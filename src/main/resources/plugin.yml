@@ -1,0 +1,38 @@
+name: MinecraftNew
+version: '${project.version}'
+main: goat.minecraft.minecraftnew.MinecraftNew
+api-version: '1.20'
+depend: [Skulls]
+commands:
+  givecustomitem:
+    description: Gives a predefined custom item to the player.
+    usage: /givecustomitem <customitem>
+    permission: givecustomitem.use
+  villager:
+    description: Summon a villager with no AI
+  xp:
+    description: Manage player XP for different skills
+    usage: /xp <add|subtract|set|get> <player> <skill> [amount]
+    permission: myplugin.xp
+    permission-message: You do not have permission to use this command.
+  loadsubsystems:
+    description: lol
+  skills:
+    description: lol
+  coins:
+    description: lol
+  clearpets:
+    description: Clears a player's pets.
+    usage: /<command> [player]
+  givegenerator:
+    description: lol
+  getpet:
+    description: lol
+  pet:
+    description: Opens the pet GUI.
+    default: true
+  setpetlevel:
+    description: Set a pet to level 100.
+    usage: /setpetlevel <petName>
+  forcebloodmoon:
+    description: Forces a Blood Moon to rise.

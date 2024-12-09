@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="MinecraftNew:jar">
+    <output-path>$USER_HOME$/AppData/Roaming/ATLauncher/servers/InfDev/plugins</output-path>
+    <root id="archive" name="MinecraftNew.jar">
+      <element id="module-output" name="Continuity" />
+    </root>
+  </artifact>
+</component>

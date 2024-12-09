@@ -1,0 +1,51 @@
+leveling up player level grants the player a perk point
+10% of all skill exp duplicates to player level
+
+Level Perks:
+40 perks:
+increases health by 0.5 per 2 levels up to level 40/45 (40hp)
+5 spells (right click air with empty fist) selectable in the main menu:
+10 = over-shield: adds a temporary 30 second 20hp absorption shield with a cooldown of 3 minutes
+20 = handyman: repairs all items 50 durability with a cooldown of 5 minutes
+30 = teleportation: teleports you 8 blocks in the direction you're facing with a cooldown of 1 second
+40 = unconscious competence: gain all skill xp twice as fast for 5 minutes with a 10 minute cooldown
+45 = feed: fill your hunger and saturation bar with a cooldown of 5 minutes
+MAX PLAYER LEVEL IS 45
+
+skill system: all skills give player xp at a low rate
+
+Forestry:
+Forestry level is determined by the lorax
+chopping down the trees pleases the lorax
+1 forestry skill point + 1 stack of Deforestation
+(Deforestation is a bloodlust perk that grants haste 1 and speed 1 per level. it has a (ForestryLevel/100)
+chance of activating for 5 seconds)
+45 perks = +1 Deforestation for 1(*forestry_Level) seconds.
+5 Abilities =
+10 = haste 2
+20 = speed 2
+30 = double logs
+40 = triple logs
+50 = gapple chance 5%
+
+Cooking:
+Brewing:
+Enchanting:
+Mining:
+Smithing:
+Farming:
+Bountiful Harvest
+
+Combat:
+Combat level is determined by kills.
+1 combat skill point + activate bloodlust for 1(*combat_level) seconds per level
+(Bloodlust is a passive combat skill that activates on hitting. It stacks and resets timer per hit and by default adds haste 1)
+50 levels, 5 abilities, 45 perks:
+45 perks = +1 bloodlust stack per hit
+5 abilities =
+10 = bloodlust regeneration 1
+20 = bloodlust speed 1
+30 = resistance 1
+40 = all effects are set to 2
+50 = stun chance (slowness 5, weakness 5): 15% on hit
+killed enemy: XP = enemyXP * level;

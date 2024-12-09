@@ -1,0 +1,436 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
+package goat.minecraft.minecraftnew.listeners;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
+import goat.minecraft.minecraftnew.MinecraftNew;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Color;
+import org.bukkit.Material;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
+
+public class BrewingStandInteract implements Listener {
+    private final HashMap<UUID, Inventory> brewingStandInventories = new HashMap<>();
+
+    public BrewingStandInteract() {
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && event.getClickedBlock().getType() == Material.BREWING_STAND) {
+            event.setCancelled(true);
+            if (this.brewingStandInventories.containsKey(player.getUniqueId())) {
+                player.openInventory((Inventory)this.brewingStandInventories.get(player.getUniqueId()));
+            } else {
+                Inventory brewingStandInventory = Bukkit.createInventory((InventoryHolder)null, 54, "Brewing Stand");
+                ItemStack blackPane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+                ItemMeta paneMeta = blackPane.getItemMeta();
+                paneMeta.setDisplayName(" ");
+                blackPane.setItemMeta(paneMeta);
+
+                for(int i = 0; i < 35; ++i) {
+                    brewingStandInventory.setItem(i, blackPane);
+                }
+
+                ItemStack whitepane = new ItemStack(Material.WHITE_STAINED_GLASS_PANE);
+                ItemMeta whitepanemeta = whitepane.getItemMeta();
+                whitepanemeta.setDisplayName(ChatColor.WHITE + "<--- Place bottles here!");
+                whitepane.setItemMeta(whitepanemeta);
+                ItemStack potion = new ItemStack(Material.POTION);
+                ItemMeta potionMeta = potion.getItemMeta();
+                potionMeta.setDisplayName("Potion");
+                potion.setItemMeta(potionMeta);
+                ItemStack purplePane = new ItemStack(Material.PURPLE_STAINED_GLASS_PANE);
+                ItemMeta purplePaneMeta = purplePane.getItemMeta();
+                purplePaneMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Place " + ChatColor.GOLD + "Active Ingredients" + ChatColor.LIGHT_PURPLE + " between these!");
+                purplePane.setItemMeta(purplePaneMeta);
+                ItemStack redPane = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+                ItemMeta redPaneMeta = redPane.getItemMeta();
+                redPaneMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Place " + ChatColor.RED + "Duration Boost Items" + ChatColor.LIGHT_PURPLE + " between these!");
+                redPane.setItemMeta(redPaneMeta);
+                ItemStack yellowPane = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE);
+                ItemMeta yellowPaneMeta = yellowPane.getItemMeta();
+                yellowPaneMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Place " + ChatColor.YELLOW + "Potency Boost Items" + ChatColor.LIGHT_PURPLE + " between these!");
+                yellowPane.setItemMeta(yellowPaneMeta);
+                ItemStack greyPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+                ItemMeta greyPaneMeta = greyPane.getItemMeta();
+                greyPaneMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Place " + ChatColor.GRAY + "Gunpowder" + ChatColor.LIGHT_PURPLE + " between these for splash potions");
+                greyPane.setItemMeta(greyPaneMeta);
+                ItemStack cyanPane = new ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE);
+                ItemMeta cyanPaneMeta = cyanPane.getItemMeta();
+                cyanPaneMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Place " + ChatColor.AQUA + "Echo Shards" + ChatColor.LIGHT_PURPLE + " between these for 4 seconds of ghost (consumption will place you in spectator mode for 4 seconds)");
+                cyanPane.setItemMeta(cyanPaneMeta);
+                ItemStack orangePane = new ItemStack(Material.ORANGE_STAINED_GLASS_PANE);
+                ItemMeta orangePaneMeta = orangePane.getItemMeta();
+                orangePaneMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Place " + ChatColor.GOLD + "Dyes" + ChatColor.LIGHT_PURPLE + " between these to change the potions color!");
+                orangePane.setItemMeta(orangePaneMeta);
+                ItemStack purplePaneEnder = new ItemStack(Material.PURPLE_STAINED_GLASS_PANE);
+                ItemMeta purplePaneEnderMeta = purplePaneEnder.getItemMeta();
+                purplePaneEnderMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Place " + ChatColor.DARK_PURPLE + "Ender Pearls" + ChatColor.LIGHT_PURPLE + " between these to gain teleportation with your potion! (sets your location on consumption, shift left click a block to return once)");
+                purplePaneEnder.setItemMeta(purplePaneEnderMeta);
+                ItemStack lightGreenPane = new ItemStack(Material.GREEN_STAINED_GLASS_PANE);
+                ItemMeta lightGreenPaneMeta = lightGreenPane.getItemMeta();
+                lightGreenPaneMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Place " + ChatColor.GOLD + "Pumpkins" + ChatColor.LIGHT_PURPLE + " between these to make your potion very appetizing! (consumption bonus of a well balanced meal)");
+                lightGreenPane.setItemMeta(lightGreenPaneMeta);
+                ItemStack outputPane = new ItemStack(Material.YELLOW_STAINED_GLASS_PANE);
+                ItemMeta outputPaneMeta = outputPane.getItemMeta();
+                outputPaneMeta.setDisplayName(ChatColor.LIGHT_PURPLE + "Click Between us to get your Potion!");
+                outputPane.setItemMeta(outputPaneMeta);
+                brewingStandInventory.setItem(0, (ItemStack)null);
+                brewingStandInventory.setItem(1, whitepane);
+                brewingStandInventory.setItem(4, potion);
+                brewingStandInventory.setItem(9, purplePane);
+                brewingStandInventory.setItem(10, purplePane);
+                brewingStandInventory.setItem(11, redPane);
+                brewingStandInventory.setItem(27, purplePane);
+                brewingStandInventory.setItem(28, purplePane);
+                brewingStandInventory.setItem(29, redPane);
+                brewingStandInventory.setItem(3, outputPane);
+                brewingStandInventory.setItem(5, outputPane);
+                brewingStandInventory.setItem(12, yellowPane);
+                brewingStandInventory.setItem(30, yellowPane);
+                brewingStandInventory.setItem(13, greyPane);
+                brewingStandInventory.setItem(31, greyPane);
+                brewingStandInventory.setItem(32, cyanPane);
+                brewingStandInventory.setItem(14, cyanPane);
+                brewingStandInventory.setItem(33, orangePane);
+                brewingStandInventory.setItem(15, orangePane);
+                brewingStandInventory.setItem(16, purplePaneEnder);
+                brewingStandInventory.setItem(34, purplePaneEnder);
+                brewingStandInventory.setItem(17, lightGreenPane);
+                brewingStandInventory.setItem(35, lightGreenPane);
+                brewingStandInventory.setItem(18, (ItemStack)null);
+                brewingStandInventory.setItem(19, (ItemStack)null);
+                brewingStandInventory.setItem(20, (ItemStack)null);
+                brewingStandInventory.setItem(21, (ItemStack)null);
+                brewingStandInventory.setItem(22, (ItemStack)null);
+                brewingStandInventory.setItem(23, (ItemStack)null);
+                brewingStandInventory.setItem(24, (ItemStack)null);
+                brewingStandInventory.setItem(25, (ItemStack)null);
+                brewingStandInventory.setItem(26, (ItemStack)null);
+                this.brewingStandInventories.put(player.getUniqueId(), brewingStandInventory);
+                player.openInventory(brewingStandInventory);
+            }
+        }
+
+    }
+
+    public static ItemStack createCustomPotion(Inventory inv, ItemStack ingredient1, ItemStack ingredient2, ItemStack durationItem, ItemStack potencyItem, ItemStack gunpowder, ItemStack echoShard, ItemStack dye, ItemStack enderPearl, ItemStack pumpkin) {
+        ItemStack emptyBottle = inv.getItem(0);
+        if (emptyBottle != null && emptyBottle.getType() == Material.GLASS_BOTTLE) {
+            PotionEffectType effectType = getPotionEffectType(ingredient1, ingredient2);
+            boolean isSplash = false;
+            int duration = calculateDuration(durationItem);
+            int potency = calculatePotency(potencyItem);
+            if (gunpowder != null && gunpowder.getType() == Material.GUNPOWDER) {
+                isSplash = true;
+            }
+
+            ItemStack potion = new ItemStack(isSplash ? Material.SPLASH_POTION : Material.POTION);
+            PotionMeta potionMeta = (PotionMeta)potion.getItemMeta();
+            potionMeta.setColor(Color.YELLOW);
+            PotionEffect potionEffect = new PotionEffect(effectType, duration, potency, true);
+            potionMeta.addCustomEffect(potionEffect, true);
+            List<String> lore = new ArrayList();
+            if (echoShard != null && echoShard.getType().equals(Material.ECHO_SHARD)) {
+                lore.add(ChatColor.AQUA + "Ghost");
+            }
+
+            if (enderPearl != null && enderPearl.getType().equals(Material.ENDER_PEARL)) {
+                lore.add(ChatColor.DARK_PURPLE + "Ender");
+            }
+
+            if (pumpkin != null) {
+                lore.add(ChatColor.GOLD + "Tasty");
+            }
+
+            potionMeta.setLore(lore);
+            potion.setItemMeta(potionMeta);
+            inv.setItem(4, potion);
+            ingredient1.setAmount(ingredient1.getAmount() - 1);
+            ingredient2.setAmount(ingredient2.getAmount() - 1);
+            emptyBottle.setAmount(emptyBottle.getAmount() - 1);
+            if (potencyItem != null) {
+                potencyItem.setAmount(potencyItem.getAmount() - 1);
+            }
+
+            if (durationItem != null) {
+                durationItem.setAmount(durationItem.getAmount() - 1);
+            }
+
+            if (gunpowder != null) {
+                gunpowder.setAmount(gunpowder.getAmount() - 1);
+            }
+
+            if (echoShard != null) {
+                echoShard.setAmount(echoShard.getAmount() - 1);
+            }
+
+            if (dye != null) {
+                dye.setAmount(dye.getAmount() - 1);
+            }
+
+            if (enderPearl != null) {
+                enderPearl.setAmount(enderPearl.getAmount() - 1);
+            }
+
+            if (pumpkin != null) {
+                pumpkin.setAmount(pumpkin.getAmount() - 1);
+            }
+
+            return potion;
+        } else {
+            ((HumanEntity)inv.getViewers().get(0)).sendMessage("There must be glass bottles!");
+            return null;
+        }
+    }
+
+    private static PotionEffectType getPotionEffectType(ItemStack ingredient1, ItemStack ingredient2) {
+        if (ingredient1 != null && ingredient2 != null) {
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.SUGAR) {
+                return PotionEffectType.SPEED;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.SLIME_BALL) {
+                return PotionEffectType.SLOW;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.GOLD_INGOT) {
+                return PotionEffectType.FAST_DIGGING;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.CHARCOAL) {
+                return PotionEffectType.SLOW_DIGGING;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.BLAZE_POWDER) {
+                return PotionEffectType.INCREASE_DAMAGE;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.GLISTERING_MELON_SLICE) {
+                return PotionEffectType.HEAL;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.POISONOUS_POTATO) {
+                return PotionEffectType.HARM;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.RABBIT_FOOT) {
+                return PotionEffectType.JUMP;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.PUFFERFISH) {
+                return PotionEffectType.CONFUSION;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.GHAST_TEAR) {
+                return PotionEffectType.REGENERATION;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.IRON_BLOCK) {
+                return PotionEffectType.DAMAGE_RESISTANCE;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.MAGMA_CREAM) {
+                return PotionEffectType.FIRE_RESISTANCE;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.PUFFERFISH) {
+                return PotionEffectType.WATER_BREATHING;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.CARVED_PUMPKIN) {
+                return PotionEffectType.INVISIBILITY;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.ROTTEN_FLESH) {
+                return PotionEffectType.HUNGER;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.GOLDEN_CARROT) {
+                return PotionEffectType.NIGHT_VISION;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.KELP) {
+                return PotionEffectType.BLINDNESS;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.BREAD) {
+                return PotionEffectType.WEAKNESS;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.SPIDER_EYE) {
+                return PotionEffectType.POISON;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.WITHER_SKELETON_SKULL) {
+                return PotionEffectType.WITHER;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.GOLDEN_APPLE) {
+                return PotionEffectType.HEALTH_BOOST;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.HONEY_BOTTLE) {
+                return PotionEffectType.ABSORPTION;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.CAKE) {
+                return PotionEffectType.SATURATION;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.SHROOMLIGHT) {
+                return PotionEffectType.GLOWING;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.SHULKER_SHELL) {
+                return PotionEffectType.LEVITATION;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.RABBIT_FOOT) {
+                return PotionEffectType.LUCK;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.GLASS) {
+                return PotionEffectType.UNLUCK;
+            }
+
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.PHANTOM_MEMBRANE) {
+                return PotionEffectType.SLOW_FALLING;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.NAUTILUS_SHELL) {
+                return PotionEffectType.CONDUIT_POWER;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.PRISMARINE_CRYSTALS) {
+                return PotionEffectType.DOLPHINS_GRACE;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.CROSSBOW) {
+                return PotionEffectType.BAD_OMEN;
+            }
+
+            if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.EMERALD_BLOCK) {
+                return PotionEffectType.HERO_OF_THE_VILLAGE;
+            }
+        }
+
+        return PotionEffectType.NIGHT_VISION;
+    }
+
+    private static int calculateDuration(ItemStack durationItem) {
+        if (durationItem != null) {
+            if (durationItem.getType() == Material.REDSTONE) {
+                return 7200;
+            }
+
+            if (durationItem.getType() == Material.REDSTONE_BLOCK) {
+                return 14400;
+            }
+        }
+
+        return 3600;
+    }
+
+    private static int calculatePotency(ItemStack potencyItem) {
+        if (potencyItem != null) {
+            if (potencyItem.getType() == Material.GLOWSTONE_DUST) {
+                return 1;
+            }
+
+            if (potencyItem.getType() == Material.GLOWSTONE) {
+                return 3;
+            }
+        }
+
+        return 0;
+    }
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player)event.getWhoClicked();
+        Inventory clickedInventory = event.getClickedInventory();
+        if (clickedInventory != null && event.getView().getTitle().equals("Brewing Stand")) {
+            ItemStack clickedItem = event.getCurrentItem();
+            ItemStack durationModifier = clickedInventory.getItem(20);
+            ItemStack potencyModifier = clickedInventory.getItem(21);
+            ItemStack gunpowderSlot = clickedInventory.getItem(22);
+            ItemStack ghostSlot = clickedInventory.getItem(23);
+            ItemStack dyeSlot = clickedInventory.getItem(24);
+            ItemStack enderSlot = clickedInventory.getItem(25);
+            ItemStack pumpkinSlot = clickedInventory.getItem(26);
+            ItemStack ingredient1 = clickedInventory.getItem(18);
+            ItemStack ingredient2 = clickedInventory.getItem(19);
+            ItemStack confirmPotion = clickedInventory.getItem(4);
+            Inventory openInventory = player.getOpenInventory().getTopInventory();
+            if (event.getView().getTitle().equals("Brewing Stand")) {
+                if (event.getSlot() == 4 && event.getCurrentItem().getItemMeta().getDisplayName().equals("Potion")) {
+                    createCustomPotion(openInventory, ingredient1, ingredient2, durationModifier, potencyModifier, gunpowderSlot, ghostSlot, dyeSlot, enderSlot, pumpkinSlot);
+                    ItemStack blackPane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+                    ItemMeta paneMeta = blackPane.getItemMeta();
+                    paneMeta.setDisplayName("Potion");
+                    blackPane.setItemMeta(paneMeta);
+                    Bukkit.getScheduler().runTaskLater(MinecraftNew.getInstance(), () -> {
+                        event.getInventory().setItem(4, blackPane);
+                    }, 5L);
+                }
+
+                if (event.getCurrentItem() != null && (event.getCurrentItem().getType().equals(Material.BLACK_STAINED_GLASS_PANE) || event.getCurrentItem().getType().equals(Material.WHITE_STAINED_GLASS_PANE) || event.getCurrentItem().getType().equals(Material.PURPLE_STAINED_GLASS_PANE) || event.getCurrentItem().getType().equals(Material.RED_STAINED_GLASS_PANE) || event.getCurrentItem().getType().equals(Material.YELLOW_STAINED_GLASS_PANE) || event.getCurrentItem().getType().equals(Material.GRAY_STAINED_GLASS_PANE) || event.getCurrentItem().getType().equals(Material.ORANGE_STAINED_GLASS_PANE) || event.getCurrentItem().getType().equals(Material.GREEN_STAINED_GLASS_PANE) || event.getCurrentItem().getType().equals(Material.LIGHT_BLUE_STAINED_GLASS_PANE) || event.getCurrentItem().getItemMeta().getDisplayName().equals("Potion")) && event.getCurrentItem() != null) {
+                    event.setCancelled(true);
+                }
+            }
+        }
+
+    }
+
+    @EventHandler
+    public void onConfirmPotionClick(InventoryClickEvent event) {
+        Player player = (Player)event.getWhoClicked();
+        Inventory clickedInventory = event.getClickedInventory();
+        ItemStack clickedItem = event.getCurrentItem();
+        if (clickedInventory != null && event.getView().getTitle().equals("Brewing Stand") && clickedItem != null && clickedItem.getType() == Material.POTION && clickedItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Confirm Potion?")) {
+            ItemStack ingredient1 = clickedInventory.getItem(18);
+            ItemStack ingredient2 = clickedInventory.getItem(19);
+            ItemStack durationItem = clickedInventory.getItem(20);
+            ItemStack potencyItem = clickedInventory.getItem(21);
+            ItemStack gunpowder = clickedInventory.getItem(22);
+            ItemStack ghostItem = clickedInventory.getItem(23);
+            ItemStack dyeItem = clickedInventory.getItem(24);
+            ItemStack enderItem = clickedInventory.getItem(25);
+            ItemStack pumpkinItem = clickedInventory.getItem(26);
+            event.setCancelled(true);
+        }
+
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Player player = (Player)event.getPlayer();
+        if (event.getView().getTitle().equals("Brewing Stand")) {
+            this.brewingStandInventories.put(player.getUniqueId(), event.getInventory());
+        }
+
+    }
+}

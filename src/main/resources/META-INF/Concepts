@@ -1,0 +1,94 @@
+Artifact: items/mods that grant right click/conditional abilities
+Relic: mods that grant permanent/conditional abilities
+Cosmetics: mods that add lore to items based on the lore of the cosmetic
+
+
+MINING:
+mining xp
+increased xp yields
+increased ore yields (percentage based)
+rare chance of getting unrefined ore (can be turned into whatever ore you want by right clicking)
+PERK /up out of caves to maximize productivity
+PERK echolocation glows nearby monsters for a frame
+PERK gold fever (haste bloodlust from mining)
+
+COMBAT:
+combat xp
+increased crit chance
+PERK monsters shed items when critically hit, allowing for the player to get more items
+PERK bloodlust (speed, strength, regen bloodlust from hitting)
+PERK stun (slowness 5 for 5 seconds 5% of hits)
+{
+reworked monster tiers
+COMMON (4 health, slow, xp)
+UNCOMMON (16 health, xp2)
+RARE (26 health, speed, xp3)
+EPIC (40 health, strength, xp4)
+LEGENDARY (100 health, resistence, xp5)
+LETHAL (250 health, reskin, strength 3, slow, xp6)
+}
+
+SMITHING:
+applies trims, cosmetics (like quotes from message in a bottles), and Relics
+
+ENCHANTING:
+enchants items based on enchanting level and applies artifacts to items
+
+FISHING:
+{
+fishing xp
+increased xp yields
+increased fish yields (progressively more chance to double fishing yields)
+increased sea creature interest
+PERK luck bloodlust (luck on fishing for 30 seconds)
+PERK raindance bloodlust (5% chance to start 30 seconds of rain)
+PERK fury bloodlust (5 seconds of strength 2 on sea creature)
+{Mechanic: Sea Creatures:
+the higher level fishing you are, the more interested sea creatures will be in your line.
+sea creatures can drop rare items and break the monotony of fishing by adding new thrills
+sea creatures:
+COMMON (4 health)
+
+drowned sailor (string, xp, Message In A Bottle (with a stupid joke in it)
+
+UNCOMMON (16 health)
+
+pirate skeleton (xp, bones, cutlass)
+
+RARE (26 health)
+
+pirate (cutlass, gold, xp)
+sea serpent (xp, serpent fang(advanced brewing ingredient(harming 10)))
+
+EPIC (40 health)
+
+titanic passenger (fancy clothes, gold, xp, buried treasure map)
+Kraken (deep sea tentacles (advanced brewing ingredient(dolphins grace 20)), xp, ink of the deep(advanced brewing ingredient(blindness)))
+
+LEGENDARY (100 health)
+
+captain jack sparrow (colossal xp, compass artifact(right click to choose next sea creature), cutlass, flintlock artifact(80 damage arrow))
+the blobfish (blobfish mucus(advanced brewing ingredient(slowness 5 permanent)), xp(mega), slime jelly(advanced smithing Relic))
+yeti (yeti fur(advanced smithing relic), xp(colossal), frozen heart(advanced brewing ingredient(turtle master 20, wither 20))  # only when snowing
+deep sea diver (diving gear(permanent underwater breathing), xp(colossal), relic sunken chest(legendary items))
+
+LETHAL (250 health)
+
+Poseidon (trident, xp, ichor(advanced brewing ingredient(absorption 20)))
+colossal squid (colossal ink(advanced brewing Artifact), xp(colossal), colossal beak(advanced brewing ingredient(harming 20))) # only during thunderstorms
+Leviathan (leviathan scale(advanced smithing Relic), xp(colossal), heart of the ocean(advanced brewing ingredient(permanent water breathing))) # only during thunderstorms
+}
+}
+FARMING:
+farming xp
+xp gains
+double yield
+rare chance of getting perfect yield(advanced brewing ingredient(saturation for 20 minutes))
+PERK swift harvest bloodlust(speed on crop break)
+PERK hidden snacking (fill hunger by breaking crops)
+
+BREWING:
+
+SKILLS:
+
+//HARDCORE MECHANIC:

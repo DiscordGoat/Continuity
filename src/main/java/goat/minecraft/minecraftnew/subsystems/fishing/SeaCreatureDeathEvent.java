@@ -1,0 +1,206 @@
+package goat.minecraft.minecraftnew.subsystems.fishing;
+
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
+import org.bukkit.*;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.MetadataValue;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+
+public class SeaCreatureDeathEvent implements Listener {
+    private final MinecraftNew plugin = MinecraftNew.getInstance();
+    private final XPManager xpManager = new XPManager(plugin);
+    private final Random random = new Random();
+    CustomItemManager customItemManager = new CustomItemManager();
+
+    ItemStack lapis = new ItemStack(Material.LAPIS_LAZULI, 4);
+
+    @EventHandler
+    public void onSeaCreatureDeath(EntityDeathEvent event) {
+        Entity entity = event.getEntity();
+
+        // Ensure metadata exists
+        List<MetadataValue> metadata = entity.getMetadata("SEA_CREATURE");
+        if (metadata == null || metadata.isEmpty()) {
+            Bukkit.getLogger().warning("No SEA_CREATURE metadata found for entity: " + entity.getCustomName());
+            // Debug: Print all metadata keys
+            for (MetadataValue value : entity.getMetadata("SEA_CREATURE")) {
+                Bukkit.getLogger().info("Found metadata key: " + value.toString());
+            }
+            return;
+        }
+
+
+        String creatureName = metadata.get(0).asString();
+        Optional<SeaCreature> optionalSeaCreature = SeaCreatureRegistry.getSeaCreatureByName(creatureName);
+        if (!optionalSeaCreature.isPresent()) {
+            Bukkit.getLogger().warning("Sea creature not found in registry: " + creatureName);
+            return;
+        }
+
+        SeaCreature seaCreature = optionalSeaCreature.get();
+        Player killer = event.getEntity().getKiller();
+        if (!(killer instanceof Player)) {
+            Bukkit.getLogger().info("Sea creature killed by non-player entity: " + event.getEntity().getKiller());
+            return;
+        }
+
+        // Process XP and drops
+        int boostedXP = getBoostedXP(seaCreature.getRarity());
+        killer.giveExp(boostedXP);
+        Bukkit.getLogger().info("Player " + killer.getName() + " gained " + boostedXP + " Fishing XP.");
+
+        // Handle alchemy drops
+        ItemStack drop = seaCreature.getAlchemyDrops();
+        if (drop != null && drop.getType() != Material.AIR) {
+            event.getDrops().add(drop);
+            killer.sendMessage(ChatColor.LIGHT_PURPLE + "You received a rare item!");
+        }
+
+        // Play effects    int chance = random.nextInt(100) + 1;
+        //
+        //        // Check if random roll is successful based on player's level
+        //        if (chance >= 90) {
+        playDeathEffects(entity, seaCreature.getRarity());
+        PetManager petManager = PetManager.getInstance(plugin);
+        int chance = random.nextInt(100) + 1;
+        ItemStack guardianDrop = CustomItemManager.createCustomItem(Material.PRISMARINE_SHARD, ChatColor.YELLOW +
+                "Rain", Arrays.asList(
+                ChatColor.GRAY + "A strange object.",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Used in summoning Rain.",
+                ChatColor.DARK_PURPLE + "Artifact"
+        ), 1,false, true);
+        ItemStack forbiddenBook = CustomItemManager.createCustomItem(
+                Material.WRITTEN_BOOK,
+                ChatColor.YELLOW + "Forbidden Book",
+                Arrays.asList(
+                        ChatColor.GRAY + "A dangerous book full of experimental magic.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to equipment to push the limits of enchantments.",
+                        ChatColor.DARK_PURPLE + "Enchanting Item"
+                ),
+                1,
+                false, // Not unbreakable
+                true   // Add enchantment shimmer
+        );
+        int rainChance = random.nextInt(100) + 1;
+        if(rainChance>=90){
+            entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), guardianDrop);
+
+            killer.sendMessage(ChatColor.AQUA + "You dropped a Rain Artifact!");
+        }
+
+        if(chance >= 90){
+            entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), forbiddenBook);
+        }
+            if(seaCreature.getRarity() == Rarity.COMMON){
+            if(chance>=90){
+                petManager.createPet(killer, "Fish", PetManager.Rarity.COMMON, 100, Particle.GLOW_SQUID_INK, PetManager.PetPerk.ANGLER);
+            }
+        }
+        if(seaCreature.getRarity() == Rarity.UNCOMMON){
+            if(chance>=90){
+                petManager.createPet(killer, "Glow Squid", PetManager.Rarity.UNCOMMON, 100, Particle.GLOW_SQUID_INK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANGLER);
+            }
+        }
+        if(seaCreature.getRarity() == Rarity.RARE){
+            if(chance>=90){
+                petManager.createPet(killer, "Dolphin", PetManager.Rarity.RARE, 100, Particle.WATER_SPLASH , PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.ANGLER);
+            }
+        }
+        if(seaCreature.getRarity() == Rarity.EPIC){
+            if(chance>=90){
+                petManager.createPet(killer, "Turtle", PetManager.Rarity.EPIC, 100, Particle.CRIMSON_SPORE , PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.COMFORTABLE);
+            }
+        }
+        if(seaCreature.getRarity() == Rarity.LEGENDARY){
+            if(chance>=90){
+                petManager.createPet(killer, "Leviathan", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY , PetManager.PetPerk.ANGLER, PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.TERROR_OF_THE_DEEP);
+            }
+        }
+    }
+
+
+    /**
+     * Plays death sounds and spawns particles based on the rarity of the sea creature.
+     *
+     * @param entity The sea creature entity.
+     * @param rarity The rarity of the sea creature.
+     */
+    private void playDeathEffects(Entity entity, Rarity rarity) {
+        Sound sound;
+        Particle particle;
+        float volume = 1.0f;
+        float pitch = 1.0f;
+
+        switch (rarity) {
+            case COMMON:
+                sound = Sound.ENTITY_FISH_SWIM;
+                particle = Particle.WATER_BUBBLE;
+                break;
+            case UNCOMMON:
+                sound = Sound.ENTITY_DOLPHIN_HURT;
+                particle = Particle.WATER_SPLASH;
+                break;
+            case RARE:
+                sound = Sound.ENTITY_GUARDIAN_DEATH;
+                particle = Particle.CRIT_MAGIC;
+                break;
+            case EPIC:
+                sound = Sound.ENTITY_WITHER_DEATH;
+                particle = Particle.EXPLOSION_LARGE;
+                volume = 1.5f;
+                pitch = 0.8f;
+                break;
+            case LEGENDARY:
+                sound = Sound.ENTITY_ENDER_DRAGON_GROWL;
+                particle = Particle.DRAGON_BREATH;
+                volume = 2.0f;
+                pitch = 0.6f;
+                break;
+            case MYTHIC:
+                sound = Sound.MUSIC_CREDITS;
+                particle = Particle.TOTEM;
+                volume = 2.0f;
+                pitch = 0.5f;
+                break;
+            default:
+                sound = Sound.ENTITY_GENERIC_EXPLODE;
+                particle = Particle.SMOKE_LARGE;
+                break;
+        }
+
+        entity.getWorld().playSound(entity.getLocation(), sound, volume, pitch);
+        entity.getWorld().spawnParticle(particle, entity.getLocation(), 50, 1.0, 1.0, 1.0, 0.1);
+    }
+
+    private int getBoostedXP(Rarity rarity) {
+        switch (rarity) {
+            case COMMON:
+                return 20;
+            case UNCOMMON:
+                return 40;
+            case RARE:
+                return 80;
+            case EPIC:
+                return 160;
+            case LEGENDARY:
+                return 320;
+            case MYTHIC:
+                return 640;
+            default:
+                return 20;
+        }
+    }
+}

@@ -1,0 +1,1193 @@
+package goat.minecraft.minecraftnew.subsystems.smithing;
+
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.subsystems.mining.MiningGemManager;
+import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
+import goat.minecraft.minecraftnew.subsystems.utils.EnchantmentUtils;
+import goat.minecraft.minecraftnew.subsystems.utils.TalismanManager;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+
+import static goat.minecraft.minecraftnew.subsystems.utils.EnchantmentUtils.*;
+
+public class AnvilRepair implements Listener {
+    // Mapping of player UUIDs to their custom anvil inventories
+    private final Map<UUID, Inventory> anvilInventories = new HashMap<>();
+
+    // File to persist anvil inventories
+    private final File inventoriesFile;
+    private final FileConfiguration inventoriesConfig;
+
+    // Reference to the main plugin class
+    private final MinecraftNew plugin;
+
+    // Slots that players can edit: slot 10 (item to repair) and slot 16 (repair material)
+    private final int[] playerEditableSlots = {10, 13};
+
+    /**
+     * Constructor initializes the anvil repair system and loads existing inventories.
+     *
+     * @param plugin The main plugin instance.
+     */
+    public AnvilRepair(MinecraftNew plugin) {
+        this.plugin = plugin;
+
+        // Initialize the inventories file
+        inventoriesFile = new File(plugin.getDataFolder(), "anvil_inventories.yml");
+        if (!inventoriesFile.exists()) {
+            try {
+                inventoriesFile.createNewFile();
+                // Optionally, you can add default configurations here
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        inventoriesConfig = YamlConfiguration.loadConfiguration(inventoriesFile);
+    }
+
+    /**
+     * Handles player interactions with the anvil block.
+     *
+     * @param event The player interaction event.
+     */
+
+    EnchantmentUtils enchantmentUtils = new EnchantmentUtils();
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Block clickedBlock = event.getClickedBlock();
+
+        // Check if the player right-clicked on an anvil
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK && clickedBlock != null && clickedBlock.getType() == Material.ANVIL) {
+            event.setCancelled(true); // Prevent the default anvil GUI from opening
+
+            // Get or load the player's custom anvil inventory
+            Inventory anvilInventory = anvilInventories.get(player.getUniqueId());
+            if (anvilInventory == null) {
+                anvilInventory = loadInventory(player.getUniqueId());
+                anvilInventories.put(player.getUniqueId(), anvilInventory);
+            }
+
+            // Open the custom anvil inventory for the player
+            player.openInventory(anvilInventory);
+        }
+    }
+
+    /**
+     * Creates a custom anvil inventory with predefined GUI elements.
+     *
+     * @return The custom anvil inventory.
+     */
+    private Inventory createAnvilInventory() {
+        // Create an inventory with 27 slots (3 rows) titled "Anvil Repair"
+        Inventory anvilInventory = Bukkit.createInventory(null, 27, "Anvil Repair");
+
+        // Define GUI panes and items for decoration and instructions
+        ItemStack blackPane = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, " ");
+        ItemStack repaireePane = createGuiItem(Material.LIGHT_GRAY_STAINED_GLASS_PANE, ChatColor.WHITE + "Place item to repair on the left");
+        //ItemStack billPane = createGuiItem(Material.YELLOW_STAINED_GLASS_PANE, ChatColor.GOLD + "Place repair material on the right");
+        ItemStack resultPane = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair");
+
+        // Informative book explaining repair mechanics
+        ItemStack infoBook = createGuiItem(Material.BOOK, ChatColor.AQUA + "Repair Instructions");
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.WHITE + "• Iron Ingot repairs: " + ChatColor.GREEN + "75 durability");
+        lore.add(ChatColor.WHITE + "• Diamond repairs: " + ChatColor.GREEN + "150 durability");
+        lore.add(ChatColor.WHITE + "Left = Repairable Item Right = Material to Repair with");
+        //lore.add(ChatColor.WHITE + "• Other materials: " + ChatColor.GREEN + "Default repair value");
+        ItemMeta infoMeta = infoBook.getItemMeta();
+        if (infoMeta != null) {
+            infoMeta.setLore(lore);
+            infoBook.setItemMeta(infoMeta);
+        }
+
+        // Set up the GUI layout with decorative panes
+        for (int i = 0; i < 27; i++) {
+            anvilInventory.setItem(i, blackPane);
+        }
+
+        // Place specific GUI items and interactive slots
+        anvilInventory.setItem(10, null); // Slot for the item to repair
+        anvilInventory.setItem(16, resultPane); // Slot for the repair material
+        anvilInventory.setItem(13, null); // Output slot with "Click to repair" pane
+
+        // Place labels above the interactive slots
+        anvilInventory.setItem(9, blackPane); // Label for repairee slot (slot 10)
+        anvilInventory.setItem(12, blackPane);    // Label for bill slot (slot 16)
+
+        // Place the informational book in the bottom-right corner (slot 26)
+        anvilInventory.setItem(26, infoBook); // Bottom-right corner
+
+        return anvilInventory;
+    }
+
+    /**
+     * Utility method to create a GUI item with a specific material and display name.
+     *
+     * @param material The material of the item.
+     * @param name     The display name of the item.
+     * @return The created ItemStack.
+     */
+    private ItemStack createGuiItem(Material material, String name) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(name);
+            meta.setLore(Collections.singletonList(ChatColor.GRAY + " ")); // Empty lore to prevent stacking
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
+//    public boolean isArmor(ItemStack item) {
+//        if (item == null || item.getType() == Material.AIR) {
+//            return false; // Check for null or empty items
+//        }
+//
+//        String type = item.getType().toString().toUpperCase();
+//        return type.endsWith("CHESTPLATE") || type.endsWith("HELMET") ||
+//                type.endsWith("LEGGINGS") || type.endsWith("BOOTS");
+//    }
+    public boolean isFishingRod(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false; // Check for null or empty items
+        }
+
+        String type = item.getType().toString().toUpperCase();
+        return item.getType().toString().toUpperCase().endsWith("ROD");
+    }
+
+    public boolean isSword(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false; // Check for null or empty items
+        }
+
+        return item.getType().toString().toUpperCase().endsWith("SWORD");
+    }
+
+    public boolean isPickaxe(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false; // Check for null or empty items
+        }
+
+        return item.getType().toString().toUpperCase().endsWith("PICKAXE");
+    }
+
+    public boolean isBow(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false; // Check for null or empty items
+        }
+
+        return item.getType().toString().toUpperCase().endsWith("BOW") &&
+               !item.getType().toString().toUpperCase().endsWith("CROSSBOW");
+    }
+    public boolean isCrossbow(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false; // Check for null or empty items
+        }
+
+        return item.getType().toString().toUpperCase().endsWith("CROSSBOW");
+    }
+    public boolean isTrident(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false; // Check for null or empty items
+        }
+
+        return item.getType().toString().toUpperCase().endsWith("TRIDENT");
+    }
+
+    public boolean isDurable(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false; // Check for null or empty items
+        }
+
+        // Get the item's meta data and check if it supports durability
+        ItemMeta meta = item.getItemMeta();
+        return meta != null && meta.isUnbreakable() == false && item.getType().getMaxDurability() > 0;
+    }
+    public static final Set<Material> MELEE = EnumSet.of(Material.WOODEN_SWORD, Material.STONE_SWORD,
+            Material.IRON_SWORD, Material.GOLDEN_SWORD, Material.DIAMOND_SWORD, Material.NETHERITE_SWORD, Material.TRIDENT);
+    public static final Set<Material> TOOLS = EnumSet.of(Material.WOODEN_PICKAXE, Material.STONE_PICKAXE,
+            Material.IRON_PICKAXE, Material.GOLDEN_PICKAXE, Material.DIAMOND_PICKAXE, Material.NETHERITE_PICKAXE,
+            Material.WOODEN_AXE, Material.STONE_AXE,
+            Material.IRON_AXE, Material.GOLDEN_AXE, Material.DIAMOND_AXE, Material.NETHERITE_AXE,
+            Material.WOODEN_SHOVEL, Material.STONE_SHOVEL,
+            Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL, Material.DIAMOND_SHOVEL, Material.NETHERITE_SHOVEL,
+            Material.WOODEN_HOE, Material.STONE_HOE,
+            Material.IRON_HOE, Material.GOLDEN_HOE, Material.DIAMOND_HOE, Material.NETHERITE_HOE,
+            Material.SHEARS, Material.FISHING_ROD, Material.FLINT_AND_STEEL);
+    public static final Set<Material> ARMOR = EnumSet.of(Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE,
+            Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS,
+            Material.IRON_HELMET, Material.IRON_CHESTPLATE,
+            Material.IRON_LEGGINGS, Material.IRON_BOOTS,
+            Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE,
+            Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_BOOTS,
+            Material.GOLDEN_HELMET, Material.GOLDEN_CHESTPLATE,
+            Material.GOLDEN_LEGGINGS, Material.GOLDEN_BOOTS,
+            Material.DIAMOND_HELMET, Material.DIAMOND_CHESTPLATE,
+            Material.DIAMOND_LEGGINGS, Material.DIAMOND_BOOTS,
+            Material.NETHERITE_HELMET, Material.NETHERITE_CHESTPLATE,
+            Material.NETHERITE_LEGGINGS, Material.NETHERITE_BOOTS
+    );
+
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        // Check if the click is within the "Anvil Repair" inventory
+        if (event.getView().getTitle().equals("Anvil Repair")) {
+            Player player = (Player) event.getWhoClicked();
+            Inventory clickedInventory = event.getClickedInventory();
+            //Bukkit.broadcastMessage("Clicked in anvil");
+            if (clickedInventory == null) return; // Clicked outside the inventory
+
+            ItemStack clickedItem = event.getCurrentItem();
+            if (clickedInventory == null || clickedInventory != event.getView().getTopInventory()) {
+                return; // Allow clicks in the player's inventory
+            }
+            int slot = event.getRawSlot();
+
+            // Prevent moving GUI items (decorative panes and info book)
+            if (isGuiItem(clickedItem) && slot < clickedInventory.getSize()) {
+                event.setCancelled(true);
+            }
+
+            // Allow interaction with repairee slot (slot 10) and bill slot (slot 16)
+            if (slot == 10 || slot == 13) {
+                return;
+            }
+
+            // Handle repair when clicking the result slot (slot 13)
+            if (slot == 16) {
+                //Bukkit.broadcastMessage("clicked repair");
+                ItemStack repairee = clickedInventory.getItem(10);
+                ItemStack billItem = clickedInventory.getItem(13);
+                if (repairee != null && billItem != null) {
+                    // Perform the repair
+                    event.setCancelled(true); // Prevent taking the pane
+
+                    // Remove one from the repair material (slot 16)
+                    List<Material> billableItems = new ArrayList<>();
+                    billableItems.add(Material.IRON_INGOT);
+                    billableItems.add(Material.GOLD_INGOT);
+                    billableItems.add(Material.DIAMOND);
+                    billableItems.add(Material.EMERALD);
+
+                    billableItems.add(Material.YELLOW_DYE);
+                    billableItems.add(Material.TURTLE_HELMET);
+                    billableItems.add(Material.SCUTE);
+                    billableItems.add(Material.CYAN_DYE);
+
+                    billableItems.add(Material.LIGHT_BLUE_DYE);
+                    billableItems.add(Material.STRING);
+                    billableItems.add(Material.ARROW);
+
+                    billableItems.add(Material.NETHER_WART);
+                    billableItems.add(Material.CRIMSON_HYPHAE);
+                    billableItems.add(Material.PINK_TULIP);
+                    billableItems.add(Material.BEETROOT_SEEDS);
+                    billableItems.add(Material.HONEY_BOTTLE);
+                    billableItems.add(Material.JUNGLE_LOG);
+                    billableItems.add(Material.PAPER);
+                    billableItems.add(Material.SPRUCE_SAPLING);
+                    billableItems.add(Material.OAK_WOOD);
+
+                    billableItems.add(Material.ROTTEN_FLESH);
+                    billableItems.add(Material.SPIDER_EYE);
+                    billableItems.add(Material.FIRE_CHARGE);
+                    billableItems.add(Material.ENCHANTED_BOOK);
+                    billableItems.add(Material.ICE);
+                    billableItems.add(Material.SLIME_BALL);
+                    billableItems.add(Material.SOUL_SOIL);
+                    billableItems.add(Material.LEATHER_BOOTS);
+                    billableItems.add(Material.TURTLE_EGG);
+                    billableItems.add(Material.GLASS);
+                    billableItems.add(Material.LEATHER_LEGGINGS);
+                    billableItems.add(Material.BONE);
+                    billableItems.add(Material.IRON_SWORD);
+                    billableItems.add(Material.BOW);
+                    billableItems.add(Material.RABBIT_STEW);
+                    billableItems.add(Material.GOLDEN_AXE);
+                    billableItems.add(Material.COD);
+                    billableItems.add(Material.EXPERIENCE_BOTTLE);
+                    billableItems.add(Material.GLASS_BOTTLE);
+                    billableItems.add(Material.TORCH);
+                    billableItems.add(Material.GOLD_NUGGET);
+                    billableItems.add(Material.SHEARS);
+                    billableItems.add(Material.ENDER_PEARL);
+                    billableItems.add(Material.SUGAR_CANE);
+                    billableItems.add(Material.ENDER_EYE);
+                    billableItems.add(Material.WHITE_DYE);
+                    billableItems.add(Material.LEATHER);
+                    billableItems.add(Material.RED_DYE);
+                    billableItems.add(Material.MOJANG_BANNER_PATTERN);
+                    billableItems.add(Material.LIGHTNING_ROD);
+                    billableItems.add(Material.CONDUIT);
+                    billableItems.add(Material.GOLDEN_PICKAXE);
+                    billableItems.add(Material.OBSIDIAN);
+                    billableItems.add(Material.GOLDEN_SWORD);
+                    billableItems.add(Material.WHEAT);
+                    billableItems.add(Material.GOLD_INGOT);
+                    billableItems.add(Material.SLIME_BLOCK);
+                    billableItems.add(Material.FIRE_CHARGE);
+                    billableItems.add(Material.BONE);
+                    billableItems.add(Material.FERMENTED_SPIDER_EYE);
+                    billableItems.add(Material.BRAIN_CORAL_BLOCK);
+                    billableItems.add(Material.STICK);
+                    billableItems.add(Material.GOLDEN_HELMET);
+                    billableItems.add(Material.GOLDEN_CHESTPLATE);
+                    billableItems.add(Material.CACTUS);
+                    billableItems.add(Material.FEATHER);
+                    billableItems.add(Material.LIME_DYE);
+                    billableItems.add(Material.BLUE_DYE);
+                    billableItems.add(Material.MAGENTA_DYE);
+                    billableItems.add(Material.YELLOW_DYE);
+
+                    billableItems.add(Material.WHITE_STAINED_GLASS);
+                    billableItems.add(Material.LIME_STAINED_GLASS);
+                    billableItems.add(Material.BLUE_STAINED_GLASS);
+                    billableItems.add(Material.MAGENTA_STAINED_GLASS);
+                    billableItems.add(Material.YELLOW_STAINED_GLASS);
+
+                    billableItems.add(Material.WHITE_STAINED_GLASS_PANE);
+                    billableItems.add(Material.LIME_STAINED_GLASS_PANE);
+                    billableItems.add(Material.BLUE_STAINED_GLASS_PANE);
+                    billableItems.add(Material.MAGENTA_STAINED_GLASS_PANE);
+                    billableItems.add(Material.YELLOW_STAINED_GLASS_PANE);
+                    billableItems.add(Material.IRON_NUGGET);
+                    billableItems.add(Material.SOUL_LANTERN);
+                    billableItems.add(Material.REDSTONE);
+                    billableItems.add(Material.LAPIS_LAZULI);
+
+                    billableItems.add(Material.GOLD_BLOCK);
+                    billableItems.add(Material.BEDROCK);
+                    billableItems.add(Material.GOLDEN_BOOTS);
+                    billableItems.add(Material.COBWEB);
+                    billableItems.add(Material.HEART_OF_THE_SEA);
+                    billableItems.add(Material.WITHER_SKELETON_SKULL);
+                    billableItems.add(Material.CHAIN);
+
+
+
+
+
+                    if (billableItems.contains(billItem.getType())) {
+
+                        repairItem(event.getInventory(), player);
+                    }else {
+                        player.sendMessage(ChatColor.RED + "You must use Valid materials!");
+                    }
+                } else {
+                    event.setCancelled(true); // Prevent taking the pane
+                }
+                return;
+            }
+
+            // Prevent moving items in other slots of the GUI
+            if (slot < clickedInventory.getSize()) {
+                event.setCancelled(true);
+            }
+        }
+    }
+    /**
+     * Repairs the item in slot 10 using the material in slot 16.
+     *
+     * - Checks for null items.
+     * - Determines if the repair material is Iron Ingot, Diamond, or a custom item.
+     * - Adds 100 durability for Iron Ingots and 300 durability for Diamonds.
+     * - Prioritizes custom repair materials over basic ones.
+     * - Subtracts one from the repair material's stack upon successful repair.
+     * - Sends feedback messages and plays a sound to the player.
+     *
+     * @param inventory The custom anvil inventory.
+     * @param player    The player performing the repair.
+     */
+    /**
+     * Repairs the item in slot 10 using the material in slot 13.
+     *
+     * - Checks if both items are present.
+     * - Determines if the repair material is Iron Ingot or Diamond.
+     * - Adds 100 durability for Iron Ingots and 300 durability for Diamonds.
+     * - Subtracts one from the repair material's stack upon successful repair.
+     * - Sends feedback messages and plays a sound to inform the player.
+     *
+     * @param inventory The custom anvil inventory.
+     * @param player    The player performing the repair.
+     */
+    TalismanManager talismanManager = new TalismanManager();
+    ReforgeManager reforgeManager = new ReforgeManager();
+    private void repairItem(Inventory inventory, Player player) {
+        // Retrieve the item to repair from slot 10
+        ItemStack repairee = inventory.getItem(10);
+
+        // Retrieve the repair material from slot 13
+        ItemStack billItem = inventory.getItem(13);
+
+        // Check if both the repairee and bill items are present
+        if (repairee == null || billItem == null) {
+            player.sendMessage(ChatColor.RED + "Both the item to repair and repair material must be present!");
+            return;
+        }
+
+        // Check if the item to repair is damageable (has durability)
+        if (!(repairee.getItemMeta() instanceof Damageable)) {
+            player.sendMessage(ChatColor.RED + "This item cannot be repaired!");
+            return;
+        }
+
+        Damageable damageable = (Damageable) repairee.getItemMeta();
+        int currentDamage = damageable.getDamage();
+
+        // Check if the item is already at full durability
+
+        // Determine the repair amount based on the repair material
+        int repairAmount = 0;
+
+        // Determine the type of repair material and set the repair amount accordingly
+        if (billItem.getType() == Material.IRON_INGOT) {
+            repairAmount = 75; // Iron Ingot repairs 100 durability
+        } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
+            repairAmount = 200;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shell")){
+            repairAmount = 400;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Deep Shell")){
+            repairAmount = 600;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Abyssal Shell")){
+            repairAmount = 10000;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Mithril Chunk") && isDurable(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.DURABILITY);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Perfect Diamond")&& TOOLS.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.LOOT_BONUS_BLOCKS);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Silk Worm") && isDurable(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.SILK_TOUCH);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Secrets of Infinity") && isBow(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.ARROW_INFINITE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Petrified Log") && isDurable(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.DURABILITY);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Pinecone") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.THORNS);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Birch Strip") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_PROJECTILE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Humid Bark") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_FALL);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Acacia Gum") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_FIRE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Acorn") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Cherry Blossom") && isDurable(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.DURABILITY);
+            incrementEnchantment(repairee, billItem,Enchantment.DURABILITY);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Maple Bark") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_FIRE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Blue Nether Wart") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Beating Heart") && isSword(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.DAMAGE_UNDEAD);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "SpiderBane") && isSword(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.DAMAGE_ARTHROPODS);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fire Ball") && isBow(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.ARROW_FIRE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Mending") && isDurable(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.MENDING);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Frost Heart") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.FROST_WALKER);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "KB Ball") && isSword(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.KNOCKBACK);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "High Caliber Arrow") && isBow(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.PIERCING);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Grains of Soul") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.SOUL_SPEED);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Gold Bar") && isSword(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.LOOT_BONUS_MOBS);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fins") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.DEPTH_STRIDER);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Turtle Tactics") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.WATER_WORKER);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Diving Helmet") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.OXYGEN);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Swim Trunks") && ARMOR.contains(repairee.getType())){
+            incrementEnchantment(repairee, billItem,Enchantment.SWIFT_SNEAK);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Narwhal Tusk") && isSword(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.IMPALING);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Sweeping Edge") && isSword(repairee)){
+            incrementEnchantment(repairee, billItem,Enchantment.SWEEPING_EDGE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Bowstring") && isBow(repairee)){
+            incrementEnchantment(repairee, billItem, Enchantment.ARROW_DAMAGE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lightning Bolt") && isTrident(repairee)){
+            incrementEnchantment(repairee, billItem, Enchantment.CHANNELING);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Anaklusmos") && isTrident(repairee)){
+            incrementEnchantment(repairee, billItem, Enchantment.RIPTIDE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Well Balanced Meal") && MELEE.contains(repairee.getType())){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Feed", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Feed") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Brutal Tactics") && isSword(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Cleaver", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Cleaver") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Call of the Void") && isFishingRod(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Call of the Void", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Call of the Void") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Savant") && isDurable(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Savant", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Savant") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Oxygen Tank")&& ARMOR.contains(repairee.getType())){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Ventilation", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Ventilation") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Everflame")&& TOOLS.contains(repairee.getType())) {
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Forge", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Forge") + 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Climbing Rope")&& TOOLS.contains(repairee.getType())){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Rappel", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Rappel") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Golden Hook")&& isFishingRod(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Piracy", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Piracy") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Laceration")&& MELEE.contains(repairee.getType())){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Shear", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Shear") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Hide")&& ARMOR.contains(repairee.getType())){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Physical Protection", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Physical Protection") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Alchemical Bundle")&& isPickaxe(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Alchemy", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Alchemy") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fast Travel")&& isSword(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Aspect of the Journey", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Aspect of the Journey") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Stun Coating")&& isBow(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Stun", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Stun") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Explosive Arrows")&& isCrossbow(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Lethal Reaction", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Lethal Reaction") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lethal Tempo")&& isSword(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Bloodlust", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Bloodlust") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Soul Lantern")&& isSword(repairee)){
+            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Experience", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Experience") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+
+
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Armor Talisman")&& ARMOR.contains(repairee.getType())){
+            TalismanManager.applyReforgeLore(repairee, "Armor");
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Armor Toughness Talisman")&& ARMOR.contains(repairee.getType())){
+            TalismanManager.applyReforgeLore(repairee, "Armor Toughness");
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Attack Damage Talisman")&& MELEE.contains(repairee.getType())){
+            TalismanManager.applyReforgeLore(repairee, "Damage");
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Sea Creature Talisman")&& isFishingRod(repairee)){
+            TalismanManager.applyReforgeLore(repairee, "Sea Creature Chance");
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Durability Talisman")&& isDurable(repairee)){
+            TalismanManager.applyReforgeLore(repairee, "Durability");
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Swift Blade Talisman")&& MELEE.contains(repairee.getType())){
+            TalismanManager.applyReforgeLore(repairee, "Swift Blade");
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+
+
+
+
+
+
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Emerald Gemstone")&& TOOLS.contains(repairee.getType())) {
+            MiningGemManager gemManager = new MiningGemManager();
+            gemManager.applyGem(repairee, MiningGemManager.MiningGem.EMERALD_GEM);
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Diamond Gemstone")&& TOOLS.contains(repairee.getType())) {
+            MiningGemManager gemManager = new MiningGemManager();
+            gemManager.applyGem(repairee, MiningGemManager.MiningGem.DIAMOND_GEM);
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Lapis Gemstone")&& TOOLS.contains(repairee.getType())) {
+            MiningGemManager gemManager = new MiningGemManager();
+            gemManager.applyGem(repairee, MiningGemManager.MiningGem.LAPIS_GEM);
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Redstone Gemstone")&& TOOLS.contains(repairee.getType())) {
+            MiningGemManager gemManager = new MiningGemManager();
+            gemManager.applyGem(repairee, MiningGemManager.MiningGem.REDSTONE_GEM);
+        }
+
+
+
+
+
+
+
+
+
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Efficiency Expertise")&& TOOLS.contains(repairee.getType())){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DIG_SPEED);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Unbreaking Expertise")&& isDurable(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DURABILITY);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Sharpness Expertise")&& isSword(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DAMAGE_ALL);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Sweeping Edge Expertise")&& isSword(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.SWEEPING_EDGE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Looting Expertise")&& isSword(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.LOOT_BONUS_MOBS);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Knockback Expertise")&& isSword(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.KNOCKBACK);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fire Aspect Expertise")&& isSword(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.FIRE_ASPECT);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Smite Expertise")&& isSword(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DAMAGE_UNDEAD);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Bane of Anthropods Expertise")&& isSword(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DAMAGE_ARTHROPODS);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lure Expertise")&& isFishingRod(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.LURE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Luck of the Sea Expertise")&& isFishingRod(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.LUCK);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Protection Expertise")&& ARMOR.contains(repairee.getType())){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_ENVIRONMENTAL);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Respiration Expertise")&& ARMOR.contains(repairee.getType())){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.OXYGEN);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Thorns Expertise")&& ARMOR.contains(repairee.getType())){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.THORNS);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Feather Falling Expertise")&& ARMOR.contains(repairee.getType())){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_FALL);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Blast Protection Expertise")&& ARMOR.contains(repairee.getType())){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_FALL);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fire Protection Expertise")&& ARMOR.contains(repairee.getType())){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_FALL);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Projectile Protection Expertise")&& ARMOR.contains(repairee.getType())){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_FALL);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Power Expertise")&& isBow(repairee)){
+            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.ARROW_DAMAGE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+
+
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Common Sword Reforge")&& isSword(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_1);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Uncommon Sword Reforge")&& isSword(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_2);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Rare Sword Reforge")&& isSword(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_3);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            billItem.setAmount(billItem.getAmount() - 1);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Epic Sword Reforge")&& isSword(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_4);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Legendary Sword Reforge")&& isSword(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_5);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Common Armor Reforge")&& ARMOR.contains(repairee.getType())){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_1);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Uncommon Armor Reforge")&& ARMOR.contains(repairee.getType())){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_2);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Rare Armor Reforge")&& ARMOR.contains(repairee.getType())){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_3);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Epic Armor Reforge")&& ARMOR.contains(repairee.getType())){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_4);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Legendary Armor Reforge")&& ARMOR.contains(repairee.getType())){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_5);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+
+
+
+
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Common Tool Reforge")&& isDurable(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_1);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Uncommon Tool Reforge")&& isDurable(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_2);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Rare Tool Reforge")&& isDurable(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_3);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Epic Tool Reforge")&& isDurable(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_4);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Legendary Tool Reforge")&& isDurable(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_5);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Singularity")&& isDurable(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_1);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+
+
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Midas Gold") && MELEE.contains(repairee.getType())){
+            setEnchantment(repairee, Enchantment.LOOT_BONUS_MOBS, 5);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Unbreakable") && isDurable(repairee)){
+            setEnchantment(repairee, Enchantment.DURABILITY, 5);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "LavaStride") && ARMOR.contains(repairee.getType())){
+            setEnchantment(repairee, Enchantment.DEPTH_STRIDER, 5);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Howl") && isFishingRod(repairee)){
+            setEnchantment(repairee, Enchantment.LURE, 5);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Cure") && MELEE.contains(repairee.getType())){
+            setEnchantment(repairee, Enchantment.DAMAGE_UNDEAD, 7);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Shrapnel") && MELEE.contains(repairee.getType())){
+            setEnchantment(repairee, Enchantment.DAMAGE_ALL, 7);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Hellfire") && MELEE.contains(repairee.getType())){
+            setEnchantment(repairee, Enchantment.FIRE_ASPECT, 4);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Weak Spot") && TOOLS.contains(repairee.getType())){
+            setEnchantment(repairee, Enchantment.DIG_SPEED, 6);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Extinction") && MELEE.contains(repairee.getType())){
+            setEnchantment(repairee, Enchantment.DAMAGE_ARTHROPODS, 7);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        else {
+            // Unsupported repair material
+            return;
+        }
+
+        // Apply the repair by reducing the damage
+        int newDamage = currentDamage - repairAmount;
+        if (newDamage < 0) {
+            newDamage = 0; // Ensure durability does not exceed maximum
+        }
+
+        // Clone the original item to create a repaired version
+        ItemStack repairedItem = repairee.clone();
+        Damageable repairedMeta = (Damageable) repairedItem.getItemMeta();
+        repairedMeta.setDamage(newDamage);
+        repairedItem.setItemMeta((ItemMeta) repairedMeta);
+
+        // Update the item in slot 10 with the repaired item
+        inventory.setItem(10, repairedItem);
+
+        // Subtract one from the repair material's stack
+        billItem.setAmount(billItem.getAmount() - 1);
+        if (billItem.getAmount() <= 0) {
+            inventory.setItem(13, null); // Remove the item if stack is empty
+        } else {
+            inventory.setItem(13, billItem); // Update the stack size
+        }
+
+        // Reset the result slot (slot 16) to the default "Click to repair" pane
+        inventory.setItem(16, createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair"));
+
+        // Play a sound to indicate a successful repair
+        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.1f, 1.0f);
+    }
+
+
+
+
+    /**
+     * Updates the result slot based on the items placed in the repairee and bill slots.
+     *
+     * @param inventory The anvil inventory.
+     * @param player    The player performing the repair.
+     */
+    private void updateResultSlot(Inventory inventory, Player player) {
+        ItemStack repaireeItem = inventory.getItem(10);
+        ItemStack billItem = inventory.getItem(16);
+
+        // Check if both slots have items
+        if (repaireeItem != null && billItem != null) {
+            // Check if the item to repair is damageable
+            if (repaireeItem.getItemMeta() instanceof Damageable) {
+                Damageable damageable = (Damageable) repaireeItem.getItemMeta();
+                int currentDamage = damageable.getDamage();
+                int maxDurability = repaireeItem.getType().getMaxDurability();
+
+                // Check if the item is damaged
+                if (currentDamage > 0) {
+                    // Determine the repair amount based on the repair material
+                    int repairAmount = calculateRepairAmount(billItem, repaireeItem.getType());
+
+                    if (repairAmount > 0) {
+                        // Create a copy of the item with increased durability
+                        ItemStack repairedItem = repaireeItem.clone();
+                        Damageable repairedMeta = (Damageable) repairedItem.getItemMeta();
+                        int newDamage = currentDamage - repairAmount;
+
+                        // Ensure that durability does not exceed the maximum
+                        if (newDamage < 0) newDamage = 0;
+                        repairedMeta.setDamage(newDamage);
+                        repairedItem.setItemMeta((ItemMeta) repairedMeta);
+
+                        // Set the repaired item in the result slot
+                        inventory.setItem(13, repairedItem);
+                        return;
+                    } else {
+                        // Invalid repair material used
+                        inventory.setItem(13, createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair"));
+                        player.sendMessage(ChatColor.RED + "Invalid repair material!");
+                        return;
+                    }
+                } else {
+                    // Item is already at full durability
+                    inventory.setItem(13, createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair"));
+                    return;
+                }
+            } else {
+                // The item to repair is not damageable
+                inventory.setItem(13, createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair"));
+                player.sendMessage(ChatColor.RED + "This item cannot be repaired!");
+                return;
+            }
+        }
+
+        // If either slot is empty, reset the result slot to default
+        inventory.setItem(13, createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair"));
+    }
+
+    /**
+     * Calculates the amount of durability to repair based on the repair material.
+     *
+     * @param billItem     The repair material ItemStack.
+     * @param repaireeType The Material of the item to repair.
+     * @return The amount of durability to repair.
+     */
+    private int calculateRepairAmount(ItemStack billItem, Material repaireeType) {
+        // Check for null to prevent NullPointerException
+        if (billItem == null || billItem.getType() == Material.AIR) {
+            return 0;
+        }
+        // Retrieve the display name of the repair material, stripping any color codes
+        ItemMeta billMeta = billItem.getItemMeta();
+        String repairMaterialName = "";
+        if (billMeta != null && billMeta.hasDisplayName()) {
+            repairMaterialName = ChatColor.stripColor(billMeta.getDisplayName()).toLowerCase();
+        } else {
+            // If no display name, use the material name
+            repairMaterialName = billItem.getType().toString().toLowerCase();
+        }
+        // Priority Check: Custom items first
+        // Define custom repair materials by their display names
+        // Example: "Custom Repair Gem" repairs more durability or has special properties
+        switch (repairMaterialName) {
+            case "shallow shell":
+                return 500; // Example: Custom repair material repairs 500 durability
+            // Add more custom repair materials here
+        }
+
+        // Basic Materials Repair Amounts
+        switch (billItem.getItemMeta().getDisplayName()) {
+            case "Iron Ingot":
+                return 100; // Iron Ingot repairs 100 durability
+            case "Diamond":
+                return 300; // Diamond repairs 300 durability
+            case "Shallow Shell":
+                return 3000;
+            default:
+                return 0; // Unsupported materials do not repair
+        }
+    }
+
+    /**
+     * Determines if the clicked item is a GUI decorative item.
+     *
+     * @param item The clicked ItemStack.
+     * @return True if it's a GUI item, false otherwise.
+     */
+    private boolean isGuiItem(ItemStack item) {
+        if (item == null || item.getItemMeta() == null) return false;
+        String displayName = item.getItemMeta().getDisplayName();
+        return displayName != null && (displayName.contains("Place") || displayName.contains("Click") || displayName.equals("Repair Instructions"));
+    }
+
+    /**
+     * Handles the closing of the Anvil Repair inventory by saving the current state.
+     *
+     * @param event The inventory close event.
+     */
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (event.getView().getTitle().equals("Anvil Repair")) {
+            Player player = (Player) event.getPlayer();
+            Inventory inventory = event.getInventory();
+            anvilInventories.put(player.getUniqueId(), inventory);
+            saveInventory(player.getUniqueId(), inventory);
+        }
+    }
+
+    /**
+     * Saves the player's anvil inventory to the YAML configuration file.
+     *
+     * @param playerUUID The player's UUID.
+     * @param inventory  The inventory to save.
+     */
+    public void saveInventory(UUID playerUUID, Inventory inventory) {
+        for (int slot : playerEditableSlots) {
+            ItemStack item = inventory.getItem(slot);
+            inventoriesConfig.set("players." + playerUUID.toString() + ".slot" + slot, item);
+        }
+        try {
+            inventoriesConfig.save(inventoriesFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Loads the player's anvil inventory from the YAML configuration file.
+     *
+     * @param playerUUID The player's UUID.
+     * @return The loaded inventory.
+     */
+    public Inventory loadInventory(UUID playerUUID) {
+        Inventory inventory = createAnvilInventory();
+        for (int slot : playerEditableSlots) {
+            String path = "players." + playerUUID.toString() + ".slot" + slot;
+            if (inventoriesConfig.contains(path)) {
+                ItemStack item = inventoriesConfig.getItemStack(path);
+                inventory.setItem(slot, item);
+            }
+        }
+        return inventory;
+    }
+
+    /**
+     * Saves all anvil inventories to the YAML configuration file.
+     * Call this method when the plugin is disabled to ensure all data is saved.
+     */
+    public void saveAllInventories() {
+        for (Map.Entry<UUID, Inventory> entry : anvilInventories.entrySet()) {
+            saveInventory(entry.getKey(), entry.getValue());
+        }
+    }
+}
