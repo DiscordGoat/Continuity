@@ -57,11 +57,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     CancelBrewing cancelBrewing = new CancelBrewing(this);
     private AnvilRepair anvilRepair;
 
-    private ResourceGeneratorSubsystem resourceGeneratorSubsystem;
-
+    private PlayerOxygenManager playerOxygenManager;
     @Override
 
     public void onEnable() {
+
 
 
 
@@ -167,7 +167,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new CakeHungerListener(), this);
         getServer().getPluginManager().registerEvents(new CakeHungerListener(), this);
         getServer().getPluginManager().registerEvents(new PetDrops(this, PetManager.getInstance(this)), this);
-
+        playerOxygenManager = PlayerOxygenManager.getInstance();
         getServer().getPluginManager().registerEvents(new ReforgeDamage(), this);
         getServer().getPluginManager().registerEvents(new ReforgeArmorToughness(), this);
         getServer().getPluginManager().registerEvents(new ReforgeArmor(), this);
@@ -248,14 +248,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onDisable() {
-        PlayerOxygenManager playerOxygenManager = new PlayerOxygenManager(this);
+
         if (playerOxygenManager != null) {
             playerOxygenManager.saveOnShutdown();
         }
         PetManager.getInstance(this).savePets();
-        if (resourceGeneratorSubsystem != null) {
-            resourceGeneratorSubsystem.disable();
-        }
         anvilRepair.saveAllInventories();
         cancelBrewing.saveAllInventories();
         System.out.println("[MinecraftNew] Plugin disabled.");

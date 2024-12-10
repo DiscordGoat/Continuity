@@ -379,11 +379,6 @@ public class PetManager implements Listener {
         despawnPet(player);
     }
 
-    /**
-     * Handles entity damage events for scaling perks like SECOND_WIND, BONE_PLATING, and REBIRTH.
-     *
-     * @param event The entity damage event.
-     */
 
     public void openPetGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Your Pets");
