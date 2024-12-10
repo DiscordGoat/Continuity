@@ -233,7 +233,13 @@ public class PetManager implements Listener {
                 despawnPet(player); // Despawn any currently active pet
                 activePets.put(player.getUniqueId(), pet);
 
-                spawnPetParticle(player, pet);
+                // Check if this is the Horse pet
+                if ("Horse".equalsIgnoreCase(pet.getName())) {
+                    summonHorseForPlayer(player, pet);
+                } else {
+                    spawnPetParticle(player, pet);
+                }
+
                 player.sendMessage(ChatColor.GREEN + "Your pet '" + pet.getName() + "' has been summoned!");
             }
         } else {
