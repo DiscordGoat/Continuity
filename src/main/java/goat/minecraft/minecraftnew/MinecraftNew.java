@@ -174,6 +174,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ReforgeDurability(), this);
         getServer().getPluginManager().registerEvents(new ReforgeSwiftBlade(), this);
         getServer().getPluginManager().registerEvents(new VillagerWorkCycleManager(this), this);
+        getServer().getPluginManager().registerEvents(new WaterLogged(this), this);
 
         getServer().getPluginManager().registerEvents(new Feed(), this);
         getServer().getPluginManager().registerEvents(new Cleaver(), this);

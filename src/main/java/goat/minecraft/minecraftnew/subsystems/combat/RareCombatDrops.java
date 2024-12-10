@@ -1,13 +1,17 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.Material;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -365,6 +369,10 @@ public class RareCombatDrops implements Listener {
     private void handleDrownedDrop(EntityDeathEvent event) {
         if (rollChance(1,30)) {
             event.getDrops().add(drownedDrop);
+        }
+        if (rollChance(1,100)) {
+            PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
+            petManager.createPet(event.getEntity().getKiller(), "Drowned", PetManager.Rarity.EPIC, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.WATERLOGGED, PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.DEVOUR);
         }
     }
     /**

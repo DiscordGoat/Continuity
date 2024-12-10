@@ -438,6 +438,8 @@ public class PetManager implements Listener {
     private String getDynamicPerkEffectDescription(PetPerk perk, int level) {
 
         switch (perk) {
+            case WATERLOGGED:
+                return ChatColor.GRAY + "Grants infinite " + ChatColor.AQUA + "Water Breathing.";
             case ASPECT_OF_THE_END:
                 return ChatColor.BLUE + "Right Click: " + ChatColor.DARK_PURPLE + "Warp forward.";
             case BLAZE:
@@ -816,6 +818,7 @@ public class PetManager implements Listener {
      * Enum representing the perks a pet can grant.
      */
     public enum PetPerk {
+        WATERLOGGED("", ""),
         ASPECT_OF_THE_END("Aspect of the End", "Right click to warp forward."),
         BLAZE("Blaze", "Lights hit mobs on fire."),
         SECRET_LEGION("Secret Legion", "Summons a Zombified Piglin minion to defend you."),
