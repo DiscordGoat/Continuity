@@ -154,14 +154,10 @@
             <id>tweetzy-repo</id>
             <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
+        <!-- SpigotMC Repository for Spigot API -->
         <repository>
             <id>codemc-snapshots</id>
             <url>https://repo.codemc.io/repository/maven-snapshots/</url>
-        </repository>
-        <!-- SpigotMC Repository for Spigot API -->
-        <repository>
-            <id>codemc-repo</id>
-            <url>https://repo.codemc.io/repository/maven-public/</url>
         </repository>
         <repository>
             <id>central</id>
@@ -178,12 +174,11 @@
             <version>1.1.2</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>me.gamercoder215</groupId>
-            <artifactId>mobchip-bukkit</artifactId>
-            <version>1.10.1-SNAPSHOT</version>
 
-            <!-- Use something like 1.7.0-SNAPSHOT for a stable release -->
+        <dependency>
+            <groupId>com.github.datatags.MobChipLite</groupId>
+            <artifactId>mobchip-bukkit</artifactId>
+            <version>1.10.8</version>
         </dependency>
 
         <dependency>
@@ -215,4 +210,5 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
 </project>

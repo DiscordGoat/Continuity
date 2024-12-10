@@ -3,28 +3,11 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 import goat.minecraft.minecraftnew.MinecraftNew;
 
 import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.*;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.inventory.EntityEquipment;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.*;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class KillMonster implements Listener {
@@ -40,6 +23,7 @@ public class KillMonster implements Listener {
     public void onKill(EntityDeathEvent e) {
         Entity entity = e.getEntity();
         Entity killer = e.getEntity().getKiller();
+
 
 
         if (killer instanceof Player && entity instanceof Monster) {
