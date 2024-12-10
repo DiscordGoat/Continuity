@@ -302,6 +302,7 @@ public class RareCombatDrops implements Listener {
         }
     }
 
+
     private void handleIlligerDrop(EntityDeathEvent event) {
         if (rollChance(1,200)) { // 1-4% chance
             event.getDrops().add(piglinDrop);
@@ -380,15 +381,15 @@ public class RareCombatDrops implements Listener {
         if (rollChance(1,4)) { // 1-4% chance
             event.getDrops().add(guardianDrop);
         }
+        if (rollChance(1,10)) { // 1-4% chance
+            petManager.createPet(event.getEntity().getKiller(), "Guardian", PetManager.Rarity.EPIC, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.LASER_BEAM);
+
+        }
+
     }
     private void handleElderGuardianDrop(EntityDeathEvent event) {
         if (rollChance(1,2)) { // 1-4% chance
             event.getDrops().add(elderGuardianDrop);
-        }
-    }
-    private void handlePillagerDrop(EntityDeathEvent event) {
-        if (rollChance(1,100)) { // 1-4% chance
-            event.getDrops().add(pillagerDrop);
         }
     }
     private void handleVindicatorDrop(EntityDeathEvent event) {

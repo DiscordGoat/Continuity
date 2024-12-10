@@ -69,28 +69,12 @@ public class PetDrops implements Listener {
         // Check if the mob has a pet variant
         if (mobToPetMap.containsKey(entityType)) {
             String petName = mobToPetMap.get(entityType);
-
-
             if (entityType.equals(EntityType.HORSE)) {
                 event.getDrops().clear(); // Clear the list of drops
                 entity.remove(); // Remove the horse entity
                 event.setDroppedExp(0);
             }
 
-            if(entityType.equals(EntityType.PILLAGER)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.1) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Pillager", PetManager.Rarity.RARE, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY);
-                }
-            }
-            if(entityType.equals(EntityType.GUARDIAN)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.01) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Guardian", PetManager.Rarity.EPIC, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.LASER_BEAM);
-                }
-            }
             if(entityType.equals(EntityType.ZOMBIFIED_PIGLIN)) {
                 // Configurable drop chance (e.g., 5%)
                 if (random.nextDouble() < 0.002) {
