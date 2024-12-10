@@ -31,7 +31,7 @@ public class SpeedBoost implements Listener {
         // If the player has an active pet with the SPEED_BOOST perk
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SPEED_BOOST)) {
             int petLevel = activePet.getLevel();
-            float bonusSpeed = DEFAULT_WALK_SPEED + (DEFAULT_WALK_SPEED * petLevel * 0.01f); // Add 1% per level
+            float bonusSpeed = DEFAULT_WALK_SPEED + (DEFAULT_WALK_SPEED * petLevel * 0.004f); // Add 0.5% per level
             player.setWalkSpeed(Math.min(bonusSpeed, MAX_WALK_SPEED)); // Cap walk speed at 0.4
         } else {
             // Reset to default speed

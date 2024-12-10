@@ -559,7 +559,7 @@ public class PetManager implements Listener {
             case SOFT_PAW:
                 return ChatColor.YELLOW + "Reduces fall damage " + ChatColor.GRAY + "by " + ChatColor.YELLOW + (level * 1) + "%.";
             case SPEED_BOOST:
-                return "Increases " + ChatColor.YELLOW + "speed " + ChatColor.GRAY + "by " + ChatColor.YELLOW + (level * 1) + "%.";
+                return "Increases " + ChatColor.YELLOW + "speed " + ChatColor.GRAY + "by " + ChatColor.YELLOW + (level * 0.4f) + "%.";
             case CLAW:
                 return "Increases " + ChatColor.RED + "melee damage " + ChatColor.GRAY + "by " + ChatColor.RED + (0.2 * level) + "%.";
             default:
