@@ -69,41 +69,8 @@ public class PetDrops implements Listener {
         // Check if the mob has a pet variant
         if (mobToPetMap.containsKey(entityType)) {
             String petName = mobToPetMap.get(entityType);
-            if(entityType.equals(EntityType.BLAZE)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.01) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Blaze", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.FLIGHT);
-                }
-            }
-            if(entityType.equals(EntityType.WITHER_SKELETON)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.005) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Wither Skeleton", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.DECAY);
-                }
-            }
-            if(entityType.equals(EntityType.ENDERMAN)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.01) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Enderman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.ELITE, PetManager.PetPerk.ASPECT_OF_THE_END, PetManager.PetPerk.COLLECTOR);
-                }
-            }
-            if(entityType.equals(EntityType.STRAY)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.005) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Stray", PetManager.Rarity.LEGENDARY, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.QUICK_DRAW, PetManager.PetPerk.TIPPED_SLOWNESS, PetManager.PetPerk.BONE_COLD);
-                }
-            }
-            if(entityType.equals(EntityType.PILLAGER)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.01) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Vindicator", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SKEPTICISM, PetManager.PetPerk.GREED, PetManager.PetPerk.ELITE);
-                }
-            }
+
+
             if (entityType.equals(EntityType.HORSE)) {
                 event.getDrops().clear(); // Clear the list of drops
                 entity.remove(); // Remove the horse entity
@@ -131,20 +98,7 @@ public class PetDrops implements Listener {
                     petManager.createPet(player, "Zombie Pigman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SECRET_LEGION, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF);
                 }
             }
-            if(entityType.equals(EntityType.SKELETON)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.01) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Skeleton", PetManager.Rarity.UNCOMMON, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.BONE_PLATING_WEAK);
-                }
-            }
-            if(entityType.equals(EntityType.ZOMBIE)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.01) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Zombie", PetManager.Rarity.RARE, 100, Particle.CRIT_MAGIC, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.DEVOUR);
-                }
-            }
+
             if(entityType.equals(EntityType.IRON_GOLEM)) {
                 // Configurable drop chance (e.g., 5%)
                 if (random.nextDouble() < 1) {

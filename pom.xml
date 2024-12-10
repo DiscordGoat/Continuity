@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>goat.minecraft</groupId>
@@ -12,196 +12,51 @@
 
     <name>MinecraftNew</name>
 
-    <!-- Define Java version and encoding -->
     <properties>
-        <java.version>21</java.version> <!-- Updated to Java 17 -->
+        <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
         <remapped.version>1.20.1-R0.1-SNAPSHOT</remapped.version>
+        <spigot.version>1.20.1-R0.1-SNAPSHOT</spigot.version>
     </properties>
 
-
-    <!-- Build configuration -->
-    <build>
-        <plugins>
-            <!-- Maven Compiler Plugin -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.13.0</version>
-                <configuration>
-                    <source>21</source>
-                    <target>21</target>
-                </configuration>
-            </plugin>
-
-            <!-- SpecialSource Maven Plugin for Remapping -->
-            <plugin>
-                <groupId>net.md-5</groupId>
-                <artifactId>specialsource-maven-plugin</artifactId>
-                <version>2.0.3</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>remap</goal>
-                        </goals>
-                        <id>remap-obf</id>
-                        <configuration>
-                            <srgIn>org.spigotmc:minecraft-server:${remapped.version}:txt:maps-mojang</srgIn>
-                            <reverse>true</reverse>
-                            <useProjectDependencies>false</useProjectDependencies>
-                            <remappedDependencies>org.spigotmc:spigot:${remapped.version}:jar:remapped-mojang</remappedDependencies>
-                            <remappedArtifactAttached>true</remappedArtifactAttached>
-                            <remappedClassifierName>remapped-obf</remappedClassifierName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>remap</goal>
-                        </goals>
-                        <id>remap-spigot</id>
-                        <configuration>
-                            <useProjectDependencies>false</useProjectDependencies>
-                            <inputFile>${project.build.directory}/${project.artifactId}-${project.version}-remapped-obf.jar</inputFile>
-                            <srgIn>org.spigotmc:minecraft-server:${remapped.version}:csrg:maps-spigot</srgIn>
-                            <remappedDependencies>org.spigotmc:spigot:${remapped.version}:jar:remapped-obf</remappedDependencies>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Maven Shade Plugin for Uber JAR (if needed) -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>3.6.0</version>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <minimizeJar>true</minimizeJar>
-                            <filters>
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>META-INF/*.SF</exclude>
-                                        <exclude>META-INF/*.DSA</exclude>
-                                        <exclude>META-INF/*.RSA</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                            <transformers>
-                                <!-- Ensure plugin.yml is included correctly -->
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <!-- Replace with your actual main class -->
-                                    <mainClass>goat.minecraft.minecraftnew.MinecraftNew</mainClass>
-                                </transformer>
-                            </transformers>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <!-- Maven Resources Plugin -->
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                </configuration>
-            </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-    </build>
-
-    <!-- Repositories for dependencies -->
     <repositories>
-
         <repository>
-            <id>techscode</id>
-            <url>https://repo.techscode.com/repository/techscode-apis/</url>
-        </repository>
-        <repository>
-            <id>sk89q-repo</id>
-            <url>https://maven.enginehub.org/repo/</url>
+            <id>datatags-repo</id>
+            <url>https://ci.datatags.dev/plugin/repository/everything/</url>
         </repository>
         <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
         <repository>
-            <id>nms-repo</id>
-            <url>https://repo.codemc.io/repository/nms/</url>
-        </repository>
-        <repository>
-            <id>repsy</id>
-            <name>Tweetzy Maven Repo On Repsy</name>
-            <url>https://repo.repsy.io/mvn/kiran/tweetzy</url>
-        </repository>
-        <repository>
-            <id>tweetzy-repo</id>
-            <url>https://repo.codemc.io/repository/maven-public/</url>
-        </repository>
-        <!-- SpigotMC Repository for Spigot API -->
-        <repository>
-            <id>codemc-snapshots</id>
-            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
-        </repository>
-        <repository>
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
-        <!-- Sonatype Repository for additional dependencies -->
+        <repository>
+            <id>spigotmc-repo</id>
+            <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
 
-    <!-- Dependencies -->
     <dependencies>
+        <!-- MobChipLite Core Dependency -->
         <dependency>
-            <groupId>me.TechsCode</groupId>
-            <artifactId>UltraEconomyAPI</artifactId>
-            <version>1.1.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.datatags.MobChipLite</groupId>
-            <artifactId>mobchip-bukkit</artifactId>
+            <groupId>com.github.datatags</groupId>
+            <artifactId>MobChipLite</artifactId>
             <version>1.10.8</version>
         </dependency>
 
-        <dependency>
-            <groupId>ca.tweetzy</groupId>
-            <artifactId>skulls</artifactId>
-            <version>3.10.0</version>
-        </dependency>
-        <!-- Spigot API -->
+        <!-- Spigot API Dependency -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <version>${spigot.version}</version>
             <scope>provided</scope>
-            <!-- Removed classifier unless specifically needed -->
-            <!-- <classifier>remapped-mojang</classifier> -->
         </dependency>
 
-        <!-- CraftBukkit for NMS Access -->
-        <!--
-             Note: CraftBukkit is not available in public Maven repositories.
-             You need to manually install the CraftBukkit jar into your local Maven repository.
-             Follow the instructions below to install it.
-        -->
+        <!-- CraftBukkit (if needed) -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
@@ -211,4 +66,45 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <!-- Maven Compiler Plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Assembly Plugin -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.1</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <mainClass>goat.minecraft.minecraftnew.MinecraftNew</mainClass>
+                        </manifest>
+                    </archive>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- bind to the package phase -->
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
 </project>

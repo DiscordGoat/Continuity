@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class RareCombatDrops implements Listener {
-
+    PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
 
     ItemStack infernalLooting = CustomItemManager.createCustomItem(Material.GOLD_BLOCK, ChatColor.GOLD +
             "Midas Gold", Arrays.asList(
@@ -186,125 +186,157 @@ public class RareCombatDrops implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
         EntityType type = entity.getType();
+        if (entity.getKiller() instanceof Player) {
+            Player player = event.getEntity().getKiller();
+            switch (type) {
+                case WITHER_SKELETON:
+                    if (rollChance(1, 100)) { // 4% chance
+                        event.getDrops().add(infernalSmite);
+                    }
+                    handleWitherSkeletonDrop(event); // Ensure this method is defined
+                    break;
 
-        switch (type) {
-            case WITHER_SKELETON:
-                if (rollChance(1,100)) { // 4% chance
-                    event.getDrops().add(infernalSmite);
-                }
-                handleWitherSkeletonDrop(event); // Ensure this method is defined
-                break;
+                case ZOMBIFIED_PIGLIN:
+                    if (rollChance(1, 300)) { // 4% chance
+                        event.getDrops().add(infernalLooting);
+                    }
+                    handleZombifiedPiglinDrop(event); // Ensure this method is defined
+                    break;
 
-            case ZOMBIFIED_PIGLIN:
-                if (rollChance(1,300)) { // 4% chance
-                    event.getDrops().add(infernalLooting);
-                }
-                handleZombifiedPiglinDrop(event); // Ensure this method is defined
-                break;
+                case PIGLIN:
+                    if (rollChance(1, 50)) { // 3% chance
+                        event.getDrops().add(infernalFireAspect);
+                    }
+                    handlePiglinDrop(event); // Ensure this method is defined
+                    break;
 
-            case PIGLIN:
-                if (rollChance(1,50)) { // 3% chance
-                    event.getDrops().add(infernalFireAspect);
-                }
-                handlePiglinDrop(event); // Ensure this method is defined
-                break;
+                case PIGLIN_BRUTE:
+                    if (rollChance(1, 2)) { // 2% chance
+                        event.getDrops().add(infernalSharpness);
+                    }
+                    break;
 
-            case PIGLIN_BRUTE:
-                if (rollChance(1,2)) { // 2% chance
-                    event.getDrops().add(infernalSharpness);
-                }
-                break;
+                case MAGMA_CUBE:
+                    if (rollChance(1, 100)) { // 3% chance
+                        event.getDrops().add(infernalUnbreaking);
+                    }
+                    break;
 
-            case MAGMA_CUBE:
-                if (rollChance(1,100)) { // 3% chance
-                    event.getDrops().add(infernalUnbreaking);
-                }
-                break;
+                case GHAST:
+                    if (rollChance(1, 25)) { // 3% chance
+                        event.getDrops().add(infernalEfficiency);
+                    }
+                    break;
+                case HOGLIN:
+                    if (rollChance(1, 50)) { // 5% chance
+                        event.getDrops().add(infernalBaneofAnthropods);
+                    }
+                    break;
+                case STRIDER:
+                    if (rollChance(1, 5)) { // 5% chance
+                        event.getDrops().add(infernalDepthStrider);
+                    }
+                    break;
 
-            case GHAST:
-                if (rollChance(1,25)) { // 3% chance
-                    event.getDrops().add(infernalEfficiency);
-                }
-                break;
-            case HOGLIN:
-                if (rollChance(1,50)) { // 5% chance
-                    event.getDrops().add(infernalBaneofAnthropods);
-                }
-                break;
-            case STRIDER:
-                if (rollChance(1,5)) { // 5% chance
-                    event.getDrops().add(infernalDepthStrider);
-                }
-                break;
+                case BLAZE:
+                    if (rollChance(1, 200)) { // 3% chance
+                        event.getDrops().add(infernalLure);
+                    }
+                    if (rollChance(1, 300)) { // 3% chance
+                        petManager.createPet(player, "Blaze", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.FLIGHT);
+                    }
 
-            case BLAZE:
-                if (rollChance(1,200)) { // 3% chance
-                    event.getDrops().add(infernalLure);
-                }
-                handleBlazeDrop(event); // Ensure this method is defined
-                break;
+                    handleBlazeDrop(event); // Ensure this method is defined
+                    break;
 
-            case ZOMBIE:
-                handleZombieDrop(event);
-                break;
-            case SKELETON:
-                handleSkeletonDrop(event);
-                break;
-            case CREEPER:
-                handleCreeperDrop(event);
-                break;
-            case SPIDER:
-                handleSpiderDrop(event); // Ensure this method is defined
-                break;
-            case CAVE_SPIDER:
-                handleSpiderDrop(event);
-                break;
-            case ENDERMAN:
-                handleEndermanDrop(event); // Ensure this method is defined
-                break;
-            case WITCH:
-                handleWitchDrop(event); // Ensure this method is defined
-                break;
-            case GUARDIAN:
-                handleGuardianDrop(event); // Ensure this method is defined
-                break;
-            case ELDER_GUARDIAN:
-                handleElderGuardianDrop(event); // Ensure this method is defined
-                break;
-            case SHULKER:
-                handleEndermanDrop(event);
-                break;
-            case PILLAGER:
-                handlePillagerDrop(event); // Ensure this method is defined
-                break;
-            case SLIME:
-                handleVindicatorDrop(event); // Ensure this method is defined
-                break;
+                case ZOMBIE:
+                    handleZombieDrop(event);
+                    break;
+                case SKELETON:
+                    handleSkeletonDrop(event);
+                    break;
+                case CREEPER:
+                    handleCreeperDrop(event);
+                    break;
+                case SPIDER:
+                    handleSpiderDrop(event); // Ensure this method is defined
+                    break;
+                case CAVE_SPIDER:
+                    handleSpiderDrop(event);
+                    break;
+                case ENDERMAN:
+                    handleEndermanDrop(event); // Ensure this method is defined
+                    break;
+                case WITCH:
+                    handleWitchDrop(event); // Ensure this method is defined
+                    break;
+                case GUARDIAN:
+                    handleGuardianDrop(event); // Ensure this method is defined
+                    break;
+                case ELDER_GUARDIAN:
+                    handleElderGuardianDrop(event); // Ensure this method is defined
+                    break;
+                case SHULKER:
+                    handleEndermanDrop(event);
+                    break;
+                case EVOKER, VINDICATOR, PILLAGER, RAVAGER:
+                    handleIlligerDrop(event); // Ensure this method is defined
+                    break;
+                case SLIME:
+                    handleVindicatorDrop(event); // Ensure this method is defined
+                    break;
 
-            case HUSK:
-                handleZombieDrop(event); // Ensure this method is defined
-                break;
-            case STRAY:
-                handleZombieDrop(event); // Ensure this method is defined
-                break;
-            case DROWNED:
-                handleDrownedDrop(event); // Ensure this method is defined
-                break;
-            default:
-                break;
+                case HUSK:
+                    handleZombieDrop(event); // Ensure this method is defined
+                    break;
+
+                case STRAY:
+                    handleStrayDrop(event); // Ensure this method is defined
+                    break;
+                case DROWNED:
+                    handleDrownedDrop(event); // Ensure this method is defined
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
+    private void handleIlligerDrop(EntityDeathEvent event) {
+        if (rollChance(1,200)) { // 1-4% chance
+            event.getDrops().add(piglinDrop);
+        }
+        if (rollChance(1,200)) { // 1-4% chance
+            petManager.createPet(event.getEntity().getKiller(), "Vindicator", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SKEPTICISM, PetManager.PetPerk.GREED, PetManager.PetPerk.ELITE);
+        }
 
+    }
+    private void handleStrayDrop(EntityDeathEvent event) {
+        if (rollChance(1,360)) { // 1-4% chance
+            event.getDrops().add(undeadDrop);
+        }
+        if (rollChance(1,200)) { // 1-4% chance
+            petManager.createPet(event.getEntity().getKiller(), "Stray", PetManager.Rarity.LEGENDARY, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.QUICK_DRAW, PetManager.PetPerk.TIPPED_SLOWNESS, PetManager.PetPerk.BONE_COLD);
+        }
+
+    }
     private void handleZombieDrop(EntityDeathEvent event) {
         if (rollChance(1,360)) { // 1-4% chance
             event.getDrops().add(undeadDrop);
         }
+        if (rollChance(1,100)) { // 1-4% chance
+            petManager.createPet(event.getEntity().getKiller(), "Zombie", PetManager.Rarity.RARE, 100, Particle.CRIT_MAGIC, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.ECHOLOCATION);
+        }
+
     }
     private void handleSkeletonDrop(EntityDeathEvent event) {
         if (rollChance(1,480)) { // 1-4% chance
             event.getDrops().add(skeletonDrop);
         }
+        if (rollChance(1,100)) { // 1-4% chance
+            petManager.createPet(event.getEntity().getKiller(), "Skeleton", PetManager.Rarity.UNCOMMON, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.BONE_PLATING_WEAK);
+        }
+
     }
     private void handleCreeperDrop(EntityDeathEvent event) {
         if (rollChance(1,25)) { // 1-4% chance
@@ -320,6 +352,10 @@ public class RareCombatDrops implements Listener {
         if (rollChance(1,75)) { // 1-4% chance
             event.getDrops().add(enderDrop);
         }
+        if (rollChance(1,100)) { // 1-4% chance
+            petManager.createPet(event.getEntity().getKiller(), "Enderman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.ELITE, PetManager.PetPerk.ASPECT_OF_THE_END, PetManager.PetPerk.COLLECTOR);
+        }
+
     }
     private void handleBlazeDrop(EntityDeathEvent event) {
         if (rollChance(1,100)) { // 1-4% chance
@@ -335,6 +371,10 @@ public class RareCombatDrops implements Listener {
         if (rollChance(1,100)) { // 1-4% chance
             event.getDrops().add(witherSkeletonDrop);
         }
+        if (rollChance(1,200)) { // 1-4% chance
+            petManager.createPet(event.getEntity().getKiller(), "Wither Skeleton", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.DECAY);
+        }
+
     }
     private void handleGuardianDrop(EntityDeathEvent event) {
         if (rollChance(1,4)) { // 1-4% chance

@@ -3,6 +3,10 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 import goat.minecraft.minecraftnew.MinecraftNew;
 
 import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
+import me.gamercoder215.mobchip.EntityBrain;
+import me.gamercoder215.mobchip.ai.EntityAI;
+import me.gamercoder215.mobchip.bukkit.BukkitBrain;
+import org.bukkit.Location;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,7 +22,34 @@ public class KillMonster implements Listener {
     private boolean isBloodMoon = false;
     private long lastCheckedTime = -1;
 
+    public void reinforceComrade(Player player) {
+        // Get the player's location
+        Location playerLocation = player.getLocation();
 
+        // Iterate through all entities in the world within 100 blocks
+
+        for (Entity entity : player.getWorld().getNearbyEntities(playerLocation, 1000, 1000, 1000)) {
+            // Check if the entity is a Mob (Monster)
+            if (entity instanceof Mob mob) {
+                // Check if the entity has a BukkitBrain (MobChip-compatible entity)
+                EntityBrain brain = BukkitBrain.getBrain(mob);
+                if (brain != null) {
+                    // Additional check to ensure it's a Monster
+                    if (mob instanceof Monster) {
+                        Creature creature = (Creature) mob;
+                        EntityAI goal = brain.getGoalAI();
+                        moveTo(creature, player);
+                    }
+                }
+            }
+        }
+    }
+    public static void moveTo(Mob mob, Player player) {
+        // Gets the entity's global brain
+        EntityBrain brain = BukkitBrain.getBrain(mob);
+
+        brain.getController().moveTo(player);
+    }
     @EventHandler
     public void onKill(EntityDeathEvent e) {
         Entity entity = e.getEntity();

@@ -30,7 +30,7 @@ public class Echolocation implements Listener {
             int petLevel = activePet.getLevel();
 
             // Calculate effect duration (e.g., 5 seconds + 1 second per pet level)
-            int duration = 20 * (5 + petLevel);
+            int duration = 80 * 5;
 
             // Apply Night Vision effect
             player.addPotionEffect(new PotionEffect(

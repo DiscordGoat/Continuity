@@ -1,10 +1,10 @@
 package goat.minecraft.minecraftnew.subsystems.pets;
 
-import ca.tweetzy.skulls.Skulls;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
-import org.apache.commons.lang.WordUtils;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -17,14 +17,17 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -35,46 +38,53 @@ public class PetManager implements Listener {
         this.plugin = plugin;
         loadPets();
     }
+
     private Map<UUID, Horse> summonedHorses = new HashMap<>();
-    private static final Map<String, Integer> PET_SKULL_IDS = new HashMap<>();
+
+    // Instead of using IDs, we now store base64 textures directly.
+    // You must populate these with actual base64 textures for each pet.
+    // The keys must match the pet names used elsewhere in your code.
+    private static final Map<String, String> PET_TEXTURES = new HashMap<>();
 
     static {
-        PET_SKULL_IDS.put("Allay", 71212);
-        PET_SKULL_IDS.put("Armadillo", 48145);
-        PET_SKULL_IDS.put("Axolotl", 40750);
-        PET_SKULL_IDS.put("Cat", 4166);
-        PET_SKULL_IDS.put("Cow", 335);
-        PET_SKULL_IDS.put("Horse", 25385);
-        PET_SKULL_IDS.put("Glow Squid", 40581);
-        PET_SKULL_IDS.put("Parrot", 6534);
-        PET_SKULL_IDS.put("Sheep", 334);
-        PET_SKULL_IDS.put("Turtle", 353);
-        PET_SKULL_IDS.put("Villager", 1530);
-        PET_SKULL_IDS.put("Squirrel", 2916);
-        PET_SKULL_IDS.put("Leviathan", 57185);
-        PET_SKULL_IDS.put("Dolphin", 44599);
-        PET_SKULL_IDS.put("Fish", 17897);
-        PET_SKULL_IDS.put("Golden Steve", 18802);
-        PET_SKULL_IDS.put("Pillager", 25149);
-        PET_SKULL_IDS.put("Stray", 3244);
-        PET_SKULL_IDS.put("Bat", 4109);
-        PET_SKULL_IDS.put("Chicken", 351);
-        PET_SKULL_IDS.put("Mooshroom", 339);
-        PET_SKULL_IDS.put("Pig", 31373);
-        PET_SKULL_IDS.put("Yeti", 16792);
-        PET_SKULL_IDS.put("Iron Golem", 33179);
-        PET_SKULL_IDS.put("Dwarf", 3423);
-        PET_SKULL_IDS.put("Piglin Brute", 38372);
-        PET_SKULL_IDS.put("Vindicator", 3079);
-        PET_SKULL_IDS.put("Guardian", 25292);
-        PET_SKULL_IDS.put("Zombie Pigman", 324);
-        PET_SKULL_IDS.put("Zombie", 3094);
-        PET_SKULL_IDS.put("Skeleton", 2746);
-        PET_SKULL_IDS.put("Warden", 58402);
-        PET_SKULL_IDS.put("Wither Skeleton", 5265);
-        PET_SKULL_IDS.put("Blaze", 322);
-        PET_SKULL_IDS.put("Enderman", 318);
-        PET_SKULL_IDS.put("Drowned", 15967);
+        // Example placeholders, replace with actual base64 textures.
+        // You can find these by searching for "custom head textures" online.
+        PET_TEXTURES.put("Allay", "BASE64_TEXTURE_FOR_ALLAY");
+        PET_TEXTURES.put("Armadillo", "BASE64_TEXTURE_FOR_ARMADILLO");
+        PET_TEXTURES.put("Axolotl", "BASE64_TEXTURE_FOR_AXOLOTL");
+        PET_TEXTURES.put("Cat", "BASE64_TEXTURE_FOR_CAT");
+        PET_TEXTURES.put("Cow", "BASE64_TEXTURE_FOR_COW");
+        PET_TEXTURES.put("Horse", "BASE64_TEXTURE_FOR_HORSE");
+        PET_TEXTURES.put("Glow Squid", "BASE64_TEXTURE_FOR_GLOW_SQUID");
+        PET_TEXTURES.put("Parrot", "BASE64_TEXTURE_FOR_PARROT");
+        PET_TEXTURES.put("Sheep", "BASE64_TEXTURE_FOR_SHEEP");
+        PET_TEXTURES.put("Turtle", "BASE64_TEXTURE_FOR_TURTLE");
+        PET_TEXTURES.put("Villager", "BASE64_TEXTURE_FOR_VILLAGER");
+        PET_TEXTURES.put("Squirrel", "BASE64_TEXTURE_FOR_SQUIRREL");
+        PET_TEXTURES.put("Leviathan", "BASE64_TEXTURE_FOR_LEVIATHAN");
+        PET_TEXTURES.put("Dolphin", "BASE64_TEXTURE_FOR_DOLPHIN");
+        PET_TEXTURES.put("Fish", "BASE64_TEXTURE_FOR_FISH");
+        PET_TEXTURES.put("Golden Steve", "BASE64_TEXTURE_FOR_GOLDEN_STEVE");
+        PET_TEXTURES.put("Pillager", "BASE64_TEXTURE_FOR_PILLAGER");
+        PET_TEXTURES.put("Stray", "BASE64_TEXTURE_FOR_STRAY");
+        PET_TEXTURES.put("Bat", "BASE64_TEXTURE_FOR_BAT");
+        PET_TEXTURES.put("Chicken", "BASE64_TEXTURE_FOR_CHICKEN");
+        PET_TEXTURES.put("Mooshroom", "BASE64_TEXTURE_FOR_MOOSHROOM");
+        PET_TEXTURES.put("Pig", "BASE64_TEXTURE_FOR_PIG");
+        PET_TEXTURES.put("Yeti", "BASE64_TEXTURE_FOR_YETI");
+        PET_TEXTURES.put("Iron Golem", "BASE64_TEXTURE_FOR_IRON_GOLEM");
+        PET_TEXTURES.put("Dwarf", "BASE64_TEXTURE_FOR_DWARF");
+        PET_TEXTURES.put("Piglin Brute", "BASE64_TEXTURE_FOR_PIGLIN_BRUTE");
+        PET_TEXTURES.put("Vindicator", "BASE64_TEXTURE_FOR_VINDICATOR");
+        PET_TEXTURES.put("Guardian", "BASE64_TEXTURE_FOR_GUARDIAN");
+        PET_TEXTURES.put("Zombie Pigman", "BASE64_TEXTURE_FOR_ZOMBIE_PIGMAN");
+        PET_TEXTURES.put("Zombie", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmIwYmI2NmViNThlZjhlMmRmMjBiOGIyNzdiZjkwMTg4ZDRlMjNiMmNlYTg5ZDM1OThhZTQwNTI3MDBiZjRiMyJ9fX0=");
+        PET_TEXTURES.put("Skeleton", "BASE64_TEXTURE_FOR_SKELETON");
+        PET_TEXTURES.put("Warden", "BASE64_TEXTURE_FOR_WARDEN");
+        PET_TEXTURES.put("Wither Skeleton", "BASE64_TEXTURE_FOR_WITHER_SKELETON");
+        PET_TEXTURES.put("Blaze", "BASE64_TEXTURE_FOR_BLAZE");
+        PET_TEXTURES.put("Enderman", "BASE64_TEXTURE_FOR_ENDERMAN");
+        PET_TEXTURES.put("Drowned", "BASE64_TEXTURE_FOR_DROWNED");
     }
 
     public static PetManager getInstance(JavaPlugin plugin) {
@@ -83,24 +93,67 @@ public class PetManager implements Listener {
         }
         return instance;
     }
-    public static int getSkullId(String petName) {
-        return PET_SKULL_IDS.getOrDefault(petName, -1); // Return -1 if not found
+
+    // Helper method to create a custom skull from a base64 texture
+    private ItemStack getCustomSkull(String base64) {
+        if (base64 == null || base64.isEmpty()) {
+            return new ItemStack(Material.NAME_TAG);
+        }
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
+        if (skullMeta == null) {
+            return skull;
+        }
+
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures", base64));
+
+        try {
+            Field profileField = skullMeta.getClass().getDeclaredField("profile");
+            profileField.setAccessible(true);
+            profileField.set(skullMeta, profile);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+            return new ItemStack(Material.NAME_TAG); // Fallback if reflection fails
+        }
+
+        skull.setItemMeta(skullMeta);
+        return skull;
     }
 
-    public static String getPetNameBySkullId(int skullId) {
-        return PET_SKULL_IDS.entrySet().stream()
-                .filter(entry -> entry.getValue() == skullId)
-                .map(Map.Entry::getKey)
-                .findFirst()
-                .orElse(null); // Return null if not found
-    }
+
     public ItemStack getSkullForPet(String petName) {
-        int skullId = getSkullId(petName);
-        if (skullId == -1) {
-            return new ItemStack(Material.NAME_TAG); // Default icon
+        String texture = PET_TEXTURES.get(petName);
+        if (!isValidBase64Texture(texture)) {
+            // If no valid base64 texture is found, return a NAME_TAG
+            return new ItemStack(Material.NAME_TAG);
         }
-        return Skulls.getAPI().getSkullItem(skullId);
+        return getCustomSkull(texture);
     }
+
+    /**
+     * Checks if the given texture string is likely a valid base64-encoded texture.
+     *
+     * This basic check ensures:
+     * - It's not null or empty.
+     * - It doesn't start with known placeholders like "BASE64_TEXTURE_FOR_".
+     * - It's not a direct URL (e.g., "http://...").
+     * - Starts with a known base64 JSON prefix often used for custom heads.
+     *
+     * Note: You can improve this method to decode and verify the JSON structure if you want more robust checks.
+     */
+    private boolean isValidBase64Texture(String texture) {
+        if (texture == null || texture.isEmpty()) {
+            return false;
+        }
+
+        // Check if it's still using a placeholder or a direct URL
+        if (texture.startsWith("BASE64_TEXTURE_FOR_")) {
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * Applies the tick speed effect to the player.
@@ -168,7 +221,6 @@ public class PetManager implements Listener {
      * @param player  The player.
      * @param petName The name of the pet to summon.
      */
-
     public void summonPet(Player player, String petName) {
         Pet pet = getPet(player, petName);
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
@@ -188,8 +240,6 @@ public class PetManager implements Listener {
             player.sendMessage(ChatColor.RED + "You do not own a pet named " + petName);
         }
     }
-
-
 
     private void saveHorseStats(Player player, Pet pet, Horse horse) {
         File file = new File(plugin.getDataFolder(), "pets.yml");
@@ -236,11 +286,9 @@ public class PetManager implements Listener {
         }
     }
 
-
     public void despawnPet(Player player) {
         Pet pet = activePets.remove(player.getUniqueId());
         if (pet != null) {
-
             if ("Horse".equalsIgnoreCase(pet.getName())) {
                 Horse horse = summonedHorses.remove(player.getUniqueId());
                 if (horse != null) {
@@ -255,7 +303,6 @@ public class PetManager implements Listener {
         }
     }
 
-
     /**
      * Retrieves the active pet for a player.
      *
@@ -266,15 +313,14 @@ public class PetManager implements Listener {
         if (player == null) {
             return null;
         } else {
-            if (activePets.get(player.getUniqueId()) != null) {
-                return activePets.get(player.getUniqueId());
-            }
-            return null;
+            return activePets.get(player.getUniqueId());
         }
     }
+
     public JavaPlugin getPlugin() {
         return this.plugin;
     }
+
     /**
      * Clears all pets from a player's collection.
      *
@@ -298,7 +344,6 @@ public class PetManager implements Listener {
         }
     }
 
-
     // ==========================
     // Pet Particle Methods
     // ==========================
@@ -310,20 +355,18 @@ public class PetManager implements Listener {
      * @param pet    The pet.
      */
     private void spawnPetParticle(Player player, Pet pet) {
-        // Use the particle type defined in the pet
         Particle particleType = pet.getParticle();
 
-        // Schedule a repeating task to display the particle effect
         BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
             if (!player.isOnline()) {
                 removePetParticle(player);
                 return;
             }
 
-            Location location = player.getLocation().add(0, 1.5, 0); // Adjust the height as needed
-            player.getWorld().spawnParticle(particleType, location, 1, 0.3, 0.3, 0.3, 0.05); // Adjust particle parameters as needed
+            Location location = player.getLocation().add(0, 1.5, 0);
+            player.getWorld().spawnParticle(particleType, location, 1, 0.3, 0.3, 0.3, 0.05);
 
-        }, 0L, 100L); // 0L delay, 100L period (5 seconds)
+        }, 0L, 100L); // every 5 seconds
 
         petTasks.put(player.getUniqueId(), task);
     }
@@ -340,21 +383,10 @@ public class PetManager implements Listener {
         }
     }
 
-
-
-    /**
-     * Check if the player has the GREED perk.
-     * Replace this with your actual perk-checking logic.
-     */
     // ==========================
     // Event Handlers
     // ==========================
 
-    /**
-     * Handles experience gain for players, attributing XP to their active pets.
-     *
-     * @param event The experience change event.
-     */
     @EventHandler
     public void onPlayerGainXP(PlayerExpChangeEvent event) {
         Player player = event.getPlayer();
@@ -366,11 +398,6 @@ public class PetManager implements Listener {
         }
     }
 
-    /**
-     * Handles player logout by despawning their active pet.
-     *
-     * @param event The player quit event.
-     */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
@@ -379,37 +406,28 @@ public class PetManager implements Listener {
         despawnPet(player);
     }
 
-
     public void openPetGUI(Player player) {
         Inventory gui = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Your Pets");
-
-        // Get the player's pets
         Map<String, Pet> pets = playerPets.getOrDefault(player.getUniqueId(), new HashMap<>());
 
         int index = 0;
         for (Pet pet : pets.values()) {
-            // Fetch the updated skull texture
             ItemStack petIcon = getSkullForPet(pet.getName());
             if (petIcon == null) {
                 petIcon = new ItemStack(Material.NAME_TAG); // Fallback item
             }
 
-            // Set item meta for the pet icon
             ItemMeta meta = petIcon.getItemMeta();
             if (meta != null) {
                 ChatColor rarityColor = pet.getRarity().getColor();
                 meta.setDisplayName(rarityColor + "[Lvl " + pet.getLevel() + "] " + pet.getName());
 
-                // Dynamic lore
                 List<String> lore = new ArrayList<>();
-
-                //lore.add(ChatColor.GRAY + "Rarity: " + pet.getRarity().toString());
                 lore.add(ChatColor.GREEN + "XP: " + (int) pet.getXp() + "/" + (int) pet.getXPForNextLevel());
                 lore.add(ChatColor.GRAY + " ");
-                //lore.add(ChatColor.GRAY + "Perks:");
                 for (PetPerk perk : pet.getPerks()) {
-                    lore.add(ChatColor.GOLD + "" + perk.getDisplayName());
-                    lore.add(ChatColor.GRAY + "" + getDynamicPerkEffectDescription(perk, pet.getLevel()));
+                    lore.add(ChatColor.GOLD + perk.getDisplayName());
+                    lore.add(ChatColor.GRAY + getDynamicPerkEffectDescription(perk, pet.getLevel()));
                     lore.add(ChatColor.GRAY + " ");
                 }
                 if (pet.equals(activePets.get(player.getUniqueId()))) {
@@ -419,11 +437,9 @@ public class PetManager implements Listener {
                 petIcon.setItemMeta(meta);
             }
 
-            // Add the pet item to the GUI
             gui.setItem(index++, petIcon);
         }
 
-        // Fill the rest of the GUI with glass panes for aesthetics
         ItemStack glassPane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta glassMeta = glassPane.getItemMeta();
         glassMeta.setDisplayName(" ");
@@ -432,9 +448,9 @@ public class PetManager implements Listener {
             gui.setItem(index, glassPane);
         }
 
-        // Open the GUI for the player
         player.openInventory(gui);
     }
+
     private String getDynamicPerkEffectDescription(PetPerk perk, int level) {
 
         switch (perk) {
@@ -546,13 +562,6 @@ public class PetManager implements Listener {
 
     }
 
-
-
-    /**
-     * Handles inventory click events within the pet management GUI to toggle pets.
-     *
-     * @param event The inventory click event.
-     */
     @EventHandler
     public void onInventoryClick(org.bukkit.event.inventory.InventoryClickEvent event) {
         if (event.getView().getTitle().equals(ChatColor.DARK_GREEN + "Your Pets")) {
@@ -561,7 +570,6 @@ public class PetManager implements Listener {
             ItemStack clicked = event.getCurrentItem();
             if (clicked != null && clicked.hasItemMeta()) {
                 String displayName = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
-                // Remove the [Lvl X] prefix using regex
                 String petName = displayName.replaceFirst("\\[Lvl \\d+\\] ", "");
                 Pet pet = getPet(player, petName);
                 if (pet != null) {
@@ -572,10 +580,6 @@ public class PetManager implements Listener {
         }
     }
 
-    // ==========================
-    // Pet Creation Method
-    // ==========================
-
     /**
      * Creates a new pet with specified properties and adds it to the player's collection.
      *
@@ -583,21 +587,8 @@ public class PetManager implements Listener {
      * @param name      The name of the pet.
      * @param rarity    The rarity of the pet.
      * @param maxLevel  The maximum level the pet can reach.
-     * @param icon      The icon representing the pet in the GUI.
      * @param particle  The particle effect associated with the pet.
      * @param perks     The perks granted by the pet.
-     */
-
-
-    /**
-     * Overloaded method to create a pet using a Material for the icon instead of an ItemStack.
-     *
-     * @param player       The player.
-     * @param name         The name of the pet.
-     * @param rarity       The rarity of the pet.
-     * @param maxLevel     The maximum level the pet can reach
-     * @param particle     The particle effect associated with the pet.
-     * @param perks        The perks granted by the pet.
      */
     public void createPet(Player player, String name, Rarity rarity, int maxLevel, Particle particle, PetPerk... perks) {
         ItemStack icon = getSkullForPet(name);
@@ -606,14 +597,6 @@ public class PetManager implements Listener {
         addPet(player, newPet);
     }
 
-
-    // ==========================
-    // Saving and Loading Pets
-    // ==========================
-
-    /**
-     * Saves all players' pets to a YAML configuration file.
-     */
     public void savePets() {
         File file = new File(plugin.getDataFolder(), "pets.yml");
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
@@ -628,9 +611,11 @@ public class PetManager implements Listener {
                 config.set(path + ".xp", pet.getXp());
                 config.set(path + ".icon", pet.getIcon().getType().toString());
                 config.set(path + ".particle", pet.getParticle().toString());
-                config.set(path + ".skullId", getSkullId(pet.getName()));
 
-                // Save perks
+                // We no longer save skullId (no SkullsAPI). Instead, we rely solely on textures.
+                // If needed, you could store the base64 texture here as well.
+                // config.set(path + ".texture", PET_TEXTURES.get(pet.getName()));
+
                 List<String> perkNames = pet.getPerks().stream().map(Enum::name).collect(Collectors.toList());
                 config.set(path + ".perks", perkNames);
             }
@@ -642,9 +627,6 @@ public class PetManager implements Listener {
         }
     }
 
-    /**
-     * Loads all players' pets from a YAML configuration file.
-     */
     public void loadPets() {
         File file = new File(plugin.getDataFolder(), "pets.yml");
         if (!file.exists()) {
@@ -662,31 +644,22 @@ public class PetManager implements Listener {
                 String rarityString = config.getString(path + ".rarity");
                 int level = config.getInt(path + ".level");
                 double xp = config.getDouble(path + ".xp");
-                int skullId = config.getInt(path + ".skullId", -1);
                 String particleName = config.getString(path + ".particle");
                 List<String> perkNames = config.getStringList(path + ".perks");
 
                 List<PetPerk> perks = perkNames.stream().map(PetPerk::valueOf).collect(Collectors.toList());
                 Rarity rarity = Rarity.valueOf(rarityString);
 
-                // Retrieve the correct icon using the skull ID
-                ItemStack icon;
-                if (skullId != -1) {
-                    icon = Skulls.getAPI().getSkullItem(skullId);
-                } else {
-                    Material iconMaterial = Material.getMaterial(config.getString(path + ".icon", "NAME_TAG"));
-                    icon = new ItemStack(iconMaterial != null ? iconMaterial : Material.NAME_TAG);
-                }
+                // Retrieve icon from the pet name using the textures we have
+                ItemStack icon = getSkullForPet(petName);
 
-                // Determine the particle effect
                 Particle particle;
                 try {
                     particle = Particle.valueOf(particleName);
                 } catch (IllegalArgumentException e) {
-                    particle = Particle.FLAME; // Default particle if invalid
+                    particle = Particle.FLAME;
                 }
 
-                // Create the pet instance
                 Pet pet = new Pet(petName, rarity, 100, icon, particle, perks);
                 pet.setLevel(level);
                 pet.setXp(xp);
@@ -698,14 +671,6 @@ public class PetManager implements Listener {
         }
     }
 
-
-    // ==========================
-    // Inner Classes and Enums
-    // ==========================
-
-    /**
-     * Represents a pet with various attributes.
-     */
     public class Pet {
         private String name;
         private Rarity rarity;
@@ -767,21 +732,10 @@ public class PetManager implements Listener {
             this.xp = xp;
         }
 
-        /**
-         * Checks if the pet has a specific perk.
-         *
-         * @param perk The perk to check.
-         * @return True if the pet has the perk, false otherwise.
-         */
         public boolean hasPerk(PetPerk perk) {
             return perks.contains(perk);
         }
 
-        /**
-         * Adds XP to the pet and handles leveling up.
-         *
-         * @param amount The amount of XP to add.
-         */
         public void addXP(double amount) {
             this.xp += amount;
             while (this.xp >= getXPForNextLevel() && this.level < maxLevel) {
@@ -789,13 +743,9 @@ public class PetManager implements Listener {
             }
         }
 
-        /**
-         * Handles leveling up the pet.
-         */
         private void levelUp() {
             this.xp -= getXPForNextLevel();
             this.level++;
-            // Notify the owner
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (playerPets.getOrDefault(player.getUniqueId(), new HashMap<>()).containsKey(name)) {
                     player.sendMessage(ChatColor.GREEN + name + " has leveled up to level " + level + "!");
@@ -803,20 +753,11 @@ public class PetManager implements Listener {
             }
         }
 
-        /**
-         * Calculates the XP required for the next level.
-         *
-         * @return The XP needed for the next level.
-         */
         public double getXPForNextLevel() {
-            // Example XP curve
-            return 100;
+            return 100; // Example XP curve
         }
     }
 
-    /**
-     * Enum representing the perks a pet can grant.
-     */
     public enum PetPerk {
         WATERLOGGED("", ""),
         ASPECT_OF_THE_END("Aspect of the End", "Right click to warp forward."),
@@ -869,44 +810,24 @@ public class PetManager implements Listener {
         SPEED_BOOST("Speed Boost", ChatColor.GOLD + "Increases your walking speed by 100%."),
         SECOND_WIND("Second Wind", ChatColor.GOLD + "Provides [Lvl] seconds of regeneration when taking damage."),
         SHOTCALLING("Shotcalling", ChatColor.GOLD + "Increases arrow damage by 1% per [Lvl]");
-        // Add more perks as needed
 
         private final String displayName;
         private final String description;
 
-        /**
-         * Constructor for PetPerk enum.
-         *
-         * @param displayName The display name of the perk.
-         * @param description The detailed description of the perk.
-         */
         PetPerk(String displayName, String description) {
             this.displayName = displayName;
             this.description = description;
         }
 
-        /**
-         * Gets the display name of the perk.
-         *
-         * @return The display name.
-         */
         public String getDisplayName() {
             return displayName;
         }
 
-        /**
-         * Gets the detailed description of the perk.
-         *
-         * @return The description.
-         */
         public String getDescription() {
             return description;
         }
     }
 
-    /**
-     * Enum representing the rarity levels of pets.
-     */
     public enum Rarity {
         COMMON(ChatColor.WHITE),
         UNCOMMON(ChatColor.GREEN),
@@ -916,60 +837,34 @@ public class PetManager implements Listener {
 
         private final ChatColor color;
 
-        /**
-         * Constructor for Rarity enum.
-         *
-         * @param color The color associated with the rarity.
-         */
         Rarity(ChatColor color) {
             this.color = color;
         }
 
-        /**
-         * Gets the color associated with the rarity.
-         *
-         * @return The ChatColor.
-         */
         public ChatColor getColor() {
             return color;
         }
     }
 
-    // ==========================
-    // Command Handling
-    // ==========================
-
-    /**
-     * Handles player interactions, specifically right-clicking the "Pet Menu" item to open the GUI.
-     *
-     * @param event The player interact event.
-     */
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        // If player right-clicks with a specific item, open the pet GUI
-        // For example, a bone named "Pet Menu"
         ItemStack item = event.getItem();
         if (item != null && item.hasItemMeta()) {
             if (item.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Pet Menu")) {
                 Player player = event.getPlayer();
-
                 UUID playerId = player.getUniqueId();
                 if (guiCooldown.contains(playerId)) {
-                    // Player is on cooldown, ignore the click
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "Please wait a moment before opening the Pet Menu again.");
                     return;
                 }
 
-                // Add player to cooldown
                 guiCooldown.add(playerId);
 
-                // Schedule removal of cooldown after COOLDOWN_TIME ticks
                 Bukkit.getScheduler().runTaskLater(plugin, () -> {
                     guiCooldown.remove(playerId);
                 }, COOLDOWN_TIME);
 
-                // Open the Pet GUI
                 openPetGUI(player);
                 event.setCancelled(true);
             }

@@ -92,7 +92,7 @@ public class PetCommand implements CommandExecutor {
             petManager.createPet(targetPlayer, "Cat", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.CLAW, PetManager.PetPerk.SOFT_PAW, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.LEAP);
             petManager.createPet(targetPlayer, "Yeti", PetManager.Rarity.EPIC, 100, Particle.CRIT_MAGIC, PetManager.PetPerk.ASPECT_OF_THE_FROST, PetManager.PetPerk.BLIZZARD, PetManager.PetPerk.SPEED_BOOST);
             petManager.createPet(targetPlayer, "Axolotl", PetManager.Rarity.EPIC, 100, Particle.SPELL_WITCH, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.REBIRTH);
-            petManager.createPet(targetPlayer, "Zombie", PetManager.Rarity.RARE, 100, Particle.CRIT_MAGIC, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.DEVOUR);
+            petManager.createPet(targetPlayer, "Zombie", PetManager.Rarity.RARE, 100, Particle.CRIT_MAGIC, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.ECHOLOCATION);
             petManager.createPet(targetPlayer, "Iron Golem", PetManager.Rarity.RARE, 100, Particle.ASH, PetManager.PetPerk.WALKING_FORTRESS, PetManager.PetPerk.ELITE);
 
             //mining pets (breaking/sustain)
