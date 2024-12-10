@@ -75,14 +75,6 @@ public class PetDrops implements Listener {
                 event.setDroppedExp(0);
             }
 
-            if(entityType.equals(EntityType.ZOMBIFIED_PIGLIN)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.002) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Zombie Pigman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SECRET_LEGION, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF);
-                }
-            }
-
             if(entityType.equals(EntityType.IRON_GOLEM)) {
                 // Configurable drop chance (e.g., 5%)
                 if (random.nextDouble() < 1) {
@@ -92,7 +84,7 @@ public class PetDrops implements Listener {
             }
             if(entityType.equals(EntityType.BAT)) {
                 // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 1) {
+                if (random.nextDouble() < 0.1) {
                     // Drop the pet item
                     petManager.createPet(player, "Bat", PetManager.Rarity.RARE, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.ECHOLOCATION);
                 }
@@ -102,13 +94,6 @@ public class PetDrops implements Listener {
                 if (random.nextDouble() < 0.5) {
                     // Drop the pet item
                     petManager.createPet(player, "Warden", PetManager.Rarity.LEGENDARY, 100, Particle.WARPED_SPORE, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.ECHOLOCATION, PetManager.PetPerk.ELITE);
-                }
-            }
-            if(entityType.equals(EntityType.ZOMBIFIED_PIGLIN)) {
-                // Configurable drop chance (e.g., 5%)
-                if (random.nextDouble() < 0.01) {
-                    // Drop the pet item
-                    petManager.createPet(player, "Zombie Pigman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF);
                 }
             }
         }

@@ -200,6 +200,9 @@ public class RareCombatDrops implements Listener {
                     if (rollChance(1, 300)) { // 4% chance
                         event.getDrops().add(infernalLooting);
                     }
+                    if (rollChance(1, 200)) { // 4% chance
+                        petManager.createPet(player, "Zombie Pigman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SECRET_LEGION, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF);
+                    }
                     handleZombifiedPiglinDrop(event); // Ensure this method is defined
                     break;
 

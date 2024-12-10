@@ -33,15 +33,17 @@ public class Collector implements Listener {
 
         // Check if the player has the COLLECTOR perk
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.COLLECTOR)) {
-            // Define the collection radius based on pet level (e.g., base 15 blocks + 1 block per level)
+            // Define the collection radius based on pet level:
+            // start at 15 and increase by 1 per level, capped at 50
             int petLevel = activePet.getLevel();
-            double radius = 15.0 + petLevel;
+            double radius = Math.min(50.0, 15.0 + petLevel);
 
             Location playerLocation = player.getLocation();
             World world = player.getWorld();
 
             // Find nearby items within the radius
-            List<Item> nearbyItems = world.getNearbyEntities(playerLocation, radius, radius, radius, entity -> entity instanceof Item)
+            List<Item> nearbyItems = world.getNearbyEntities(playerLocation, radius, radius, radius,
+                            entity -> entity instanceof Item)
                     .stream()
                     .map(entity -> (Item) entity)
                     .collect(Collectors.toList());
