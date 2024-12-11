@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew;
 
+import goat.minecraft.minecraftnew.subsystems.ai.BlazeAI;
 import goat.minecraft.minecraftnew.subsystems.artifacts.RightClickArtifacts;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.subsystems.chocolatemisc.CakeHungerListener;
@@ -243,6 +244,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
+        getServer().getPluginManager().registerEvents(new BlazeAI(), this);
 
 
 

@@ -82,7 +82,6 @@ public class PetCommand implements CommandExecutor {
             //ranged
             petManager.createPet(targetPlayer, "Stray", PetManager.Rarity.LEGENDARY, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.TIPPED_SLOWNESS, PetManager.PetPerk.BONE_COLD, PetManager.PetPerk.QUICK_DRAW);
             petManager.createPet(targetPlayer, "Guardian", PetManager.Rarity.EPIC, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.LASER_BEAM);
-            petManager.createPet(targetPlayer, "Pillager", PetManager.Rarity.RARE, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY);
             petManager.createPet(targetPlayer, "Skeleton", PetManager.Rarity.UNCOMMON, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.BONE_PLATING_WEAK);
             //melee
             petManager.createPet(targetPlayer, "Zombie Pigman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SECRET_LEGION, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF);
