@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew;
 
-import goat.minecraft.minecraftnew.subsystems.ai.BlazeAI;
+import goat.minecraft.minecraftnew.subsystems.ai.HordeInstinct;
 import goat.minecraft.minecraftnew.subsystems.artifacts.RightClickArtifacts;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.subsystems.chocolatemisc.CakeHungerListener;
@@ -17,7 +17,6 @@ import goat.minecraft.minecraftnew.subsystems.farming.FarmingEvent;
 import goat.minecraft.minecraftnew.subsystems.fishing.FishingEvent;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
-import goat.minecraft.minecraftnew.subsystems.generators.ResourceGeneratorSubsystem;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.music.MusicDiscManager;
 import goat.minecraft.minecraftnew.subsystems.pets.*;
@@ -44,7 +43,6 @@ import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.subsystems.utils.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -235,6 +233,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
+        getServer().getPluginManager().registerEvents(new HordeInstinct(), this);
 
 
 
@@ -244,7 +243,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
-        getServer().getPluginManager().registerEvents(new BlazeAI(), this);
 
 
 

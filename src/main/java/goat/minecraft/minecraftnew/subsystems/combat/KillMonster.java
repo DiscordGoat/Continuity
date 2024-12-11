@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 
+import goat.minecraft.minecraftnew.subsystems.ai.Pathfinder;
 import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
 import me.gamercoder215.mobchip.EntityBrain;
 import me.gamercoder215.mobchip.ai.EntityAI;
@@ -59,6 +60,11 @@ public class KillMonster implements Listener {
 
         if (killer instanceof Player && entity instanceof Monster) {
             Player playerKiller = (Player) killer;
+
+            if (entity instanceof Zombie) {
+            Pathfinder pathfinder = new Pathfinder();
+            pathfinder.reinforceZombies(entity, 100);
+            }
 
             // Get the monster's level (ensure it's at least 1)
             int monsterLevel = extractIntegerFromEntityName(entity);

@@ -157,6 +157,9 @@ public class PlayerOxygenManager implements Listener {
             if (currentOxygen == 150) {
                 player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1F, 1F);
             }
+            if(currentOxygen > 0 && player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR){
+                player.setGameMode(GameMode.SURVIVAL);
+            }
 
             if (currentOxygen <= 60 && currentOxygen > 15) {
                 // Play breathing sfx every 5 seconds
@@ -170,10 +173,10 @@ public class PlayerOxygenManager implements Listener {
             }
 
             // If oxygen is depleted, apply damage
-            if (currentOxygen == 0) {
-                player.damage(1.0);
-                player.sendMessage(ChatColor.RED + "You are suffocating due to lack of oxygen!");
+            if (currentOxygen == 0 && player.getGameMode() == GameMode.SURVIVAL) {
+                player.setGameMode(GameMode.ADVENTURE);
             }
+
 
         } else {
             // Oxygen replenishes when not depleting, at a controlled rate

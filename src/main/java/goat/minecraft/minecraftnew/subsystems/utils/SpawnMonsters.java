@@ -84,7 +84,7 @@ public class SpawnMonsters implements Listener {
         return Math.sqrt(x * x + z * z);
     }
 
-    private Player getNearestPlayer(Entity entity, double radius) {
+    public Player getNearestPlayer(Entity entity, double radius) {
         Location mobLocation = entity.getLocation();
         double nearestDistanceSquared = radius * radius;
         Player nearestPlayer = null;

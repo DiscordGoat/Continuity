@@ -1,21 +1,38 @@
 package goat.minecraft.minecraftnew.subsystems.ai;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.utils.SpawnMonsters;
+import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
 import me.gamercoder215.mobchip.EntityBrain;
 import me.gamercoder215.mobchip.ai.EntityAI;
 import me.gamercoder215.mobchip.ai.controller.NaturalMoveType;
 import me.gamercoder215.mobchip.bukkit.BukkitBrain;
+import net.minecraft.world.level.storage.loot.LootTableInfo;
 import org.bukkit.Location;
 import org.bukkit.entity.*;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Pathfinder
 {
 
 
+    public void reinforceZombies(Entity target, double radius) {
+                target.getWorld().getNearbyEntities(target.getLocation(), radius, radius, radius).stream()
+                .filter(e -> e instanceof Zombie)
+                .map(e -> (Monster) e)
+                .forEach(monster -> {
+                    EntityBrain monsterBrain = BukkitBrain.getBrain(monster);
+                    monsterBrain.getController().moveTo(target.getLocation(), 1.2);
+                });
+    }
 
-
+    public void moveNear(Mob mob, Location location, double radius) {
+        EntityBrain brain = BukkitBrain.getBrain(mob);
+        brain.getController().moveTo(location);
+    }
     public void moveTo(Mob mob, Location location) {
         EntityBrain brain = BukkitBrain.getBrain(mob);
         brain.getController().moveTo(location);
@@ -44,8 +61,34 @@ public class Pathfinder
             }
         }.runTaskTimer(plugin, 0L, 1L); // Start immediately, run every tick
     }
+    public int getMobLevel(Entity entity) {
+        String name = entity.getName();
+        String cleanedName = name.replaceAll("(?i)§[0-9a-f]", "");
+        String numberString = cleanedName.replaceAll("[^0-9]", "");
+        if (numberString.isEmpty()) {
+            return 0;
+        }
+        try {
+            return Integer.parseInt(numberString);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+    public Player getNearestPlayer(Entity entity, double radius) {
+        Location mobLocation = entity.getLocation();
+        double nearestDistanceSquared = radius * radius;
+        Player nearestPlayer = null;
 
-
+        for (Player player : entity.getWorld().getPlayers()) {
+            double distanceSquared = player.getLocation().distanceSquared(mobLocation);
+            if (distanceSquared <= nearestDistanceSquared) {
+                nearestDistanceSquared = distanceSquared;
+                nearestPlayer = player;
+            }
+        }
+        return nearestPlayer;
+    }
 
 
 
