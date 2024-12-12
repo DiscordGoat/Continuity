@@ -1904,25 +1904,25 @@ public class VillagerTradeManager implements Listener {
 
         return false;
     }
+
     private void removeCustomItems(Inventory inventory, ItemStack targetItem, int quantity) {
         int remaining = quantity;
 
-        for (ItemStack item : inventory.getContents()) {
+        for (int slot = 0; slot < inventory.getSize(); slot++) {
+            ItemStack item = inventory.getItem(slot);
             if (item == null) continue;
 
-            // Check if the item matches either by custom name or type
             if (isMatchingItem(item, targetItem)) {
-                int itemAmount = item.getAmount();
+                if (remaining <= 0) break;
 
+                int itemAmount = item.getAmount();
                 if (itemAmount <= remaining) {
-                    inventory.remove(item);
+                    inventory.setItem(slot, null); // Remove entire stack
                     remaining -= itemAmount;
                 } else {
                     item.setAmount(itemAmount - remaining);
                     remaining = 0;
                 }
-
-                if (remaining <= 0) break; // Exit once all required items are removed
             }
         }
     }
