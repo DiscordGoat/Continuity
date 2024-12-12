@@ -99,6 +99,12 @@ public class VillagerWorkCycleManager implements Listener {
 
     // Farmers harvest nearby crops
     private void performFarmerWork(Villager villager) {
+        // First check if there's a hay bale nearby within radius 10
+        Block hayBale = findNearestBlock(villager, List.of(Material.HAY_BLOCK), 10);
+        if (hayBale == null) {
+            return; // No hay bale nearby, don't perform farming
+        }
+
         int radius = 40; // Set the search radius to 40 blocks
 
         List<Material> harvestableCrops = List.of(
@@ -558,7 +564,7 @@ public class VillagerWorkCycleManager implements Listener {
                     String armorType = item.getType().name().split("_")[0];
                     int gain = armorGains.getOrDefault(armorType, 0);
 
-                    int repairAmount = gain * 2;
+                    int repairAmount = gain * 1000;
 
                     // Repair the armor item
                     repairArmor(item, repairAmount);
@@ -679,7 +685,7 @@ public class VillagerWorkCycleManager implements Listener {
                 totalGains += gain;
 
                 // Repair the item in the item frame
-                int repairAmount = gain * 12; // Adjust repair multiplier as needed
+                int repairAmount = gain * 1000; // Adjust repair multiplier as needed
                 repairWeapons(item, repairAmount);
 
                 // Set the repaired item back in the item frame
@@ -747,7 +753,7 @@ public class VillagerWorkCycleManager implements Listener {
                 totalGains += gain;
 
                 // Repair the tool in the item frame
-                int repairAmount = gain * 20; // Adjust the repair amount multiplier as needed
+                int repairAmount = gain * 1000; // Adjust the repair amount multiplier as needed
                 repairTools(item, repairAmount);
 
                 // Update the repaired item in the item frame
@@ -1534,10 +1540,9 @@ Random random = new Random();
         for (Block block : blocksToReplicate) {
             Material blockType = block.getType();
             // Add 48 of the block to the yield
-            harvestYield.merge(blockType, 48, Integer::sum);
+            harvestYield.merge(blockType, 16, Integer::sum);
 
             // Break the block (set to air)
-            block.setType(Material.AIR);
 
             // Optionally, play a break effect
             world.playEffect(block.getLocation(), Effect.STEP_SOUND, blockType);

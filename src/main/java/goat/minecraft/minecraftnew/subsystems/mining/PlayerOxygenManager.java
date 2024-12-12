@@ -168,9 +168,6 @@ public class PlayerOxygenManager implements Listener {
                 }
             }
 
-            if (currentOxygen <= 15 && currentOxygen > 0) {
-                applyDarknessEffect(player);
-            }
 
             // If oxygen is depleted, apply damage
             if (currentOxygen == 0 && player.getGameMode() == GameMode.SURVIVAL) {

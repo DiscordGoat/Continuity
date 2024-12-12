@@ -481,7 +481,7 @@ public class PetManager implements Listener {
             case CULTIVATION:
                 return "Gain " + ChatColor.GREEN + "+" + (level * 1) + "% Chance " + ChatColor.GRAY + "to harvest " + ChatColor.GREEN + "double crops.";
             case GREEN_THUMB:
-                return "Gain " + ChatColor.YELLOW + "+" + (level * 1) + " Tick Speed " + ChatColor.GRAY + "when on the ground.";
+                return "Grows " + ChatColor.YELLOW + "crops within " + (10 + level) + ChatColor.GRAY + " blocks every 60 seconds.";
             case GREED:
                 return "Gain up to " + ChatColor.YELLOW + "4% chance " + ChatColor.GRAY + "to drop " + ChatColor.GREEN + "1-" + (level * 0.32) + " Emeralds " + ChatColor.GRAY + "when killing monsters.";
             case SKEPTICISM:

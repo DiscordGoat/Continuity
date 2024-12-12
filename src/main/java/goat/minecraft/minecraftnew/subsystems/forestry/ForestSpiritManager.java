@@ -8,6 +8,7 @@ import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
@@ -15,11 +16,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.MetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -170,12 +173,11 @@ public class ForestSpiritManager implements Listener {
     private void grantHaste(Player player, String skill) {
         int level = xpManager.getPlayerLevel(player, skill);
         if (random.nextInt(100) + 1 >= 90) { // 10% chance to grant Haste
-            int hasteLevel = 1; // Haste level increases every 33 levels, max level 2
+            int hasteLevel = 0; // Haste level increases every 33 levels, max level 2
             int duration = 200 + (level * 5); // Duration scales with level (in ticks)
 
             // Apply Haste effect
             player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, hasteLevel), true);
-            player.sendMessage(ChatColor.YELLOW + "Haste activated! +" + (hasteLevel + 1) + " Haste.");
             player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_STEP, 1.0f, 1.0f);
         }
     }
@@ -200,7 +202,8 @@ public class ForestSpiritManager implements Listener {
         // Spawn the Skeleton entity as the spirit
         Skeleton spirit = (Skeleton) world.spawnEntity(location, EntityType.SKELETON);
         spawnMonsters.applyMobAttributes(spirit, spiritType.level); // Apply custom attributes
-        spirit.setCustomName(spiritType.getDisplayName());
+        spirit.setCustomName(ChatColor.RED + "[Lvl " + spiritType.getLevel() + "] " + spiritType.getDisplayName());
+        spirit.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 5, true));
         spirit.setCustomNameVisible(true);
         spirit.setPersistent(true); // Prevent despawning
 
@@ -301,7 +304,22 @@ public class ForestSpiritManager implements Listener {
                 return null;
         }
     }
+    @EventHandler
+    public void onForestSpiritHit(EntityDamageByEntityEvent event) {
+        Entity entity = event.getEntity();
+        if (entity.getCustomName() != null && entity.getCustomName().contains("Spirit")) {
 
+            Location loc = entity.getLocation();
+            World world = entity.getWorld();
+
+            // Play iron clang sound
+            world.playSound(loc, Sound.BLOCK_BAMBOO_WOOD_BREAK, 0.1f, 0.5f);
+
+            // Spawn iron particles
+            world.spawnParticle(Particle.FLAME, loc, 10, 0.5, 1, 0.5);
+        }
+
+    }
     /**
      * Handles the death of a Forest Spirit.
      * Manages custom drops and awards additional Forestry XP.
@@ -321,7 +339,7 @@ public class ForestSpiritManager implements Listener {
         // Determine the spirit type based on its custom name
         SpiritType spiritType = null;
         for (SpiritType type : SpiritType.values()) {
-            if (customName.equals(type.getDisplayName())) {
+            if (customName.contains(type.getDisplayName())) {
                 spiritType = type;
                 break;
             }
@@ -356,17 +374,16 @@ public class ForestSpiritManager implements Listener {
                 }
             }
         }
-        // 50% chance to drop the rare item
 
-            ItemStack rareDrop = CustomItemManager.createCustomItem(
-                    spiritType.getRareDropMaterial(),
-                    ChatColor.GOLD + spiritType.getRareDropName(),
-                    spiritType.getRareDropLore(),
-                    1,
-                    false, // Not unbreakable
-                    true   // Add enchantment shimmer
-            );
-            event.getDrops().add(rareDrop);
+        ItemStack rareDrop = CustomItemManager.createCustomItem(
+                spiritType.getRareDropMaterial(),
+                ChatColor.GOLD + spiritType.getRareDropName(),
+                spiritType.getRareDropLore(),
+                1,
+                false, // Not unbreakable
+                true   // Add enchantment shimmer
+        );
+        event.getDrops().add(rareDrop);
         
 
         // Award additional Forestry XP to the player who killed the spirit
