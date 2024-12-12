@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.utils.SpawnMonsters;
 import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
 import org.bukkit.*;
@@ -217,7 +218,11 @@ public class FishingEvent implements Listener {
         livingEntity.getEquipment().setChestplateDropChance(0);
         livingEntity.getEquipment().setLeggingsDropChance(0);
         livingEntity.getEquipment().setBootsDropChance(0);
-
+        ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHandDropChance(1);
+        if(seaCreature.getSkullName().equals("Pirate")){
+            ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHand(ItemRegistry.getRandomTreasure());
+            ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHandDropChance(1);
+        }
         livingEntity.setSwimming(true);
         livingEntity.setSilent(true);
         SpawnMonsters spawnMonsters = new SpawnMonsters(plugin, xpManager);
@@ -377,7 +382,7 @@ public class FishingEvent implements Listener {
      *
      * @return An ItemStack representing the treasure item.
      */
-    private ItemStack getRandomTreasure(Player player) {
+    public ItemStack getRandomTreasure(Player player) {
         // Define a loot table with items and their weights
         List<LootItem> lootTable = Arrays.asList(
                 new LootItem(new ItemStack(Material.NAUTILUS_SHELL), 10),
@@ -450,9 +455,16 @@ public class FishingEvent implements Listener {
         // Choose a random sea creature
         SeaCreature randomCreature = seaCreatures.get(random.nextInt(seaCreatures.size()));
 
-        // Return its alchemy drop
-        return randomCreature.getAlchemyDrops();
+        // Get the drops from the random sea creature
+        List<ItemStack> drops = randomCreature.getDrops();
+
+        // If there are no drops, return null
+        if (drops.isEmpty()) return null;
+
+        // Return a random item from the drops
+        return drops.get(random.nextInt(drops.size()));
     }
+
 
     /**
      * Returns a random rare sapling.
@@ -549,7 +561,7 @@ public class FishingEvent implements Listener {
     /**
      * Helper class to represent a loot item and its weight.
      */
-    private static class LootItem {
+    public static class LootItem {
         private final ItemStack item;
         private final int weight;
 

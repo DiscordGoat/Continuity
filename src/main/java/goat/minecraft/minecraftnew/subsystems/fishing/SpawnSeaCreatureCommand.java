@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.utils.SpawnMonsters;
 import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
 import org.bukkit.Bukkit;
@@ -36,7 +37,7 @@ public class SpawnSeaCreatureCommand implements CommandExecutor {
             return true;
         }
 
-        String creatureName = args[0];
+        String creatureName = args[0].replace("_", " ");
 
         // Get the sea creature by name
         Optional<SeaCreature> optionalSeaCreature = SeaCreatureRegistry.getSeaCreatureByName(creatureName);
@@ -62,7 +63,6 @@ public class SpawnSeaCreatureCommand implements CommandExecutor {
         spawnedEntity.setMetadata("SEA_CREATURE", new FixedMetadataValue(Bukkit.getPluginManager().getPlugin("MinecraftNew"), seaCreature.getDisplayName()));
 
         // Apply attributes and equipment
-
 
         player.sendMessage(ChatColor.GREEN + "Spawned " + seaCreature.getColoredDisplayName() + " at your location!");
         Bukkit.getLogger().info("Sea Creature Stats:");
@@ -97,6 +97,17 @@ public class SpawnSeaCreatureCommand implements CommandExecutor {
         equipment.setLeggings(SeaCreatureRegistry.createDyedLeatherArmor(org.bukkit.Material.LEATHER_LEGGINGS, armorColor));
         equipment.setBoots(SeaCreatureRegistry.createDyedLeatherArmor(org.bukkit.Material.LEATHER_BOOTS, armorColor));
 
+        equipment.setBootsDropChance(0);
+        equipment.setChestplateDropChance(0);
+        equipment.setHelmetDropChance(0);
+        equipment.setLeggingsDropChance(0);
+
+        equipment.setItemInOffHandDropChance(1.0f);
+
+        if(seaCreature.getSkullName().equals("Pirate")){
+            equipment.setItemInOffHand(ItemRegistry.getRandomTreasure());
+            equipment.setItemInOffHandDropChance(1);
+        }
         // Create and set the player head
         String playerHeadName = seaCreature.getSkullName();
         ItemStack helmet = petManager.getSkullForPet(seaCreature.getSkullName());

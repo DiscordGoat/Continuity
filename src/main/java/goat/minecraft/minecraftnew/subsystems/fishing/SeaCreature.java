@@ -11,25 +11,25 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
 import java.lang.reflect.Field;
-import java.util.Base64;
-import java.util.UUID;
+import java.util.*;
 
 public class SeaCreature {
     private String displayName;
     private Rarity rarity;
     private EntityType entityType;
-    private ItemStack alchemyDrops;
+    private List<DropItem> dropItems; // List of possible drops with chance and quantity range
     private Color armorColor; // Color for dyed armor
     private String playerHeadName; // Display name for player head
     private int level; // Level based on rarity
     private String skullName; // Holds the base64 URL string
+    private Random random = new Random();
 
-    public SeaCreature(String displayName, Rarity rarity, EntityType entityType, ItemStack alchemyDrops,
+    public SeaCreature(String displayName, Rarity rarity, EntityType entityType, List<DropItem> dropItems,
                        Color armorColor, String skullName, int level) {
         this.displayName = displayName;
         this.rarity = rarity;
         this.entityType = entityType;
-        this.alchemyDrops = alchemyDrops;
+        this.dropItems = dropItems;
         this.armorColor = armorColor;
         this.level = level;
         this.skullName = skullName;
@@ -53,18 +53,34 @@ public class SeaCreature {
         return entityType;
     }
 
-    public ItemStack getAlchemyDrops() {
-        return alchemyDrops;
+    public List<ItemStack> getDrops() {
+        List<ItemStack> drops = new ArrayList<>();
+
+        for (DropItem dropItem : dropItems) {
+            int quantity = 0;
+            for (int i = 0; i < dropItem.getRollCount(); i++) {
+                if (random.nextInt(dropItem.getRollDenominator()) < dropItem.getRollNumerator()) {
+                    quantity++;
+                }
+            }
+            if (quantity > 0) {
+                ItemStack item = dropItem.getItemStack().clone();
+                item.setAmount(quantity);
+                drops.add(item);
+            }
+        }
+
+        return drops;
     }
 
     public Color getArmorColor() {
         return armorColor;
     }
 
-
     public int getLevel() {
         return level;
     }
+
     public static ItemStack createDyedLeatherArmor(Material material, Color color) {
         ItemStack armor = new ItemStack(material);
         LeatherArmorMeta meta = (LeatherArmorMeta) armor.getItemMeta();
@@ -72,7 +88,6 @@ public class SeaCreature {
         armor.setItemMeta(meta);
         return armor;
     }
-
 
     public String getColoredDisplayName() {
         // Prepend color codes based on rarity
@@ -91,6 +106,37 @@ public class SeaCreature {
                 return ChatColor.DARK_AQUA + displayName;
             default:
                 return displayName;
+        }
+    }
+
+    // Inner class to represent a drop item with chance and quantity range
+    public static class DropItem {
+        private ItemStack itemStack;
+        private int rollCount;
+        private int rollNumerator;
+        private int rollDenominator;
+
+        public DropItem(ItemStack itemStack, int rollCount, int rollNumerator, int rollDenominator) {
+            this.itemStack = itemStack;
+            this.rollCount = rollCount;
+            this.rollNumerator = rollNumerator;
+            this.rollDenominator = rollDenominator;
+        }
+
+        public ItemStack getItemStack() {
+            return itemStack;
+        }
+
+        public int getRollCount() {
+            return rollCount;
+        }
+
+        public int getRollNumerator() {
+            return rollNumerator;
+        }
+
+        public int getRollDenominator() {
+            return rollDenominator;
         }
     }
 }

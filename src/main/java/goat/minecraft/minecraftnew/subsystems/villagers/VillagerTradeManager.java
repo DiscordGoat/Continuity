@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
 import goat.minecraft.minecraftnew.subsystems.generators.ResourceGeneratorSubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.utils.StructureUtils;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -1583,7 +1584,7 @@ public class VillagerTradeManager implements Listener {
             fishingSells.add(new TradeItem(new ItemStack(Material.PUFFERFISH, 1), 1, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(Material.TROPICAL_FISH, 1), 1, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(Material.GLOW_INK_SAC, 4), 1, 4, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(shallowVenom), 4, 1, 2)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(ItemRegistry.getTooth()), 4, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(luminescentInk), 8, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(shallowInk), 4, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(deepInk), 8, 1, 2)); // Placeholder trade

@@ -28,6 +28,7 @@ public class SeaCreatureDeathEvent implements Listener {
     CustomItemManager customItemManager = new CustomItemManager();
 
     ItemStack lapis = new ItemStack(Material.LAPIS_LAZULI, 4);
+
     @EventHandler
     public void onSeaCreatureHit(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
@@ -46,10 +47,14 @@ public class SeaCreatureDeathEvent implements Listener {
             world.spawnParticle(Particle.WATER_WAKE, loc, 10, 0.5, 1, 0.5);
         }
     }
+
     @EventHandler
     public void onSeaCreatureDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
-
+        if (entity instanceof LivingEntity) {
+            ((LivingEntity) entity).getEquipment().setHelmet(null);
+            ((LivingEntity) entity).getEquipment().setItemInOffHandDropChance(1);
+        }
         // Ensure metadata exists
         List<MetadataValue> metadata = entity.getMetadata("SEA_CREATURE");
         if (metadata == null || metadata.isEmpty()) {
@@ -68,6 +73,7 @@ public class SeaCreatureDeathEvent implements Listener {
             return;
         }
 
+
         SeaCreature seaCreature = optionalSeaCreature.get();
         Player killer = event.getEntity().getKiller();
         if (!(killer instanceof Player)) {
@@ -80,17 +86,25 @@ public class SeaCreatureDeathEvent implements Listener {
         killer.giveExp(boostedXP);
         Bukkit.getLogger().info("Player " + killer.getName() + " gained " + boostedXP + " Fishing XP.");
 
-        // Handle alchemy drops
-        ItemStack drop = seaCreature.getAlchemyDrops();
-        if (drop != null && drop.getType() != Material.AIR) {
-            event.getDrops().add(drop);
-            killer.sendMessage(ChatColor.LIGHT_PURPLE + "You received a rare item!");
+        if(seaCreature.getSkullName().equals("Pirate")){
+            PetManager petManager = PetManager.getInstance(plugin);
+            int pirateChance = random.nextInt(100) + 1;
+            if (pirateChance <= 10) {
+                petManager.createPet(killer, "Golden Steve", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY, PetManager.PetPerk.TREASURE_HUNTER, PetManager.PetPerk.COMFORTABLE);
+            }
+        }
+        // Handle drops
+        List<ItemStack> drops = seaCreature.getDrops();
+        if (drops != null && !drops.isEmpty()) {
+            for (ItemStack drop : drops) {
+                if (drop != null && drop.getType() != Material.AIR) {
+                    event.getDrops().add(drop);
+                }
+            }
+            killer.playSound(killer.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 10.f);
         }
 
-        // Play effects    int chance = random.nextInt(100) + 1;
-        //
-        //        // Check if random roll is successful based on player's level
-        //        if (chance >= 90) {
+        // Play effects    
         playDeathEffects(entity, seaCreature.getRarity());
         PetManager petManager = PetManager.getInstance(plugin);
         int chance = random.nextInt(100) + 1;
@@ -99,7 +113,7 @@ public class SeaCreatureDeathEvent implements Listener {
                 ChatColor.GRAY + "A strange object.",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Used in summoning Rain.",
                 ChatColor.DARK_PURPLE + "Artifact"
-        ), 1,false, true);
+        ), 1, false, true);
         ItemStack forbiddenBook = CustomItemManager.createCustomItem(
                 Material.WRITTEN_BOOK,
                 ChatColor.YELLOW + "Forbidden Book",
@@ -113,38 +127,37 @@ public class SeaCreatureDeathEvent implements Listener {
                 true   // Add enchantment shimmer
         );
         int rainChance = random.nextInt(100) + 1;
-        if(rainChance>=90){
+        if (rainChance >= 90) {
             entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), guardianDrop);
-
             killer.sendMessage(ChatColor.AQUA + "You dropped a Rain Artifact!");
         }
 
-        if(chance >= 90){
+        if (chance >= 90) {
             entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), forbiddenBook);
         }
-            if(seaCreature.getRarity() == Rarity.COMMON){
-            if(chance>=90){
+        if (seaCreature.getRarity() == Rarity.COMMON) {
+            if (chance >= 90) {
                 petManager.createPet(killer, "Fish", PetManager.Rarity.COMMON, 100, Particle.GLOW_SQUID_INK, PetManager.PetPerk.ANGLER);
             }
         }
-        if(seaCreature.getRarity() == Rarity.UNCOMMON){
-            if(chance>=90){
+        if (seaCreature.getRarity() == Rarity.UNCOMMON) {
+            if (chance >= 90) {
                 petManager.createPet(killer, "Glow Squid", PetManager.Rarity.UNCOMMON, 100, Particle.GLOW_SQUID_INK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANGLER);
             }
         }
-        if(seaCreature.getRarity() == Rarity.RARE){
-            if(chance>=90){
-                petManager.createPet(killer, "Dolphin", PetManager.Rarity.RARE, 100, Particle.WATER_SPLASH , PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.ANGLER);
+        if (seaCreature.getRarity() == Rarity.RARE) {
+            if (chance >= 90) {
+                petManager.createPet(killer, "Dolphin", PetManager.Rarity.RARE, 100, Particle.WATER_SPLASH, PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.ANGLER);
             }
         }
-        if(seaCreature.getRarity() == Rarity.EPIC){
-            if(chance>=90){
-                petManager.createPet(killer, "Turtle", PetManager.Rarity.EPIC, 100, Particle.CRIMSON_SPORE , PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.COMFORTABLE);
+        if (seaCreature.getRarity() == Rarity.EPIC) {
+            if (chance >= 90) {
+                petManager.createPet(killer, "Turtle", PetManager.Rarity.EPIC, 100, Particle.CRIMSON_SPORE, PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.COMFORTABLE);
             }
         }
-        if(seaCreature.getRarity() == Rarity.LEGENDARY){
-            if(chance>=90){
-                petManager.createPet(killer, "Leviathan", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY , PetManager.PetPerk.ANGLER, PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.TERROR_OF_THE_DEEP);
+        if (seaCreature.getRarity() == Rarity.LEGENDARY) {
+            if (chance >= 90) {
+                petManager.createPet(killer, "Leviathan", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY, PetManager.PetPerk.ANGLER, PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.TERROR_OF_THE_DEEP);
             }
         }
     }

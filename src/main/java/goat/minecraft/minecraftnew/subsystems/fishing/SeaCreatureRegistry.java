@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.utils.ItemRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -49,17 +50,9 @@ public class SeaCreatureRegistry implements Listener {
         RARITY_LEVELS.put(Rarity.LEGENDARY, 100);
 
         // Define alchemy items with detailed lore
-        ItemStack fishBone = createAlchemyItem("Fish Bone", Material.BONE, List.of(
-                ChatColor.GRAY + "A bone from a fish.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Turns potions into splash potions.",
-                ChatColor.DARK_PURPLE + "Brewing Modifier"
-        ));
-        ItemStack fishOil = createAlchemyItem("Fish Oil", Material.POTION, List.of(
-                ChatColor.GRAY + "A bottle of rich fish oil.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Ghast Tear substitute",
-                ChatColor.GRAY + "",
-                ChatColor.DARK_PURPLE + "Brewing Ingredient"
-        ));
+        ItemStack fishBone = ItemRegistry.getFishBone();
+        ItemStack tooth = ItemRegistry.getTooth();
+
         ItemStack shallowShell = createAlchemyItem("Shallow Shell", Material.SCUTE, List.of(
                 ChatColor.GRAY + "A shell found in shallow waters.",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment slightly.",
@@ -198,16 +191,60 @@ public class SeaCreatureRegistry implements Listener {
 
 
 
-
+        List<SeaCreature.DropItem> sharkDrops = new ArrayList<>();
+        sharkDrops.add(new SeaCreature.DropItem(tooth, 3, 1, 5));
         SEA_CREATURES.add(new SeaCreature(
                 "Shark",
                 Rarity.RARE,
                 EntityType.ZOMBIE,
-                sweepingEdge,
-                Color.fromRGB(192, 220, 220),
+                sharkDrops,
+                Color.fromRGB(47, 47, 47),
                 "Shark",  // unique texture for this creature
                 RARITY_LEVELS.get(Rarity.RARE)
         ));
+        SEA_CREATURES.add(new SeaCreature(
+                "Pirate",
+                Rarity.RARE,
+                EntityType.SKELETON,
+                null,
+                Color.fromRGB(0, 0, 0),
+                "Pirate",  // unique texture for this creature
+                RARITY_LEVELS.get(Rarity.RARE)
+        ));
+
+
+
+
+
+        List<SeaCreature.DropItem> greatWhiteSharkDrops = new ArrayList<>();
+        greatWhiteSharkDrops.add(new SeaCreature.DropItem(tooth, 7, 1, 4));
+        SEA_CREATURES.add(new SeaCreature(
+                "Great White Shark",
+                Rarity.EPIC,
+                EntityType.ZOMBIE,
+                greatWhiteSharkDrops,
+                Color.fromRGB(0, 51, 102),
+                "Great_White_Shark",  // unique texture for this creature
+                RARITY_LEVELS.get(Rarity.EPIC)
+        ));
+
+
+
+
+
+
+        List<SeaCreature.DropItem> megalodonDrops = new ArrayList<>();
+        megalodonDrops.add(new SeaCreature.DropItem(tooth, 31, 1, 4));
+        SEA_CREATURES.add(new SeaCreature(
+                "Megalodon",
+                Rarity.LEGENDARY,
+                EntityType.ZOMBIE,
+                megalodonDrops,
+                Color.fromRGB(211, 211, 211),
+                "Megalodon",  // unique texture for this creature
+                RARITY_LEVELS.get(Rarity.LEGENDARY)
+        ));
+
 
 
 
