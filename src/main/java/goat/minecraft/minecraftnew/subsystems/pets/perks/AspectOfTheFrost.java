@@ -20,7 +20,7 @@ public class AspectOfTheFrost implements Listener {
 
     public AspectOfTheFrost(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.villagerWorkCycleManager = new VillagerWorkCycleManager(plugin);
+        this.villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(plugin);
     }
 
     @EventHandler

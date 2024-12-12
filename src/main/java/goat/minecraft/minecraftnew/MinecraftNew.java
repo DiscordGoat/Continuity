@@ -61,7 +61,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
 
     public void onEnable() {
-
+        VillagerWorkCycleManager.getInstance(this);
 
 
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
@@ -173,7 +173,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ReforgeArmor(), this);
         getServer().getPluginManager().registerEvents(new ReforgeDurability(), this);
         getServer().getPluginManager().registerEvents(new ReforgeSwiftBlade(), this);
-        getServer().getPluginManager().registerEvents(new VillagerWorkCycleManager(this), this);
         getServer().getPluginManager().registerEvents(new WaterLogged(this), this);
 
         getServer().getPluginManager().registerEvents(new Feed(), this);
@@ -220,7 +219,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new CombatBuffs(), this);
         getServer().getPluginManager().registerEvents(new FarmingBuff(xpManager), this);
 
-        villagerWorkCycleManager = new VillagerWorkCycleManager(this);
+        villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
         //nms >
 
@@ -250,7 +249,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onDisable() {
-
         if (playerOxygenManager != null) {
             playerOxygenManager.saveOnShutdown();
         }

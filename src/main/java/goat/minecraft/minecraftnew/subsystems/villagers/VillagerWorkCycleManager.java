@@ -1,5 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
@@ -20,56 +22,41 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.io.File;
+import java.lang.reflect.Type;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class VillagerWorkCycleManager implements Listener {
 
     private final JavaPlugin plugin;
-    private final HashMap<UUID, Integer> villagerWorkCycles = new HashMap<>();
-
+    private static VillagerWorkCycleManager instance;
     public VillagerWorkCycleManager(JavaPlugin plugin) {
         this.plugin = plugin;
         startGlobalScheduler();
-        startDailyResetScheduler();
+    }
+    public static VillagerWorkCycleManager getInstance(JavaPlugin plugin) {
+        if (instance == null) {
+            instance = new VillagerWorkCycleManager(plugin);
+        }
+        return instance;
     }
 
-    private void startGlobalScheduler() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-
-                // Iterate over all villagers in the world
-                for (Villager villager : plugin.getServer().getWorlds().stream()
-                        .flatMap(world -> world.getEntitiesByClass(Villager.class).stream())
-                        .toList()) {
-
-                    UUID villagerId = villager.getUniqueId();
-
-                    // Initialize work cycle count if not present
-                    villagerWorkCycles.putIfAbsent(villagerId, 0);
-
-                    int cycles = villagerWorkCycles.get(villagerId);
-
-                    if (cycles < 1) {
-                        // Villager performs work
-                        performVillagerWork(villager);
-
-                        // Increment work cycle count
-                        villagerWorkCycles.put(villagerId, cycles + 1);
-                    }
-                }
+public void startGlobalScheduler() {
+    // Run villager work once per Minecraft day
+    new BukkitRunnable() {
+        @Override
+        public void run() {
+            // Iterate over all villagers in the world 
+            for (Villager villager : plugin.getServer().getWorlds().stream()
+                    .flatMap(world -> world.getEntitiesByClass(Villager.class).stream())
+                    .toList()) {
+                // Perform work for each villager
+                performVillagerWork(villager);
             }
-        }.runTaskTimer(plugin, 0L, 300*4L); // Runs every 15 seconds (15 * 20 ticks)
-    }
-
-    private void startDailyResetScheduler() {
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                resetWorkCycles();
-            }
-        }.runTaskTimer(plugin, 0L, 24000L); // Runs every Minecraft day (20 min * 60 sec * 20 ticks)
-    }
+        }
+    }.runTaskTimer(plugin, 0L, 24000L); // Run once per Minecraft day (20 min)
+}
 
     private void performVillagerWork(Villager villager) {
         Villager.Profession profession = villager.getProfession();
@@ -78,13 +65,25 @@ public class VillagerWorkCycleManager implements Listener {
         switch (profession) {
             case FARMER -> performFarmerWork(villager);
             case BUTCHER -> performButcherWork(villager, searchRadius);
-            case FISHERMAN -> performFishermanWork(villager, searchRadius);
-            case LIBRARIAN -> performLibrarianWork(villager, searchRadius);
-            case CLERIC -> performClericWork(villager, searchRadius);
+            case FISHERMAN -> {
+                performFishermanWork(villager, searchRadius);
+                performFishermanWork(villager, searchRadius);
+                performFishermanWork(villager, searchRadius);
+            }
+            case LIBRARIAN -> {
+                performLibrarianWork(villager, searchRadius);
+                performLibrarianWork(villager, searchRadius);
+                performLibrarianWork(villager, searchRadius);
+            }
+            case CLERIC -> performClericWork(villager);
             case CARTOGRAPHER -> performCartographerWork(villager, 20);
             case FLETCHER -> performFletcherWork(villager, 50);
             case LEATHERWORKER -> performLeatherworkerWork(villager, searchRadius);
-            case MASON -> performMasonWork(villager, searchRadius);
+            case MASON -> {
+                performMasonWork(villager, searchRadius);
+                performMasonWork(villager, searchRadius);
+                performMasonWork(villager, searchRadius);
+            }
             case SHEPHERD -> performShepherdWork(villager, searchRadius);
             case TOOLSMITH -> performToolsmithWork(villager, searchRadius);
             case WEAPONSMITH -> performWeaponsmithWork(villager, searchRadius);
@@ -297,7 +296,7 @@ public class VillagerWorkCycleManager implements Listener {
 
         };
         Material food = edibleFoods[random.nextInt(edibleFoods.length)];
-        int yield = 1 + random.nextInt(1); // Base yield: 1-2 items
+        int yield = 1 + random.nextInt(3); // Base yield: 1-2 items
 
         // Modify yield based on nearby blocks
         if (influenceMap.containsKey(Material.CAMPFIRE)) {
@@ -861,6 +860,7 @@ public class VillagerWorkCycleManager implements Listener {
         }
         return sheepList;
     }
+
     private void performLeatherworkerWork(Villager villager, int radius) {
         // Find nearby cauldrons
         List<Block> cauldrons = findNearbyBlocks(villager, List.of(Material.CAULDRON), radius);
@@ -870,191 +870,86 @@ public class VillagerWorkCycleManager implements Listener {
             return;
         }
 
-        // Calculate leather yield based on the number of cauldrons
-        int leatherYield = cauldrons.size() * 3; // Example yield multiplier: 3 leather per cauldron
-
-        // Optional: Increase yield if cauldrons are filled (thematic representation of tanning)
-        int additionalYield = 0;
-        for (Block cauldron : cauldrons) {
-            BlockState state = cauldron.getState();
-            if (state instanceof Levelled) {
-                Levelled cauldronData = (Levelled) state;
-                additionalYield += cauldronData.getLevel(); // Example: Add extra leather based on fill level
-            }
-        }
-
-        leatherYield += additionalYield;
-
-        // Create the harvest yield map
+        Random random = new Random();
         Map<Material, Integer> harvestYield = new HashMap<>();
+
+        // Base leather production
+        int leatherYield = 3;
+
+        // Add leather to harvest
         harvestYield.put(Material.LEATHER, leatherYield);
 
-        // Store or drop the leather yield
+        // 10% chance to produce a saddle
+        if (random.nextFloat() < 0.10) {
+            harvestYield.put(Material.SADDLE, 1);
+        }
+
+        // Store or drop the items
         storeOrDropHarvest(villager, harvestYield);
+        Bukkit.getLogger().info("Leatherworker worked");
 
-        // Play a sound to indicate leatherwork completion
+        // Play sound effects
         villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1.0f, 1.0f);
-
-        // Optional: Send a message to nearby players (for demonstration/debugging purposes)
+        if (harvestYield.containsKey(Material.SADDLE)) {
+            villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1.0f, 0.5f);
+        }
     }
 
-    private void performClericWork(Villager villager, int radius) {
-        Location loc = villager.getLocation();
-
-        // Define the blocks to search for
-        List<Material> singleUseBlocks = List.of(
-                Material.NETHER_WART_BLOCK,
-                Material.SOUL_SAND,
-                Material.SOUL_FIRE,
-                Material.SOUL_TORCH,
-                Material.SOUL_CAMPFIRE,
-                Material.CAULDRON,
-                Material.QUARTZ_BLOCK
-        );
-
-        List<Material> durationBoostBlocks = List.of(
-                Material.REDSTONE_BLOCK
-        );
-
-        List<Material> potencyBoostBlocks = List.of(
-                Material.GLOWSTONE
-        );
-
-        List<Material> brewingStandBlocks = List.of(
-                Material.BREWING_STAND
-        );
-
-        // Set to keep track of single-use blocks found
-        Set<Material> foundSingleUseBlocks = new HashSet<>();
-
-        // Flags for boosts
-        boolean hasRedstoneBlock = false;
-        boolean hasGlowstoneBlock = false;
-
-        // Count of brewing stands
-        int brewingStandCount = 0;
-
-        // Search within the radius
-        int xOrigin = loc.getBlockX();
-        int yOrigin = loc.getBlockY();
-        int zOrigin = loc.getBlockZ();
-
-        int minY = Math.max(0, yOrigin - radius);
-        int maxY = Math.min(loc.getWorld().getMaxHeight(), yOrigin + radius);
-
-        for (int x = xOrigin - radius; x <= xOrigin + radius; x++) {
-            for (int y = minY; y <= maxY; y++) {
-                for (int z = zOrigin - radius; z <= zOrigin + radius; z++) {
-                    Block block = loc.getWorld().getBlockAt(x, y, z);
-                    Material blockType = block.getType();
-
-                    // Check for brewing stands
-                    if (brewingStandBlocks.contains(blockType)) {
-                        brewingStandCount++;
-                    }
-
-                    // Check for single-use blocks
-                    if (singleUseBlocks.contains(blockType)) {
-                        foundSingleUseBlocks.add(blockType);
-                    }
-
-                    // Check for duration boost
-                    if (durationBoostBlocks.contains(blockType)) {
-                        hasRedstoneBlock = true;
-                    }
-
-                    // Check for potency boost
-                    if (potencyBoostBlocks.contains(blockType)) {
-                        hasGlowstoneBlock = true;
-                    }
-                }
-            }
-        }
-
-        // Calculate duration modifier
-        int durationModifier = 0;
-        if (hasRedstoneBlock) {
-            durationModifier += 2; // Significant boost
-        }
-        durationModifier += foundSingleUseBlocks.size(); // Slight upgrades for each unique block
-
-        // Calculate potency modifier
-        int potencyModifier = hasGlowstoneBlock ? 1 : 0;
-
-        // Calculate amount based on brewing stands
-        int amount = Math.max(1, brewingStandCount);
-
-        // Select a random potion effect
+    private void performClericWork(Villager villager) {
         Random random = new Random();
-        PotionEffectType[] positiveEffects = {
-                PotionEffectType.REGENERATION,
-                PotionEffectType.SPEED,
-                PotionEffectType.FIRE_RESISTANCE,
-                PotionEffectType.WATER_BREATHING,
-                PotionEffectType.INVISIBILITY,
-                PotionEffectType.NIGHT_VISION,
-                PotionEffectType.JUMP,
-                PotionEffectType.HEALTH_BOOST,
-                PotionEffectType.DAMAGE_RESISTANCE,
-                PotionEffectType.LUCK,
-                PotionEffectType.HERO_OF_THE_VILLAGE,
-                PotionEffectType.SLOW_FALLING,
-                PotionEffectType.CONDUIT_POWER
+
+        // List of possible ingredients
+        Material[] ingredients = {
+                Material.SPIDER_EYE,
+                Material.GLISTERING_MELON_SLICE,
+                Material.MAGMA_CREAM,
+                Material.GHAST_TEAR,
+                Material.GOLDEN_CARROT,
+                Material.RABBIT_FOOT,
+                Material.PHANTOM_MEMBRANE,
+                Material.FERMENTED_SPIDER_EYE,
+                Material.GLOWSTONE_DUST,
+                Material.REDSTONE
         };
 
-        PotionEffectType[] negativeEffects = {
-                PotionEffectType.POISON,
-                PotionEffectType.WEAKNESS,
-                PotionEffectType.SLOW,
-                PotionEffectType.BLINDNESS,
-                PotionEffectType.HUNGER,
-                PotionEffectType.WITHER,
-                PotionEffectType.BAD_OMEN,
-                PotionEffectType.UNLUCK,
-                PotionEffectType.LEVITATION
-        };
+        // Choose one random ingredient and amount (1-4)
+        Material ingredient = ingredients[random.nextInt(ingredients.length)];
+        int amount = 1 + random.nextInt(4); // Random amount between 1-4
+        Map<Material, Integer> harvestYield = new HashMap<>();
+        harvestYield.put(ingredient, amount);
 
-        boolean isPositive = random.nextBoolean();
-        PotionEffectType effectType = isPositive ?
-                positiveEffects[random.nextInt(positiveEffects.length)] :
-                negativeEffects[random.nextInt(negativeEffects.length)];
+        // 1% chance to brew special 3-hour potions
+        if (random.nextFloat() < 0.01) {
+            PotionEffectType[] positiveEffects = {
+                    PotionEffectType.REGENERATION,
+                    PotionEffectType.SPEED,
+                    PotionEffectType.FIRE_RESISTANCE,
+                    PotionEffectType.WATER_BREATHING,
+                    PotionEffectType.NIGHT_VISION,
+                    PotionEffectType.JUMP,
+                    PotionEffectType.DAMAGE_RESISTANCE,
+                    PotionEffectType.LUCK,
+                    PotionEffectType.SLOW_FALLING
+            };
 
-        // Base duration and amplifier
-        int baseDuration = effectType.isInstant() ? 1 : 60; // In seconds
-        int amplifier = 0;
+            // Create 3-hour potion
+            ItemStack specialPotion = new ItemStack(Material.POTION);
+            PotionMeta meta = (PotionMeta) specialPotion.getItemMeta();
+            PotionEffectType effect = positiveEffects[random.nextInt(positiveEffects.length)];
+            // 3 hours = 216000 ticks (20 ticks/sec * 60 sec/min * 180 min)
+            meta.addCustomEffect(new PotionEffect(effect, 216000, 0), true);
+            meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Extended " + effect.getName() + " Potion");
+            meta.addEnchant(org.bukkit.enchantments.Enchantment.LUCK, 1, true);
+            meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
+            specialPotion.setItemMeta(meta);
 
-        // Apply duration modifier
-        baseDuration += durationModifier * 30; // Each modifier adds 30 seconds
-
-        // Apply potency modifier
-        amplifier += potencyModifier;
-
-        // Create potion item
-        ItemStack potionItem;
-        if (isPositive) {
-            // Randomly decide between drinkable and splash potion
-            boolean isDrinkable = random.nextBoolean();
-            potionItem = new ItemStack(isDrinkable ? Material.POTION : Material.SPLASH_POTION, amount);
-        } else {
-            // Negative potions are always throwable
-            potionItem = new ItemStack(Material.SPLASH_POTION, amount);
+            // Store the special potion
+            storeOrDropCustomItem(villager, specialPotion);
+            villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_BREWING_STAND_BREW, 1.0f, 1.0f);
         }
 
-        // Set potion meta
-        PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
-        PotionEffect potionEffect = new PotionEffect(effectType, baseDuration * 20, amplifier); // Duration in ticks
-        potionMeta.addCustomEffect(potionEffect, true);
-        potionMeta.setDisplayName(effectType.getName() + " Potion");
-        potionItem.setItemMeta(potionMeta);
-
-        // Prepare the harvest yield
-        Map<Material, Integer> harvestYield = new HashMap<>();
-        harvestYield.put(potionItem.getType(), potionItem.getAmount());
-
-        // Store or drop the potion
-        storeOrDropCustomItem(villager, potionItem);
-
-        // Play sound to indicate potion brewing
+        // Store or drop the ingredients
+        storeOrDropHarvest(villager, harvestYield);
         villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_BOTTLE_FILL, 1.0f, 1.0f);
     }
 
@@ -1714,10 +1609,5 @@ Random random = new Random();
         }
 
 
-    }
-
-
-    public void resetWorkCycles() {
-        villagerWorkCycles.clear();
     }
 }
