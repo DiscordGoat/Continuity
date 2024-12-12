@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.utils.SpawnMonsters;
 import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -26,6 +27,10 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+
+import static goat.minecraft.minecraftnew.subsystems.fishing.SeaCreature.createDyedLeatherArmor;
+
+
 
 public class FishingEvent implements Listener {
     private final MinecraftNew plugin = MinecraftNew.getInstance();
@@ -122,13 +127,13 @@ public class FishingEvent implements Listener {
         xpManager.addXP(player, "Fishing", 20);
 
         // Determine if a sea creature should replace this catch
-        if (random.nextDouble() <= seaCreatureChance && player.getWorld().hasStorm()) {
+        if (random.nextDouble() <= seaCreatureChance) {
             spawnAndLaunchSeaCreature(player, e.getHook().getLocation());
-            player.sendMessage(ChatColor.DARK_AQUA + "If raining, Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%");
+            player.sendMessage(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%");
         } else {
             // Proceed with regular fish catch
             awardRegularFish(player, fishingLevel);
-            player.sendMessage(ChatColor.DARK_AQUA + "If raining, Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%");
+            player.sendMessage(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%");
         }
 
         // Implement the enhanced treasure system
@@ -178,27 +183,46 @@ public class FishingEvent implements Listener {
      * @param bobberLocation The location of the fishing bobber.
      */
     private void spawnAndLaunchSeaCreature(Player player, Location bobberLocation) {
+        PetManager petManager = PetManager.getInstance(plugin);
         Optional<SeaCreature> optionalSeaCreature = SeaCreatureRegistry.getRandomSeaCreature();
         if (!optionalSeaCreature.isPresent()) return;
 
         SeaCreature seaCreature = optionalSeaCreature.get();
         EntityType entityType = seaCreature.getEntityType();
 
-        ItemStack leatherBoots = new ItemStack(Material.LEATHER_BOOTS);
-        LeatherArmorMeta leatherBootsMeta = (LeatherArmorMeta) leatherBoots.getItemMeta();
-        leatherBootsMeta.setColor(seaCreature.getArmorColor());
-        leatherBoots.setItemMeta(leatherBootsMeta);
+
 
         // Log sea creature stats to the console
         Bukkit.getLogger().info("Sea Creature Stats:");
         Bukkit.getLogger().info("Name: " + seaCreature.getDisplayName());
         Bukkit.getLogger().info("Rarity: " + seaCreature.getRarity());
         Bukkit.getLogger().info("Level: " + seaCreature.getLevel());
-        Bukkit.getLogger().info("Entity Type: " + seaCreature.getEntityType().toString());
 
         // Spawn the sea creature at the bobber's location
         Entity spawnedEntity = player.getWorld().spawnEntity(bobberLocation, entityType);
-        spawnedEntity.setCustomName(seaCreature.getColoredDisplayName());
+        LivingEntity livingEntity = (LivingEntity) spawnedEntity;
+        // Retrieve the creature's custom base64 texture
+        String skullName = seaCreature.getSkullName();
+        ItemStack helmet = petManager.getSkullForPet(seaCreature.getSkullName());
+        ItemStack chest = createDyedLeatherArmor(Material.LEATHER_CHESTPLATE, seaCreature.getArmorColor());
+        ItemStack legs = createDyedLeatherArmor(Material.LEATHER_LEGGINGS, seaCreature.getArmorColor());
+        ItemStack boots = createDyedLeatherArmor(Material.LEATHER_BOOTS, seaCreature.getArmorColor());
+
+        livingEntity.getEquipment().setHelmet(helmet);
+        livingEntity.getEquipment().setChestplate(chest);
+        livingEntity.getEquipment().setLeggings(legs);
+        livingEntity.getEquipment().setBoots(boots);
+
+        livingEntity.getEquipment().setHelmetDropChance(0);
+        livingEntity.getEquipment().setChestplateDropChance(0);
+        livingEntity.getEquipment().setLeggingsDropChance(0);
+        livingEntity.getEquipment().setBootsDropChance(0);
+
+        livingEntity.setSwimming(true);
+        livingEntity.setSilent(true);
+        SpawnMonsters spawnMonsters = new SpawnMonsters(plugin, xpManager);
+        spawnMonsters.applyMobAttributes(livingEntity, seaCreature.getLevel());
+        spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + seaCreature.getLevel() + "] " + seaCreature.getColoredDisplayName());
         spawnedEntity.setCustomNameVisible(true);
         // Attach metadata with the sea creature's name
         spawnedEntity.setMetadata("SEA_CREATURE", new FixedMetadataValue(MinecraftNew.getInstance(), seaCreature.getDisplayName()));
@@ -206,13 +230,6 @@ public class FishingEvent implements Listener {
             Bukkit.getLogger().info("Metadata successfully applied to entity: " + spawnedEntity.getName());
         } else {
             Bukkit.getLogger().warning("Metadata application failed for entity: " + spawnedEntity.getName());
-        }
-
-
-        // Apply dyed armor, player head, and attributes
-        if (spawnedEntity instanceof LivingEntity) {
-            LivingEntity livingEntity = (LivingEntity) spawnedEntity;
-            applySeaCreatureAttributes(livingEntity, seaCreature.getLevel());
         }
 
         // Calculate the direction vector from sea creature to player
@@ -227,34 +244,16 @@ public class FishingEvent implements Listener {
         // Set the sea creature's velocity towards the player, including upward motion
         spawnedEntity.setVelocity(direction);
 
-        player.sendMessage(ChatColor.AQUA + "A " + seaCreature.getRarity() + " " + seaCreature.getColoredDisplayName() + " is approaching!");
+        player.sendMessage("A " + seaCreature.getColoredDisplayName() + " is approaching!");
         playSplashSound(player, seaCreature.getRarity());
 
         // Play particles at the bobber location
         bobberLocation.getWorld().spawnParticle(Particle.WATER_SPLASH, bobberLocation, 30, 0.5, 0.5, 0.5, 0.1);
         bobberLocation.getWorld().playSound(bobberLocation, Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
+
+        ((LivingEntity) spawnedEntity).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, false));
     }
 
-    /**
-     * Applies attributes to the sea creature based on its level.
-     *
-     * @param entity The sea creature entity.
-     * @param level  The level of the sea creature.
-     */
-    private void applySeaCreatureAttributes(LivingEntity entity, int level) {
-        // Adjust health
-        double baseHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-        double newHealth = baseHealth + level * 2; // Adjust scaling as needed
-        entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
-        entity.setHealth(newHealth);
-
-        // Adjust damage if applicable
-        if (entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) != null) {
-            double baseDamage = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getBaseValue();
-            double newDamage = baseDamage + level * 0.5; // Adjust scaling as needed
-            entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(newDamage);
-        }
-    }
 
     private void playSplashSound(Player player, Rarity rarity) {
         // Adjusted to include more sounds based on rarity
@@ -263,32 +262,29 @@ public class FishingEvent implements Listener {
         float pitch = 1.0f;
 
         switch (rarity) {
-            case COMMON:
-                sound = Sound.ENTITY_FISHING_BOBBER_RETRIEVE;
-                break;
-            case UNCOMMON:
+            case COMMON, UNCOMMON:
                 sound = Sound.ENTITY_DOLPHIN_SPLASH;
                 break;
             case RARE:
-                sound = Sound.ENTITY_ELDER_GUARDIAN_AMBIENT;
+                sound = Sound.ENTITY_DOLPHIN_SPLASH;
                 break;
             case EPIC:
-                sound = Sound.ENTITY_WITHER_SPAWN;
+                sound = Sound.ENTITY_ELDER_GUARDIAN_AMBIENT;
                 volume = 1.5f;
                 pitch = 0.8f;
                 break;
             case LEGENDARY:
-                sound = Sound.ENTITY_ENDER_DRAGON_GROWL;
+                sound = Sound.ENTITY_ELDER_GUARDIAN_AMBIENT;
                 volume = 2.0f;
                 pitch = 0.6f;
                 break;
             case MYTHIC:
-                sound = Sound.ENTITY_WITHER_DEATH;
+                sound = Sound.ENTITY_ELDER_GUARDIAN_AMBIENT;
                 volume = 2.0f;
                 pitch = 0.5f;
                 break;
             default:
-                sound = Sound.BLOCK_WATER_AMBIENT;
+                sound = Sound.ENTITY_ELDER_GUARDIAN_AMBIENT;
                 break;
         }
 

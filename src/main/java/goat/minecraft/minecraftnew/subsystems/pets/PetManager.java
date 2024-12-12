@@ -84,6 +84,9 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Blaze", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTgwNDZkMzhhOTdjOTFmNTk5NDllYTc0MmVmZDc0ODI3Y2NlZGVmZTk4NTI4NTUyY2QzMjdiNGI2MWMzOWI1ZiJ9fX0=");
         PET_TEXTURES.put("Enderman", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGYyNDc2N2M4MTM4YjNkZmVjMDJmNzdiZDE1MTk5NGQ0ODBkNGU4Njk2NjRjZTA5YTI2YjE5Mjg5MjEyMTYyYiJ9fX0=");
         PET_TEXTURES.put("Drowned", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2JmOGM1NzJhNzM3ZDgyNzVlM2MzOGFiY2ZlYmRiMTI1YmUzYjkwZmMxZTVlNzllNmVkZDU0OTlhYTYyYmVkNiJ9fX0=");
+
+        //sea creature textures...
+        PET_TEXTURES.put("Shark", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOGYwNjdmOGQ3NjJlNGFmOTNiZDNmMmY5ZTc5ODdhYjBhYTBiZGQzOWFkMWU2YTNkNmI0NjJjMWE2NDdlODAxIn19fQ==");
     }
 
     public static PetManager getInstance(JavaPlugin plugin) {
@@ -94,7 +97,7 @@ public class PetManager implements Listener {
     }
 
     // Helper method to create a custom skull from a base64 texture
-    private ItemStack getCustomSkull(String base64) {
+    public ItemStack getCustomSkull(String base64) {
         if (base64 == null || base64.isEmpty()) {
             return new ItemStack(Material.NAME_TAG);
         }

@@ -288,7 +288,7 @@ public class Mining implements Listener {
         // Determine the Haste level
         int hasteLevel = hasRedstoneGem ? 1 : 0; // Default to Haste I (level 0), upgrade to Haste II (level 1) if REDSTONE_GEM is applied
 
-        if (roll >= 90) { // 11% chance to grant Haste
+        if (roll < 2) { // 11% chance to grant Haste
             int duration = 200 + (level * 5); // Duration increases with level
 
             // Apply or extend Haste effect

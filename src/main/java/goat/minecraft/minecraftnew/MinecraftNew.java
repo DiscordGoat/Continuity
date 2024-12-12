@@ -16,6 +16,7 @@ import goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects.*;
 import goat.minecraft.minecraftnew.subsystems.farming.FarmingEvent;
 import goat.minecraft.minecraftnew.subsystems.fishing.FishingEvent;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
+import goat.minecraft.minecraftnew.subsystems.fishing.SpawnSeaCreatureCommand;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.music.MusicDiscManager;
@@ -63,7 +64,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
-
+        this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
         PetManager petManager = PetManager.getInstance(this);
         new SpeedBoost(petManager);
         getServer().getPluginManager().registerEvents(new Leap(this), this);

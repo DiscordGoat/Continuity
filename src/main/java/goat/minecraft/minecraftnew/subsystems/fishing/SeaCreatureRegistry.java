@@ -1,5 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.fishing;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -15,7 +17,9 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
 import java.util.*;
 
 import static goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager.createCustomItem;
@@ -25,6 +29,9 @@ public class SeaCreatureRegistry implements Listener {
     private static final Map<Rarity, Double> RARITY_WEIGHTS = new HashMap<>();
     private static final Map<Rarity, Integer> RARITY_LEVELS = new HashMap<>();
     private static final Random RANDOM = new Random();
+
+
+
     static {
         // Define weights for each rarity (sum should be 1.0)
         RARITY_WEIGHTS.put(Rarity.COMMON, 0.25);
@@ -35,12 +42,11 @@ public class SeaCreatureRegistry implements Listener {
         RARITY_WEIGHTS.put(Rarity.MYTHIC, 0.10);
 
         // Assign levels based on rarity
-        RARITY_LEVELS.put(Rarity.COMMON, 10);
-        RARITY_LEVELS.put(Rarity.UNCOMMON, 20);
-        RARITY_LEVELS.put(Rarity.RARE, 30);
-        RARITY_LEVELS.put(Rarity.EPIC, 40);
-        RARITY_LEVELS.put(Rarity.LEGENDARY, 50);
-        RARITY_LEVELS.put(Rarity.MYTHIC, 60);
+        RARITY_LEVELS.put(Rarity.COMMON, 20);
+        RARITY_LEVELS.put(Rarity.UNCOMMON, 40);
+        RARITY_LEVELS.put(Rarity.RARE, 60);
+        RARITY_LEVELS.put(Rarity.EPIC, 80);
+        RARITY_LEVELS.put(Rarity.LEGENDARY, 100);
 
         // Define alchemy items with detailed lore
         ItemStack fishBone = createAlchemyItem("Fish Bone", Material.BONE, List.of(
@@ -188,295 +194,22 @@ public class SeaCreatureRegistry implements Listener {
         ), 1,false, true);
 
 
-        SEA_CREATURES.add(new SeaCreature(
-                "Cod",
-                Rarity.COMMON,
-                EntityType.COD,
-                fishBone,
-                Color.fromRGB(255, 215, 0), // Gold
-                "Glowfin Head",
-                RARITY_LEVELS.get(Rarity.COMMON)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Salmon",
-                Rarity.COMMON,
-                EntityType.SALMON,
-                fishBone,
-                Color.fromRGB(34, 139, 34), // Forest Green
-                "Mossback Head",
-                RARITY_LEVELS.get(Rarity.COMMON)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Pufferfish",
-                Rarity.COMMON,
-                EntityType.PUFFERFISH,
-                fishOil,
-                Color.fromRGB(0, 191, 255), // Deep Sky Blue
-                "Puffer Head",
-                RARITY_LEVELS.get(Rarity.COMMON)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Tropical Fish",
-                Rarity.COMMON,
-                EntityType.TROPICAL_FISH,
-                fishBone,
-                Color.fromRGB(255, 69, 0), // Orange Red
-                "Tropical Head",
-                RARITY_LEVELS.get(Rarity.COMMON)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Turtle Hatchling",
-                Rarity.COMMON,
-                EntityType.TURTLE,
-                shallowShell,
-                Color.fromRGB(0, 128, 128), // Teal
-                "Turtle Head",
-                RARITY_LEVELS.get(Rarity.COMMON)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Moonlit Squid",
-                Rarity.COMMON,
-                EntityType.SQUID,
-                shallowInk,
-                Color.fromRGB(72, 61, 139), // Dark Slate Blue
-                "Moonlit Squid Head",
-                RARITY_LEVELS.get(Rarity.COMMON)
-        ));
 
-        // --------------------------
-        // Uncommon Sea Creatures (10)
-        // --------------------------
+
+
+
+
         SEA_CREATURES.add(new SeaCreature(
-                "Crimson Puffer",
-                Rarity.UNCOMMON,
-                EntityType.PUFFERFISH,
-                shallowVenom,
-                Color.fromRGB(220, 20, 60), // Crimson
-                "Crimson Head",
-                RARITY_LEVELS.get(Rarity.UNCOMMON)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Azure Jellyfish",
-                Rarity.UNCOMMON,
-                EntityType.STRAY,
-                aquaAffinity,
-                Color.fromRGB(0, 0, 255), // Blue
-                "Azure Head",
-                RARITY_LEVELS.get(Rarity.UNCOMMON)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Coralback Turtle",
-                Rarity.UNCOMMON,
-                EntityType.TURTLE,
-                shell,
-                Color.fromRGB(255, 127, 80), // Coral
-                "Coralback Head",
-                RARITY_LEVELS.get(Rarity.UNCOMMON)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Luminescent Squid",
-                Rarity.UNCOMMON,
-                EntityType.SQUID,
-                luminescentInk,
-                Color.fromRGB(75, 0, 130), // Indigo
-                "Luminescent Squid Head",
-                RARITY_LEVELS.get(Rarity.UNCOMMON)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Pirate",
-                Rarity.UNCOMMON,
-                EntityType.PILLAGER,
+                "Shark",
+                Rarity.RARE,
+                EntityType.ZOMBIE,
                 sweepingEdge,
-                Color.fromRGB(0, 128, 0), // Green
-                "Emerald Turtle Head",
-                RARITY_LEVELS.get(Rarity.UNCOMMON)
-        ));
-
-        SEA_CREATURES.add(new SeaCreature(
-                "Oceanic Squid",
-                Rarity.UNCOMMON,
-                EntityType.SQUID,
-                deepInk,
-                Color.fromRGB(0, 0, 139), // Dark Blue
-                "Oceanic Squid Head",
-                RARITY_LEVELS.get(Rarity.UNCOMMON)
-        ));
-
-        // ----------------------
-        // Rare Sea Creatures (15)
-        // ----------------------
-        SEA_CREATURES.add(new SeaCreature(
-                "Pearlback Puffer",
-                Rarity.RARE,
-                EntityType.PUFFERFISH,
-                shallowVenom,
-                Color.fromRGB(255, 250, 250), // Snow
-                "Pearlback Puffer Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Poseidon",
-                Rarity.RARE,
-                EntityType.GUARDIAN,
-                trident,
-                Color.fromRGB(25, 25, 112), // Midnight Blue
-                "Leviathan Spawn Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Shadow Eel",
-                Rarity.RARE,
-                EntityType.ZOMBIE_VILLAGER,
-                swiftSneak,
-                Color.fromRGB(47, 79, 79), // Dark Slate Gray
-                "Shadow Eel Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Golden Puffer",
-                Rarity.RARE,
-                EntityType.PUFFERFISH,
-                deepVenom,
-                Color.fromRGB(255, 215, 0), // Gold
-                "Golden Puffer Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Water Zombie",
-                Rarity.RARE,
-                EntityType.ZOMBIE,
-                riptide,
-                Color.fromRGB(255, 215, 0), // Gold
-                "Golden Puffer Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Ironclad Turtle",
-                Rarity.RARE,
-                EntityType.TURTLE,
-                deepShell,
-                Color.fromRGB(192, 192, 192), // Silver
-                "Ironclad Turtle Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Stormcaller Squid",
-                Rarity.RARE,
-                EntityType.SQUID,
-                deepInk,
-                Color.fromRGB(0, 0, 255), // Blue
-                "Stormcaller Squid Head",
+                Color.fromRGB(192, 220, 220),
+                "Shark",  // unique texture for this creature
                 RARITY_LEVELS.get(Rarity.RARE)
         ));
 
-        SEA_CREATURES.add(new SeaCreature(
-                "Primeval Serpent",
-                Rarity.RARE,
-                EntityType.ZOMBIE,
-                impaling,
-                Color.fromRGB(75, 0, 130), // Indigo
-                "Primeval Serpent Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-        ));
 
-        // -------------------
-        // Epic Sea Creatures (10)
-        // -------------------
-        SEA_CREATURES.add(new SeaCreature(
-                "Abyssal Kraken",
-                Rarity.EPIC,
-                EntityType.GUARDIAN,
-                abyssalInk,
-                Color.fromRGB(0, 0, 128), // Navy
-                "Abyssal Kraken Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Crimson Tide Serpent",
-                Rarity.EPIC,
-                EntityType.ZOMBIE,
-                deepTear,
-                Color.fromRGB(220, 20, 60), // Crimson
-                "Crimson Tide Serpent Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Yeti",
-                Rarity.EPIC,
-                EntityType.STRAY,
-                deepTear,
-                Color.fromRGB(220, 20, 60), // Crimson
-                "Crimson Tide Serpent Head",
-                RARITY_LEVELS.get(Rarity.RARE)
-                ));
-        // -------------------------
-        // Legendary Sea Creatures (10)
-        // -------------------------
-        SEA_CREATURES.add(new SeaCreature(
-                "Apex Leviathan",
-                Rarity.LEGENDARY,
-                EntityType.SKELETON,
-                leviathanHeart,
-                Color.fromRGB(0, 0, 128), // Navy
-                "Leviathan Head",
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Mighty Guardian",
-                Rarity.LEGENDARY,
-                EntityType.GUARDIAN,
-                respiration,
-                Color.fromRGB(34, 139, 34), // Forest Green
-                "Mighty Guardian Head",
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Venomous Water Spider",
-                Rarity.LEGENDARY,
-                EntityType.CAVE_SPIDER,
-                respiration,
-                Color.fromRGB(34, 139, 34), // Forest Green
-                "Mighty Guardian Head",
-                RARITY_LEVELS.get(Rarity.EPIC)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Obsidian Squid",
-                Rarity.LEGENDARY,
-                EntityType.SQUID,
-                abyssalInk,
-                Color.fromRGB(0, 0, 0), // Black
-                "Obsidian Squid Head",
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Elder Turtle",
-                Rarity.LEGENDARY,
-                EntityType.TURTLE,
-                abyssalShell,
-                Color.fromRGB(105, 105, 105), // Dim Gray
-                "Elder Turtle Head",
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Electric Eel",
-                Rarity.LEGENDARY,
-                EntityType.GUARDIAN,
-                channeling,
-                Color.fromRGB(105, 105, 105), // Dim Gray
-                "Elder Turtle Head",
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
-        ));
-        SEA_CREATURES.add(new SeaCreature(
-                "Radiant Puffer",
-                Rarity.LEGENDARY,
-                EntityType.PUFFERFISH,
-                abyssalVenom
-                ,
-                Color.fromRGB(255, 215, 0), // Gold
-                "Radiant Puffer Head",
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
-        ));
 
 
     }
@@ -567,7 +300,7 @@ public class SeaCreatureRegistry implements Listener {
      * @param color    The color to dye the armor.
      * @return The dyed leather armor ItemStack.
      */
-    private static ItemStack createDyedLeatherArmor(Material material, Color color) {
+    static ItemStack createDyedLeatherArmor(Material material, Color color) {
         ItemStack armor = new ItemStack(material);
         LeatherArmorMeta meta = (LeatherArmorMeta) armor.getItemMeta();
         meta.setColor(color);

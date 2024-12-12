@@ -7,9 +7,11 @@ import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
@@ -26,7 +28,24 @@ public class SeaCreatureDeathEvent implements Listener {
     CustomItemManager customItemManager = new CustomItemManager();
 
     ItemStack lapis = new ItemStack(Material.LAPIS_LAZULI, 4);
+    @EventHandler
+    public void onSeaCreatureHit(EntityDamageByEntityEvent event) {
+        Entity entity = event.getEntity();
 
+        // Ensure metadata exists
+        List<MetadataValue> metadata = entity.getMetadata("SEA_CREATURE");
+
+        if (!metadata.isEmpty()) {
+            Location loc = entity.getLocation();
+            World world = entity.getWorld();
+
+            // Play iron clang sound
+            world.playSound(loc, Sound.ENTITY_ZOMBIE_CONVERTED_TO_DROWNED, 0.1f, 0.5f);
+
+            // Spawn iron particles
+            world.spawnParticle(Particle.WATER_WAKE, loc, 10, 0.5, 1, 0.5);
+        }
+    }
     @EventHandler
     public void onSeaCreatureDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
@@ -34,7 +53,6 @@ public class SeaCreatureDeathEvent implements Listener {
         // Ensure metadata exists
         List<MetadataValue> metadata = entity.getMetadata("SEA_CREATURE");
         if (metadata == null || metadata.isEmpty()) {
-            Bukkit.getLogger().warning("No SEA_CREATURE metadata found for entity: " + entity.getCustomName());
             // Debug: Print all metadata keys
             for (MetadataValue value : entity.getMetadata("SEA_CREATURE")) {
                 Bukkit.getLogger().info("Found metadata key: " + value.toString());

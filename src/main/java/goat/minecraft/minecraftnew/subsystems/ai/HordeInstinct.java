@@ -17,7 +17,7 @@ public class HordeInstinct implements Listener {
         Entity zombie = event.getEntity();
         if(zombie instanceof Zombie) {
             int zombieLevel = pathfinder.getMobLevel(zombie);
-            if (zombieLevel >= 1 && Math.random() < 0.05) {
+            if (zombieLevel >= 50 && Math.random() < 0.05) {
                 zombie.setCustomName("§4Alpha " + zombie.getCustomName());
                 new BukkitRunnable() {
                     @Override
@@ -28,7 +28,7 @@ public class HordeInstinct implements Listener {
                         }
                         Player nearestPlayer = pathfinder.getNearestPlayer(zombie, 100);
                         if (nearestPlayer != null) {
-                            pathfinder.moveNear((Mob) zombie, nearestPlayer.getLocation(), 25);
+                            pathfinder.moveTo((Mob) zombie, nearestPlayer.getLocation());
                         }
                     }
                 }.runTaskTimer(MinecraftNew.getInstance(), 0L, 20L); // Run every second

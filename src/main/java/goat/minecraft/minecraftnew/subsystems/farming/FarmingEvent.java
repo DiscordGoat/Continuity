@@ -113,11 +113,10 @@ public class FarmingEvent implements Listener {
         if (roll < LEGENDARY_THRESHOLD) {
             petManager.createPet(
                     player,
-                    "Dragon",
+                    "Pig",
                     PetManager.Rarity.LEGENDARY,
                     100,
                     Particle.FIREWORKS_SPARK,
-                    PetManager.PetPerk.SPEED_BOOST,
                     PetManager.PetPerk.GREEN_THUMB,
                     PetManager.PetPerk.CULTIVATION,
                     PetManager.PetPerk.SUPERIOR_ENDURANCE
@@ -127,11 +126,10 @@ public class FarmingEvent implements Listener {
         } else if (roll < EPIC_THRESHOLD) {
             petManager.createPet(
                     player,
-                    "Phoenix",
+                    "Mooshroom",
                     PetManager.Rarity.EPIC,
                     100,
                     Particle.FIREWORKS_SPARK,
-                    PetManager.PetPerk.SPEED_BOOST,
                     PetManager.PetPerk.GREEN_THUMB,
                     PetManager.PetPerk.CULTIVATION
             );
@@ -140,11 +138,10 @@ public class FarmingEvent implements Listener {
         } else if (roll < RARE_THRESHOLD) {
             petManager.createPet(
                     player,
-                    "Griffin",
+                    "Cow",
                     PetManager.Rarity.RARE,
                     100,
                     Particle.FIREWORKS_SPARK,
-                    PetManager.PetPerk.SPEED_BOOST,
                     PetManager.PetPerk.GREEN_THUMB,
                     PetManager.PetPerk.ANTIDOTE
             );
@@ -156,7 +153,6 @@ public class FarmingEvent implements Listener {
                     PetManager.Rarity.UNCOMMON,
                     100,
                     Particle.FIREWORKS_SPARK,
-                    PetManager.PetPerk.SPEED_BOOST,
                     PetManager.PetPerk.GREEN_THUMB
             );
 

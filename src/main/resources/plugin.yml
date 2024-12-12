@@ -3,6 +3,8 @@ version: '${project.version}'
 main: goat.minecraft.minecraftnew.MinecraftNew
 api-version: '1.20'
 commands:
+  spawnseacreature:
+    description: Spawns a sea creature by name.
   givecustomitem:
     description: Gives a predefined custom item to the player.
     usage: /givecustomitem <customitem>

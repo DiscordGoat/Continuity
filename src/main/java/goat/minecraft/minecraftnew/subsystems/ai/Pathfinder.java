@@ -29,10 +29,6 @@ public class Pathfinder
                 });
     }
 
-    public void moveNear(Mob mob, Location location, double radius) {
-        EntityBrain brain = BukkitBrain.getBrain(mob);
-        brain.getController().moveTo(location);
-    }
     public void moveTo(Mob mob, Location location) {
         EntityBrain brain = BukkitBrain.getBrain(mob);
         brain.getController().moveTo(location);

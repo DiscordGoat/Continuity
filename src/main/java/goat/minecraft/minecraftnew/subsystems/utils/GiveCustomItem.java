@@ -1,5 +1,10 @@
 package goat.minecraft.minecraftnew.subsystems.utils;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreature;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -7,9 +12,15 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.SkullMeta;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+
+
+
 
 public class GiveCustomItem implements CommandExecutor {
 
@@ -22,19 +33,9 @@ public class GiveCustomItem implements CommandExecutor {
         }
 
         Player player = (Player) sender;
-
-        // Add all custom items to the player's inventory
-        player.getInventory().addItem(perfectDiamond());
-        player.getInventory().addItem(infernalLooting());
-        player.getInventory().addItem(infernalUnbreaking());
-        player.getInventory().addItem(infernalDepthStrider());
-        player.getInventory().addItem(infernalBaneOfAnthropods());
-        player.getInventory().addItem(infernalEfficiency());
-        player.getInventory().addItem(infernalFireAspect());
-        player.getInventory().addItem(infernalSharpness());
-        player.getInventory().addItem(infernalSmite());
-        player.getInventory().addItem(infernalLure());
-
+        PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
+        ItemStack helmet = petManager.getSkullForPet("Zed");
+        player.getInventory().addItem(helmet);
         player.sendMessage(ChatColor.GREEN + "You have received all custom items!");
 
         return true;

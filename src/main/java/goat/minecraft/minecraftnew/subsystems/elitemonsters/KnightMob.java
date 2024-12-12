@@ -45,8 +45,10 @@ public class KnightMob implements Listener {
         zombieList.add(EntityType.ZOMBIFIED_PIGLIN);
         zombieList.add(EntityType.DROWNED);
 
-        if(zombieList.contains(e.getEntity().getType())){
-            if (random.nextInt(100) < 1) { // 4% chance to transform
+        if (zombieList.contains(e.getEntity().getType())) {
+            SpawnMonsters spawnMonsters = new SpawnMonsters(MinecraftNew.getInstance(), xpManager);
+            Player nearestPlayer = spawnMonsters.getNearestPlayer(e.getEntity(), 100);
+            if (nearestPlayer != null && xpManager.getPlayerLevel(nearestPlayer, "Combat") >= 20 && random.nextInt(100) < 1) {
                 transformToKnight(e.getEntity());
             }
         }
