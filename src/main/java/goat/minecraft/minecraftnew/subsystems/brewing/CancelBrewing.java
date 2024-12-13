@@ -50,21 +50,17 @@ public class CancelBrewing implements Listener {
         Block clickedBlock = event.getClickedBlock();
         XPManager xpManager = new XPManager(plugin);
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && clickedBlock != null && clickedBlock.getType() == Material.BREWING_STAND) {
-            if(xpManager.getPlayerLevel(player, "Player") < 50){
-                player.sendMessage(ChatColor.RED + "You must be player level 50 to brew potions!");
-                event.setCancelled(true);
-            }else {
-                event.setCancelled(true);
-
-                // Get or load the player's brewing stand inventory
-                Inventory brewingStandInventory = brewingStandInventories.get(player.getUniqueId());
-                if (brewingStandInventory == null) {
-                    brewingStandInventory = loadInventory(player.getUniqueId());
-                    brewingStandInventories.put(player.getUniqueId(), brewingStandInventory);
-                }
-
-                player.openInventory(brewingStandInventory);
+            player.sendMessage(ChatColor.RED + "You must be player level 50 to brew potions!");
+            event.setCancelled(true);
+            // Get or load the player's brewing stand inventory
+            Inventory brewingStandInventory = brewingStandInventories.get(player.getUniqueId());
+            if (brewingStandInventory == null) {
+                brewingStandInventory = loadInventory(player.getUniqueId());
+                brewingStandInventories.put(player.getUniqueId(), brewingStandInventory);
             }
+
+            player.openInventory(brewingStandInventory);
+
         }
     }
 
@@ -168,8 +164,7 @@ public class CancelBrewing implements Listener {
             int duration = calculateDuration(durationItem);
             int potency = calculatePotency(potencyItem);
 
-            boolean isSplash = (gunpowder != null && (gunpowder.getType() == Material.GUNPOWDER || Objects.requireNonNull(gunpowder).getItemMeta().getDisplayName()
-                    .equals(ChatColor.LIGHT_PURPLE + "Fish Bone")));
+            boolean isSplash = (gunpowder != null && (gunpowder.getType() == Material.GUNPOWDER));
             ItemStack potion = new ItemStack(isSplash ? Material.SPLASH_POTION : Material.POTION);
             PotionMeta potionMeta = (PotionMeta) potion.getItemMeta();
 
@@ -195,12 +190,6 @@ public class CancelBrewing implements Listener {
 
             // Handle special lore
             List<String> lore = new ArrayList<>();
-            if (enderPearl != null && enderPearl.getType() == Material.ENDER_PEARL) {
-                lore.add(ChatColor.DARK_PURPLE + "Ender");
-            }
-            if (pumpkin != null && pumpkin.getType() == Material.PUMPKIN) {
-                lore.add(ChatColor.GOLD + "Tasty");
-            }
             potionMeta.setLore(lore);
 
             potion.setItemMeta(potionMeta);
@@ -293,8 +282,7 @@ public class CancelBrewing implements Listener {
             if (ingredient1.getType() == Material.HONEYCOMB && ingredient2.getType() == Material.CHARCOAL) {
                 return PotionEffectType.SLOW_DIGGING;
             }
-            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.BLAZE_POWDER || ingredient2.getItemMeta()
-                    .getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Deep Tooth")) {
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.BLAZE_POWDER) {
                 return PotionEffectType.INCREASE_DAMAGE;
             }
             if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.IRON_NUGGET) {
@@ -343,8 +331,7 @@ public class CancelBrewing implements Listener {
             if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.MAGMA_CREAM) {
                 return PotionEffectType.FIRE_RESISTANCE;
             }
-            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.GHAST_TEAR || ingredient2.getItemMeta()
-                    .getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Fish Oil")) {
+            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.GHAST_TEAR) {
                 return PotionEffectType.REGENERATION;
             }
             if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getType() == Material.GOLDEN_CARROT) {
@@ -354,22 +341,15 @@ public class CancelBrewing implements Listener {
                     .equals(ChatColor.LIGHT_PURPLE + "Luminescent Ink")) {
                 return PotionEffectType.GLOWING;
             }
-            if (ingredient1.getType() == Material.NETHER_WART && ingredient2.getItemMeta().getDisplayName()
-                    .equals(ChatColor.AQUA + "Apple")) {
-                return PotionEffectType.REGENERATION;
-            }
-
         }
         return null;
     }
 
     private static int calculateDuration(ItemStack durationItem) {
         if (durationItem != null) {
-            if (durationItem.getType() == Material.REDSTONE || durationItem.getItemMeta().getDisplayName()
-                    .equals(ChatColor.LIGHT_PURPLE + "Shallow Venom")) {
+            if (durationItem.getType() == Material.REDSTONE) {
                 return 7200; // 6 minutes
-            } else if (durationItem.getType() == Material.REDSTONE_BLOCK || durationItem.getItemMeta().getDisplayName()
-                    .equals(ChatColor.LIGHT_PURPLE + "Deep Venom")) {
+            } else if (durationItem.getType() == Material.REDSTONE_BLOCK) {
                 return 14400; // 12 minutes
             }else if(durationItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Abyssal Venom")){
                 return 28800;
@@ -380,11 +360,9 @@ public class CancelBrewing implements Listener {
 
     private static int calculatePotency(ItemStack potencyItem) {
         if (potencyItem != null) {
-            if (potencyItem.getType() == Material.GLOWSTONE_DUST || potencyItem.getItemMeta().getDisplayName()
-                    .equals(ChatColor.LIGHT_PURPLE + "Shallow Ink")) {
+            if (potencyItem.getType() == Material.GLOWSTONE_DUST) {
                 return 1; // Potency level 1
-            } else if (potencyItem.getType() == Material.GLOWSTONE || potencyItem.getItemMeta().getDisplayName()
-                    .equals(ChatColor.LIGHT_PURPLE + "Deep Ink")) {
+            } else if (potencyItem.getType() == Material.GLOWSTONE) {
                 return 2; // Potency level 2
             }else if(potencyItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Abyssal Ink")){
                 return 4;

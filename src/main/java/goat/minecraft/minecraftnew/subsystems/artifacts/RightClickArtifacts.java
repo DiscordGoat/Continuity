@@ -55,18 +55,7 @@ public class RightClickArtifacts implements Listener {
     public static ItemStack getRandomArmorTrim() {
         return armorTrims.get(random.nextInt(armorTrims.size()));
     }
-    private final ItemStack enderDrop = CustomItemManager.createCustomItem(
-            Material.ENDER_PEARL,
-            ChatColor.YELLOW + "End Pearl",
-            Arrays.asList(
-                    ChatColor.GRAY + "Something doesn't look normal here...",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reusable ender pearl.",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
+    private final ItemStack enderDrop = ItemRegistry.getEnderDrop();
     private final Plugin plugin;
 
     /**

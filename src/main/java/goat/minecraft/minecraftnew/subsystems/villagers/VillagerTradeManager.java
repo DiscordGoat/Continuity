@@ -1561,8 +1561,6 @@ public class VillagerTradeManager implements Listener {
             fishingPurchases.add(new TradeItem(new ItemStack(Material.CAMPFIRE, 2), 12, 2, 3));
 
             fishingPurchases.add(new TradeItem(deepShell,  64, 1, 4));
-            fishingPurchases.add(new TradeItem(deepVenom,  32, 1, 4));
-            fishingPurchases.add(new TradeItem(deepInk,  32, 1, 4));
             fishingPurchases.add(new TradeItem(fishermanLure,  64, 1, 4));
             fishingPurchases.add(new TradeItem(fishermanLuckoftheSea,  64, 1, 4));
 
@@ -1586,13 +1584,9 @@ public class VillagerTradeManager implements Listener {
             fishingSells.add(new TradeItem(new ItemStack(Material.GLOW_INK_SAC, 4), 1, 4, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(ItemRegistry.getTooth()), 4, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(luminescentInk), 8, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(shallowInk), 4, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(deepInk), 8, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(Material.NAUTILUS_SHELL), 4, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(Material.HEART_OF_THE_SEA), 16, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(fishBone), 4, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(fishOil), 4, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(deepVenom), 4, 1, 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(new ItemStack(Material.TRIDENT)), 24, 1, 2)); // Placeholder trade
         }
         sellWhitelist.put(Villager.Profession.FISHERMAN, fishingSells);

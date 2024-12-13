@@ -52,139 +52,22 @@ public class SeaCreatureRegistry implements Listener {
         // Define alchemy items with detailed lore
         ItemStack fishBone = ItemRegistry.getFishBone();
         ItemStack tooth = ItemRegistry.getTooth();
+        ItemStack shallowShell = ItemRegistry.getShallowShell();
+        ItemStack shell = ItemRegistry.getShell();
+        ItemStack luminescentInk = ItemRegistry.getLuminescentInk();
+        ItemStack leviathanHeart = ItemRegistry.getLeviathanHeart();
+        ItemStack deepShell = ItemRegistry.getDeepShell();
+        ItemStack abyssalInk = ItemRegistry.getAbyssalInk();
+        ItemStack abyssalShell = ItemRegistry.getAbyssalShell();
+        ItemStack abyssalVenom = ItemRegistry.getAbyssalVenom();
 
-        ItemStack shallowShell = createAlchemyItem("Shallow Shell", Material.SCUTE, List.of(
-                ChatColor.GRAY + "A shell found in shallow waters.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment slightly.",
-                ChatColor.GRAY + "Restores 100 durability.",
-                ChatColor.DARK_PURPLE + "Smithing Ingredient"
-        ));
-        ItemStack shallowInk = createAlchemyItem("Shallow Ink", Material.INK_SAC, List.of(
-                ChatColor.GRAY + "A handful of shallow ink.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Glowstone Dust substitute.",
-                ChatColor.GRAY + "Adds I Potency",
-                ChatColor.DARK_PURPLE + "Brewing Modifier"
-        ));
-        ItemStack shallowVenom = createAlchemyItem("Shallow Venom", Material.LIME_DYE, List.of(
-                ChatColor.GRAY + "Venom from shallow creatures.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Redstone Dust substitute",
-                ChatColor.DARK_PURPLE + "Brewing Modifier"
-        ));
-        ItemStack shell = createAlchemyItem("Shell", Material.CYAN_DYE, List.of(
-                ChatColor.GRAY + "A sturdy shell.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment moderately.",
-                ChatColor.GRAY + "Restores 200 durability.",
-                ChatColor.DARK_PURPLE + "Smithing Ingredient"
-        ));
-
-        ItemStack luminescentInk = createAlchemyItem("Luminescent Ink", Material.GLOW_INK_SAC, List.of(
-                ChatColor.GRAY + "A glowing ink.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Brewing ingredient for Glowing.",
-                ChatColor.GRAY + "Adds Glowing I",
-                ChatColor.DARK_PURPLE + "Brewing Ingredient"
-        ));
-
-        ItemStack leviathanHeart = createAlchemyItem("Leviathan Heart", Material.RED_DYE, List.of(
-                ChatColor.GRAY + "The beating heart of a mighty creature.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Artifact for health.",
-                ChatColor.GRAY + "Adds Regeneration 8 for 180 seconds.",
-                ChatColor.DARK_PURPLE + "Artifact"
-        ));
-
-        ItemStack deepVenom = createAlchemyItem("Deep Venom", Material.GREEN_DYE, List.of(
-                ChatColor.GRAY + "A potent venom from deep waters.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Redstone Block substitute.",
-                ChatColor.GRAY + "",
-                ChatColor.DARK_PURPLE + "Brewing Modifier"
-        ));
-
-        ItemStack deepShell = createAlchemyItem("Deep Shell", Material.TURTLE_HELMET, List.of(
-                ChatColor.GRAY + "A resilient shell from the depths.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment greatly.",
-                ChatColor.GRAY + "Restores 400 durability.",
-                ChatColor.DARK_PURPLE + "Smithing Ingredient"
-        ));
-
-        ItemStack deepInk = createAlchemyItem("Deep Ink", Material.BLACK_DYE, List.of(
-                ChatColor.GRAY + "A handful of ink from deep waters.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Glowstone substitute.",
-                ChatColor.GRAY + "",
-                ChatColor.DARK_PURPLE + "Brewing Modifier"
-        ));
-
-        ItemStack deepTear = createAlchemyItem("Deep Tooth", Material.IRON_NUGGET, List.of(
-                ChatColor.GRAY + "A tooth from a fierce predator.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Grants Strength 4 for 30 seconds.",
-                ChatColor.GRAY + "Adds Strength IV",
-                ChatColor.DARK_PURPLE + "Artifact"
-        ));
-
-        ItemStack abyssalInk = createAlchemyItem("Abyssal Ink", Material.BLACK_DYE, List.of(
-                ChatColor.GRAY + "Ink from the deepest abyss.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Exceptionally powerful Potency Modifier.",
-                ChatColor.GRAY + "",
-                ChatColor.DARK_PURPLE + "Mastery Brewing Modifier"
-        ));
-
-
-        ItemStack abyssalShell = createAlchemyItem("Abyssal Shell", Material.YELLOW_DYE, List.of(
-                ChatColor.GRAY + "A shell from the deepest abyss.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment massively.",
-                ChatColor.GRAY + "Restores 10000 durability.",
-                ChatColor.DARK_PURPLE + "Smithing Ingredient"
-        ));
-
-        ItemStack abyssalVenom = createAlchemyItem("Abyssal Venom", Material.POTION, List.of(
-                ChatColor.GRAY + "A vial of fatal venom.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Exceptionally powerful Duration Modifier.",
-                ChatColor.GRAY + "",
-                ChatColor.DARK_PURPLE + "Mastery Brewing Modifier"
-        ));
-        ItemStack trident = new ItemStack(Material.TRIDENT);
-
-
-        ItemStack aquaAffinity = createCustomItem(Material.TURTLE_EGG, ChatColor.YELLOW +
-                "Turtle Tactics", Arrays.asList(
-                ChatColor.GRAY + "Water Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Aqua Affinity.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack respiration = createCustomItem(Material.GLASS, ChatColor.YELLOW +
-                "Diving Helmet", Arrays.asList(
-                ChatColor.GRAY + "Water Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Respiration.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack swiftSneak = createCustomItem(Material.LEATHER_LEGGINGS, ChatColor.YELLOW +
-                "Swim Trunks", Arrays.asList(
-                ChatColor.GRAY + "Water Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Swift Sneak.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack impaling = createCustomItem(Material.BONE, ChatColor.YELLOW +
-                "Narwhal Tusk", Arrays.asList(
-                ChatColor.GRAY + "Water Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Impaling.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack sweepingEdge = createCustomItem(Material.IRON_SWORD, ChatColor.YELLOW +
-                "Sweeping Edge", Arrays.asList(
-                ChatColor.GRAY + "Air Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Sweeping Edge.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack channeling = createCustomItem(Material.LIGHTNING_ROD, ChatColor.YELLOW +
-                "Lightning Bolt", Arrays.asList(
-                ChatColor.GRAY + "Air Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Channeling.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack riptide = createCustomItem(Material.CONDUIT, ChatColor.YELLOW +
-                "Anaklusmos", Arrays.asList(
-                ChatColor.GRAY + "Water Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Riptide.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
+        ItemStack aquaAffinity = ItemRegistry.getAquaAffinity();
+        ItemStack respiration = ItemRegistry.getRespiration();
+        ItemStack swiftSneak = ItemRegistry.getSwiftSneak();
+        ItemStack impaling = ItemRegistry.getImpaling();
+        ItemStack sweepingEdge = ItemRegistry.getSweepingEdge();
+        ItemStack channeling = ItemRegistry.getChanneling();
+        ItemStack riptide = ItemRegistry.getRiptide();
 
 
 
@@ -193,6 +76,7 @@ public class SeaCreatureRegistry implements Listener {
 
         List<SeaCreature.DropItem> sharkDrops = new ArrayList<>();
         sharkDrops.add(new SeaCreature.DropItem(tooth, 3, 1, 5));
+        sharkDrops.add(new SeaCreature.DropItem(fishBone, 3, 1, 5));
         SEA_CREATURES.add(new SeaCreature(
                 "Shark",
                 Rarity.RARE,
@@ -217,6 +101,7 @@ public class SeaCreatureRegistry implements Listener {
 
 
         List<SeaCreature.DropItem> greatWhiteSharkDrops = new ArrayList<>();
+        greatWhiteSharkDrops.add(new SeaCreature.DropItem(fishBone, 7, 1, 5));
         greatWhiteSharkDrops.add(new SeaCreature.DropItem(tooth, 7, 1, 4));
         SEA_CREATURES.add(new SeaCreature(
                 "Great White Shark",
@@ -235,6 +120,7 @@ public class SeaCreatureRegistry implements Listener {
 
         List<SeaCreature.DropItem> megalodonDrops = new ArrayList<>();
         megalodonDrops.add(new SeaCreature.DropItem(tooth, 31, 1, 4));
+        megalodonDrops.add(new SeaCreature.DropItem(fishBone, 31, 1, 4));
         SEA_CREATURES.add(new SeaCreature(
                 "Megalodon",
                 Rarity.LEGENDARY,
@@ -244,11 +130,6 @@ public class SeaCreatureRegistry implements Listener {
                 "Megalodon",  // unique texture for this creature
                 RARITY_LEVELS.get(Rarity.LEGENDARY)
         ));
-
-
-
-
-
     }
 
     /**

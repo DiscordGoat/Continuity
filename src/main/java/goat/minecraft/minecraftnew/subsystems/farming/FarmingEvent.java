@@ -98,14 +98,7 @@ public class FarmingEvent implements Listener {
                 }
                 player.playSound(player.getLocation(), Sound.BLOCK_ROOTED_DIRT_PLACE, 1.0f, 1.0f);
             }
-
-            // Farming pets drop logic
-            grantFarmingPet(player, blockType);
         }
     }
 
-    // Farming pets drop logic remains the same...
-    private void grantFarmingPet(Player player, Material blockType) {
-        // ... existing grantFarmingPet implementation ...
-    }
 }
