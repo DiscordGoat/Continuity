@@ -51,7 +51,7 @@ public class SkillsCommand implements CommandExecutor {
         Inventory skillsInventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "Your Skills");
 
         // Define the skills to display
-        String[] skills = {"Fishing", "Farming", "Mining", "Combat", "Player", "Forestry"};
+        String[] skills = {"Fishing", "Farming", "Mining", "Combat", "Player", "Forestry", "Bartering", "Culinary"};
 
         // Define icons for each skill (you can customize these as desired)
         Material[] icons = {
@@ -60,7 +60,9 @@ public class SkillsCommand implements CommandExecutor {
                 Material.IRON_PICKAXE,  // Mining
                 Material.IRON_SWORD,    // Combat
                 Material.PLAYER_HEAD,   // Player
-                Material.GOLDEN_AXE     // Forestry
+                Material.GOLDEN_AXE,     // Forestry
+                Material.EMERALD,     // Bartering
+                Material.FURNACE     // Bartering
         };
 
         // Populate the inventory with skill items
@@ -124,17 +126,26 @@ public class SkillsCommand implements CommandExecutor {
     private List<String> getSkillStatLore(String skill, int level) {
         double multiplier = 1 + (level * 0.02); // 2% per level
         switch (skill) {
+            case "Culinary":
+                double additionalSaturation = Math.min(level * 0.05, 20.0); // Max 20 saturation at level 100
+                return Arrays.asList(
+                        ChatColor.YELLOW + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.YELLOW + "Extra Saturation: " + ChatColor.GREEN + String.format("%.2f", additionalSaturation) + " (Max 5)"
+                );
+            case "Bartering":
+                return Arrays.asList(
+                        ChatColor.BLUE + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.BLUE + "Discount: " + ChatColor.GREEN +  + level * 0.1 + "%"
+                );
             case "Fishing":
                 return Arrays.asList(
                         ChatColor.BLUE + "Level: " + ChatColor.GREEN + level,
                         ChatColor.BLUE + "Sea Creature Chance: " + ChatColor.GREEN +  + level /2 + "%"
                 );
             case "Farming":
-                double additionalSaturation = Math.min(level * 0.05, 20.0); // Max 20 saturation at level 100
                 return Arrays.asList(
                         ChatColor.YELLOW + "Level: " + ChatColor.GREEN + level,
-                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (level / 2) + "%",
-                        ChatColor.YELLOW + "Extra Saturation: " + ChatColor.GREEN + String.format("%.2f", additionalSaturation) + " (Max 5)"
+                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (level / 2) + "%"
                 );
             case "Mining":
                 int duration = 200 + (level * 5); // Duration increases with level

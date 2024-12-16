@@ -1297,7 +1297,7 @@ public class MusicDiscManager implements Listener {
         int totalCycles = durationTicks / intervalTicks;
 
         // List of skills
-        String[] skills = {"Combat", "Fishing", "Forestry", "Mining", "Farming"};
+        String[] skills = {"Combat", "Fishing", "Forestry", "Mining", "Farming", "Bartering"};
 
         // Colors for each skill
         Map<String, ChatColor> skillColors = new HashMap<>();
@@ -1306,6 +1306,7 @@ public class MusicDiscManager implements Listener {
         skillColors.put("Forestry", ChatColor.DARK_GREEN);
         skillColors.put("Mining", ChatColor.GRAY);
         skillColors.put("Farming", ChatColor.YELLOW);
+        skillColors.put("Bartering", ChatColor.GREEN);
 
         Random random = new Random();
 

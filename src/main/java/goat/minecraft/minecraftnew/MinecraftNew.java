@@ -7,6 +7,8 @@ import goat.minecraft.minecraftnew.subsystems.chocolatemisc.CakeHungerListener;
 import goat.minecraft.minecraftnew.subsystems.chocolatemisc.InventoryClickListener;
 import goat.minecraft.minecraftnew.subsystems.combat.EpicEnderDragonFight;
 import goat.minecraft.minecraftnew.subsystems.combat.MobDamageHandler;
+import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
+import goat.minecraft.minecraftnew.subsystems.culinary.MeatCookingManager;
 import goat.minecraft.minecraftnew.subsystems.elitemonsters.KnightMob;
 import goat.minecraft.minecraftnew.subsystems.combat.RareCombatDrops;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
@@ -28,7 +30,6 @@ import goat.minecraft.minecraftnew.subsystems.pets.petdrops.AxolotlInteractEvent
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.CatTameEvent;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.PetDrops;
 import goat.minecraft.minecraftnew.subsystems.skillbuffs.CombatBuffs;
-import goat.minecraft.minecraftnew.subsystems.skillbuffs.FarmingBuff;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.talismans.*;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ArmorReforge;
@@ -44,6 +45,7 @@ import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.subsystems.utils.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -56,6 +58,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private static MinecraftNew instance;
     CancelBrewing cancelBrewing = new CancelBrewing(this);
     private AnvilRepair anvilRepair;
+    private CulinarySubsystem culinarySubsystem;
+    private MeatCookingManager meatCookingManager;
+
 
     private PlayerOxygenManager playerOxygenManager;
     @Override
@@ -67,6 +72,16 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
         PetManager petManager = PetManager.getInstance(this);
         new SpeedBoost(petManager);
+        // Initialize the culinary subsystem
+        culinarySubsystem = new CulinarySubsystem(this);
+
+        getLogger().info("MyPlugin has been enabled!");
+
+        meatCookingManager = new MeatCookingManager(this);
+
+
+
+
         getServer().getPluginManager().registerEvents(new Leap(this), this);
         getServer().getPluginManager().registerEvents(new MobDamageHandler(), this);
         getServer().getPluginManager().registerEvents(new SoftPaw(this), this);
@@ -217,7 +232,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("clearpets").setExecutor(new ClearPetsCommand(this, petManager));
 
         getServer().getPluginManager().registerEvents(new CombatBuffs(), this);
-        getServer().getPluginManager().registerEvents(new FarmingBuff(xpManager), this);
 
         villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
@@ -249,6 +263,14 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onDisable() {
+        if (meatCookingManager != null) {
+            meatCookingManager.cancelAllCookingsOnShutdown();
+        }
+        if (culinarySubsystem != null) {
+            culinarySubsystem.finalizeAllSessionsOnShutdown();
+        }
+        getLogger().info("MinecraftNew disabled, all sessions finalized.");
+        Bukkit.getLogger().info("[CulinarySubsystem] Data saved and plugin disabled.");
         if (playerOxygenManager != null) {
             playerOxygenManager.saveOnShutdown();
         }

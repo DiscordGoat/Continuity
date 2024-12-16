@@ -28,10 +28,9 @@ public class LoadSubsystemsCommand implements CommandExecutor {
             sender.sendMessage("Successfully Created Farming Subsystem");
             xpManager.createDatabase(p.getUniqueId(), "Fishing");
             sender.sendMessage("Successfully Created Fishing Subsystem");
-            xpManager.createDatabase(p.getUniqueId(), "Coins");
-            sender.sendMessage("Successfully Created Coins Subsystem");
-            xpManager.createDatabase(p.getUniqueId(), "Oxygen");
-            sender.sendMessage("Successfully Created Oxygen Subsystem");
+            xpManager.createDatabase(p.getUniqueId(), "Bartering");
+            sender.sendMessage("Successfully Created Culinary Subsystem");
+            xpManager.createDatabase(p.getUniqueId(), "Culinary");
             return true;
         }
         return false;

@@ -910,8 +910,7 @@ public class AnvilRepair implements Listener {
 
 
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Midas Gold") && MELEE.contains(repairee.getType())){
-            setEnchantment(repairee, Enchantment.LOOT_BONUS_MOBS, 5);
-            billItem.setAmount(billItem.getAmount() - 1);
+            incrementInfernalEnchantment(repairee, billItem, Enchantment.LOOT_BONUS_MOBS);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }

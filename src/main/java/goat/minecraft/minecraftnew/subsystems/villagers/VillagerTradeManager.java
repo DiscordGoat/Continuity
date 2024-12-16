@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.utils.StructureUtils;
+import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
@@ -1086,250 +1087,170 @@ public class VillagerTradeManager implements Listener {
 
 // Mason
         List<TradeItem> masonPurchases = new ArrayList<>();
-        masonPurchases.add(new TradeItem(new ItemStack(Material.BRICKS, 4), 3, 4, 1)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.STONE, 8), 3, 8, 1)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.BRICKS, 4), 3, 4, 1, 29 * 1)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.STONE, 8), 3, 8, 1,29 * 1)); // Placeholder trade
 
-        masonPurchases.add(new TradeItem(new ItemStack(Material.ANDESITE, 8), 3, 8, 2)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.DIORITE, 8), 3, 8, 2)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.GRANITE, 8), 3, 8, 2)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.ANDESITE, 8), 3, 8, 2,29 * 1)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.DIORITE, 8), 3, 8, 2,29 * 1)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.GRANITE, 8), 3, 8, 2,29 * 1)); // Placeholder trade
 
-        masonPurchases.add(new TradeItem(new ItemStack(Material.TERRACOTTA, 8), 3, 8, 3)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.QUARTZ_BLOCK, 8), 5, 8, 3)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.SMOOTH_STONE, 8), 5, 8, 3)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.SANDSTONE, 8), 5, 8, 3)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.TERRACOTTA, 8), 3, 8, 3,29 * 1)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.QUARTZ_BLOCK, 8), 5, 8, 3,29 * 2)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.SMOOTH_STONE, 8), 5, 8, 3,29 * 2)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.SANDSTONE, 8), 5, 8, 3,29 * 2)); // Placeholder trade
 
-        masonPurchases.add(new TradeItem(new ItemStack(Material.PRISMARINE, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.DARK_PRISMARINE, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.PRISMARINE_BRICKS, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.NETHER_BRICKS, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.BLACKSTONE, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.SOUL_SAND, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.TUBE_CORAL_BLOCK, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.BRAIN_CORAL_BLOCK, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.BUBBLE_CORAL_BLOCK, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.FIRE_CORAL_BLOCK, 8), 7, 8, 4)); // Placeholder trade
-        masonPurchases.add(new TradeItem(new ItemStack(Material.HORN_CORAL_BLOCK, 8), 7, 8, 4)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.PRISMARINE, 8), 7, 8, 4,29 * 4)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.DARK_PRISMARINE, 8), 7, 8, 4,29 * 4)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.PRISMARINE_BRICKS, 8), 7, 8, 4,29 * 4)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.NETHER_BRICKS, 8), 7, 8, 4,29 * 4)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.BLACKSTONE, 8), 7, 8, 4,29 * 4)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.SOUL_SAND, 8), 7, 8, 4,29 * 4)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.TUBE_CORAL_BLOCK, 8), 7, 8, 4,29 * 3)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.BRAIN_CORAL_BLOCK, 8), 7, 8, 4,29 * 3)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.BUBBLE_CORAL_BLOCK, 8), 7, 8, 4,29 * 4)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.FIRE_CORAL_BLOCK, 8), 7, 8, 4,29 * 4)); // Placeholder trade
+        masonPurchases.add(new TradeItem(new ItemStack(Material.HORN_CORAL_BLOCK, 8), 7, 8, 4,29 * 4)); // Placeholder trade
         purchaseWhitelist.put(Villager.Profession.MASON, masonPurchases);
 
         List<TradeItem> masonSells = new ArrayList<>();
-        masonSells.add(new TradeItem(new ItemStack(Material.CLAY, 4), 1, 4, 1)); // Placeholder trade
-        masonSells.add(new TradeItem(new ItemStack(Material.COBBLESTONE, 32), 1, 32, 1)); // Placeholder trade
-        masonSells.add(new TradeItem(new ItemStack(Material.COPPER_INGOT, 3), 1, 3, 1)); // Placeholder trade
+        masonSells.add(new TradeItem(new ItemStack(Material.CLAY, 4), 1, 4, 1,29 * 1)); // Placeholder trade
+        masonSells.add(new TradeItem(new ItemStack(Material.COBBLESTONE, 32), 1, 32, 1,29 * 1)); // Placeholder trade
+        masonSells.add(new TradeItem(new ItemStack(Material.COPPER_INGOT, 3), 1, 3, 1,29 * 1)); // Placeholder trade
         sellWhitelist.put(Villager.Profession.MASON, masonSells);
 
 
 // Weaponsmith
         List<TradeItem> weaponsmithPurchases = new ArrayList<>();
-        weaponsmithPurchases.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 1), 4, 1, 1)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(new ItemStack(Material.COAL, 4), 2, 4, 1)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(commonSwordReforge, 32, 1, 1)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 1), 4, 1, 1,29 * 2)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(new ItemStack(Material.COAL, 4), 2, 4, 1,29 * 1)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(commonSwordReforge, 32, 1, 1,29 * 16)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(uncommonSwordReforge, 64, 1, 2)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(uncommonSwordReforge, 64, 1, 2,29 * 32)); // Placeholder trade
 
 
-        weaponsmithPurchases.add(new TradeItem(new ItemStack(Material.BELL, 1), 63, 1, 3)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithReforge, 64, 1, 3)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithReforgeTwo, 128, 1, 3)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(new ItemStack(Material.BELL, 1), 63, 1, 3,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithReforge, 64, 1, 3,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithReforgeTwo, 128, 1, 3,29 * 64)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(rareSwordReforge, 128, 1, 3)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(rareSwordReforge, 128, 1, 3,29 * 64)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(weaponsmithSharpness, 64, 1, 4)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(epicSwordReforge, 256, 1, 4)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithSharpness, 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(epicSwordReforge, 256, 1, 4,29 * 128)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(weaponsmithSweepingEdge, 63, 1, 4)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithLooting, 64, 1, 4)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithKnockback, 64, 1, 4)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithFireAspect, 64, 1, 4)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithSmite, 64, 1, 4)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithBaneofAnthropods, 64, 1, 4)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithSweepingEdge, 63, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithLooting, 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithKnockback, 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithFireAspect, 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithSmite, 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithBaneofAnthropods, 64, 1, 4,29 * 32)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(weaponsmithEnchant, 64, 1, 5)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(legendarySwordReforge, 512, 1, 5)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(weaponsmithEnchant, 64, 1, 5,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(legendarySwordReforge, 512, 1, 5,29 * 256)); // Placeholder trade
 
         purchaseWhitelist.put(Villager.Profession.WEAPONSMITH, weaponsmithPurchases);
-        ItemStack undeadDrop = CustomItemManager.createCustomItem(Material.ROTTEN_FLESH, ChatColor.YELLOW +
-                "Beating Heart", Arrays.asList(
-                ChatColor.GRAY + "An undead heart still beating with undead life.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Smite.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack creeperDrop = CustomItemManager.createCustomItem(Material.TNT, ChatColor.YELLOW +
-                "Hydrogen Bomb", Arrays.asList(
-                ChatColor.GRAY + "500 KG of TNT.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "to summon a large quantity of live-fuse TNT.",
-                ChatColor.DARK_PURPLE + "Artifact"
-        ), 1,false, true);
-        ItemStack spiderDrop = CustomItemManager.createCustomItem(Material.SPIDER_EYE, ChatColor.YELLOW +
-                "SpiderBane", Arrays.asList(
-                ChatColor.GRAY + "A strange substance lethal against spiders.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Bane of Anthropods.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack enderDrop = CustomItemManager.createCustomItem(Material.ENDER_PEARL, ChatColor.YELLOW +
-                "End Pearl", Arrays.asList(
-                ChatColor.GRAY + "Something doesn't look normal here...",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reusable ender pearl.",
-                ChatColor.DARK_PURPLE + "Artifact"
-        ), 1,false, true);
-        ItemStack blazeDrop = CustomItemManager.createCustomItem(Material.FIRE_CHARGE, ChatColor.YELLOW +
-                "Fire Ball", Arrays.asList(
-                ChatColor.GRAY + "A projectile ball of fire.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Flame.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack witchDrop = CustomItemManager.createCustomItem(Material.ENCHANTED_BOOK, ChatColor.YELLOW +
-                "Mending", Arrays.asList(
-                ChatColor.GRAY + "An extremely rare enchantment.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Mending.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, false);
-        ItemStack witherSkeletonDrop = CustomItemManager.createCustomItem(Material.WITHER_SKELETON_SKULL, ChatColor.YELLOW +
-                "Wither Skeleton Skull", Arrays.asList(
-                ChatColor.GRAY + "A cursed skull.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Used in spawning the Wither.",
-                ChatColor.DARK_PURPLE + "Summoning Item"
-        ), 1,false, true);
-        ItemStack guardianDrop = CustomItemManager.createCustomItem(Material.PRISMARINE_SHARD, ChatColor.YELLOW +
-                "Rain", Arrays.asList(
-                ChatColor.GRAY + "A strange object.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Used in summoning Rain.",
-                ChatColor.DARK_PURPLE + "Artifact"
-        ), 1,false, true);
-        ItemStack elderGuardianDrop = CustomItemManager.createCustomItem(Material.ICE, ChatColor.YELLOW +
-                "Frost Heart", Arrays.asList(
-                ChatColor.GRAY + "A rare object.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Frost Walker.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack pillagerDrop = CustomItemManager.createCustomItem(Material.IRON_BLOCK, ChatColor.YELLOW +
-                "Iron Golem", Arrays.asList(
-                ChatColor.GRAY + "Ancient Summoning Artifact.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summon an Iron Golem.",
-                ChatColor.DARK_PURPLE + "Summoning Artifact"
-        ), 1,false, true);
-        ItemStack vindicatorDrop = CustomItemManager.createCustomItem(Material.SLIME_BALL, ChatColor.YELLOW +
-                "KB Ball", Arrays.asList(
-                ChatColor.GRAY + "An extremely bouncy ball.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Knockback.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack piglinDrop = CustomItemManager.createCustomItem(Material.ARROW, ChatColor.YELLOW +
-                "High Caliber Arrow", Arrays.asList(
-                ChatColor.GRAY + "A heavy arrow.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Piercing.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack piglinBruteDrop = CustomItemManager.createCustomItem(Material.SOUL_SOIL, ChatColor.YELLOW +
-                "Grains of Soul", Arrays.asList(
-                ChatColor.GRAY + "Soul soil with spirits of speed.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Soul Speed.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack zombifiedPiglinDrop = CustomItemManager.createCustomItem(Material.GOLD_INGOT, ChatColor.YELLOW +
-                "Gold Bar", Arrays.asList(
-                ChatColor.GRAY + "High value magnet.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Looting.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack drownedDrop = CustomItemManager.createCustomItem(Material.LEATHER_BOOTS, ChatColor.YELLOW +
-                "Fins", Arrays.asList(
-                ChatColor.GRAY + "Water Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Depth Strider.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack skeletonDrop = CustomItemManager.createCustomItem(Material.BOW, ChatColor.YELLOW +
-                "Bowstring", Arrays.asList(
-                ChatColor.GRAY + "Air Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Power.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
+        ItemStack undeadDrop = ItemRegistry.getUndeadDrop();
+        ItemStack creeperDrop = ItemRegistry.getCreeperDrop();
+        ItemStack spiderDrop = ItemRegistry.getSpiderDrop();
+        ItemStack enderDrop = ItemRegistry.getEnderDrop();
+        ItemStack blazeDrop = ItemRegistry.getBlazeDrop();
+        ItemStack witchDrop = ItemRegistry.getWitchDrop();
+        ItemStack witherSkeletonDrop = ItemRegistry.getWitherSkeletonDrop();
+        ItemStack guardianDrop = ItemRegistry.getGuardianDrop();
+        ItemStack elderGuardianDrop = ItemRegistry.getElderGuardianDrop();
+        ItemStack pillagerDrop = ItemRegistry.getPillagerDrop();
+        ItemStack vindicatorDrop = ItemRegistry.getVindicatorDrop();
+        ItemStack piglinDrop = ItemRegistry.getPiglinDrop();
+        ItemStack piglinBruteDrop = ItemRegistry.getPiglinBruteDrop();
+        ItemStack zombifiedPiglinDrop = ItemRegistry.getZombifiedPiglinDrop();
+        ItemStack drownedDrop = ItemRegistry.getDrownedDrop();
+        ItemStack skeletonDrop = ItemRegistry.getSkeletonDrop();
         List<TradeItem> weaponsmithSells = new ArrayList<>();
-        weaponsmithSells.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 3), 1, 3, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(new ItemStack(Material.GOLD_INGOT, 2), 1, 2, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(new ItemStack(Material.DIAMOND, 1), 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(new ItemStack(Material.ZOMBIE_HEAD, 1), 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(new ItemStack(Material.SKELETON_SKULL, 1), 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(new ItemStack(Material.CREEPER_HEAD, 1), 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(singularity(), 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(skeletonDrop, 150, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(drownedDrop, 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(creeperDrop, 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(blazeDrop, 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(enderDrop, 24, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(guardianDrop, 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(elderGuardianDrop, 4, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(piglinBruteDrop, 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(piglinDrop, 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(spiderDrop, 100, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(undeadDrop, 100, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(vindicatorDrop, 8, 1, 1)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(witchDrop, 32, 1, 1)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 3), 1, 3, 1,29 * 1)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(new ItemStack(Material.GOLD_INGOT, 2), 1, 2, 1,29 * 1)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(new ItemStack(Material.DIAMOND, 1), 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(new ItemStack(Material.ZOMBIE_HEAD, 1), 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(new ItemStack(Material.SKELETON_SKULL, 1), 8, 1, 1,29 * 3)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(new ItemStack(Material.CREEPER_HEAD, 1), 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(singularity(), 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(skeletonDrop, 150, 1, 1,29 * 75)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(drownedDrop, 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(creeperDrop, 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(blazeDrop, 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(enderDrop, 24, 1, 1,29 * 12)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(guardianDrop, 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(elderGuardianDrop, 4, 1, 1,29 * 2)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(piglinBruteDrop, 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(piglinDrop, 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(spiderDrop, 100, 1, 1,29 * 50)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(undeadDrop, 100, 1, 1,29 * 50)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(vindicatorDrop, 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(witchDrop, 32, 1, 1,29 * 16)); // Placeholder trade
         sellWhitelist.put(Villager.Profession.WEAPONSMITH, weaponsmithSells);
 
 
 
 //Fletcher
         List<TradeItem> fletcherPurchases = new ArrayList<>();
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.ARROW, 4), 1, 4, 1)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.BOW, 1), 4, 1, 1)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.CROSSBOW, 1), 4, 1, 2)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.FEATHER, 1), 2, 1, 2)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.ARROW, 4), 1, 4, 1,29 * 1)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.BOW, 1), 4, 1, 1,29 * 2)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.CROSSBOW, 1), 4, 1, 2,29 * 2)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.FEATHER, 1), 2, 1, 2,29 * 1)); // Placeholder trade
 
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.OAK_SAPLING, 4), 2, 4, 3)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.JUNGLE_SAPLING, 4), 2, 4, 3)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.DARK_OAK_SAPLING, 4), 2, 4, 3)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.SPRUCE_SAPLING, 4), 2, 4, 3)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.BIRCH_SAPLING, 4), 2, 4, 3)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.ACACIA_SAPLING, 4), 2, 4, 3)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(new ItemStack(Material.CHERRY_SAPLING, 4), 2, 4, 3)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.OAK_SAPLING, 4), 2, 4, 3,29 * 1)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.JUNGLE_SAPLING, 4), 2, 4, 3,29 * 1)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.DARK_OAK_SAPLING, 4), 2, 4, 3,29 * 1)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.SPRUCE_SAPLING, 4), 2, 4, 3,29 * 1)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.BIRCH_SAPLING, 4), 2, 4, 3,29 * 1)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.ACACIA_SAPLING, 4), 2, 4, 3,29 * 1)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(new ItemStack(Material.CHERRY_SAPLING, 4), 2, 4, 3,29 * 1)); // Placeholder trade
 
-        fletcherPurchases.add(new TradeItem(fletcherBowEnchant, 16, 1, 4)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(fletcherPower, 64, 1, 4)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(fletcherCrossbowEnchant, 64, 1, 5)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(fletcherBowEnchant, 16, 1, 4,29 * 8)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(fletcherPower, 64, 1, 4,29 * 32)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(fletcherCrossbowEnchant, 64, 1, 5,29 * 32)); // Placeholder trade
 
 
         purchaseWhitelist.put(Villager.Profession.FLETCHER, fletcherPurchases);
 
 
         List<TradeItem> fletcherSells = new ArrayList<>();
-        fletcherSells.add(new TradeItem(new ItemStack(Material.STICK, 64), 1, 64, 1)); // Placeholder trade
-        fletcherSells.add(new TradeItem(new ItemStack(Material.FLINT, 2), 1, 2, 1)); // Placeholder trade
-        fletcherSells.add(new TradeItem(new ItemStack(Material.STRING, 2), 1, 2, 1)); // Placeholder trade
-        fletcherSells.add(new TradeItem(new ItemStack(Material.FEATHER, 2), 1, 2, 1)); // Placeholder trade
-        fletcherSells.add(new TradeItem(new ItemStack(Material.ARROW, 16), 1, 16, 1)); // Placeholder trade
-        fletcherSells.add(new TradeItem(new ItemStack(secretsOfInfinity), 128, 1, 128)); // Placeholder trade
+        fletcherSells.add(new TradeItem(new ItemStack(Material.STICK, 64), 1, 64, 1,29 * 32)); // Placeholder trade
+        fletcherSells.add(new TradeItem(new ItemStack(Material.FLINT, 2), 1, 2, 1,29 * 1)); // Placeholder trade
+        fletcherSells.add(new TradeItem(new ItemStack(Material.STRING, 2), 1, 2, 1,29 * 1)); // Placeholder trade
+        fletcherSells.add(new TradeItem(new ItemStack(Material.FEATHER, 2), 1, 2, 1,29 * 1)); // Placeholder trade
+        fletcherSells.add(new TradeItem(new ItemStack(Material.ARROW, 16), 1, 16, 1,29 * 1)); // Placeholder trade
+        fletcherSells.add(new TradeItem(new ItemStack(secretsOfInfinity), 128, 1, 128,29 * 64)); // Placeholder trade
 
         sellWhitelist.put(Villager.Profession.FLETCHER, fletcherSells);
 
 
 // Cartographer
         List<TradeItem> cartographerPurchases = new ArrayList<>();
-        cartographerPurchases.add(new TradeItem(cartographerMineshaft, 16, 1, 1)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerVillage, 16, 1, 1)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerShipwreck, 16, 1, 1)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerMineshaft, 16, 1, 1,29 * 8)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerVillage, 16, 1, 1,29 * 8)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerShipwreck, 16, 1, 1,29 * 8)); // Placeholder trade
 
-        cartographerPurchases.add(new TradeItem(cartographerBuriedTreasure, 16, 1, 2)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerIgloo, 20, 1, 2)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerOceanMonument, 20, 1, 2)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerOceanRuin, 20, 1, 2)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerBuriedTreasure, 16, 1, 2,29 * 8)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerIgloo, 20, 1, 2,29 * 10)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerOceanMonument, 20, 1, 2,29 * 10)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerOceanRuin, 20, 1, 2,29 * 10)); // Placeholder trade
 
-        cartographerPurchases.add(new TradeItem(cartographerDesertPyramid, 32, 1, 3)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerJunglePyramid, 32, 1, 3)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerPillagerOutpost, 32, 1, 3)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerSwampHut, 32, 1, 3)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerNetherFortress, 32, 1, 3)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerDesertPyramid, 32, 1, 3,29 * 16)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerJunglePyramid, 32, 1, 3,29 * 16)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerPillagerOutpost, 32, 1, 3,29 * 16)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerSwampHut, 32, 1, 3,29 * 16)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerNetherFortress, 32, 1, 3,29 * 16)); // Placeholder trade
 
 
-        cartographerPurchases.add(new TradeItem(cartographerStronghold, 64, 1, 4)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerBastionRemnant, 64, 1, 4)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerStronghold, 64, 1, 4,29 * 32)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerBastionRemnant, 64, 1, 4,29 * 32)); // Placeholder trade
 
-        cartographerPurchases.add(new TradeItem(cartographerWoodlandMansion, 128, 1, 5)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(aspectAOfTheJourney, 128, 1, 5)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(cartographerWoodlandMansion, 128, 1, 5,29 * 64)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(aspectAOfTheJourney, 128, 1, 5,29 * 64)); // Placeholder trade
         purchaseWhitelist.put(Villager.Profession.CARTOGRAPHER, cartographerPurchases);
 
         List<TradeItem> cartographerSells = new ArrayList<>();
-        cartographerSells.add(new TradeItem(new ItemStack(Material.PAPER, 8), 1, 8, 1)); // Placeholder trade
-        cartographerSells.add(new TradeItem(new ItemStack(Material.COMPASS, 1), 3, 1, 1)); // Placeholder trade
+        cartographerSells.add(new TradeItem(new ItemStack(Material.PAPER, 8), 1, 8, 1,29 * 1)); // Placeholder trade
+        cartographerSells.add(new TradeItem(new ItemStack(Material.COMPASS, 1), 3, 1, 1,29 * 1)); // Placeholder trade
         sellWhitelist.put(Villager.Profession.CARTOGRAPHER, cartographerSells);
 
 
@@ -1337,36 +1258,36 @@ public class VillagerTradeManager implements Listener {
 
 // Cleric
         List<TradeItem> clericPurchases = new ArrayList<>();
-        clericPurchases.add(new TradeItem(new ItemStack(Material.GLASS_BOTTLE, 1), 2, 1, 1)); // Placeholder trade
-        clericPurchases.add(new TradeItem(new ItemStack(Material.NETHER_WART, 1), 64, 1, 1));
-        clericPurchases.add(new TradeItem(new ItemStack(Material.SUGAR, 1), 2, 1, 1));
+        clericPurchases.add(new TradeItem(new ItemStack(Material.GLASS_BOTTLE, 1), 2, 1, 1,29 * 1)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.NETHER_WART, 1), 64, 1, 1,29 * 32));
+        clericPurchases.add(new TradeItem(new ItemStack(Material.SUGAR, 1), 2, 1, 1,29 * 1));
 
-        clericPurchases.add(new TradeItem(new ItemStack(Material.RABBIT_FOOT, 1), 12, 1, 2));
-        clericPurchases.add(new TradeItem(new ItemStack(Material.GLISTERING_MELON_SLICE, 1), 8, 1, 2));
-        clericPurchases.add(new TradeItem(new ItemStack(Material.FERMENTED_SPIDER_EYE, 3), 15, 3, 2)); // Placeholder trade
-        clericPurchases.add(new TradeItem(new ItemStack(Material.SPIDER_EYE, 3), 12, 3, 2)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.RABBIT_FOOT, 1), 12, 1, 2,29 * 6));
+        clericPurchases.add(new TradeItem(new ItemStack(Material.GLISTERING_MELON_SLICE, 1), 8, 1, 2,29 * 4));
+        clericPurchases.add(new TradeItem(new ItemStack(Material.FERMENTED_SPIDER_EYE, 3), 15, 3, 2,29 * 7)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.SPIDER_EYE, 3), 12, 3, 2,29 * 6)); // Placeholder trade
 
-        clericPurchases.add(new TradeItem(new ItemStack(Material.GUNPOWDER, 3), 6, 3, 3)); // Placeholder trade
-        clericPurchases.add(new TradeItem(new ItemStack(Material.MAGMA_CREAM, 3), 16, 3, 3)); // Placeholder trade
-        clericPurchases.add(new TradeItem(new ItemStack(Material.BLAZE_POWDER, 2), 48, 2, 3)); // Placeholder trade
-        clericPurchases.add(new TradeItem(new ItemStack(Material.PHANTOM_MEMBRANE, 2), 8, 2, 3)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.GUNPOWDER, 3), 6, 3, 3,29 * 3)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.MAGMA_CREAM, 3), 16, 3, 3,29 * 8)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.BLAZE_POWDER, 2), 48, 2, 3,29 * 24)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.PHANTOM_MEMBRANE, 2), 8, 2, 3,29 * 4)); // Placeholder trade
 
-        clericPurchases.add(new TradeItem(new ItemStack(Material.GHAST_TEAR, 2), 20, 2, 4)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.GHAST_TEAR, 2), 20, 2, 4,29 * 10)); // Placeholder trade
 
-        clericPurchases.add(new TradeItem(new ItemStack(Material.DRAGON_BREATH, 4), 64, 4, 5)); // Placeholder trade
-        clericPurchases.add(new TradeItem(new ItemStack(Material.TURTLE_HELMET, 1), 64, 1, 5)); // Placeholder trade
-        clericPurchases.add(new TradeItem(clericEnchant, 64, 1, 5)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.DRAGON_BREATH, 4), 64, 4, 5,29 * 32)); // Placeholder trade
+        clericPurchases.add(new TradeItem(new ItemStack(Material.TURTLE_HELMET, 1), 64, 1, 5,29 * 32)); // Placeholder trade
+        clericPurchases.add(new TradeItem(clericEnchant, 64, 1, 5,29 * 32)); // Placeholder trade
 
         purchaseWhitelist.put(Villager.Profession.CLERIC, clericPurchases);
 
         List<TradeItem> clericSells = new ArrayList<>();
-        clericSells.add(new TradeItem(new ItemStack(Material.ROTTEN_FLESH, 4), 1, 4, 1)); // Placeholder trade
-        clericSells.add(new TradeItem(new ItemStack(Material.BONE, 8), 3, 8, 1)); // Placeholder trade
-        clericSells.add(new TradeItem(new ItemStack(Material.SPIDER_EYE, 4), 3, 4, 1)); // Placeholder trade
-        clericSells.add(new TradeItem(new ItemStack(Material.LAPIS_LAZULI, 8), 1, 8, 2)); // Placeholder trade
-        clericSells.add(new TradeItem(new ItemStack(Material.REDSTONE, 8), 1, 8, 2)); // Placeholder trade
-        clericSells.add(new TradeItem(new ItemStack(Material.ENDER_PEARL, 2), 8, 2, 3)); // Placeholder trade
-        clericSells.add(new TradeItem(new ItemStack(Material.GLOWSTONE, 1), 3, 1, 4)); // Placeholder trade
+        clericSells.add(new TradeItem(new ItemStack(Material.ROTTEN_FLESH, 4), 1, 4, 1,29 * 1)); // Placeholder trade
+        clericSells.add(new TradeItem(new ItemStack(Material.BONE, 8), 3, 8, 1,29 * 1)); // Placeholder trade
+        clericSells.add(new TradeItem(new ItemStack(Material.SPIDER_EYE, 4), 3, 4, 1,29 * 1)); // Placeholder trade
+        clericSells.add(new TradeItem(new ItemStack(Material.LAPIS_LAZULI, 8), 1, 8, 2,29 * 1)); // Placeholder trade
+        clericSells.add(new TradeItem(new ItemStack(Material.REDSTONE, 8), 1, 8, 2,29 * 1)); // Placeholder trade
+        clericSells.add(new TradeItem(new ItemStack(Material.ENDER_PEARL, 2), 8, 2, 3,29 * 4)); // Placeholder trade
+        clericSells.add(new TradeItem(new ItemStack(Material.GLOWSTONE, 1), 3, 1, 4,29 * 1)); // Placeholder trade
 
         sellWhitelist.put(Villager.Profession.CLERIC, clericSells);
 
@@ -1375,20 +1296,20 @@ public class VillagerTradeManager implements Listener {
 // Leatherworker
         List<TradeItem> leatherworkerPurchases = new ArrayList<>();
         {
-            leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.LEATHER, 1), 3, 1, 1)); // Placeholder trade
-            leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.ITEM_FRAME, 1), 3, 1, 1)); // Placeholder trade
-            leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.SHULKER_SHELL), 64, 1, 3)); // Placeholder trade
+            leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.LEATHER, 1), 3, 1, 1,29 * 1)); // Placeholder trade
+            leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.ITEM_FRAME, 1), 3, 1, 1,29 * 1)); // Placeholder trade
+            leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.SHULKER_SHELL), 64, 1, 3,29 * 32)); // Placeholder trade
 
-            leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.BUNDLE, 1), 64, 1, 3)); // Placeholder trade
-            leatherworkerPurchases.add(new TradeItem(leatherworkerEnchant, 32, 1, 4)); // Placeholder trade
-            leatherworkerPurchases.add(new TradeItem(leatherworkerArtifact, 64, 1, 5)); // Placeholder trade
+            leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.BUNDLE, 1), 64, 1, 3,29 * 32)); // Placeholder trade
+            leatherworkerPurchases.add(new TradeItem(leatherworkerEnchant, 32, 1, 4,29 * 16)); // Placeholder trade
+            leatherworkerPurchases.add(new TradeItem(leatherworkerArtifact, 64, 1, 5,29 * 32)); // Placeholder trade
         }
         purchaseWhitelist.put(Villager.Profession.LEATHERWORKER, leatherworkerPurchases);
 
         List<TradeItem> leatherworkerSells = new ArrayList<>();
         {
-            leatherworkerSells.add(new TradeItem(new ItemStack(Material.SADDLE), 12, 1, 1));
-            leatherworkerSells.add(new TradeItem(new ItemStack(Material.LEATHER_BOOTS), 1, 1, 1));
+            leatherworkerSells.add(new TradeItem(new ItemStack(Material.SADDLE), 12, 1, 1,29 * 6));
+            leatherworkerSells.add(new TradeItem(new ItemStack(Material.LEATHER_BOOTS), 1, 1, 1,29 * 1));
         }
         sellWhitelist.put(Villager.Profession.LEATHERWORKER, leatherworkerSells);
 
@@ -1396,126 +1317,126 @@ public class VillagerTradeManager implements Listener {
 
         // Shepherd
         List<TradeItem> shepherdPurchases = new ArrayList<>();
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.PAINTING, 4), 8, 4, 1)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.PAINTING, 4), 8, 4, 1,29 * 4)); // Placeholder trade
 
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.WHITE_DYE, 4), 3, 4, 2)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.GRAY_DYE, 4), 3, 4, 2)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.BLACK_DYE, 4), 3, 4, 2)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.CYAN_DYE, 4), 3, 4, 2)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.LIME_DYE, 4), 3, 4, 2)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.WHITE_DYE, 4), 3, 4, 2,29 * 1)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.GRAY_DYE, 4), 3, 4, 2,29 * 1)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.BLACK_DYE, 4), 3, 4, 2,29 * 1)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.CYAN_DYE, 4), 3, 4, 2,29 * 1)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.LIME_DYE, 4), 3, 4, 2,29 * 1)); // Placeholder trade
 
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.YELLOW_DYE, 4), 6, 4, 3)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.ORANGE_DYE, 4), 6, 4, 3)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.RED_DYE, 4), 6, 4, 3)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.PINK_DYE, 4), 6, 4, 3)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.LIGHT_GRAY_DYE, 4), 6, 4, 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.YELLOW_DYE, 4), 6, 4, 3,29 * 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.ORANGE_DYE, 4), 6, 4, 3,29 * 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.RED_DYE, 4), 6, 4, 3,29 * 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.PINK_DYE, 4), 6, 4, 3,29 * 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.LIGHT_GRAY_DYE, 4), 6, 4, 3,29 * 3)); // Placeholder trade
 
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.MAGENTA_DYE, 4), 9, 4, 4)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.PURPLE_DYE, 4), 9, 4, 4)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.BLUE_DYE, 4), 9, 4, 4)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.CYAN_DYE, 4), 9, 4, 4)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.GREEN_DYE, 4), 9, 4, 4)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.BROWN_DYE, 4), 9, 4, 4)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.MAGENTA_DYE, 4), 9, 4, 4,29 * 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.PURPLE_DYE, 4), 9, 4, 4,29 * 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.BLUE_DYE, 4), 9, 4, 4,29 * 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.CYAN_DYE, 4), 9, 4, 4,29 * 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.GREEN_DYE, 4), 9, 4, 4,29 * 3)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.BROWN_DYE, 4), 9, 4, 4,29 * 3)); // Placeholder trade
 
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.TERRACOTTA, 8), 4, 4, 5)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.GRAVEL, 8), 4, 4, 5)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(new ItemStack(Material.SAND, 8), 4, 4, 5)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(shepherdArtifact, 16, 8, 5)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(shepherdEnchant, 32, 1, 5)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.TERRACOTTA, 8), 4, 4, 5,29 * 2)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.GRAVEL, 8), 4, 4, 5,29 * 2)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(new ItemStack(Material.SAND, 8), 4, 4, 5,29 * 2)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(shepherdArtifact, 16, 8, 5,29 * 4)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(shepherdEnchant, 32, 1, 5,29 * 4)); // Placeholder trade
 
 
         purchaseWhitelist.put(Villager.Profession.SHEPHERD, shepherdPurchases);
 
         List<TradeItem> shepherdSells = new ArrayList<>();
-        shepherdSells.add(new TradeItem(new ItemStack(Material.SHEARS, 1), 3, 1, 1)); // Placeholder trade
-        shepherdSells.add(new TradeItem(new ItemStack(Material.BLACK_WOOL, 6), 2, 6, 1)); // Placeholder trade
-        shepherdSells.add(new TradeItem(new ItemStack(Material.WHITE_WOOL, 16), 1, 16, 1)); // Placeholder trade
+        shepherdSells.add(new TradeItem(new ItemStack(Material.SHEARS, 1), 3, 1, 1,29 * 1)); // Placeholder trade
+        shepherdSells.add(new TradeItem(new ItemStack(Material.BLACK_WOOL, 6), 2, 6, 1,29 * 1)); // Placeholder trade
+        shepherdSells.add(new TradeItem(new ItemStack(Material.WHITE_WOOL, 16), 1, 16, 1,29 * 1)); // Placeholder trade
         sellWhitelist.put(Villager.Profession.SHEPHERD, shepherdSells);
 
 
 // Toolsmith
         List<TradeItem> toolsmithPurchases = new ArrayList<>();
-        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.FISHING_ROD, 1), 6, 1, 1)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.SHEARS, 1), 6, 1, 1)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.BUCKET, 1), 8, 1, 1)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(commonToolReforge, 4, 1, 1)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.FISHING_ROD, 1), 6, 1, 1,29 * 3)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.SHEARS, 1), 6, 1, 1,29 * 3)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.BUCKET, 1), 8, 1, 1,29 * 4)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(commonToolReforge, 4, 1, 1,29 * 2)); // Placeholder trade
 
-        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.SHIELD, 1), 10, 1, 2)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(uncommonToolReforge, 8, 1, 2)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.SHIELD, 1), 10, 1, 2,29 * 5)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(uncommonToolReforge, 8, 1, 2,29 * 4)); // Placeholder trade
 
 
 
-        toolsmithPurchases.add(new TradeItem(toolsmithReforge, 64, 1, 3)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(rareToolReforge, 16, 1, 3)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(toolsmithReforge, 64, 1, 3,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(rareToolReforge, 16, 1, 3,29 * 8)); // Placeholder trade
 
-        toolsmithPurchases.add(new TradeItem(toolsmithEfficiency, 64, 1, 4)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(toolsmithUnbreaking, 64, 1, 4)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(epicToolReforge, 32, 1, 4)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(toolsmithEfficiency, 64, 1, 4,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(toolsmithUnbreaking, 64, 1, 4,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(epicToolReforge, 32, 1, 4,29 * 16)); // Placeholder trade
 
-        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.ANCIENT_DEBRIS, 1), 64, 1, 5)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(toolsmithEnchant, 64, 1, 5)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(toolsmithEnchantTwo, 128, 1, 5)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(legendaryToolReforge, 64, 1, 5)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(new ItemStack(Material.ANCIENT_DEBRIS, 1), 64, 1, 5,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(toolsmithEnchant, 64, 1, 5,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(toolsmithEnchantTwo, 128, 1, 5,29 * 64)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(legendaryToolReforge, 64, 1, 5,29 * 32)); // Placeholder trade
 
 
         purchaseWhitelist.put(Villager.Profession.TOOLSMITH, toolsmithPurchases);
 
         List<TradeItem> toolsmithSells = new ArrayList<>();
-        toolsmithSells.add(new TradeItem(new ItemStack(Material.COAL, 3), 1, 3, 1)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(new ItemStack(Material.CHARCOAL, 3), 2, 3, 1)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 3), 1, 3, 1)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(new ItemStack(Material.GOLD_INGOT, 3), 2, 3, 1)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(new ItemStack(Material.DIAMOND, 1), 6, 1, 1)); // Placeholder trade        toolsmithSells.add(new TradeItem(diamondGemstone(), 128, 1, 3)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(lapisGemstone(), 32, 1, 3)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(emeraldGemstone(), 64, 1, 3)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(redstoneGemstone(), 32, 1, 3)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(diamondGemstone(), 64, 1, 3)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(new ItemStack(Material.COAL, 3), 1, 3, 1,29 * 1)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(new ItemStack(Material.CHARCOAL, 3), 2, 3, 1,29 * 1)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 3), 1, 3, 1,29 * 1)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(new ItemStack(Material.GOLD_INGOT, 3), 2, 3, 1,29 * 1)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(new ItemStack(Material.DIAMOND, 1), 6, 1, 1,29 * 3)); // Placeholder trade        toolsmithSells.add(new TradeItem(diamondGemstone(), 128, 1, 3)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(lapisGemstone(), 32, 1, 3,29 * 16)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(emeraldGemstone(), 64, 1, 3,29 * 32)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(redstoneGemstone(), 32, 1, 3,29 * 16)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(diamondGemstone(), 64, 1, 3,29 * 32)); // Placeholder trade
 
 
         sellWhitelist.put(Villager.Profession.TOOLSMITH, toolsmithSells);
 
 // Armorer
         List<TradeItem> armorerPurchases = new ArrayList<>();
-        armorerPurchases.add(new TradeItem(new ItemStack(Material.IRON_ORE, 4), 7, 4, 1)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(commonArmorReforge, 8, 1, 1)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(new ItemStack(Material.IRON_ORE, 4), 7, 4, 1,29 * 3)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(commonArmorReforge, 8, 1, 1,29 * 4)); // Placeholder trade
 
-        armorerPurchases.add(new TradeItem(new ItemStack(Material.ANVIL, 1), 24, 1, 2)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(uncommonArmorReforge, 16, 1, 2)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(new ItemStack(Material.ANVIL, 1), 24, 1, 2,29 * 12)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(uncommonArmorReforge, 16, 1, 2,29 * 8)); // Placeholder trade
 
-        armorerPurchases.add(new TradeItem(new ItemStack(Material.GOLD_ORE, 4), 6, 4, 3)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(rareArmorReforge, 32, 1, 3)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(new ItemStack(Material.GOLD_ORE, 4), 6, 4, 3,29 * 3)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(rareArmorReforge, 32, 1, 3,29 * 16)); // Placeholder trade
 
-        armorerPurchases.add(new TradeItem(new ItemStack(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 2), 32, 2, 4)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(epicArmorReforge, 64, 1, 4)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(new ItemStack(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 2), 32, 2, 4,29 * 16)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(epicArmorReforge, 64, 1, 4,29 * 32)); // Placeholder trade
 
-        armorerPurchases.add(new TradeItem(randomTrim, 64, 1, 4)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorSmithProtection, 64, 1, 4)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorSmithRespiration, 64, 1, 4)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorSmithThorns, 64, 1, 4)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorSmithFeatherFalling, 64, 1, 4)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(randomTrim, 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(armorSmithProtection, 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(armorSmithRespiration, 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(armorSmithThorns, 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(armorSmithFeatherFalling, 64, 1, 4,29 * 32)); // Placeholder trade
 
-        armorerPurchases.add(new TradeItem(legendaryArmorReforge, 128, 1, 5)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorerEnchant, 16, 1, 5)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorsmithReforge, 32, 1, 5)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorsmithReforgeTwo, 64, 1, 5)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(legendaryArmorReforge, 128, 1, 5,29 * 64)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(armorerEnchant, 16, 1, 5,29 * 8)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(armorsmithReforge, 32, 1, 5,29 * 16)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(armorsmithReforgeTwo, 64, 1, 5,29 * 32)); // Placeholder trade
         //armorerPurchases.add(new TradeItem(armorsmithReforgeThree, 64, 1, 5)); // Placeholder trade
 
 
 
-        armorerPurchases.add(new TradeItem(new ItemStack(Material.ANCIENT_DEBRIS, 1), 64, 1, 5)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(new ItemStack(Material.ANCIENT_DEBRIS, 1), 64, 1, 5,29 * 32)); // Placeholder trade
         purchaseWhitelist.put(Villager.Profession.ARMORER, armorerPurchases);
 
         List<TradeItem> armorerSells = new ArrayList<>();
-        armorerSells.add(new TradeItem(new ItemStack(Material.LEATHER_HORSE_ARMOR, 1), 6, 1, 1)); // Placeholder trade
-        armorerSells.add(new TradeItem(new ItemStack(Material.IRON_HORSE_ARMOR, 1), 12, 1, 1)); // Placeholder trade
-        armorerSells.add(new TradeItem(new ItemStack(Material.GOLDEN_HORSE_ARMOR, 1), 24, 1, 1)); // Placeholder trade
-        armorerSells.add(new TradeItem(new ItemStack(Material.DIAMOND_HORSE_ARMOR, 1), 48, 1, 1)); // Placeholder trade
+        armorerSells.add(new TradeItem(new ItemStack(Material.LEATHER_HORSE_ARMOR, 1), 6, 1, 1,29 * 3)); // Placeholder trade
+        armorerSells.add(new TradeItem(new ItemStack(Material.IRON_HORSE_ARMOR, 1), 12, 1, 1,29 * 6)); // Placeholder trade
+        armorerSells.add(new TradeItem(new ItemStack(Material.GOLDEN_HORSE_ARMOR, 1), 24, 1, 1,29 * 12)); // Placeholder trade
+        armorerSells.add(new TradeItem(new ItemStack(Material.DIAMOND_HORSE_ARMOR, 1), 48, 1, 1,29 * 24)); // Placeholder trade
 
-        armorerSells.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 3), 1, 3, 1)); // Placeholder trade
-        armorerSells.add(new TradeItem(new ItemStack(Material.GOLD_INGOT, 3), 2, 3, 1)); // Placeholder trade
-        armorerSells.add(new TradeItem(new ItemStack(Material.DIAMOND, 1), 6, 1, 1)); // Placeholder trade
-        armorerSells.add(new TradeItem(aquaAffinity, 16, 1, 2)); // Placeholder trade
-        armorerSells.add(new TradeItem(swiftSneak, 16, 1, 2)); // Placeholder trade
+        armorerSells.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 3), 1, 3, 1,29 * 1)); // Placeholder trade
+        armorerSells.add(new TradeItem(new ItemStack(Material.GOLD_INGOT, 3), 2, 3, 1,29 * 1)); // Placeholder trade
+        armorerSells.add(new TradeItem(new ItemStack(Material.DIAMOND, 1), 6, 1, 1,29 * 3)); // Placeholder trade
+        armorerSells.add(new TradeItem(aquaAffinity, 16, 1, 2,29 * 8)); // Placeholder trade
+        armorerSells.add(new TradeItem(swiftSneak, 16, 1, 2,29 * 8)); // Placeholder trade
 
         sellWhitelist.put(Villager.Profession.ARMORER, armorerSells);
 
@@ -1523,99 +1444,100 @@ public class VillagerTradeManager implements Listener {
 
         // Librarian
         List<TradeItem> librarianPurchases = new ArrayList<>();
-        librarianPurchases.add(new TradeItem(new ItemStack(Material.BOOK, 1), 3, 1, 1)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(new ItemStack(Material.BOOK, 1), 3, 1, 1,29 * 1)); // Placeholder trade
 
-        librarianPurchases.add(new TradeItem(new ItemStack(Material.BOOKSHELF, 3), 12, 3, 2)); // Placeholder trade
-        librarianPurchases.add(new TradeItem(new ItemStack(Material.LANTERN, 3), 4, 3, 2)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(new ItemStack(Material.BOOKSHELF, 3), 12, 3, 2,29 * 6)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(new ItemStack(Material.LANTERN, 3), 4, 3, 2,29 * 2)); // Placeholder trade
 
-        librarianPurchases.add(new TradeItem(new ItemStack(Material.GLASS, 6), 9, 3, 3)); // Placeholder trade
-        librarianPurchases.add(new TradeItem(librarianEnchant2, 16, 1, 3)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(new ItemStack(Material.GLASS, 6), 9, 3, 3,29 * 3)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(librarianEnchant2, 16, 1, 3,29 * 8)); // Placeholder trade
 
-        librarianPurchases.add(new TradeItem(ironGolem, 16, 1, 4)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(ironGolem, 16, 1, 4,29 * 8)); // Placeholder trade
 
-        librarianPurchases.add(new TradeItem(librarianEnchant, 32, 1, 5)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(librarianEnchant, 32, 1, 5,29 * 16)); // Placeholder trade
 
 
         purchaseWhitelist.put(Villager.Profession.LIBRARIAN, librarianPurchases);
 
         List<TradeItem> librarianSells = new ArrayList<>();
-        librarianSells.add(new TradeItem(new ItemStack(Material.NAME_TAG, 1), 8, 1, 3)); // Placeholder trade
-        librarianSells.add(new TradeItem(new ItemStack(Material.PAPER, 3), 1, 3, 1)); // Placeholder trade
-        librarianSells.add(new TradeItem(new ItemStack(Material.BOOK, 3), 1, 3, 1)); // Placeholder trade
-        librarianSells.add(new TradeItem(new ItemStack(Material.ENCHANTED_BOOK, 1), 8, 1, 1)); // Placeholder trade
-        librarianSells.add(new TradeItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 1), 16, 1, 1)); // Placeholder trade
-        librarianSells.add(new TradeItem(forbiddenBook, 8, 1, 1)); // Placeholder trade
+        librarianSells.add(new TradeItem(new ItemStack(Material.NAME_TAG, 1), 8, 1, 3,29 * 4)); // Placeholder trade
+        librarianSells.add(new TradeItem(new ItemStack(Material.PAPER, 3), 1, 3, 1,29 * 1)); // Placeholder trade
+        librarianSells.add(new TradeItem(new ItemStack(Material.BOOK, 3), 1, 3, 1,29 * 1)); // Placeholder trade
+        librarianSells.add(new TradeItem(new ItemStack(Material.ENCHANTED_BOOK, 1), 8, 1, 1,29 * 4)); // Placeholder trade
+        librarianSells.add(new TradeItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 1), 16, 1, 1,29 * 8)); // Placeholder trade
+        librarianSells.add(new TradeItem(forbiddenBook, 8, 1, 1,29 * 4)); // Placeholder trade
 
 
         sellWhitelist.put(Villager.Profession.LIBRARIAN, librarianSells);
 // Fishermans
         List<TradeItem> fishingPurchases = new ArrayList<>();
         {
-            fishingPurchases.add(new TradeItem(new ItemStack(Material.FISHING_ROD, 1), 6, 1, 1));
-            fishingPurchases.add(new TradeItem(new ItemStack(Material.BUCKET, 1), 8, 1, 2));
-            fishingPurchases.add(new TradeItem(new ItemStack(Material.LAPIS_LAZULI, 4),  8, 4, 2));
-            fishingPurchases.add(new TradeItem(shallowShell,  16, 1, 2));
+            fishingPurchases.add(new TradeItem(new ItemStack(Material.FISHING_ROD, 1), 6, 1, 1,29 * 3));
+            fishingPurchases.add(new TradeItem(new ItemStack(Material.BUCKET, 1), 8, 1, 2,29 * 4));
+            fishingPurchases.add(new TradeItem(new ItemStack(Material.LAPIS_LAZULI, 4),  8, 4, 2,29 * 4));
+            fishingPurchases.add(new TradeItem(shallowShell,  16, 1, 2,29 * 8));
 
-            fishingPurchases.add(new TradeItem(shell,  32, 1, 3));
-            fishingPurchases.add(new TradeItem(fishermanReforge,  64, 1, 3));
-            fishingPurchases.add(new TradeItem(new ItemStack(Material.CAMPFIRE, 2), 12, 2, 3));
+            fishingPurchases.add(new TradeItem(shell,  32, 1, 3,29 * 16));
+            fishingPurchases.add(new TradeItem(fishermanReforge,  64, 1, 3,29 * 32));
+            fishingPurchases.add(new TradeItem(new ItemStack(Material.CAMPFIRE, 2), 12, 2, 3,29 * 6));
 
-            fishingPurchases.add(new TradeItem(deepShell,  64, 1, 4));
-            fishingPurchases.add(new TradeItem(fishermanLure,  64, 1, 4));
-            fishingPurchases.add(new TradeItem(fishermanLuckoftheSea,  64, 1, 4));
+            fishingPurchases.add(new TradeItem(deepShell,  64, 1, 4,29 * 32));
+            fishingPurchases.add(new TradeItem(fishermanLure,  64, 1, 4,29 * 32));
+            fishingPurchases.add(new TradeItem(fishermanLuckoftheSea,  64, 1, 4,29 * 32));
 
-            fishingPurchases.add(new TradeItem(abyssalShell,  64, 1, 5));
-            fishingPurchases.add(new TradeItem(abyssalInk,  64, 1, 5));
-            fishingPurchases.add(new TradeItem(abyssalVenom,  64, 1, 5));
-            fishingPurchases.add(new TradeItem(fisherEnchant,  40, 1, 5));
-            fishingPurchases.add(new TradeItem(fishingEnchant,  40, 1, 5));
+            fishingPurchases.add(new TradeItem(abyssalShell,  64, 1, 5,29 * 32));
+            fishingPurchases.add(new TradeItem(abyssalInk,  64, 1, 5,29 * 32));
+            fishingPurchases.add(new TradeItem(abyssalVenom,  64, 1, 5,29 * 32));
+            fishingPurchases.add(new TradeItem(fisherEnchant,  40, 1, 5,29 * 20));
+            fishingPurchases.add(new TradeItem(fishingEnchant,  40, 1, 5,29 * 20));
             //add sea creature drops
         }
         purchaseWhitelist.put(Villager.Profession.FISHERMAN, fishingPurchases);
 
         List<TradeItem> fishingSells = new ArrayList<>();
         {
-            fishingSells.add(new TradeItem(new ItemStack(Material.STRING, 4), 1, 4, 1)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(Material.INK_SAC, 4), 1, 4, 1)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(Material.COD, 8), 1, 8, 1)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(Material.SALMON, 8), 1, 8, 1)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(Material.PUFFERFISH, 1), 1, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(Material.TROPICAL_FISH, 1), 1, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(Material.GLOW_INK_SAC, 4), 1, 4, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(ItemRegistry.getTooth()), 4, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(luminescentInk), 8, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(Material.NAUTILUS_SHELL), 4, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(Material.HEART_OF_THE_SEA), 16, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(fishBone), 4, 1, 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(new ItemStack(Material.TRIDENT)), 24, 1, 2)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(Material.STRING, 4), 1, 4, 1,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(Material.INK_SAC, 4), 1, 4, 1,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(Material.COD, 8), 1, 8, 1,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(Material.SALMON, 8), 1, 8, 1,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(Material.PUFFERFISH, 1), 1, 1, 2,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(Material.TROPICAL_FISH, 1), 1, 1, 2,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(Material.GLOW_INK_SAC, 4), 1, 4, 2,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(ItemRegistry.getTooth()), 4, 1, 2,29 * 2)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(luminescentInk), 2, 1, 2,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(Material.NAUTILUS_SHELL), 4, 1, 2,29 * 2)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(Material.HEART_OF_THE_SEA), 16, 1, 2,29 * 8)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(fishBone), 1, 1, 2,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(new ItemStack(Material.TRIDENT)), 24, 1, 2,29 * 12)); // Placeholder trade
+
         }
         sellWhitelist.put(Villager.Profession.FISHERMAN, fishingSells);
 
 
         List<TradeItem> butcherPurchases = new ArrayList<>();
         {
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_MUTTON, 1), 3, 1, 1));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.RABBIT_STEW, 16), 20, 16, 1));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.DRIED_KELP_BLOCK, 1), 7, 1, 1));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COAL, 3), 3, 1, 3));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_CHICKEN, 3), 2, 3, 1));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_RABBIT, 3), 2, 3, 2));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_BEEF, 3), 5, 3, 3));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_PORKCHOP, 3), 5, 3, 3));
+            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_MUTTON, 1), 3, 1, 1,29 * 1));
+            butcherPurchases.add(new TradeItem(new ItemStack(Material.RABBIT_STEW, 16), 20, 16, 1,29 * 10));
+            butcherPurchases.add(new TradeItem(new ItemStack(Material.DRIED_KELP_BLOCK, 1), 7, 1, 1,29 * 3));
+            butcherPurchases.add(new TradeItem(new ItemStack(Material.COAL, 3), 3, 1, 3,29 * 1));
+            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_CHICKEN, 3), 2, 3, 1,29 * 1));
+            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_RABBIT, 3), 2, 3, 2,29 * 1));
+            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_BEEF, 3), 5, 3, 3,29 * 2));
+            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_PORKCHOP, 3), 5, 3, 3,29 * 2));
 
 
-            butcherPurchases.add(new TradeItem(new ItemStack(butcherEnchant), 16, 1, 5));
+            butcherPurchases.add(new TradeItem(new ItemStack(butcherEnchant), 16, 1, 5,29 * 8));
         }
         purchaseWhitelist.put(Villager.Profession.BUTCHER, butcherPurchases);
 
         List<TradeItem> butcherSells = new ArrayList<>();
         {
-            butcherSells.add(new TradeItem(new ItemStack(Material.COAL, 3), 1, 3, 1));
-            butcherSells.add(new TradeItem(new ItemStack(Material.CHICKEN, 1), 1, 1, 1));
-            butcherSells.add(new TradeItem(new ItemStack(Material.MUTTON, 1), 1, 1, 1));
-            butcherSells.add(new TradeItem(new ItemStack(Material.BEEF, 1), 1, 1, 2));
-            butcherSells.add(new TradeItem(new ItemStack(Material.PORKCHOP, 1), 1, 1, 2));
-            butcherSells.add(new TradeItem(new ItemStack(Material.RABBIT, 1), 2, 1, 3));
+            butcherSells.add(new TradeItem(new ItemStack(Material.COAL, 3), 1, 3, 1,29 * 1));
+            butcherSells.add(new TradeItem(new ItemStack(Material.CHICKEN, 1), 1, 1, 1,29 * 1));
+            butcherSells.add(new TradeItem(new ItemStack(Material.MUTTON, 1), 1, 1, 1,29 * 1));
+            butcherSells.add(new TradeItem(new ItemStack(Material.BEEF, 1), 1, 1, 2,29 * 1));
+            butcherSells.add(new TradeItem(new ItemStack(Material.PORKCHOP, 1), 1, 1, 2,29 * 1));
+            butcherSells.add(new TradeItem(new ItemStack(Material.RABBIT, 1), 2, 1, 3,29 * 1));
 
         }
         sellWhitelist.put(Villager.Profession.BUTCHER, butcherSells);
@@ -1624,14 +1546,14 @@ public class VillagerTradeManager implements Listener {
 
         List<TradeItem> farmerPurchases = new ArrayList<>();
         {
-            farmerPurchases.add(new TradeItem(new ItemStack(Material.BREAD, 3), 1, 3, 1)); // Level 1 trade
-            farmerPurchases.add(new TradeItem(new ItemStack(Material.WHEAT_SEEDS, 12), 3, 12, 1)); // Level 1 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(Material.BREAD, 3), 1, 3, 1,29 * 1)); // Level 1 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(Material.WHEAT_SEEDS, 12), 3, 12, 1,29 * 1)); // Level 1 trade
 
-            farmerPurchases.add(new TradeItem(new ItemStack(Material.PUMPKIN_SEEDS, 3), 32, 3, 2)); // Level 1 trade
-            farmerPurchases.add(new TradeItem(new ItemStack(Material.MELON_SEEDS, 3), 32, 3, 2)); // Level 1 trade
-            farmerPurchases.add(new TradeItem(new ItemStack(Material.CAKE, 1), 6, 1, 3)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(Material.PUMPKIN_SEEDS, 3), 32, 3, 2,29 * 16)); // Level 1 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(Material.MELON_SEEDS, 3), 32, 3, 2,29 * 16)); // Level 1 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(Material.CAKE, 1), 6, 1, 3,29 * 3)); // Level 2 trade
 
-            farmerPurchases.add(new TradeItem(new ItemStack(Material.WATER_BUCKET, 1), 3, 1, 3)); // Level 1 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(Material.WATER_BUCKET, 1), 3, 1, 3,29 * 1)); // Level 1 trade
 //            ItemStack wheatGenerator = resourceGeneratorSubsystem.createGenerator(Material.WHEAT, 1, 280);
 //            ItemStack potatoGenerator = resourceGeneratorSubsystem.createGenerator(Material.POTATO, 3, 280);
 //            ItemStack carrotGenerator = resourceGeneratorSubsystem.createGenerator(Material.CARROT, 2, 280);
@@ -1650,10 +1572,10 @@ public class VillagerTradeManager implements Listener {
 //            farmerPurchases.add(new TradeItem(melonGenerator, 64, 1, 3)); // Level 1 trade
 //            farmerPurchases.add(new TradeItem(pumpkinGenerator, 64, 1, 3)); // Level 1 trade
 
-            farmerPurchases.add(new TradeItem(new ItemStack(Material.GOLDEN_CARROT, 4), 3, 4, 4)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(Material.GOLDEN_CARROT, 4), 3, 4, 4,29 * 1)); // Level 2 trade
 
-            farmerPurchases.add(new TradeItem(new ItemStack(Material.SNIFFER_EGG, 1), 64, 1, 5)); // Level 2 trade
-            farmerPurchases.add(new TradeItem(new ItemStack(farmerEnchant), 64, 1, 5)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(Material.SNIFFER_EGG, 1), 64, 1, 5,29 * 32)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(farmerEnchant), 64, 1, 5,29 * 32)); // Level 2 trade
         }
         purchaseWhitelist.put(Villager.Profession.FARMER, farmerPurchases);
 
@@ -1661,21 +1583,21 @@ public class VillagerTradeManager implements Listener {
 
         List<TradeItem> farmerSells = new ArrayList<>();
         {
-            farmerSells.add(new TradeItem(new ItemStack(Material.WHEAT, 12), 1, 12, 1)); // Level 1 trade
-            farmerSells.add(new TradeItem(new ItemStack(Material.CARROT, 12), 1, 12, 1)); // Level 2 trade
-            farmerSells.add(new TradeItem(new ItemStack(Material.POTATO, 12), 1, 12, 1)); // Level 2 trade
-            farmerSells.add(new TradeItem(new ItemStack(Material.WHEAT_SEEDS, 32), 1, 32, 1)); // Level 2 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.WHEAT, 12), 1, 12, 1,29 * 6)); // Level 1 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.CARROT, 12), 1, 12, 1,29 * 6)); // Level 2 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.POTATO, 12), 1, 12, 1,29 * 6)); // Level 2 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.WHEAT_SEEDS, 32), 1, 32, 1,29 * 16)); // Level 2 trade
 
-            farmerSells.add(new TradeItem(new ItemStack(Material.BEETROOT, 4), 1, 4, 2)); // Level 2 trade
-            farmerSells.add(new TradeItem(new ItemStack(Material.EGG, 6), 2, 6, 2)); // Level 3 trade
-            farmerSells.add(new TradeItem(new ItemStack(Material.SUGAR_CANE, 6), 1, 6, 2)); // Level 3 trade
-            farmerSells.add(new TradeItem(new ItemStack(Material.APPLE, 1), 1, 1, 2)); // Level 3 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.BEETROOT, 4), 1, 4, 2,29 * 2)); // Level 2 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.EGG, 6), 2, 6, 2,29 * 1)); // Level 3 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.SUGAR_CANE, 6), 1, 6, 2,29 * 1)); // Level 3 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.APPLE, 1), 1, 1, 2,29 * 1)); // Level 3 trade
 
-            farmerSells.add(new TradeItem(new ItemStack(Material.MELON_SLICE, 12), 1, 12, 3)); // Level 3 trade
-            farmerSells.add(new TradeItem(new ItemStack(Material.PUMPKIN, 8), 1, 8, 3)); // Level 3 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.MELON_SLICE, 12), 1, 12, 3,29 * 1)); // Level 3 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.PUMPKIN, 8), 1, 8, 3,29 * 1)); // Level 3 trade
 
-            farmerSells.add(new TradeItem(new ItemStack(Material.BROWN_MUSHROOM, 1), 1, 1, 4)); // Level 3 trade
-            farmerSells.add(new TradeItem(new ItemStack(Material.RED_MUSHROOM, 1), 1, 1, 4)); // Level 3 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.BROWN_MUSHROOM, 1), 1, 1, 4,29 * 1)); // Level 3 trade
+            farmerSells.add(new TradeItem(new ItemStack(Material.RED_MUSHROOM, 1), 1, 1, 4,29 * 1)); // Level 3 trade
         }
         sellWhitelist.put(Villager.Profession.FARMER, farmerSells);
 
@@ -1962,6 +1884,7 @@ public class VillagerTradeManager implements Listener {
     public void processPurchase(Player player, Villager villager, TradeItem tradeItem) {
         int emeraldCost = tradeItem.getEmeraldValue();
         int quantity = tradeItem.getQuantity();
+        int barteringExperience = tradeItem.getBarteringExperience(); // Get bartering experience
 
         // Check if player has enough emeralds
         if (hasEnoughItems(player.getInventory(), new ItemStack(Material.EMERALD), emeraldCost)) {
@@ -1970,7 +1893,7 @@ public class VillagerTradeManager implements Listener {
             PetManager.Pet activePet = petManager.getActivePet(player);
 
             // Adjust cost based on HAGGLE perk
-            int finalCost = emeraldCost; // Default to full cost
+            double finalCost = emeraldCost; // Use double for intermediate calculations
             if (activePet != null && activePet.hasPerk(PetManager.PetPerk.HAGGLE)) {
                 int petLevel = activePet.getLevel(); // Assume Pet has a `getLevel()` method
                 double maxDiscount = 0.5; // 50% discount at max level
@@ -1978,13 +1901,27 @@ public class VillagerTradeManager implements Listener {
 
                 // Calculate discount proportionally to pet's level
                 double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
-                finalCost = (int) Math.max(1, emeraldCost * (1 - discountFactor)); // Ensure minimum cost of 1 emerald
+                finalCost *= (1 - discountFactor); // Apply pet discount
 
                 player.sendMessage(ChatColor.GREEN + "Haggle perk applied! You paid " + finalCost + " emeralds.");
             }
 
+            // Apply bartering level discount
+            XPManager xpManager = new XPManager(plugin);
+            int barteringLevel = xpManager.getPlayerLevel(player, "Bartering"); // Get the player's bartering level
+
+            // Calculate the bartering discount (0.1% per level, max 10%)
+            double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001)); // 0.1% per level, max 10%
+            finalCost *= (1 - barteringDiscount); // Apply bartering discount
+
+            // Round down to the nearest emerald
+            int finalCostRounded = (int) Math.floor(finalCost);
+            finalCostRounded = Math.max(1, finalCostRounded); // Ensure minimum cost of 1 emerald
+
+            player.sendMessage(ChatColor.GREEN + "Bartering level discount applied! You paid " + finalCostRounded + " emeralds.");
+
             // Remove emeralds based on the final cost
-            removeItems(player.getInventory(), Material.EMERALD, finalCost);
+            removeItems(player.getInventory(), Material.EMERALD, finalCostRounded);
 
             // Give the item to the player
             ItemStack itemToGive = tradeItem.getItem().clone();
@@ -2014,10 +1951,15 @@ public class VillagerTradeManager implements Listener {
                 player.sendMessage(ChatColor.GOLD + "Congratulations! You have received the Villager pet!");
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 1.0f);
             }
+
+            // Add bartering experience to the player
+            xpManager.addXP(player, "Bartering", barteringExperience);
         } else {
             player.sendMessage(ChatColor.RED + "You don't have enough emeralds.");
         }
     }
+
+
 
 
 
@@ -2169,12 +2111,14 @@ public class VillagerTradeManager implements Listener {
         private final int emeraldValue;
         private final int quantity;
         private final int requiredLevel;
+        private final int barteringExperience; // New field for bartering experience
 
-        public TradeItem(ItemStack item, int emeraldValue, int quantity, int requiredLevel) {
+        public TradeItem(ItemStack item, int emeraldValue, int quantity, int requiredLevel, int barteringExperience) {
             this.item = item;
             this.emeraldValue = emeraldValue;
             this.quantity = quantity;
             this.requiredLevel = requiredLevel;
+            this.barteringExperience = barteringExperience; // Initialize the new field
         }
 
         public ItemStack getItem() {
@@ -2192,5 +2136,10 @@ public class VillagerTradeManager implements Listener {
         public int getRequiredLevel() {
             return requiredLevel;
         }
+
+        public int getBarteringExperience() { // New getter method
+            return barteringExperience;
+        }
     }
 }
+

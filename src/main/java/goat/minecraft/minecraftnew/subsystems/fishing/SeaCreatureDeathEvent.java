@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -83,7 +84,7 @@ public class SeaCreatureDeathEvent implements Listener {
 
         // Process XP and drops
         int boostedXP = getBoostedXP(seaCreature.getRarity());
-        killer.giveExp(boostedXP);
+        xpManager.addXP(killer, "Fishing", boostedXP);
         Bukkit.getLogger().info("Player " + killer.getName() + " gained " + boostedXP + " Fishing XP.");
 
         if(seaCreature.getSkullName().equals("Pirate")){
@@ -108,26 +109,10 @@ public class SeaCreatureDeathEvent implements Listener {
         playDeathEffects(entity, seaCreature.getRarity());
         PetManager petManager = PetManager.getInstance(plugin);
         int chance = random.nextInt(100) + 1;
-        ItemStack guardianDrop = CustomItemManager.createCustomItem(Material.PRISMARINE_SHARD, ChatColor.YELLOW +
-                "Rain", Arrays.asList(
-                ChatColor.GRAY + "A strange object.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Used in summoning Rain.",
-                ChatColor.DARK_PURPLE + "Artifact"
-        ), 1, false, true);
-        ItemStack forbiddenBook = CustomItemManager.createCustomItem(
-                Material.WRITTEN_BOOK,
-                ChatColor.YELLOW + "Forbidden Book",
-                Arrays.asList(
-                        ChatColor.GRAY + "A dangerous book full of experimental magic.",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to equipment to push the limits of enchantments.",
-                        ChatColor.DARK_PURPLE + "Enchanting Item"
-                ),
-                1,
-                false, // Not unbreakable
-                true   // Add enchantment shimmer
-        );
+        ItemStack guardianDrop = ItemRegistry.getGuardianDrop();
+        ItemStack forbiddenBook = ItemRegistry.getForbiddenBook();
         int rainChance = random.nextInt(100) + 1;
-        if (rainChance >= 90) {
+        if (rainChance >= 99) {
             entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), guardianDrop);
             killer.sendMessage(ChatColor.AQUA + "You dropped a Rain Artifact!");
         }

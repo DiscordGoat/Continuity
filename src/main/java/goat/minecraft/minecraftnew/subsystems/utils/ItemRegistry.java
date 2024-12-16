@@ -14,6 +14,52 @@ import java.util.Random;
 public class ItemRegistry {
     private ItemRegistry() {
     } // Private constructor to prevent instantiation
+
+
+    public static ItemStack getSeaSalt() {
+        return createCustomItem(
+                Material.SUGAR,
+                ChatColor.YELLOW + "Sea Salt",
+                Arrays.asList(
+                        ChatColor.GRAY + "A rare mineral found deep underwater...",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to food to add Sea Salt.",
+                        ChatColor.DARK_PURPLE + "Culinary Ingredient"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
+    public static ItemStack getRainArtifact() {
+        return createCustomItem(
+                Material.PRISMARINE_SHARD,
+                ChatColor.YELLOW + "Rain",
+                Arrays.asList(
+                        ChatColor.GRAY + "A strange object.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Used in summoning Rain.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getForbiddenBook() {
+        return createCustomItem(
+                Material.WRITTEN_BOOK,
+                ChatColor.YELLOW + "Forbidden Book",
+                Arrays.asList(
+                        ChatColor.GRAY + "A dangerous book full of experimental magic.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to equipment to push the limits of enchantments.",
+                        ChatColor.DARK_PURPLE + "Enchanting Item"
+                ),
+                1,
+                false, // Not unbreakable
+                true   // Add enchantment shimmer
+        );
+    }
+
     public static ItemStack getFishBone() {
         return createCustomItem(Material.BONE, ChatColor.BLUE + "Fish Bone",
                 Arrays.asList(

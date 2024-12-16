@@ -31,6 +31,58 @@ public class EnchantmentUtils {
                 + level + " for item " + item.getType());
         return item;
     }
+    /**
+     * Increments an enchantment by 1 level, provided that the enchantment is already at maxLevel + 1.
+     * This method allows for unsafe enchantments beyond the vanilla max level.
+     *
+     * @param item        The ItemStack to modify.
+     * @param billItem    The ItemStack representing the cost (e.g., currency) for the enchantment.
+     * @param enchantment The Enchantment to increment.
+     */
+    /**
+     * Increments an enchantment by 1 level, provided that the enchantment is already at maxLevel + 1.
+     * This method allows for unsafe enchantments beyond the vanilla max level.
+     *
+     * @param item        The ItemStack to modify.
+     * @param billItem    The ItemStack representing the cost (e.g., currency) for the enchantment.
+     * @param enchantment The Enchantment to increment.
+     * @return The modified ItemStack with the incremented enchantment level,
+     *         or the original item if the enchantment is not at maxLevel + 1.
+     */
+    public static ItemStack incrementInfernalEnchantment(ItemStack item, ItemStack billItem, Enchantment enchantment) {
+        if (item == null || item.getType().isAir()) {
+            System.err.println("Error: Cannot enchant a null or AIR item.");
+            return item;
+        }
+
+        if (!isItemEnchantable(item)) {
+            System.err.println("Error: The item " + item.getType() + " cannot be enchanted.");
+            return item;
+        }
+
+        int currentLevel = item.getEnchantmentLevel(enchantment);
+        int vanillaMaxLevel = enchantment.getMaxLevel(); // Vanilla max level
+        int infernalMaxLevel = vanillaMaxLevel + 1; // Infernal max level (maxLevel + 1)
+
+        // Check if the enchantment is already at maxLevel + 1
+        if (currentLevel != infernalMaxLevel) {
+            System.out.println("Enchantment must be at maxLevel + 1 to use Infernal Enchantments.");
+            return item;
+        }
+
+        // Increment the enchantment level by 1
+        int newLevel = currentLevel + 1;
+        item.addUnsafeEnchantment(enchantment, newLevel);
+
+        // Decrease the billItem amount by 1 only after successful enchantment
+        billItem.setAmount(billItem.getAmount() - 1);
+
+        System.out.println("Incremented " + enchantment.getKey().getKey() + " level from "
+                + currentLevel + " to " + newLevel + " for item " + item.getType());
+
+        return item;
+    }
+
 
     /**
      * Increments the specified enchantment level by 1.
