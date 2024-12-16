@@ -51,6 +51,20 @@ public class CulinarySubsystem implements Listener {
                 Arrays.asList("Cooked Chicken", "Bread"),
                 100
         ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.LIGHT_WEIGHTED_PRESSURE_PLATE,
+                "Slice of Cheese",
+                Arrays.asList("Milk", "Sea Salt"),
+                100
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.BREAD,
+                "Ham and Cheese Sandwich",
+                Arrays.asList("Slice of Cheese", "Ham", "Bread"),
+                200
+        ));
     }
 
     public CulinarySubsystem(JavaPlugin plugin) {
@@ -163,16 +177,19 @@ public class CulinarySubsystem implements Listener {
         }
 
         XPManager xpManager = new XPManager(plugin);
+
+        if(displayName.contains("Culinary")){
+            xpManager.addXP(player, "Culinary", 125);
+        }
         switch (displayName) {
-            case "Chicken Tenders":
-                player.setFoodLevel(Math.min(player.getFoodLevel() + 11, 20));
-                player.setSaturation(Math.min(player.getSaturation() + 6, 20));
-                xpManager.addXP(player, "Culinary", 125);
+            case "Salted Steak (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
                 break;
-            case "Sugared Steak":
-                player.setFoodLevel(Math.min(player.getFoodLevel() + 8, 20));
-                player.setSaturation(Math.min(player.getSaturation() + 8, 20));
-                xpManager.addXP(player, "Culinary", 100);
+            case "Chicken Tenders (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*20, 0));
+                break;
+            case "Ham and Cheese Sandwich (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*30, 0));
                 break;
             default:
                 break;
@@ -285,10 +302,40 @@ public class CulinarySubsystem implements Listener {
         item.setItemMeta(meta);
         return item;
     }
+    private ItemStack createIngredientItem(Material material, String ingredientName, List<String> usedInRecipes) {
+        ItemStack item = new ItemStack(material, 1);
+        ItemMeta meta = item.getItemMeta();
+
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.GREEN + ingredientName);
+
+            List<String> lore = new ArrayList<>();
+            lore.add(ChatColor.GRAY + "Used in:");
+            for (String recipe : usedInRecipes) {
+                lore.add(ChatColor.AQUA + "- " + recipe);
+            }
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
+
+        return item;
+    }
 
     private ItemStack createOutputItem(CulinaryRecipe recipe) {
         ItemStack item = new ItemStack(recipe.getOutputMaterial());
         ItemMeta meta = item.getItemMeta();
+        assert meta != null;
+        if(recipe.getName().equals("Slice of Cheese")){
+            meta.setDisplayName(ChatColor.GOLD + recipe.getName());
+            List<String> lore = new ArrayList<>();
+            lore.add(ChatColor.YELLOW + "Crafted with:");
+            for (String ing : recipe.getIngredients()) {
+                lore.add(ChatColor.GRAY + "- " + ing);
+            }
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+            return item;
+        }
         meta.setDisplayName(ChatColor.GOLD + recipe.getName() + " (Culinary)");
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.YELLOW + "Crafted with:");
@@ -398,10 +445,13 @@ public class CulinarySubsystem implements Listener {
     }
 
     private UUID spawnIngredientAboveTableRandom(Location tableLoc, Material mat, ItemStack ingredient) {
+        if (ingredient == null || ingredient.getType() == Material.AIR) {
+            logger.warning("[CulinarySubsystem] spawnIngredientAboveTableRandom: Invalid ingredient. Material: " + mat);
+            return null;
+        }
         double offsetX = (Math.random() - 0.5) * 0.6;
         double offsetZ = (Math.random() - 0.5) * 0.6;
         Location itemLoc = tableLoc.clone().add(0.5 + offsetX, 0.5, 0.5 + offsetZ);
-
         logger.info("[CulinarySubsystem] spawnIngredientAboveTableRandom: Spawning ingredient stand for " + mat + " at " + itemLoc);
         ArmorStand stand = (ArmorStand) itemLoc.getWorld().spawnEntity(itemLoc, EntityType.ARMOR_STAND);
 
@@ -411,9 +461,10 @@ public class CulinarySubsystem implements Listener {
         stand.setGravity(false);
         stand.setSmall(true);
         stand.setArms(true);
-        ItemStack ingredientButOne = ingredient.clone();
-        ingredientButOne.setAmount(1);
-        stand.getEquipment().setItemInMainHand(ingredientButOne);
+        ItemStack ingredientCopy = ingredient.clone();
+        ingredientCopy.setAmount(1);
+
+        stand.getEquipment().setItemInMainHand(ingredientCopy);
         stand.setCustomNameVisible(false);
         stand.setRightArmPose(new EulerAngle(Math.toRadians(-90), 0, 0));
 

@@ -50,7 +50,6 @@ public class CancelBrewing implements Listener {
         Block clickedBlock = event.getClickedBlock();
         XPManager xpManager = new XPManager(plugin);
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK && clickedBlock != null && clickedBlock.getType() == Material.BREWING_STAND) {
-            player.sendMessage(ChatColor.RED + "You must be player level 50 to brew potions!");
             event.setCancelled(true);
             // Get or load the player's brewing stand inventory
             Inventory brewingStandInventory = brewingStandInventories.get(player.getUniqueId());

@@ -5,8 +5,11 @@ import goat.minecraft.minecraftnew.subsystems.artifacts.RightClickArtifacts;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.subsystems.chocolatemisc.CakeHungerListener;
 import goat.minecraft.minecraftnew.subsystems.chocolatemisc.InventoryClickListener;
+import goat.minecraft.minecraftnew.subsystems.chocolatemisc.ItemDisplayManager;
+import goat.minecraft.minecraftnew.subsystems.chocolatemisc.ParticlePetEffects;
 import goat.minecraft.minecraftnew.subsystems.combat.EpicEnderDragonFight;
 import goat.minecraft.minecraftnew.subsystems.combat.MobDamageHandler;
+import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.culinary.MeatCookingManager;
 import goat.minecraft.minecraftnew.subsystems.elitemonsters.KnightMob;
@@ -60,20 +63,23 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private AnvilRepair anvilRepair;
     private CulinarySubsystem culinarySubsystem;
     private MeatCookingManager meatCookingManager;
-
-
+    private ItemDisplayManager displayManager;
     private PlayerOxygenManager playerOxygenManager;
     @Override
 
     public void onEnable() {
         VillagerWorkCycleManager.getInstance(this);
-
-
+        displayManager = new ItemDisplayManager(this);
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdirs();
+        }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
         PetManager petManager = PetManager.getInstance(this);
         new SpeedBoost(petManager);
         // Initialize the culinary subsystem
         culinarySubsystem = new CulinarySubsystem(this);
+        new CulinaryCauldron(this);
+        new ParticlePetEffects(this);
 
         getLogger().info("MyPlugin has been enabled!");
 
@@ -263,6 +269,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onDisable() {
+        if (displayManager != null) {
+            displayManager.shutdown();
+        }
         if (meatCookingManager != null) {
             meatCookingManager.cancelAllCookingsOnShutdown();
         }

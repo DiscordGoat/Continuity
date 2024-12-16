@@ -49,27 +49,27 @@ public class MeatCookingManager implements Listener {
     private void initializeMeatStages() {
         // Define cooking stages for Beef
         meatStagesMap.put(Material.BEEF, Arrays.asList(
-                "Raw", "Rare", "Medium Rare", "Well Done", "Burnt"
+                "Raw Beef", "Rare Steak", "Medium Rare Steak", "Well Done Steak", "Burnt Steak"
         ));
 
         // Define cooking stages for Porkchop
         meatStagesMap.put(Material.PORKCHOP, Arrays.asList(
-                "Raw", "Cooked", "Bacon", "Ham", "Burnt"
+                "Raw Porkchop", "Cooked Porkchop", "Bacon", "Ham", "Burnt Porkchop"
         ));
 
         // Define cooking stages for Chicken
         meatStagesMap.put(Material.CHICKEN, Arrays.asList(
-                "Raw", "Cooked", "Burnt"
+                "Raw Chicken", "Cooked Chicken", "Burnt Chicken"
         ));
 
         // Define cooking stages for Mutton
         meatStagesMap.put(Material.MUTTON, Arrays.asList(
-                "Raw", "Medium Rare", "Medium", "Well Done", "Burnt"
+                "Raw Mutton", "Medium Rare Mutton", "Medium Mutton", "Well Done Mutton", "Burnt Mutton"
         ));
 
         // Define cooking stages for Rabbit
         meatStagesMap.put(Material.RABBIT, Arrays.asList(
-                "Raw", "Cooked", "Burnt"
+                "Raw Rabbit", "Cooked Rabbit", "Burnt Rabbit"
         ));
 
         // Add more meat types and their stages as needed
@@ -368,7 +368,7 @@ public class MeatCookingManager implements Listener {
         ItemStack item = new ItemStack(resultMat, 1);
         if (item.getItemMeta() != null) {
             ItemMeta meta = item.getItemMeta();
-            String display = ChatColor.GOLD + stageName + " " + getMeatName(rawType);
+            String display = ChatColor.GOLD + stageName;
             meta.setDisplayName(display);
             item.setItemMeta(meta);
             Bukkit.getLogger().info("[MeatCookingManager] getStageItem: Created " + display + " from " + rawType);

@@ -15,7 +15,34 @@ public class ItemRegistry {
     private ItemRegistry() {
     } // Private constructor to prevent instantiation
 
-
+    public static ItemStack getDough() {
+        return createCustomItem(
+                Material.SNOWBALL,
+                ChatColor.YELLOW + "Dough",
+                Arrays.asList(
+                        ChatColor.GRAY + "A form of Bread.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to food to add Dough.",
+                        ChatColor.DARK_PURPLE + "Culinary Ingredient"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
+    public static ItemStack getButter() {
+        return createCustomItem(
+                Material.GOLD_INGOT,
+                ChatColor.YELLOW + "Butter",
+                Arrays.asList(
+                        ChatColor.GRAY + "A form of milk.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to food to add Butter.",
+                        ChatColor.DARK_PURPLE + "Culinary Ingredient"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
     public static ItemStack getSeaSalt() {
         return createCustomItem(
                 Material.SUGAR,
