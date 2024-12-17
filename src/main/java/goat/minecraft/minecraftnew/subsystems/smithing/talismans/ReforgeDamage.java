@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.smithing.talismans;
 
-import goat.minecraft.minecraftnew.subsystems.utils.TalismanManager;
+import goat.minecraft.minecraftnew.utils.TalismanManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

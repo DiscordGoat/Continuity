@@ -2,8 +2,8 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 
-import goat.minecraft.minecraftnew.subsystems.ai.Pathfinder;
-import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.ai.Pathfinder;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import me.gamercoder215.mobchip.EntityBrain;
 import me.gamercoder215.mobchip.ai.EntityAI;
 import me.gamercoder215.mobchip.bukkit.BukkitBrain;

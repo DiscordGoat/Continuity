@@ -2,12 +2,9 @@ package goat.minecraft.minecraftnew.subsystems.farming;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
-import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
-import org.bukkit.ChatColor;
+import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;

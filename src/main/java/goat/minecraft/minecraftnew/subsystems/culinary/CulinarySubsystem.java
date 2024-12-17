@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.culinary;
 
-import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -65,6 +65,13 @@ public class CulinarySubsystem implements Listener {
                 Arrays.asList("Slice of Cheese", "Ham", "Bread"),
                 200
         ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.DRIED_KELP,
+                "Seafood Feast",
+                Arrays.asList("Dried Kelp Block", "Cod", "Salmon", "Tropical Fish", "Calamari", "Heart of the Sea"),
+                1000
+        ));
     }
 
     public CulinarySubsystem(JavaPlugin plugin) {
@@ -83,13 +90,21 @@ public class CulinarySubsystem implements Listener {
     public void finalizeAllSessionsOnShutdown() {
         for (RecipeSession session : activeRecipeSessions.values()) {
             // Drop the recipe paper again
-            ItemStack recipePaper = createRecipeItem(session.recipe);
-            session.tableLocation.getWorld().dropItemNaturally(
-                    session.tableLocation.clone().add(0.5, 1, 0.5), recipePaper);
+            if (session.tableLocation != null && session.tableLocation.getWorld() != null) {
+                ItemStack recipePaper = createRecipeItem(session.recipe);
+                session.tableLocation.getWorld().dropItemNaturally(
+                        session.tableLocation.clone().add(0.5, 1, 0.5), recipePaper);
+            }
 
             // Drop all placed ingredients as items
             for (Map.Entry<String, UUID> entry : session.placedIngredientsStands.entrySet()) {
                 UUID standUUID = entry.getValue();
+
+                if (standUUID == null) {
+                    logger.warning("[CulinarySubsystem] Null UUID in placedIngredientsStands. Skipping.");
+                    continue;
+                }
+
                 Entity e = Bukkit.getEntity(standUUID);
                 if (e instanceof ArmorStand) {
                     ArmorStand ingStand = (ArmorStand) e;
@@ -104,20 +119,33 @@ public class CulinarySubsystem implements Listener {
 
             // Cancel spin tasks
             for (BukkitTask task : session.ingredientSpinTasks.values()) {
-                task.cancel();
+                if (task != null) {
+                    task.cancel();
+                }
             }
 
             // Remove main stand
-            removeEntityByUUID(session.mainArmorStandUUID);
+            if (session.mainArmorStandUUID != null) {
+                removeEntityByUUID(session.mainArmorStandUUID);
+            } else {
+                logger.warning("[CulinarySubsystem] Main armor stand UUID is null for a session.");
+            }
+
             // Remove label stands
             for (UUID u : session.ingredientLabelStands.values()) {
-                removeEntityByUUID(u);
+                if (u != null) {
+                    removeEntityByUUID(u);
+                } else {
+                    logger.warning("[CulinarySubsystem] Null UUID found in ingredientLabelStands.");
+                }
             }
         }
 
+        // Clear all sessions
         activeRecipeSessions.clear();
         logger.info("[CulinarySubsystem] All sessions finalized and cleared on shutdown/reload.");
     }
+
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -190,6 +218,13 @@ public class CulinarySubsystem implements Listener {
                 break;
             case "Ham and Cheese Sandwich (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*30, 0));
+                break;
+            case "Seafood Feast (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*60*1, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*10, 0));
+                player.setFoodLevel(20);
+                player.setSaturation(player.getSaturation() + 100);
+                player.setHealth(player.getMaxHealth());
                 break;
             default:
                 break;

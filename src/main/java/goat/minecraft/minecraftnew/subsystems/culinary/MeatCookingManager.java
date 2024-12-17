@@ -3,7 +3,6 @@ package goat.minecraft.minecraftnew.subsystems.culinary;
 import org.bukkit.*;
 import org.bukkit.block.data.type.Furnace;
 import org.bukkit.entity.*;
-import org.bukkit.event.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

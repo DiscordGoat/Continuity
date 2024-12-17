@@ -1,29 +1,16 @@
 package goat.minecraft.minecraftnew.subsystems.fishing;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
-import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
-import goat.minecraft.minecraftnew.subsystems.utils.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 
-import java.lang.reflect.Field;
 import java.util.*;
-
-import static goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager.createCustomItem;
 
 public class SeaCreatureRegistry implements Listener {
     private static final List<SeaCreature> SEA_CREATURES = new ArrayList<>();
@@ -115,7 +102,18 @@ public class SeaCreatureRegistry implements Listener {
                 "Luminescent_Drowned", // Unique texture for this creature
                 RARITY_LEVELS.get(Rarity.UNCOMMON) // Rarity level for uncommon creatures
         ));
-
+        List<SeaCreature.DropItem> squidDrops = new ArrayList<>();
+        squidDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 1, 1, 1)); // Luminescent Ink drop
+        squidDrops.add(new SeaCreature.DropItem(ItemRegistry.getCalamari(), 1, 1, 2)); // Luminescent Ink drop
+        SEA_CREATURES.add(new SeaCreature(
+                "Squid", // Name of the sea creature
+                Rarity.UNCOMMON, // Rarity of the sea creature
+                EntityType.SQUID, // Entity type for the luminescent drowned
+                squidDrops, // Drops for the luminescent drowned
+                Color.fromRGB(50, 150, 255), // Light blue color to represent a luminescent drowned
+                "Luminescent_Drowned", // Unique texture for this creature
+                RARITY_LEVELS.get(Rarity.UNCOMMON) // Rarity level for uncommon creatures
+        ));
 
         //RARE
         List<SeaCreature.DropItem> sharkDrops = new ArrayList<>();

@@ -1,14 +1,11 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
-import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Ageable;
-import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,10 +19,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.io.File;
-import java.lang.reflect.Type;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class VillagerWorkCycleManager implements Listener {
 

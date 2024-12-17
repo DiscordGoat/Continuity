@@ -2,7 +2,6 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;

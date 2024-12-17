@@ -1,18 +1,13 @@
 package goat.minecraft.minecraftnew.subsystems.music;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
-import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
-import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
+import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Block;
 import org.bukkit.block.Jukebox;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -20,10 +15,8 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -43,7 +36,7 @@ import org.bukkit.util.EulerAngle;
 import java.util.*;
 
 import static goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry.createAlchemyItem;
-import static goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager.createCustomItem;
+import static goat.minecraft.minecraftnew.utils.CustomItemManager.createCustomItem;
 
 
 public class MusicDiscManager implements Listener {
@@ -1306,7 +1299,8 @@ public class MusicDiscManager implements Listener {
         skillColors.put("Forestry", ChatColor.DARK_GREEN);
         skillColors.put("Mining", ChatColor.GRAY);
         skillColors.put("Farming", ChatColor.YELLOW);
-        skillColors.put("Bartering", ChatColor.GREEN);
+        skillColors.put("Bartering", ChatColor.GREEN
+        );
 
         Random random = new Random();
 

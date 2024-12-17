@@ -1,16 +1,13 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
-import goat.minecraft.minecraftnew.subsystems.generators.ResourceGeneratorSubsystem;
+import goat.minecraft.minecraftnew.utils.generators.ResourceGeneratorSubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
-import goat.minecraft.minecraftnew.subsystems.utils.ItemRegistry;
-import goat.minecraft.minecraftnew.subsystems.utils.StructureUtils;
-import goat.minecraft.minecraftnew.subsystems.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -20,12 +17,11 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
 import static goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry.createAlchemyItem;
-import static goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager.createCustomItem;
+import static goat.minecraft.minecraftnew.utils.CustomItemManager.createCustomItem;
 
 public class VillagerTradeManager implements Listener {
 

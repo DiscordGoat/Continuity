@@ -2,19 +2,15 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.utils.CustomItemManager;
-import goat.minecraft.minecraftnew.subsystems.utils.ItemRegistry;
-import org.bukkit.ChatColor;
+import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import org.bukkit.Particle;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Material;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
 import java.util.Random;
 
 public class RareCombatDrops implements Listener {
