@@ -1299,7 +1299,8 @@ public class MusicDiscManager implements Listener {
         skillColors.put("Forestry", ChatColor.DARK_GREEN);
         skillColors.put("Mining", ChatColor.GRAY);
         skillColors.put("Farming", ChatColor.YELLOW);
-        skillColors.put("Bartering", ChatColor.GREEN
+        skillColors.put("Bartering", ChatColor.GREEN);
+        skillColors.put("Culinary", ChatColor.YELLOW
         );
 
         Random random = new Random();

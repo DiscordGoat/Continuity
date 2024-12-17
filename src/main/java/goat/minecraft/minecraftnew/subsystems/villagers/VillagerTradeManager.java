@@ -1548,6 +1548,10 @@ public class VillagerTradeManager implements Listener {
             farmerPurchases.add(new TradeItem(new ItemStack(Material.PUMPKIN_SEEDS, 3), 32, 3, 2,29 * 16)); // Level 1 trade
             farmerPurchases.add(new TradeItem(new ItemStack(Material.MELON_SEEDS, 3), 32, 3, 2,29 * 16)); // Level 1 trade
             farmerPurchases.add(new TradeItem(new ItemStack(Material.CAKE, 1), 6, 1, 3,29 * 3)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(ItemRegistry.getWheatSeeder(), 16, 1, 3,29 * 3)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(ItemRegistry.getBeetrootSeeder(), 16, 1, 3,29 * 3)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(ItemRegistry.getCarrotSeeder(), 16, 1, 3,29 * 3)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(ItemRegistry.getPotatoSeeder(), 16, 1, 3,29 * 3)); // Level 2 trade
 
             farmerPurchases.add(new TradeItem(new ItemStack(Material.WATER_BUCKET, 1), 3, 1, 3,29 * 1)); // Level 1 trade
 //            ItemStack wheatGenerator = resourceGeneratorSubsystem.createGenerator(Material.WHEAT, 1, 280);
@@ -1572,6 +1576,7 @@ public class VillagerTradeManager implements Listener {
 
             farmerPurchases.add(new TradeItem(new ItemStack(Material.SNIFFER_EGG, 1), 64, 1, 5,29 * 32)); // Level 2 trade
             farmerPurchases.add(new TradeItem(new ItemStack(farmerEnchant), 64, 1, 5,29 * 32)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(ItemRegistry.getAutoComposter(), 64, 1, 5,29 * 32)); // Level 2 trade
         }
         purchaseWhitelist.put(Villager.Profession.FARMER, farmerPurchases);
 
@@ -1585,6 +1590,7 @@ public class VillagerTradeManager implements Listener {
             farmerSells.add(new TradeItem(new ItemStack(Material.WHEAT_SEEDS, 32), 1, 32, 1,29 * 16)); // Level 2 trade
 
             farmerSells.add(new TradeItem(new ItemStack(Material.BEETROOT, 4), 1, 4, 2,29 * 2)); // Level 2 trade
+            farmerSells.add(new TradeItem(ItemRegistry.getOrganicSoil(), 3, 4, 2,29 * 2)); // Level 2 trade
             farmerSells.add(new TradeItem(new ItemStack(Material.EGG, 6), 2, 6, 2,29 * 1)); // Level 3 trade
             farmerSells.add(new TradeItem(new ItemStack(Material.SUGAR_CANE, 6), 1, 6, 2,29 * 1)); // Level 3 trade
             farmerSells.add(new TradeItem(new ItemStack(Material.APPLE, 1), 1, 1, 2,29 * 1)); // Level 3 trade

@@ -33,11 +33,9 @@ public class SuperiorEndurance implements Listener {
         // Check if the player has the SUPERIOR_ENDURANCE perk
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SUPERIOR_ENDURANCE)) {
             // Increase the player's saturation by 1
-            float currentSaturation = player.getSaturation();
-            player.setSaturation(currentSaturation + 1.0f);
+            player.setSaturation(20);
 
             // Notify the player (optional)
-            player.sendMessage("Your " + activePet.getName() + "'s Superior Endurance perk has fed you!");
         }
     }
 

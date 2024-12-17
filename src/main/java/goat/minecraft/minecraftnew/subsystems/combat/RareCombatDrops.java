@@ -188,7 +188,7 @@ public class RareCombatDrops implements Listener {
 
     }
     private void handleZombieDrop(EntityDeathEvent event) {
-        if (rollChance(1,360)) { // 1-4% chance
+        if (rollChance(1,250)) { // 1-4% chance
             event.getDrops().add(undeadDrop);
         }
         if (rollChance(1,100)) { // 1-4% chance
@@ -197,7 +197,7 @@ public class RareCombatDrops implements Listener {
 
     }
     private void handleSkeletonDrop(EntityDeathEvent event) {
-        if (rollChance(1,480)) { // 1-4% chance
+        if (rollChance(1,250)) { // 1-4% chance
             event.getDrops().add(skeletonDrop);
         }
         if (rollChance(1,100)) { // 1-4% chance
@@ -211,7 +211,7 @@ public class RareCombatDrops implements Listener {
         }
     }
     private void handleSpiderDrop(EntityDeathEvent event) {
-        if (rollChance(1,360)) { // 1-4% chance
+        if (rollChance(1,250)) { // 1-4% chance
             event.getDrops().add(spiderDrop);
         }
     }

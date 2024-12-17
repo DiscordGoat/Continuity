@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,7 +49,7 @@ public class MithrilMiner implements Listener {
                 if (random.nextDouble() <= chance) {
                     // Drop a Mithril Chunk at the block's location
                     Location dropLocation = event.getBlock().getLocation();
-                    ItemStack mithrilChunk = customItemManager.mithrilChunk();
+                    ItemStack mithrilChunk = ItemRegistry.getMithrilChunk();
                     dropLocation.getWorld().dropItemNaturally(dropLocation, mithrilChunk);
 
                     // Notify the player

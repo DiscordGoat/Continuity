@@ -38,6 +38,7 @@ import goat.minecraft.minecraftnew.subsystems.smithing.talismans.*;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ArmorReforge;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.SwordReforge;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ToolReforge;
+import goat.minecraft.minecraftnew.subsystems.farming.AutoComposter;
 import goat.minecraft.minecraftnew.utils.structures.Mineshafts;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.combat.KillMonster;
@@ -55,6 +56,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MinecraftNew extends JavaPlugin implements Listener {
 
     private VillagerWorkCycleManager villagerWorkCycleManager;
+    private AutoComposter autoComposter;
 
     private XPManager xpManager;
     //instancing
@@ -68,6 +70,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
 
     public void onEnable() {
+        autoComposter = new AutoComposter(this);
         VillagerWorkCycleManager.getInstance(this);
         displayManager = new ItemDisplayManager(this);
         if (!getDataFolder().exists()) {

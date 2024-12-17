@@ -15,6 +15,138 @@ public class ItemRegistry {
     private ItemRegistry() {
     } // Private constructor to prevent instantiation
 
+
+
+    public static ItemStack getRareItem(Material cropType) {
+        switch (cropType) {
+            case CARROTS:
+                return getCarrotSeeder();
+            case POTATOES:
+                return getPotatoSeeder();
+            case WHEAT:
+                return getWheatSeeder();
+            case BEETROOTS:
+                return getBeetrootSeeder();
+            default:
+                return null; // No rare item defined for other crops
+        }
+    }
+    public static ItemStack getOrganicSoil() {
+        return createCustomItem(
+                Material.DIRT,
+                ChatColor.YELLOW + "Organic Soil",
+                List.of(ChatColor.GRAY + "Strong Soil.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Valuable.",
+                        ChatColor.DARK_PURPLE + "Trophy Item"),
+                1,
+                false // Set to true if you want it to be unbreakable
+                , true
+        );
+    }
+    public static ItemStack getAutoComposter() {
+        return createCustomItem(
+                Material.DISPENSER,
+                ChatColor.YELLOW + "Auto-Composter",
+                List.of(ChatColor.GRAY + "Automatically composts crops into organic soil.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Automatic.",
+                        ChatColor.DARK_PURPLE + "Inventory Talisman"),
+                1,
+                false // Set to true if you want it to be unbreakable
+                , true
+        );
+    }
+    public static ItemStack getHireVillager() {
+        return createCustomItem(
+                Material.WOODEN_HOE,
+                ChatColor.YELLOW + "Hire Villager",
+                List.of(ChatColor.GRAY + "A proverbially useful companion.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summons a Villager.",
+                        ChatColor.DARK_PURPLE + "Summoning Item"),
+                1,
+                false // Set to true if you want it to be unbreakable
+                , true
+        );
+    }
+    public static ItemStack getMithrilChunk() {
+        return createCustomItem(
+                Material.LIGHT_BLUE_DYE,
+                ChatColor.BLUE + "Mithril Chunk",
+                List.of(ChatColor.GRAY + "A rare mineral.",
+                        "Apply it to equipment to unlock the secrets of Unbreaking.",
+                        "Smithing Item"),
+                1,
+                false // Set to true if you want it to be unbreakable
+                , true
+        );
+    }
+    public static ItemStack getSilkWorm() {
+        return createCustomItem(
+                Material.STRING,
+                ChatColor.YELLOW + "Silk Worm",
+                List.of(ChatColor.GRAY + "A delicate creature that weaves silk.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to a pickaxe to unlock the secrets of Silk Touch.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"),
+                1,
+                false // Set to true if you want it to be unbreakable
+                , true
+        );
+    }
+    public static ItemStack getCarrotSeeder() {
+        return createCustomItem(
+                Material.GOLDEN_CARROT,
+                ChatColor.YELLOW + "CarrotSeeder",
+                Arrays.asList(
+                        ChatColor.GRAY + "A bag of Carrot Seeds",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Mass plants seeds.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
+    public static ItemStack getPotatoSeeder() {
+        return createCustomItem(
+                Material.BAKED_POTATO,
+                ChatColor.YELLOW + "PotatoSeeder",
+                Arrays.asList(
+                        ChatColor.GRAY + "A bag of Potato Seeds",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Mass plants seeds.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
+    public static ItemStack getBeetrootSeeder() {
+        return createCustomItem(
+                Material.BEETROOT,
+                ChatColor.YELLOW + "BeetrootSeeder",
+                Arrays.asList(
+                        ChatColor.GRAY + "A bag of Beet Seeds",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Mass plants seeds.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
+    public static ItemStack getWheatSeeder() {
+        return createCustomItem(
+                Material.WHEAT,
+                ChatColor.YELLOW + "WheatSeeder",
+                Arrays.asList(
+                        ChatColor.GRAY + "A bag of Wheat Seeds",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Mass plants seeds.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
     public static ItemStack getCalamari() {
         return createCustomItem(
                 Material.INK_SAC,
