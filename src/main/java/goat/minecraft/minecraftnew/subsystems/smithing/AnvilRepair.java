@@ -101,41 +101,23 @@ public class AnvilRepair implements Listener {
         Inventory anvilInventory = Bukkit.createInventory(null, 27, "Anvil Repair");
 
         // Define GUI panes and items for decoration and instructions
-        ItemStack blackPane = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, " ");
-        ItemStack repaireePane = createGuiItem(Material.LIGHT_GRAY_STAINED_GLASS_PANE, ChatColor.WHITE + "Place item to repair on the left");
-        //ItemStack billPane = createGuiItem(Material.YELLOW_STAINED_GLASS_PANE, ChatColor.GOLD + "Place repair material on the right");
+        ItemStack blackPane = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, "");
         ItemStack resultPane = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair");
-
-        // Informative book explaining repair mechanics
-        ItemStack infoBook = createGuiItem(Material.BOOK, ChatColor.AQUA + "Repair Instructions");
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.WHITE + "• Iron Ingot repairs: " + ChatColor.GREEN + "75 durability");
-        lore.add(ChatColor.WHITE + "• Diamond repairs: " + ChatColor.GREEN + "150 durability");
-        lore.add(ChatColor.WHITE + "Left = Repairable Item Right = Material to Repair with");
-        //lore.add(ChatColor.WHITE + "• Other materials: " + ChatColor.GREEN + "Default repair value");
-        ItemMeta infoMeta = infoBook.getItemMeta();
-        if (infoMeta != null) {
-            infoMeta.setLore(lore);
-            infoBook.setItemMeta(infoMeta);
-        }
+        ItemStack sharpnessItem = createGuiItem(Material.DIAMOND_SWORD, ChatColor.DARK_PURPLE + "Sharpen: 2 Diamonds");
+        ItemStack efficiencyItem = createGuiItem(Material.GOLDEN_PICKAXE, ChatColor.DARK_PURPLE + "Polish: 1 Gold Block");
+        ItemStack protectionItem = createGuiItem(Material.OBSIDIAN, ChatColor.DARK_PURPLE + "Reinforce: 2 Obsidian");
 
         // Set up the GUI layout with decorative panes
         for (int i = 0; i < 27; i++) {
             anvilInventory.setItem(i, blackPane);
         }
-
+        anvilInventory.setItem(8, sharpnessItem);
+        anvilInventory.setItem(17, efficiencyItem);
+        anvilInventory.setItem(26, protectionItem);
         // Place specific GUI items and interactive slots
         anvilInventory.setItem(10, null); // Slot for the item to repair
-        anvilInventory.setItem(16, resultPane); // Slot for the repair material
+        anvilInventory.setItem(15, resultPane); // Slot for the repair material
         anvilInventory.setItem(13, null); // Output slot with "Click to repair" pane
-
-        // Place labels above the interactive slots
-        anvilInventory.setItem(9, blackPane); // Label for repairee slot (slot 10)
-        anvilInventory.setItem(12, blackPane);    // Label for bill slot (slot 16)
-
-        // Place the informational book in the bottom-right corner (slot 26)
-        anvilInventory.setItem(26, infoBook); // Bottom-right corner
-
         return anvilInventory;
     }
 
@@ -151,7 +133,7 @@ public class AnvilRepair implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(name);
-            meta.setLore(Collections.singletonList(ChatColor.GRAY + " ")); // Empty lore to prevent stacking
+            meta.setLore(Collections.singletonList(ChatColor.GRAY + "")); // Empty lore to prevent stacking
             item.setItemMeta(meta);
         }
         return item;
@@ -273,9 +255,101 @@ public class AnvilRepair implements Listener {
             if (slot == 10 || slot == 13) {
                 return;
             }
+            // Handle Protection (slot 26)
+            if (event.getView().getTopInventory() != null && slot == 26) {
+                Inventory inventory = player.getInventory();
+                event.setCancelled(true);
 
-            // Handle repair when clicking the result slot (slot 13)
-            if (slot == 16) {
+                // Count obsidian blocks
+                int obsidianCount = 0;
+                for (ItemStack item : inventory.getContents()) {
+                    if (item != null && item.getType() == Material.OBSIDIAN) {
+                        obsidianCount += item.getAmount();
+                    }
+                }
+
+                if (obsidianCount >= 2) {
+                    ItemStack repairee = event.getClickedInventory().getItem(10);
+
+                    if (repairee != null && ARMOR.contains(repairee.getType())) {
+                        if (repairee.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL) == 4) {
+                            return;
+                        }
+                        EnchantmentUtils.incrementEnchantment(repairee, null, Enchantment.PROTECTION_ENVIRONMENTAL);
+                        inventory.removeItem(new ItemStack(Material.OBSIDIAN, 2));
+                        player.sendMessage("Your item has been enchanted with Protection!");
+                    } else {
+                        player.sendMessage("Please place armor to enchant!");
+                    }
+                } else {
+                    player.sendMessage("You need at least 2 obsidian blocks to enchant with Protection!");
+                }
+            }
+// Handle Efficiency (slot 17)
+            if (event.getView().getTopInventory() != null && slot == 17) {
+                Inventory inventory = player.getInventory();
+                event.setCancelled(true);
+
+                // Count gold blocks
+                int goldBlockCount = 0;
+                for (ItemStack item : inventory.getContents()) {
+                    if (item != null && item.getType() == Material.GOLD_BLOCK) {
+                        goldBlockCount += item.getAmount();
+                    }
+                }
+
+                if (goldBlockCount >= 1) {
+                    ItemStack repairee = event.getClickedInventory().getItem(10);
+
+                    if (repairee != null && TOOLS.contains(repairee.getType())) {
+                        if (repairee.getEnchantmentLevel(Enchantment.DIG_SPEED) == 5) {
+                            return;
+                        }
+                        EnchantmentUtils.incrementEnchantment(repairee, null, Enchantment.DIG_SPEED);
+                        inventory.removeItem(new ItemStack(Material.GOLD_BLOCK, 1));
+                        player.sendMessage("Your item has been enchanted with Efficiency!");
+                    } else {
+                        player.sendMessage("Please place a tool to enchant!");
+                    }
+                } else {
+                    player.sendMessage("You need at least 1 gold block to enchant with Efficiency!");
+                }
+            }
+            // Handle sharpen click event
+            if (event.getView().getTopInventory() != null && slot == 8) {
+                Inventory inventory = player.getInventory(); // Get the player's inventory
+                event.setCancelled(true);
+                int diamondCount = 0;
+                for (ItemStack item : inventory.getContents()) {
+                    if (item != null && item.getType() == Material.DIAMOND) {
+                        diamondCount += item.getAmount();
+                    }
+                }
+                if (diamondCount >= 2) {
+                    // Get the item in the slot to be repaired
+                    ItemStack repairee = event.getClickedInventory().getItem(10);
+                    ItemStack billItem = event.getClickedInventory().getItem(13); // This might be null intentionally
+
+                    if (repairee != null && MELEE.contains(repairee.getType())) {
+                        // Pass null safely to incrementEnchantment
+                        if(repairee.getEnchantmentLevel(Enchantment.DAMAGE_ALL) == 5){
+                            return;
+                        }
+                        EnchantmentUtils.incrementEnchantment(repairee, billItem, Enchantment.DAMAGE_ALL);
+
+                        // Remove diamonds from inventory
+                        inventory.removeItem(new ItemStack(Material.DIAMOND, 2));
+
+                        player.sendMessage("Your item has been sharpened!");
+                    } else {
+                        player.sendMessage("Please place a sword to be sharpened!");
+                    }
+                } else {
+                    player.sendMessage("You need at least 2 diamonds to sharpen your item!");
+                }
+            }
+
+            if (slot == 15) {
                 //Bukkit.broadcastMessage("clicked repair");
                 ItemStack repairee = clickedInventory.getItem(10);
                 ItemStack billItem = clickedInventory.getItem(13);
@@ -283,7 +357,6 @@ public class AnvilRepair implements Listener {
                     // Perform the repair
                     event.setCancelled(true); // Prevent taking the pane
 
-                    // Remove one from the repair material (slot 16)
                     List<Material> billableItems = new ArrayList<>();
                     billableItems.add(Material.IRON_INGOT);
                     billableItems.add(Material.GOLD_INGOT);
@@ -1004,10 +1077,6 @@ public class AnvilRepair implements Listener {
             inventory.setItem(13, billItem); // Update the stack size
         }
 
-        // Reset the result slot (slot 16) to the default "Click to repair" pane
-        inventory.setItem(16, createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair"));
-
-        // Play a sound to indicate a successful repair
         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.1f, 1.0f);
     }
 

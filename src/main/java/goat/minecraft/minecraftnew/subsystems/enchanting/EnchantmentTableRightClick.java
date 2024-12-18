@@ -33,6 +33,9 @@ public class EnchantmentTableRightClick implements Listener {
             Enchantment.PROTECTION_FALL,     // Silk Touch
             Enchantment.PROTECTION_EXPLOSIONS,     // Silk Touch
             Enchantment.DEPTH_STRIDER,     // Silk Touch
+            Enchantment.DAMAGE_ALL,     // Silk Touch
+            Enchantment.DIG_SPEED,     // Silk Touch
+            Enchantment.PROTECTION_ENVIRONMENTAL,     // Silk Touch
 
             Enchantment.DAMAGE_ARTHROPODS,     // Silk Touch
             Enchantment.FIRE_ASPECT,     // Silk Touch

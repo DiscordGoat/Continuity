@@ -106,22 +106,29 @@ public class EnchantmentUtils {
         }
 
         int currentLevel = item.getEnchantmentLevel(enchantment);
-        int maxLevel = enchantment.getMaxLevel(); // Set cap at double the base level
+        int maxLevel = enchantment.getMaxLevel();
 
         if (currentLevel >= maxLevel) {
-            // Cap reached, add billItem to player's inventory
-            System.out.println("Enchantment level limit reached. " + billItem.getType() + " has been added to the player's inventory.");
+            System.out.println("Enchantment level limit reached.");
             return item;
         }
 
         int newLevel = currentLevel + 1;
         item.addUnsafeEnchantment(enchantment, newLevel);
 
-        System.out.println("Incremented " + enchantment.getKey().getKey() + " level from "
-                + currentLevel + " to " + newLevel + " for item " + item.getType());
-        billItem.setAmount(billItem.getAmount() -1);
+        // Handle billItem if it's not null
+        if (billItem != null && billItem.getAmount() > 0) {
+            billItem.setAmount(billItem.getAmount() - 1);
+            System.out.println("Decreased billItem amount by 1.");
+        } else if (billItem == null) {
+            System.out.println("No billItem was required for this enchantment.");
+        } else {
+            System.err.println("Error: Bill item amount invalid.");
+        }
+
         return item;
     }
+
 
     public static ItemStack incrementEnchantmentUnsafely(ItemStack item, ItemStack billItem, Enchantment enchantment) {
         if (item == null || item.getType().isAir()) {
@@ -153,7 +160,11 @@ public class EnchantmentUtils {
 
         System.out.println("Incremented " + enchantment.getKey().getKey() + " level from "
                 + currentLevel + " to " + newLevel + " for item " + item.getType());
-        billItem.setAmount(billItem.getAmount() -1);
+        if(billItem == null){
+
+        }else {
+            billItem.setAmount(billItem.getAmount() - 1);
+        }
         return item;
     }
 
