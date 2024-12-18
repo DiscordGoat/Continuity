@@ -218,6 +218,10 @@ public class FishingEvent implements Listener {
             ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHand(ItemRegistry.getRandomTreasure());
             ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHandDropChance(1);
         }
+        if(seaCreature.getSkullName().equals("Poseidon")){
+            ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHand(ItemRegistry.getTrident());
+
+        }
         livingEntity.setSwimming(true);
         livingEntity.setSilent(true);
         SpawnMonsters spawnMonsters = new SpawnMonsters(plugin, xpManager);

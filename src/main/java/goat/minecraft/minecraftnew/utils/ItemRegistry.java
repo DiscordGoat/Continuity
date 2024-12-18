@@ -11,11 +11,997 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import static goat.minecraft.minecraftnew.utils.CustomItemManager.createCustomItem;
+
 public class ItemRegistry {
     private ItemRegistry() {
     } // Private constructor to prevent instantiation
 
+    public static ItemStack getFarmerEnchant() {
+        return CustomItemManager.createCustomItem(Material.RABBIT_STEW, ChatColor.YELLOW +
+                "Well Balanced Meal", Arrays.asList(
+                ChatColor.GRAY + "Max level of III",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Feed to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getButcherEnchant() {
+        return CustomItemManager.createCustomItem(Material.GOLDEN_AXE, ChatColor.YELLOW +
+                "Brutal Tactics", Arrays.asList(
+                ChatColor.GRAY + "Max level of V",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Cleaver to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getFisherEnchant() {
+        return CustomItemManager.createCustomItem(Material.COD, ChatColor.YELLOW + "Call of the Void", Arrays.asList(
+                ChatColor.GRAY + "Max level of V",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Call of the Void to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getIronGolem() {
+        return CustomItemManager.createCustomItem(Material.IRON_BLOCK, ChatColor.YELLOW +
+                "Iron Golem", Arrays.asList(
+                ChatColor.GRAY + "Ancient Summoning Artifact.",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summon an Iron Golem.",
+                ChatColor.DARK_PURPLE + "Summoning Artifact"
+        ), 1, false, true);
+    }
+    public static ItemStack getLibrarianEnchant() {
+        return CustomItemManager.createCustomItem(Material.EXPERIENCE_BOTTLE, ChatColor.YELLOW +
+                "Savant", Arrays.asList(
+                ChatColor.GRAY + "Max level of 1",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Savant to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getLibrarianEnchantmentTwo() {
+        return CustomItemManager.createCustomItem(Material.SOUL_LANTERN, ChatColor.YELLOW +
+                "Soul Lantern", Arrays.asList(
+                ChatColor.GRAY + "Max level of 5",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Experience to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getRandomArmorTrim() {
+        return CustomItemManager.createCustomItem(Material.PAPER, ChatColor.YELLOW +
+                "Draw Random Armor Trim", Arrays.asList(
+                ChatColor.GRAY + "A collection of materials and tools",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Creates a random Armor Trim.",
+                ChatColor.DARK_PURPLE + "Artifact"
+        ), 1, false, true);
+    }
+    public static ItemStack getArmorerEnchant() {
+        return CustomItemManager.createCustomItem(Material.GLASS_BOTTLE, ChatColor.YELLOW +
+                "Oxygen Tank", Arrays.asList(
+                ChatColor.GRAY + "Max level of 4",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Ventilation to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getToolsmithEnchant() {
+        return CustomItemManager.createCustomItem(Material.TORCH, ChatColor.YELLOW +
+                "Everflame", Arrays.asList(
+                ChatColor.GRAY + "Max level of 5",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Forge to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getToolsmithEnchantTwo() {
+        return CustomItemManager.createCustomItem(Material.CHAIN, ChatColor.YELLOW +
+                "Climbing Rope", Arrays.asList(
+                ChatColor.GRAY + "Max level of 1",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Rappel to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getShepherdArtifact() {
+        return CustomItemManager.createCustomItem(Material.BRUSH, ChatColor.YELLOW +
+                "Creative Mind", Arrays.asList(
+                ChatColor.GRAY + "A collection of Colors and Mixes",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Hydrates All Concrete",
+                ChatColor.DARK_PURPLE + "Artifact"
+        ), 1, false, true);
+    }
+    public static ItemStack getShepherdEnchant() {
+        return CustomItemManager.createCustomItem(Material.SHEARS, ChatColor.YELLOW +
+                "Laceration", Arrays.asList(
+                ChatColor.GRAY + "Max level of 5",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Shear to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getFishingEnchant() {
+        return CustomItemManager.createCustomItem(Material.GOLD_NUGGET, ChatColor.YELLOW +
+                "Golden Hook", Arrays.asList(
+                ChatColor.GRAY + "Max level of 5",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Piracy to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getLeatherworkerEnchant() {
+        return CustomItemManager.createCustomItem(Material.LEATHER, ChatColor.YELLOW +
+                "Hide", Arrays.asList(
+                ChatColor.GRAY + "Max level of 4",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Physical Protection to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getLeatherworkerArtifact() {
+        return CustomItemManager.createCustomItem(Material.BOOK, ChatColor.YELLOW +
+                "Backpack", Arrays.asList(
+                ChatColor.GRAY + "A storage device for items",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Opens Backpack.",
+                ChatColor.DARK_PURPLE + "Artifact"
+        ), 1, false, true);
+    }
+    public static ItemStack getClericEnchant() {
+        return CustomItemManager.createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
+                "Alchemical Bundle", Arrays.asList(
+                ChatColor.GRAY + "Max level of 4",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Alchemy to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
 
+
+
+
+
+    // Mineshaft Location
+    public static ItemStack getCartographerMineshaft() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Mineshaft Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Stronghold Location
+    public static ItemStack getCartographerStronghold() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Stronghold Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Village Location
+    public static ItemStack getCartographerVillage() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Village Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    // Igloo Location
+    public static ItemStack getCartographerIgloo() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Igloo Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    // Buried Treasure Location
+    public static ItemStack getCartographerBuriedTreasure() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Buried Treasure Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Desert Pyramid Location
+    public static ItemStack getCartographerDesertPyramid() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Desert Pyramid Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Jungle Pyramid Location
+    public static ItemStack getCartographerJungleTemple() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Jungle Pyramid Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    // Ocean Monument Location
+    public static ItemStack getCartographerOceanMonument() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Ocean Monument Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    // Pillager Outpost Location
+    public static ItemStack getCartographerPillagerOutpost() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Pillager Outpost Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Swamp Hut Location
+    public static ItemStack getCartographerSwampHut() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Swamp Hut Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Woodland Mansion Location
+    public static ItemStack getCartographerWoodlandMansion() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Woodland Mansion Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Bastion Remnant Location
+    public static ItemStack getCartographerBastionRemnant() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Bastion Remnant Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // End City Location
+    public static ItemStack getCartographerEndCity() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "End City Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Nether Fortress Location
+    public static ItemStack getCartographerNetherFortress() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Nether Fortress Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Ocean Ruin Location
+    public static ItemStack getCartographerOceanRuins() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Ocean Ruin Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // Shipwreck Location
+    public static ItemStack getCartographerShipwreck() {
+        return CustomItemManager.createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Shipwreck Location",
+                Arrays.asList(
+                        ChatColor.GRAY + "The coords of a location",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getAspectoftheJourney() {
+        return CustomItemManager.createCustomItem(
+                Material.ENDER_EYE,
+                ChatColor.YELLOW + "Fast Travel",
+                Arrays.asList(
+                        ChatColor.GRAY + "Max level of I",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Aspect of the Journey to items.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getFletcherBowEnchant() {
+        return CustomItemManager.createCustomItem(
+                Material.WHITE_DYE,
+                ChatColor.YELLOW + "Stun Coating",
+                Arrays.asList(
+                        ChatColor.GRAY + "Max level of 5",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Stun to items.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getFletcherCrossbowEnchant() {
+        return CustomItemManager.createCustomItem(
+                Material.FIRE_CHARGE,
+                ChatColor.YELLOW + "Explosive Arrows",
+                Arrays.asList(
+                        ChatColor.GRAY + "Max level of 10",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Lethal Reaction to items.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithEnchant() {
+        return CustomItemManager.createCustomItem(
+                Material.RED_DYE,
+                ChatColor.YELLOW + "Lethal Tempo",
+                Arrays.asList(
+                        ChatColor.GRAY + "Max level of 5",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Bloodlust to items.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getArmorsmithReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.MOJANG_BANNER_PATTERN,
+                ChatColor.YELLOW + "Armor Talisman",
+                Arrays.asList(
+                        ChatColor.GRAY + "An armorsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Armor Rating.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getArmorsmithReforgeTwo() {
+        return CustomItemManager.createCustomItem(
+                Material.MOJANG_BANNER_PATTERN,
+                ChatColor.YELLOW + "Armor Toughness Talisman",
+                Arrays.asList(
+                        ChatColor.GRAY + "An armorsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Armor Toughness Rating.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getArmorsmithReforgeThree() {
+        return CustomItemManager.createCustomItem(
+                Material.MOJANG_BANNER_PATTERN,
+                ChatColor.YELLOW + "Knockback Talisman",
+                Arrays.asList(
+                        ChatColor.GRAY + "An armorsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining reduced Knockback.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.MOJANG_BANNER_PATTERN,
+                ChatColor.YELLOW + "Attack Damage Talisman",
+                Arrays.asList(
+                        ChatColor.GRAY + "An weaponsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Attack Damage Rating.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithReforgeTwo() {
+        return CustomItemManager.createCustomItem(
+                Material.MOJANG_BANNER_PATTERN,
+                ChatColor.YELLOW + "Swift Blade Talisman",
+                Arrays.asList(
+                        ChatColor.GRAY + "An weaponsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Attack Damage Rating.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getFishermanReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.MOJANG_BANNER_PATTERN,
+                ChatColor.YELLOW + "Sea Creature Talisman",
+                Arrays.asList(
+                        ChatColor.GRAY + "An fishermans expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Sea Creature Chance.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getToolsmithReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.MOJANG_BANNER_PATTERN,
+                ChatColor.YELLOW + "Durability Talisman",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Toolsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Durability Rating.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getToolsmithEfficiency() {
+        return CustomItemManager.createCustomItem(
+                Material.GOLDEN_PICKAXE,
+                ChatColor.YELLOW + "Efficiency Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Toolsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getToolsmithUnbreaking() {
+        return CustomItemManager.createCustomItem(
+                Material.OBSIDIAN,
+                ChatColor.YELLOW + "Unbreaking Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Toolsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithSharpness() {
+        return CustomItemManager.createCustomItem(
+                Material.GOLDEN_SWORD,
+                ChatColor.YELLOW + "Sharpness Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Weaponsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithSweepingEdge() {
+        return CustomItemManager.createCustomItem(
+                Material.WHEAT,
+                ChatColor.YELLOW + "Sweeping Edge Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Weaponsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithLooting() {
+        return CustomItemManager.createCustomItem(
+                Material.GOLD_INGOT,
+                ChatColor.YELLOW + "Looting Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Weaponsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithKnockback() {
+        return CustomItemManager.createCustomItem(
+                Material.SLIME_BLOCK,
+                ChatColor.YELLOW + "Knockback Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Weaponsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithFireAspect() {
+        return CustomItemManager.createCustomItem(
+                Material.FIRE_CHARGE,
+                ChatColor.YELLOW + "Fire Aspect Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Weaponsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithSmite() {
+        return CustomItemManager.createCustomItem(
+                Material.BONE,
+                ChatColor.YELLOW + "Smite Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Weaponsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getWeaponsmithBaneofAnthropods() {
+        return CustomItemManager.createCustomItem(
+                Material.FERMENTED_SPIDER_EYE,
+                ChatColor.YELLOW + "Bane of Anthropods Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Weaponsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getFishermanLure() {
+        return CustomItemManager.createCustomItem(
+                Material.BRAIN_CORAL_BLOCK,
+                ChatColor.YELLOW + "Lure Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Fishermans expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getFishermanLuckoftheSea() {
+        return CustomItemManager.createCustomItem(
+                Material.STICK,
+                ChatColor.YELLOW + "Luck of the Sea Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Fishermans expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getArmorSmithProtection() {
+        return CustomItemManager.createCustomItem(
+                Material.GOLDEN_CHESTPLATE,
+                ChatColor.YELLOW + "Protection Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "An Armorsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getArmorSmithRespiration() {
+        return CustomItemManager.createCustomItem(
+                Material.GOLDEN_HELMET,
+                ChatColor.YELLOW + "Respiration Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "An Armorsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getArmorSmithThorns() {
+        return CustomItemManager.createCustomItem(
+                Material.CACTUS,
+                ChatColor.YELLOW + "Thorns Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "An Armorsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getArmorSmithFeatherFalling() {
+        return CustomItemManager.createCustomItem(
+                Material.FEATHER,
+                ChatColor.YELLOW + "Feather Falling Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "An Armorsmiths expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getFletcherPower() {
+        return CustomItemManager.createCustomItem(
+                Material.FEATHER,
+                ChatColor.YELLOW + "Power Expertise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A fletchers expertise",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
+                        ChatColor.DARK_PURPLE + "Mastery Enchant"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getCommonSwordReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.WHITE_DYE,
+                ChatColor.YELLOW + "Common Sword Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges a sword to deal more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getUncommonSwordReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.LIME_DYE,
+                ChatColor.YELLOW + "Uncommon Sword Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges a sword to deal more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getRareSwordReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.BLUE_DYE,
+                ChatColor.YELLOW + "Rare Sword Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges a sword to deal more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getEpicSwordReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.MAGENTA_DYE,
+                ChatColor.YELLOW + "Epic Sword Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges a sword to deal more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getLegendarySwordReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.YELLOW_DYE,
+                ChatColor.YELLOW + "Legendary Sword Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges a sword to deal more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+
+    public static ItemStack getCommonArmorReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.WHITE_STAINED_GLASS,
+                ChatColor.YELLOW + "Common Armor Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges armor to absorb more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getUncommonArmorReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.LIME_STAINED_GLASS,
+                ChatColor.YELLOW + "Uncommon Armor Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges armor to absorb more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getRareArmorReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.BLUE_STAINED_GLASS,
+                ChatColor.YELLOW + "Rare Armor Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges armor to absorb more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getEpicArmorReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.MAGENTA_STAINED_GLASS,
+                ChatColor.YELLOW + "Epic Armor Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges armor to absorb more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getSingularity() {
+        return createCustomItem(
+                Material.IRON_NUGGET,
+                ChatColor.BLUE + "Singularity",
+                List.of(ChatColor.GRAY + "A rare blueprint entrusted to the Knights",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reforges Items to the first Tier.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"),
+                1,
+                false // Set to true if you want it to be unbreakable
+                , true
+        );
+    }
+    public static ItemStack getLegendaryArmorReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.YELLOW_STAINED_GLASS,
+                ChatColor.YELLOW + "Legendary Armor Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges armor to absorb more damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getCommonToolReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.WHITE_STAINED_GLASS_PANE,
+                ChatColor.YELLOW + "Common Tool Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getUncommonToolReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.LIME_STAINED_GLASS_PANE,
+                ChatColor.YELLOW + "Uncommon Tool Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getRareToolReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.BLUE_STAINED_GLASS_PANE,
+                ChatColor.YELLOW + "Rare Tool Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getEpicToolReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.MAGENTA_STAINED_GLASS_PANE,
+                ChatColor.YELLOW + "Epic Tool Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getLegendaryToolReforge() {
+        return CustomItemManager.createCustomItem(
+                Material.YELLOW_STAINED_GLASS_PANE,
+                ChatColor.YELLOW + "Legendary Tool Reforge",
+                Arrays.asList(
+                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
     public static ItemStack getDiamondGemstone() {
         return createCustomItem(
                 Material.DIAMOND,
@@ -841,7 +1827,20 @@ public class ItemRegistry {
                 ChatColor.DARK_PURPLE + "Smithing Item"
         ), 1, false, true);
     }
-
+    public static ItemStack getSecretsOfInfinity() {
+        return CustomItemManager.createCustomItem(
+                Material.ARROW,
+                ChatColor.DARK_PURPLE + "Secrets of Infinity",
+                Arrays.asList(
+                        ChatColor.GRAY + "A piece of wood imbued with knowledge.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 level of Infinity.",
+                        ChatColor.DARK_PURPLE + "Smithing Ingredient"
+                ),
+                1,
+                true, // Unbreakable
+                true  // Add enchantment shimmer
+        );
+    }
     public static ItemStack getSweepingEdge() {
         return createCustomItem(Material.IRON_SWORD, ChatColor.YELLOW +
                 "Sweeping Edge", Arrays.asList(

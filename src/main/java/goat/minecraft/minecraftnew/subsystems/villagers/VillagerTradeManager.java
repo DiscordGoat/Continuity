@@ -44,1043 +44,11 @@ public class VillagerTradeManager implements Listener {
         // Register events
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-    ItemStack secretsOfInfinity = CustomItemManager.createCustomItem(
-            Material.ARROW,
-            ChatColor.DARK_PURPLE + "Secrets of Infinity",
-            Arrays.asList(
-                    ChatColor.GRAY + "A piece of wood imbued with knowledge.",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 level of Infinity.",
-                    ChatColor.DARK_PURPLE + "Smithing Ingredient"
-            ),
-            1,
-            true, // Unbreakable
-            true  // Add enchantment shimmer
-    );
-    ResourceGeneratorSubsystem resourceGeneratorSubsystem = new ResourceGeneratorSubsystem(MinecraftNew.getInstance());
-    ItemStack fishBone = createAlchemyItem("Fish Bone", Material.BONE, List.of(
-            ChatColor.GRAY + "A bone from a fish.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Turns potions into splash potions.",
-            ChatColor.DARK_PURPLE + "Brewing Modifier"
-    ));
-    ItemStack fishOil = createAlchemyItem("Fish Oil", Material.POTION, List.of(
-            ChatColor.GRAY + "A bottle of rich fish oil.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Ghast Tear substitute",
-            ChatColor.GRAY + "",
-            ChatColor.DARK_PURPLE + "Brewing Ingredient"
-    ));
-    ItemStack shallowShell = createAlchemyItem("Shallow Shell", Material.SCUTE, List.of(
-            ChatColor.GRAY + "A shell found in shallow waters.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment slightly.",
-            ChatColor.GRAY + "Restores 100 durability.",
-            ChatColor.DARK_PURPLE + "Smithing Ingredient"
-    ));
-    ItemStack shallowInk = createAlchemyItem("Shallow Ink", Material.INK_SAC, List.of(
-            ChatColor.GRAY + "A handful of shallow ink.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Glowstone Dust substitute.",
-            ChatColor.GRAY + "Adds I Potency",
-            ChatColor.DARK_PURPLE + "Brewing Modifier"
-    ));
-    ItemStack shallowVenom = createAlchemyItem("Shallow Venom", Material.LIME_DYE, List.of(
-            ChatColor.GRAY + "Venom from shallow creatures.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Redstone Dust substitute",
-            ChatColor.DARK_PURPLE + "Brewing Modifier"
-    ));
-    ItemStack shell = createAlchemyItem("Shell", Material.CYAN_DYE, List.of(
-            ChatColor.GRAY + "A sturdy shell.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment moderately.",
-            ChatColor.GRAY + "Restores 200 durability.",
-            ChatColor.DARK_PURPLE + "Smithing Ingredient"
-    ));
 
-    ItemStack luminescentInk = createAlchemyItem("Luminescent Ink", Material.GLOW_INK_SAC, List.of(
-            ChatColor.GRAY + "A glowing ink.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Brewing ingredient for Glowing.",
-            ChatColor.GRAY + "Adds Glowing I",
-            ChatColor.DARK_PURPLE + "Brewing Ingredient"
-    ));
-
-    ItemStack leviathanHeart = createAlchemyItem("Leviathan Heart", Material.RED_DYE, List.of(
-            ChatColor.GRAY + "The beating heart of a mighty creature.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Artifact for health.",
-            ChatColor.GRAY + "Adds Regeneration 8 for 180 seconds.",
-            ChatColor.DARK_PURPLE + "Artifact"
-    ));
-
-    ItemStack deepVenom = createAlchemyItem("Deep Venom", Material.GREEN_DYE, List.of(
-            ChatColor.GRAY + "A potent venom from deep waters.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Redstone Block substitute.",
-            ChatColor.GRAY + "",
-            ChatColor.DARK_PURPLE + "Brewing Modifier"
-    ));
-    ItemStack forbiddenBook = CustomItemManager.createCustomItem(
-            Material.WRITTEN_BOOK,
-            ChatColor.YELLOW + "Forbidden Book",
-            Arrays.asList(
-                    ChatColor.GRAY + "A dangerous book full of experimental magic.",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to equipment to push the limits of enchantments.",
-                    ChatColor.DARK_PURPLE + "Enchanting Item"
-            ),
-            1,
-            false, // Not unbreakable
-            true   // Add enchantment shimmer
-    );
-    ItemStack deepShell = createAlchemyItem("Deep Shell", Material.TURTLE_HELMET, List.of(
-            ChatColor.GRAY + "A resilient shell from the depths.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment greatly.",
-            ChatColor.GRAY + "Restores 400 durability.",
-            ChatColor.DARK_PURPLE + "Smithing Ingredient"
-    ));
-    public ItemStack diamondGemstone() {
-        return createCustomItem(
-                Material.DIAMOND,
-                ChatColor.DARK_PURPLE + "Diamond Gemstone",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to unlock triple drop chance.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-    public ItemStack lapisGemstone() {
-        return createCustomItem(
-                Material.LAPIS_LAZULI,
-                ChatColor.DARK_PURPLE + "Lapis Gemstone",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to enrich mining XP gains.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-    public ItemStack redstoneGemstone() {
-        return createCustomItem(
-                Material.REDSTONE,
-                ChatColor.DARK_PURPLE + "Redstone Gemstone",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to enrich Gold Fever.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-    public ItemStack emeraldGemstone() {
-        return createCustomItem(
-                Material.EMERALD,
-                ChatColor.DARK_PURPLE + "Emerald Gemstone",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to unlock night vision chance.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-    ItemStack deepInk = createAlchemyItem("Deep Ink", Material.BLACK_DYE, List.of(
-            ChatColor.GRAY + "A handful of ink from deep waters.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Glowstone substitute.",
-            ChatColor.GRAY + "",
-            ChatColor.DARK_PURPLE + "Brewing Modifier"
-    ));
-    ItemStack swiftSneak = createCustomItem(Material.LEATHER_LEGGINGS, ChatColor.YELLOW +
-            "Swim Trunks", Arrays.asList(
-            ChatColor.GRAY + "Water Technology.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Swift Sneak.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack deepTear = createAlchemyItem("Deep Tooth", Material.IRON_NUGGET, List.of(
-            ChatColor.GRAY + "A tooth from a fierce predator.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Brewing alternative for strength.",
-            ChatColor.GRAY + "Adds Strength II",
-            ChatColor.DARK_PURPLE + "Brewing Modifier"
-    ));
-    ItemStack aquaAffinity = createCustomItem(Material.TURTLE_EGG, ChatColor.YELLOW +
-            "Turtle Tactics", Arrays.asList(
-            ChatColor.GRAY + "Water Technology.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Aqua Affinity.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack abyssalInk = createAlchemyItem("Abyssal Ink", Material.BLACK_DYE, List.of(
-            ChatColor.GRAY + "Ink from the deepest abyss.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Exceptionally powerful Potency Modifier.",
-            ChatColor.GRAY + "",
-            ChatColor.DARK_PURPLE + "Mastery Brewing Modifier"
-    ));
-    public ItemStack singularity() {
-        return createCustomItem(
-                Material.IRON_NUGGET,
-                ChatColor.BLUE + "Singularity",
-                List.of(ChatColor.GRAY + "A rare blueprint entrusted to the Knights",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reforges Items to the first Tier.",
-                        ChatColor.DARK_PURPLE + "Smithing Item"),
-                1,
-                false // Set to true if you want it to be unbreakable
-                , true
-        );
-    }
-
-    ItemStack abyssalShell = createAlchemyItem("Abyssal Shell", Material.YELLOW_DYE, List.of(
-            ChatColor.GRAY + "A shell from the deepest abyss.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment massively.",
-            ChatColor.GRAY + "Restores 10000 durability.",
-            ChatColor.DARK_PURPLE + "Smithing Ingredient"
-    ));
-
-    ItemStack abyssalVenom = createAlchemyItem("Abyssal Venom", Material.POTION, List.of(
-            ChatColor.GRAY + "A vial of fatal venom.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Exceptionally powerful Duration Modifier.",
-            ChatColor.GRAY + "",
-            ChatColor.DARK_PURPLE + "Mastery Brewing Modifier"
-    ));
-    ItemStack trident = createAlchemyItem("Trident", Material.TRIDENT, List.of(
-            ChatColor.GRAY + "A Trident.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Trident-ing.",
-            ChatColor.GRAY + "",
-            ChatColor.DARK_PURPLE + "Trident"
-    ));
-
-    ItemStack farmerEnchant = CustomItemManager.createCustomItem(Material.RABBIT_STEW, ChatColor.YELLOW +
-            "Well Balanced Meal", Arrays.asList(
-            ChatColor.GRAY + "Max level of III",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Feed to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack butcherEnchant = CustomItemManager.createCustomItem(Material.GOLDEN_AXE, ChatColor.YELLOW +
-            "Brutal Tactics", Arrays.asList(
-            ChatColor.GRAY + "Max level of V",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Cleaver to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack fisherEnchant = CustomItemManager.createCustomItem(Material.COD, ChatColor.YELLOW +
-            "Call of the Void", Arrays.asList(
-            ChatColor.GRAY + "Max level of V",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Call of the Void to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack ironGolem = CustomItemManager.createCustomItem(Material.IRON_BLOCK, ChatColor.YELLOW +
-            "Iron Golem", Arrays.asList(
-            ChatColor.GRAY + "Ancient Summoning Artifact.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summon an Iron Golem.",
-            ChatColor.DARK_PURPLE + "Summoning Artifact"
-    ), 1,false, true);
-    ItemStack librarianEnchant = CustomItemManager.createCustomItem(Material.EXPERIENCE_BOTTLE, ChatColor.YELLOW +
-            "Savant", Arrays.asList(
-            ChatColor.GRAY + "Max level of 1",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Savant to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack librarianEnchant2 = CustomItemManager.createCustomItem(Material.SOUL_LANTERN, ChatColor.YELLOW +
-            "Soul Lantern", Arrays.asList(
-            ChatColor.GRAY + "Max level of 5",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Experience to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack randomTrim = CustomItemManager.createCustomItem(Material.PAPER, ChatColor.YELLOW +
-            "Draw Random Armor Trim", Arrays.asList(
-            ChatColor.GRAY + "A collection of materials and tools",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Creates a random Armor Trim.",
-            ChatColor.DARK_PURPLE + "Artifact"
-    ), 1,false, true);
-    ItemStack armorerEnchant = CustomItemManager.createCustomItem(Material.GLASS_BOTTLE, ChatColor.YELLOW +
-            "Oxygen Tank", Arrays.asList(
-            ChatColor.GRAY + "Max level of 4",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Ventilation to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack toolsmithEnchant = CustomItemManager.createCustomItem(Material.TORCH, ChatColor.YELLOW +
-            "Everflame", Arrays.asList(
-            ChatColor.GRAY + "Max level of 5",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Forge to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack toolsmithEnchantTwo = CustomItemManager.createCustomItem(Material.CHAIN, ChatColor.YELLOW +
-            "Climbing Rope", Arrays.asList(
-            ChatColor.GRAY + "Max level of 1",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Rappel to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack shepherdArtifact = CustomItemManager.createCustomItem(Material.BRUSH, ChatColor.YELLOW +
-            "Creative Mind", Arrays.asList(
-            ChatColor.GRAY + "A collection of Colors and Mixes",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Hydrates All Concrete",
-            ChatColor.DARK_PURPLE + "Artifact"
-    ), 1,false, true);
-    ItemStack shepherdEnchant = CustomItemManager.createCustomItem(Material.SHEARS, ChatColor.YELLOW +
-            "Laceration", Arrays.asList(
-            ChatColor.GRAY + "Max level of 5",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Shear to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack fishingEnchant = CustomItemManager.createCustomItem(Material.GOLD_NUGGET, ChatColor.YELLOW +
-            "Golden Hook", Arrays.asList(
-            ChatColor.GRAY + "Max level of 5",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Piracy to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack leatherworkerEnchant = CustomItemManager.createCustomItem(Material.LEATHER, ChatColor.YELLOW +
-            "Hide", Arrays.asList(
-            ChatColor.GRAY + "Max level of 4",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Physical Protection to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-    ItemStack leatherworkerArtifact = CustomItemManager.createCustomItem(Material.BOOK, ChatColor.YELLOW +
-            "Backpack", Arrays.asList(
-            ChatColor.GRAY + "A storage device for items",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Opens Backpack.",
-            ChatColor.DARK_PURPLE + "Artifact"
-    ), 1,false, true);
-    ItemStack clericEnchant = CustomItemManager.createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
-            "Alchemical Bundle", Arrays.asList(
-            ChatColor.GRAY + "Max level of 4",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Alchemy to items.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1,false, true);
-
-
-
-
-
-    // Mineshaft Location
-    ItemStack cartographerMineshaft = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Mineshaft Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Stronghold Location
-    ItemStack cartographerStronghold = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Stronghold Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Village Location
-    ItemStack cartographerVillage = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Village Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Igloo Location
-    ItemStack cartographerIgloo = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Igloo Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Buried Treasure Location
-    ItemStack cartographerBuriedTreasure = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Buried Treasure Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Desert Pyramid Location
-    ItemStack cartographerDesertPyramid = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Desert Pyramid Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Jungle Pyramid Location
-    ItemStack cartographerJunglePyramid = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Jungle Pyramid Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Ocean Monument Location
-    ItemStack cartographerOceanMonument = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Ocean Monument Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Pillager Outpost Location
-    ItemStack cartographerPillagerOutpost = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Pillager Outpost Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Swamp Hut Location
-    ItemStack cartographerSwampHut = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Swamp Hut Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Woodland Mansion Location
-    ItemStack cartographerWoodlandMansion = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Woodland Mansion Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Bastion Remnant Location
-    ItemStack cartographerBastionRemnant = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Bastion Remnant Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // End City Location
-    ItemStack cartographerEndCity = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "End City Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Nether Fortress Location
-    ItemStack cartographerNetherFortress = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Nether Fortress Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Ocean Ruin Location
-    ItemStack cartographerOceanRuin = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Ocean Ruin Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-
-    // Shipwreck Location
-    ItemStack cartographerShipwreck = CustomItemManager.createCustomItem(
-            Material.FILLED_MAP,
-            ChatColor.YELLOW + "Shipwreck Location",
-            Arrays.asList(
-                    ChatColor.GRAY + "The coords of a location",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                    ChatColor.DARK_PURPLE + "Artifact"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack aspectAOfTheJourney = CustomItemManager.createCustomItem(
-            Material.ENDER_EYE,
-            ChatColor.YELLOW + "Fast Travel",
-            Arrays.asList(
-                    ChatColor.GRAY + "Max level of I",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Aspect of the Journey to items.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack fletcherBowEnchant = CustomItemManager.createCustomItem(
-            Material.WHITE_DYE,
-            ChatColor.YELLOW + "Stun Coating",
-            Arrays.asList(
-                    ChatColor.GRAY + "Max level of 5",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Stun to items.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack fletcherCrossbowEnchant = CustomItemManager.createCustomItem(
-            Material.FIRE_CHARGE,
-            ChatColor.YELLOW + "Explosive Arrows",
-            Arrays.asList(
-                    ChatColor.GRAY + "Max level of 10",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Lethal Reaction to items.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithEnchant = CustomItemManager.createCustomItem(
-            Material.RED_DYE,
-            ChatColor.YELLOW + "Lethal Tempo",
-            Arrays.asList(
-                    ChatColor.GRAY + "Max level of 5",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Bloodlust to items.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack armorsmithReforge = CustomItemManager.createCustomItem(
-            Material.MOJANG_BANNER_PATTERN,
-            ChatColor.YELLOW + "Armor Talisman",
-            Arrays.asList(
-                    ChatColor.GRAY + "An armorsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Armor Rating.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack armorsmithReforgeTwo = CustomItemManager.createCustomItem(
-            Material.MOJANG_BANNER_PATTERN,
-            ChatColor.YELLOW + "Armor Toughness Talisman",
-            Arrays.asList(
-                    ChatColor.GRAY + "An armorsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Armor Toughness Rating.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack armorsmithReforgeThree = CustomItemManager.createCustomItem(
-            Material.MOJANG_BANNER_PATTERN,
-            ChatColor.YELLOW + "Knockback Talisman",
-            Arrays.asList(
-                    ChatColor.GRAY + "An armorsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining reduced Knockback.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithReforge = CustomItemManager.createCustomItem(
-            Material.MOJANG_BANNER_PATTERN,
-            ChatColor.YELLOW + "Attack Damage Talisman",
-            Arrays.asList(
-                    ChatColor.GRAY + "An weaponsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Attack Damage Rating.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithReforgeTwo = CustomItemManager.createCustomItem(
-            Material.MOJANG_BANNER_PATTERN,
-            ChatColor.YELLOW + "Swift Blade Talisman",
-            Arrays.asList(
-                    ChatColor.GRAY + "An weaponsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Attack Damage Rating.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack fishermanReforge = CustomItemManager.createCustomItem(
-            Material.MOJANG_BANNER_PATTERN,
-            ChatColor.YELLOW + "Sea Creature Talisman",
-            Arrays.asList(
-                    ChatColor.GRAY + "An fishermans expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Sea Creature Chance.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack toolsmithReforge = CustomItemManager.createCustomItem(
-            Material.MOJANG_BANNER_PATTERN,
-            ChatColor.YELLOW + "Durability Talisman",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Toolsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Durability Rating.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack toolsmithEfficiency = CustomItemManager.createCustomItem(
-            Material.GOLDEN_PICKAXE,
-            ChatColor.YELLOW + "Efficiency Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Toolsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack toolsmithUnbreaking = CustomItemManager.createCustomItem(
-            Material.OBSIDIAN,
-            ChatColor.YELLOW + "Unbreaking Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Toolsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithSharpness = CustomItemManager.createCustomItem(
-            Material.GOLDEN_SWORD,
-            ChatColor.YELLOW + "Sharpness Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Weaponsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithSweepingEdge = CustomItemManager.createCustomItem(
-            Material.WHEAT,
-            ChatColor.YELLOW + "Sweeping Edge Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Weaponsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithLooting = CustomItemManager.createCustomItem(
-            Material.GOLD_INGOT,
-            ChatColor.YELLOW + "Looting Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Weaponsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithKnockback = CustomItemManager.createCustomItem(
-            Material.SLIME_BLOCK,
-            ChatColor.YELLOW + "Knockback Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Weaponsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithFireAspect = CustomItemManager.createCustomItem(
-            Material.FIRE_CHARGE,
-            ChatColor.YELLOW + "Fire Aspect Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Weaponsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithSmite = CustomItemManager.createCustomItem(
-            Material.BONE,
-            ChatColor.YELLOW + "Smite Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Weaponsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack weaponsmithBaneofAnthropods = CustomItemManager.createCustomItem(
-            Material.FERMENTED_SPIDER_EYE,
-            ChatColor.YELLOW + "Bane of Anthropods Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Weaponsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack fishermanLure = CustomItemManager.createCustomItem(
-            Material.BRAIN_CORAL_BLOCK,
-            ChatColor.YELLOW + "Lure Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Fishermans expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack fishermanLuckoftheSea = CustomItemManager.createCustomItem(
-            Material.STICK,
-            ChatColor.YELLOW + "Luck of the Sea Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A Fishermans expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack armorSmithProtection = CustomItemManager.createCustomItem(
-            Material.GOLDEN_CHESTPLATE,
-            ChatColor.YELLOW + "Protection Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "An Armorsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack armorSmithRespiration = CustomItemManager.createCustomItem(
-            Material.GOLDEN_HELMET,
-            ChatColor.YELLOW + "Respiration Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "An Armorsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack armorSmithThorns = CustomItemManager.createCustomItem(
-            Material.CACTUS,
-            ChatColor.YELLOW + "Thorns Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "An Armorsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack armorSmithFeatherFalling = CustomItemManager.createCustomItem(
-            Material.FEATHER,
-            ChatColor.YELLOW + "Feather Falling Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "An Armorsmiths expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack fletcherPower = CustomItemManager.createCustomItem(
-            Material.FEATHER,
-            ChatColor.YELLOW + "Power Expertise",
-            Arrays.asList(
-                    ChatColor.GRAY + "A fletchers expertise",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
-                    ChatColor.DARK_PURPLE + "Mastery Enchant"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack commonSwordReforge = CustomItemManager.createCustomItem(
-            Material.WHITE_DYE,
-            ChatColor.YELLOW + "Common Sword Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges a sword to deal more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack uncommonSwordReforge = CustomItemManager.createCustomItem(
-            Material.LIME_DYE,
-            ChatColor.YELLOW + "Uncommon Sword Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges a sword to deal more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack rareSwordReforge = CustomItemManager.createCustomItem(
-            Material.BLUE_DYE,
-            ChatColor.YELLOW + "Rare Sword Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges a sword to deal more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack epicSwordReforge = CustomItemManager.createCustomItem(
-            Material.MAGENTA_DYE,
-            ChatColor.YELLOW + "Epic Sword Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges a sword to deal more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack legendarySwordReforge = CustomItemManager.createCustomItem(
-            Material.YELLOW_DYE,
-            ChatColor.YELLOW + "Legendary Sword Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges a sword to deal more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-
-
-    ItemStack commonArmorReforge = CustomItemManager.createCustomItem(
-            Material.WHITE_STAINED_GLASS,
-            ChatColor.YELLOW + "Common Armor Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges armor to absorb more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack uncommonArmorReforge = CustomItemManager.createCustomItem(
-            Material.LIME_STAINED_GLASS,
-            ChatColor.YELLOW + "Uncommon Armor Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges armor to absorb more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack rareArmorReforge = CustomItemManager.createCustomItem(
-            Material.BLUE_STAINED_GLASS,
-            ChatColor.YELLOW + "Rare Armor Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges armor to absorb more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack epicArmorReforge = CustomItemManager.createCustomItem(
-            Material.MAGENTA_STAINED_GLASS,
-            ChatColor.YELLOW + "Epic Armor Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges armor to absorb more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack legendaryArmorReforge = CustomItemManager.createCustomItem(
-            Material.YELLOW_STAINED_GLASS,
-            ChatColor.YELLOW + "Legendary Armor Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges armor to absorb more damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack commonToolReforge = CustomItemManager.createCustomItem(
-            Material.WHITE_STAINED_GLASS_PANE,
-            ChatColor.YELLOW + "Common Tool Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges tools to take less damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack uncommonToolReforge = CustomItemManager.createCustomItem(
-            Material.LIME_STAINED_GLASS_PANE,
-            ChatColor.YELLOW + "Uncommon Tool Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges tools to take less damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack rareToolReforge = CustomItemManager.createCustomItem(
-            Material.BLUE_STAINED_GLASS_PANE,
-            ChatColor.YELLOW + "Rare Tool Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges tools to take less damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack epicToolReforge = CustomItemManager.createCustomItem(
-            Material.MAGENTA_STAINED_GLASS_PANE,
-            ChatColor.YELLOW + "Epic Tool Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges tools to take less damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
-    ItemStack legendaryToolReforge = CustomItemManager.createCustomItem(
-            Material.YELLOW_STAINED_GLASS_PANE,
-            ChatColor.YELLOW + "Legendary Tool Reforge",
-            Arrays.asList(
-                    ChatColor.GRAY + "Reforges tools to take less damage",
-                    ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
-                    ChatColor.DARK_PURPLE + "Smithing Item"
-            ),
-            1,
-            false,
-            true
-    );
     /**
      * Initializes the purchase and sell whitelists with predefined trades.
      */
     private void initializeWhitelists() {
-        // Example for Farmer profession
-
-// Wandering Trader
-//biome based trades
-
-
 // Mason
         List<TradeItem> masonPurchases = new ArrayList<>();
         masonPurchases.add(new TradeItem(new ItemStack(Material.BRICKS, 4), 3, 4, 1, 29 * 1)); // Placeholder trade
@@ -1119,29 +87,29 @@ public class VillagerTradeManager implements Listener {
         List<TradeItem> weaponsmithPurchases = new ArrayList<>();
         weaponsmithPurchases.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 1), 4, 1, 1,29 * 2)); // Placeholder trade
         weaponsmithPurchases.add(new TradeItem(new ItemStack(Material.COAL, 4), 2, 4, 1,29 * 1)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(commonSwordReforge, 32, 1, 1,29 * 16)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getCommonSwordReforge(), 32, 1, 1,29 * 16)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(uncommonSwordReforge, 64, 1, 2,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getUncommonSwordReforge(), 64, 1, 2,29 * 32)); // Placeholder trade
 
 
         weaponsmithPurchases.add(new TradeItem(new ItemStack(Material.BELL, 1), 63, 1, 3,29 * 32)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithReforge, 64, 1, 3,29 * 32)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithReforgeTwo, 128, 1, 3,29 * 64)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithReforge(), 64, 1, 3,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithReforgeTwo(), 128, 1, 3,29 * 64)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(rareSwordReforge, 128, 1, 3,29 * 64)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getRareSwordReforge(), 128, 1, 3,29 * 64)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(weaponsmithSharpness, 64, 1, 4,29 * 32)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(epicSwordReforge, 256, 1, 4,29 * 128)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithSharpness(), 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getEpicSwordReforge(), 256, 1, 4,29 * 128)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(weaponsmithSweepingEdge, 63, 1, 4,29 * 32)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithLooting, 64, 1, 4,29 * 32)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithKnockback, 64, 1, 4,29 * 32)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithFireAspect, 64, 1, 4,29 * 32)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithSmite, 64, 1, 4,29 * 32)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(weaponsmithBaneofAnthropods, 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithSweepingEdge(), 63, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithLooting(), 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithKnockback(), 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithFireAspect(), 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithSmite(), 64, 1, 4,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithBaneofAnthropods(), 64, 1, 4,29 * 32)); // Placeholder trade
 
-        weaponsmithPurchases.add(new TradeItem(weaponsmithEnchant, 64, 1, 5,29 * 32)); // Placeholder trade
-        weaponsmithPurchases.add(new TradeItem(legendarySwordReforge, 512, 1, 5,29 * 256)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getWeaponsmithEnchant(), 64, 1, 5,29 * 32)); // Placeholder trade
+        weaponsmithPurchases.add(new TradeItem(ItemRegistry.getLegendarySwordReforge(), 512, 1, 5,29 * 256)); // Placeholder trade
 
         purchaseWhitelist.put(Villager.Profession.WEAPONSMITH, weaponsmithPurchases);
         ItemStack undeadDrop = ItemRegistry.getUndeadDrop();
@@ -1150,14 +118,11 @@ public class VillagerTradeManager implements Listener {
         ItemStack enderDrop = ItemRegistry.getEnderDrop();
         ItemStack blazeDrop = ItemRegistry.getBlazeDrop();
         ItemStack witchDrop = ItemRegistry.getWitchDrop();
-        ItemStack witherSkeletonDrop = ItemRegistry.getWitherSkeletonDrop();
         ItemStack guardianDrop = ItemRegistry.getGuardianDrop();
         ItemStack elderGuardianDrop = ItemRegistry.getElderGuardianDrop();
-        ItemStack pillagerDrop = ItemRegistry.getPillagerDrop();
         ItemStack vindicatorDrop = ItemRegistry.getVindicatorDrop();
         ItemStack piglinDrop = ItemRegistry.getPiglinDrop();
         ItemStack piglinBruteDrop = ItemRegistry.getPiglinBruteDrop();
-        ItemStack zombifiedPiglinDrop = ItemRegistry.getZombifiedPiglinDrop();
         ItemStack drownedDrop = ItemRegistry.getDrownedDrop();
         ItemStack skeletonDrop = ItemRegistry.getSkeletonDrop();
         List<TradeItem> weaponsmithSells = new ArrayList<>();
@@ -1167,7 +132,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithSells.add(new TradeItem(new ItemStack(Material.ZOMBIE_HEAD, 1), 8, 1, 1,29 * 4)); // Placeholder trade
         weaponsmithSells.add(new TradeItem(new ItemStack(Material.SKELETON_SKULL, 1), 8, 1, 1,29 * 3)); // Placeholder trade
         weaponsmithSells.add(new TradeItem(new ItemStack(Material.CREEPER_HEAD, 1), 8, 1, 1,29 * 4)); // Placeholder trade
-        weaponsmithSells.add(new TradeItem(singularity(), 8, 1, 1,29 * 4)); // Placeholder trade
+        weaponsmithSells.add(new TradeItem(ItemRegistry.getSingularity(), 8, 1, 1,29 * 4)); // Placeholder trade
         weaponsmithSells.add(new TradeItem(skeletonDrop, 150, 1, 1,29 * 75)); // Placeholder trade
         weaponsmithSells.add(new TradeItem(drownedDrop, 8, 1, 1,29 * 4)); // Placeholder trade
         weaponsmithSells.add(new TradeItem(creeperDrop, 8, 1, 1,29 * 4)); // Placeholder trade
@@ -1200,9 +165,9 @@ public class VillagerTradeManager implements Listener {
         fletcherPurchases.add(new TradeItem(new ItemStack(Material.ACACIA_SAPLING, 4), 2, 4, 3,29 * 1)); // Placeholder trade
         fletcherPurchases.add(new TradeItem(new ItemStack(Material.CHERRY_SAPLING, 4), 2, 4, 3,29 * 1)); // Placeholder trade
 
-        fletcherPurchases.add(new TradeItem(fletcherBowEnchant, 16, 1, 4,29 * 8)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(fletcherPower, 64, 1, 4,29 * 32)); // Placeholder trade
-        fletcherPurchases.add(new TradeItem(fletcherCrossbowEnchant, 64, 1, 5,29 * 32)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(ItemRegistry.getFletcherBowEnchant(), 16, 1, 4,29 * 8)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(ItemRegistry.getFletcherPower(), 64, 1, 4,29 * 32)); // Placeholder trade
+        fletcherPurchases.add(new TradeItem(ItemRegistry.getFletcherCrossbowEnchant(), 64, 1, 5,29 * 32)); // Placeholder trade
 
 
         purchaseWhitelist.put(Villager.Profession.FLETCHER, fletcherPurchases);
@@ -1214,34 +179,34 @@ public class VillagerTradeManager implements Listener {
         fletcherSells.add(new TradeItem(new ItemStack(Material.STRING, 2), 1, 2, 1,29 * 1)); // Placeholder trade
         fletcherSells.add(new TradeItem(new ItemStack(Material.FEATHER, 2), 1, 2, 1,29 * 1)); // Placeholder trade
         fletcherSells.add(new TradeItem(new ItemStack(Material.ARROW, 16), 1, 16, 1,29 * 1)); // Placeholder trade
-        fletcherSells.add(new TradeItem(new ItemStack(secretsOfInfinity), 128, 1, 128,29 * 64)); // Placeholder trade
+        fletcherSells.add(new TradeItem(new ItemStack(ItemRegistry.getSecretsOfInfinity()), 128, 1, 128,29 * 64)); // Placeholder trade
 
         sellWhitelist.put(Villager.Profession.FLETCHER, fletcherSells);
 
 
 // Cartographer
         List<TradeItem> cartographerPurchases = new ArrayList<>();
-        cartographerPurchases.add(new TradeItem(cartographerMineshaft, 16, 1, 1,29 * 8)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerVillage, 16, 1, 1,29 * 8)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerShipwreck, 16, 1, 1,29 * 8)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerMineshaft(), 16, 1, 1,29 * 8)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerVillage(), 16, 1, 1,29 * 8)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerShipwreck(), 16, 1, 1,29 * 8)); // Placeholder trade
 
-        cartographerPurchases.add(new TradeItem(cartographerBuriedTreasure, 16, 1, 2,29 * 8)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerIgloo, 20, 1, 2,29 * 10)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerOceanMonument, 20, 1, 2,29 * 10)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerOceanRuin, 20, 1, 2,29 * 10)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerBuriedTreasure(), 16, 1, 2,29 * 8)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerIgloo(), 20, 1, 2,29 * 10)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerOceanMonument(), 20, 1, 2,29 * 10)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerOceanRuins(), 20, 1, 2,29 * 10)); // Placeholder trade
 
-        cartographerPurchases.add(new TradeItem(cartographerDesertPyramid, 32, 1, 3,29 * 16)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerJunglePyramid, 32, 1, 3,29 * 16)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerPillagerOutpost, 32, 1, 3,29 * 16)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerSwampHut, 32, 1, 3,29 * 16)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerNetherFortress, 32, 1, 3,29 * 16)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerDesertPyramid(), 32, 1, 3,29 * 16)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerJungleTemple(), 32, 1, 3,29 * 16)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerPillagerOutpost(), 32, 1, 3,29 * 16)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerSwampHut(), 32, 1, 3,29 * 16)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerNetherFortress(), 32, 1, 3,29 * 16)); // Placeholder trade
 
 
-        cartographerPurchases.add(new TradeItem(cartographerStronghold, 64, 1, 4,29 * 32)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(cartographerBastionRemnant, 64, 1, 4,29 * 32)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerStronghold(), 64, 1, 4,29 * 32)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerBastionRemnant(), 64, 1, 4,29 * 32)); // Placeholder trade
 
-        cartographerPurchases.add(new TradeItem(cartographerWoodlandMansion, 128, 1, 5,29 * 64)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(aspectAOfTheJourney, 128, 1, 5,29 * 64)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerWoodlandMansion(), 128, 1, 5,29 * 64)); // Placeholder trade
+        cartographerPurchases.add(new TradeItem(ItemRegistry.getAspectoftheJourney(), 128, 1, 5,29 * 64)); // Placeholder trade
         purchaseWhitelist.put(Villager.Profession.CARTOGRAPHER, cartographerPurchases);
 
         List<TradeItem> cartographerSells = new ArrayList<>();
@@ -1272,7 +237,7 @@ public class VillagerTradeManager implements Listener {
 
         clericPurchases.add(new TradeItem(new ItemStack(Material.DRAGON_BREATH, 4), 64, 4, 5,29 * 32)); // Placeholder trade
         clericPurchases.add(new TradeItem(new ItemStack(Material.TURTLE_HELMET, 1), 64, 1, 5,29 * 32)); // Placeholder trade
-        clericPurchases.add(new TradeItem(clericEnchant, 64, 1, 5,29 * 32)); // Placeholder trade
+        clericPurchases.add(new TradeItem(ItemRegistry.getClericEnchant(), 64, 1, 5,29 * 32)); // Placeholder trade
 
         purchaseWhitelist.put(Villager.Profession.CLERIC, clericPurchases);
 
@@ -1297,8 +262,8 @@ public class VillagerTradeManager implements Listener {
             leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.SHULKER_SHELL), 64, 1, 3,29 * 32)); // Placeholder trade
 
             leatherworkerPurchases.add(new TradeItem(new ItemStack(Material.BUNDLE, 1), 64, 1, 3,29 * 32)); // Placeholder trade
-            leatherworkerPurchases.add(new TradeItem(leatherworkerEnchant, 32, 1, 4,29 * 16)); // Placeholder trade
-            leatherworkerPurchases.add(new TradeItem(leatherworkerArtifact, 64, 1, 5,29 * 32)); // Placeholder trade
+            leatherworkerPurchases.add(new TradeItem(ItemRegistry.getLeatherworkerEnchant(), 32, 1, 4,29 * 16)); // Placeholder trade
+            leatherworkerPurchases.add(new TradeItem(ItemRegistry.getLeatherworkerArtifact(), 64, 1, 5,29 * 32)); // Placeholder trade
         }
         purchaseWhitelist.put(Villager.Profession.LEATHERWORKER, leatherworkerPurchases);
 
@@ -1337,8 +302,8 @@ public class VillagerTradeManager implements Listener {
         shepherdPurchases.add(new TradeItem(new ItemStack(Material.TERRACOTTA, 8), 4, 4, 5,29 * 2)); // Placeholder trade
         shepherdPurchases.add(new TradeItem(new ItemStack(Material.GRAVEL, 8), 4, 4, 5,29 * 2)); // Placeholder trade
         shepherdPurchases.add(new TradeItem(new ItemStack(Material.SAND, 8), 4, 4, 5,29 * 2)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(shepherdArtifact, 16, 8, 5,29 * 4)); // Placeholder trade
-        shepherdPurchases.add(new TradeItem(shepherdEnchant, 32, 1, 5,29 * 4)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(ItemRegistry.getShepherdArtifact(), 16, 8, 5,29 * 4)); // Placeholder trade
+        shepherdPurchases.add(new TradeItem(ItemRegistry.getShepherdEnchant(), 32, 1, 5,29 * 4)); // Placeholder trade
 
 
         purchaseWhitelist.put(Villager.Profession.SHEPHERD, shepherdPurchases);
@@ -1355,24 +320,24 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(new TradeItem(new ItemStack(Material.FISHING_ROD, 1), 6, 1, 1,29 * 3)); // Placeholder trade
         toolsmithPurchases.add(new TradeItem(new ItemStack(Material.SHEARS, 1), 6, 1, 1,29 * 3)); // Placeholder trade
         toolsmithPurchases.add(new TradeItem(new ItemStack(Material.BUCKET, 1), 8, 1, 1,29 * 4)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(commonToolReforge, 4, 1, 1,29 * 2)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getCommonToolReforge(), 4, 1, 1,29 * 2)); // Placeholder trade
 
         toolsmithPurchases.add(new TradeItem(new ItemStack(Material.SHIELD, 1), 10, 1, 2,29 * 5)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(uncommonToolReforge, 8, 1, 2,29 * 4)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getUncommonToolReforge(), 8, 1, 2,29 * 4)); // Placeholder trade
 
 
 
-        toolsmithPurchases.add(new TradeItem(toolsmithReforge, 64, 1, 3,29 * 32)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(rareToolReforge, 16, 1, 3,29 * 8)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getToolsmithReforge(), 64, 1, 3,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getRareToolReforge(), 16, 1, 3,29 * 8)); // Placeholder trade
 
-        toolsmithPurchases.add(new TradeItem(toolsmithEfficiency, 64, 1, 4,29 * 32)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(toolsmithUnbreaking, 64, 1, 4,29 * 32)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(epicToolReforge, 32, 1, 4,29 * 16)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getToolsmithEfficiency(), 64, 1, 4,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getToolsmithUnbreaking(), 64, 1, 4,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getEpicToolReforge(), 32, 1, 4,29 * 16)); // Placeholder trade
 
         toolsmithPurchases.add(new TradeItem(new ItemStack(Material.ANCIENT_DEBRIS, 1), 64, 1, 5,29 * 32)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(toolsmithEnchant, 64, 1, 5,29 * 32)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(toolsmithEnchantTwo, 128, 1, 5,29 * 64)); // Placeholder trade
-        toolsmithPurchases.add(new TradeItem(legendaryToolReforge, 64, 1, 5,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getToolsmithEnchant(), 64, 1, 5,29 * 32)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getToolsmithEnchantTwo(), 128, 1, 5,29 * 64)); // Placeholder trade
+        toolsmithPurchases.add(new TradeItem(ItemRegistry.getLegendaryToolReforge(), 64, 1, 5,29 * 32)); // Placeholder trade
 
 
         purchaseWhitelist.put(Villager.Profession.TOOLSMITH, toolsmithPurchases);
@@ -1383,10 +348,10 @@ public class VillagerTradeManager implements Listener {
         toolsmithSells.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 3), 1, 3, 1,29 * 1)); // Placeholder trade
         toolsmithSells.add(new TradeItem(new ItemStack(Material.GOLD_INGOT, 3), 2, 3, 1,29 * 1)); // Placeholder trade
         toolsmithSells.add(new TradeItem(new ItemStack(Material.DIAMOND, 1), 6, 1, 1,29 * 3)); // Placeholder trade        toolsmithSells.add(new TradeItem(diamondGemstone(), 128, 1, 3)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(lapisGemstone(), 32, 1, 3,29 * 16)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(emeraldGemstone(), 64, 1, 3,29 * 32)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(redstoneGemstone(), 32, 1, 3,29 * 16)); // Placeholder trade
-        toolsmithSells.add(new TradeItem(diamondGemstone(), 64, 1, 3,29 * 32)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(ItemRegistry.getLapisGemstone(), 32, 1, 3,29 * 16)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(ItemRegistry.getEmeraldGemstone(), 64, 1, 3,29 * 32)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(ItemRegistry.getRedstoneGemstone(), 32, 1, 3,29 * 16)); // Placeholder trade
+        toolsmithSells.add(new TradeItem(ItemRegistry.getDiamondGemstone(), 64, 1, 3,29 * 32)); // Placeholder trade
 
 
         sellWhitelist.put(Villager.Profession.TOOLSMITH, toolsmithSells);
@@ -1394,27 +359,27 @@ public class VillagerTradeManager implements Listener {
 // Armorer
         List<TradeItem> armorerPurchases = new ArrayList<>();
         armorerPurchases.add(new TradeItem(new ItemStack(Material.IRON_ORE, 4), 7, 4, 1,29 * 3)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(commonArmorReforge, 8, 1, 1,29 * 4)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getCommonArmorReforge(), 8, 1, 1,29 * 4)); // Placeholder trade
 
         armorerPurchases.add(new TradeItem(new ItemStack(Material.ANVIL, 1), 24, 1, 2,29 * 12)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(uncommonArmorReforge, 16, 1, 2,29 * 8)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getUncommonArmorReforge(), 16, 1, 2,29 * 8)); // Placeholder trade
 
         armorerPurchases.add(new TradeItem(new ItemStack(Material.GOLD_ORE, 4), 6, 4, 3,29 * 3)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(rareArmorReforge, 32, 1, 3,29 * 16)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getRareArmorReforge(), 32, 1, 3,29 * 16)); // Placeholder trade
 
         armorerPurchases.add(new TradeItem(new ItemStack(Material.NETHERITE_UPGRADE_SMITHING_TEMPLATE, 2), 32, 2, 4,29 * 16)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(epicArmorReforge, 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getEpicArmorReforge(), 64, 1, 4,29 * 32)); // Placeholder trade
 
-        armorerPurchases.add(new TradeItem(randomTrim, 64, 1, 4,29 * 32)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorSmithProtection, 64, 1, 4,29 * 32)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorSmithRespiration, 64, 1, 4,29 * 32)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorSmithThorns, 64, 1, 4,29 * 32)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorSmithFeatherFalling, 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getRandomArmorTrim(), 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getArmorSmithProtection(), 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getArmorSmithRespiration(), 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getArmorSmithThorns(), 64, 1, 4,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getArmorSmithFeatherFalling(), 64, 1, 4,29 * 32)); // Placeholder trade
 
-        armorerPurchases.add(new TradeItem(legendaryArmorReforge, 128, 1, 5,29 * 64)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorerEnchant, 16, 1, 5,29 * 8)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorsmithReforge, 32, 1, 5,29 * 16)); // Placeholder trade
-        armorerPurchases.add(new TradeItem(armorsmithReforgeTwo, 64, 1, 5,29 * 32)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getLegendaryArmorReforge(), 128, 1, 5,29 * 64)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getArmorerEnchant(), 16, 1, 5,29 * 8)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getArmorsmithReforge(), 32, 1, 5,29 * 16)); // Placeholder trade
+        armorerPurchases.add(new TradeItem(ItemRegistry.getArmorsmithReforgeTwo(), 64, 1, 5,29 * 32)); // Placeholder trade
         //armorerPurchases.add(new TradeItem(armorsmithReforgeThree, 64, 1, 5)); // Placeholder trade
 
 
@@ -1431,8 +396,8 @@ public class VillagerTradeManager implements Listener {
         armorerSells.add(new TradeItem(new ItemStack(Material.IRON_INGOT, 3), 1, 3, 1,29 * 1)); // Placeholder trade
         armorerSells.add(new TradeItem(new ItemStack(Material.GOLD_INGOT, 3), 2, 3, 1,29 * 1)); // Placeholder trade
         armorerSells.add(new TradeItem(new ItemStack(Material.DIAMOND, 1), 6, 1, 1,29 * 3)); // Placeholder trade
-        armorerSells.add(new TradeItem(aquaAffinity, 16, 1, 2,29 * 8)); // Placeholder trade
-        armorerSells.add(new TradeItem(swiftSneak, 16, 1, 2,29 * 8)); // Placeholder trade
+        armorerSells.add(new TradeItem(ItemRegistry.getAquaAffinity(), 16, 1, 2,29 * 8)); // Placeholder trade
+        armorerSells.add(new TradeItem(ItemRegistry.getSwiftSneak(), 16, 1, 2,29 * 8)); // Placeholder trade
 
         sellWhitelist.put(Villager.Profession.ARMORER, armorerSells);
 
@@ -1446,11 +411,11 @@ public class VillagerTradeManager implements Listener {
         librarianPurchases.add(new TradeItem(new ItemStack(Material.LANTERN, 3), 4, 3, 2,29 * 2)); // Placeholder trade
 
         librarianPurchases.add(new TradeItem(new ItemStack(Material.GLASS, 6), 9, 3, 3,29 * 3)); // Placeholder trade
-        librarianPurchases.add(new TradeItem(librarianEnchant2, 16, 1, 3,29 * 8)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(ItemRegistry.getLibrarianEnchantmentTwo(), 16, 1, 3,29 * 8)); // Placeholder trade
 
-        librarianPurchases.add(new TradeItem(ironGolem, 16, 1, 4,29 * 8)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(ItemRegistry.getIronGolem(), 16, 1, 4,29 * 8)); // Placeholder trade
 
-        librarianPurchases.add(new TradeItem(librarianEnchant, 32, 1, 5,29 * 16)); // Placeholder trade
+        librarianPurchases.add(new TradeItem(ItemRegistry.getLibrarianEnchant(), 32, 1, 5,29 * 16)); // Placeholder trade
 
 
         purchaseWhitelist.put(Villager.Profession.LIBRARIAN, librarianPurchases);
@@ -1461,7 +426,7 @@ public class VillagerTradeManager implements Listener {
         librarianSells.add(new TradeItem(new ItemStack(Material.BOOK, 3), 1, 3, 1,29 * 1)); // Placeholder trade
         librarianSells.add(new TradeItem(new ItemStack(Material.ENCHANTED_BOOK, 1), 8, 1, 1,29 * 4)); // Placeholder trade
         librarianSells.add(new TradeItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 1), 16, 1, 1,29 * 8)); // Placeholder trade
-        librarianSells.add(new TradeItem(forbiddenBook, 8, 1, 1,29 * 4)); // Placeholder trade
+        librarianSells.add(new TradeItem(ItemRegistry.getForbiddenBook(), 8, 1, 1,29 * 4)); // Placeholder trade
 
 
         sellWhitelist.put(Villager.Profession.LIBRARIAN, librarianSells);
@@ -1471,21 +436,21 @@ public class VillagerTradeManager implements Listener {
             fishingPurchases.add(new TradeItem(new ItemStack(Material.FISHING_ROD, 1), 6, 1, 1,29 * 3));
             fishingPurchases.add(new TradeItem(new ItemStack(Material.BUCKET, 1), 8, 1, 2,29 * 4));
             fishingPurchases.add(new TradeItem(new ItemStack(Material.LAPIS_LAZULI, 4),  8, 4, 2,29 * 4));
-            fishingPurchases.add(new TradeItem(shallowShell,  16, 1, 2,29 * 8));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getShallowShell(),  16, 1, 2,29 * 8));
 
-            fishingPurchases.add(new TradeItem(shell,  32, 1, 3,29 * 16));
-            fishingPurchases.add(new TradeItem(fishermanReforge,  64, 1, 3,29 * 32));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getShell(),  32, 1, 3,29 * 16));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getFishermanReforge(),  64, 1, 3,29 * 32));
             fishingPurchases.add(new TradeItem(new ItemStack(Material.CAMPFIRE, 2), 12, 2, 3,29 * 6));
 
-            fishingPurchases.add(new TradeItem(deepShell,  64, 1, 4,29 * 32));
-            fishingPurchases.add(new TradeItem(fishermanLure,  64, 1, 4,29 * 32));
-            fishingPurchases.add(new TradeItem(fishermanLuckoftheSea,  64, 1, 4,29 * 32));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getDeepShell(),  64, 1, 4,29 * 32));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getFishermanLure(),  64, 1, 4,29 * 32));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getFishermanLuckoftheSea(),  64, 1, 4,29 * 32));
 
-            fishingPurchases.add(new TradeItem(abyssalShell,  64, 1, 5,29 * 32));
-            fishingPurchases.add(new TradeItem(abyssalInk,  64, 1, 5,29 * 32));
-            fishingPurchases.add(new TradeItem(abyssalVenom,  64, 1, 5,29 * 32));
-            fishingPurchases.add(new TradeItem(fisherEnchant,  40, 1, 5,29 * 20));
-            fishingPurchases.add(new TradeItem(fishingEnchant,  40, 1, 5,29 * 20));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getAbyssalShell(),  64, 1, 5,29 * 32));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getAbyssalInk(),  64, 1, 5,29 * 32));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getAbyssalVenom(),  64, 1, 5,29 * 32));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getFisherEnchant(),  40, 1, 5,29 * 20));
+            fishingPurchases.add(new TradeItem(ItemRegistry.getFishingEnchant(),  40, 1, 5,29 * 20));
             //add sea creature drops
         }
         purchaseWhitelist.put(Villager.Profession.FISHERMAN, fishingPurchases);
@@ -1499,11 +464,11 @@ public class VillagerTradeManager implements Listener {
             fishingSells.add(new TradeItem(new ItemStack(Material.PUFFERFISH, 1), 1, 1, 2,29 * 1)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(Material.TROPICAL_FISH, 1), 1, 1, 2,29 * 1)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(Material.GLOW_INK_SAC, 4), 1, 4, 2,29 * 1)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(ItemRegistry.getTooth()), 4, 1, 2,29 * 2)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(luminescentInk), 2, 1, 2,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(ItemRegistry.getTooth()), 2, 1, 2,29 * 2)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(ItemRegistry.getLuminescentInk()), 2, 1, 2,29 * 1)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(Material.NAUTILUS_SHELL), 4, 1, 2,29 * 2)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(Material.HEART_OF_THE_SEA), 16, 1, 2,29 * 8)); // Placeholder trade
-            fishingSells.add(new TradeItem(new ItemStack(fishBone), 1, 1, 2,29 * 1)); // Placeholder trade
+            fishingSells.add(new TradeItem(new ItemStack(ItemRegistry.getFishBone()), 1, 1, 2,29 * 1)); // Placeholder trade
             fishingSells.add(new TradeItem(new ItemStack(new ItemStack(Material.TRIDENT)), 24, 1, 2,29 * 12)); // Placeholder trade
 
         }
@@ -1522,7 +487,7 @@ public class VillagerTradeManager implements Listener {
             butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_PORKCHOP, 3), 5, 3, 3,29 * 2));
 
 
-            butcherPurchases.add(new TradeItem(new ItemStack(butcherEnchant), 16, 1, 5,29 * 8));
+            butcherPurchases.add(new TradeItem(new ItemStack(ItemRegistry.getButcherEnchant()), 16, 1, 5,29 * 8));
         }
         purchaseWhitelist.put(Villager.Profession.BUTCHER, butcherPurchases);
 
@@ -1575,7 +540,7 @@ public class VillagerTradeManager implements Listener {
             farmerPurchases.add(new TradeItem(new ItemStack(Material.GOLDEN_CARROT, 4), 3, 4, 4,29 * 1)); // Level 2 trade
 
             farmerPurchases.add(new TradeItem(new ItemStack(Material.SNIFFER_EGG, 1), 64, 1, 5,29 * 32)); // Level 2 trade
-            farmerPurchases.add(new TradeItem(new ItemStack(farmerEnchant), 64, 1, 5,29 * 32)); // Level 2 trade
+            farmerPurchases.add(new TradeItem(new ItemStack(ItemRegistry.getFarmerEnchant()), 64, 1, 5,29 * 32)); // Level 2 trade
             farmerPurchases.add(new TradeItem(ItemRegistry.getAutoComposter(), 64, 1, 5,29 * 32)); // Level 2 trade
         }
         purchaseWhitelist.put(Villager.Profession.FARMER, farmerPurchases);

@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.combat.elitemonsters;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
@@ -97,30 +98,7 @@ public class KnightMob implements Listener {
             world.spawnParticle(Particle.CRIT, loc, 10, 0.5, 1, 0.5);
         }
     }
-    public ItemStack rareItem() {
-        return createCustomItem(
-                Material.BLUE_CARPET,
-                ChatColor.BLUE + "Blueprints",
-                List.of(ChatColor.GRAY + "A rare blueprint entrusted to the Knights",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Draw a random Reforge.",
-                        ChatColor.DARK_PURPLE + "Artifact"),
-                1,
-                false // Set to true if you want it to be unbreakable
-                , true
-        );
-    }
-    public ItemStack singularity() {
-        return createCustomItem(
-                Material.IRON_NUGGET,
-                ChatColor.BLUE + "Singularity",
-                List.of(ChatColor.GRAY + "A rare blueprint entrusted to the Knights",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reforges Items to the first Tier.",
-                        ChatColor.DARK_PURPLE + "Smithing Item"),
-                1,
-                false // Set to true if you want it to be unbreakable
-                , true
-        );
-    }
+
 
     // Event listener to drop a rare item on knight death
     @EventHandler
@@ -147,7 +125,7 @@ public class KnightMob implements Listener {
             // Drop a rare item with a chance
             if (random.nextDouble() < 1.0) { // 10% chance to drop the rare item
                 Bukkit.getLogger().info("Adding rare item drop for knight: " + event.getEntity().getUniqueId());
-                event.getDrops().add(singularity());
+                event.getDrops().add(ItemRegistry.getSingularity());
             }
         }
     }

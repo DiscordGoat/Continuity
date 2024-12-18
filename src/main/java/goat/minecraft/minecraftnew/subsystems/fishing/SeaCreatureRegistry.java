@@ -25,16 +25,15 @@ public class SeaCreatureRegistry implements Listener {
         RARITY_WEIGHTS.put(Rarity.COMMON, 0.25);
         RARITY_WEIGHTS.put(Rarity.UNCOMMON, 0.25);
         RARITY_WEIGHTS.put(Rarity.RARE, 0.20);
-        RARITY_WEIGHTS.put(Rarity.EPIC, 0.10);
-        RARITY_WEIGHTS.put(Rarity.LEGENDARY, 0.10);
-        RARITY_WEIGHTS.put(Rarity.MYTHIC, 0.10);
+        RARITY_WEIGHTS.put(Rarity.EPIC, 0.15);
+        RARITY_WEIGHTS.put(Rarity.LEGENDARY, 0.15);
 
         // Assign levels based on rarity
-        RARITY_LEVELS.put(Rarity.COMMON, 20);
-        RARITY_LEVELS.put(Rarity.UNCOMMON, 40);
-        RARITY_LEVELS.put(Rarity.RARE, 60);
-        RARITY_LEVELS.put(Rarity.EPIC, 80);
-        RARITY_LEVELS.put(Rarity.LEGENDARY, 100);
+        RARITY_LEVELS.put(Rarity.COMMON, 10);
+        RARITY_LEVELS.put(Rarity.UNCOMMON, 20);
+        RARITY_LEVELS.put(Rarity.RARE, 30);
+        RARITY_LEVELS.put(Rarity.EPIC, 40);
+        RARITY_LEVELS.put(Rarity.LEGENDARY, 50);
 
 
 
@@ -141,6 +140,7 @@ public class SeaCreatureRegistry implements Listener {
         //RARE
         List<SeaCreature.DropItem> deepTurtleDrops = new ArrayList<>();
         deepTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getDeepShell(), 1, 1, 1)); // Common drop for a cod fish
+        deepTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getRainArtifact(), 1, 1, 1)); // Common drop for a cod fish
         SEA_CREATURES.add(new SeaCreature(
                 "Deep Sea Turtle", // Name of the sea creature
                 Rarity.RARE, // Rarity of the sea creature
