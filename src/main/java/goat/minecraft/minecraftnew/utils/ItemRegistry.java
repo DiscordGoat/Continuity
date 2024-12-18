@@ -45,7 +45,7 @@ public class ItemRegistry {
     }
     public static ItemStack getAutoComposter() {
         return createCustomItem(
-                Material.DISPENSER,
+                Material.COMPOSTER,
                 ChatColor.YELLOW + "Auto-Composter",
                 List.of(ChatColor.GRAY + "Automatically composts crops into organic soil.",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Automatic.",
@@ -121,7 +121,7 @@ public class ItemRegistry {
     }
     public static ItemStack getBeetrootSeeder() {
         return createCustomItem(
-                Material.BEETROOT,
+                Material.RED_DYE,
                 ChatColor.YELLOW + "BeetrootSeeder",
                 Arrays.asList(
                         ChatColor.GRAY + "A bag of Beet Seeds",
@@ -684,7 +684,7 @@ public class ItemRegistry {
 
     public static ItemStack getDeepShell() {
         return createCustomItem(
-                Material.TURTLE_HELMET,
+                Material.PURPLE_DYE,
                 ChatColor.LIGHT_PURPLE + "Deep Shell",
                 Arrays.asList(
                         ChatColor.GRAY + "A resilient shell from the depths.",
@@ -721,7 +721,7 @@ public class ItemRegistry {
                 Arrays.asList(
                         ChatColor.GRAY + "A shell from the deepest abyss.",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment massively.",
-                        ChatColor.GRAY + "Restores 10000 durability.",
+                        ChatColor.GRAY + "Restores 800 durability.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
                 1,

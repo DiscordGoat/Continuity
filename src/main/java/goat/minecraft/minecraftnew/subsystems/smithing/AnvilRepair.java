@@ -464,16 +464,16 @@ public class AnvilRepair implements Listener {
         if (billItem.getType() == Material.IRON_INGOT) {
             repairAmount = 75; // Iron Ingot repairs 100 durability
         } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
-            repairAmount = 200;
+            repairAmount = 100;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shell")){
-            repairAmount = 400;
+            repairAmount = 200;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Deep Shell")){
-            repairAmount = 600;
+            repairAmount = 400;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Abyssal Shell")){
-            repairAmount = 10000;
+            repairAmount = 800;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Mithril Chunk") && isDurable(repairee)){
             incrementEnchantment(repairee, billItem,Enchantment.DURABILITY);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
