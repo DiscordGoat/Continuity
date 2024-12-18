@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.mining;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -21,6 +22,7 @@ public class Mining implements Listener {
     private MinecraftNew plugin = MinecraftNew.getInstance();
     private XPManager xpManager = new XPManager(plugin);
     private Random random = new Random();
+    private final OreCountManager oreCountManager = new OreCountManager(plugin);
 
     // List of ores to monitor
     public static List<Material> ores = Arrays.asList(
@@ -56,111 +58,35 @@ public class Mining implements Listener {
             Material.END_STONE,
             Material.ANCIENT_DEBRIS
     );
-
-    public ItemStack createCustomItem(Material material, String name, List<String> lore, int amount, boolean unbreakable, boolean addEnchantmentShimmer) {
-        ItemStack item = new ItemStack(material, amount);
-        ItemMeta meta = item.getItemMeta();
-
-        // Set custom name
-        if (name != null) {
-            meta.setDisplayName(name);
-        }
-
-        // Set lore
-        if (lore != null && !lore.isEmpty()) {
-            meta.setLore(lore);
-        }
-
-        // Add enchantment shimmer if specified
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS); // This hides the enchantments from the item's tooltip
-        item.setItemMeta(meta);
-        if (addEnchantmentShimmer) {
-            // Add a dummy enchantment to create the shimmer effect
-            item.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
-        }
-        return item;
-    }
-
-    public ItemStack mithrilChunk() {
-        return createCustomItem(
-                Material.LIGHT_BLUE_DYE,
-                ChatColor.BLUE + "Mithril Chunk",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to unlock the secrets of Unbreaking.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-
-    public ItemStack diamondGemstone() {
-        return createCustomItem(
-                Material.DIAMOND,
-                ChatColor.DARK_PURPLE + "Diamond Gemstone",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to unlock triple drop chance.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-    public ItemStack lapisGemstone() {
-        return createCustomItem(
-                Material.LAPIS_LAZULI,
-                ChatColor.DARK_PURPLE + "Lapis Gemstone",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to enrich mining XP gains.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-    public ItemStack redstoneGemstone() {
-        return createCustomItem(
-                Material.REDSTONE,
-                ChatColor.DARK_PURPLE + "Redstone Gemstone",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to enrich Gold Fever.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-    public ItemStack emeraldGemstone() {
-        return createCustomItem(
-                Material.EMERALD,
-                ChatColor.DARK_PURPLE + "Emerald Gemstone",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to unlock night vision chance.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-    public ItemStack perfectDiamond() {
-        return createCustomItem(
-                Material.DIAMOND,
-                ChatColor.BLUE + "Perfect Diamond",
-                List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to a pickaxe to unlock the secrets of Fortune.",
-                        "Smithing Item"),
-                1,
-                false,
-                true
-        );
-    }
-
+    public static List<Material> onlyOres = Arrays.asList(
+            Material.COAL_ORE,
+            Material.DEEPSLATE_COAL_ORE,
+            Material.IRON_ORE,
+            Material.DEEPSLATE_IRON_ORE,
+            Material.COPPER_ORE,
+            Material.DEEPSLATE_COPPER_ORE,
+            Material.GOLD_ORE,
+            Material.DEEPSLATE_GOLD_ORE,
+            Material.REDSTONE_ORE,
+            Material.DEEPSLATE_REDSTONE_ORE,
+            Material.EMERALD_ORE,
+            Material.DEEPSLATE_EMERALD_ORE,
+            Material.LAPIS_ORE,
+            Material.DEEPSLATE_LAPIS_ORE,
+            Material.DIAMOND_ORE,
+            Material.DEEPSLATE_DIAMOND_ORE,
+            Material.NETHER_QUARTZ_ORE,
+            Material.NETHER_GOLD_ORE,
+            Material.ANCIENT_DEBRIS
+    );
     @EventHandler
     public void onOreMine(BlockBreakEvent e) {
         Block block = e.getBlock();
         Player player = e.getPlayer();
         ItemStack tool = player.getInventory().getItemInMainHand();
-
+        if(onlyOres.contains(block.getType())){
+            oreCountManager.incrementOreCount(player);
+        }
         if (ores.contains(block.getType())) {
             // Check if the player is using Silk Touch
             if (tool != null && tool.containsEnchantment(Enchantment.SILK_TOUCH)) {
@@ -171,7 +97,7 @@ public class Mining implements Listener {
             switch (block.getType()) {
                 case DEEPSLATE_DIAMOND_ORE:
                     if (random.nextInt(100) < 1) { // 4% chance
-                        player.getInventory().addItem(diamondGemstone());
+                        player.getInventory().addItem(ItemRegistry.getDiamondGemstone());
                         player.sendMessage(ChatColor.AQUA + "You discovered a Diamond Gemstone!");
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                     }
@@ -179,7 +105,7 @@ public class Mining implements Listener {
 
                 case EMERALD_ORE:
                     if (random.nextInt(100) < 10) { // 10% chance
-                        player.getInventory().addItem(emeraldGemstone());
+                        player.getInventory().addItem(ItemRegistry.getEmeraldGemstone());
                         player.sendMessage(ChatColor.GREEN + "You discovered an Emerald Gemstone!");
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                     }
@@ -187,7 +113,7 @@ public class Mining implements Listener {
 
                 case DEEPSLATE_LAPIS_ORE:
                     if (random.nextInt(100) < 0.2) { // 2% chance
-                        player.getInventory().addItem(lapisGemstone());
+                        player.getInventory().addItem(ItemRegistry.getLapisGemstone());
                         player.sendMessage(ChatColor.BLUE + "You discovered a Lapis Gemstone!");
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                     }
@@ -195,7 +121,7 @@ public class Mining implements Listener {
 
                 case DEEPSLATE_REDSTONE_ORE:
                     if (random.nextInt(100) < 0.1) { // 1% chance
-                        player.getInventory().addItem(redstoneGemstone());
+                        player.getInventory().addItem(ItemRegistry.getRedstoneGemstone());
                         player.sendMessage(ChatColor.RED + "You discovered a Redstone Gemstone!");
                         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                     }
@@ -248,12 +174,12 @@ public class Mining implements Listener {
             if (block.getType().equals(Material.DEEPSLATE_DIAMOND_ORE)) {
                 int rollRareItem = random.nextInt(200) + 1;
                 if (rollRareItem <= 1) { // 0.5% chance
-                    player.getInventory().addItem(perfectDiamond());
+                    player.getInventory().addItem(ItemRegistry.getPerfectDiamond());
                     player.sendMessage(ChatColor.AQUA + "You discovered a Perfect Diamond!");
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 }
                 if (rollRareItem <= 2) { // Additional 1% chance
-                    player.getInventory().addItem(mithrilChunk());
+                    player.getInventory().addItem(ItemRegistry.getMithrilChunk());
                     player.sendMessage(ChatColor.GREEN + "You discovered a Mithril Chunk!");
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 }

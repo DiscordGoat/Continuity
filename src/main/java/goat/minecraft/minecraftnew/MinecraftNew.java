@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew;
 
 import goat.minecraft.minecraftnew.subsystems.combat.HordeInstinct;
+import goat.minecraft.minecraftnew.subsystems.mining.OreCountManager;
 import goat.minecraft.minecraftnew.utils.artifacts.RightClickArtifacts;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.utils.chocolatemisc.CakeHungerListener;

@@ -16,7 +16,66 @@ public class ItemRegistry {
     } // Private constructor to prevent instantiation
 
 
-
+    public static ItemStack getDiamondGemstone() {
+        return createCustomItem(
+                Material.DIAMOND,
+                ChatColor.DARK_PURPLE + "Diamond Gemstone",
+                List.of(ChatColor.GRAY + "A rare mineral.",
+                        "Apply it to equipment to unlock triple drop chance.",
+                        "Smithing Item"),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getLapisGemstone() {
+        return createCustomItem(
+                Material.LAPIS_LAZULI,
+                ChatColor.DARK_PURPLE + "Lapis Gemstone",
+                List.of(ChatColor.GRAY + "A rare mineral.",
+                        "Apply it to equipment to enrich mining XP gains.",
+                        "Smithing Item"),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getRedstoneGemstone() {
+        return createCustomItem(
+                Material.REDSTONE,
+                ChatColor.DARK_PURPLE + "Redstone Gemstone",
+                List.of(ChatColor.GRAY + "A rare mineral.",
+                        "Apply it to equipment to enrich Gold Fever.",
+                        "Smithing Item"),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getEmeraldGemstone() {
+        return createCustomItem(
+                Material.EMERALD,
+                ChatColor.DARK_PURPLE + "Emerald Gemstone",
+                List.of(ChatColor.GRAY + "A rare mineral.",
+                        "Apply it to equipment to unlock night vision chance.",
+                        "Smithing Item"),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getPerfectDiamond() {
+        return createCustomItem(
+                Material.DIAMOND,
+                ChatColor.BLUE + "Perfect Diamond",
+                List.of(ChatColor.GRAY + "A rare mineral.",
+                        "Apply it to a pickaxe to unlock the secrets of Fortune.",
+                        "Smithing Item"),
+                1,
+                false,
+                true
+        );
+    }
     public static ItemStack getRareItem(Material cropType) {
         switch (cropType) {
             case CARROTS:

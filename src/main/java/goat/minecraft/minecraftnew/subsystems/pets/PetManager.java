@@ -764,7 +764,7 @@ public class PetManager implements Listener {
     }
 
     public enum PetPerk {
-        WATERLOGGED("", ""),
+        WATERLOGGED("Waterlogged", ""),
         ASPECT_OF_THE_END("Aspect of the End", "Right click to warp forward."),
         BLAZE("Blaze", "Lights hit mobs on fire."),
         SECRET_LEGION("Secret Legion", "Summons a Zombified Piglin minion to defend you."),
