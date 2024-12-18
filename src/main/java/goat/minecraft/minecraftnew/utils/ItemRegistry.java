@@ -800,6 +800,9 @@ public class ItemRegistry {
                 ChatColor.DARK_PURPLE + "Smithing Item"
         ), 1, false, true);
     }
+    public static ItemStack getTrident() {
+        return new ItemStack(Material.TRIDENT);
+    }
 
     public static ItemStack getRiptide() {
         return createCustomItem(Material.CONDUIT, ChatColor.YELLOW +

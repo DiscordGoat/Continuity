@@ -116,6 +116,18 @@ public class SeaCreatureRegistry implements Listener {
         ));
 
         //RARE
+        List<SeaCreature.DropItem> poseidonDrops = new ArrayList<>();
+        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 3, 1, 5));
+        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getTrident(), 1, 1, 1));
+        SEA_CREATURES.add(new SeaCreature(
+                "Poseidon",
+                Rarity.RARE,
+                EntityType.DROWNED,
+                poseidonDrops,
+                Color.fromRGB(0, 0, 255),
+                "Poseidon",  // unique texture for this creature
+                RARITY_LEVELS.get(Rarity.RARE)
+        ));
         List<SeaCreature.DropItem> sharkDrops = new ArrayList<>();
         sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 3, 1, 5));
         sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 3, 1, 5));
