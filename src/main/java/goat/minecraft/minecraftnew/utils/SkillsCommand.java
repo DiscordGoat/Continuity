@@ -51,7 +51,7 @@ public class SkillsCommand implements CommandExecutor {
         Inventory skillsInventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "Your Skills");
 
         // Define the skills to display
-        String[] skills = {"Fishing", "Farming", "Mining", "Combat", "Player", "Forestry", "Bartering", "Culinary"};
+        String[] skills = {"Fishing", "Farming", "Mining", "Combat", "Player", "Forestry", "Bartering", "Culinary", "Smithing"};
 
         // Define icons for each skill (you can customize these as desired)
         Material[] icons = {
@@ -62,7 +62,8 @@ public class SkillsCommand implements CommandExecutor {
                 Material.PLAYER_HEAD,   // Player
                 Material.GOLDEN_AXE,     // Forestry
                 Material.EMERALD,     // Bartering
-                Material.FURNACE     // Bartering
+                Material.FURNACE,     // Bartering
+                Material.DAMAGED_ANVIL     // Bartering
         };
 
         // Populate the inventory with skill items
@@ -126,6 +127,14 @@ public class SkillsCommand implements CommandExecutor {
     private List<String> getSkillStatLore(String skill, int level) {
         double multiplier = 1 + (level * 0.02); // 2% per level
         switch (skill) {
+            case "Smithing":
+                return Arrays.asList(
+                        ChatColor.WHITE + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.WHITE + "Repair Amount: " + (25+level),
+                        ChatColor.WHITE + "Sharpen Success Chance: " + 80 + "%",
+                        ChatColor.WHITE + "Polish Success Chance: " + 80 + "%",
+                        ChatColor.WHITE + "Reinforce Success Chance: " + 80 + "%"
+                );
             case "Culinary":
                 double additionalSaturation = Math.min(level * 0.05, 20.0); // Max 20 saturation at level 100
                 return Arrays.asList(

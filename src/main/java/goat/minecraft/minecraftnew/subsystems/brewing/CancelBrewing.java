@@ -150,8 +150,6 @@ public class CancelBrewing implements Listener {
             ItemStack modifierItem = inv.getItem(22); // Modifier item slot
             ItemStack gunpowder = inv.getItem(23);
             ItemStack dyeItem = inv.getItem(24);
-            ItemStack enderPearl = inv.getItem(25);
-            ItemStack pumpkin = inv.getItem(26);
 
             PotionEffectType effectType = getPotionEffectType(ingredient1, ingredient2);
             if (effectType == null) {
@@ -206,6 +204,9 @@ public class CancelBrewing implements Listener {
             consumeItem(inv, 26); // Pumpkin
 
             // Play sound and particles
+
+            potion.setAmount(3);
+
             HumanEntity player = inv.getViewers().get(0);
             Location loc = player.getLocation();
             World world = loc.getWorld();
