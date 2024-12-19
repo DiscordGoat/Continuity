@@ -65,6 +65,17 @@ public class CulinarySubsystem implements Listener {
                 Arrays.asList("Slice of Cheese", "Ham", "Bread"),
                 200
         ));
+
+
+
+
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.COOKED_RABBIT,
+                "Meatlovers Feast",
+                Arrays.asList("Medium Rare Steak", "Cooked Chicken", "Butter", "Sea Salt", "Medium Rare Mutton", "Cooked Rabbit", "Bacon"),
+                1000
+        ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.DRIED_KELP,
@@ -219,6 +230,15 @@ public class CulinarySubsystem implements Listener {
             case "Ham and Cheese Sandwich (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*30, 0));
                 break;
+
+
+            case "Meatlovers Feast (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*60*60*1, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*10, 0));
+                player.setFoodLevel(20);
+                player.setSaturation(player.getSaturation() + 100);
+                player.setHealth(player.getMaxHealth());
+                break;
             case "Seafood Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*60*1, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*10, 0));
@@ -246,7 +266,7 @@ public class CulinarySubsystem implements Listener {
         if (event.getClickedBlock().getType() != Material.CRAFTING_TABLE) return;
 
         Player player = event.getPlayer();
-        ItemStack hand = player.getInventory().getItemInMainHand();
+        ItemStack hand = player.getInventory().getItemInMainHand().clone();
         Location tableLoc = event.getClickedBlock().getLocation().clone();
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
@@ -293,7 +313,7 @@ public class CulinarySubsystem implements Listener {
 
                     consumeItem(player, hand, 1);
 
-                    UUID standUUID = spawnIngredientAboveTableRandom(tableLoc, hand.getType(), player.getInventory().getItemInMainHand());
+                    UUID standUUID = spawnIngredientAboveTableRandom(tableLoc, hand.getType(), hand);
                     session.placedIngredientsStands.put(ingredientName, standUUID);
 
                     BukkitTask spinTask = startSpinning(standUUID);
@@ -335,24 +355,6 @@ public class CulinarySubsystem implements Listener {
         }
         meta.setLore(lore);
         item.setItemMeta(meta);
-        return item;
-    }
-    private ItemStack createIngredientItem(Material material, String ingredientName, List<String> usedInRecipes) {
-        ItemStack item = new ItemStack(material, 1);
-        ItemMeta meta = item.getItemMeta();
-
-        if (meta != null) {
-            meta.setDisplayName(ChatColor.GREEN + ingredientName);
-
-            List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GRAY + "Used in:");
-            for (String recipe : usedInRecipes) {
-                lore.add(ChatColor.AQUA + "- " + recipe);
-            }
-            meta.setLore(lore);
-            item.setItemMeta(meta);
-        }
-
         return item;
     }
 
@@ -459,8 +461,8 @@ public class CulinarySubsystem implements Listener {
         // Drop final output
         ItemStack result = createOutputItem(session.recipe);
         session.tableLocation.getWorld().dropItemNaturally(session.tableLocation.clone().add(0.5, 1, 0.5), result);
-
-        SkillManager.getInstance().getPlayerSkills(player.getUniqueId()).addSkillXP("CULINARY", session.recipe.getXpReward());
+        XPManager xpManager = new XPManager(plugin);
+        xpManager.addXP(player, "Culinary", session.recipe.getXpReward());
         player.sendMessage(ChatColor.GREEN + "You crafted " + session.recipe.getName() + "! You gained culinary XP.");
         logger.info("[CulinarySubsystem] finalizeRecipe: Recipe crafted, XP granted.");
 
@@ -579,27 +581,6 @@ public class CulinarySubsystem implements Listener {
         public RecipeSession(CulinaryRecipe recipe, Location tableLocation) {
             this.recipe = recipe;
             this.tableLocation = tableLocation.clone();
-        }
-    }
-
-    public static class SkillManager {
-        private static SkillManager instance = new SkillManager();
-        private Map<UUID, PlayerSkills> map = new HashMap<>();
-
-        public static SkillManager getInstance() {
-            return instance;
-        }
-
-        public PlayerSkills getPlayerSkills(UUID uuid) {
-            return map.computeIfAbsent(uuid, k -> new PlayerSkills());
-        }
-    }
-
-    public static class PlayerSkills {
-        private Map<String, Double> skillXP = new HashMap<>();
-
-        public void addSkillXP(String skill, double amount) {
-            skillXP.put(skill, skillXP.getOrDefault(skill, 0.0) + amount);
         }
     }
 }

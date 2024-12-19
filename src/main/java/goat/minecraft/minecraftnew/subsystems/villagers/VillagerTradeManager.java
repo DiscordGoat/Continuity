@@ -62,6 +62,7 @@ public class VillagerTradeManager implements Listener {
         masonPurchases.add(new TradeItem(new ItemStack(Material.QUARTZ_BLOCK, 8), 5, 8, 3,29 * 2)); // Placeholder trade
         masonPurchases.add(new TradeItem(new ItemStack(Material.SMOOTH_STONE, 8), 5, 8, 3,29 * 2)); // Placeholder trade
         masonPurchases.add(new TradeItem(new ItemStack(Material.SANDSTONE, 8), 5, 8, 3,29 * 2)); // Placeholder trade
+        masonPurchases.add(new TradeItem(ItemRegistry.getItemDisplayItem(), 8, 1, 3,29 * 2)); // Placeholder trade
 
         masonPurchases.add(new TradeItem(new ItemStack(Material.PRISMARINE, 8), 7, 8, 4,29 * 4)); // Placeholder trade
         masonPurchases.add(new TradeItem(new ItemStack(Material.DARK_PRISMARINE, 8), 7, 8, 4,29 * 4)); // Placeholder trade

@@ -126,7 +126,7 @@ public class SeaCreatureRegistry implements Listener {
         ));
         List<SeaCreature.DropItem> squidDrops = new ArrayList<>();
         squidDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 1, 1, 1)); // Luminescent Ink drop
-        squidDrops.add(new SeaCreature.DropItem(ItemRegistry.getCalamari(), 1, 1, 2)); // Luminescent Ink drop
+        squidDrops.add(new SeaCreature.DropItem(ItemRegistry.getCalamari(), 1, 1, 4)); // Luminescent Ink drop
         SEA_CREATURES.add(new SeaCreature(
                 "Squid", // Name of the sea creature
                 Rarity.UNCOMMON, // Rarity of the sea creature
@@ -250,7 +250,7 @@ public class SeaCreatureRegistry implements Listener {
         List<SeaCreature.DropItem> yetiDrops = new ArrayList<>();
         yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 10, 1, 3)); // Example drop
         yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 10, 1, 3)); // Example drop
-        yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalSharpness(), 1, 1, 1)); // Yeti Fur drop
+        yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalSharpness(), 1, 1, 10)); // Yeti Fur drop
         SEA_CREATURES.add(new SeaCreature(
                 "Yeti", // Name of the sea creature
                 Rarity.EPIC, // Rarity of the sea creature

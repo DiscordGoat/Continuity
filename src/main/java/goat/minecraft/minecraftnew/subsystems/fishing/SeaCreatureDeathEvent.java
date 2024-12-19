@@ -92,6 +92,16 @@ public class SeaCreatureDeathEvent implements Listener {
                 petManager.createPet(killer, "Golden Steve", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY, PetManager.PetPerk.TREASURE_HUNTER, PetManager.PetPerk.COMFORTABLE);
             }
         }
+        if(seaCreature.getSkullName().equals("Yeti")){
+            PetManager petManager = PetManager.getInstance(plugin);
+            int pirateChance = random.nextInt(100) + 1;
+            if (pirateChance <= 10) {
+                petManager.createPet(killer, "Yeti", PetManager.Rarity.EPIC, 100, Particle.CRIT_MAGIC, PetManager.PetPerk.ASPECT_OF_THE_FROST, PetManager.PetPerk.BLIZZARD, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.BONE_COLD, PetManager.PetPerk.ELITE);
+            }
+        }
+
+
+
         // Handle drops
         List<ItemStack> drops = seaCreature.getDrops();
         if (drops != null && !drops.isEmpty()) {
