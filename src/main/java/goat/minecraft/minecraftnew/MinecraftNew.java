@@ -2,12 +2,10 @@ package goat.minecraft.minecraftnew;
 
 import goat.minecraft.minecraftnew.subsystems.combat.HordeInstinct;
 import goat.minecraft.minecraftnew.subsystems.mining.OreCountManager;
+import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
 import goat.minecraft.minecraftnew.utils.artifacts.RightClickArtifacts;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
-import goat.minecraft.minecraftnew.utils.chocolatemisc.CakeHungerListener;
-import goat.minecraft.minecraftnew.utils.chocolatemisc.InventoryClickListener;
-import goat.minecraft.minecraftnew.utils.chocolatemisc.ItemDisplayManager;
-import goat.minecraft.minecraftnew.utils.chocolatemisc.ParticlePetEffects;
+import goat.minecraft.minecraftnew.utils.chocolatemisc.*;
 import goat.minecraft.minecraftnew.subsystems.combat.EpicEnderDragonFight;
 import goat.minecraft.minecraftnew.subsystems.combat.MobDamageHandler;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
@@ -91,7 +89,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
-
+        Bukkit.getPluginManager().registerEvents(new HireVillager(), this);
+        getServer().getPluginManager().registerEvents(new ArmorEquipListener(), this);
         getServer().getPluginManager().registerEvents(new Leap(this), this);
         getServer().getPluginManager().registerEvents(new MobDamageHandler(), this);
         getServer().getPluginManager().registerEvents(new SoftPaw(this), this);

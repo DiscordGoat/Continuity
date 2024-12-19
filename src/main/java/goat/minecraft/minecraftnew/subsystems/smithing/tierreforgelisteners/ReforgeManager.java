@@ -138,7 +138,7 @@ public class ReforgeManager {
         // Remove existing reforge-related lore
         lore.removeIf(line -> line.contains("Damage Increase:")
                 || line.contains("Damage Reduction:")
-                || line.contains("Chance to not use durability:"));
+                || line.contains("Chance to repair durability:"));
 
         // Add the new reforge lore
         if (isSword) {
@@ -146,7 +146,7 @@ public class ReforgeManager {
         } else if (isArmor) {
             lore.add(ChatColor.DARK_GRAY + "Damage Reduction: " + ChatColor.AQUA + targetTier.getArmorDamageReduction() + "%");
         } else if (isTool) {
-            lore.add(ChatColor.DARK_GRAY + "Chance to not use durability: " + ChatColor.AQUA + targetTier.getToolDurabilityChance() + "%");
+            lore.add(ChatColor.DARK_GRAY + "Chance to repair durability: " + ChatColor.AQUA + targetTier.getToolDurabilityChance() + "%");
         }
 
         meta.setLore(lore);

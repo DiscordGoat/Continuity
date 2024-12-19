@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.utils.chocolatemisc;
 
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -280,15 +281,7 @@ public class ItemDisplayManager implements Listener {
         }
     }
 
-    public ItemStack createItemDisplayItem() {
-        ItemStack item = new ItemStack(Material.STONE, 1);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.AQUA + "Item Display");
-        meta.addEnchant(Enchantment.DURABILITY, 1, true);
-        meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-        item.setItemMeta(meta);
-        return item;
-    }
+
 
     private boolean isItemDisplayItem(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return false;
@@ -368,10 +361,10 @@ public class ItemDisplayManager implements Listener {
 
         if (display.storedItem != null) {
             block.getWorld().dropItemNaturally(block.getLocation().add(0.5,1,0.5), display.storedItem.clone());
-            block.getWorld().dropItemNaturally(block.getLocation().add(0.5,1,0.5), createItemDisplayItem());
+            block.getWorld().dropItemNaturally(block.getLocation().add(0.5,1,0.5), ItemRegistry.getItemDisplayItem());
         }
         else{
-            block.getWorld().dropItemNaturally(block.getLocation().add(0.5,1,0.5), createItemDisplayItem());
+            block.getWorld().dropItemNaturally(block.getLocation().add(0.5,1,0.5), ItemRegistry.getItemDisplayItem());
         }
         display.remove();
         event.getPlayer().sendMessage(ChatColor.RED + "Item display removed!");

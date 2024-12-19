@@ -1262,7 +1262,18 @@ public class ItemRegistry {
                 true
         );
     }
-
+    public static ItemStack getItemDisplayItem() {
+        return createCustomItem(Material.STONE, ChatColor.AQUA + "Item Display",
+                Arrays.asList(
+                        ChatColor.GRAY + "Took a lot of time to make.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Place items on display.",
+                        ChatColor.DARK_PURPLE + "Decorative Block"
+                ),
+                1,
+                false, // Not unbreakable
+                true   // Add enchantment shimmer
+        );
+    }
     public static ItemStack getForbiddenBook() {
         return createCustomItem(
                 Material.WRITTEN_BOOK,
