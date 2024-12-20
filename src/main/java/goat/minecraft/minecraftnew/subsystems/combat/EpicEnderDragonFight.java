@@ -48,7 +48,6 @@ public class EpicEnderDragonFight implements Listener {
             EnderCrystal enderCrystal = (EnderCrystal) event.getEntity();
             // Check if the damage will destroy the crystal
                 Location location = new Location(Bukkit.getWorld("world"), 0, 66, 0, 0, 0);
-                spawnKnightOfTheEnd(location);
                 // Play explosion sound and particles
                 World world = location.getWorld();
                 world.playSound(location, Sound.ENTITY_WITHER_SPAWN, 1.0f, 0.5f);
@@ -57,36 +56,6 @@ public class EpicEnderDragonFight implements Listener {
         }
     }
 
-    /**
-     * Spawns a Knight of the End at the given location.
-     *
-     * @param location The location to spawn the Knight.
-     */
-    private void spawnKnightOfTheEnd(Location location) {
-        World world = location.getWorld();
-        if (world == null) return;
-
-        WitherSkeleton knight = (WitherSkeleton) world.spawnEntity(location, EntityType.WITHER_SKELETON);
-        knight.setCustomName(ChatColor.DARK_PURPLE + "Knight of the End");
-        knight.setCustomNameVisible(true);
-        knight.setPersistent(true);
-
-        // Equip with Netherite armor and weapon
-        knight.getEquipment().setHelmet(createUnbreakableItem(Material.NETHERITE_HELMET));
-        knight.getEquipment().setChestplate(createUnbreakableItem(Material.NETHERITE_CHESTPLATE));
-        knight.getEquipment().setLeggings(createUnbreakableItem(Material.NETHERITE_LEGGINGS));
-        knight.getEquipment().setBoots(createUnbreakableItem(Material.NETHERITE_BOOTS));
-        knight.getEquipment().setItemInMainHand(createUnbreakableItem(Material.NETHERITE_SWORD));
-
-        knight.getEquipment().setHelmetDropChance(0.05f);
-        knight.getEquipment().setChestplateDropChance(0.05f);
-        knight.getEquipment().setLeggingsDropChance(0.05f);
-        knight.getEquipment().setBootsDropChance(0.05f);
-        knight.getEquipment().setItemInMainHandDropChance(0.05f);
-
-        // Add potion effect
-        knight.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, Integer.MAX_VALUE, 1));
-    }
 
     /**
      * Creates an unbreakable item of the specified material.
