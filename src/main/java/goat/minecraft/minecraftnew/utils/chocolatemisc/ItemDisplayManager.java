@@ -109,13 +109,14 @@ public class ItemDisplayManager implements Listener {
                 e.printStackTrace();
             }
         }
-
+        Bukkit.getPluginManager().registerEvents(this, plugin);
         loadData();
         respawnAllDisplays();
 
-        Bukkit.getPluginManager().registerEvents(this, plugin);
+
         logger.info("[ItemDisplay] Manager initialized.");
     }
+
 
     public class ItemDisplay {
         public UUID id;
@@ -170,12 +171,21 @@ public class ItemDisplayManager implements Listener {
                 if (e != null && e.isValid()) {
                     e.remove();
                 }
+                standUUID = null; // Clear the UUID to avoid lingering references
             }
 
-            if (rotateTask != null) rotateTask.cancel();
-            if (particleTask != null) particleTask.cancel();
+            if (rotateTask != null) {
+                rotateTask.cancel();
+                rotateTask = null;
+            }
 
-            displays.remove(id);
+            if (particleTask != null) {
+                particleTask.cancel();
+                particleTask = null;
+            }
+
+            displays.remove(id); // Remove from the displays map
+            standSpawned = false; // Mark as no longer spawned
         }
 
         public void startRotationTask() {
@@ -296,13 +306,16 @@ public class ItemDisplayManager implements Listener {
         Player player = event.getPlayer();
         ItemStack item = event.getItemInHand();
         if (!isItemDisplayItem(item)) return;
+
         Location loc = event.getBlock().getLocation();
         loc.getBlock().setType(Material.QUARTZ_PILLAR);
 
         ItemDisplay display = new ItemDisplay(loc);
+        display.spawn(); // Spawn the stand immediately
         displays.put(display.id, display);
-        player.sendMessage(ChatColor.GREEN + "Item Display placed! Shift-Right-click the pillar to set display mode.");
+        player.sendMessage(ChatColor.GREEN + "Item Display placed!");
     }
+
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -499,7 +512,7 @@ public class ItemDisplayManager implements Listener {
     }
 
     @SuppressWarnings("unchecked")
-    private void loadData() {
+    public void loadData() {
         dataConfig = YamlConfiguration.loadConfiguration(dataFile);
         if (dataConfig.contains(DISPLAYS_KEY)) {
             List<Map<String, Object>> displayList = (List<Map<String, Object>>) dataConfig.getList(DISPLAYS_KEY);
@@ -566,18 +579,13 @@ public class ItemDisplayManager implements Listener {
 
     public void respawnAllDisplays() {
         for (ItemDisplay d : displays.values()) {
-            if (d.standSpawned) {
-                // Old stand no longer exists. Clear the old UUID.
-                d.standUUID = null;
-                // Set standSpawned to false so that spawn() actually runs again.
-                d.standSpawned = false;
-                // Now spawn the stand fresh.
-                d.spawn();
-                // Update the displayed item now that a new stand is in place.
-                d.updateStandItem();
-            }
+            d.standUUID = null;
+            d.standSpawned = false;
+            d.spawn();
+            d.updateStandItem();
         }
     }
+
 
 
 

@@ -230,8 +230,8 @@ public class MusicDiscManager implements Listener {
                         if (Math.random() < 0.5) { // 10% chance to infect the player with BT
                             Bukkit.broadcastMessage(ChatColor.RED + damagedPlayer.getName() + " has been infected with the BaroTrauma Virus!");
                             PlayerOxygenManager playerOxygenManager = new PlayerOxygenManager(MinecraftNew.getInstance());
-                            player.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 200, 3));
-                            damagedPlayer.sendMessage(ChatColor.DARK_AQUA + "You are suffocating! Run!");
+                            playerOxygenManager.setPlayerOxygenLevel(player, 0);
+                            damagedPlayer.sendMessage(ChatColor.DARK_AQUA + "You lost your oxygen!");
                         }
                     }
                 }

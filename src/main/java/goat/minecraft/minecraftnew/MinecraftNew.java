@@ -69,6 +69,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
 
     public void onEnable() {
+
+
+
         autoComposter = new AutoComposter(this);
         VillagerWorkCycleManager.getInstance(this);
         displayManager = new ItemDisplayManager(this);
