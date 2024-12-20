@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
@@ -79,9 +80,9 @@ public class SeaCreatureDeathEvent implements Listener {
             Bukkit.getLogger().info("Sea creature killed by non-player entity: " + event.getEntity().getKiller());
             return;
         }
-
-        // Process XP and drops
-        int boostedXP = getBoostedXP(seaCreature.getRarity());
+        HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(killer);
+        int boostedXP = getBoostedXP(seaCreature.getRarity(), hostilityLevel);
         xpManager.addXP(killer, "Fishing", boostedXP);
         Bukkit.getLogger().info("Player " + killer.getName() + " gained " + boostedXP + " Fishing XP.");
 
@@ -209,22 +210,15 @@ public class SeaCreatureDeathEvent implements Listener {
         entity.getWorld().spawnParticle(particle, entity.getLocation(), 50, 1.0, 1.0, 1.0, 0.1);
     }
 
-    private int getBoostedXP(Rarity rarity) {
-        switch (rarity) {
-            case COMMON:
-                return 20;
-            case UNCOMMON:
-                return 40;
-            case RARE:
-                return 80;
-            case EPIC:
-                return 160;
-            case LEGENDARY:
-                return 320;
-            case MYTHIC:
-                return 640;
-            default:
-                return 20;
-        }
+    private int getBoostedXP(Rarity rarity, int hostilityLevel) {
+        return switch (rarity) {
+            case COMMON -> 20 * hostilityLevel/2;
+            case UNCOMMON -> 40 * hostilityLevel/2;
+            case RARE -> 80 * hostilityLevel/2;
+            case EPIC -> 160 * hostilityLevel/2;
+            case LEGENDARY -> 320 * hostilityLevel/2;
+            case MYTHIC -> 640 * hostilityLevel/2;
+            default -> 20;
+        };
     }
 }
