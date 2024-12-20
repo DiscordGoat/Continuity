@@ -158,7 +158,9 @@ public class SpawnMonsters implements Listener {
         Entity entity = e.getEntity();
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
         int playerHostility = hostilityManager.getPlayerDifficultyTier(getNearestPlayer(entity, 1000));
-
+        if(entity instanceof LivingEntity monster){
+            monster.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, true));
+        }
         if(entity instanceof Zombie zombie){
             if(shouldMutationOccur(playerHostility)){
                 KnightMob knightMob = new KnightMob(plugin);
