@@ -1,9 +1,11 @@
 package goat.minecraft.minecraftnew.subsystems.music;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -24,6 +26,9 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.loot.LootContext;
+import org.bukkit.loot.LootTable;
+import org.bukkit.loot.LootTables;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -151,6 +156,220 @@ public class MusicDiscManager implements Listener {
         }
     }
 
+    private void handleMusicDiscBlocks(Player player) {
+        // Broadcast the activation message to all players
+        Bukkit.broadcastMessage(ChatColor.GREEN + "Recipe Writer Feature is now active!");
+
+        // Play the MUSIC_DISC_BLOCKS sound to the activating player
+        player.playSound(player.getLocation(), Sound.MUSIC_DISC_BLOCKS, 3.0f, 1.0f);
+
+        // Define the total number of messages and total duration
+        final int totalMessages = 16;
+        final long totalDurationSeconds = 345; // 5 minutes and 45 seconds
+        final long totalDurationTicks = totalDurationSeconds * 20L; // Convert seconds to ticks (20 ticks = 1 second)
+        final long intervalTicks = totalDurationTicks / totalMessages; // Interval between messages
+
+        // Schedule a repeating task to send "TBD RECIPE" messages
+        new BukkitRunnable() {
+            int messagesSent = 0;
+
+            @Override
+            public void run() {
+                if (messagesSent >= totalMessages || !player.isOnline()) {
+                    this.cancel(); // Cancel the task if all messages are sent or player is offline
+                    return;
+                }
+
+                // Placeholder for your future method. Replace the following line with your method call.
+                player.sendMessage(ChatColor.YELLOW + "TBD RECIPE");
+
+                // Increment the count of sent messages
+                messagesSent++;
+            }
+        }.runTaskTimer(plugin, intervalTicks, intervalTicks); // Initial delay and period both set to intervalTicks
+    }
+
+    private void handleMusicDisc11(Player player) {
+        HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
+        hostilityManager.setPlayerTier(player, 20);
+        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Somehow, you've made monsters even angrier...");
+
+    }
+    private void handleMusicDiscFar(Player player) {
+        // Play the music disc sound
+        player.playSound(player.getLocation(), Sound.MUSIC_DISC_FAR, 3.0f, 1.0f);
+        Bukkit.broadcastMessage(ChatColor.GOLD + "Random Loot crates event Activated!");
+
+        // Define the duration of the disc in ticks (120 seconds + 54 seconds * 20 ticks per second)
+        int durationTicks = (120 + 54) * 20;
+
+        // Define the interval at which chests spawn
+        int intervalTicks = durationTicks / 16; // Spawn 16 chests during the song
+
+        // Define the list of loot tables
+        List<NamespacedKey> lootTables = Arrays.asList(
+                LootTables.BASTION_TREASURE.getKey(),
+                LootTables.BASTION_OTHER.getKey(),
+                LootTables.BASTION_BRIDGE.getKey(),
+                LootTables.BASTION_HOGLIN_STABLE.getKey(),
+                LootTables.DESERT_PYRAMID.getKey(),
+                LootTables.END_CITY_TREASURE.getKey(),
+                LootTables.IGLOO_CHEST.getKey(),
+                LootTables.JUNGLE_TEMPLE.getKey(),
+                LootTables.JUNGLE_TEMPLE_DISPENSER.getKey(),
+                LootTables.ABANDONED_MINESHAFT.getKey(),
+                LootTables.NETHER_BRIDGE.getKey(),
+                LootTables.PILLAGER_OUTPOST.getKey(),
+                LootTables.RUINED_PORTAL.getKey(),
+                LootTables.SHIPWRECK_MAP.getKey(),
+                LootTables.SHIPWRECK_SUPPLY.getKey(),
+                LootTables.SHIPWRECK_TREASURE.getKey(),
+                LootTables.STRONGHOLD_CORRIDOR.getKey(),
+                LootTables.STRONGHOLD_CROSSING.getKey(),
+                LootTables.STRONGHOLD_LIBRARY.getKey(),
+                LootTables.UNDERWATER_RUIN_BIG.getKey(),
+                LootTables.UNDERWATER_RUIN_SMALL.getKey(),
+                LootTables.VILLAGE_ARMORER.getKey(),
+                LootTables.VILLAGE_BUTCHER.getKey(),
+                LootTables.VILLAGE_CARTOGRAPHER.getKey(),
+                LootTables.VILLAGE_DESERT_HOUSE.getKey(),
+                LootTables.VILLAGE_FISHER.getKey(),
+                LootTables.VILLAGE_FLETCHER.getKey(),
+                LootTables.VILLAGE_MASON.getKey(),
+                LootTables.VILLAGE_PLAINS_HOUSE.getKey(),
+                LootTables.VILLAGE_SAVANNA_HOUSE.getKey(),
+                LootTables.VILLAGE_SHEPHERD.getKey(),
+                LootTables.VILLAGE_SNOWY_HOUSE.getKey(),
+                LootTables.VILLAGE_TAIGA_HOUSE.getKey(),
+                LootTables.VILLAGE_TANNERY.getKey(),
+                LootTables.VILLAGE_TEMPLE.getKey(),
+                LootTables.VILLAGE_TOOLSMITH.getKey(),
+                LootTables.VILLAGE_WEAPONSMITH.getKey(),
+                LootTables.WOODLAND_MANSION.getKey()
+        );
+
+        // Schedule a repeating task to spawn chests
+        new BukkitRunnable() {
+            int chestsSpawned = 0;
+
+            @Override
+            public void run() {
+                if (chestsSpawned >= 16 || !player.isOnline()) {
+                    this.cancel(); // Stop spawning chests if the limit is reached or player is offline
+                    return;
+                }
+
+                // Choose a random loot table
+                NamespacedKey randomLootTable = lootTables.get(new Random().nextInt(lootTables.size()));
+
+                // Create a custom chest item with the loot table as its name
+                ItemStack chestItem = new ItemStack(Material.CHEST);
+                ItemMeta meta = chestItem.getItemMeta();
+                if (meta != null) {
+                    meta.setDisplayName(ChatColor.GOLD + "Loot Chest: " + randomLootTable.getKey());
+                    meta.getPersistentDataContainer().set(
+                            new NamespacedKey(plugin, "loot_table"),
+                            PersistentDataType.STRING,
+                            randomLootTable.toString()
+                    );
+                    chestItem.setItemMeta(meta);
+                }
+
+                // Drop the chest at the player's location
+                Location dropLocation = player.getLocation();
+                player.getWorld().dropItemNaturally(dropLocation, chestItem);
+
+                // Add particles and sound effects at the drop location
+                dropLocation.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, dropLocation, 50, 0.5, 1, 0.5, 0.1);
+                player.getWorld().playSound(dropLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
+
+                chestsSpawned++;
+            }
+        }.runTaskTimer(plugin, 0L, intervalTicks);
+
+        // Handle chest placement to drop loot from the corresponding loot table
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onPlayerInteract(PlayerInteractEvent event) {
+                if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                    Block block = event.getClickedBlock();
+                    ItemStack item = event.getItem();
+
+                    // Check if the item is a custom loot chest
+                    if (item != null && item.getType() == Material.CHEST) {
+                        ItemMeta meta = item.getItemMeta();
+                        if (meta != null && meta.getPersistentDataContainer().has(
+                                new NamespacedKey(plugin, "loot_table"),
+                                PersistentDataType.STRING
+                        )) {
+                            // Get the loot table from the item's metadata
+                            String lootTableKey = meta.getPersistentDataContainer().get(
+                                    new NamespacedKey(plugin, "loot_table"),
+                                    PersistentDataType.STRING
+                            );
+
+                            // Drop the loot at the chest's placement location
+                            if (block != null && lootTableKey != null) {
+                                NamespacedKey lootTable = NamespacedKey.fromString(lootTableKey);
+                                LootTable table = Bukkit.getLootTable(lootTable);
+
+                                if (table != null) {
+                                    Location location = block.getLocation();
+                                    Collection<ItemStack> loot = table.populateLoot(
+                                            new Random(),
+                                            new LootContext.Builder(location).build()
+                                    );
+
+                                    // Drop each item in the loot table
+                                    loot.forEach(itemStack -> location.getWorld().dropItemNaturally(location, itemStack));
+
+                                    // Add particle and sound effects
+                                    location.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location.add(0, 1, 0), 100, 0.5, 1, 0.5, 0.1);
+                                    location.getWorld().playSound(location, Sound.BLOCK_CHEST_OPEN, 1.0f, 1.0f);
+
+                                    // Remove the chest from the player's inventory
+                                    item.setAmount(item.getAmount() - 1);
+                                }
+                            }
+
+                            event.setCancelled(true); // Prevent block placement
+                        }
+                    }
+                }
+            }
+        }, plugin);
+    }
+
+
+
+
+    private void handleMusicDiscMall(Player player) {
+        // Start a 40-minute rainstorm
+        player.playSound(player.getLocation(), Sound.MUSIC_DISC_MALL, 3.0f, 1.0f);
+        Bukkit.getWorlds().forEach(world -> {
+            world.setStorm(true); // Start rain
+            world.setWeatherDuration(40 * 60 * 20); // 40 minutes in ticks
+            world.setGameRule(GameRule.DO_MOB_SPAWNING, false); // Disable monster spawns
+        });
+
+        // Notify the player and others
+        Bukkit.broadcastMessage(ChatColor.AQUA + "A soothing rainstorm has begun, and monster spawns are disabled for 40 minutes!");
+        player.sendMessage(ChatColor.GREEN + "You feel empowered by the rain!");
+
+        // Grant the player Conduit Power for 40 minutes
+        int durationTicks = 40 * 60 * 20; // 40 minutes in ticks
+        player.addPotionEffect(new PotionEffect(PotionEffectType.CONDUIT_POWER, durationTicks, 0, true, false, false));
+
+        // Schedule a task to reset the gamerule after the rainstorm ends
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            Bukkit.getWorlds().forEach(world -> {
+                world.setGameRule(GameRule.DO_MOB_SPAWNING, true); // Re-enable monster spawns
+            });
+
+            Bukkit.broadcastMessage(ChatColor.RED + "The rainstorm has ended, and monsters are free to spawn again.");
+        }, durationTicks);
+    }
+
     // Empty methods for each music disc variant
 
 
@@ -249,43 +468,6 @@ public class MusicDiscManager implements Listener {
             HandlerList.unregisterAll(btListener);
         }, ((2 * 60) + 58) * 20L); // Runs after 2 minutes and 58 seconds
     }
-
-
-
-    private void handleMusicDiscBlocks(Player player) {
-        // Broadcast the activation message to all players
-        Bukkit.broadcastMessage(ChatColor.GREEN + "Recipe Writer Feature is now active!");
-
-        // Play the MUSIC_DISC_BLOCKS sound to the activating player
-        player.playSound(player.getLocation(), Sound.MUSIC_DISC_BLOCKS, 3.0f, 1.0f);
-
-        // Define the total number of messages and total duration
-        final int totalMessages = 16;
-        final long totalDurationSeconds = 345; // 5 minutes and 45 seconds
-        final long totalDurationTicks = totalDurationSeconds * 20L; // Convert seconds to ticks (20 ticks = 1 second)
-        final long intervalTicks = totalDurationTicks / totalMessages; // Interval between messages
-
-        // Schedule a repeating task to send "TBD RECIPE" messages
-        new BukkitRunnable() {
-            int messagesSent = 0;
-
-            @Override
-            public void run() {
-                if (messagesSent >= totalMessages || !player.isOnline()) {
-                    this.cancel(); // Cancel the task if all messages are sent or player is offline
-                    return;
-                }
-
-                // Placeholder for your future method. Replace the following line with your method call.
-                player.sendMessage(ChatColor.YELLOW + "TBD RECIPE");
-
-                // Increment the count of sent messages
-                messagesSent++;
-            }
-        }.runTaskTimer(plugin, intervalTicks, intervalTicks); // Initial delay and period both set to intervalTicks
-    }
-
-
     private void handleMusicDiscRelic(Player player, Location jukeboxLocation) {
         Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Festivity Activated for 3 minutes 38 seconds!");
         player.playSound(player.getLocation(), Sound.MUSIC_DISC_RELIC, 3.0f, 1.0f);
@@ -468,83 +650,6 @@ public class MusicDiscManager implements Listener {
             player.sendMessage(ChatColor.RED + "The Timber Boost event has ended!");
         }, 185 * 20L); // 185 seconds converted to ticks (20 ticks = 1 second)
     }
-
-
-
-
-    private void handleMusicDiscFar(Player player) {
-        // Stop the original sound and functionality for MUSIC_DISC_FAR
-        player.stopSound(Sound.MUSIC_DISC_FAR);
-
-        // Generate a random teleport location within a 100,000 block radius
-        int maxDistance = 100000;
-        Random random = new Random();
-        int randomX = random.nextInt(maxDistance * 2) - maxDistance;
-        int randomZ = random.nextInt(maxDistance * 2) - maxDistance;
-
-        // Find the highest surface block at the location
-        World world = player.getWorld();
-        Location randomLocation = new Location(world, randomX, world.getHighestBlockYAt(randomX, randomZ), randomZ);
-
-        // Save the player's original location
-        Location originalLocation = player.getLocation();
-
-        // Teleport the player to the random location
-        player.teleport(randomLocation);
-        Bukkit.broadcastMessage(ChatColor.YELLOW + "Teleported to Random Location! Happy looting!");
-
-        // Make the player invincible for 2:54
-
-        // Apply Speed II effect for 2:54
-        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 2 * 60 * 20 + 54 * 20, 1)); // 20 ticks = 1 second
-        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 2 * 60 * 20 + 54 * 20, 5)); // 20 ticks = 1 second
-
-        // Play the song at the new location
-        player.playSound(player.getLocation(), Sound.MUSIC_DISC_FAR, 100000, 1.0f);
-
-        // Schedule a task to return the player after 2:54 (20 ticks per second)
-        Bukkit.getScheduler().runTaskLater(MinecraftNew.getInstance(), () -> {
-            // Return the player to the original location
-            player.teleport(originalLocation);
-
-            // Remove invulnerability
-
-
-        }, (2 * 60 * 20) + 54 * 20); // Delay of 2:54 in ticks
-    }
-
-
-    private void handleMusicDiscMall(Player player) {
-        // Play the Mall music disc sound
-        player.playSound(player.getLocation(), Sound.MUSIC_DISC_MALL, 100000, 1.0f);
-        Bukkit.broadcastMessage(ChatColor.YELLOW + "Monster spawns have been disabled for the duration of the song!");
-
-        // Create a temporary flag to disable monster spawns
-        Listener monsterSpawnListener = new Listener() {
-            @EventHandler
-            public void onCreatureSpawn(org.bukkit.event.entity.CreatureSpawnEvent event) {
-                // Cancel monster spawns
-                if (event.getEntity().getType().isAlive() && event.getEntity() instanceof org.bukkit.entity.Monster) {
-                    event.setCancelled(true);
-                }
-            }
-        };
-
-        // Register the monster spawn listener
-        Bukkit.getPluginManager().registerEvents(monsterSpawnListener, MinecraftNew.getInstance());
-
-        // Schedule a task to re-enable monster spawns after 3:17 (197 seconds)
-        Bukkit.getScheduler().runTaskLater(MinecraftNew.getInstance(), () -> {
-            // Unregister the listener
-            HandlerList.unregisterAll(monsterSpawnListener);
-
-            // Notify players that monster spawns are re-enabled
-            Bukkit.broadcastMessage(ChatColor.RED + "Monster spawns are now enabled again.");
-        }, 197 * 20L); // 197 seconds in ticks (20 ticks per second)
-    }
-
-
-
     private void handleMusicDiscMellohi(Player player) {
         // Play the Mellohi music disc sound
         player.playSound(player.getLocation(), Sound.MUSIC_DISC_MELLOHI, 100000, 1.0f);
@@ -573,9 +678,10 @@ public class MusicDiscManager implements Listener {
             public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
                 if (event.getEntity() instanceof Player && event.getDamager() instanceof Zombie) {
                     Player victim = (Player) event.getEntity();
-
+                    HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
+                    int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
                     // 10% chance to infect player with lethal Wither
-                    if (Math.random() < 0.10) {
+                    if (Math.random() < 0.10 * hostilityLevel) {
                         victim.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 200, 2)); // Wither effect for 10 seconds, level 2
                         victim.sendMessage(ChatColor.DARK_RED + "You've been infected!");
                     }
@@ -631,207 +737,36 @@ public class MusicDiscManager implements Listener {
 
         // List of auction items (populate this manually)
         List<AuctionItem> auctionItems = new ArrayList<>();
-
-        ItemStack enderDrop = CustomItemManager.createCustomItem(
-                Material.ENDER_PEARL,
-                ChatColor.YELLOW + "End Pearl",
-                Arrays.asList(
-                        ChatColor.GRAY + "Something doesn't look normal here...",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reusable ender pearl.",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        );
-        ItemStack undeadDrop = CustomItemManager.createCustomItem(Material.ROTTEN_FLESH, ChatColor.YELLOW +
-                "Beating Heart", Arrays.asList(
-                ChatColor.GRAY + "An undead heart still beating with undead life.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Smite.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack creeperDrop = CustomItemManager.createCustomItem(Material.TNT, ChatColor.YELLOW +
-                "Hydrogen Bomb", Arrays.asList(
-                ChatColor.GRAY + "500 KG of TNT.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "to summon a large quantity of live-fuse TNT.",
-                ChatColor.DARK_PURPLE + "Artifact"
-        ), 1,false, true);
-        ItemStack spiderDrop = CustomItemManager.createCustomItem(Material.SPIDER_EYE, ChatColor.YELLOW +
-                "SpiderBane", Arrays.asList(
-                ChatColor.GRAY + "A strange substance lethal against spiders.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Bane of Anthropods.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack blazeDrop = CustomItemManager.createCustomItem(Material.FIRE_CHARGE, ChatColor.YELLOW +
-                "Fire Ball", Arrays.asList(
-                ChatColor.GRAY + "A projectile ball of fire.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Flame.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack witchDrop = CustomItemManager.createCustomItem(Material.ENCHANTED_BOOK, ChatColor.YELLOW +
-                "Mending", Arrays.asList(
-                ChatColor.GRAY + "An extremely rare enchantment.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Mending.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, false);
-        ItemStack witherSkeletonDrop = CustomItemManager.createCustomItem(Material.WITHER_SKELETON_SKULL, ChatColor.YELLOW +
-                "Wither Skeleton Skull", Arrays.asList(
-                ChatColor.GRAY + "A cursed skull.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Used in spawning the Wither.",
-                ChatColor.DARK_PURPLE + "Summoning Item"
-        ), 1,false, true);
-        ItemStack guardianDrop = CustomItemManager.createCustomItem(Material.PRISMARINE_SHARD, ChatColor.YELLOW +
-                "Rain", Arrays.asList(
-                ChatColor.GRAY + "A strange object.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Used in summoning Rain.",
-                ChatColor.DARK_PURPLE + "Artifact"
-        ), 1,false, true);
-        ItemStack elderGuardianDrop = CustomItemManager.createCustomItem(Material.ICE, ChatColor.YELLOW +
-                "Frost Heart", Arrays.asList(
-                ChatColor.GRAY + "A rare object.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Frost Walker.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack pillagerDrop = CustomItemManager.createCustomItem(Material.IRON_BLOCK, ChatColor.YELLOW +
-                "Iron Golem", Arrays.asList(
-                ChatColor.GRAY + "Ancient Summoning Artifact.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summon an Iron Golem.",
-                ChatColor.DARK_PURPLE + "Summoning Artifact"
-        ), 1,false, true);
-        ItemStack vindicatorDrop = CustomItemManager.createCustomItem(Material.SLIME_BALL, ChatColor.YELLOW +
-                "KB Ball", Arrays.asList(
-                ChatColor.GRAY + "An extremely bouncy ball.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Knockback.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack piglinDrop = CustomItemManager.createCustomItem(Material.ARROW, ChatColor.YELLOW +
-                "High Caliber Arrow", Arrays.asList(
-                ChatColor.GRAY + "A heavy arrow.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Piercing.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack piglinBruteDrop = CustomItemManager.createCustomItem(Material.SOUL_SOIL, ChatColor.YELLOW +
-                "Grains of Soul", Arrays.asList(
-                ChatColor.GRAY + "Soul soil with spirits of speed.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Soul Speed.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack zombifiedPiglinDrop = CustomItemManager.createCustomItem(Material.GOLD_INGOT, ChatColor.YELLOW +
-                "Gold Bar", Arrays.asList(
-                ChatColor.GRAY + "High value magnet.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Looting.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack drownedDrop = CustomItemManager.createCustomItem(Material.LEATHER_BOOTS, ChatColor.YELLOW +
-                "Fins", Arrays.asList(
-                ChatColor.GRAY + "Water Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Depth Strider.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-        ItemStack skeletonDrop = CustomItemManager.createCustomItem(Material.BOW, ChatColor.YELLOW +
-                "Bowstring", Arrays.asList(
-                ChatColor.GRAY + "Air Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Power.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1,false, true);
-         ItemStack singularity = createCustomItem(
-                    Material.IRON_NUGGET,
-                    ChatColor.BLUE + "Singularity",
-                    List.of(ChatColor.GRAY + "A rare blueprint entrusted to the Knights",
-                            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reforges Items to the first Tier.",
-                            ChatColor.DARK_PURPLE + "Smithing Item"),
-                    1,
-                    false // Set to true if you want it to be unbreakable
-                    , true
-         );
-        ItemStack createHireVillager =
-             createCustomItem(
-                    Material.WOODEN_HOE,
-                    ChatColor.YELLOW + "Hire Villager",
-                    List.of(ChatColor.GRAY + "A proverbially useful companion.",
-                            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summons a Villager.",
-                            ChatColor.DARK_PURPLE + "Summoning Item"),
-                    1,
-                    false // Set to true if you want it to be unbreakable
-                    , true
-            );
-        ItemStack leviathanHeart = createAlchemyItem("Leviathan Heart", Material.RED_DYE, List.of(
-                ChatColor.GRAY + "The beating heart of a mighty creature.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Artifact for health.",
-                ChatColor.GRAY + "Adds Regeneration 8 for 180 seconds.",
-                ChatColor.DARK_PURPLE + "Artifact"
-        ));
-        ItemStack abyssalInk = createAlchemyItem("Abyssal Ink", Material.BLACK_DYE, List.of(
-                ChatColor.GRAY + "Ink from the deepest abyss.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Exceptionally powerful Potency Modifier.",
-                ChatColor.GRAY + "",
-                ChatColor.DARK_PURPLE + "Mastery Brewing Modifier"
-        ));
-
-
-        ItemStack abyssalShell = createAlchemyItem("Abyssal Shell", Material.YELLOW_DYE, List.of(
-                ChatColor.GRAY + "A shell from the deepest abyss.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment massively.",
-                ChatColor.GRAY + "Restores 10000 durability.",
-                ChatColor.DARK_PURPLE + "Smithing Ingredient"
-        ));
-
-        ItemStack abyssalVenom = createAlchemyItem("Abyssal Venom", Material.POTION, List.of(
-                ChatColor.GRAY + "A vial of fatal venom.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Exceptionally powerful Duration Modifier.",
-                ChatColor.GRAY + "",
-                ChatColor.DARK_PURPLE + "Mastery Brewing Modifier"
-        ));
-        ItemStack trident = createAlchemyItem("Trident", Material.TRIDENT, List.of(
-                ChatColor.GRAY + "A Trident.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Trident-ing.",
-                ChatColor.GRAY + "",
-                ChatColor.DARK_PURPLE + "Trident"
-        ));
-        ItemStack forbiddenBook = CustomItemManager.createCustomItem(
-                Material.WRITTEN_BOOK,
-                ChatColor.YELLOW + "Forbidden Book",
-                Arrays.asList(
-                        ChatColor.GRAY + "A dangerous book full of experimental magic.",
-                        ChatColor.GRAY + "Apply it to equipment to push the limits of Enchantments.",
-                        ChatColor.DARK_PURPLE + "Enchanting Item"
-                ),
-                1,
-                false, // Not unbreakable
-                true   // Add enchantment shimmer
-        );
-         ItemStack mithrilChunk
-            = createCustomItem(
-                    Material.LIGHT_BLUE_DYE,
-                    ChatColor.BLUE + "Mithril Chunk",
-                    List.of(ChatColor.GRAY + "A rare mineral.",
-                            "Apply it to equipment to unlock the secrets of Unbreaking.",
-                            "Smithing Item"),
-                    1,
-                    false // Set to true if you want it to be unbreakable
-                    , true
-            );
-
-         ItemStack perfectDiamond =
-             createCustomItem(
-                    Material.DIAMOND,
-                    ChatColor.BLUE + "Perfect Diamond",
-                    List.of(ChatColor.GRAY + "A rare mineral.",
-                            "Apply it to a pickaxe to unlock the secrets of Fortune.",
-                            "Smithing Item"),
-                    1,
-                    false // Set to true if you want it to be unbreakable
-                    , true
-            );
-
-
-
-
-
+        ItemStack enderDrop = ItemRegistry.getEnderDrop();
+        ItemStack undeadDrop = ItemRegistry.getUndeadDrop();
+        ItemStack creeperDrop = ItemRegistry.getCreeperDrop();
+        ItemStack spiderDrop = ItemRegistry.getSpiderDrop();
+        ItemStack blazeDrop = ItemRegistry.getBlazeDrop();
+        ItemStack witchDrop = ItemRegistry.getWitchDrop();
+        ItemStack witherSkeletonDrop = ItemRegistry.getWitherSkeletonDrop();
+        ItemStack guardianDrop = ItemRegistry.getGuardianDrop();
+        ItemStack elderGuardianDrop = ItemRegistry.getElderGuardianDrop();
+        ItemStack pillagerDrop = ItemRegistry.getPillagerDrop();
+        ItemStack vindicatorDrop = ItemRegistry.getVindicatorDrop();
+        ItemStack piglinDrop = ItemRegistry.getPiglinDrop();
+        ItemStack piglinBruteDrop = ItemRegistry.getPiglinBruteDrop();
+        ItemStack zombifiedPiglinDrop = ItemRegistry.getZombifiedPiglinDrop();
+        ItemStack drownedDrop = ItemRegistry.getDrownedDrop();
+        ItemStack skeletonDrop = ItemRegistry.getSkeletonDrop();
+        ItemStack singularity = ItemRegistry.getSingularity();
+        ItemStack hireVillager = ItemRegistry.getHireVillager();
+        ItemStack leviathanHeart = ItemRegistry.getLeviathanHeart();
+        ItemStack abyssalInk = ItemRegistry.getAbyssalInk();
+        ItemStack abyssalShell = ItemRegistry.getAbyssalShell();
+        ItemStack abyssalVenom = ItemRegistry.getAbyssalVenom();
+        ItemStack trident = ItemRegistry.getTrident();
+        ItemStack forbiddenBook = ItemRegistry.getForbiddenBook();
+        ItemStack mithrilChunk = ItemRegistry.getMithrilChunk();
+        ItemStack perfectDiamond = ItemRegistry.getPerfectDiamond();
 
         auctionItems.add(new AuctionItem(new ItemStack(Material.DIAMOND), 12));
         auctionItems.add(new AuctionItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE), 64));
-        auctionItems.add(new AuctionItem(trident, 64));
+        auctionItems.add(new AuctionItem(trident, 16));
         auctionItems.add(new AuctionItem(enderDrop, 64));
         auctionItems.add(new AuctionItem(undeadDrop, 32));
         auctionItems.add(new AuctionItem(skeletonDrop, 32));
@@ -850,7 +785,7 @@ public class MusicDiscManager implements Listener {
         auctionItems.add(new AuctionItem(drownedDrop, 32));
         auctionItems.add(new AuctionItem(skeletonDrop, 32));
         auctionItems.add(new AuctionItem(singularity, 16));
-        auctionItems.add(new AuctionItem(createHireVillager, 64));
+        auctionItems.add(new AuctionItem(hireVillager, 64));
         auctionItems.add(new AuctionItem(leviathanHeart, 64));
         auctionItems.add(new AuctionItem(abyssalInk, 64));
         auctionItems.add(new AuctionItem(abyssalVenom, 64));
@@ -1281,7 +1216,7 @@ public class MusicDiscManager implements Listener {
         int totalCycles = durationTicks / intervalTicks;
 
         // List of skills
-        String[] skills = {"Combat", "Fishing", "Forestry", "Mining", "Farming", "Bartering"};
+        String[] skills = {"Combat", "Fishing", "Forestry", "Mining", "Farming", "Bartering", "Smithing", "Culinary"};
 
         // Colors for each skill
         Map<String, ChatColor> skillColors = new HashMap<>();
@@ -1488,87 +1423,16 @@ public class MusicDiscManager implements Listener {
         return item;
     }
 
-    @EventHandler
-    public void onWardenDeath(EntityDeathEvent event) {
-        if (event.getEntity() instanceof Warden) {
-            Warden warden = (Warden) event.getEntity();
-
-            // Check if the Warden has metadata to track the spawner
-            if (warden.hasMetadata("spawner")) {
-                UUID spawnerUUID = (UUID) warden.getMetadata("spawner").get(0).value();
-                Player spawner = Bukkit.getPlayer(spawnerUUID);
-
-                if (spawner != null && spawner.isOnline()) {
-                    Random random = new Random();
-                    // Reward the player with the Warden pet
-                    if (random.nextDouble() < 0.1) { // 20% chance
-                        giveWardenPet(spawner);
-                        spawner.sendMessage(ChatColor.GOLD + "Congratulations! You have been rewarded with a Warden pet!");
-                    }
-                }
-            }
-        }
-    }
-
-    private void giveWardenPet(Player player) {
-        PetManager petManager = PetManager.getInstance(plugin);
-        petManager.createPet(player, "Warden", PetManager.Rarity.LEGENDARY, 100, Particle.WARPED_SPORE, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.ECHOLOCATION, PetManager.PetPerk.LASER_BEAM, PetManager.PetPerk.BONE_PLATING);
-
-    }
-
-
     private void handleMusicDisc5(Player player) {
         PlayerOxygenManager playerOxygenManager = PlayerOxygenManager.getInstance();
         UUID playerUUID = player.getUniqueId();
-
         // Reset the player's oxygen to the initial value
         int initialOxygen = playerOxygenManager.calculateInitialOxygen(player);
         playerOxygenManager.setPlayerOxygenLevel(player, initialOxygen);
-
         // Apply night vision for 20 minutes (20 ticks/second * 60 seconds/minute * 20 minutes)
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 20 * 60 * 20, 0, true, false, false));
-
         // Notify the player
-
     }
-
-
-
-    private void handleMusicDisc11(Player player) {
-        // Play the creepy music
-        player.getWorld().playSound(player.getLocation(), Sound.MUSIC_DISC_11, SoundCategory.RECORDS, 3.0f, 1.0f);
-
-        // Spawn the Warden miniboss
-        Warden warden = (Warden) player.getWorld().spawnEntity(player.getLocation(), EntityType.WARDEN);
-        warden.setCustomName(ChatColor.DARK_RED + "Miniboss: The Schizophrenic Warden");
-        warden.setCustomNameVisible(true);
-
-        // Apply special effects to the Warden (e.g., glowing)
-        warden.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 0));
-
-        // Track the player who spawned the Warden
-        warden.setMetadata("spawner", new FixedMetadataValue(MinecraftNew.getInstance(), player.getUniqueId()));
-
-        // Scheduler to make the Warden lose sight of the player every 4 seconds
-        Bukkit.getScheduler().runTaskTimer(MinecraftNew.getInstance(), () -> {
-            if (!warden.isValid()) {
-                return; // Stop if the Warden is no longer in the world
-            }
-            // Remove all active targets from the Warden
-            warden.setAnger(player, 0);
-            warden.setTarget(null);
-
-            // Play a sound effect to indicate blindness
-            warden.getWorld().playSound(warden.getLocation(), Sound.ENTITY_BAT_AMBIENT, 1.0f, 0.5f);
-
-            // Show a particle effect to signal disorientation
-            warden.getWorld().spawnParticle(Particle.SMOKE_LARGE, warden.getLocation(), 10, 1, 1, 1);
-            Bukkit.broadcastMessage(ChatColor.BLACK + "The Schizophrenic Warden has lost your scent!");
-
-        }, 0L, 200L); // Runs every 4 seconds (80 ticks)
-    }
-
-
     public void handleMusicDiscOtherside(Player player) {
         Random random = new Random();
         World world = player.getWorld();

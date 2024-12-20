@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.forestry;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
@@ -125,19 +126,8 @@ public class ForestSpiritManager implements Listener {
 
         // 0.5% chance to receive a "Secrets of Infinity" Arrow
         if (random.nextInt(1200) + 1 == 1) { // 0.5% chance
-            ItemStack secretsOfInfinity = CustomItemManager.createCustomItem(
-                    Material.ARROW,
-                    ChatColor.DARK_PURPLE + "Secrets of Infinity",
-                    Arrays.asList(
-                            ChatColor.GRAY + "A piece of wood imbued with knowledge.",
-                            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 level of Infinity.",
-                            ChatColor.DARK_PURPLE + "Smithing Ingredient"
-                    ),
-                    1,
-                    true, // Unbreakable
-                    true  // Add enchantment shimmer
-            );
-            player.getInventory().addItem(secretsOfInfinity);
+
+            player.getInventory().addItem(ItemRegistry.getSecretsOfInfinity());
             player.sendMessage(ChatColor.YELLOW + "You received Secrets of Infinity!");
         }
 
@@ -351,23 +341,12 @@ public class ForestSpiritManager implements Listener {
         event.getDrops().clear();
 
         // Always drop a Forbidden Book
-        ItemStack forbiddenBook = CustomItemManager.createCustomItem(
-                Material.WRITTEN_BOOK,
-                ChatColor.YELLOW + "Forbidden Book",
-                Arrays.asList(
-                        ChatColor.GRAY + "A dangerous book full of experimental magic.",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to equipment to push the limits of enchantments.",
-                        ChatColor.DARK_PURPLE + "Enchanting Item"
-                ),
-                1,
-                false, // Not unbreakable
-                true   // Add enchantment shimmer
-        );
+
         if(random.nextBoolean()) {
             if(random.nextBoolean()) {
                 if(random.nextBoolean()) {
                     if (random.nextBoolean()) {
-                        event.getDrops().add(forbiddenBook);
+                        event.getDrops().add(ItemRegistry.getForbiddenBook());
                     }
                 }
             }
