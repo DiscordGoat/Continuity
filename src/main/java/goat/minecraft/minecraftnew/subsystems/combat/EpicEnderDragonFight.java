@@ -32,7 +32,7 @@ public class EpicEnderDragonFight implements Listener {
                 event.setCancelled(true);
                 Projectile projectile = event.getEntity();
                 projectile.setVelocity(projectile.getVelocity().multiply(-1));
-                projectile.getWorld().playSound(projectile.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1.0f, 1.0f);
+                projectile.getWorld().playSound(projectile.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1000.0f, 1.0f);
                 projectile.getWorld().spawnParticle(Particle.CRIT_MAGIC, projectile.getLocation(), 10, 0.2, 0.2, 0.2, 0.1);
             }
         }
@@ -47,7 +47,7 @@ public class EpicEnderDragonFight implements Listener {
         if (event.getEntity() instanceof EnderCrystal) {
             EnderCrystal enderCrystal = (EnderCrystal) event.getEntity();
             // Check if the damage will destroy the crystal
-                Location location = new Location(Bukkit.getWorld("world"), 0, 64, 0, 0, 0);
+                Location location = new Location(Bukkit.getWorld("world"), 0, 66, 0, 0, 0);
                 spawnKnightOfTheEnd(location);
                 // Play explosion sound and particles
                 World world = location.getWorld();

@@ -272,7 +272,7 @@ public class SpawnMonsters implements Listener {
             if (entity instanceof ArmorStand) return;
             LivingEntity mob = (LivingEntity) entity;
             if (mob instanceof EnderDragon) {
-                int randomValue = Math.min(200 + random.nextInt(101), MAX_MONSTER_LEVEL);
+                int randomValue = 1000;
                 applyMobAttributes(mob, randomValue);
                 return;
             }
@@ -323,7 +323,11 @@ public class SpawnMonsters implements Listener {
 
     public void applyMobAttributes(LivingEntity mob, int level) {
         level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL)); // Cap level between 1 and 300
-
+        if (mob instanceof EnderDragon){
+            level = 200;
+            mob.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 2, true));
+            mob.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 2, true));
+        }
         double healthMultiplier = 1 + (level * 0.1);
 
         double originalHealth = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
