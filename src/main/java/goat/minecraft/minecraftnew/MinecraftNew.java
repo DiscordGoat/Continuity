@@ -1,18 +1,14 @@
 package goat.minecraft.minecraftnew;
 
-import goat.minecraft.minecraftnew.subsystems.combat.HordeInstinct;
-import goat.minecraft.minecraftnew.subsystems.mining.OreCountManager;
+import goat.minecraft.minecraftnew.subsystems.combat.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
 import goat.minecraft.minecraftnew.utils.artifacts.RightClickArtifacts;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.utils.chocolatemisc.*;
-import goat.minecraft.minecraftnew.subsystems.combat.EpicEnderDragonFight;
-import goat.minecraft.minecraftnew.subsystems.combat.MobDamageHandler;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.culinary.MeatCookingManager;
-import goat.minecraft.minecraftnew.subsystems.combat.elitemonsters.KnightMob;
-import goat.minecraft.minecraftnew.subsystems.combat.RareCombatDrops;
+import goat.minecraft.minecraftnew.utils.KnightMob;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentTableInventoryInteractCancel;
 import goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentTableRightClick;
@@ -31,7 +27,6 @@ import goat.minecraft.minecraftnew.subsystems.pets.petdrops.AllayInteractEvent;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.AxolotlInteractEvent;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.CatTameEvent;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.PetDrops;
-import goat.minecraft.minecraftnew.subsystems.combat.CombatBuffs;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.talismans.*;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ArmorReforge;
@@ -40,7 +35,6 @@ import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.Tool
 import goat.minecraft.minecraftnew.subsystems.farming.AutoComposter;
 import goat.minecraft.minecraftnew.utils.structures.Mineshafts;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
-import goat.minecraft.minecraftnew.subsystems.combat.KillMonster;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.utils.player.PlayerLevel;
@@ -66,10 +60,15 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private MeatCookingManager meatCookingManager;
     private ItemDisplayManager displayManager;
     private PlayerOxygenManager playerOxygenManager;
-    @Override
 
+
+    @Override
     public void onEnable() {
 
+        HostilityManager manager = HostilityManager.getInstance(this);
+
+        // Register the /hostility command executor
+        getCommand("hostility").setExecutor(manager.new HostilityCommand());
 
 
         autoComposter = new AutoComposter(this);

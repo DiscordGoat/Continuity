@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
@@ -171,7 +172,10 @@ public class FishingEvent implements Listener {
             player.playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
         }
     }
-
+    private int getAdjustedSeaCreatureLevel(int baseLevel, int hostilityLevel) {
+        double multiplier = 1.0 + (hostilityLevel / 10.0);
+        return (int) Math.round(baseLevel * multiplier);
+    }
     /**
      * Spawns a sea creature and launches it towards the player.
      *
@@ -224,9 +228,22 @@ public class FishingEvent implements Listener {
         }
         livingEntity.setSwimming(true);
         livingEntity.setSilent(true);
+
+        HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        plugin.getLogger().info("Hostility Level for player " + player.getName() + ": " + hostilityLevel);
+
         SpawnMonsters spawnMonsters = new SpawnMonsters(plugin, xpManager);
-        spawnMonsters.applyMobAttributes(livingEntity, seaCreature.getLevel());
-        spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + seaCreature.getLevel() + "] " + seaCreature.getColoredDisplayName());
+        int baseLevel = seaCreature.getLevel();
+        plugin.getLogger().info("Base Level of Sea Creature: " + baseLevel);
+
+        int adjustedLevel = getAdjustedSeaCreatureLevel(baseLevel, hostilityLevel);
+        plugin.getLogger().info("Adjusted Level of Sea Creature: " + adjustedLevel);
+
+        spawnMonsters.applyMobAttributes(livingEntity, adjustedLevel);
+        plugin.getLogger().info("Applied attributes to Sea Creature with level: " + adjustedLevel);
+
+        spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + adjustedLevel + "] " + seaCreature.getColoredDisplayName());
         spawnedEntity.setCustomNameVisible(true);
         // Attach metadata with the sea creature's name
         spawnedEntity.setMetadata("SEA_CREATURE", new FixedMetadataValue(MinecraftNew.getInstance(), seaCreature.getDisplayName()));

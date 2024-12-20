@@ -254,26 +254,37 @@ public class MusicDiscManager implements Listener {
 
     private void handleMusicDiscBlocks(Player player) {
         // Broadcast the activation message to all players
-        Bukkit.broadcastMessage(ChatColor.GREEN + "Builder Mode Activated! You can fly for 5 minutes and 45 seconds!");
+        Bukkit.broadcastMessage(ChatColor.GREEN + "Recipe Writer Feature is now active!");
 
         // Play the MUSIC_DISC_BLOCKS sound to the activating player
         player.playSound(player.getLocation(), Sound.MUSIC_DISC_BLOCKS, 3.0f, 1.0f);
 
-        // Allow the player to fly
-        player.setAllowFlight(true);
-        player.setFlying(true);
+        // Define the total number of messages and total duration
+        final int totalMessages = 16;
+        final long totalDurationSeconds = 345; // 5 minutes and 45 seconds
+        final long totalDurationTicks = totalDurationSeconds * 20L; // Convert seconds to ticks (20 ticks = 1 second)
+        final long intervalTicks = totalDurationTicks / totalMessages; // Interval between messages
 
-        // Schedule a task to disable flight after 5 minutes and 45 seconds (345 seconds)
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            // Check if the player is still online before modifying their state
-            if (player.isOnline()) {
-                player.setFlying(false);
-                player.setAllowFlight(false);
-                player.sendMessage(ChatColor.RED + "Your flight ability has expired.");
-                Bukkit.broadcastMessage(ChatColor.RED + "Flight ability has been disabled for all players.");
+        // Schedule a repeating task to send "TBD RECIPE" messages
+        new BukkitRunnable() {
+            int messagesSent = 0;
+
+            @Override
+            public void run() {
+                if (messagesSent >= totalMessages || !player.isOnline()) {
+                    this.cancel(); // Cancel the task if all messages are sent or player is offline
+                    return;
+                }
+
+                // Placeholder for your future method. Replace the following line with your method call.
+                player.sendMessage(ChatColor.YELLOW + "TBD RECIPE");
+
+                // Increment the count of sent messages
+                messagesSent++;
             }
-        }, 345 * 20L); // 345 seconds converted to ticks (20 ticks = 1 second)
+        }.runTaskTimer(plugin, intervalTicks, intervalTicks); // Initial delay and period both set to intervalTicks
     }
+
 
     private void handleMusicDiscRelic(Player player, Location jukeboxLocation) {
         Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Festivity Activated for 3 minutes 38 seconds!");
@@ -334,26 +345,6 @@ public class MusicDiscManager implements Listener {
             firework.setFireworkMeta(meta);
         }
     }
-
-
-    /**
-     * Spawns colored particles around an entity to simulate a colored glow effect.
-     *
-     * @param entity The entity around which to spawn particles.
-     */
-    private void spawnColoredParticlesAroundEntity(Entity entity) {
-        Location loc = entity.getLocation();
-
-        // Choose a random color
-        Color color = getRandomColor();
-
-        // Spawn a colored Particle.REDSTONE around the entity
-        Particle.DustOptions dustOptions = new Particle.DustOptions(color, 1.0f);
-        entity.getWorld().spawnParticle(Particle.REDSTONE, loc, 100, 1, 1, 1, dustOptions);
-    }
-
-
-
     /**
      * Generates a random color.
      *

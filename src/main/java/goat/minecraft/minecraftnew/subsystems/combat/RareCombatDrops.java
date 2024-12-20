@@ -14,6 +14,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Random;
 
 public class RareCombatDrops implements Listener {
+
+
+
     PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
 
     ItemStack infernalLooting = ItemRegistry.getInfernalLooting();
@@ -51,64 +54,68 @@ public class RareCombatDrops implements Listener {
         EntityType type = entity.getType();
         if (entity.getKiller() instanceof Player) {
             Player player = event.getEntity().getKiller();
+
+            HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+            assert player != null;
+            int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
             switch (type) {
                 case WITHER_SKELETON:
-                    if (rollChance(1, 100)) { // 4% chance
+                    if (rollChance(1, 100, hostilityLevel)) { // 4% chance
                         event.getDrops().add(infernalSmite);
                     }
                     handleWitherSkeletonDrop(event); // Ensure this method is defined
                     break;
 
                 case ZOMBIFIED_PIGLIN:
-                    if (rollChance(1, 300)) { // 4% chance
+                    if (rollChance(1, 300, hostilityLevel)) { // 4% chance
                         event.getDrops().add(infernalLooting);
                     }
-                    if (rollChance(1, 200)) { // 4% chance
+                    if (rollChance(1, 200, hostilityLevel)) { // 4% chance
                         petManager.createPet(player, "Zombie Pigman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SECRET_LEGION, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF);
                     }
                     handleZombifiedPiglinDrop(event); // Ensure this method is defined
                     break;
 
                 case PIGLIN:
-                    if (rollChance(1, 50)) { // 3% chance
+                    if (rollChance(1, 50, hostilityLevel)) { // 3% chance
                         event.getDrops().add(infernalFireAspect);
                     }
                     handlePiglinDrop(event); // Ensure this method is defined
                     break;
 
                 case PIGLIN_BRUTE:
-                    if (rollChance(1, 2)) { // 2% chance
+                    if (rollChance(1, 2, hostilityLevel)) { // 2% chance
                         event.getDrops().add(infernalSharpness);
                     }
                     break;
 
                 case MAGMA_CUBE:
-                    if (rollChance(1, 100)) { // 3% chance
+                    if (rollChance(1, 100, hostilityLevel)) { // 3% chance
                         event.getDrops().add(infernalUnbreaking);
                     }
                     break;
 
                 case GHAST:
-                    if (rollChance(1, 25)) { // 3% chance
+                    if (rollChance(1, 25, hostilityLevel)) { // 3% chance
                         event.getDrops().add(infernalEfficiency);
                     }
                     break;
                 case HOGLIN:
-                    if (rollChance(1, 50)) { // 5% chance
+                    if (rollChance(1, 50, hostilityLevel)) { // 5% chance
                         event.getDrops().add(infernalBaneofAnthropods);
                     }
                     break;
                 case STRIDER:
-                    if (rollChance(1, 5)) { // 5% chance
+                    if (rollChance(1, 5, hostilityLevel)) { // 5% chance
                         event.getDrops().add(infernalDepthStrider);
                     }
                     break;
 
                 case BLAZE:
-                    if (rollChance(1, 200)) { // 3% chance
+                    if (rollChance(1, 200, hostilityLevel)) { // 3% chance
                         event.getDrops().add(infernalLure);
                     }
-                    if (rollChance(1, 300)) { // 3% chance
+                    if (rollChance(1, 300, hostilityLevel)) { // 3% chance
                         petManager.createPet(player, "Blaze", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.FLIGHT);
                     }
 
@@ -170,114 +177,163 @@ public class RareCombatDrops implements Listener {
 
 
     private void handleIlligerDrop(EntityDeathEvent event) {
-        if (rollChance(1,200)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(piglinDrop);
         }
-        if (rollChance(1,200)) { // 1-4% chance
+        if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Vindicator", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SKEPTICISM, PetManager.PetPerk.GREED, PetManager.PetPerk.ELITE);
         }
 
     }
     private void handleStrayDrop(EntityDeathEvent event) {
-        if (rollChance(1,360)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,360, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(undeadDrop);
         }
-        if (rollChance(1,200)) { // 1-4% chance
+        if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Stray", PetManager.Rarity.LEGENDARY, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.QUICK_DRAW, PetManager.PetPerk.TIPPED_SLOWNESS, PetManager.PetPerk.BONE_COLD);
         }
 
     }
     private void handleZombieDrop(EntityDeathEvent event) {
-        if (rollChance(1,250)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,250, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(undeadDrop);
         }
-        if (rollChance(1,100)) { // 1-4% chance
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Zombie", PetManager.Rarity.RARE, 100, Particle.CRIT_MAGIC, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.ECHOLOCATION);
         }
 
     }
     private void handleSkeletonDrop(EntityDeathEvent event) {
-        if (rollChance(1,250)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,250, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(skeletonDrop);
         }
-        if (rollChance(1,100)) { // 1-4% chance
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Skeleton", PetManager.Rarity.UNCOMMON, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.BONE_PLATING_WEAK);
         }
 
     }
     private void handleCreeperDrop(EntityDeathEvent event) {
-        if (rollChance(1,25)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,250, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(creeperDrop);
         }
     }
     private void handleSpiderDrop(EntityDeathEvent event) {
-        if (rollChance(1,250)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,250, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(spiderDrop);
         }
     }
     private void handleEndermanDrop(EntityDeathEvent event) {
-        if (rollChance(1,75)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,75, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(enderDrop);
         }
-        if (rollChance(1,100)) { // 1-4% chance
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Enderman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.ELITE, PetManager.PetPerk.ASPECT_OF_THE_END, PetManager.PetPerk.COLLECTOR);
         }
 
     }
     private void handleBlazeDrop(EntityDeathEvent event) {
-        if (rollChance(1,100)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(blazeDrop);
         }
     }
     private void handleWitchDrop(EntityDeathEvent event) {
-        if (rollChance(1,100)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(witchDrop);
         }
     }
     private void handleWitherSkeletonDrop(EntityDeathEvent event) {
-        if (rollChance(1,100)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(witherSkeletonDrop);
         }
-        if (rollChance(1,200)) { // 1-4% chance
+        if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Wither Skeleton", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.DECAY);
         }
 
     }
     private void handleGuardianDrop(EntityDeathEvent event) {
-        if (rollChance(1,4)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,4, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(guardianDrop);
         }
-        if (rollChance(1,10)) { // 1-4% chance
+        if (rollChance(1,10, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Guardian", PetManager.Rarity.EPIC, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.LASER_BEAM);
 
         }
 
     }
     private void handleElderGuardianDrop(EntityDeathEvent event) {
-        if (rollChance(1,2)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,2, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(elderGuardianDrop);
         }
     }
     private void handleVindicatorDrop(EntityDeathEvent event) {
-        if (rollChance(1,25)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,25, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(vindicatorDrop);
         }
     }
     private void handlePiglinDrop(EntityDeathEvent event) {
-        if (rollChance(1,25)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,25, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(piglinDrop);
         }
     }
     private void handleZombifiedPiglinDrop(EntityDeathEvent event) {
-        if (rollChance(1,100)) { // 1-4% chance
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(zombifiedPiglinDrop);
         }
     }
     private void handleDrownedDrop(EntityDeathEvent event) {
-        if (rollChance(1,30)) {
+        Player player = event.getEntity().getKiller();
+        HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
+        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
+        if (rollChance(1,30, hostilityLevel)) {
             event.getDrops().add(drownedDrop);
         }
-        if (rollChance(1,100)) {
+
+        if (rollChance(1,100, hostilityLevel)) {
             PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
             petManager.createPet(event.getEntity().getKiller(), "Drowned", PetManager.Rarity.EPIC, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.WATERLOGGED, PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.DEVOUR);
         }
@@ -288,8 +344,12 @@ public class RareCombatDrops implements Listener {
      * @return true if the item should drop, false otherwise
      */
 
-    private boolean rollChance(int numerator, int denominator) {
-        return random.nextInt(denominator) < numerator;
+
+    private boolean rollChance(int numerator, int baselineDenominator, int hostilityLevel) {
+        // Calculate the adjusted denominator
+        int adjustedDenominator = (int) (baselineDenominator * (10.0 / hostilityLevel));
+        // Roll the chance using the adjusted denominator
+        return random.nextInt(adjustedDenominator) < numerator;
     }
 
     /**

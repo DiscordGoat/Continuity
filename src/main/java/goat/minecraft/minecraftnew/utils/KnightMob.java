@@ -1,9 +1,6 @@
-package goat.minecraft.minecraftnew.subsystems.combat.elitemonsters;
+package goat.minecraft.minecraftnew.utils;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.utils.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.SpawnMonsters;
-import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
@@ -11,17 +8,12 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-
-import static goat.minecraft.minecraftnew.utils.CustomItemManager.createCustomItem;
 
 public class KnightMob implements Listener {
 
@@ -34,26 +26,6 @@ public class KnightMob implements Listener {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
-
-    ArrayList<EntityType> zombieList = new ArrayList<EntityType>();
-    // Method to transform a mob into a knight
-    @EventHandler
-    public void zombieSpawn(EntitySpawnEvent e){
-        zombieList.add(EntityType.ZOMBIE);
-        zombieList.add(EntityType.ZOMBIE_VILLAGER);
-        zombieList.add(EntityType.ZOMBIFIED_PIGLIN);
-        zombieList.add(EntityType.DROWNED);
-
-        if (zombieList.contains(e.getEntity().getType())) {
-            SpawnMonsters spawnMonsters = new SpawnMonsters(MinecraftNew.getInstance(), xpManager);
-            Player nearestPlayer = spawnMonsters.getNearestPlayer(e.getEntity(), 100);
-            if (nearestPlayer != null && xpManager.getPlayerLevel(nearestPlayer, "Combat") >= 20 && random.nextInt(100) < 1) {
-                transformToKnight(e.getEntity());
-            }
-        }
-    }
-
-
     public void transformToKnight(Entity entity) {
             LivingEntity mob = (LivingEntity) entity;
 
@@ -73,6 +45,7 @@ public class KnightMob implements Listener {
             mob.getEquipment().setChestplate(ironChestplate);
             mob.getEquipment().setLeggings(ironLeggings);
             mob.getEquipment().setBoots(ironBoots);
+            mob.setCustomName(ChatColor.GRAY + "Knight");
             // Set mob attributes for increased difficulty
             // Optionally set a custom name for identification
 
@@ -103,8 +76,7 @@ public class KnightMob implements Listener {
     // Event listener to drop a rare item on knight death
     @EventHandler
     public void onKnightDeath(EntityDeathEvent event) {
-        if (zombieList.contains(event.getEntity().getType()) &&
-                event.getEntity().getCustomName() != null &&
+        if (event.getEntity().getCustomName() != null &&
                 event.getEntity().getCustomName().equals(ChatColor.GRAY + "Knight")) {
 
             // Check if the entity has a persistent data key to avoid double triggering

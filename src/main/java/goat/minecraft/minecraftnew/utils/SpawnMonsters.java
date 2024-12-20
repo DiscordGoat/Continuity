@@ -1,25 +1,30 @@
 package goat.minecraft.minecraftnew.utils;
 
+import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Random;
 
 public class SpawnMonsters implements Listener {
 
     private XPManager xpManager; // Assume you have an XPManager class
-    private Plugin plugin;
+    private JavaPlugin plugin;
 
     private static final int MAX_MONSTER_LEVEL = 200;
 
     // Constructor to pass in XPManager and plugin instance
-    public SpawnMonsters(Plugin plugin, XPManager xpManager) {
+    public SpawnMonsters(JavaPlugin plugin, XPManager xpManager) {
         this.plugin = plugin;
         this.xpManager = xpManager;
     }
@@ -28,21 +33,162 @@ public class SpawnMonsters implements Listener {
         int playTimeTicks = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
         return playTimeTicks / 24000; // 1 Minecraft day = 24000 ticks
     }
+    public boolean shouldMutationOccur(int playerHostility) {
+        Random random = new Random();
+        int randomValue = random.nextInt(100) + 1; // Generate a random number between 1 and 100
+        return randomValue <= playerHostility; // Return true if the random number is less than or equal to the hostility percentage
+    }
+    public void applyRandomArmor(LivingEntity entity) {
+        if (entity == null) return;
 
+        Random random = new Random();
+        int randomValue = random.nextInt(100);
+
+        // Determine the armor set type
+        Material baseChestplate;
+        if (randomValue < 80) {
+            // 80% chance for leather, chainmail, or gold
+            Material[] options = {Material.LEATHER_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE};
+            baseChestplate = options[random.nextInt(options.length)];
+        } else if (randomValue < 95) {
+            // 15% chance for iron
+            baseChestplate = Material.IRON_CHESTPLATE;
+        } else {
+            // 5% chance for diamond
+            baseChestplate = Material.DIAMOND_CHESTPLATE;
+        }
+
+        // Determine the corresponding helmet, leggings, and boots based on the chestplate
+        Material helmet, chestplate, leggings, boots;
+
+        switch (baseChestplate) {
+            case LEATHER_CHESTPLATE:
+                helmet = Material.LEATHER_HELMET;
+                chestplate = Material.LEATHER_CHESTPLATE;
+                leggings = Material.LEATHER_LEGGINGS;
+                boots = Material.LEATHER_BOOTS;
+                break;
+            case CHAINMAIL_CHESTPLATE:
+                helmet = Material.CHAINMAIL_HELMET;
+                chestplate = Material.CHAINMAIL_CHESTPLATE;
+                leggings = Material.CHAINMAIL_LEGGINGS;
+                boots = Material.CHAINMAIL_BOOTS;
+                break;
+            case GOLDEN_CHESTPLATE:
+                helmet = Material.GOLDEN_HELMET;
+                chestplate = Material.GOLDEN_CHESTPLATE;
+                leggings = Material.GOLDEN_LEGGINGS;
+                boots = Material.GOLDEN_BOOTS;
+                break;
+            case IRON_CHESTPLATE:
+                helmet = Material.IRON_HELMET;
+                chestplate = Material.IRON_CHESTPLATE;
+                leggings = Material.IRON_LEGGINGS;
+                boots = Material.IRON_BOOTS;
+                break;
+            case DIAMOND_CHESTPLATE:
+                helmet = Material.DIAMOND_HELMET;
+                chestplate = Material.DIAMOND_CHESTPLATE;
+                leggings = Material.DIAMOND_LEGGINGS;
+                boots = Material.DIAMOND_BOOTS;
+                break;
+            default:
+                // Default to leather set if somehow an unknown material is selected
+                helmet = Material.LEATHER_HELMET;
+                chestplate = Material.LEATHER_CHESTPLATE;
+                leggings = Material.LEATHER_LEGGINGS;
+                boots = Material.LEATHER_BOOTS;
+                break;
+        }
+
+        // Create ItemStacks for each armor piece
+        ItemStack helmetItem = new ItemStack(helmet);
+        ItemStack chestplateItem = new ItemStack(chestplate);
+        ItemStack leggingsItem = new ItemStack(leggings);
+        ItemStack bootsItem = new ItemStack(boots);
+
+        // Optionally, customize the armor items (e.g., set unbreakable, add enchantments)
+        // For example, to make armor unbreakable:
+        /*
+        makeUnbreakable(helmetItem);
+        makeUnbreakable(chestplateItem);
+        makeUnbreakable(leggingsItem);
+        makeUnbreakable(bootsItem);
+        */
+
+        // Set the armor on the entity
+        EntityEquipment equipment = entity.getEquipment();
+        if (equipment != null) {
+            equipment.setHelmet(helmetItem);
+            equipment.setChestplate(chestplateItem);
+            equipment.setLeggings(leggingsItem);
+            equipment.setBoots(bootsItem);
+        }
+    }
+
+    public void equipRandomWeapon(LivingEntity entity) {
+        Random random = new Random();
+        Material weaponMaterial = random.nextBoolean() ? Material.IRON_SWORD : Material.IRON_SHOVEL;
+
+        EntityEquipment equipment = entity.getEquipment();
+        equipment.setItemInMainHand(new ItemStack(weaponMaterial));
+    }
+    public void enchantArmorWithProtection(LivingEntity entity) {
+        EntityEquipment equipment = entity.getEquipment();
+
+        ItemStack[] armor = {
+                equipment.getHelmet(),
+                equipment.getChestplate(),
+                equipment.getLeggings(),
+                equipment.getBoots()
+        };
+
+        for (ItemStack item : armor) {
+            if (item != null && item.getType() != Material.AIR) {
+                ItemMeta meta = item.getItemMeta();
+                meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3, true);
+                item.setItemMeta(meta);
+            }
+        }
+    }
     @EventHandler
     public void alterMonsters(EntitySpawnEvent e) {
         Entity entity = e.getEntity();
-
+        HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
+        int playerHostility = hostilityManager.getPlayerDifficultyTier(getNearestPlayer(entity, 1000));
         // Remove creepers with 80% chance
-        if (entity instanceof Creeper && Math.random() < 0.8) {
-            entity.remove();
-            return;
+
+        if(entity instanceof Zombie zombie){
+            if(shouldMutationOccur(playerHostility)){
+                KnightMob knightMob = new KnightMob(plugin);
+                knightMob.transformToKnight(zombie);
+                zombie.setCustomName(ChatColor.GRAY + "Knight");
+            }
+            if(shouldMutationOccur(playerHostility)){
+                applyRandomArmor(zombie);
+            }
+            if(shouldMutationOccur(playerHostility)){
+                applyRandomArmor(zombie);
+            }
+            if(shouldMutationOccur(playerHostility)){
+                applyRandomArmor(zombie);
+            }
+            if(shouldMutationOccur(playerHostility)){
+                equipRandomWeapon(zombie);
+            }
+            if(shouldMutationOccur(playerHostility)){
+                enchantArmorWithProtection(zombie);
+            }
+        }
+        if(entity instanceof Creeper creeper){
+            if(shouldMutationOccur(playerHostility)){
+                creeper.setPowered(true);
+            }
         }
 
         Random random = new Random();
         if (entity instanceof LivingEntity) {
             if (entity instanceof ArmorStand) return;
-
             LivingEntity mob = (LivingEntity) entity;
             if (mob instanceof EnderDragon) {
                 int randomValue = Math.min(200 + random.nextInt(101), MAX_MONSTER_LEVEL);
@@ -51,12 +197,12 @@ public class SpawnMonsters implements Listener {
             }
 
             double distance = getDistanceFromOrigin(entity);
-            Player nearestPlayer = getNearestPlayer(entity, 100);
+            Player nearestPlayer = getNearestPlayer(entity, 1000);
             int mobLevel;
 
             if (nearestPlayer != null) {
-                int dayCount = getDayCount(nearestPlayer);
-                mobLevel = Math.min(dayCount + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
+                int level = playerHostility * 10;
+                mobLevel = Math.min(level + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
             } else {
                 mobLevel = Math.min((int) (distance / 100) + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
             }
@@ -108,6 +254,9 @@ public class SpawnMonsters implements Listener {
         mob.setMetadata("mobLevel", new FixedMetadataValue(plugin, level));
 
         String color = getColorForLevel(level);
+        if(mob.getCustomName() != null && mob.getCustomName().equals(ChatColor.GRAY + "Knight")){
+            return;
+        }
         mob.setCustomName(color + "Level: " + level + " " + formatMobType(mob.getType().toString()));
         mob.setCustomNameVisible(true);
         mob.setRemoveWhenFarAway(true);

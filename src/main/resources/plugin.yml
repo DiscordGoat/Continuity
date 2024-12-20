@@ -3,6 +3,8 @@ version: '${project.version}'
 main: goat.minecraft.minecraftnew.MinecraftNew
 api-version: '1.20'
 commands:
+  hostility:
+    description: opens difficulty GUI.
   spawnseacreature:
     description: Spawns a sea creature by name.
   givecustomitem:
