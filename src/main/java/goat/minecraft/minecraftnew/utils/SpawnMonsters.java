@@ -13,6 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.Random;
 
@@ -156,7 +158,6 @@ public class SpawnMonsters implements Listener {
         Entity entity = e.getEntity();
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
         int playerHostility = hostilityManager.getPlayerDifficultyTier(getNearestPlayer(entity, 1000));
-        // Remove creepers with 80% chance
 
         if(entity instanceof Zombie zombie){
             if(shouldMutationOccur(playerHostility)){
@@ -180,11 +181,89 @@ public class SpawnMonsters implements Listener {
                 enchantArmorWithProtection(zombie);
             }
         }
+        if(entity instanceof WitherSkeleton ws){
+            if(shouldMutationOccur(playerHostility)){
+                KnightMob knightMob = new KnightMob(plugin);
+                knightMob.transformToKnight(ws);
+                ws.setCustomName(ChatColor.GRAY + "Knight");
+            }
+            if(shouldMutationOccur(playerHostility)){
+                applyRandomArmor(ws);
+            }
+            if(shouldMutationOccur(playerHostility)){
+                applyRandomArmor(ws);
+            }
+            if(shouldMutationOccur(playerHostility)){
+                applyRandomArmor(ws);
+            }
+            if(shouldMutationOccur(playerHostility)){
+                equipRandomWeapon(ws);
+            }
+            if(shouldMutationOccur(playerHostility)){
+                enchantArmorWithProtection(ws);
+            }
+        }
         if(entity instanceof Creeper creeper){
             if(shouldMutationOccur(playerHostility)){
                 creeper.setPowered(true);
             }
         }
+        if(entity instanceof Blaze monster){
+            if(shouldMutationOccur(playerHostility)){
+                monster.setCustomName(ChatColor.RED + "High Flying Blaze");
+                monster.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, Integer.MAX_VALUE, 1, true));
+            }
+        }
+        if(entity instanceof Drowned monster){
+            if(shouldMutationOccur(playerHostility)){
+                monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
+                monster.setCustomName(ChatColor.RED + "Olympic Swimmer");
+                monster.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, Integer.MAX_VALUE, 3, true));
+            }
+        }
+        if(entity instanceof MagmaCube monster){
+            if (shouldMutationOccur(playerHostility)) {
+                // Set the size of the Magma Cube to 6 (giant size)
+                monster.setSize(10);
+
+                // Optionally, you can give it a trident and a custom name
+                monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
+                monster.setCustomName(ChatColor.RED + "Giant Cube");
+                monster.setCustomNameVisible(true); // Make the custom name visible
+            }
+        }
+        if (entity instanceof Skeleton monster) {
+            if (shouldMutationOccur(playerHostility)) {
+                // Set the custom name
+                monster.setCustomName(ChatColor.RED + "Sniper");
+                monster.setCustomNameVisible(true); // Make the custom name visible
+
+                // Create a sniper helmet (e.g., a diamond helmet with custom enchantments)
+                ItemStack sniperHelmet = new ItemStack(Material.DIAMOND_HELMET);
+                sniperHelmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2); // Example enchantment
+                sniperHelmet.addEnchantment(Enchantment.OXYGEN, 1); // Example enchantment
+
+                // Set the helmet on the skeleton
+                monster.getEquipment().setHelmet(sniperHelmet);
+            }
+        }
+        if(entity instanceof Slime monster){
+            if (shouldMutationOccur(playerHostility)) {
+                // Set the size of the Magma Cube to 6 (giant size)
+                monster.setSize(10);
+
+                // Optionally, you can give it a trident and a custom name
+                monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
+                monster.setCustomName(ChatColor.RED + "Giant Cube");
+                monster.setCustomNameVisible(true); // Make the custom name visible
+            }
+        }
+
+
+
+
+
+
 
         Random random = new Random();
         if (entity instanceof LivingEntity) {
