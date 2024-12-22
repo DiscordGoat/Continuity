@@ -11,7 +11,6 @@ import goat.minecraft.minecraftnew.subsystems.culinary.MeatCookingManager;
 import goat.minecraft.minecraftnew.utils.KnightMob;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentTableInventoryInteractCancel;
-import goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentTableRightClick;
 import goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects.*;
 import goat.minecraft.minecraftnew.subsystems.farming.FarmingEvent;
 import goat.minecraft.minecraftnew.subsystems.fishing.FishingEvent;
@@ -62,10 +61,14 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private PlayerOxygenManager playerOxygenManager;
 
 
+
     @Override
     public void onEnable() {
 
+
         HostilityManager manager = HostilityManager.getInstance(this);
+
+
 
         // Register the /hostility command executor
         getCommand("hostility").setExecutor(manager.new HostilityCommand());
@@ -180,7 +183,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), this);
         getServer().getPluginManager().registerEvents(new CancelBrewing(this), this);
         getServer().getPluginManager().registerEvents(new EnchantmentTableInventoryInteractCancel(), this);
-        getServer().getPluginManager().registerEvents(new EnchantmentTableRightClick(), this);
         getServer().getPluginManager().registerEvents(new RightClickArtifacts(this), this);
         getServer().getPluginManager().registerEvents(new AnvilRepair(this), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);

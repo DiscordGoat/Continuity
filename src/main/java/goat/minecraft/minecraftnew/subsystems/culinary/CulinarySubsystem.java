@@ -65,10 +65,30 @@ public class CulinarySubsystem implements Listener {
                 Arrays.asList("Slice of Cheese", "Ham", "Bread"),
                 200
         ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.BREAD,
+                "Toast",
+                Arrays.asList("Bread", "Butter"),
+                200
+        ));
 
 
 
-
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.PUMPKIN_PIE,
+                "Sweet Feast",
+                Arrays.asList("Sugar", "Pumpkin", "Egg", "Wheat", "Cookie", "Cocoa Beans"),
+                1000
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.CARROT,
+                "Vegetarian Feast",
+                Arrays.asList("Carrot", "Potato", "Golden Carrot", "Beetroot", "Brown Mushroom", "Red Mushroom"),
+                1000
+        ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKED_RABBIT,
@@ -222,26 +242,43 @@ public class CulinarySubsystem implements Listener {
         }
         switch (displayName) {
             case "Salted Steak (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
                 break;
             case "Chicken Tenders (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*20, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
                 break;
             case "Ham and Cheese Sandwich (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*30, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*3, 0));
+                break;
+            case "Toast (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*1, 0));
                 break;
 
 
+            case "Sweet Feast (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*60*60*1, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
+                player.setFoodLevel(20);
+                player.setSaturation(player.getSaturation() + 100);
+                player.setHealth(player.getMaxHealth());
+                break;
+            case "Vegetarian Feast (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 20*60*60*1, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
+                player.setFoodLevel(20);
+                player.setSaturation(player.getSaturation() + 100);
+                player.setHealth(player.getMaxHealth());
+                break;
             case "Meatlovers Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
                 player.setFoodLevel(20);
                 player.setSaturation(player.getSaturation() + 100);
                 player.setHealth(player.getMaxHealth());
                 break;
             case "Seafood Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
                 player.setFoodLevel(20);
                 player.setSaturation(player.getSaturation() + 100);
                 player.setHealth(player.getMaxHealth());
@@ -431,11 +468,7 @@ public class CulinarySubsystem implements Listener {
     }
 
     private void consumeItem(Player player, ItemStack item, int amount) {
-        if (item.getAmount() > amount) {
-            item.setAmount(item.getAmount() - amount);
-        } else {
-            player.getInventory().setItemInMainHand(null);
-        }
+        player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
     }
 
     private void finalizeRecipe(RecipeSession session, Player player) {

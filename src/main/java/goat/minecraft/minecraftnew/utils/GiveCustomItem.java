@@ -26,7 +26,7 @@ public class GiveCustomItem implements CommandExecutor {
 
         Player player = (Player) sender;
         PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
-        ItemStack customItem = ItemRegistry.getItemDisplayItem();
+        ItemStack customItem = ItemRegistry.getForbiddenBook();
         player.getInventory().addItem(customItem);
 
 
