@@ -71,6 +71,9 @@ public class HostilityManager implements Listener {
      * @return The difficulty tier as an integer.
      */
     public int getPlayerDifficultyTier(Player player) {
+        if(player == null){
+            return 1;
+        }
         UUID uuid = player.getUniqueId();
         String path = CONFIG_KEY + "." + uuid.toString();
         return hostilityConfig.getInt(path, 1); // Default tier is 1

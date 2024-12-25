@@ -876,7 +876,7 @@ public class AnvilRepair implements Listener {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             xpManager.addXP(player, "Smithing", 100.0);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Explosive Arrows")&& isCrossbow(repairee)){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Explosive Bolts")&& isCrossbow(repairee)){
             CustomEnchantmentManager.addEnchantment(billItem, repairee, "Lethal Reaction", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Lethal Reaction") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             xpManager.addXP(player, "Smithing", 100.0);

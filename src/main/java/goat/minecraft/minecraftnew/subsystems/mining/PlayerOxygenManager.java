@@ -156,9 +156,6 @@ public class PlayerOxygenManager implements Listener {
             if (currentOxygen == 150) {
                 player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1F, 1F);
             }
-            if(currentOxygen > 0 && player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR){
-                player.setGameMode(GameMode.SURVIVAL);
-            }
 
             if (currentOxygen <= 60 && currentOxygen > 15) {
                 // Play breathing sfx every 5 seconds
@@ -169,20 +166,31 @@ public class PlayerOxygenManager implements Listener {
 
 
             // If oxygen is depleted, apply damage
+            Bukkit.getLogger().info("Current Oxygen: " + currentOxygen);
             if (currentOxygen == 0 && player.getGameMode() == GameMode.SURVIVAL) {
                 player.setGameMode(GameMode.ADVENTURE);
+                Bukkit.getLogger().info("Player " + player.getName() + " switched to Adventure mode due to 0 oxygen.");
+            } else if (currentOxygen > 0 && player.getGameMode() == GameMode.ADVENTURE) {
+                player.setGameMode(GameMode.SURVIVAL);
+                Bukkit.getLogger().info("Player " + player.getName() + " switched back to Survival mode due to oxygen recovery.");
             }
 
 
+
+
+
         } else {
-            // Oxygen replenishes when not depleting, at a controlled rate
-            // We want approx. 40 minutes to fully recover. We'll increment by 1 every RECOVERY_INTERVAL_SECONDS.
-            // The loop runs every second, so we check if (recoveryCounter % RECOVERY_INTERVAL_SECONDS == 0)
+            // Handle oxygen recovery
             if (currentOxygen < initialOxygen) {
                 if (recoveryCounter % RECOVERY_INTERVAL_SECONDS == 0) {
                     currentOxygen++;
-                    if (currentOxygen > initialOxygen) currentOxygen = initialOxygen;
                     playerOxygenLevels.put(uuid, currentOxygen);
+
+                    // Handle game mode transition when oxygen recovers
+                    if (currentOxygen > 0 && player.getGameMode() == GameMode.ADVENTURE) {
+                        player.setGameMode(GameMode.SURVIVAL);
+                        Bukkit.getLogger().info("Player " + player.getName() + " switched back to Survival mode due to oxygen recovery.");
+                    }
                 }
             }
         }

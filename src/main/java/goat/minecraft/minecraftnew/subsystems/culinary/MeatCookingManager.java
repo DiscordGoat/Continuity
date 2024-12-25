@@ -35,9 +35,7 @@ public class MeatCookingManager implements Listener {
      */
     public MeatCookingManager(JavaPlugin plugin) {
         this.plugin = plugin;
-        Bukkit.getLogger().info("[MeatCookingManager] Registering events...");
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        Bukkit.getLogger().info("[MeatCookingManager] Events registered.");
         initializeMeatStages();
     }
 
@@ -105,7 +103,6 @@ public class MeatCookingManager implements Listener {
     @EventHandler
     public void onPlayerRightClickFurnace(PlayerInteractEvent event) {
         if (event.getClickedBlock() == null) {
-            Bukkit.getLogger().info("[MeatCookingManager] onPlayerRightClickFurnace: No block clicked.");
             return;
         }
 
@@ -122,14 +119,11 @@ public class MeatCookingManager implements Listener {
         Location furnaceLoc = event.getClickedBlock().getLocation();
         Furnace furnace = (Furnace) event.getClickedBlock().getBlockData();
         furnace.setLit(true);
-        Bukkit.getLogger().info("[MeatCookingManager] onPlayerRightClickFurnace: Player=" + player.getName()
-                + ", Item=" + (hand != null ? hand.getType() : "null") + ", Furnace=" + furnaceLoc);
-
         if (cookingMap.containsKey(furnaceLoc)) {
             // Furnace is cooking
             if (!isRawMeat(hand)) {
                 // Stop cooking
-                Bukkit.getLogger().info("[MeatCookingManager] onPlayerRightClickFurnace: Stopping cooking.");
+
                 event.setCancelled(true);
                 MeatCookingData data = cookingMap.get(furnaceLoc);
                 stopCooking(data, player, furnace);
@@ -138,14 +132,13 @@ public class MeatCookingManager implements Listener {
             } else {
                 // Furnace is already cooking and player is trying to start another cooking session
                 player.sendMessage(ChatColor.RED + "This furnace is already cooking.");
-                Bukkit.getLogger().info("[MeatCookingManager] onPlayerRightClickFurnace: Furnace already cooking.");
+
             }
             return;
         }
 
         // Furnace not cooking yet, need raw meat to start
         if (!isRawMeat(hand)) {
-            Bukkit.getLogger().info("[MeatCookingManager] onPlayerRightClickFurnace: No raw meat, no action.");
             return;
         }
 
@@ -158,14 +151,12 @@ public class MeatCookingManager implements Listener {
      * Start cooking a piece of meat on the furnace.
      */
     private void startCooking(Location furnaceLoc, Player player, ItemStack rawMeat) {
-        Bukkit.getLogger().info("[MeatCookingManager] startCooking: Player=" + player.getName()
-                + ", Furnace=" + furnaceLoc + ", Meat=" + rawMeat.getType());
 
 // Retrieve the current amount of meat
         int amt = rawMeat.getAmount();
 
 // Log the intention to consume one meat
-        Bukkit.getLogger().info("[MeatCookingManager] startCooking: Attempting to consume one meat. Current amount=" + amt);
+
 
 // Subtract one from the current amount
         int newAmt = amt - 1;
@@ -175,11 +166,11 @@ public class MeatCookingManager implements Listener {
             // There is still meat left after consumption
             rawMeat.setAmount(newAmt);
             player.getInventory().setItemInMainHand(rawMeat);
-            Bukkit.getLogger().info("[MeatCookingManager] startCooking: Consumed one meat. Remaining=" + rawMeat.getAmount());
+
         } else {
             // No meat left; remove the item from the player's hand
             player.getInventory().setItemInMainHand(null);
-            Bukkit.getLogger().info("[MeatCookingManager] startCooking: Consumed last meat. Hand is now empty.");
+
         }
 
 
@@ -188,22 +179,22 @@ public class MeatCookingManager implements Listener {
         List<String> stages = getMeatStagesForMaterial(rawType);
         if (stages == null || stages.isEmpty()) {
             player.sendMessage(ChatColor.RED + "This meat cannot be cooked.");
-            Bukkit.getLogger().warning("[MeatCookingManager] startCooking: No stages found for " + rawType);
+
             return;
         }
 
         String initialStage = stages.get(0);
-        Bukkit.getLogger().info("[MeatCookingManager] startCooking: Initial stage=" + initialStage);
+
 
         // Spawn stage text ArmorStand moved up 1 block
         Location textLoc = furnaceLoc.clone().add(0.5, 1.0, 0.5); // Moved up 1 block
         UUID standUUID = spawnCookingStand(textLoc, initialStage);
-        Bukkit.getLogger().info("[MeatCookingManager] startCooking: Spawned stage text stand UUID=" + standUUID);
+
 
         // Display the raw item on top of the furnace, moved down 0.5 blocks and centered
         Location itemLoc = furnaceLoc.clone().add(0.9, 0.2, 0.2); // Moved down 0.5 blocks
         UUID itemStandUUID = spawnItemStand(itemLoc, rawType);
-        Bukkit.getLogger().info("[MeatCookingManager] startCooking: Spawned item stand UUID=" + itemStandUUID);
+
 
         // Spawn fire particles and play sound effects
         playFireEffects(furnaceLoc);
@@ -217,7 +208,7 @@ public class MeatCookingManager implements Listener {
                     Location loc = itemStand.getLocation().add(0, 0.0, 0); // Slightly above the stand
                     playFireEffects(furnaceLoc);
                 } else {
-                    Bukkit.getLogger().warning("[MeatCookingManager] ParticleTask: Item ArmorStand not found or invalid.");
+
                     cancel(); // Cancel task if ArmorStand is gone
                 }
             }
@@ -226,7 +217,7 @@ public class MeatCookingManager implements Listener {
         // Create and store cooking data
         MeatCookingData data = new MeatCookingData(furnaceLoc, standUUID, itemStandUUID, rawType, player.getUniqueId(), particleTask);
         cookingMap.put(furnaceLoc, data);
-        Bukkit.getLogger().info("[MeatCookingManager] startCooking: Data stored in cookingMap for " + furnaceLoc);
+
 
         // Schedule task every 30 seconds (600 ticks) to advance stage
         new BukkitRunnable() {
@@ -234,30 +225,26 @@ public class MeatCookingManager implements Listener {
             public void run() {
                 MeatCookingData d = cookingMap.get(furnaceLoc);
                 if (d == null) {
-                    Bukkit.getLogger().info("[MeatCookingManager] CookingTask: Data is null, stopping.");
+
                     cancel();
                     return;
                 }
                 if (d.stopped) {
-                    Bukkit.getLogger().info("[MeatCookingManager] CookingTask: Cooking stopped, stopping timer.");
+
                     cancel();
                     return;
                 }
 
                 d.stageIndex++;
-                Bukkit.getLogger().info("[MeatCookingManager] CookingTask: Advanced stage to " + d.stageIndex + " for " + rawType);
                 if (d.stageIndex >= stages.size()) {
                     d.stageIndex = stages.size() - 1;
-                    Bukkit.getLogger().info("[MeatCookingManager] CookingTask: Stage index adjusted to last stage.");
                 }
 
                 Entity stand = Bukkit.getEntity(d.standUUID);
                 if (stand instanceof ArmorStand) {
                     ArmorStand as = (ArmorStand) stand;
                     as.setCustomName(ChatColor.GOLD + stages.get(d.stageIndex)); // Gold color
-                    Bukkit.getLogger().info("[MeatCookingManager] CookingTask: Updated stand name to " + stages.get(d.stageIndex));
                 } else {
-                    Bukkit.getLogger().warning("[MeatCookingManager] CookingTask: Stand not found or not an ArmorStand!");
                 }
 
                 // Play fire effects each stage progression
@@ -267,7 +254,6 @@ public class MeatCookingManager implements Listener {
 
         player.sendMessage(ChatColor.GREEN + "You placed the meat on top of the furnace. It will cook over time.");
         player.sendMessage(ChatColor.YELLOW + "Right-click the furnace again (without raw meat) to stop cooking and retrieve your meat.");
-        Bukkit.getLogger().info("[MeatCookingManager] startCooking: Cooking started successfully for " + rawType);
     }
     public void cancelAllCookingsOnShutdown() {
         // Iterate over all currently cooking furnaces
@@ -291,38 +277,31 @@ public class MeatCookingManager implements Listener {
             ItemStack rawItem = new ItemStack(data.rawMeatType, 1);
             dropLoc.getWorld().dropItemNaturally(dropLoc, rawItem);
         }
-        Bukkit.getLogger().info("[MeatCookingManager] All cooking sessions canceled and raw meat dropped on shutdown.");
     }
 
     /**
      * Stop cooking and drop the current stage meat.
      */
     private void stopCooking(MeatCookingData data, Player player, Furnace furnace) {
-        Bukkit.getLogger().info("[MeatCookingManager] stopCooking: Stopping cooking. Furnace=" + data.furnaceLocation + ", StageIndex=" + data.stageIndex);
         data.stopped = true;
         furnace.setLit(false);
         cookingMap.remove(data.furnaceLocation);
-        Bukkit.getLogger().info("[MeatCookingManager] stopCooking: Removed from cookingMap.");
 
         // Remove stage text ArmorStand
         removeEntityByUUID(data.standUUID);
-        Bukkit.getLogger().info("[MeatCookingManager] stopCooking: Removed stage text stand.");
 
         // Remove item ArmorStand
         removeEntityByUUID(data.itemStandUUID);
-        Bukkit.getLogger().info("[MeatCookingManager] stopCooking: Removed item stand.");
 
         // Cancel particle spawning task
         if (data.particleTask != null) {
             data.particleTask.cancel();
-            Bukkit.getLogger().info("[MeatCookingManager] stopCooking: Canceled particle spawning task.");
         }
 
         // Get stages for the material
         List<String> stages = getMeatStagesForMaterial(data.rawMeatType);
         if (stages == null || stages.isEmpty()) {
             player.sendMessage(ChatColor.RED + "Could not retrieve your meat.");
-            Bukkit.getLogger().warning("[MeatCookingManager] stopCooking: No stages for " + data.rawMeatType);
             return;
         }
 
@@ -330,7 +309,6 @@ public class MeatCookingManager implements Listener {
         ItemStack result = getStageItem(data.rawMeatType, stageName);
         player.getWorld().dropItemNaturally(player.getLocation(), result);
         player.sendMessage(ChatColor.GREEN + "You retrieved a " + stageName + " " + getMeatName(data.rawMeatType) + ".");
-        Bukkit.getLogger().info("[MeatCookingManager] stopCooking: Dropped " + stageName + " " + getMeatName(data.rawMeatType));
     }
 
     /**
@@ -338,12 +316,10 @@ public class MeatCookingManager implements Listener {
      */
     private boolean isRawMeat(ItemStack item) {
         if (item == null) {
-            Bukkit.getLogger().info("[MeatCookingManager] isRawMeat: item=null");
             return false;
         }
         Material mat = item.getType();
         boolean result = meatStagesMap.containsKey(mat);
-        Bukkit.getLogger().info("[MeatCookingManager] isRawMeat: " + mat + " -> " + result);
         return result;
     }
 
@@ -353,7 +329,6 @@ public class MeatCookingManager implements Listener {
     private List<String> getMeatStagesForMaterial(Material mat) {
         List<String> stages = meatStagesMap.get(mat);
         if (stages == null) {
-            Bukkit.getLogger().warning("[MeatCookingManager] getMeatStagesForMaterial: No stages defined for " + mat);
             return Collections.emptyList();
         }
         return stages;
@@ -370,7 +345,6 @@ public class MeatCookingManager implements Listener {
             String display = ChatColor.GOLD + stageName;
             meta.setDisplayName(display);
             item.setItemMeta(meta);
-            Bukkit.getLogger().info("[MeatCookingManager] getStageItem: Created " + display + " from " + rawType);
         }
         return item;
     }
@@ -394,7 +368,6 @@ public class MeatCookingManager implements Listener {
             case RABBIT:
                 return Material.COOKED_RABBIT;
             default:
-                Bukkit.getLogger().warning("[MeatCookingManager] getResultMaterialForStage: Unknown rawType " + rawType);
                 return rawType;
         }
     }
@@ -415,7 +388,6 @@ public class MeatCookingManager implements Listener {
             case RABBIT:
                 return "Rabbit";
             default:
-                Bukkit.getLogger().warning("[MeatCookingManager] getMeatName: Unexpected meat type " + rawType);
                 return "Meat";
         }
     }
@@ -424,7 +396,6 @@ public class MeatCookingManager implements Listener {
      * Spawn an ArmorStand to display the cooking stage text, moved up 1 block.
      */
     private UUID spawnCookingStand(Location loc, String stageName) {
-        Bukkit.getLogger().info("[MeatCookingManager] spawnCookingStand: Spawning stand at " + loc + " stageName=" + stageName);
         ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
         stand.setInvisible(true);
         stand.setCustomNameVisible(true);
@@ -433,7 +404,6 @@ public class MeatCookingManager implements Listener {
         stand.setInvulnerable(true);
         stand.setMarker(true); // Marker so no hitbox
         UUID uuid = stand.getUniqueId();
-        Bukkit.getLogger().info("[MeatCookingManager] spawnCookingStand: Spawned stand UUID=" + uuid);
         return uuid;
     }
 
@@ -441,7 +411,6 @@ public class MeatCookingManager implements Listener {
      * Spawn an ArmorStand to display the food item, moved down 0.5 blocks and centered.
      */
     private UUID spawnItemStand(Location loc, Material meatType) {
-        Bukkit.getLogger().info("[MeatCookingManager] spawnItemStand: Spawning item stand at " + loc + " with " + meatType);
         ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
         stand.setInvisible(true);
         stand.setMarker(true); // so item hovers at exact point
@@ -456,7 +425,6 @@ public class MeatCookingManager implements Listener {
         stand.setSmall(false); // smaller stand so item hovers nicely
 
         UUID uuid = stand.getUniqueId();
-        Bukkit.getLogger().info("[MeatCookingManager] spawnItemStand: Spawned item stand UUID=" + uuid);
         return uuid;
     }
 
@@ -464,13 +432,10 @@ public class MeatCookingManager implements Listener {
      * Utility to remove an entity by UUID.
      */
     private void removeEntityByUUID(UUID uuid) {
-        Bukkit.getLogger().info("[MeatCookingManager] removeEntityByUUID: Removing " + uuid);
         Entity e = Bukkit.getEntity(uuid);
         if (e != null) {
             e.remove();
-            Bukkit.getLogger().info("[MeatCookingManager] removeEntityByUUID: Entity removed.");
         } else {
-            Bukkit.getLogger().info("[MeatCookingManager] removeEntityByUUID: Entity not found.");
         }
     }
 

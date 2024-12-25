@@ -32,23 +32,21 @@ public class HireVillager implements Listener {
 
         // Check if the player has at least 4 emeralds in their inventory
         ItemStack emeraldStack = new ItemStack(Material.EMERALD, 4);
-        if (!player.getInventory().getItemInMainHand().getType().equals(Material.EMERALD) && player.getInventory().getItemInMainHand().getAmount() > 3) {
-            player.sendMessage("You need at least 4 emeralds to hire this villager.");
-            return;
+        if (player.getInventory().getItemInMainHand().getType().equals(Material.EMERALD) && player.getInventory().getItemInMainHand().getAmount() > 3) {
+            ItemStack customItem = ItemRegistry.getHireVillager();
+            villager.getWorld().dropItemNaturally(villager.getLocation(), customItem);
+            villager.remove();
         }
-
+        player.sendMessage("You need at least 4 emeralds to hire this villager.");
         // Remove 4 emeralds from the player's inventory
         player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 4);
 
         // Drop the custom item at the villager's location
-        ItemStack customItem = ItemRegistry.getHireVillager();
-        villager.getWorld().dropItemNaturally(villager.getLocation(), customItem);
+
 
         // Remove the villager
-        villager.remove();
 
-        // Notify the player
-        player.sendMessage("You have successfully hired the villager!");
+
         closeInventoryAfterDelay(player);
     }
     public void closeInventoryAfterDelay(Player player) {

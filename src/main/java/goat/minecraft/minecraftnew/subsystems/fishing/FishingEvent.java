@@ -7,6 +7,8 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.XPManager;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -126,11 +128,17 @@ public class FishingEvent implements Listener {
         // Determine if a sea creature should replace this catch
         if (random.nextDouble() <= seaCreatureChance) {
             spawnAndLaunchSeaCreature(player, e.getHook().getLocation());
-            player.sendMessage(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%");
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                    //String.format("%.2f", damageMultiplier)
+                    new TextComponent(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%")
+            );
         } else {
             // Proceed with regular fish catch
             awardRegularFish(player, fishingLevel);
-            player.sendMessage(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%");
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
+                    //String.format("%.2f", damageMultiplier)
+                    new TextComponent(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%")
+            );
         }
 
         // Implement the enhanced treasure system

@@ -29,11 +29,11 @@ public class SeaCreatureRegistry implements Listener {
         RARITY_WEIGHTS.put(Rarity.LEGENDARY, 0.15);
 
         // Assign levels based on rarity
-        RARITY_LEVELS.put(Rarity.COMMON, 10);
-        RARITY_LEVELS.put(Rarity.UNCOMMON, 20);
-        RARITY_LEVELS.put(Rarity.RARE, 30);
-        RARITY_LEVELS.put(Rarity.EPIC, 40);
-        RARITY_LEVELS.put(Rarity.LEGENDARY, 50);
+        RARITY_LEVELS.put(Rarity.COMMON, 5);
+        RARITY_LEVELS.put(Rarity.UNCOMMON, 10);
+        RARITY_LEVELS.put(Rarity.RARE, 20);
+        RARITY_LEVELS.put(Rarity.EPIC, 30);
+        RARITY_LEVELS.put(Rarity.LEGENDARY, 40);
 
 
 

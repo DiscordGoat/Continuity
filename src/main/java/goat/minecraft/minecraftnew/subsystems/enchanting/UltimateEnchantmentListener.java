@@ -282,25 +282,27 @@ public class UltimateEnchantmentListener implements Listener {
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Monster || event.getDamager() instanceof Projectile) {
-            Player player = (Player) event.getEntity();
-            UUID playerUUID = player.getUniqueId();
+            if (event.getEntity() instanceof Player) {
+                Player player = (Player) event.getEntity();
+                UUID playerUUID = player.getUniqueId();
 
-            if (defenseActive.containsKey(playerUUID) && defenseActive.get(playerUUID)) {
-                event.setCancelled(true);
-                defenseActive.remove(playerUUID);
+                if (defenseActive.containsKey(playerUUID) && defenseActive.get(playerUUID)) {
+                    event.setCancelled(true);
+                    defenseActive.remove(playerUUID);
 
-                // Knockback the attacker
-                Monster attacker = (Monster) event.getDamager();
-                attacker.setHealth(attacker.getHealth() / 2);
-                Vector knockbackDirection = attacker.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
-                knockbackDirection.multiply(0.5); // Adjust knockback strength
-                knockbackDirection.setY(0.3); // Add vertical knockback to make it look more dramatic
-                attacker.setVelocity(knockbackDirection);
+                    // Knockback the attacker
+                    Monster attacker = (Monster) event.getDamager();
+                    attacker.setHealth(attacker.getHealth() / 2);
+                    Vector knockbackDirection = attacker.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
+                    knockbackDirection.multiply(0.5); // Adjust knockback strength
+                    knockbackDirection.setY(0.3); // Add vertical knockback to make it look more dramatic
+                    attacker.setVelocity(knockbackDirection);
 
-                // Apply slowness to the attacker
-                attacker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 1)); // Slowness 6 for 6 seconds
+                    // Apply slowness to the attacker
+                    attacker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 1)); // Slowness 6 for 6 seconds
 
-                player.sendMessage(ChatColor.GREEN + "You parried!");
+                    player.sendMessage(ChatColor.GREEN + "You parried!");
+                }
             }
         }
         // Check if the damager is a player

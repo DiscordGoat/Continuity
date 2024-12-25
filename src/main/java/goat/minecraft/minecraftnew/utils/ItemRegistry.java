@@ -431,7 +431,7 @@ public class ItemRegistry {
     public static ItemStack getFletcherCrossbowEnchant() {
         return CustomItemManager.createCustomItem(
                 Material.FIRE_CHARGE,
-                ChatColor.YELLOW + "Explosive Arrows",
+                ChatColor.YELLOW + "Explosive Bolts",
                 Arrays.asList(
                         ChatColor.GRAY + "Max level of 10",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Lethal Reaction to items.",
