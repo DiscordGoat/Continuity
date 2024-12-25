@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.music;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
+import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
@@ -163,31 +164,59 @@ public class MusicDiscManager implements Listener {
         // Play the MUSIC_DISC_BLOCKS sound to the activating player
         player.playSound(player.getLocation(), Sound.MUSIC_DISC_BLOCKS, 3.0f, 1.0f);
 
-        // Define the total number of messages and total duration
-        final int totalMessages = 16;
-        final long totalDurationSeconds = 345; // 5 minutes and 45 seconds
-        final long totalDurationTicks = totalDurationSeconds * 20L; // Convert seconds to ticks (20 ticks = 1 second)
-        final long intervalTicks = totalDurationTicks / totalMessages; // Interval between messages
+        // Get all recipe items from the CulinarySubsystem
+        List<ItemStack> allRecipeItems = CulinarySubsystem.getInstance(plugin).getAllRecipeItems();
 
-        // Schedule a repeating task to send "TBD RECIPE" messages
+        // Shuffle the recipe items to randomize the order
+        Collections.shuffle(allRecipeItems);
+
+        // Define the total number of recipes to give (16)
+        final int totalRecipes = 16;
+
+        // Define the total duration of the song in ticks (345 seconds * 20 ticks per second)
+        final long totalDurationTicks = 345 * 20L;
+
+        // Calculate the interval between each recipe drop (in ticks)
+        final long intervalTicks = totalDurationTicks / totalRecipes;
+
+        // Debug: Log the interval
+        plugin.getLogger().info("Recipe interval: " + intervalTicks + " ticks");
+
+        // Schedule a repeating task to give recipes over the duration of the song
         new BukkitRunnable() {
-            int messagesSent = 0;
+            int recipesGiven = 0;
 
             @Override
             public void run() {
-                if (messagesSent >= totalMessages || !player.isOnline()) {
-                    this.cancel(); // Cancel the task if all messages are sent or player is offline
+                if (recipesGiven >= totalRecipes || !player.isOnline()) {
+                    // Cancel the task if all recipes have been given or the player is offline
+                    this.cancel();
+                    player.sendMessage(ChatColor.GREEN + "You have received all 16 random recipes!");
                     return;
                 }
 
-                // Placeholder for your future method. Replace the following line with your method call.
-                player.sendMessage(ChatColor.YELLOW + "TBD RECIPE");
+                // Get the next recipe item
+                ItemStack recipeItem = allRecipeItems.get(recipesGiven);
 
-                // Increment the count of sent messages
-                messagesSent++;
+                // Give the recipe to the player
+                HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(recipeItem);
+                if (!remaining.isEmpty()) {
+                    // If the inventory is full, drop the remaining items at the player's location
+                    for (ItemStack leftover : remaining.values()) {
+                        player.getWorld().dropItemNaturally(player.getLocation(), leftover);
+                    }
+                }
+
+                // Notify the player
+                player.sendMessage(ChatColor.YELLOW + "You received a recipe: " + recipeItem.getItemMeta().getDisplayName());
+
+                // Increment the count of recipes given
+                recipesGiven++;
             }
-        }.runTaskTimer(plugin, intervalTicks, intervalTicks); // Initial delay and period both set to intervalTicks
+        }.runTaskTimer(plugin, 0L, intervalTicks); // Start immediately and repeat every intervalTicks
     }
+
+
 
     private void handleMusicDisc11(Player player) {
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);

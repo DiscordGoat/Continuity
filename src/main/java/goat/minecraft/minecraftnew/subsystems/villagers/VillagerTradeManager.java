@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.utils.generators.ResourceGeneratorSubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
@@ -20,6 +21,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
+import static goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem.recipeRegistry;
 import static goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry.createAlchemyItem;
 import static goat.minecraft.minecraftnew.utils.CustomItemManager.createCustomItem;
 
@@ -48,6 +50,7 @@ public class VillagerTradeManager implements Listener {
     /**
      * Initializes the purchase and sell whitelists with predefined trades.
      */
+
     private void initializeWhitelists() {
 // Mason
         List<TradeItem> masonPurchases = new ArrayList<>();
@@ -207,7 +210,7 @@ public class VillagerTradeManager implements Listener {
         cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerBastionRemnant(), 64, 1, 4,29 * 32)); // Placeholder trade
 
         cartographerPurchases.add(new TradeItem(ItemRegistry.getCartographerWoodlandMansion(), 128, 1, 5,29 * 64)); // Placeholder trade
-        cartographerPurchases.add(new TradeItem(ItemRegistry.getAspectoftheJourney(), 128, 1, 5,29 * 64)); // Placeholder trade
+        //cartographerPurchases.add(new TradeItem(ItemRegistry.getAspectoftheJourney(), 128, 1, 5,29 * 64)); // Placeholder trade
         purchaseWhitelist.put(Villager.Profession.CARTOGRAPHER, cartographerPurchases);
 
         List<TradeItem> cartographerSells = new ArrayList<>();
@@ -475,17 +478,13 @@ public class VillagerTradeManager implements Listener {
         }
         sellWhitelist.put(Villager.Profession.FISHERMAN, fishingSells);
 
-
         List<TradeItem> butcherPurchases = new ArrayList<>();
         {
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_MUTTON, 1), 3, 1, 1,29 * 1));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.RABBIT_STEW, 16), 20, 16, 1,29 * 10));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.DRIED_KELP_BLOCK, 1), 7, 1, 1,29 * 3));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COAL, 3), 3, 1, 3,29 * 1));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_CHICKEN, 3), 2, 3, 1,29 * 1));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_RABBIT, 3), 2, 3, 2,29 * 1));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_BEEF, 3), 5, 3, 3,29 * 2));
-            butcherPurchases.add(new TradeItem(new ItemStack(Material.COOKED_PORKCHOP, 3), 5, 3, 3,29 * 2));
+
+
+
+            // Add each recipe to the butcher's trades
+
 
 
             butcherPurchases.add(new TradeItem(new ItemStack(ItemRegistry.getButcherEnchant()), 16, 1, 5,29 * 8));
@@ -568,10 +567,6 @@ public class VillagerTradeManager implements Listener {
             farmerSells.add(new TradeItem(new ItemStack(Material.RED_MUSHROOM, 1), 1, 1, 4,29 * 1)); // Level 3 trade
         }
         sellWhitelist.put(Villager.Profession.FARMER, farmerSells);
-
-
-
-
         // Initialize other professions similarly...
     }
 

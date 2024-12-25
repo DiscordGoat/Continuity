@@ -28,12 +28,31 @@ import java.util.logging.Logger;
 public class CulinarySubsystem implements Listener {
     private JavaPlugin plugin;
     private Logger logger;
-
+    private static CulinarySubsystem instance;
     // Active recipe sessions keyed by the crafting table location
     private Map<Location, RecipeSession> activeRecipeSessions = new HashMap<>();
+    public List<ItemStack> getAllRecipeItems() {
+        List<ItemStack> recipeItems = new ArrayList<>();
 
+        // Iterate through each recipe in the recipe registry
+        for (CulinaryRecipe recipe : recipeRegistry) {
+            // Create the recipe item for the current recipe
+            ItemStack recipeItem = createRecipeItem(recipe);
+
+            // Add the recipe item to the list
+            recipeItems.add(recipeItem);
+        }
+
+        return recipeItems;
+    }
+    public static CulinarySubsystem getInstance(JavaPlugin plugin) {
+        if (instance == null) {
+            instance = new CulinarySubsystem(plugin);
+        }
+        return instance;
+    }
     // Recipe registry
-    private static List<CulinaryRecipe> recipeRegistry = new ArrayList<>();
+    public static List<CulinaryRecipe> recipeRegistry = new ArrayList<>();
 
     static {
         // Example recipes
@@ -103,9 +122,30 @@ public class CulinarySubsystem implements Listener {
                 Arrays.asList("Dried Kelp Block", "Cod", "Salmon", "Tropical Fish", "Calamari", "Heart of the Sea"),
                 1000
         ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.COOKED_SALMON,
+                "Grilled Salmon",
+                Arrays.asList("Cooked Salmon", "Sea Salt"),
+                150
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.MUSHROOM_STEW,
+                "Mushroom Soup",
+                Arrays.asList("Red Mushroom", "Brown Mushroom", "Sea Salt"),
+                250
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.BAKED_POTATO,
+                "Loaded Baked Potato",
+                Arrays.asList("Baked Potato", "Butter", "Slice of Cheese", "Bacon"),
+                300
+        ));
     }
 
-    public CulinarySubsystem(JavaPlugin plugin) {
+    private CulinarySubsystem(JavaPlugin plugin) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
 
@@ -178,16 +218,21 @@ public class CulinarySubsystem implements Listener {
     }
 
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
+    public List<ItemStack> getAllRecipePapers() {
+        List<ItemStack> recipePapers = new ArrayList<>();
+
+        // Iterate through each recipe in the recipe registry
         for (CulinaryRecipe recipe : recipeRegistry) {
-            ItemStack recipeItem = createRecipeItem(recipe);
-            player.getInventory().addItem(recipeItem);
-            player.sendMessage(ChatColor.GREEN + "You have received the " + recipe.getName() + " recipe!");
-            logger.info("[CulinarySubsystem] onPlayerJoin: Gave " + player.getName() + " the " + recipe.getName() + " recipe.");
+            // Create the recipe item for the current recipe
+            ItemStack recipePaper = createRecipeItem(recipe);
+
+            // Add the recipe item to the list
+            recipePapers.add(recipePaper);
         }
+
+        return recipePapers;
     }
+
 
     @EventHandler
     public void onEat(PlayerItemConsumeEvent event) {
@@ -252,6 +297,15 @@ public class CulinarySubsystem implements Listener {
                 break;
             case "Toast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*1, 0));
+                break;
+            case "Grilled Salmon (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*1, 0));
+                break;
+            case "Mushroom Soup (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*1, 0));
+                break;
+            case "Loaded Baked Potato (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*11, 0));
                 break;
 
 
@@ -381,7 +435,7 @@ public class CulinarySubsystem implements Listener {
         }
     }
 
-    private ItemStack createRecipeItem(CulinaryRecipe recipe) {
+    public static ItemStack createRecipeItem(CulinaryRecipe recipe) {
         ItemStack item = new ItemStack(recipe.getRecipeItem(), 1);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.GOLD + recipe.getName() + " Recipe");

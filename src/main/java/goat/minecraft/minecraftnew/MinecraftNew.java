@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew;
 
 import goat.minecraft.minecraftnew.subsystems.combat.*;
+import goat.minecraft.minecraftnew.subsystems.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
 import goat.minecraft.minecraftnew.utils.artifacts.RightClickArtifacts;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
@@ -9,8 +10,6 @@ import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.culinary.MeatCookingManager;
 import goat.minecraft.minecraftnew.utils.KnightMob;
-import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
-import goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentTableInventoryInteractCancel;
 import goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects.*;
 import goat.minecraft.minecraftnew.subsystems.farming.FarmingEvent;
 import goat.minecraft.minecraftnew.subsystems.fishing.FishingEvent;
@@ -59,19 +58,24 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private MeatCookingManager meatCookingManager;
     private ItemDisplayManager displayManager;
     private PlayerOxygenManager playerOxygenManager;
+    private UltimateEnchantingSystem ultimateEnchantmentManager;
+
 
 
 
     @Override
     public void onEnable() {
 
+        getServer().getPluginManager().registerEvents(new UltimateEnchantmentListener(this), this);
 
-        HostilityManager manager = HostilityManager.getInstance(this);
+        UltimateEnchantingSystem ultimateEnchantingSystem = new UltimateEnchantingSystem();
+        ultimateEnchantingSystem.registerCustomEnchants();
+        HostilityManager hostilityManagermanager = HostilityManager.getInstance(this);
 
 
 
         // Register the /hostility command executor
-        getCommand("hostility").setExecutor(manager.new HostilityCommand());
+        getCommand("hostility").setExecutor(hostilityManagermanager.new HostilityCommand());
 
 
         autoComposter = new AutoComposter(this);
@@ -84,7 +88,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         PetManager petManager = PetManager.getInstance(this);
         new SpeedBoost(petManager);
         // Initialize the culinary subsystem
-        culinarySubsystem = new CulinarySubsystem(this);
+        CulinarySubsystem culinarySubsystem = CulinarySubsystem.getInstance(this);
         new CulinaryCauldron(this);
         new ParticlePetEffects(this);
 
@@ -95,6 +99,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
         Bukkit.getPluginManager().registerEvents(new HireVillager(), this);
+
+        getServer().getPluginManager().registerEvents(new UltimateEnchantingSystem(), this);
+
         getServer().getPluginManager().registerEvents(new ArmorEquipListener(), this);
         getServer().getPluginManager().registerEvents(new Leap(this), this);
         getServer().getPluginManager().registerEvents(new MobDamageHandler(), this);
@@ -182,7 +189,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new FarmingEvent(), this);
         getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), this);
         getServer().getPluginManager().registerEvents(new CancelBrewing(this), this);
-        getServer().getPluginManager().registerEvents(new EnchantmentTableInventoryInteractCancel(), this);
         getServer().getPluginManager().registerEvents(new RightClickArtifacts(this), this);
         getServer().getPluginManager().registerEvents(new AnvilRepair(this), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
@@ -231,6 +237,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomEnchantmentManager.registerEnchantment("Bloodlust", 5, true);
         CustomEnchantmentManager.registerEnchantment("Experience", 5, true);
         CustomEnchantmentManager.registerEnchantment("Rappel", 1, true);
+
 
         getServer().getPluginManager().registerEvents(new KnightMob(this), this);
         getServer().getPluginManager().registerEvents(new SwordReforge(new ReforgeManager()), this);
