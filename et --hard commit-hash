@@ -1,0 +1,230 @@
+[33mcommit 5a275a26a2be8b9da86cd7bcab44df15e375df78[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Wed Dec 25 12:25:44 2024 -0800
+
+    1.0 update
+
+[33mcommit ab177431d8eebc76c001e04244d80af5a9a6df2a[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Tue Dec 24 16:24:47 2024 -0800
+
+    push of pre-config update
+
+[33mcommit e83948a6f369ee1d4d7254cc9eef24e354f52aeb[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Sun Dec 22 03:24:35 2024 -0800
+
+    precedent to ultimateenchantment update
+
+[33mcommit ed4adec829cbf12232041734e9e272132fe0865c[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Fri Dec 20 13:36:41 2024 -0800
+
+    balanced ender dragon boss fight
+
+[33mcommit 135d80a6e4b3f737e05369ffefd5495a106ac71a[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Fri Dec 20 03:38:08 2024 -0800
+
+    balanced ender dragon boss fight
+
+[33mcommit ccc806a8ca02b4f8a36ca33b1a10365b0fa6a0ff[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Fri Dec 20 02:41:34 2024 -0800
+
+    added speed mutation
+
+[33mcommit 744cbafbb6f739cf56a7460ee369dc2dc1d608bc[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Fri Dec 20 02:40:10 2024 -0800
+
+    added mob mutations
+
+[33mcommit 8a5c7dfeab613319f28d557c6a4ba3988f9844da[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Fri Dec 20 02:20:03 2024 -0800
+
+    made disc 11 set the players hostility level to 20 (not normally achievable)
+    made disc mall start rain and disable monster spawning for 40 minutes
+    made far music disc spawn 16 random loot crates
+    music subsystem is now complete.
+
+[33mcommit 71978c1e9aaec4d2c6d47f3e3f19a180afbdb422[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Thu Dec 19 21:52:44 2024 -0800
+
+    fixed sea creatures not dropping bonus xp from higher hostility levels
+
+[33mcommit 1be80f8e4b3d3e40d29f202cd9e7a7b1b60ea868[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Thu Dec 19 21:48:15 2024 -0800
+
+    fixed hostility feature into droprate and level scaling of monsters and sea creatures
+
+[33mcommit c20d4b6b2526af51a11c4a6f0c41957a1eedeebd[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Thu Dec 19 17:27:03 2024 -0800
+
+    fixed item displays not loading correctly when server fully restarts
+
+[33mcommit e18f765272bba8a0d840c4b05ff8859b9bd18cdc[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Thu Dec 19 14:08:11 2024 -0800
+
+    fixed random bugs
+
+[33mcommit 47cf9c7549f0cf9d109539ee06290d317427aee0[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Thu Dec 19 12:58:17 2024 -0800
+
+    added the ability to hire villagers for 4 emeralds by shift right clicking them with at least 4 emeralds
+
+[33mcommit b8f80874ccf363815730d7a72829b21d4df84200[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Wed Dec 18 04:53:59 2024 -0800
+
+    nerfed sea creature levels
+
+[33mcommit d8e80988d5d9521e87afa464002235c90c75847d[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Wed Dec 18 00:40:13 2024 -0800
+
+    added some mining items to ItemRegistry.
+    fixed mining pet acquisition. a stat of all ores mined is now kept per player and mining pets are granted based on that statistic.
+    fixed warden pet
+    fixed Waterlogged perk not displaying name
+
+[33mcommit feccfbd52446ca3f8494da447114a824cf77b72d[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Tue Dec 17 20:55:56 2024 -0800
+
+    nearly out of beta
+
+[33mcommit cd4f765f8361b3344338048732e2f6dfe3986c32[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Tue Dec 17 19:33:28 2024 -0800
+
+    added sharpen, polish, and reinforce logic
+
+[33mcommit 734334bcf4eff2d3d479013d74563891200a14d4[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Tue Dec 17 18:21:14 2024 -0800
+
+    fixed shell durability repair values to match their descriptions
+    added turtle variant sea creatures for shell items
+    changed deep shell item from turtle helmet to purple dye
+    added epic water spider to sea creature registry
+    added bioluminescent guardian legendary sea creature
+
+[33mcommit e32b0e87264ae60a117306ae961d19a8b68cb11e[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Tue Dec 17 17:40:20 2024 -0800
+
+    buffed leviathan pet to gain strong swimmer and elite perk
+
+[33mcommit d000c5b29a13ecd9966e79c70b65e7ea74163ae4[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Tue Dec 17 17:37:47 2024 -0800
+
+    added poseidon sea creature
+    added trident drop to poseidon
+
+[33mcommit f11d2b8fdcd6bae6294bc581125f4b8f33715e29[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Tue Dec 17 04:32:47 2024 -0800
+
+    updated farming.
+    added farming pet acquisition
+    added seeder variants
+    added seeders to farmer drops
+    added auto composter to tier 5 farmerbuys
+    added organic soil to farmersells
+
+[33mcommit 79ccceefcf8b4609960bc4aab6690cb2e53d011c[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Tue Dec 17 04:32:27 2024 -0800
+
+    updated farming.
+    added farming pet acquisition
+    added seeder variants
+    added seeders to farmer drops
+    added auto composter to tier 5 farmerbuys
+    added organic soil to farmersells
+
+[33mcommit ba2685ef3eb4657d909445dff28b6e88ae233ddd[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Tue Dec 17 00:44:56 2024 -0800
+
+    cleaned packages
+
+[33mcommit be687631be9d87c7b29b72aa02c95ad4f808e138[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Mon Dec 16 15:10:47 2024 -0800
+
+    added pet particle effects to combat pets
+    fixed item displays and culinary reload logic
+
+[33mcommit 493216c8c763ef87f929c6ffd218ef6cb8697c0d[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Mon Dec 16 04:17:44 2024 -0800
+
+    added CulinarySubsystem.
+    added meatManager
+    added bartering skill
+    removed FarmingBuff.java to allow for the culinary skill to grant bonus saturation instead
+    fixed infernal enchantments applying without requiring the maxlevel+1
+    added sea salt to item registry
+    added sea salt to common-rare sea creature loot
+    added forbidden book to ItemRegistry
+    added culinary skill to skills command
+    added Bartering to SkillsCommand
+    added abomination sea creature
+    added luminescent drowned sea creature
+    added bartering xp to all villager trades
+
+[33mcommit 09e08661607f2ef6ad7489505fa47be498eb28e4[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Fri Dec 13 14:29:59 2024 -0800
+
+    continued item registry
+    reblanced villager trading
+
+[33mcommit a13016dabfdcc6424a77182def9d20f45291d0a8[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Thu Dec 12 15:47:22 2024 -0800
+
+    begun item registry
+    added great white shark, megalodon, and pirate sea creatures
+    changed fisherman to buy creature teeth
+    all sharks drop creature teeth
+    added a 10% chance for pirate to drop golden steve pet
+
+[33mcommit 0a0817c32f85e4ff8ad054668e0bbd3514046c72[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Thu Dec 12 03:58:49 2024 -0800
+
+    fixes
+
+[33mcommit a6b2f925ea67e41a09264b01782f70e85a9da25c[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Thu Dec 12 01:41:10 2024 -0800
+
+    fixed a bug where selling items like saddles would sell every available saddle for 1 transaction rather than just 1
+
+[33mcommit e5c10dcd06b26e7c22073b73f2cbe0403b4a7bfb[m
+Author: jacob <jacob.a.fox@gmail.com>
+Date:   Thu Dec 12 01:33:39 2024 -0800
+
+    fixed farmer to only harvest nearby crops if he has a hay bale nearby
+    rebalanced fishermans gains from fishing
+    fixed a bug where the player could place and break crops for infinite farming xp
+    revamped librarians workcycle to make the player bottles of enchanting
+    fixed forest spirits not getting damage multipliers
+    buffed armorers to fully repair nearby armor on stands
+    buffed weaponsmiths to fully repair nearby swords in itemframes
+    buffed toolsmiths to fully repair nearby tools in itemframes
+    enabled the fletcher to produce 4 of every nearby wood type log every workcycle in addition to arrows
+    buffed masons to no longer remove the nearby stone variants they are replicating at the cost of lower yields
+    mason: -1 inspiration block = 48 output blocks -> 4 output blocks per nearby inspiration block on top of clean stone slab
+    
+    rebalanced the rest of villa
