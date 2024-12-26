@@ -78,6 +78,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("hostility").setExecutor(hostilityManagermanager.new HostilityCommand());
 
 
+
         autoComposter = new AutoComposter(this);
         VillagerWorkCycleManager.getInstance(this);
         displayManager = new ItemDisplayManager(this);
