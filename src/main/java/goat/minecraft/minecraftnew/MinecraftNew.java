@@ -44,6 +44,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public class MinecraftNew extends JavaPlugin implements Listener {
 
     private VillagerWorkCycleManager villagerWorkCycleManager;
@@ -65,6 +67,12 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        displayManager = new ItemDisplayManager(this);
+        Collections collectionsCommand = new Collections(this, displayManager);
+
+        Objects.requireNonNull(getCommand("collection")).setExecutor(collectionsCommand);
+
+
 
         getServer().getPluginManager().registerEvents(new UltimateEnchantmentListener(this), this);
 
@@ -81,7 +89,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         autoComposter = new AutoComposter(this);
         VillagerWorkCycleManager.getInstance(this);
-        displayManager = new ItemDisplayManager(this);
+
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
