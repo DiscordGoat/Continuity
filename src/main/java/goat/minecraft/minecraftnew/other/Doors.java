@@ -1,7 +1,6 @@
-package goat.minecraft.minecraftnew.utils.chocolatemisc;
+package goat.minecraft.minecraftnew.other;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;

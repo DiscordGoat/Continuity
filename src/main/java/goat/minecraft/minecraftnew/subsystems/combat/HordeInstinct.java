@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.utils.ai.Pathfinder;
+import goat.minecraft.minecraftnew.other.Pathfinder;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.entity.Player;

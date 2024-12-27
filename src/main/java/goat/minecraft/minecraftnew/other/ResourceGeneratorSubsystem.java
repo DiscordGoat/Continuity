@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils.generators;
+package goat.minecraft.minecraftnew.other;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;

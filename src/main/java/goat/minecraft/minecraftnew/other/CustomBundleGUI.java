@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils.chocolatemisc;
+package goat.minecraft.minecraftnew.other;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

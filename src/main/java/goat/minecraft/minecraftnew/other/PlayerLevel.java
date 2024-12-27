@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils.player;
+package goat.minecraft.minecraftnew.other;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.XPManager;

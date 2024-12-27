@@ -57,29 +57,36 @@ public class UltimateEnchantmentListener implements Listener {
                     Block relativeBlock;
 
                     if (vertical) {
-                        // Break horizontally (y-axis)
+                        // Break vertically
                         relativeBlock = centerBlock.getRelative(x, y, z);
                     } else {
-                        // Break vertically (z-axis)
+                        // Break horizontally
                         relativeBlock = centerBlock.getRelative(x, z, y);
                     }
 
                     // Check if the block is breakable
                     if (relativeBlock.getType().isSolid()) {
-                        // Check for Silk Touch
-                        ItemStack tool = player.getInventory().getItemInMainHand();
-                        if (tool != null && tool.containsEnchantment(Enchantment.SILK_TOUCH)) {
-                            // Drop the block as an item if Silk Touch is active
-                            relativeBlock.getWorld().dropItemNaturally(relativeBlock.getLocation(), new ItemStack(relativeBlock.getType()));
-                        }
-
-                        // Break the block
-                        relativeBlock.setType(Material.AIR);
+                        // Handle the block break
+                        breakBlock(player, relativeBlock);
                     }
                 }
             }
         }
     }
+
+    private void breakBlock(Player player, Block block) {
+        // Get the player's tool
+        ItemStack tool = player.getInventory().getItemInMainHand();
+
+        // Drop the block's natural drops
+        for (ItemStack itemStack : block.getDrops(tool)) {
+            block.getWorld().dropItemNaturally(block.getLocation(), itemStack);
+        }
+
+        // Set the block to air (break it)
+        block.setType(Material.AIR);
+    }
+
     private boolean isLeafBlock(Material material) {
         return material == Material.OAK_LEAVES || material == Material.BIRCH_LEAVES || material == Material.SPRUCE_LEAVES
                 || material == Material.JUNGLE_LEAVES || material == Material.ACACIA_LEAVES || material == Material.DARK_OAK_LEAVES
@@ -90,19 +97,7 @@ public class UltimateEnchantmentListener implements Listener {
                 || material == Material.JUNGLE_LOG || material == Material.ACACIA_LOG || material == Material.DARK_OAK_LOG
                 || material == Material.CRIMSON_STEM || material == Material.WARPED_STEM;
     }
-    private void breakBlock(Player player, Block block) {
-        // Check for Silk Touch
-        ItemStack tool = player.getInventory().getItemInMainHand();
-        if (tool != null) {
-            // Drop the block as an item if Silk Touch is active
-            for (ItemStack itemStack : block.getDrops()) {
-                block.getWorld().dropItemNaturally(block.getLocation(), itemStack);
-            }
-        }
 
-        // Break the block
-        block.setType(Material.AIR);
-    }
     private void breakConnectedWoodAndLeaves(Player player, Block startBlock) {
         Queue<Block> queue = new ArrayDeque<>();
         Set<Block> visited = new HashSet<>();

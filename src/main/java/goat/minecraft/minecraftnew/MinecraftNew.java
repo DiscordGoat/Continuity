@@ -1,11 +1,10 @@
 package goat.minecraft.minecraftnew;
 
+import goat.minecraft.minecraftnew.other.*;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
-import goat.minecraft.minecraftnew.utils.artifacts.RightClickArtifacts;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
-import goat.minecraft.minecraftnew.utils.chocolatemisc.*;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.culinary.MeatCookingManager;
@@ -31,11 +30,10 @@ import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.Armo
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.SwordReforge;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ToolReforge;
 import goat.minecraft.minecraftnew.subsystems.farming.AutoComposter;
-import goat.minecraft.minecraftnew.utils.structures.Mineshafts;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
-import goat.minecraft.minecraftnew.utils.player.PlayerLevel;
+import goat.minecraft.minecraftnew.other.PlayerLevel;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.utils.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
@@ -267,8 +265,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
         //nms >
-
-        getServer().getPluginManager().registerEvents(new Mineshafts(this), this);
 
 
         if (!getDataFolder().exists()) {

@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils.chocolatemisc;
+package goat.minecraft.minecraftnew.other;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.Bukkit;

@@ -1,8 +1,7 @@
-package goat.minecraft.minecraftnew.utils.artifacts;
+package goat.minecraft.minecraftnew.other;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.farming.SeederType;
-import goat.minecraft.minecraftnew.utils.chocolatemisc.CustomBundleGUI;
 import goat.minecraft.minecraftnew.utils.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;

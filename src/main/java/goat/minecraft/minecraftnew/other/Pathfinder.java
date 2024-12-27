@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils.ai;
+package goat.minecraft.minecraftnew.other;
 
 import me.gamercoder215.mobchip.EntityBrain;
 import me.gamercoder215.mobchip.bukkit.BukkitBrain;

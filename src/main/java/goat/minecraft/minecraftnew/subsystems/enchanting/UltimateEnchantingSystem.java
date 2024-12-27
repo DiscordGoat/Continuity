@@ -23,7 +23,7 @@ public class UltimateEnchantingSystem implements Listener {
     // Hard-coded costs
     private static final int ULTIMATE_ENCHANT_COST_LAPIS = 64;
     private static final int COOLDOWN_UPGRADE_COST_LAPIS = 64;
-    private static final int FORBIDDEN_BOOK_COST = 16;
+    private static final int FORBIDDEN_BOOK_COST = 4;
 
     /**
      * Instead of a class, we store a mapping from Material -> List<String> (enchantment names).
@@ -140,7 +140,7 @@ public class UltimateEnchantingSystem implements Listener {
         if (meta != null) {
             meta.setDisplayName(ChatColor.GOLD + enchantName);
             List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.BLUE + "Cost: 64 Lapis & 16 Forbidden Books.");
+            lore.add(ChatColor.BLUE + "Cost: 64 Lapis & 4 Forbidden Books.");
             meta.setLore(lore);
             meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
             icon.setItemMeta(meta);

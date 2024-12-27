@@ -1,8 +1,7 @@
-package goat.minecraft.minecraftnew.utils.chocolatemisc;
+package goat.minecraft.minecraftnew.other;
 
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.chocolatemisc.ItemDisplayManager;
-import goat.minecraft.minecraftnew.utils.chocolatemisc.ItemDisplayManager.ItemDisplay;
+import goat.minecraft.minecraftnew.other.ItemDisplayManager.ItemDisplay;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.*;
@@ -91,19 +90,18 @@ public class Collections implements CommandExecutor, Listener {
             List<Map<String, Object>> defaultRequiredList = new ArrayList<>();
             // Add custom item
             ItemStack forbiddenBook = ItemRegistry.getForbiddenBook(); // Example custom item
-            defaultRequiredList.add(forbiddenBook.serialize());
-            // Add normal sword
+            //defaultRequiredList.add(forbiddenBook.serialize());
+            defaultRequiredList.add(new ItemStack(Material.WOODEN_SWORD).serialize());
             defaultRequiredList.add(new ItemStack(Material.STONE_SWORD).serialize());
             defaultRequiredList.add(new ItemStack(Material.IRON_SWORD).serialize());
             defaultRequiredList.add(new ItemStack(Material.GOLDEN_SWORD).serialize());
             defaultRequiredList.add(new ItemStack(Material.DIAMOND_SWORD).serialize());
-            defaultRequiredList.add(new ItemStack(Material.NETHERITE_SWORD).serialize());
             swords.put("requiredItems", defaultRequiredList);
 
             // For rewards
             List<Map<String, Object>> defaultRewardList = new ArrayList<>();
-            defaultRewardList.add(new ItemStack(Material.GOLD_INGOT, 5).serialize());
-            defaultRewardList.add(new ItemStack(Material.EXPERIENCE_BOTTLE, 16).serialize());
+            defaultRewardList.add(new ItemStack(Material.EMERALD, 64).serialize());
+            defaultRewardList.add(ItemRegistry.getExperienceArtifact().serialize());
             swords.put("rewardItems", defaultRewardList);
 
             swords.put("rewardMessage", "&aYou have collected all swords!");
