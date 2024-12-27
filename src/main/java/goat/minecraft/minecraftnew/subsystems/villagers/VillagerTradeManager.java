@@ -1154,6 +1154,8 @@ public class VillagerTradeManager implements Listener {
     }
 
     private void processSell(Player player, Villager villager, TradeItem tradeItem) {
+        int barteringExperience = tradeItem.getBarteringExperience();
+        XPManager xpManager = new XPManager(plugin);
         int emeraldReward = tradeItem.getEmeraldValue();
         int quantity = tradeItem.getQuantity();
         ItemStack tradeItemStack = tradeItem.getItem();
@@ -1173,6 +1175,8 @@ public class VillagerTradeManager implements Listener {
 
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
             player.sendMessage(ChatColor.GREEN + "You sold " + quantity + " items for " + emeraldReward + " emeralds!");
+            xpManager.addXP(player, "Bartering", barteringExperience);
+
         } else {
             player.sendMessage(ChatColor.RED + "You don't have enough of the required items to sell.");
         }
