@@ -1,8 +1,11 @@
 package goat.minecraft.minecraftnew.utils;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Utility class for handling enchantments on ItemStacks.
@@ -94,7 +97,8 @@ public class EnchantmentUtils {
      * @return The modified ItemStack with the incremented enchantment level,
      *         or the original item if modification failed.
      */
-    public static ItemStack incrementEnchantment(ItemStack item, ItemStack billItem, Enchantment enchantment) {
+    public static ItemStack incrementEnchantment(Player player, ItemStack item, ItemStack billItem, Enchantment enchantment) {
+        XPManager xpManager = new XPManager(MinecraftNew.getInstance());
         if (item == null || item.getType().isAir()) {
             System.err.println("Error: Cannot enchant a null or AIR item.");
             return item;
@@ -119,7 +123,7 @@ public class EnchantmentUtils {
         // Handle billItem if it's not null
         if (billItem != null && billItem.getAmount() > 0) {
             billItem.setAmount(billItem.getAmount() - 1);
-            System.out.println("Decreased billItem amount by 1.");
+            xpManager.addXP(player, "Smithing", 100);
         } else if (billItem == null) {
             System.out.println("No billItem was required for this enchantment.");
         } else {
@@ -130,7 +134,8 @@ public class EnchantmentUtils {
     }
 
 
-    public static ItemStack incrementEnchantmentUnsafely(ItemStack item, ItemStack billItem, Enchantment enchantment) {
+    public static ItemStack incrementEnchantmentUnsafely(Player player, ItemStack item, ItemStack billItem, Enchantment enchantment) {
+        XPManager xpManager = new XPManager(MinecraftNew.getInstance());
         if (item == null || item.getType().isAir()) {
             System.err.println("Error: Cannot enchant a null or AIR item.");
             return item;
@@ -164,6 +169,7 @@ public class EnchantmentUtils {
 
         }else {
             billItem.setAmount(billItem.getAmount() - 1);
+            xpManager.addXP(player, "Smithing", 1000);
         }
         return item;
     }

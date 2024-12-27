@@ -364,7 +364,7 @@ public class AnvilRepair implements Listener {
                         if (repairee.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL) == 4) {
                             return;
                         }
-                        EnchantmentUtils.incrementEnchantment(repairee, null, Enchantment.PROTECTION_ENVIRONMENTAL);
+                        EnchantmentUtils.incrementEnchantment(player, repairee, null, Enchantment.PROTECTION_ENVIRONMENTAL);
                         inventory.removeItem(new ItemStack(Material.OBSIDIAN, 2));
                         player.sendMessage("Your item has been enchanted with Protection!");
                         xpManager.addXP(player, "Smithing", 500.0); // Add XP here
@@ -402,7 +402,7 @@ public class AnvilRepair implements Listener {
                         if (repairee.getEnchantmentLevel(Enchantment.DIG_SPEED) == 5) {
                             return;
                         }
-                        EnchantmentUtils.incrementEnchantment(repairee, null, Enchantment.DIG_SPEED);
+                        EnchantmentUtils.incrementEnchantment(player, repairee, null, Enchantment.DIG_SPEED);
                         inventory.removeItem(new ItemStack(Material.GOLD_BLOCK, 1));
                         player.sendMessage("Your item has been enchanted with Efficiency!");
                         xpManager.addXP(player, "Smithing", 500.0); // Add XP here
@@ -438,7 +438,7 @@ public class AnvilRepair implements Listener {
                         if (repairee.getEnchantmentLevel(Enchantment.DAMAGE_ALL) == 5) {
                             return;
                         }
-                        EnchantmentUtils.incrementEnchantment(repairee, billItem, Enchantment.DAMAGE_ALL);
+                        EnchantmentUtils.incrementEnchantment(player, repairee, billItem, Enchantment.DAMAGE_ALL);
                         inventory.removeItem(new ItemStack(Material.DIAMOND, 2));
 
                         player.sendMessage("Your item has been sharpened!");
@@ -652,244 +652,239 @@ public class AnvilRepair implements Listener {
             repairAmount = 800;
             xpManager.addXP(player, "Smithing", 200.0);
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Mithril Chunk") && isDurable(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.DURABILITY);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.DURABILITY);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Perfect Diamond")&& TOOLS.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.LOOT_BONUS_BLOCKS);
-            xpManager.addXP(player, "Smithing", 10000.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.LOOT_BONUS_BLOCKS);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Silk Worm") && isDurable(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.SILK_TOUCH);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.SILK_TOUCH);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Secrets of Infinity") && isBow(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.ARROW_INFINITE);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.ARROW_INFINITE);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Petrified Log") && isDurable(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.DURABILITY);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.DURABILITY);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Pinecone") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.THORNS);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.THORNS);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Birch Strip") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_PROJECTILE);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_PROJECTILE);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Humid Bark") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_FALL);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_FALL);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Acacia Gum") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_FIRE);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_FIRE);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Acorn") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Cherry Blossom") && isDurable(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.DURABILITY);
-            incrementEnchantment(repairee, billItem,Enchantment.DURABILITY);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.DURABILITY);
+            incrementEnchantment(player, repairee, billItem,Enchantment.DURABILITY);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Maple Bark") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_FIRE);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_FIRE);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Blue Nether Wart") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Beating Heart") && isSword(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.DAMAGE_UNDEAD);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.DAMAGE_UNDEAD);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "SpiderBane") && isSword(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.DAMAGE_ARTHROPODS);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.DAMAGE_ARTHROPODS);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fire Ball") && isBow(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.ARROW_FIRE);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.ARROW_FIRE);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Mending") && isDurable(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.MENDING);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.MENDING);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Frost Heart") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.FROST_WALKER);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.FROST_WALKER);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "KB Ball") && isSword(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.KNOCKBACK);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.KNOCKBACK);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "High Caliber Arrow") && isBow(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.PIERCING);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.PIERCING);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Grains of Soul") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.SOUL_SPEED);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.SOUL_SPEED);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Gold Bar") && isSword(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.LOOT_BONUS_MOBS);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.LOOT_BONUS_MOBS);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fins") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.DEPTH_STRIDER);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.DEPTH_STRIDER);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Turtle Tactics") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.WATER_WORKER);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.WATER_WORKER);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Diving Helmet") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.OXYGEN);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.OXYGEN);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Swim Trunks") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(repairee, billItem,Enchantment.SWIFT_SNEAK);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.SWIFT_SNEAK);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Narwhal Tusk") && isSword(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.IMPALING);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.IMPALING);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Sweeping Edge") && isSword(repairee)){
-            incrementEnchantment(repairee, billItem,Enchantment.SWEEPING_EDGE);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem,Enchantment.SWEEPING_EDGE);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Bowstring") && isBow(repairee)){
-            incrementEnchantment(repairee, billItem, Enchantment.ARROW_DAMAGE);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem, Enchantment.ARROW_DAMAGE);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lightning Bolt") && isTrident(repairee)){
-            incrementEnchantment(repairee, billItem, Enchantment.CHANNELING);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem, Enchantment.CHANNELING);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Anaklusmos") && isTrident(repairee)){
-            incrementEnchantment(repairee, billItem, Enchantment.RIPTIDE);
-            xpManager.addXP(player, "Smithing", 100.0);
+            incrementEnchantment(player, repairee, billItem, Enchantment.RIPTIDE);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
 
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Well Balanced Meal") && MELEE.contains(repairee.getType())){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Feed", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Feed") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Feed", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Feed") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Brutal Tactics") && isSword(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Cleaver", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Cleaver") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Cleaver", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Cleaver") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Call of the Void") && isFishingRod(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Call of the Void", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Call of the Void") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Call of the Void", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Call of the Void") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Savant") && isDurable(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Savant", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Savant") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Savant", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Savant") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Oxygen Tank")&& ARMOR.contains(repairee.getType())){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Ventilation", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Ventilation") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Ventilation", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Ventilation") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Everflame")&& TOOLS.contains(repairee.getType())) {
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Forge", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Forge") + 1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Forge", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Forge") + 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Climbing Rope")&& TOOLS.contains(repairee.getType())){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Rappel", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Rappel") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Rappel", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Rappel") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Golden Hook")&& isFishingRod(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Piracy", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Piracy") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Piracy", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Piracy") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Laceration")&& MELEE.contains(repairee.getType())){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Shear", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Shear") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Shear", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Shear") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Hide")&& ARMOR.contains(repairee.getType())){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Physical Protection", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Physical Protection") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Physical Protection", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Physical Protection") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Alchemical Bundle")&& isPickaxe(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Alchemy", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Alchemy") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Alchemy", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Alchemy") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fast Travel")&& isSword(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Aspect of the Journey", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Aspect of the Journey") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Aspect of the Journey", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Aspect of the Journey") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Stun Coating")&& isBow(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Stun", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Stun") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Stun", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Stun") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Explosive Bolts")&& isCrossbow(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Lethal Reaction", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Lethal Reaction") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Lethal Reaction", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Lethal Reaction") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
+
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lethal Tempo")&& isSword(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Bloodlust", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Bloodlust") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Bloodlust", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Bloodlust") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
-            return;
+            ;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Soul Lantern")&& isSword(repairee)){
-            CustomEnchantmentManager.addEnchantment(billItem, repairee, "Experience", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Experience") +1);
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Experience", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Experience") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-            xpManager.addXP(player, "Smithing", 100.0);
             return;
         }
 
@@ -956,98 +951,95 @@ public class AnvilRepair implements Listener {
 
 
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Efficiency Expertise")&& TOOLS.contains(repairee.getType())){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DIG_SPEED);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.DIG_SPEED);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Unbreaking Expertise")&& isDurable(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DURABILITY);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.DURABILITY);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Sharpness Expertise")&& isSword(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DAMAGE_ALL);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.DAMAGE_ALL);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Sweeping Edge Expertise")&& isSword(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.SWEEPING_EDGE);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.SWEEPING_EDGE);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Looting Expertise")&& isSword(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.LOOT_BONUS_MOBS);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.LOOT_BONUS_MOBS);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Knockback Expertise")&& isSword(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.KNOCKBACK);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.KNOCKBACK);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fire Aspect Expertise")&& isSword(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.FIRE_ASPECT);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.FIRE_ASPECT);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Smite Expertise")&& isSword(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DAMAGE_UNDEAD);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.DAMAGE_UNDEAD);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Bane of Anthropods Expertise")&& isSword(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.DAMAGE_ARTHROPODS);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.DAMAGE_ARTHROPODS);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lure Expertise")&& isFishingRod(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.LURE);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.LURE);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Luck of the Sea Expertise")&& isFishingRod(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.LUCK);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.LUCK);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Protection Expertise")&& ARMOR.contains(repairee.getType())){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_ENVIRONMENTAL);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.PROTECTION_ENVIRONMENTAL);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Respiration Expertise")&& ARMOR.contains(repairee.getType())){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.OXYGEN);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.OXYGEN);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Thorns Expertise")&& ARMOR.contains(repairee.getType())){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.THORNS);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.THORNS);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Feather Falling Expertise")&& ARMOR.contains(repairee.getType())){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_FALL);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.PROTECTION_FALL);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Blast Protection Expertise")&& ARMOR.contains(repairee.getType())){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_FALL);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.PROTECTION_FALL);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fire Protection Expertise")&& ARMOR.contains(repairee.getType())){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_FALL);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.PROTECTION_FALL);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Projectile Protection Expertise")&& ARMOR.contains(repairee.getType())){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.PROTECTION_FALL);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.PROTECTION_FALL);
+
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Power Expertise")&& isBow(repairee)){
-            incrementEnchantmentUnsafely(repairee, billItem, Enchantment.ARROW_DAMAGE);
-            xpManager.addXP(player, "Smithing", 500.0);
+            incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.ARROW_DAMAGE);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }

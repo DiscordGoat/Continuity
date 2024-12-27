@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.enchanting;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -141,7 +144,8 @@ public class CustomEnchantmentManager {
     /**
      * Applies a custom enchantment to an item. (Non-ultimate usage)
      */
-    public static ItemStack addEnchantment(ItemStack billItem, ItemStack item, String enchantmentName, int level) {
+    public static ItemStack addEnchantment(Player player, ItemStack billItem, ItemStack item, String enchantmentName, int level) {
+        XPManager xpManager = new XPManager(MinecraftNew.getInstance());
         CustomEnchantment enchantment = getEnchantment(enchantmentName);
         if (enchantment == null) return item;
         if (level < 1 || level > enchantment.getMaxLevel()) {
@@ -163,6 +167,7 @@ public class CustomEnchantmentManager {
         meta.setLore(lore);
         item.setItemMeta(meta);
         billItem.setAmount(billItem.getAmount() - 1);
+        xpManager.addXP(player, "Smithing", 200);
         return item;
     }
 
