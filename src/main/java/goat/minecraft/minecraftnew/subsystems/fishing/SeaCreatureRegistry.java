@@ -168,6 +168,7 @@ public class SeaCreatureRegistry implements Listener {
         sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 3, 1, 5));
         sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 3, 1, 5));
         sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 3, 1, 5));
+        sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 3, 1, 5));
         SEA_CREATURES.add(new SeaCreature(
                 "Shark",
                 Rarity.RARE,
@@ -182,6 +183,7 @@ public class SeaCreatureRegistry implements Listener {
         pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 3, 1, 5));
         pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 3, 1, 5));
         pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getImpaling(), 1, 1, 4));
+        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getLuck(), 1, 1, 4));
         SEA_CREATURES.add(new SeaCreature(
                 "Pirate",
                 Rarity.RARE,

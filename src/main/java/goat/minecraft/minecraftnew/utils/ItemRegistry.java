@@ -687,6 +687,34 @@ public class ItemRegistry {
                 true
         );
     }
+    public static ItemStack getBait() {
+        return CustomItemManager.createCustomItem(
+                Material.ROTTEN_FLESH,
+                ChatColor.YELLOW + "Fish Bait",
+                Arrays.asList(
+                        ChatColor.GRAY + "Various snacks for fish that make them smile.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Lure.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getLuck() {
+        return CustomItemManager.createCustomItem(
+                Material.GOLD_NUGGET,
+                ChatColor.YELLOW + "Lucky",
+                Arrays.asList(
+                        ChatColor.GRAY + "Various flavours for fish that make them smile.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Luck of the Sea.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
     public static ItemStack getFishermanLure() {
         return CustomItemManager.createCustomItem(
                 Material.BRAIN_CORAL_BLOCK,

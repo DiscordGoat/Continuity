@@ -782,9 +782,17 @@ public class AnvilRepair implements Listener {
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Narwhal Tusk") && isSword(repairee)){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Bait") && isFishingRod(repairee)) {
+            incrementEnchantment(player, repairee, billItem, Enchantment.LURE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lucky") && isFishingRod(repairee)) {
+            incrementEnchantment(player, repairee, billItem, Enchantment.LUCK);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Narwhal Tusk") && isSword(repairee)){
             incrementEnchantment(player, repairee, billItem,Enchantment.IMPALING);
-
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Sweeping Edge") && isSword(repairee)){
