@@ -54,6 +54,7 @@ public class FarmingEvent implements Listener {
         cropXP.put(Material.NETHER_WART, 7); // Common crops
         cropXP.put(Material.POTATOES, 5);
         cropXP.put(Material.CARROTS, 6);
+        cropXP.put(Material.CARROT, 6);
         cropXP.put(Material.BEETROOTS, 6); // Slightly rarer crops
         cropXP.put(Material.MELON, 8); // Uncommon crops
         cropXP.put(Material.PUMPKIN, 8);
@@ -66,8 +67,9 @@ public class FarmingEvent implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Block block = event.getBlock();
-        if (cropXP.containsKey(block.getType())) {
+        if (block.getType() == Material.PUMPKIN || block.getType() == Material.MELON) {
             block.setMetadata(PLAYER_PLACED_KEY, new FixedMetadataValue(plugin, true));
+            System.out.println("Metadata set for player-placed block: " + block.getType());
         }
     }
 
@@ -76,12 +78,17 @@ public class FarmingEvent implements Listener {
         Block block = e.getBlock();
         Player player = e.getPlayer();
         Material blockType = block.getType();
+        //System.out.println("Breaking block: " + blockType.name());
 
         // Check if the block is a recognized crop
         if (cropXP.containsKey(blockType)) {
             // Check if the block was placed by a player
             if (block.hasMetadata(PLAYER_PLACED_KEY)) {
-                return;
+                if (block.getType() == Material.PUMPKIN || block.getType() == Material.MELON) {
+                    System.out.println("player placed block broken: " + blockType.name());
+
+                    return;
+                }
             }
 
             // Handle crops that have growth stages (Ageable blocks)
