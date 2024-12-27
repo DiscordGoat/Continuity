@@ -503,8 +503,8 @@ public class VillagerTradeManager implements Listener {
         fishermanSells.add(createTradeMap("GLOW_INK_SAC", 4, 1, 2, 29)); // Material
         fishermanSells.add(createTradeMap("TOOTH", 1, 2, 2, 58)); // Custom Item
         fishermanSells.add(createTradeMap("LUMINESCENT_INK", 1, 2, 2, 29)); // Custom Item
-        fishermanSells.add(createTradeMap("NAUTILUS_SHELL", 4, 1, 2, 58)); // Material
-        fishermanSells.add(createTradeMap("HEART_OF_THE_SEA", 16, 1, 2, 232)); // Material
+        fishermanSells.add(createTradeMap("NAUTILUS_SHELL", 1, 4, 2, 58)); // Material
+        fishermanSells.add(createTradeMap("HEART_OF_THE_SEA", 1, 16, 2, 232)); // Material
         fishermanSells.add(createTradeMap("FISH_BONE", 1, 1, 2, 29)); // Custom Item
         fishermanSells.add(createTradeMap("TRIDENT", 1, 24, 2, 696)); // Material
 
