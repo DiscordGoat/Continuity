@@ -535,8 +535,8 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> farmerPurchases = new ArrayList<>();
         farmerPurchases.add(createTradeMap("BREAD", 3, 1, 1, 29)); // Level 1 trade
         farmerPurchases.add(createTradeMap("WHEAT_SEEDS", 12, 3, 1, 29)); // Level 1 trade
-        farmerPurchases.add(createTradeMap("PUMPKIN_SEEDS", 3, 32, 2, 464)); // Level 2 trade
-        farmerPurchases.add(createTradeMap("MELON_SEEDS", 3, 32, 2, 464)); // Level 2 trade
+        farmerPurchases.add(createTradeMap("PUMPKIN_SEEDS", 3, 32, 2, 50)); // Level 2 trade
+        farmerPurchases.add(createTradeMap("MELON_SEEDS", 3, 32, 2, 50)); // Level 2 trade
         farmerPurchases.add(createTradeMap("CAKE", 1, 6, 3, 87)); // Level 3 trade
         farmerPurchases.add(createTradeMap("WHEAT_SEEDER", 1, 16, 3, 87)); // Custom item
         farmerPurchases.add(createTradeMap("BEETROOT_SEEDER", 1, 16, 3, 87)); // Custom item
@@ -552,11 +552,11 @@ public class VillagerTradeManager implements Listener {
 
 // Farmer Sells
         List<Map<String, Object>> farmerSells = new ArrayList<>();
-        farmerSells.add(createTradeMap("WHEAT", 12, 1, 1, 174)); // Level 1 trade
-        farmerSells.add(createTradeMap("CARROT", 12, 1, 1, 174)); // Level 2 trade
-        farmerSells.add(createTradeMap("POTATO", 12, 1, 1, 174)); // Level 2 trade
-        farmerSells.add(createTradeMap("WHEAT_SEEDS", 32, 1, 1, 464)); // Level 2 trade
-        farmerSells.add(createTradeMap("BEETROOT", 4, 1, 2, 58)); // Level 2 trade
+        farmerSells.add(createTradeMap("WHEAT", 12, 1, 1, 29)); // Level 1 trade
+        farmerSells.add(createTradeMap("CARROT", 12, 1, 1, 29)); // Level 2 trade
+        farmerSells.add(createTradeMap("POTATO", 12, 1, 1, 29)); // Level 2 trade
+        farmerSells.add(createTradeMap("WHEAT_SEEDS", 32, 1, 1, 29)); // Level 2 trade
+        farmerSells.add(createTradeMap("BEETROOT", 4, 1, 2, 29)); // Level 2 trade
         farmerSells.add(createTradeMap("ORGANIC_SOIL", 4, 3, 2, 58)); // Custom item
         farmerSells.add(createTradeMap("EGG", 6, 2, 2, 29)); // Level 3 trade
         farmerSells.add(createTradeMap("SUGAR_CANE", 6, 1, 2, 29)); // Level 3 trade
