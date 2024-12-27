@@ -16,7 +16,14 @@ import static goat.minecraft.minecraftnew.utils.CustomItemManager.createCustomIt
 public class ItemRegistry {
     private ItemRegistry() {
     } // Private constructor to prevent instantiation
-
+    public static ItemStack getExperienceArtifact() {
+        return CustomItemManager.createCustomItem(Material.GLASS_BOTTLE, ChatColor.YELLOW +
+                "Experience Artifact Tier 1", Arrays.asList(
+                ChatColor.GRAY + "Max level of 3",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summons 25,000 XP.",
+                ChatColor.DARK_PURPLE + "Artifact"
+        ), 1, false, true);
+    }
     public static ItemStack getFarmerEnchant() {
         return CustomItemManager.createCustomItem(Material.RABBIT_STEW, ChatColor.YELLOW +
                 "Well Balanced Meal", Arrays.asList(

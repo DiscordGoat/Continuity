@@ -67,6 +67,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        getServer().getPluginManager().registerEvents(new Doors(), this);
+
         displayManager = new ItemDisplayManager(this);
         Collections collectionsCommand = new Collections(this, displayManager);
 

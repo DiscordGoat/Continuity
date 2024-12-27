@@ -8,10 +8,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
-import org.bukkit.entity.EnderPearl;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.TNTPrimed;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -67,7 +64,23 @@ public class RightClickArtifacts implements Listener {
     public RightClickArtifacts(Plugin plugin) {
         this.plugin = plugin;
     }
+    public static void summonXP(Player player) {
+        // Get the player's location
+        Location location = player.getLocation();
 
+        // Calculate the number of orbs needed
+        int totalXP = 25000;
+        int orbCount = totalXP / 10; // Each orb contains roughly 10 XP on average
+
+        // Summon XP orbs at the player's location
+        for (int i = 0; i < orbCount; i++) {
+            ExperienceOrb xpOrb = location.getWorld().spawn(location, ExperienceOrb.class);
+            xpOrb.setExperience(10*100); // Set XP amount for each orb
+        }
+
+        // Send a message to the player
+        player.sendMessage("You have been granted 25,000 XP!");
+    }
     /**
      * Spawns 50 TNT blocks around the specified player with a 10-second fuse.
      * Sends a message to the player informing them they have 10 seconds to run.
@@ -285,6 +298,11 @@ public class RightClickArtifacts implements Listener {
             if (displayName.equals(ChatColor.LIGHT_PURPLE + "Leviathan Heart")) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 180 * 20, 7));
                 player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_ROAR, 1.0f, 1.0f);
+                decrementItemAmount(itemInHand, player);
+                return;
+            }
+            if (displayName.equals(ChatColor.YELLOW + "Experience Artifact Tier 1")) {
+                summonXP(player);
                 decrementItemAmount(itemInHand, player);
                 return;
             }
