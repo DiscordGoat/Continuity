@@ -499,7 +499,7 @@ public class MusicDiscManager implements Listener {
     }
     private void handleMusicDiscRelic(Player player, Location jukeboxLocation) {
         Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Festivity Activated for 3 minutes 38 seconds!");
-        player.playSound(player.getLocation(), Sound.MUSIC_DISC_RELIC, 3.0f, 1.0f);
+        player.playSound(player.getLocation(), Sound.MUSIC_DISC_RELIC, 300.0f, 1.0f);
 
         // Duration of the effect in ticks (3 minutes 38 seconds = 218 seconds = 4360 ticks)
         long durationTicks = 218 * 20L;
