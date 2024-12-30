@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+
 import static goat.minecraft.minecraftnew.utils.EnchantmentUtils.*;
 
 public class AnvilRepair implements Listener {
@@ -107,7 +108,7 @@ public class AnvilRepair implements Listener {
         ItemStack blackPane = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, "");
         ItemStack resultPane = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair");
         ItemStack sharpnessItem = createGuiItem(Material.DIAMOND_SWORD, ChatColor.DARK_PURPLE + "Sharpen: 2 Diamonds");
-        ItemStack efficiencyItem = createGuiItem(Material.GOLDEN_PICKAXE, ChatColor.DARK_PURPLE + "Polish: 1 Gold Block");
+        ItemStack efficiencyItem = createGuiItem(Material.GOLDEN_PICKAXE, ChatColor.DARK_PURPLE + "Polish: 2 Gold Blocks");
         ItemStack protectionItem = createGuiItem(Material.OBSIDIAN, ChatColor.DARK_PURPLE + "Reinforce: 2 Obsidian");
 
         // Set up the GUI layout with decorative panes
@@ -366,7 +367,8 @@ public class AnvilRepair implements Listener {
                         }
                         EnchantmentUtils.incrementEnchantment(player, repairee, null, Enchantment.PROTECTION_ENVIRONMENTAL);
                         inventory.removeItem(new ItemStack(Material.OBSIDIAN, 2));
-                        player.sendMessage("Your item has been enchanted with Protection!");
+                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+                        player.sendMessage(ChatColor.AQUA + "Your item has been enchanted with Protection!");
                         xpManager.addXP(player, "Smithing", 500.0); // Add XP here
 
                     } else {
@@ -395,7 +397,7 @@ public class AnvilRepair implements Listener {
 
                     if (repairee != null && TOOLS.contains(repairee.getType())) {
                         if (random.nextDouble() < 0.2) { // 20% chance to fail
-                            handleFailure(getNearestAnvil(player, 10), repairee, inventory, 1, Material.GOLD_BLOCK, player);
+                            handleFailure(getNearestAnvil(player, 10), repairee, inventory, 2, Material.GOLD_BLOCK, player);
                             return;
                         }
 
@@ -403,8 +405,9 @@ public class AnvilRepair implements Listener {
                             return;
                         }
                         EnchantmentUtils.incrementEnchantment(player, repairee, null, Enchantment.DIG_SPEED);
-                        inventory.removeItem(new ItemStack(Material.GOLD_BLOCK, 1));
-                        player.sendMessage("Your item has been enchanted with Efficiency!");
+                        inventory.removeItem(new ItemStack(Material.GOLD_BLOCK, 2));
+                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+                        player.sendMessage(ChatColor.AQUA + "Your item has been enchanted with Efficiency!");
                         xpManager.addXP(player, "Smithing", 500.0); // Add XP here
 
                     } else {
@@ -440,8 +443,8 @@ public class AnvilRepair implements Listener {
                         }
                         EnchantmentUtils.incrementEnchantment(player, repairee, billItem, Enchantment.DAMAGE_ALL);
                         inventory.removeItem(new ItemStack(Material.DIAMOND, 2));
-
-                        player.sendMessage("Your item has been sharpened!");
+                        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+                        player.sendMessage(ChatColor.AQUA + "Your item has been sharpened!");
                         xpManager.addXP(player, "Smithing", 500.0); // Add XP here
 
                     } else {
