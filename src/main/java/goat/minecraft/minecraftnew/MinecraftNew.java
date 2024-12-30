@@ -59,18 +59,21 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private ItemDisplayManager displayManager;
     private PlayerOxygenManager playerOxygenManager;
     private UltimateEnchantingSystem ultimateEnchantmentManager;
+    private static Collections collectionsManager;
 
 
 
-
+    public static Collections getCollectionsManager() {
+        return collectionsManager;
+    }
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(new Doors(), this);
 
         displayManager = new ItemDisplayManager(this);
-        Collections collectionsCommand = new Collections(this, displayManager);
+        collectionsManager = new Collections(this, displayManager);
 
-        Objects.requireNonNull(getCommand("collection")).setExecutor(collectionsCommand);
+        Objects.requireNonNull(getCommand("collection")).setExecutor(collectionsManager);
 
 
 
@@ -288,6 +291,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
     }
+
+
     @Override
     public void onDisable() {
         if (displayManager != null) {
