@@ -355,7 +355,7 @@ public class UltimateEnchantmentListener implements Listener {
     public void activateHammer(Player player) {
         UUID playerUUID = player.getUniqueId();
         hammerActive.put(playerUUID, true);
-        player.sendMessage(ChatColor.GREEN + "Hammer effect activated! The next block you break will break surrounding blocks.");
+        player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_STEP, 1.0f, 1.0f);
     }
     public void fireHomingArrows(Player player) {
         // Define the spread angle for the shotgun pattern
