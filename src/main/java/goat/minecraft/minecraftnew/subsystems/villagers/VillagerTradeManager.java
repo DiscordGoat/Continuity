@@ -538,15 +538,15 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("PUMPKIN_SEEDS", 3, 32, 2, 50)); // Level 2 trade
         farmerPurchases.add(createTradeMap("MELON_SEEDS", 3, 32, 2, 50)); // Level 2 trade
         farmerPurchases.add(createTradeMap("CAKE", 1, 8, 3, 87)); // Level 3 trade
-        farmerPurchases.add(createTradeMap("WHEAT_SEEDER", 1, 16, 3, 87)); // Custom item
-        farmerPurchases.add(createTradeMap("BEETROOT_SEEDER", 1, 16, 3, 87)); // Custom item
-        farmerPurchases.add(createTradeMap("CARROT_SEEDER", 1, 16, 3, 87)); // Custom item
-        farmerPurchases.add(createTradeMap("POTATO_SEEDER", 1, 16, 3, 87)); // Custom item
+        farmerPurchases.add(createTradeMap("WHEAT_SEEDER", 1, 64, 3, 87)); // Custom item
+        farmerPurchases.add(createTradeMap("BEETROOT_SEEDER", 1, 64, 3, 87)); // Custom item
+        farmerPurchases.add(createTradeMap("CARROT_SEEDER", 1, 64, 3, 87)); // Custom item
+        farmerPurchases.add(createTradeMap("POTATO_SEEDER", 1, 64, 3, 87)); // Custom item
         farmerPurchases.add(createTradeMap("WATER_BUCKET", 1, 3, 3, 29)); // Level 3 trade
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4, 29)); // Level 4 trade
         farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5, 928)); // Level 5 trade
         farmerPurchases.add(createTradeMap("FARMER_ENCHANT", 1, 64, 5, 928)); // Custom item
-        farmerPurchases.add(createTradeMap("AUTO_COMPOSTER", 1, 64, 5, 928)); // Custom item
+        farmerPurchases.add(createTradeMap("AUTO_COMPOSTER", 1, 128, 5, 928)); // Custom item
 
         defaultConfig.set("FARMER.purchases", farmerPurchases);
 
