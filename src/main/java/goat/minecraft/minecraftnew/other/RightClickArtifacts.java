@@ -636,7 +636,7 @@ public class RightClickArtifacts implements Listener {
         world.setWeatherDuration(duration);
 
         // Optionally, send a message to the player
-        player.sendMessage(ChatColor.YELLOW + "🌧️ You have summoned rain! It will last for " + duration/20 + " minutes.");
+        player.sendMessage(ChatColor.YELLOW + "🌧️ You have summoned rain! It will last for " + (duration/20)/60 + " minutes.");
     }
     /**
      * Helper method to decrement the amount of an item in hand.
