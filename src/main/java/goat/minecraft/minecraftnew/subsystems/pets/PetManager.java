@@ -546,7 +546,7 @@ public class PetManager implements Listener {
                 int heartBonus = 10;
                 return "Grants " + ChatColor.AQUA + heartBonus + "% Sea Creature Chance.";
             case TERROR_OF_THE_DEEP:
-                return "Grants you " + ChatColor.RED + "Bloodlust " + ChatColor.GRAY + "when you strike a " + ChatColor.AQUA + "Sea Creature.";
+                return "Grants you " + ChatColor.RED + "Bloodlust " + ChatColor.GRAY + "when you strike a " + ChatColor.AQUA + "Sea Creature" + ChatColor.GRAY + " for " + level + " seconds.";
             case TREASURE_HUNTER:
                 return ChatColor.AQUA + "Triples treasure chance " + ChatColor.GRAY + "when fishing.";
             case PRACTICE:

@@ -31,10 +31,10 @@ public class TerrorOfTheDeep implements Listener {
             // Get the player's active pet
             PetManager petManager = PetManager.getInstance(plugin);
             PetManager.Pet activePet = petManager.getActivePet(player);
-
+            int petLevel = activePet.getLevel();
             // Check if the player has the Terror of the Deep perk
             if (activePet != null && activePet.hasPerk(PetManager.PetPerk.TERROR_OF_THE_DEEP)) {
-                activateTerrorOfTheDeep(player, entity);
+                activateTerrorOfTheDeep(player, entity, petLevel);
             }
         }
     }
@@ -45,7 +45,7 @@ public class TerrorOfTheDeep implements Listener {
      * @param player The player dealing damage.
      * @param entity The entity being attacked.
      */
-    private void activateTerrorOfTheDeep(Player player, Entity entity) {
+    private void activateTerrorOfTheDeep(Player player, Entity entity, int petLevel) {
         // Check if the entity has metadata
         if (entity.hasMetadata("SEA_CREATURE")) {
             // Retrieve the metadata value
@@ -58,12 +58,13 @@ public class TerrorOfTheDeep implements Listener {
                 String creatureName = metadataValue.asString();
                 Bukkit.getLogger().info("Detected SEA_CREATURE: " + creatureName);
 
+
                 // Apply Bloodlust effects
                 player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1.0f, 1.0f);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 600, 1)); // Haste II
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 1)); // Strength II
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 600, 1)); // Speed II
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 600, 1)); // Regeneration II
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20*petLevel, 1)); // Haste II
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*petLevel, 1)); // Strength II
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*petLevel, 1)); // Speed II
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*petLevel, 1)); // Regeneration II
 
                 // Notify the player
                 player.sendMessage(ChatColor.DARK_RED + "You feel enraged after striking a " + creatureName + "!");
