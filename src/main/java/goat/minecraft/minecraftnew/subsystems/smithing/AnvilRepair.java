@@ -563,6 +563,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.HEART_OF_THE_SEA);
                     billableItems.add(Material.WITHER_SKELETON_SKULL);
                     billableItems.add(Material.CHAIN);
+                    billableItems.add(Material.PURPLE_DYE);
 
 
 

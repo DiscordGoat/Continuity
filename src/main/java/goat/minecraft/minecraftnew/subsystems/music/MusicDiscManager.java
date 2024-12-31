@@ -221,7 +221,7 @@ public class MusicDiscManager implements Listener {
     private void handleMusicDisc11(Player player) {
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
         hostilityManager.setPlayerTier(player, 20);
-        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Somehow, you've made monsters even angrier...");
+        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Somehow, you've made monsters even angrier... Hostility set to Tier XX");
 
     }
     private void handleMusicDiscFar(Player player) {
