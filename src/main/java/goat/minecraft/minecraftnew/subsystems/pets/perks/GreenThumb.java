@@ -10,16 +10,13 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class GreenThumb implements Listener {
     private final PetManager petManager;
+    private final Map<UUID, Long> lastMovementTime = new HashMap<>();
     private final Map<UUID, Long> lastGrowthTime = new HashMap<>();
-    private static final long GROWTH_COOLDOWN = 60 * 1000; // 5 seconds cooldown
+    private static final long GROWTH_COOLDOWN = 300 * 1000; // 5 minutes cooldown
 
     private final List<Material> CROP_TYPES = Arrays.asList(
             Material.WHEAT, Material.CARROTS, Material.POTATOES,
@@ -33,20 +30,34 @@ public class GreenThumb implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (player.getGameMode() != GameMode.SURVIVAL) return;
+        UUID playerId = player.getUniqueId();
 
-        // Check if enough time has passed since last growth
-        long currentTime = System.currentTimeMillis();
-        if (lastGrowthTime.containsKey(player.getUniqueId()) &&
-                currentTime - lastGrowthTime.get(player.getUniqueId()) < GROWTH_COOLDOWN) {
+        // Track player's last movement time
+        if (!event.getFrom().toVector().equals(event.getTo().toVector())) {
+            lastMovementTime.put(playerId, System.currentTimeMillis());
             return;
         }
 
+        // Check if the player is standing still for 5 minutes
+        long currentTime = System.currentTimeMillis();
+        if (lastMovementTime.containsKey(playerId) &&
+                currentTime - lastMovementTime.get(playerId) < GROWTH_COOLDOWN) {
+            return; // Player hasn't been idle long enough
+        }
+
+        // Check cooldown for crop growth
+        if (lastGrowthTime.containsKey(playerId) &&
+                currentTime - lastGrowthTime.get(playerId) < GROWTH_COOLDOWN) {
+            return; // Growth cooldown hasn't passed
+        }
+
+        // Check if player has the Green Thumb perk
         PetManager.Pet activePet = petManager.getActivePet(player);
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.GREEN_THUMB)) {
             int radius = 10 + activePet.getLevel();
             growCropsAroundPlayer(player, radius);
-            lastGrowthTime.put(player.getUniqueId(), currentTime);
+            player.sendMessage(ChatColor.YELLOW + "Your pet naturally grows nearby crops!");
+            lastGrowthTime.put(playerId, currentTime); // Update growth time
         }
     }
 
