@@ -478,7 +478,7 @@ public class PetManager implements Listener {
             case CULTIVATION:
                 return "Gain " + ChatColor.GREEN + "+" + (level * 1) + "% Chance " + ChatColor.GRAY + "to harvest " + ChatColor.GREEN + "double crops.";
             case GREEN_THUMB:
-                return "Grows " + ChatColor.YELLOW + "crops within " + (10 + level) + ChatColor.GRAY + " blocks every 5 minutes while AFK.";
+                return "Grows " + ChatColor.YELLOW + "crops within " + (10 + level) + ChatColor.GRAY + " blocks every minute.";
             case GREED:
                 return "Gain up to " + ChatColor.YELLOW + "4% chance " + ChatColor.GRAY + "to drop " + ChatColor.GREEN + "1-" + (level * 0.32) + " Emeralds " + ChatColor.GRAY + "when killing monsters.";
             case SKEPTICISM:
@@ -534,7 +534,7 @@ public class PetManager implements Listener {
             case RECOVERY:
                 return "Gain a " + ChatColor.YELLOW + (level * 1) + "% chance " + ChatColor.GRAY + "to " + ChatColor.YELLOW + "recover arrows.";
             case BONE_PLATING:
-                return ChatColor.DARK_GRAY + "Reduces damage " + ChatColor.GRAY + "by " + ChatColor.DARK_GRAY + "40% " + ChatColor.GRAY + "for " + ChatColor.DARK_GRAY + (level * 1) + " seconds.";
+                return ChatColor.DARK_GRAY + "Reduces damage " + ChatColor.GRAY + "by " + ChatColor.DARK_GRAY + level * 0.5 + "%";
             case STRONG_SWIMMER:
                 return "Grants " + ChatColor.AQUA + "Dolphins Grace " + ChatColor.GRAY + "when swimming.";
             case COMFORTABLE:
@@ -548,7 +548,7 @@ public class PetManager implements Listener {
             case TERROR_OF_THE_DEEP:
                 return "Grants you " + ChatColor.RED + "Bloodlust " + ChatColor.GRAY + "when you strike a " + ChatColor.AQUA + "Sea Creature" + ChatColor.GRAY + " for " + level + " seconds.";
             case TREASURE_HUNTER:
-                return ChatColor.AQUA + "Triples treasure chance " + ChatColor.GRAY + "when fishing.";
+                return ChatColor.AQUA + "Increases treasure chance by " + ChatColor.GOLD + (level * 0.45) + "%" + ChatColor.GRAY + " when fishing.";
             case PRACTICE:
                 return ChatColor.YELLOW + "Triples villager XP gains.";
             case HAGGLE:

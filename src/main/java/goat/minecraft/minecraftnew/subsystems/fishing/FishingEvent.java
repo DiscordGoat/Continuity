@@ -375,10 +375,11 @@ public class FishingEvent implements Listener {
     private void rollForTreasure(Player player) {
         PetManager petManager = PetManager.getInstance(plugin);
         double treasureChance = 0.05; // Base chance of 5%
+        int petLevel = petManager.getActivePet(player).getLevel();
 
         // Check if the player has the Treasure Hunter perk
         if (petManager.getActivePet(player) != null && petManager.getActivePet(player).hasPerk(PetManager.PetPerk.TREASURE_HUNTER)) {
-            treasureChance *= 3; // Triple the base chance
+            treasureChance += (petLevel * 0.0045); // Scale to add 0.45 at pet level 100
         }
 
         // Add bonus from "Piracy" enchantment

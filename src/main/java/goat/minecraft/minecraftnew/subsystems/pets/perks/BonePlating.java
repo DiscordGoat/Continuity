@@ -8,38 +8,42 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 public class BonePlating implements Listener {
-    private final JavaPlugin plugin;
+    private final PetManager petManager;
 
     public BonePlating(JavaPlugin plugin) {
-        this.plugin = plugin;
+        this.petManager = PetManager.getInstance(plugin);
     }
+
     @EventHandler
-    public void onPlayerDamage(EntityDamageEvent event) {
+    public void onPlayerTakeDamage(EntityDamageEvent event) {
         // Ensure the entity taking damage is a player
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
 
         // Get the player's active pet
-        PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
 
         // Check if the player has the BONE_PLATING perk
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.BONE_PLATING)) {
             int petLevel = activePet.getLevel();
 
-            // Apply Resistance II effect for <level> seconds
+            // Calculate damage reduction percentage
+            double damageReduction = Math.min(petLevel * 0.5, 50.0); // Cap at 50% reduction
+            double reductionFactor = 1 - (damageReduction / 100.0);
+
+            // Reduce the damage directly
+            double originalDamage = event.getDamage();
+            double reducedDamage = originalDamage * reductionFactor;
+            event.setDamage(reducedDamage);
+
+            // Notify the player of the damage reduction
 
 
-            // Notify the player
-            if (!player.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) {
-                player.playSound(player.getLocation(), Sound.ENTITY_IRON_GOLEM_DAMAGE, 5, 100);
-            }
-            player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, petLevel * 20, 1));
+            // Play a sound to indicate the perk activated
+            player.playSound(player.getLocation(), Sound.ENTITY_SKELETON_HURT, 1.0f, 1.0f);
         }
     }
 }

@@ -596,8 +596,7 @@ public class UltimateEnchantmentListener implements Listener {
     private void fireDamageArrow(Player player) {
         Arrow arrow = player.launchProjectile(Arrow.class);
         arrow.setDamage(100);
-        arrow.addCustomEffect(new PotionEffect(PotionEffectType.SLOW, 20 * 60 * 30, 100), true);
-        player.sendMessage(ChatColor.GREEN + "You fired a powerful arrow that deals 100 damage!");
+        player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 10.f, 1.0f);
     }
     public void launchPlayerForward(Player player) {
         Vector direction = player.getLocation().getDirection().normalize();
