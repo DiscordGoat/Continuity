@@ -155,6 +155,7 @@ public class SeaCreatureRegistry implements Listener {
         poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getTrident(), 1, 1, 1));
         poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getRiptide(), 1, 1, 4));
         poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getChanneling(), 1, 1, 4));
+        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 4));
         SEA_CREATURES.add(new SeaCreature(
                 "Poseidon",
                 Rarity.RARE,
@@ -184,6 +185,8 @@ public class SeaCreatureRegistry implements Listener {
         pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 3, 1, 5));
         pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getImpaling(), 1, 1, 4));
         pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getLuck(), 1, 1, 4));
+        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 3, 1, 5));
+
         SEA_CREATURES.add(new SeaCreature(
                 "Pirate",
                 Rarity.RARE,
@@ -226,6 +229,7 @@ public class SeaCreatureRegistry implements Listener {
         greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 7, 1, 5));
         greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 7, 1, 4));
         greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getRespiration(), 1, 1, 4));
+        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 4));
         SEA_CREATURES.add(new SeaCreature(
                 "Great White Shark",
                 Rarity.EPIC,

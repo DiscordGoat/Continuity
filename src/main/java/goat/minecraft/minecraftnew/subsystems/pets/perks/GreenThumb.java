@@ -7,16 +7,15 @@ import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
 public class GreenThumb implements Listener {
     private final PetManager petManager;
-    private final Map<UUID, Long> lastMovementTime = new HashMap<>();
     private final Map<UUID, Long> lastGrowthTime = new HashMap<>();
-    private static final long GROWTH_COOLDOWN = 300 * 1000; // 5 minutes cooldown
+    private static final long GROWTH_COOLDOWN = 60 * 1000; // 1 minute cooldown
 
     private final List<Material> CROP_TYPES = Arrays.asList(
             Material.WHEAT, Material.CARROTS, Material.POTATOES,
@@ -25,25 +24,21 @@ public class GreenThumb implements Listener {
 
     public GreenThumb(JavaPlugin plugin) {
         this.petManager = PetManager.getInstance(plugin);
+
+        // Schedule crop growth task every minute
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    growCropsForPlayer(player);
+                }
+            }
+        }.runTaskTimer(plugin, 0, 1200); // 1200 ticks = 1 minute
     }
 
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
+    private void growCropsForPlayer(Player player) {
         UUID playerId = player.getUniqueId();
-
-        // Track player's last movement time
-        if (!event.getFrom().toVector().equals(event.getTo().toVector())) {
-            lastMovementTime.put(playerId, System.currentTimeMillis());
-            return;
-        }
-
-        // Check if the player is standing still for 5 minutes
         long currentTime = System.currentTimeMillis();
-        if (lastMovementTime.containsKey(playerId) &&
-                currentTime - lastMovementTime.get(playerId) < GROWTH_COOLDOWN) {
-            return; // Player hasn't been idle long enough
-        }
 
         // Check cooldown for crop growth
         if (lastGrowthTime.containsKey(playerId) &&
