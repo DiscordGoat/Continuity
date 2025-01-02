@@ -539,6 +539,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.BLUE_DYE);
                     billableItems.add(Material.MAGENTA_DYE);
                     billableItems.add(Material.YELLOW_DYE);
+                    billableItems.add(Material.FILLED_MAP);
 
                     billableItems.add(Material.WHITE_STAINED_GLASS);
                     billableItems.add(Material.LIME_STAINED_GLASS);
@@ -788,6 +789,11 @@ public class AnvilRepair implements Listener {
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fish Bait") && isFishingRod(repairee)) {
             incrementEnchantment(player, repairee, billItem, Enchantment.LURE);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Loyal Declaration") && isTrident(repairee)) {
+            incrementEnchantment(player, repairee, billItem, Enchantment.LOYALTY);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lucky") && isFishingRod(repairee)) {
