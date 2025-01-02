@@ -786,7 +786,7 @@ public class AnvilRepair implements Listener {
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Bait") && isFishingRod(repairee)) {
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Fish Bait") && isFishingRod(repairee)) {
             incrementEnchantment(player, repairee, billItem, Enchantment.LURE);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
