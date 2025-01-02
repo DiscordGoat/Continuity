@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -40,8 +41,7 @@ public class WalkingFortress implements Listener {
             event.setDamage(reducedDamage);
 
             // Notify the player of the damage reduction
-            player.sendMessage(ChatColor.GRAY + "Your Walking Fortress perk reduced the damage by " +
-                    (int) damageReduction + "%!");
+            player.playSound(player.getLocation(), Sound.ENTITY_IRON_GOLEM_DAMAGE, 1.0f, 1.0f);
         }
     }
 }
