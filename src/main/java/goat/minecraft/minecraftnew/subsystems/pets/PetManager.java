@@ -183,6 +183,7 @@ public class PetManager implements Listener {
         pets.put(pet.getName(), pet);
         savePets();
         player.sendMessage(ChatColor.GREEN + "You have received a new pet: " + pet.getName());
+        player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 2.0f);
     }
 
     public Pet getPet(Player player, String petName) {
