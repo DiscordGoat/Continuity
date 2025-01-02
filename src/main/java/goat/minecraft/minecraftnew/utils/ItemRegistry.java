@@ -1309,6 +1309,20 @@ public class ItemRegistry {
                 true   // Add enchantment shimmer
         );
     }
+    public static ItemStack getLoyaltyContract() {
+        return createCustomItem(
+                Material.FILLED_MAP,
+                ChatColor.YELLOW + "Loyal Declaration",
+                Arrays.asList(
+                        ChatColor.GRAY + "A binding legal document.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Loyalty.",
+                        ChatColor.DARK_PURPLE + "Enchanting Item"
+                ),
+                1,
+                false, // Not unbreakable
+                true   // Add enchantment shimmer
+        );
+    }
     public static ItemStack getForbiddenBook() {
         return createCustomItem(
                 Material.WRITTEN_BOOK,
