@@ -418,6 +418,7 @@ public class UltimateEnchantmentListener implements Listener {
                 long timeLeft = getCooldownTimeLeft(player.getUniqueId(), ueData.getName());
                 return;
             }
+
             switch (enchantName) {
                 case "homing arrows":
                     fireHomingArrows(player);
