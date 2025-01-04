@@ -1414,6 +1414,7 @@ Random random = new Random();
     private void performMasonWork(Villager villager, int radius) {
         Location villagerLoc = villager.getLocation();
         World world = villager.getWorld();
+        radius = 40;
 
         // Find blocks to replicate
         List<Block> blocksToReplicate = findBlocksToReplicate(villager, radius);

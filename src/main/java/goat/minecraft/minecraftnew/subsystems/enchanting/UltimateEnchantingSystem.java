@@ -160,7 +160,7 @@ public class UltimateEnchantingSystem implements Listener {
 
         // If they click the middle slot (the actual item), allow them to take it
         if (event.getSlot() == 22) {
-            event.setCancelled(false);
+            event.setCancelled(true);
             return;
         }
         // Check cost
