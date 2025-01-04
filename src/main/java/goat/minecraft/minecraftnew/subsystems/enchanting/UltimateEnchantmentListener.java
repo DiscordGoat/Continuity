@@ -14,6 +14,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.block.Action;
@@ -440,6 +441,9 @@ public class UltimateEnchantmentListener implements Listener {
 
         // Right-click logic, with Hammer/Treecap removed
         if(event.getAction() == Action.RIGHT_CLICK_AIR) {
+            if (!event.getHand().equals(EquipmentSlot.HAND) && event.getHand()!=null) {
+                return; // Ignore offhand interactions
+            }
             if (isOnCooldown(player.getUniqueId(), ueData.getName())) {
                 long timeLeft = getCooldownTimeLeft(player.getUniqueId(), ueData.getName());
                 player.sendMessage(ChatColor.RED + "This Ultimate Enchantment is on cooldown for "
