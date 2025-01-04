@@ -847,7 +847,9 @@ public class VillagerTradeManager implements Listener {
             Player player = event.getPlayer();
 
             playerVillagerMap.put(player, villager); // Store the villager in the map with the player
-            openVillagerTradeGUI(player, villager);
+            if(!(villager.getProfession() == Villager.Profession.NONE)) {
+                openVillagerTradeGUI(player, villager);
+            }
         }
     }
 

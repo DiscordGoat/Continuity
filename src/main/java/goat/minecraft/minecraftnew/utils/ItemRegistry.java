@@ -1309,6 +1309,23 @@ public class ItemRegistry {
                 true   // Add enchantment shimmer
         );
     }
+
+
+    public static ItemStack getEngineeringDegree() {
+        return createCustomItem(
+                Material.REDSTONE_TORCH,
+                ChatColor.YELLOW + "Engineering Profession",
+                Arrays.asList(
+                        ChatColor.GRAY + "A bachelors degree.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to a villager to change its profession.",
+                        ChatColor.DARK_PURPLE + "Degree Item"
+                ),
+                1,
+                false, // Not unbreakable
+                true   // Add enchantment shimmer
+        );
+    }
+
     public static ItemStack getLoyaltyContract() {
         return createCustomItem(
                 Material.FILLED_MAP,

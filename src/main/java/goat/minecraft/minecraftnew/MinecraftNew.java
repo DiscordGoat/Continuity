@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew;
 
 import goat.minecraft.minecraftnew.other.*;
+import goat.minecraft.minecraftnew.other.engineer.EngineerVillagerManager;
+import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionListener;
+import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionRecipe;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
@@ -60,12 +63,15 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private PlayerOxygenManager playerOxygenManager;
     private UltimateEnchantingSystem ultimateEnchantmentManager;
     private static Collections collectionsManager;
-
+    private EngineerVillagerManager engineerVillagerManager;
 
 
     public static Collections getCollectionsManager() {
         return collectionsManager;
     }
+
+
+
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(new Doors(), this);
@@ -76,6 +82,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         Objects.requireNonNull(getCommand("collection")).setExecutor(collectionsManager);
 
 
+        EngineeringProfessionRecipe engineeringProfessionRecipe = new EngineeringProfessionRecipe(this);
+        engineeringProfessionRecipe.registerRecipe();
+        getServer().getPluginManager().registerEvents(new EngineeringProfessionListener(this), this);
+        engineerVillagerManager = new EngineerVillagerManager(this);
 
         getServer().getPluginManager().registerEvents(new UltimateEnchantmentListener(this), this);
 

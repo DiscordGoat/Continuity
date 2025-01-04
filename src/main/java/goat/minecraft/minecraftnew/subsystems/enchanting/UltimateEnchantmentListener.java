@@ -438,7 +438,7 @@ public class UltimateEnchantmentListener implements Listener {
         }
 
         // Right-click logic, with Hammer/Treecap removed
-        if(event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+        if(event.getAction() == Action.RIGHT_CLICK_AIR) {
             if (isOnCooldown(player.getUniqueId(), ueData.getName())) {
                 long timeLeft = getCooldownTimeLeft(player.getUniqueId(), ueData.getName());
                 player.sendMessage(ChatColor.RED + "This Ultimate Enchantment is on cooldown for "
