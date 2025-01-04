@@ -96,8 +96,6 @@ public class VillagerTradeManager implements Listener {
                     int quantity = (int) map.get("quantity");
                     int emeralds = (int) map.get("emeralds");
                     int level = (int) map.get("level");
-                    int exp = (int) map.get("experience");          // Our "barteringExperience"
-
                     ItemStack item = getItemByIdentifier(itemId);
                     if (item == null) {
                         plugin.getLogger().warning("Item not recognized: " + itemId);
@@ -505,7 +503,8 @@ public class VillagerTradeManager implements Listener {
         fishermanSells.add(createTradeMap("NAUTILUS_SHELL", 1, 4, 2)); // Material
         fishermanSells.add(createTradeMap("HEART_OF_THE_SEA", 1, 16, 2)); // Material
         fishermanSells.add(createTradeMap("FISH_BONE", 1, 1, 2)); // Custom Item
-        fishermanSells.add(createTradeMap("TRIDENT", 1, 24, 2)); // Material
+        fishermanSells.add(createTradeMap("TRIDENT", 1, 12, 2)); // Material
+        fishermanSells.add(createTradeMap("LIGHTNING_BOLT", 1, 12, 2)); // Material
 
         defaultConfig.set("FISHERMAN.sells", fishermanSells);
 // Butcher Purchases
@@ -656,6 +655,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getFishBone();
             case "LIBRARIAN_ENCHANTMENT_TWO":
                 return ItemRegistry.getLibrarianEnchantmentTwo();
+            case "LIGHTNING_BOLT":
+                return ItemRegistry.getChanneling();
             case "IRON_GOLEM":
                 return ItemRegistry.getIronGolem();
             case "LIBRARIAN_ENCHANT":
