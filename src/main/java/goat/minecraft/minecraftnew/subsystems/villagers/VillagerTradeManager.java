@@ -106,7 +106,7 @@ public class VillagerTradeManager implements Listener {
                     // Set the item quantity
                     item.setAmount(quantity);
 
-                    purchases.add(new TradeItem(item, emeralds, quantity, level, exp));
+                    purchases.add(new TradeItem(item, emeralds, quantity, level));
                 } catch (Exception e) {
                     plugin.getLogger().warning("Error loading purchase trade for " + professionName + ": " + e.getMessage());
                 }
@@ -120,7 +120,6 @@ public class VillagerTradeManager implements Listener {
                     int quantity = (int) map.get("quantity");
                     int emeralds = (int) map.get("emeralds");
                     int level = (int) map.get("level");
-                    int exp = (int) map.get("experience");          // Our "barteringExperience"
 
                     ItemStack item = getItemByIdentifier(itemId);
                     if (item == null) {
@@ -129,7 +128,7 @@ public class VillagerTradeManager implements Listener {
                     }
                     item.setAmount(quantity);
 
-                    sells.add(new TradeItem(item, emeralds, quantity, level, exp));
+                    sells.add(new TradeItem(item, emeralds, quantity, level));
                 } catch (Exception e) {
                     plugin.getLogger().warning("Error loading sell trade for " + professionName + ": " + e.getMessage());
                 }
@@ -149,422 +148,422 @@ public class VillagerTradeManager implements Listener {
 
         // Example for MASON
         List<Map<String, Object>> masonPurchases = new ArrayList<>();
-        masonPurchases.add(createTradeMap("BRICKS", 4, 3, 1, 29));    // item, quantity, emeralds, level, experience
-        masonPurchases.add(createTradeMap("STONE", 8, 3, 1, 29));    // item, quantity, emeralds, level, experience
-        masonPurchases.add(createTradeMap("ANDESITE", 8, 3, 2, 29));
-        masonPurchases.add(createTradeMap("DIORITE", 8, 3, 2, 29));
-        masonPurchases.add(createTradeMap("GRANITE", 8, 3, 2, 29));
-        masonPurchases.add(createTradeMap("TERRACOTTA", 8, 3, 3, 29));
-        masonPurchases.add(createTradeMap("QUARTZ_BLOCK", 8, 5, 3, 58));
-        masonPurchases.add(createTradeMap("SMOOTH_STONE", 8, 5, 3, 58));
-        masonPurchases.add(createTradeMap("SANDSTONE", 8, 5, 3, 58));
-        masonPurchases.add(createTradeMap("CUSTOM_ITEM_DISPLAY", 1, 8, 3, 58));    // ItemRegistry.getItemDisplayItem()
-        masonPurchases.add(createTradeMap("PRISMARINE", 8, 7, 4, 116));
-        masonPurchases.add(createTradeMap("DARK_PRISMARINE", 8, 7, 4, 116));
-        masonPurchases.add(createTradeMap("PRISMARINE_BRICKS", 8, 7, 4, 116));
-        masonPurchases.add(createTradeMap("NETHER_BRICKS", 8, 7, 4, 116));
-        masonPurchases.add(createTradeMap("BLACKSTONE", 8, 7, 4, 116));
-        masonPurchases.add(createTradeMap("SOUL_SAND", 8, 7, 4, 116));
-        masonPurchases.add(createTradeMap("TUBE_CORAL_BLOCK", 8, 7, 4, 87));
-        masonPurchases.add(createTradeMap("BRAIN_CORAL_BLOCK", 8, 7, 4, 87));
-        masonPurchases.add(createTradeMap("BUBBLE_CORAL_BLOCK", 8, 7, 4, 116));
-        masonPurchases.add(createTradeMap("FIRE_CORAL_BLOCK", 8, 7, 4, 116));
-        masonPurchases.add(createTradeMap("HORN_CORAL_BLOCK", 8, 7, 4, 116));
+        masonPurchases.add(createTradeMap("BRICKS", 4, 3, 1));    // item, quantity, emeralds, level, experience
+        masonPurchases.add(createTradeMap("STONE", 8, 3, 1));    // item, quantity, emeralds, level, experience
+        masonPurchases.add(createTradeMap("ANDESITE", 8, 3, 2));
+        masonPurchases.add(createTradeMap("DIORITE", 8, 3, 2));
+        masonPurchases.add(createTradeMap("GRANITE", 8, 3, 2));
+        masonPurchases.add(createTradeMap("TERRACOTTA", 8, 3, 3));
+        masonPurchases.add(createTradeMap("QUARTZ_BLOCK", 8, 5, 3));
+        masonPurchases.add(createTradeMap("SMOOTH_STONE", 8, 5, 3));
+        masonPurchases.add(createTradeMap("SANDSTONE", 8, 5, 3));
+        masonPurchases.add(createTradeMap("CUSTOM_ITEM_DISPLAY", 1, 8, 3));    // ItemRegistry.getItemDisplayItem()
+        masonPurchases.add(createTradeMap("PRISMARINE", 8, 7, 4));
+        masonPurchases.add(createTradeMap("DARK_PRISMARINE", 8, 7, 4));
+        masonPurchases.add(createTradeMap("PRISMARINE_BRICKS", 8, 7, 4));
+        masonPurchases.add(createTradeMap("NETHER_BRICKS", 8, 7, 4));
+        masonPurchases.add(createTradeMap("BLACKSTONE", 8, 7, 4));
+        masonPurchases.add(createTradeMap("SOUL_SAND", 8, 7, 4));
+        masonPurchases.add(createTradeMap("TUBE_CORAL_BLOCK", 8, 7, 4));
+        masonPurchases.add(createTradeMap("BRAIN_CORAL_BLOCK", 8, 7, 4));
+        masonPurchases.add(createTradeMap("BUBBLE_CORAL_BLOCK", 8, 7, 4));
+        masonPurchases.add(createTradeMap("FIRE_CORAL_BLOCK", 8, 7, 4));
+        masonPurchases.add(createTradeMap("HORN_CORAL_BLOCK", 8, 7, 4));
         defaultConfig.set("MASON.purchases", masonPurchases);
 
         List<Map<String, Object>> masonSells = new ArrayList<>();
-        masonSells.add(createTradeMap("CLAY", 4, 1, 1, 29));
-        masonSells.add(createTradeMap("COBBLESTONE", 32, 1, 1, 29));
-        masonSells.add(createTradeMap("COPPER_INGOT", 3, 1, 1, 29));
+        masonSells.add(createTradeMap("CLAY", 4, 1, 1));
+        masonSells.add(createTradeMap("COBBLESTONE", 32, 1, 1));
+        masonSells.add(createTradeMap("COPPER_INGOT", 3, 1, 1));
         defaultConfig.set("MASON.sells", masonSells);
 
 
 // Example for WEAPONSMITH
         List<Map<String, Object>> weaponsmithPurchases = new ArrayList<>();
-        weaponsmithPurchases.add(createTradeMap("IRON_INGOT", 1, 4, 1, 58));    // item, quantity, emeralds, level, experience
-        weaponsmithPurchases.add(createTradeMap("COAL", 4, 2, 1, 29));
-        weaponsmithPurchases.add(createTradeMap("COMMON_SWORD_REFORGE", 1, 32, 1, 464)); // ItemRegistry.getCommonSwordReforge()
+        weaponsmithPurchases.add(createTradeMap("IRON_INGOT", 1, 4, 1));    // item, quantity, emeralds, level, experience
+        weaponsmithPurchases.add(createTradeMap("COAL", 4, 2, 1));
+        weaponsmithPurchases.add(createTradeMap("COMMON_SWORD_REFORGE", 1, 32, 1)); // ItemRegistry.getCommonSwordReforge()
 
-        weaponsmithPurchases.add(createTradeMap("UNCOMMON_SWORD_REFORGE", 1, 64, 2, 928)); // ItemRegistry.getUncommonSwordReforge()
+        weaponsmithPurchases.add(createTradeMap("UNCOMMON_SWORD_REFORGE", 1, 64, 2)); // ItemRegistry.getUncommonSwordReforge()
 
-        weaponsmithPurchases.add(createTradeMap("BELL", 1, 63, 3, 928));
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_REFORGE", 1, 64, 3, 928)); // ItemRegistry.getWeaponsmithReforge()
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_REFORGE_TWO", 1, 128, 3, 1856)); // ItemRegistry.getWeaponsmithReforgeTwo()
+        weaponsmithPurchases.add(createTradeMap("BELL", 1, 63, 3));
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_REFORGE", 1, 64, 3)); // ItemRegistry.getWeaponsmithReforge()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_REFORGE_TWO", 1, 128, 3)); // ItemRegistry.getWeaponsmithReforgeTwo()
 
-        weaponsmithPurchases.add(createTradeMap("RARE_SWORD_REFORGE", 1, 128, 3, 1856)); // ItemRegistry.getRareSwordReforge()
+        weaponsmithPurchases.add(createTradeMap("RARE_SWORD_REFORGE", 1, 128, 3)); // ItemRegistry.getRareSwordReforge()
 
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SHARPNESS", 1, 64, 4, 928)); // ItemRegistry.getWeaponsmithSharpness()
-        weaponsmithPurchases.add(createTradeMap("EPIC_SWORD_REFORGE", 1, 256, 4, 3712)); // ItemRegistry.getEpicSwordReforge()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SHARPNESS", 1, 64, 4)); // ItemRegistry.getWeaponsmithSharpness()
+        weaponsmithPurchases.add(createTradeMap("EPIC_SWORD_REFORGE", 1, 256, 4)); // ItemRegistry.getEpicSwordReforge()
 
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SWEEPING_EDGE", 1, 63, 4, 928)); // ItemRegistry.getWeaponsmithSweepingEdge()
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_LOOTING", 1, 64, 4, 928)); // ItemRegistry.getWeaponsmithLooting()
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_KNOCKBACK", 1, 64, 4, 928)); // ItemRegistry.getWeaponsmithKnockback()
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_FIRE_ASPECT", 1, 64, 4, 928)); // ItemRegistry.getWeaponsmithFireAspect()
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SMITE", 1, 64, 4, 928)); // ItemRegistry.getWeaponsmithSmite()
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_BANE_OF_ARTHROPODS", 1, 64, 4, 928)); // ItemRegistry.getWeaponsmithBaneofAnthropods()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SWEEPING_EDGE", 1, 63, 4)); // ItemRegistry.getWeaponsmithSweepingEdge()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_LOOTING", 1, 64, 4)); // ItemRegistry.getWeaponsmithLooting()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_KNOCKBACK", 1, 64, 4)); // ItemRegistry.getWeaponsmithKnockback()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_FIRE_ASPECT", 1, 64, 4)); // ItemRegistry.getWeaponsmithFireAspect()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SMITE", 1, 64, 4)); // ItemRegistry.getWeaponsmithSmite()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_BANE_OF_ARTHROPODS", 1, 64, 4)); // ItemRegistry.getWeaponsmithBaneofAnthropods()
 
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_ENCHANT", 1, 64, 5, 928)); // ItemRegistry.getWeaponsmithEnchant()
-        weaponsmithPurchases.add(createTradeMap("LEGENDARY_SWORD_REFORGE", 1, 512, 5, 7424)); // ItemRegistry.getLegendarySwordReforge()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_ENCHANT", 1, 64, 5)); // ItemRegistry.getWeaponsmithEnchant()
+        weaponsmithPurchases.add(createTradeMap("LEGENDARY_SWORD_REFORGE", 1, 512, 5)); // ItemRegistry.getLegendarySwordReforge()
         defaultConfig.set("WEAPONSMITH.purchases", weaponsmithPurchases);
 
         List<Map<String, Object>> weaponsmithSells = new ArrayList<>();
-        weaponsmithSells.add(createTradeMap("IRON_INGOT", 3, 1, 1, 29));
-        weaponsmithSells.add(createTradeMap("GOLD_INGOT", 2, 1, 1, 29));
-        weaponsmithSells.add(createTradeMap("DIAMOND", 1, 8, 1, 116));
-        weaponsmithSells.add(createTradeMap("ZOMBIE_HEAD", 1, 8, 1, 116));
-        weaponsmithSells.add(createTradeMap("SKELETON_SKULL", 1, 8, 1, 87));
-        weaponsmithSells.add(createTradeMap("CREEPER_HEAD", 1, 8, 1, 116));
-        weaponsmithSells.add(createTradeMap("SINGULARITY", 1, 8, 1, 116)); // ItemRegistry.getSingularity()
-        weaponsmithSells.add(createTradeMap("SKELETON_DROP", 1, 150, 1, 2175)); // skeletonDrop
-        weaponsmithSells.add(createTradeMap("DROWNED_DROP", 1, 8, 1, 116)); // drownedDrop
-        weaponsmithSells.add(createTradeMap("CREEPER_DROP", 1, 8, 1, 116)); // creeperDrop
-        weaponsmithSells.add(createTradeMap("BLAZE_DROP", 1, 8, 1, 116)); // blazeDrop
-        weaponsmithSells.add(createTradeMap("ENDER_DROP", 1, 24, 1, 348)); // enderDrop
-        weaponsmithSells.add(createTradeMap("GUARDIAN_DROP", 1, 8, 1, 116)); // guardianDrop
-        weaponsmithSells.add(createTradeMap("ELDER_GUARDIAN_DROP", 1, 4, 1, 58)); // elderGuardianDrop
-        weaponsmithSells.add(createTradeMap("PIGLIN_BRUTE_DROP", 1, 8, 1, 116)); // piglinBruteDrop
-        weaponsmithSells.add(createTradeMap("PIGLIN_DROP", 1, 8, 1, 116)); // piglinDrop
-        weaponsmithSells.add(createTradeMap("SPIDER_DROP", 1, 100, 1, 1450)); // spiderDrop
-        weaponsmithSells.add(createTradeMap("UNDEAD_DROP", 1, 100, 1, 1450)); // undeadDrop
-        weaponsmithSells.add(createTradeMap("VINDICATOR_DROP", 1, 8, 1, 116)); // vindicatorDrop
-        weaponsmithSells.add(createTradeMap("WITCH_DROP", 1, 32, 1, 464)); // witchDrop
+        weaponsmithSells.add(createTradeMap("IRON_INGOT", 3, 1, 1));
+        weaponsmithSells.add(createTradeMap("GOLD_INGOT", 2, 1, 1));
+        weaponsmithSells.add(createTradeMap("DIAMOND", 1, 8, 1));
+        weaponsmithSells.add(createTradeMap("ZOMBIE_HEAD", 1, 8, 1));
+        weaponsmithSells.add(createTradeMap("SKELETON_SKULL", 1, 8, 1));
+        weaponsmithSells.add(createTradeMap("CREEPER_HEAD", 1, 8, 1));
+        weaponsmithSells.add(createTradeMap("SINGULARITY", 1, 8, 1)); // ItemRegistry.getSingularity()
+        weaponsmithSells.add(createTradeMap("SKELETON_DROP", 1, 150, 1)); // skeletonDrop
+        weaponsmithSells.add(createTradeMap("DROWNED_DROP", 1, 8, 1)); // drownedDrop
+        weaponsmithSells.add(createTradeMap("CREEPER_DROP", 1, 8, 1)); // creeperDrop
+        weaponsmithSells.add(createTradeMap("BLAZE_DROP", 1, 8, 1)); // blazeDrop
+        weaponsmithSells.add(createTradeMap("ENDER_DROP", 1, 24, 1)); // enderDrop
+        weaponsmithSells.add(createTradeMap("GUARDIAN_DROP", 1, 8, 1)); // guardianDrop
+        weaponsmithSells.add(createTradeMap("ELDER_GUARDIAN_DROP", 1, 4, 1)); // elderGuardianDrop
+        weaponsmithSells.add(createTradeMap("PIGLIN_BRUTE_DROP", 1, 8, 1)); // piglinBruteDrop
+        weaponsmithSells.add(createTradeMap("PIGLIN_DROP", 1, 8, 1)); // piglinDrop
+        weaponsmithSells.add(createTradeMap("SPIDER_DROP", 1, 100, 1)); // spiderDrop
+        weaponsmithSells.add(createTradeMap("UNDEAD_DROP", 1, 100, 1)); // undeadDrop
+        weaponsmithSells.add(createTradeMap("VINDICATOR_DROP", 1, 8, 1)); // vindicatorDrop
+        weaponsmithSells.add(createTradeMap("WITCH_DROP", 1, 32, 1)); // witchDrop
         defaultConfig.set("WEAPONSMITH.sells", weaponsmithSells);
 
         List<Map<String, Object>> fletcherPurchases = new ArrayList<>();
-        fletcherPurchases.add(createTradeMap("ARROW", 4, 1, 1, 29)); // item, quantity, emeralds, level, experience
-        fletcherPurchases.add(createTradeMap("BOW", 1, 4, 1, 58));
-        fletcherPurchases.add(createTradeMap("CROSSBOW", 1, 4, 2, 58));
-        fletcherPurchases.add(createTradeMap("FEATHER", 1, 2, 2, 29));
+        fletcherPurchases.add(createTradeMap("ARROW", 4, 1, 1)); // item, quantity, emeralds, level, experience
+        fletcherPurchases.add(createTradeMap("BOW", 1, 4, 1));
+        fletcherPurchases.add(createTradeMap("CROSSBOW", 1, 4, 2));
+        fletcherPurchases.add(createTradeMap("FEATHER", 1, 2, 2));
 
-        fletcherPurchases.add(createTradeMap("OAK_SAPLING", 4, 2, 3, 29));
-        fletcherPurchases.add(createTradeMap("JUNGLE_SAPLING", 4, 2, 3, 29));
-        fletcherPurchases.add(createTradeMap("DARK_OAK_SAPLING", 4, 2, 3, 29));
-        fletcherPurchases.add(createTradeMap("SPRUCE_SAPLING", 4, 2, 3, 29));
-        fletcherPurchases.add(createTradeMap("BIRCH_SAPLING", 4, 2, 3, 29));
-        fletcherPurchases.add(createTradeMap("ACACIA_SAPLING", 4, 2, 3, 29));
-        fletcherPurchases.add(createTradeMap("CHERRY_SAPLING", 4, 2, 3, 29));
+        fletcherPurchases.add(createTradeMap("OAK_SAPLING", 4, 2, 3));
+        fletcherPurchases.add(createTradeMap("JUNGLE_SAPLING", 4, 2, 3));
+        fletcherPurchases.add(createTradeMap("DARK_OAK_SAPLING", 4, 2, 3));
+        fletcherPurchases.add(createTradeMap("SPRUCE_SAPLING", 4, 2, 3));
+        fletcherPurchases.add(createTradeMap("BIRCH_SAPLING", 4, 2, 3));
+        fletcherPurchases.add(createTradeMap("ACACIA_SAPLING", 4, 2, 3));
+        fletcherPurchases.add(createTradeMap("CHERRY_SAPLING", 4, 2, 3));
 
-        fletcherPurchases.add(createTradeMap("FLETCHER_BOW_ENCHANT", 1, 1, 4, 232)); // Custom item
-        fletcherPurchases.add(createTradeMap("FLETCHER_POWER", 1, 1, 4, 928)); // Custom item
-        fletcherPurchases.add(createTradeMap("FLETCHER_CROSSBOW_ENCHANT", 1, 1, 5, 928)); // Custom item
+        fletcherPurchases.add(createTradeMap("FLETCHER_BOW_ENCHANT", 1, 1, 4)); // Custom item
+        fletcherPurchases.add(createTradeMap("FLETCHER_POWER", 1, 1, 4)); // Custom item
+        fletcherPurchases.add(createTradeMap("FLETCHER_CROSSBOW_ENCHANT", 1, 1, 5)); // Custom item
         defaultConfig.set("FLETCHER.purchases", fletcherPurchases);
 
         List<Map<String, Object>> fletcherSells = new ArrayList<>();
-        fletcherSells.add(createTradeMap("STICK", 64, 1, 1, 928));
-        fletcherSells.add(createTradeMap("FLINT", 2, 1, 1, 29));
-        fletcherSells.add(createTradeMap("STRING", 2, 1, 1, 29));
-        fletcherSells.add(createTradeMap("FEATHER", 2, 1, 1, 29));
-        fletcherSells.add(createTradeMap("ARROW", 16, 1, 1, 29));
-        fletcherSells.add(createTradeMap("SECRETS_OF_INFINITY", 128, 1, 128, 1856)); // Custom item
+        fletcherSells.add(createTradeMap("STICK", 64, 1, 1));
+        fletcherSells.add(createTradeMap("FLINT", 2, 1, 1));
+        fletcherSells.add(createTradeMap("STRING", 2, 1, 1));
+        fletcherSells.add(createTradeMap("FEATHER", 2, 1, 1));
+        fletcherSells.add(createTradeMap("ARROW", 16, 1, 1));
+        fletcherSells.add(createTradeMap("SECRETS_OF_INFINITY", 1, 128, 4)); // Custom item
         defaultConfig.set("FLETCHER.sells", fletcherSells);
 // Cartographer Purchases
         List<Map<String, Object>> cartographerPurchases = new ArrayList<>();
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_MINESHAFT", 1, 16, 1, 232)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_VILLAGE", 1, 16, 1, 232)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_SHIPWRECK", 1, 16, 1, 232)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_MINESHAFT", 1, 16, 1)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_VILLAGE", 1, 16, 1)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_SHIPWRECK", 1, 16, 1)); // Custom item
 
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_BURIED_TREASURE", 1, 16, 2, 232)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_IGLOO", 1, 16, 2, 290)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_OCEAN_MONUMENT", 1, 20, 2, 290)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_OCEAN_RUINS", 1, 20, 2, 290)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_BURIED_TREASURE", 1, 16, 2)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_IGLOO", 1, 16, 2)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_OCEAN_MONUMENT", 1, 20, 2)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_OCEAN_RUINS", 1, 20, 2)); // Custom item
 
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_DESERT_PYRAMID", 1, 32, 3, 464)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_JUNGLE_TEMPLE", 1, 32, 3, 464)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_PILLAGER_OUTPOST", 1, 32, 3, 464)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_SWAMP_HUT", 1, 32, 3, 464)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_NETHER_FORTRESS", 1, 32, 3, 464)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_DESERT_PYRAMID", 1, 32, 3)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_JUNGLE_TEMPLE", 1, 32, 3)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_PILLAGER_OUTPOST", 1, 32, 3)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_SWAMP_HUT", 1, 32, 3)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_NETHER_FORTRESS", 1, 32, 3)); // Custom item
 
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_STRONGHOLD", 1, 64, 4, 928)); // Custom item
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_BASTION_REMNANT", 1, 64, 4, 928)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_STRONGHOLD", 1, 64, 4)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_BASTION_REMNANT", 1, 64, 4)); // Custom item
 
-        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_WOODLAND_MANSION", 1, 128, 5, 1856)); // Custom item
+        cartographerPurchases.add(createTradeMap("CARTOGRAPHER_WOODLAND_MANSION", 1, 128, 5)); // Custom item
         defaultConfig.set("CARTOGRAPHER.purchases", cartographerPurchases);
 
 // Cartographer Sells
         List<Map<String, Object>> cartographerSells = new ArrayList<>();
-        cartographerSells.add(createTradeMap("PAPER", 8, 1, 1, 29));
-        cartographerSells.add(createTradeMap("COMPASS", 1, 3, 1, 29));
+        cartographerSells.add(createTradeMap("PAPER", 8, 1, 1));
+        cartographerSells.add(createTradeMap("COMPASS", 1, 3, 1));
         defaultConfig.set("CARTOGRAPHER.sells", cartographerSells);
         // Cleric Purchases
         List<Map<String, Object>> clericPurchases = new ArrayList<>();
-        clericPurchases.add(createTradeMap("GLASS_BOTTLE", 1, 2, 1, 29)); // Material
-        clericPurchases.add(createTradeMap("NETHER_WART", 1, 64, 1, 928)); // Material
-        clericPurchases.add(createTradeMap("SUGAR", 1, 2, 1, 29)); // Material
+        clericPurchases.add(createTradeMap("GLASS_BOTTLE", 1, 2, 1)); // Material
+        clericPurchases.add(createTradeMap("NETHER_WART", 1, 64, 1)); // Material
+        clericPurchases.add(createTradeMap("SUGAR", 1, 2, 1)); // Material
 
-        clericPurchases.add(createTradeMap("RABBIT_FOOT", 1, 12, 2, 174)); // Material
-        clericPurchases.add(createTradeMap("GLISTERING_MELON_SLICE", 1, 8, 2, 116)); // Material
-        clericPurchases.add(createTradeMap("FERMENTED_SPIDER_EYE", 3, 15, 2, 203)); // Material
-        clericPurchases.add(createTradeMap("SPIDER_EYE", 3, 12, 2, 174)); // Material
+        clericPurchases.add(createTradeMap("RABBIT_FOOT", 1, 12, 2)); // Material
+        clericPurchases.add(createTradeMap("GLISTERING_MELON_SLICE", 1, 8, 2)); // Material
+        clericPurchases.add(createTradeMap("FERMENTED_SPIDER_EYE", 3, 15, 2)); // Material
+        clericPurchases.add(createTradeMap("SPIDER_EYE", 3, 12, 2)); // Material
 
-        clericPurchases.add(createTradeMap("GUNPOWDER", 3, 6, 3, 87)); // Material
-        clericPurchases.add(createTradeMap("MAGMA_CREAM", 3, 16, 3, 232)); // Material
-        clericPurchases.add(createTradeMap("BLAZE_POWDER", 2, 48, 3, 696)); // Material
-        clericPurchases.add(createTradeMap("PHANTOM_MEMBRANE", 2, 8, 3, 116)); // Material
+        clericPurchases.add(createTradeMap("GUNPOWDER", 3, 6, 3)); // Material
+        clericPurchases.add(createTradeMap("MAGMA_CREAM", 3, 16, 3)); // Material
+        clericPurchases.add(createTradeMap("BLAZE_POWDER", 2, 48, 3)); // Material
+        clericPurchases.add(createTradeMap("PHANTOM_MEMBRANE", 2, 8, 3)); // Material
 
-        clericPurchases.add(createTradeMap("GHAST_TEAR", 2, 20, 4, 290)); // Material
+        clericPurchases.add(createTradeMap("GHAST_TEAR", 2, 20, 4)); // Material
 
-        clericPurchases.add(createTradeMap("DRAGON_BREATH", 4, 64, 5, 928)); // Material
-        clericPurchases.add(createTradeMap("TURTLE_HELMET", 1, 64, 5, 928)); // Material
-        clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 5, 928)); // Custom Item
+        clericPurchases.add(createTradeMap("DRAGON_BREATH", 4, 64, 5)); // Material
+        clericPurchases.add(createTradeMap("TURTLE_HELMET", 1, 64, 5)); // Material
+        clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 5)); // Custom Item
         defaultConfig.set("CLERIC.purchases", clericPurchases);
 
 // Cleric Sells
         List<Map<String, Object>> clericSells = new ArrayList<>();
-        clericSells.add(createTradeMap("ROTTEN_FLESH", 4, 1, 1, 29)); // Material
-        clericSells.add(createTradeMap("BONE", 8, 3, 1, 29)); // Material
-        clericSells.add(createTradeMap("SPIDER_EYE", 4, 3, 1, 29)); // Material
-        clericSells.add(createTradeMap("LAPIS_LAZULI", 8, 1, 2, 29)); // Material
-        clericSells.add(createTradeMap("REDSTONE", 8, 1, 2, 29)); // Material
-        clericSells.add(createTradeMap("ENDER_PEARL", 2, 8, 3, 116)); // Material
-        clericSells.add(createTradeMap("GLOWSTONE", 1, 3, 4, 29)); // Material
+        clericSells.add(createTradeMap("ROTTEN_FLESH", 4, 1, 1)); // Material
+        clericSells.add(createTradeMap("BONE", 8, 3, 1)); // Material
+        clericSells.add(createTradeMap("SPIDER_EYE", 4, 3, 1)); // Material
+        clericSells.add(createTradeMap("LAPIS_LAZULI", 8, 1, 2)); // Material
+        clericSells.add(createTradeMap("REDSTONE", 8, 1, 2)); // Material
+        clericSells.add(createTradeMap("ENDER_PEARL", 2, 8, 3)); // Material
+        clericSells.add(createTradeMap("GLOWSTONE", 1, 3, 4)); // Material
         defaultConfig.set("CLERIC.sells", clericSells);
 // Leatherworker Purchases
         List<Map<String, Object>> leatherworkerPurchases = new ArrayList<>();
-        leatherworkerPurchases.add(createTradeMap("LEATHER", 1, 3, 1, 29)); // Material
-        leatherworkerPurchases.add(createTradeMap("ITEM_FRAME", 1, 3, 1, 29)); // Material
-        leatherworkerPurchases.add(createTradeMap("SHULKER_SHELL", 1, 64, 3, 928)); // Material
+        leatherworkerPurchases.add(createTradeMap("LEATHER", 1, 3, 1)); // Material
+        leatherworkerPurchases.add(createTradeMap("ITEM_FRAME", 1, 3, 1)); // Material
+        leatherworkerPurchases.add(createTradeMap("SHULKER_SHELL", 1, 64, 3)); // Material
 
-        leatherworkerPurchases.add(createTradeMap("BUNDLE", 1, 64, 3, 928)); // Material
-        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ENCHANT", 1, 32, 4, 464)); // Custom Item
-        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ARTIFACT", 1, 64, 5, 928)); // Custom Item
+        leatherworkerPurchases.add(createTradeMap("BUNDLE", 1, 64, 3)); // Material
+        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ENCHANT", 1, 32, 4)); // Custom Item
+        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ARTIFACT", 1, 64, 5)); // Custom Item
         defaultConfig.set("LEATHERWORKER.purchases", leatherworkerPurchases);
 
 // Leatherworker Sells
         List<Map<String, Object>> leatherworkerSells = new ArrayList<>();
-        leatherworkerSells.add(createTradeMap("SADDLE", 1, 12, 1, 174)); // Material
-        leatherworkerSells.add(createTradeMap("LEATHER_BOOTS", 1, 1, 1, 29)); // Material
+        leatherworkerSells.add(createTradeMap("SADDLE", 1, 12, 1)); // Material
+        leatherworkerSells.add(createTradeMap("LEATHER_BOOTS", 1, 1, 1)); // Material
         defaultConfig.set("LEATHERWORKER.sells", leatherworkerSells);
 // Shepherd Purchases
         List<Map<String, Object>> shepherdPurchases = new ArrayList<>();
-        shepherdPurchases.add(createTradeMap("PAINTING", 4, 8, 1, 116)); // Material
+        shepherdPurchases.add(createTradeMap("PAINTING", 4, 8, 1)); // Material
 
-        shepherdPurchases.add(createTradeMap("WHITE_DYE", 4, 3, 2, 29)); // Material
-        shepherdPurchases.add(createTradeMap("GRAY_DYE", 4, 3, 2, 29)); // Material
-        shepherdPurchases.add(createTradeMap("BLACK_DYE", 4, 3, 2, 29)); // Material
-        shepherdPurchases.add(createTradeMap("CYAN_DYE", 4, 3, 2, 29)); // Material
-        shepherdPurchases.add(createTradeMap("LIME_DYE", 4, 3, 2, 29)); // Material
+        shepherdPurchases.add(createTradeMap("WHITE_DYE", 4, 3, 2)); // Material
+        shepherdPurchases.add(createTradeMap("GRAY_DYE", 4, 3, 2)); // Material
+        shepherdPurchases.add(createTradeMap("BLACK_DYE", 4, 3, 2)); // Material
+        shepherdPurchases.add(createTradeMap("CYAN_DYE", 4, 3, 2)); // Material
+        shepherdPurchases.add(createTradeMap("LIME_DYE", 4, 3, 2)); // Material
 
-        shepherdPurchases.add(createTradeMap("YELLOW_DYE", 4, 6, 3, 87)); // Material
-        shepherdPurchases.add(createTradeMap("ORANGE_DYE", 4, 6, 3, 87)); // Material
-        shepherdPurchases.add(createTradeMap("RED_DYE", 4, 6, 3, 87)); // Material
-        shepherdPurchases.add(createTradeMap("PINK_DYE", 4, 6, 3, 87)); // Material
-        shepherdPurchases.add(createTradeMap("LIGHT_GRAY_DYE", 4, 6, 3, 87)); // Material
+        shepherdPurchases.add(createTradeMap("YELLOW_DYE", 4, 6, 3)); // Material
+        shepherdPurchases.add(createTradeMap("ORANGE_DYE", 4, 6, 3)); // Material
+        shepherdPurchases.add(createTradeMap("RED_DYE", 4, 6, 3)); // Material
+        shepherdPurchases.add(createTradeMap("PINK_DYE", 4, 6, 3)); // Material
+        shepherdPurchases.add(createTradeMap("LIGHT_GRAY_DYE", 4, 6, 3)); // Material
 
-        shepherdPurchases.add(createTradeMap("MAGENTA_DYE", 4, 9, 4, 87)); // Material
-        shepherdPurchases.add(createTradeMap("PURPLE_DYE", 4, 9, 4, 87)); // Material
-        shepherdPurchases.add(createTradeMap("BLUE_DYE", 4, 9, 4, 87)); // Material
-        shepherdPurchases.add(createTradeMap("CYAN_DYE", 4, 9, 4, 87)); // Material
-        shepherdPurchases.add(createTradeMap("GREEN_DYE", 4, 9, 4, 87)); // Material
-        shepherdPurchases.add(createTradeMap("BROWN_DYE", 4, 9, 4, 87)); // Material
+        shepherdPurchases.add(createTradeMap("MAGENTA_DYE", 4, 9, 4)); // Material
+        shepherdPurchases.add(createTradeMap("PURPLE_DYE", 4, 9, 4)); // Material
+        shepherdPurchases.add(createTradeMap("BLUE_DYE", 4, 9, 4)); // Material
+        shepherdPurchases.add(createTradeMap("CYAN_DYE", 4, 9, 4)); // Material
+        shepherdPurchases.add(createTradeMap("GREEN_DYE", 4, 9, 4)); // Material
+        shepherdPurchases.add(createTradeMap("BROWN_DYE", 4, 9, 4)); // Material
 
-        shepherdPurchases.add(createTradeMap("TERRACOTTA", 8, 4, 5, 58)); // Material
-        shepherdPurchases.add(createTradeMap("GRAVEL", 8, 4, 5, 58)); // Material
-        shepherdPurchases.add(createTradeMap("SAND", 8, 4, 5, 58)); // Material
-        shepherdPurchases.add(createTradeMap("SHEPHERD_ARTIFACT", 8, 16, 5, 116)); // Custom Item
-        shepherdPurchases.add(createTradeMap("SHEPHERD_ENCHANT", 1, 32, 5, 116)); // Custom Item
+        shepherdPurchases.add(createTradeMap("TERRACOTTA", 8, 4, 5)); // Material
+        shepherdPurchases.add(createTradeMap("GRAVEL", 8, 4, 5)); // Material
+        shepherdPurchases.add(createTradeMap("SAND", 8, 4, 5)); // Material
+        shepherdPurchases.add(createTradeMap("SHEPHERD_ARTIFACT", 8, 16, 5)); // Custom Item
+        shepherdPurchases.add(createTradeMap("SHEPHERD_ENCHANT", 1, 32, 5)); // Custom Item
         defaultConfig.set("SHEPHERD.purchases", shepherdPurchases);
 
 // Shepherd Sells
         List<Map<String, Object>> shepherdSells = new ArrayList<>();
-        shepherdSells.add(createTradeMap("SHEARS", 1, 3, 1, 29)); // Material
-        shepherdSells.add(createTradeMap("BLACK_WOOL", 6, 2, 1, 29)); // Material
-        shepherdSells.add(createTradeMap("WHITE_WOOL", 16, 1, 1, 29)); // Material
+        shepherdSells.add(createTradeMap("SHEARS", 1, 3, 1)); // Material
+        shepherdSells.add(createTradeMap("BLACK_WOOL", 6, 2, 1)); // Material
+        shepherdSells.add(createTradeMap("WHITE_WOOL", 16, 1, 1)); // Material
         defaultConfig.set("SHEPHERD.sells", shepherdSells);
 // Toolsmith Purchases
         List<Map<String, Object>> toolsmithPurchases = new ArrayList<>();
-        toolsmithPurchases.add(createTradeMap("FISHING_ROD", 1, 6, 1, 87)); // Material
-        toolsmithPurchases.add(createTradeMap("SHEARS", 1, 6, 1, 87)); // Material
-        toolsmithPurchases.add(createTradeMap("BUCKET", 1, 8, 1, 116)); // Material
-        toolsmithPurchases.add(createTradeMap("COMMON_TOOL_REFORGE", 1, 4, 1, 58)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("FISHING_ROD", 1, 6, 1)); // Material
+        toolsmithPurchases.add(createTradeMap("SHEARS", 1, 6, 1)); // Material
+        toolsmithPurchases.add(createTradeMap("BUCKET", 1, 8, 1)); // Material
+        toolsmithPurchases.add(createTradeMap("COMMON_TOOL_REFORGE", 1, 4, 1)); // Custom Item
 
-        toolsmithPurchases.add(createTradeMap("SHIELD", 1, 10, 2, 145)); // Material
-        toolsmithPurchases.add(createTradeMap("UNCOMMON_TOOL_REFORGE", 1, 8, 2, 116)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("SHIELD", 1, 10, 2)); // Material
+        toolsmithPurchases.add(createTradeMap("UNCOMMON_TOOL_REFORGE", 1, 8, 2)); // Custom Item
 
-        toolsmithPurchases.add(createTradeMap("TOOLSMITH_REFORGE", 1, 64, 3, 928)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("RARE_TOOL_REFORGE", 1, 16, 3, 232)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("TOOLSMITH_REFORGE", 1, 64, 3)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("RARE_TOOL_REFORGE", 1, 16, 3)); // Custom Item
 
-        toolsmithPurchases.add(createTradeMap("TOOLSMITH_EFFICIENCY", 1, 64, 4, 928)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("TOOLSMITH_UNBREAKING", 1, 64, 4, 928)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("EPIC_TOOL_REFORGE", 1, 32, 4, 464)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("TOOLSMITH_EFFICIENCY", 1, 64, 4)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("TOOLSMITH_UNBREAKING", 1, 64, 4)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("EPIC_TOOL_REFORGE", 1, 32, 4)); // Custom Item
 
-        toolsmithPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5, 928)); // Material
-        toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT", 1, 64, 5, 928)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT_TWO", 1, 128, 5, 1856)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("LEGENDARY_TOOL_REFORGE", 1, 64, 5, 928)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
+        toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT", 1, 64, 5)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT_TWO", 1, 128, 5)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("LEGENDARY_TOOL_REFORGE", 1, 64, 5)); // Custom Item
 
         defaultConfig.set("TOOLSMITH.purchases", toolsmithPurchases);
 
 // Toolsmith Sells
         List<Map<String, Object>> toolsmithSells = new ArrayList<>();
-        toolsmithSells.add(createTradeMap("COAL", 3, 1, 1, 29)); // Material
-        toolsmithSells.add(createTradeMap("CHARCOAL", 3, 2, 1, 29)); // Material
-        toolsmithSells.add(createTradeMap("IRON_INGOT", 3, 1, 1, 29)); // Material
-        toolsmithSells.add(createTradeMap("GOLD_INGOT", 3, 2, 1, 29)); // Material
-        toolsmithSells.add(createTradeMap("DIAMOND", 1, 6, 1, 87)); // Material
-        toolsmithSells.add(createTradeMap("LAPIS_GEMSTONE", 1, 32, 3, 464)); // Custom Item
-        toolsmithSells.add(createTradeMap("EMERALD_GEMSTONE", 1, 64, 3, 928)); // Custom Item
-        toolsmithSells.add(createTradeMap("REDSTONE_GEMSTONE", 1, 32, 3, 464)); // Custom Item
-        toolsmithSells.add(createTradeMap("DIAMOND_GEMSTONE", 1, 64, 3, 928)); // Custom Item
+        toolsmithSells.add(createTradeMap("COAL", 3, 1, 1)); // Material
+        toolsmithSells.add(createTradeMap("CHARCOAL", 3, 2, 1)); // Material
+        toolsmithSells.add(createTradeMap("IRON_INGOT", 3, 1, 1)); // Material
+        toolsmithSells.add(createTradeMap("GOLD_INGOT", 3, 2, 1)); // Material
+        toolsmithSells.add(createTradeMap("DIAMOND", 1, 6, 1)); // Material
+        toolsmithSells.add(createTradeMap("LAPIS_GEMSTONE", 1, 32, 3)); // Custom Item
+        toolsmithSells.add(createTradeMap("EMERALD_GEMSTONE", 1, 64, 3)); // Custom Item
+        toolsmithSells.add(createTradeMap("REDSTONE_GEMSTONE", 1, 32, 3)); // Custom Item
+        toolsmithSells.add(createTradeMap("DIAMOND_GEMSTONE", 1, 64, 3)); // Custom Item
 
         defaultConfig.set("TOOLSMITH.sells", toolsmithSells);
 // Armorer Purchases
         List<Map<String, Object>> armorerPurchases = new ArrayList<>();
-        armorerPurchases.add(createTradeMap("IRON_ORE", 4, 7, 1, 87)); // Material
-        armorerPurchases.add(createTradeMap("COMMON_ARMOR_REFORGE", 1, 8, 1, 116)); // Custom Item
+        armorerPurchases.add(createTradeMap("IRON_ORE", 4, 7, 1)); // Material
+        armorerPurchases.add(createTradeMap("COMMON_ARMOR_REFORGE", 1, 8, 1)); // Custom Item
 
-        armorerPurchases.add(createTradeMap("ANVIL", 1, 24, 2, 348)); // Material
-        armorerPurchases.add(createTradeMap("UNCOMMON_ARMOR_REFORGE", 1, 16, 2, 232)); // Custom Item
+        armorerPurchases.add(createTradeMap("ANVIL", 1, 24, 2)); // Material
+        armorerPurchases.add(createTradeMap("UNCOMMON_ARMOR_REFORGE", 1, 16, 2)); // Custom Item
 
-        armorerPurchases.add(createTradeMap("GOLD_ORE", 4, 6, 3, 87)); // Material
-        armorerPurchases.add(createTradeMap("RARE_ARMOR_REFORGE", 1, 32, 3, 464)); // Custom Item
+        armorerPurchases.add(createTradeMap("GOLD_ORE", 4, 6, 3)); // Material
+        armorerPurchases.add(createTradeMap("RARE_ARMOR_REFORGE", 1, 32, 3)); // Custom Item
 
-        armorerPurchases.add(createTradeMap("NETHERITE_UPGRADE_SMITHING_TEMPLATE", 2, 32, 4, 464)); // Material
-        armorerPurchases.add(createTradeMap("EPIC_ARMOR_REFORGE", 1, 64, 4, 928)); // Custom Item
+        armorerPurchases.add(createTradeMap("NETHERITE_UPGRADE_SMITHING_TEMPLATE", 2, 32, 4)); // Material
+        armorerPurchases.add(createTradeMap("EPIC_ARMOR_REFORGE", 1, 64, 4)); // Custom Item
 
-        armorerPurchases.add(createTradeMap("RANDOM_ARMOR_TRIM", 1, 64, 4, 928)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMOR_SMITH_PROTECTION", 1, 64, 4, 928)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMOR_SMITH_RESPIRATION", 1, 64, 4, 928)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMOR_SMITH_THORNS", 1, 64, 4, 928)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMOR_SMITH_FEATHER_FALLING", 1, 64, 4, 928)); // Custom Item
+        armorerPurchases.add(createTradeMap("RANDOM_ARMOR_TRIM", 1, 64, 4)); // Custom Item
+        armorerPurchases.add(createTradeMap("ARMOR_SMITH_PROTECTION", 1, 64, 4)); // Custom Item
+        armorerPurchases.add(createTradeMap("ARMOR_SMITH_RESPIRATION", 1, 64, 4)); // Custom Item
+        armorerPurchases.add(createTradeMap("ARMOR_SMITH_THORNS", 1, 64, 4)); // Custom Item
+        armorerPurchases.add(createTradeMap("ARMOR_SMITH_FEATHER_FALLING", 1, 64, 4)); // Custom Item
 
-        armorerPurchases.add(createTradeMap("LEGENDARY_ARMOR_REFORGE", 1, 128, 5, 1856)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMORER_ENCHANT", 1, 16, 5, 232)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE", 1, 32, 5, 464)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE_TWO", 1, 64, 5, 928)); // Custom Item
+        armorerPurchases.add(createTradeMap("LEGENDARY_ARMOR_REFORGE", 1, 128, 5)); // Custom Item
+        armorerPurchases.add(createTradeMap("ARMORER_ENCHANT", 1, 16, 5)); // Custom Item
+        armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE", 1, 32, 5)); // Custom Item
+        armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE_TWO", 1, 64, 5)); // Custom Item
 
-        armorerPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5, 928)); // Material
+        armorerPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
 
         defaultConfig.set("ARMORER.purchases", armorerPurchases);
 
 // Armorer Sells
         List<Map<String, Object>> armorerSells = new ArrayList<>();
-        armorerSells.add(createTradeMap("LEATHER_HORSE_ARMOR", 1, 6, 1, 87)); // Material
-        armorerSells.add(createTradeMap("IRON_HORSE_ARMOR", 1, 12, 1, 174)); // Material
-        armorerSells.add(createTradeMap("GOLDEN_HORSE_ARMOR", 1, 24, 1, 348)); // Material
-        armorerSells.add(createTradeMap("DIAMOND_HORSE_ARMOR", 1, 48, 1, 696)); // Material
+        armorerSells.add(createTradeMap("LEATHER_HORSE_ARMOR", 1, 6, 1)); // Material
+        armorerSells.add(createTradeMap("IRON_HORSE_ARMOR", 1, 12, 1)); // Material
+        armorerSells.add(createTradeMap("GOLDEN_HORSE_ARMOR", 1, 24, 1)); // Material
+        armorerSells.add(createTradeMap("DIAMOND_HORSE_ARMOR", 1, 48, 1)); // Material
 
-        armorerSells.add(createTradeMap("IRON_INGOT", 3, 1, 1, 29)); // Material
-        armorerSells.add(createTradeMap("GOLD_INGOT", 3, 2, 1, 29)); // Material
-        armorerSells.add(createTradeMap("DIAMOND", 1, 6, 1, 87)); // Material
-        armorerSells.add(createTradeMap("AQUA_AFFINITY", 1, 16, 2, 232)); // Custom Item
-        armorerSells.add(createTradeMap("SWIFT_SNEAK", 1, 16, 2, 232)); // Custom Item
+        armorerSells.add(createTradeMap("IRON_INGOT", 3, 1, 1)); // Material
+        armorerSells.add(createTradeMap("GOLD_INGOT", 3, 2, 1)); // Material
+        armorerSells.add(createTradeMap("DIAMOND", 1, 6, 1)); // Material
+        armorerSells.add(createTradeMap("AQUA_AFFINITY", 1, 16, 2)); // Custom Item
+        armorerSells.add(createTradeMap("SWIFT_SNEAK", 1, 16, 2)); // Custom Item
 
         defaultConfig.set("ARMORER.sells", armorerSells);
 // Librarian Purchases
         List<Map<String, Object>> librarianPurchases = new ArrayList<>();
-        librarianPurchases.add(createTradeMap("BOOK", 1, 3, 1, 29)); // Material
-        librarianPurchases.add(createTradeMap("BOOKSHELF", 3, 12, 2, 174)); // Material
-        librarianPurchases.add(createTradeMap("LANTERN", 3, 4, 2, 58)); // Material
-        librarianPurchases.add(createTradeMap("GLASS", 6, 9, 3, 87)); // Material
-        librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANTMENT_TWO", 1, 16, 3, 232)); // Custom Item
-        librarianPurchases.add(createTradeMap("IRON_GOLEM", 1, 16, 4, 232)); // Custom Item
-        librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANT", 1, 32, 5, 464)); // Custom Item
+        librarianPurchases.add(createTradeMap("BOOK", 1, 3, 1)); // Material
+        librarianPurchases.add(createTradeMap("BOOKSHELF", 3, 12, 2)); // Material
+        librarianPurchases.add(createTradeMap("LANTERN", 3, 4, 2)); // Material
+        librarianPurchases.add(createTradeMap("GLASS", 6, 9, 3)); // Material
+        librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANTMENT_TWO", 1, 16, 3)); // Custom Item
+        librarianPurchases.add(createTradeMap("IRON_GOLEM", 1, 16, 4)); // Custom Item
+        librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANT", 1, 32, 5)); // Custom Item
 
         defaultConfig.set("LIBRARIAN.purchases", librarianPurchases);
 
 // Librarian Sells
         List<Map<String, Object>> librarianSells = new ArrayList<>();
-        librarianSells.add(createTradeMap("NAME_TAG", 1, 8, 3, 116)); // Material
-        librarianSells.add(createTradeMap("PAPER", 3, 1, 1, 29)); // Material
-        librarianSells.add(createTradeMap("BOOK", 3, 1, 1, 29)); // Material
-        librarianSells.add(createTradeMap("ENCHANTED_BOOK", 1, 8, 1, 116)); // Material
-        librarianSells.add(createTradeMap("ENCHANTED_GOLDEN_APPLE", 1, 16, 1, 232)); // Material
-        librarianSells.add(createTradeMap("FORBIDDEN_BOOK", 1, 8, 1, 116)); // Custom Item
+        librarianSells.add(createTradeMap("NAME_TAG", 1, 8, 3)); // Material
+        librarianSells.add(createTradeMap("PAPER", 3, 1, 1)); // Material
+        librarianSells.add(createTradeMap("BOOK", 3, 1, 1)); // Material
+        librarianSells.add(createTradeMap("ENCHANTED_BOOK", 1, 8, 1)); // Material
+        librarianSells.add(createTradeMap("ENCHANTED_GOLDEN_APPLE", 1, 16, 1)); // Material
+        librarianSells.add(createTradeMap("FORBIDDEN_BOOK", 1, 8, 1)); // Custom Item
 
         defaultConfig.set("LIBRARIAN.sells", librarianSells);
 // Fisherman Purchases
         List<Map<String, Object>> fishermanPurchases = new ArrayList<>();
-        fishermanPurchases.add(createTradeMap("FISHING_ROD", 1, 6, 1, 87)); // Material
-        fishermanPurchases.add(createTradeMap("BUCKET", 1, 8, 2, 116)); // Material
-        fishermanPurchases.add(createTradeMap("LAPIS_LAZULI", 4, 8, 2, 116)); // Material
-        fishermanPurchases.add(createTradeMap("SHALLOW_SHELL", 1, 16, 2, 232)); // Custom Item
-        fishermanPurchases.add(createTradeMap("SHELL", 1, 32, 3, 464)); // Custom Item
-        fishermanPurchases.add(createTradeMap("FISHERMAN_REFORGE", 1, 64, 3, 928)); // Custom Item
-        fishermanPurchases.add(createTradeMap("CAMPFIRE", 2, 12, 3, 174)); // Material
-        fishermanPurchases.add(createTradeMap("DEEP_SHELL", 1, 64, 4, 928)); // Custom Item
-        fishermanPurchases.add(createTradeMap("FISHERMAN_LURE", 1, 64, 4, 928)); // Custom Item
-        fishermanPurchases.add(createTradeMap("FISHERMAN_LUCK_OF_THE_SEA", 1, 64, 4, 928)); // Custom Item
-        fishermanPurchases.add(createTradeMap("ABYSSAL_SHELL", 1, 64, 5, 928)); // Custom Item
-        fishermanPurchases.add(createTradeMap("ABYSSAL_INK", 1, 64, 5, 928)); // Custom Item
-        fishermanPurchases.add(createTradeMap("ABYSSAL_VENOM", 1, 64, 5, 928)); // Custom Item
-        fishermanPurchases.add(createTradeMap("FISHER_ENCHANT", 1, 40, 5, 580)); // Custom Item
-        fishermanPurchases.add(createTradeMap("FISHING_ENCHANT", 1, 40, 5, 580)); // Custom Item
+        fishermanPurchases.add(createTradeMap("FISHING_ROD", 1, 6, 1)); // Material
+        fishermanPurchases.add(createTradeMap("BUCKET", 1, 8, 2)); // Material
+        fishermanPurchases.add(createTradeMap("LAPIS_LAZULI", 4, 8, 2)); // Material
+        fishermanPurchases.add(createTradeMap("SHALLOW_SHELL", 1, 16, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("SHELL", 1, 32, 3)); // Custom Item
+        fishermanPurchases.add(createTradeMap("FISHERMAN_REFORGE", 1, 64, 3)); // Custom Item
+        fishermanPurchases.add(createTradeMap("CAMPFIRE", 2, 12, 3)); // Material
+        fishermanPurchases.add(createTradeMap("DEEP_SHELL", 1, 64, 4)); // Custom Item
+        fishermanPurchases.add(createTradeMap("FISHERMAN_LURE", 1, 64, 4)); // Custom Item
+        fishermanPurchases.add(createTradeMap("FISHERMAN_LUCK_OF_THE_SEA", 1, 64, 4)); // Custom Item
+        fishermanPurchases.add(createTradeMap("ABYSSAL_SHELL", 1, 64, 5)); // Custom Item
+        fishermanPurchases.add(createTradeMap("ABYSSAL_INK", 1, 64, 5)); // Custom Item
+        fishermanPurchases.add(createTradeMap("ABYSSAL_VENOM", 1, 64, 5)); // Custom Item
+        fishermanPurchases.add(createTradeMap("FISHER_ENCHANT", 1, 40, 5)); // Custom Item
+        fishermanPurchases.add(createTradeMap("FISHING_ENCHANT", 1, 40, 5)); // Custom Item
 
         defaultConfig.set("FISHERMAN.purchases", fishermanPurchases);
 
 // Fisherman Sells
         List<Map<String, Object>> fishermanSells = new ArrayList<>();
-        fishermanSells.add(createTradeMap("STRING", 4, 1, 1, 29)); // Material
-        fishermanSells.add(createTradeMap("INK_SAC", 4, 1, 1, 29)); // Material
-        fishermanSells.add(createTradeMap("COD", 8, 1, 1, 29)); // Material
-        fishermanSells.add(createTradeMap("SALMON", 8, 1, 1, 29)); // Material
-        fishermanSells.add(createTradeMap("PUFFERFISH", 1, 1, 2, 29)); // Material
-        fishermanSells.add(createTradeMap("TROPICAL_FISH", 1, 1, 2, 29)); // Material
-        fishermanSells.add(createTradeMap("GLOW_INK_SAC", 4, 1, 2, 29)); // Material
-        fishermanSells.add(createTradeMap("TOOTH", 1, 2, 2, 58)); // Custom Item
-        fishermanSells.add(createTradeMap("LUMINESCENT_INK", 1, 2, 2, 29)); // Custom Item
-        fishermanSells.add(createTradeMap("NAUTILUS_SHELL", 1, 4, 2, 58)); // Material
-        fishermanSells.add(createTradeMap("HEART_OF_THE_SEA", 1, 16, 2, 232)); // Material
-        fishermanSells.add(createTradeMap("FISH_BONE", 1, 1, 2, 29)); // Custom Item
-        fishermanSells.add(createTradeMap("TRIDENT", 1, 24, 2, 696)); // Material
+        fishermanSells.add(createTradeMap("STRING", 4, 1, 1)); // Material
+        fishermanSells.add(createTradeMap("INK_SAC", 4, 1, 1)); // Material
+        fishermanSells.add(createTradeMap("COD", 8, 1, 1)); // Material
+        fishermanSells.add(createTradeMap("SALMON", 8, 1, 1)); // Material
+        fishermanSells.add(createTradeMap("PUFFERFISH", 1, 1, 2)); // Material
+        fishermanSells.add(createTradeMap("TROPICAL_FISH", 1, 1, 2)); // Material
+        fishermanSells.add(createTradeMap("GLOW_INK_SAC", 4, 1, 2)); // Material
+        fishermanSells.add(createTradeMap("TOOTH", 1, 2, 2)); // Custom Item
+        fishermanSells.add(createTradeMap("LUMINESCENT_INK", 1, 2, 2)); // Custom Item
+        fishermanSells.add(createTradeMap("NAUTILUS_SHELL", 1, 4, 2)); // Material
+        fishermanSells.add(createTradeMap("HEART_OF_THE_SEA", 1, 16, 2)); // Material
+        fishermanSells.add(createTradeMap("FISH_BONE", 1, 1, 2)); // Custom Item
+        fishermanSells.add(createTradeMap("TRIDENT", 1, 24, 2)); // Material
 
         defaultConfig.set("FISHERMAN.sells", fishermanSells);
 // Butcher Purchases
         List<Map<String, Object>> butcherPurchases = new ArrayList<>();
-        butcherPurchases.add(createTradeMap("BEEF", 1, 1, 1, 232)); // Custom Item
-        butcherPurchases.add(createTradeMap("MUSIC_DISC_BLOCKS", 1, 16, 1, 232)); // Custom Item
-        butcherPurchases.add(createTradeMap("PORKCHOP", 1, 1, 1, 232)); // Custom Item
-        butcherPurchases.add(createTradeMap("MUTTON", 1, 1, 1, 232)); // Custom Item
-        butcherPurchases.add(createTradeMap("CHICKEN", 1, 1, 1, 232)); // Custom Item
-        butcherPurchases.add(createTradeMap("RABBIT", 1, 1, 1, 232)); // Custom Item
-        butcherPurchases.add(createTradeMap("BUTCHER_ENCHANT", 1, 16, 5, 232)); // Custom Item
+        butcherPurchases.add(createTradeMap("BEEF", 1, 1, 1)); // Custom Item
+        butcherPurchases.add(createTradeMap("MUSIC_DISC_BLOCKS", 1, 16, 1)); // Custom Item
+        butcherPurchases.add(createTradeMap("PORKCHOP", 1, 1, 1)); // Custom Item
+        butcherPurchases.add(createTradeMap("MUTTON", 1, 1, 1)); // Custom Item
+        butcherPurchases.add(createTradeMap("CHICKEN", 1, 1, 1)); // Custom Item
+        butcherPurchases.add(createTradeMap("RABBIT", 1, 1, 1)); // Custom Item
+        butcherPurchases.add(createTradeMap("BUTCHER_ENCHANT", 1, 16, 5)); // Custom Item
 
         defaultConfig.set("BUTCHER.purchases", butcherPurchases);
 
 // Butcher Sells
         List<Map<String, Object>> butcherSells = new ArrayList<>();
-        butcherSells.add(createTradeMap("COAL", 3, 1, 1, 29)); // Material
-        butcherSells.add(createTradeMap("CHICKEN", 3, 1, 1, 29)); // Material
-        butcherSells.add(createTradeMap("MUTTON", 3, 1, 1, 29)); // Material
-        butcherSells.add(createTradeMap("BEEF", 3, 1, 2, 29)); // Material
-        butcherSells.add(createTradeMap("PORKCHOP", 3, 1, 2, 29)); // Material
-        butcherSells.add(createTradeMap("RABBIT", 3, 2, 3, 29)); // Material
+        butcherSells.add(createTradeMap("COAL", 3, 1, 1)); // Material
+        butcherSells.add(createTradeMap("CHICKEN", 3, 1, 1)); // Material
+        butcherSells.add(createTradeMap("MUTTON", 3, 1, 1)); // Material
+        butcherSells.add(createTradeMap("BEEF", 3, 1, 2)); // Material
+        butcherSells.add(createTradeMap("PORKCHOP", 3, 1, 2)); // Material
+        butcherSells.add(createTradeMap("RABBIT", 3, 2, 3)); // Material
 
         defaultConfig.set("BUTCHER.sells", butcherSells);
 // Farmer Purchases
         List<Map<String, Object>> farmerPurchases = new ArrayList<>();
-        farmerPurchases.add(createTradeMap("BREAD", 3, 1, 1, 29)); // Level 1 trade
-        farmerPurchases.add(createTradeMap("WHEAT_SEEDS", 12, 3, 1, 29)); // Level 1 trade
-        farmerPurchases.add(createTradeMap("PUMPKIN_SEEDS", 3, 32, 2, 50)); // Level 2 trade
-        farmerPurchases.add(createTradeMap("MELON_SEEDS", 3, 32, 2, 50)); // Level 2 trade
-        farmerPurchases.add(createTradeMap("CAKE", 1, 8, 3, 87)); // Level 3 trade
-        farmerPurchases.add(createTradeMap("WHEAT_SEEDER", 1, 64, 3, 87)); // Custom item
-        farmerPurchases.add(createTradeMap("BEETROOT_SEEDER", 1, 64, 3, 87)); // Custom item
-        farmerPurchases.add(createTradeMap("CARROT_SEEDER", 1, 64, 3, 87)); // Custom item
-        farmerPurchases.add(createTradeMap("POTATO_SEEDER", 1, 64, 3, 87)); // Custom item
-        farmerPurchases.add(createTradeMap("WATER_BUCKET", 1, 3, 3, 29)); // Level 3 trade
-        farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4, 29)); // Level 4 trade
-        farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5, 928)); // Level 5 trade
-        farmerPurchases.add(createTradeMap("FARMER_ENCHANT", 1, 64, 5, 928)); // Custom item
-        farmerPurchases.add(createTradeMap("AUTO_COMPOSTER", 1, 128, 5, 928)); // Custom item
+        farmerPurchases.add(createTradeMap("BREAD", 3, 1, 1)); // Level 1 trade
+        farmerPurchases.add(createTradeMap("WHEAT_SEEDS", 12, 3, 1)); // Level 1 trade
+        farmerPurchases.add(createTradeMap("PUMPKIN_SEEDS", 3, 32, 2)); // Level 2 trade
+        farmerPurchases.add(createTradeMap("MELON_SEEDS", 3, 32, 2)); // Level 2 trade
+        farmerPurchases.add(createTradeMap("CAKE", 1, 8, 3)); // Level 3 trade
+        farmerPurchases.add(createTradeMap("WHEAT_SEEDER", 1, 64, 3)); // Custom item
+        farmerPurchases.add(createTradeMap("BEETROOT_SEEDER", 1, 64, 3)); // Custom item
+        farmerPurchases.add(createTradeMap("CARROT_SEEDER", 1, 64, 3)); // Custom item
+        farmerPurchases.add(createTradeMap("POTATO_SEEDER", 1, 64, 3)); // Custom item
+        farmerPurchases.add(createTradeMap("WATER_BUCKET", 1, 3, 3)); // Level 3 trade
+        farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
+        farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5)); // Level 5 trade
+        farmerPurchases.add(createTradeMap("FARMER_ENCHANT", 1, 64, 5)); // Custom item
+        farmerPurchases.add(createTradeMap("AUTO_COMPOSTER", 1, 128, 5)); // Custom item
 
         defaultConfig.set("FARMER.purchases", farmerPurchases);
 
 // Farmer Sells
         List<Map<String, Object>> farmerSells = new ArrayList<>();
-        farmerSells.add(createTradeMap("WHEAT", 24, 1, 1, 29)); // Level 1 trade
-        farmerSells.add(createTradeMap("CARROT", 24, 1, 1, 29)); // Level 2 trade
-        farmerSells.add(createTradeMap("POTATO", 24, 1, 1, 29)); // Level 2 trade
-        farmerSells.add(createTradeMap("WHEAT_SEEDS", 32, 1, 1, 29)); // Level 2 trade
-        farmerSells.add(createTradeMap("BEETROOT", 8, 1, 2, 29)); // Level 2 trade
-        farmerSells.add(createTradeMap("ORGANIC_SOIL", 4, 2, 2, 58)); // Custom item
-        farmerSells.add(createTradeMap("EGG", 6, 1, 2, 29)); // Level 3 trade
-        farmerSells.add(createTradeMap("SUGAR_CANE", 6, 1, 2, 29)); // Level 3 trade
-        farmerSells.add(createTradeMap("APPLE", 4, 1, 2, 29)); // Level 3 trade
-        farmerSells.add(createTradeMap("MELON_SLICE", 16, 1, 3, 29)); // Level 3 trade
-        farmerSells.add(createTradeMap("PUMPKIN", 8, 1, 3, 29)); // Level 3 trade
-        farmerSells.add(createTradeMap("BROWN_MUSHROOM", 1, 1, 4, 29)); // Level 4 trade
-        farmerSells.add(createTradeMap("RED_MUSHROOM", 1, 1, 4, 29)); // Level 4 trade
+        farmerSells.add(createTradeMap("WHEAT", 24, 1, 1)); // Level 1 trade
+        farmerSells.add(createTradeMap("CARROT", 24, 1, 1)); // Level 2 trade
+        farmerSells.add(createTradeMap("POTATO", 24, 1, 1)); // Level 2 trade
+        farmerSells.add(createTradeMap("WHEAT_SEEDS", 32, 1, 1)); // Level 2 trade
+        farmerSells.add(createTradeMap("BEETROOT", 8, 1, 2)); // Level 2 trade
+        farmerSells.add(createTradeMap("ORGANIC_SOIL", 4, 2, 2)); // Custom item
+        farmerSells.add(createTradeMap("EGG", 6, 1, 2)); // Level 3 trade
+        farmerSells.add(createTradeMap("SUGAR_CANE", 6, 1, 2)); // Level 3 trade
+        farmerSells.add(createTradeMap("APPLE", 4, 1, 2)); // Level 3 trade
+        farmerSells.add(createTradeMap("MELON_SLICE", 16, 1, 3)); // Level 3 trade
+        farmerSells.add(createTradeMap("PUMPKIN", 8, 1, 3)); // Level 3 trade
+        farmerSells.add(createTradeMap("BROWN_MUSHROOM", 1, 1, 4)); // Level 4 trade
+        farmerSells.add(createTradeMap("RED_MUSHROOM", 1, 1, 4)); // Level 4 trade
 
         defaultConfig.set("FARMER.sells", farmerSells);
 
@@ -586,13 +585,12 @@ public class VillagerTradeManager implements Listener {
     /**
      * Helper to build a single trade in Map format for YAML saving/loading.
      */
-    private Map<String, Object> createTradeMap(String item, int quantity, int emeralds, int level, int experience) {
+    private Map<String, Object> createTradeMap(String item, int quantity, int emeralds, int level) {
         Map<String, Object> map = new HashMap<>();
         map.put("item", item);
         map.put("quantity", quantity);
         map.put("emeralds", emeralds);
         map.put("level", level);
-        map.put("experience", experience);
         return map;
     }
 
@@ -1085,7 +1083,6 @@ public class VillagerTradeManager implements Listener {
     public void processPurchase(Player player, Villager villager, TradeItem tradeItem) {
         int emeraldCost = tradeItem.getEmeraldValue();
         int quantity = tradeItem.getQuantity();
-        int barteringExperience = tradeItem.getBarteringExperience();
 
         if (hasEnoughItems(player.getInventory(), new ItemStack(Material.EMERALD), emeraldCost)) {
             PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
@@ -1149,14 +1146,13 @@ public class VillagerTradeManager implements Listener {
             }
 
             // Add bartering experience
-            xpManager.addXP(player, "Bartering", barteringExperience);
+            xpManager.addXP(player, "Bartering", 11);
         } else {
             player.sendMessage(ChatColor.RED + "You don't have enough emeralds.");
         }
     }
 
     private void processSell(Player player, Villager villager, TradeItem tradeItem) {
-        int barteringExperience = tradeItem.getBarteringExperience();
         XPManager xpManager = new XPManager(plugin);
         int emeraldReward = tradeItem.getEmeraldValue();
         int quantity = tradeItem.getQuantity();
@@ -1177,7 +1173,7 @@ public class VillagerTradeManager implements Listener {
 
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
             player.sendMessage(ChatColor.GREEN + "You sold " + quantity + " items for " + emeraldReward + " emeralds!");
-            xpManager.addXP(player, "Bartering", barteringExperience);
+            xpManager.addXP(player, "Bartering", 11);
 
         } else {
             player.sendMessage(ChatColor.RED + "You don't have enough of the required items to sell.");
@@ -1266,14 +1262,13 @@ public class VillagerTradeManager implements Listener {
         private final int emeraldValue;
         private final int quantity;
         private final int requiredLevel;
-        private final int barteringExperience;
 
-        public TradeItem(ItemStack item, int emeraldValue, int quantity, int requiredLevel, int barteringExperience) {
+
+        public TradeItem(ItemStack item, int emeraldValue, int quantity, int requiredLevel) {
             this.item = item;
             this.emeraldValue = emeraldValue;
             this.quantity = quantity;
             this.requiredLevel = requiredLevel;
-            this.barteringExperience = barteringExperience;
         }
 
         public ItemStack getItem() {
@@ -1292,8 +1287,5 @@ public class VillagerTradeManager implements Listener {
             return requiredLevel;
         }
 
-        public int getBarteringExperience() {
-            return barteringExperience;
-        }
     }
 }
