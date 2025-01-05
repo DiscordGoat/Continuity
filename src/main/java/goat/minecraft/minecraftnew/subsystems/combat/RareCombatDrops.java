@@ -211,6 +211,7 @@ public class RareCombatDrops implements Listener {
             petManager.createPet(event.getEntity().getKiller(), "Zombie", PetManager.Rarity.RARE, 100, Particle.CRIT_MAGIC, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.ECHOLOCATION);
         }
 
+
     }
     private void handleSkeletonDrop(EntityDeathEvent event) {
         Player player = event.getEntity().getKiller();
