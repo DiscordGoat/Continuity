@@ -60,6 +60,10 @@ public class EngineerVillagerManager implements Listener {
         put(Material.ACTIVATOR_RAIL,   new TradeCost(4, 4));
         put(Material.TNT,              new TradeCost(12, 12));
         put(Material.REDSTONE_LAMP,    new TradeCost(4, 4));
+        put(Material.IRON_DOOR,    new TradeCost(5, 5));
+        put(Material.IRON_TRAPDOOR,    new TradeCost(3, 3));
+        put(Material.STONE_BUTTON,    new TradeCost(1, 0));
+        put(Material.OAK_BUTTON,    new TradeCost(0, 1));
     }};
 
     // All redstone-related blocks we might detect

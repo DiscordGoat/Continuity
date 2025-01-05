@@ -446,20 +446,32 @@ public class MusicDiscManager implements Listener {
             public void onEntitySpawn(CreatureSpawnEvent event) {
                 if (Math.random() < 0.3) { // 30% chance for the monster to be infected with BT
                     LivingEntity entity = event.getEntity();
-                    entity.setCustomName(ChatColor.AQUA + "BT-Infected " + entity.getType().name());
-                    entity.setCustomNameVisible(true);
-                    entity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, (2 * 60 + 58) * 20, 0)); // Aqua glowing effect
-                    entity.getWorld().spawnParticle(Particle.WATER_SPLASH, entity.getLocation(), 50, 0.5, 0.5, 0.5, 0.1); // Aqua particles
+                    Location location = entity.getLocation();
 
-                    // Apply BT behavior: Slower movement, special loot chance
-                    entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (2 * 60 + 58) * 20, 2)); // Slower movement
-                    entity.getPersistentDataContainer().set(new NamespacedKey(MinecraftNew.getInstance(), "bt_monster"), PersistentDataType.BYTE, (byte) 1);
+                    // Check if the monster is spawning on the surface
+                    if (location.getWorld().getHighestBlockYAt(location) <= location.getBlockY()) {
+                        entity.setCustomName(ChatColor.AQUA + "BT-Infected " + entity.getType().name());
+                        entity.setCustomNameVisible(true);
+                        entity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, (2 * 60 + 58) * 20, 0)); // Aqua glowing effect
+                        entity.getWorld().spawnParticle(Particle.WATER_SPLASH, entity.getLocation(), 50, 0.5, 0.5, 0.5, 0.1); // Aqua particles
+
+                        // Apply BT behavior: Slower movement
+                        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (2 * 60 + 58) * 20, 2)); // Slower movement
+                        entity.getPersistentDataContainer().set(new NamespacedKey(MinecraftNew.getInstance(), "bt_monster"), PersistentDataType.BYTE, (byte) 1);
+                    }
                 }
             }
 
             @EventHandler
             public void onEntityDeath(EntityDeathEvent event) {
                 if (event.getEntity().getPersistentDataContainer().has(new NamespacedKey(MinecraftNew.getInstance(), "bt_monster"), PersistentDataType.BYTE)) {
+                    // Drop 20 experience orbs that explode around the entity
+                    Location deathLocation = event.getEntity().getLocation();
+                    World world = deathLocation.getWorld();
+                        ExperienceOrb orb = (ExperienceOrb) deathLocation.getWorld().spawn(deathLocation, ExperienceOrb.class);
+                        orb.setExperience(20);
+
+
                     // 10% chance to drop a random music disc
                     if (Math.random() < 0.2) {
                         event.getDrops().add(getRandomLootItem()); // Replace with a random disc if needed
@@ -477,7 +489,7 @@ public class MusicDiscManager implements Listener {
                     if (damager.getPersistentDataContainer().has(new NamespacedKey(MinecraftNew.getInstance(), "bt_monster"), PersistentDataType.BYTE)) {
                         if (Math.random() < 0.5) { // 10% chance to infect the player with BT
                             Bukkit.broadcastMessage(ChatColor.RED + damagedPlayer.getName() + " has been infected with the BaroTrauma Virus!");
-                            PlayerOxygenManager playerOxygenManager = new PlayerOxygenManager(MinecraftNew.getInstance());
+                            PlayerOxygenManager playerOxygenManager = PlayerOxygenManager.getInstance();
                             playerOxygenManager.setPlayerOxygenLevel(player, 0);
                             damagedPlayer.sendMessage(ChatColor.DARK_AQUA + "You lost your oxygen!");
                         }
@@ -497,6 +509,7 @@ public class MusicDiscManager implements Listener {
             HandlerList.unregisterAll(btListener);
         }, ((2 * 60) + 58) * 20L); // Runs after 2 minutes and 58 seconds
     }
+
     private void handleMusicDiscRelic(Player player, Location jukeboxLocation) {
         Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Festivity Activated for 3 minutes 38 seconds!");
         player.playSound(player.getLocation(), Sound.MUSIC_DISC_RELIC, 300.0f, 1.0f);

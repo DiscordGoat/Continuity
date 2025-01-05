@@ -460,6 +460,8 @@ public class PetManager implements Listener {
     private String getDynamicPerkEffectDescription(PetPerk perk, int level) {
 
         switch (perk) {
+            case ROCK_EATER:
+                return ChatColor.GRAY + "Compacts 16 stone based blocks into " + ChatColor.DARK_BLUE + "Compact Stone every ore break.";
             case WATERLOGGED:
                 return ChatColor.GRAY + "Grants infinite " + ChatColor.AQUA + "Water Breathing.";
             case ASPECT_OF_THE_END:
@@ -507,7 +509,7 @@ public class PetManager implements Listener {
             case ELITE:
                 return "Gain " + ChatColor.RED + "+" + (level * 0.5) + "% Melee Damage.";
             case WALKING_FORTRESS:
-                return "Gain " + ChatColor.DARK_GRAY + (level * 0.8) + "% Damage Reduction.";
+                return "Gain " + ChatColor.DARK_GRAY + (level * 0.5) + "% Damage Reduction.";
             case REBIRTH:
                 return "Revive after dying " + ChatColor.GRAY + "at " + ChatColor.GREEN + "full health " + ChatColor.GRAY + "at the cost of your entire hunger bar.";
             case SECOND_WIND:
@@ -815,7 +817,8 @@ public class PetManager implements Listener {
         FLIGHT("Flight", ChatColor.GOLD + "Grants the ability to fly."),
         SPEED_BOOST("Speed Boost", ChatColor.GOLD + "Increases your walking speed by 100%."),
         SECOND_WIND("Second Wind", ChatColor.GOLD + "Provides [Lvl] seconds of regeneration when taking damage."),
-        SHOTCALLING("Shotcalling", ChatColor.GOLD + "Increases arrow damage by 1% per [Lvl]");
+        SHOTCALLING("Shotcalling", ChatColor.GOLD + "Increases arrow damage by 1% per [Lvl]"),
+        ROCK_EATER("Ore Magnet", ChatColor.GOLD + "");
 
         private final String displayName;
         private final String description;

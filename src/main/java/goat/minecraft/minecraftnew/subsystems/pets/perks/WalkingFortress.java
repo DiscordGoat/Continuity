@@ -32,7 +32,7 @@ public class WalkingFortress implements Listener {
             int petLevel = activePet.getLevel();
 
             // Calculate damage reduction percentage
-            double damageReduction = Math.min(petLevel * 0.8, 80.0); // Cap at 80% reduction
+            double damageReduction = Math.min(petLevel * 0.5, 50.0); // Cap at 80% reduction
             double reductionFactor = 1 - (damageReduction / 100.0);
 
             // Reduce the damage directly
