@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -1306,7 +1307,7 @@ Random random = new Random();
         int zOrigin = loc.getBlockZ();
 
         for (int x = xOrigin - radius; x <= xOrigin + radius; x++) {
-            for (int y = yOrigin - 2; y <= yOrigin + 2; y++) {
+            for (int y = yOrigin - 2; y <= yOrigin + 4; y++) {
                 for (int z = zOrigin - radius; z <= zOrigin + radius; z++) {
                     Block block = loc.getWorld().getBlockAt(x, y, z);
                     if (block.getType() == Material.CHEST) {
@@ -1466,14 +1467,15 @@ Random random = new Random();
 
                     Block block = loc.getWorld().getBlockAt(x, y, z);
 
-                    // Check if block is on top of a smooth stone slab
+                    // Check if block is on top of an upper smooth stone slab
                     Block blockBelow = block.getRelative(BlockFace.DOWN);
-                    if (blockBelow.getType() != Material.SMOOTH_STONE_SLAB) {
-                        continue;
-                    }
-
-                    if (isReplicableBlock(block.getType())) {
-                        blocksToReplicate.add(block);
+                    if (blockBelow.getType() == Material.SMOOTH_STONE_SLAB) {
+                        // Check if it's an upper slab
+                        if (blockBelow.getBlockData() instanceof Slab slabData && slabData.getType() == Slab.Type.TOP) {
+                            if (isReplicableBlock(block.getType())) {
+                                blocksToReplicate.add(block);
+                            }
+                        }
                     }
                 }
             }
@@ -1481,6 +1483,7 @@ Random random = new Random();
 
         return blocksToReplicate;
     }
+
 
     private boolean isReplicableBlock(Material material) {
         // List of replicable blocks
@@ -1513,7 +1516,7 @@ Random random = new Random();
                  RED_NETHER_BRICKS, RED_NETHER_BRICK_STAIRS, RED_NETHER_BRICK_SLAB, RED_NETHER_BRICK_WALL -> true;
 
             // Additional building blocks
-            case QUARTZ_BLOCK, QUARTZ_STAIRS, QUARTZ_SLAB,
+            case QUARTZ_BLOCK, QUARTZ_STAIRS, QUARTZ_SLAB, SMOOTH_STONE,
                  PRISMARINE, PRISMARINE_BRICKS, DARK_PRISMARINE,
                  POLISHED_ANDESITE, POLISHED_DIORITE, POLISHED_GRANITE -> true;
 

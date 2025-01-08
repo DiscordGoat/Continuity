@@ -52,7 +52,7 @@ public class EngineerVillagerManager implements Listener {
         put(Material.HONEY_BLOCK,      new TradeCost(12, 0));
         put(Material.DISPENSER,        new TradeCost(8, 3));
         put(Material.DROPPER,          new TradeCost(4, 1));
-        put(Material.HOPPER,           new TradeCost(7, 2));
+        put(Material.HOPPER,           new TradeCost(4, 6));
         put(Material.OBSERVER,         new TradeCost(7, 2));
         put(Material.RAIL,             new TradeCost(6, 1));
         put(Material.POWERED_RAIL,     new TradeCost(12, 3));
