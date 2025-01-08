@@ -80,7 +80,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
 
 
-    private void registerEngineeringRecipe() {
+    private void registerCustomRecipeCluster() {
         ItemStack engineeringItem = ItemRegistry.getEngineeringDegree();
         NamespacedKey key = new NamespacedKey(this, "engineering_profession");
 
@@ -131,7 +131,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         collectionsManager.setLockedRecipeManager(lockedRecipeManager);
 
         // Register any locked recipes
-        registerEngineeringRecipe();
+        registerCustomRecipeCluster();
 
 
         getServer().getPluginManager().registerEvents(new EngineeringProfessionListener(this), this);
