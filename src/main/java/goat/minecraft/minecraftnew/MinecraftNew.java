@@ -95,6 +95,14 @@ public class MinecraftNew extends JavaPlugin implements Listener {
                 recipe,
                 true // add to server
         );
+
+        NamespacedKey notchAppleKey = new NamespacedKey(this, "notch_apple_recipe");
+        lockedRecipeManager.addLockedRecipe(
+                notchAppleKey,
+                "Apple Mania", // EXACT name of the collection
+                recipeManager.getCustomRecipes().get(notchAppleKey),
+                false // We already called Bukkit.addRecipe(...) above
+        );
     }
     public LockedRecipeManager getLockedRecipeManager() {
         return lockedRecipeManager;

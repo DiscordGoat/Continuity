@@ -119,7 +119,7 @@ public class Collections implements CommandExecutor, Listener {
             // Reward items: 1 Redstone Torch (example)
             List<Map<String, Object>> redstoneRewardList = new ArrayList<>();
             redstoneRewardList.add(new ItemStack(Material.REDSTONE_BLOCK, 64).serialize());
-            redstoneRewardList.add(new ItemStack(Material.REDSTONE, 64*8).serialize());
+            redstoneRewardList.add(new ItemStack(Material.REDSTONE, 64*4).serialize());
             redstoneRewardList.add(new ItemStack(Material.EMERALD_BLOCK, 16).serialize());
             redstone.put("rewardItems", redstoneRewardList);
 
@@ -132,35 +132,6 @@ public class Collections implements CommandExecutor, Listener {
 
             config.set("collections.default_redstone", redstone);
 
-            // Hardcode some defaults if no config
-            // Example: "Swords" collection that uses a custom item from ItemRegistry
-            Map<String, Object> swords = new HashMap<>();
-            swords.put("name", "All Swords");
-            ItemStack iconSword = new ItemStack(Material.DIAMOND_SWORD);
-            swords.put("iconItem", iconSword.serialize());
-
-            // For the required items, demonstrate mixing a custom item plus normal swords
-            List<Map<String, Object>> defaultRequiredList = new ArrayList<>();
-            // Add custom item
-            ItemStack forbiddenBook = ItemRegistry.getForbiddenBook(); // Example custom item
-            //defaultRequiredList.add(forbiddenBook.serialize());
-            defaultRequiredList.add(new ItemStack(Material.WOODEN_SWORD).serialize());
-            defaultRequiredList.add(new ItemStack(Material.STONE_SWORD).serialize());
-            defaultRequiredList.add(new ItemStack(Material.IRON_SWORD).serialize());
-            defaultRequiredList.add(new ItemStack(Material.GOLDEN_SWORD).serialize());
-            defaultRequiredList.add(new ItemStack(Material.DIAMOND_SWORD).serialize());
-            swords.put("requiredItems", defaultRequiredList);
-
-            // For rewards
-            List<Map<String, Object>> defaultRewardList = new ArrayList<>();
-            defaultRewardList.add(new ItemStack(Material.EMERALD, 64).serialize());
-            defaultRewardList.add(ItemRegistry.getExperienceArtifact().serialize());
-            swords.put("rewardItems", defaultRewardList);
-
-            swords.put("rewardMessage", "&aYou have collected all swords!");
-            swords.put("claimed", new ArrayList<>()); // none claimed yet
-
-            config.set("collections.default_swords", swords);
 
             // Another example: "Apples"
             Map<String, Object> apples = new HashMap<>();
@@ -172,18 +143,21 @@ public class Collections implements CommandExecutor, Listener {
 
             // Required items: golden apple, enchanted golden apple
             List<Map<String, Object>> appleRequiredList = new ArrayList<>();
+            appleRequiredList.add(new ItemStack(Material.APPLE).serialize());
             appleRequiredList.add(new ItemStack(Material.GOLDEN_APPLE).serialize());
             appleRequiredList.add(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE).serialize());
             apples.put("requiredItems", appleRequiredList);
 
             // Reward items: gold ingot, xp bottle
             List<Map<String, Object>> appleRewardList = new ArrayList<>();
-            appleRewardList.add(new ItemStack(Material.GOLD_INGOT, 2).serialize());
-            appleRewardList.add(new ItemStack(Material.EXPERIENCE_BOTTLE, 10).serialize());
+            appleRewardList.add(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 4).serialize());
+            appleRewardList.add(new ItemStack(Material.GOLDEN_CARROT, 64).serialize());
             apples.put("rewardItems", appleRewardList);
 
-            apples.put("rewardMessage", "&aYou have collected all the apples!");
+            apples.put("rewardMessage", "&aYou have collected all the apples! Unlocked Enchanted Golden Apple recipe!");
             apples.put("claimed", new ArrayList<>());
+
+            apples.put("recipeKeysToUnlock", Arrays.asList("minecraftnew:notch_apple_recipe"));
 
             config.set("collections.default_apples", apples);
 
