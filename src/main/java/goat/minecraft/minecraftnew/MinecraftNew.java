@@ -4,6 +4,10 @@ import goat.minecraft.minecraftnew.other.*;
 import goat.minecraft.minecraftnew.other.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionListener;
 import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionRecipe;
+import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
+import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
+import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
+import goat.minecraft.minecraftnew.other.recipes.ViewRecipeCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
@@ -42,7 +46,11 @@ import goat.minecraft.minecraftnew.utils.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -64,17 +72,43 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private UltimateEnchantingSystem ultimateEnchantmentManager;
     private static Collections collectionsManager;
     private EngineerVillagerManager engineerVillagerManager;
-
+    private LockedRecipeManager lockedRecipeManager;
+    private RecipeManager recipeManager;
 
     public static Collections getCollectionsManager() {
         return collectionsManager;
     }
 
 
+    private void registerEngineeringRecipe() {
+        ItemStack engineeringItem = ItemRegistry.getEngineeringDegree();
+        NamespacedKey key = new NamespacedKey(this, "engineering_profession");
 
+        ShapedRecipe recipe = new ShapedRecipe(key, engineeringItem);
+        recipe.shape("RRR", "RRR", "RRR");
+        recipe.setIngredient('R', Material.REDSTONE_BLOCK);
+
+        // Let’s lock this recipe behind the collection named "Redstone Collection"
+        lockedRecipeManager.addLockedRecipe(
+                key,
+                "Redstone Collection",
+                recipe,
+                true // add to server
+        );
+    }
+    public LockedRecipeManager getLockedRecipeManager() {
+        return lockedRecipeManager;
+    }
     @Override
     public void onEnable() {
+
+        recipeManager = new RecipeManager(this);
+        recipeManager.registerAllRecipes();
+
+        getCommand("recipes").setExecutor(new RecipesCommand(recipeManager));
+        getCommand("viewrecipe").setExecutor(new ViewRecipeCommand(recipeManager));
         getServer().getPluginManager().registerEvents(new Doors(), this);
+        getServer().getPluginManager().registerEvents(new ViewRecipeCommand.ViewRecipeListener(), this);
 
         displayManager = new ItemDisplayManager(this);
         collectionsManager = new Collections(this, displayManager);
@@ -82,8 +116,16 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         Objects.requireNonNull(getCommand("collection")).setExecutor(collectionsManager);
 
 
-        EngineeringProfessionRecipe engineeringProfessionRecipe = new EngineeringProfessionRecipe(this);
-        engineeringProfessionRecipe.registerRecipe();
+        lockedRecipeManager = new LockedRecipeManager(this, collectionsManager);
+        lockedRecipeManager.init(); // registers event listener
+
+        // Now inject the lockedRecipeManager back into the collections manager
+        collectionsManager.setLockedRecipeManager(lockedRecipeManager);
+
+        // Register any locked recipes
+        registerEngineeringRecipe();
+
+
         getServer().getPluginManager().registerEvents(new EngineeringProfessionListener(this), this);
         engineerVillagerManager = new EngineerVillagerManager(this);
 

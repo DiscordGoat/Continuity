@@ -1,9 +1,11 @@
 package goat.minecraft.minecraftnew.other;
 
+import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.other.ItemDisplayManager.ItemDisplay;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -25,7 +27,12 @@ public class Collections implements CommandExecutor, Listener {
 
     private final JavaPlugin plugin;
     private final ItemDisplayManager displayManager;
+    private LockedRecipeManager lockedRecipeManager;
 
+    /** Let the main plugin inject the locked recipe manager. */
+    public void setLockedRecipeManager(LockedRecipeManager lockedRecipeManager) {
+        this.lockedRecipeManager = lockedRecipeManager;
+    }
     // We'll store our "collections" data here
     private final List<CollectionData> collections = new ArrayList<>();
 
@@ -37,6 +44,7 @@ public class Collections implements CommandExecutor, Listener {
         public List<ItemStack> rewardItems;
         public String rewardMessage;
         public Set<UUID> claimedPlayers = new HashSet<>();
+        public List<String> recipeKeysToUnlock = new ArrayList<>();
 
         public CollectionData(String name,
                               ItemStack iconItem,
@@ -49,6 +57,9 @@ public class Collections implements CommandExecutor, Listener {
             this.rewardItems = rewardItems;
             this.rewardMessage = rewardMessage;
         }
+    }
+    public List<CollectionData> getAllCollections() {
+        return this.collections;
     }
 
     private File configFile;
@@ -78,6 +89,48 @@ public class Collections implements CommandExecutor, Listener {
                 e.printStackTrace();
             }
             config = YamlConfiguration.loadConfiguration(configFile);
+// NEW example: "Redstone Collection"
+            Map<String, Object> redstone = new HashMap<>();
+            redstone.put("name", "Redstone Collection");
+
+            // Use a Redstone Block as the icon
+            ItemStack redstoneIcon = new ItemStack(Material.REDSTONE_BLOCK);
+            redstone.put("iconItem", redstoneIcon.serialize());
+
+            // Required items: 1 Redstone Block + 1 Redstone Dust
+            List<Map<String, Object>> redstoneRequiredList = new ArrayList<>();
+            redstoneRequiredList.add(new ItemStack(Material.REDSTONE_BLOCK).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.REDSTONE).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.REDSTONE_TORCH).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.REDSTONE_LAMP).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.REPEATER).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.OBSERVER).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.PISTON).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.COMPARATOR).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.NOTE_BLOCK).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.LEVER).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.HOPPER).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.DISPENSER).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.TNT).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.DROPPER).serialize());
+            redstoneRequiredList.add(new ItemStack(Material.DAYLIGHT_DETECTOR).serialize());
+            redstone.put("requiredItems", redstoneRequiredList);
+
+            // Reward items: 1 Redstone Torch (example)
+            List<Map<String, Object>> redstoneRewardList = new ArrayList<>();
+            redstoneRewardList.add(new ItemStack(Material.REDSTONE_BLOCK, 64).serialize());
+            redstoneRewardList.add(new ItemStack(Material.REDSTONE, 64*8).serialize());
+            redstoneRewardList.add(new ItemStack(Material.EMERALD_BLOCK, 16).serialize());
+            redstone.put("rewardItems", redstoneRewardList);
+
+            redstone.put("rewardMessage", "&aYou have unlocked Engineering Degree Recipe! Use /recipes to view recipes");
+            redstone.put("claimed", new ArrayList<>()); // no one has claimed yet
+
+            // If you're using recipe unlocking, list the recipe keys to unlock
+            // (assuming "minecraftnew:engineering_profession" is your recipe key)
+            redstone.put("recipeKeysToUnlock", new ArrayList<>());
+
+            config.set("collections.default_redstone", redstone);
 
             // Hardcode some defaults if no config
             // Example: "Swords" collection that uses a custom item from ItemRegistry
@@ -405,6 +458,13 @@ public class Collections implements CommandExecutor, Listener {
 
         // Mark as claimed and save
         cData.claimedPlayers.add(player.getUniqueId());
+        if (lockedRecipeManager != null) {
+            for (String recipeKeyString : cData.recipeKeysToUnlock) {
+                // Convert the string to a NamespacedKey
+                NamespacedKey recipeKey = NamespacedKey.fromString(recipeKeyString, plugin);
+                lockedRecipeManager.discoverRecipeForPlayer(player, recipeKey);
+            }
+        }
         saveCollections();
 
         // Refresh the GUI
