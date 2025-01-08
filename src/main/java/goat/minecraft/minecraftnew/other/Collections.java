@@ -133,6 +133,67 @@ public class Collections implements CommandExecutor, Listener {
             config.set("collections.default_redstone", redstone);
 
 
+            // Another example: "Shells"
+            Map<String, Object> shells = new HashMap<>();
+            shells.put("name", "Turtle Shells");
+
+            // Apple icon
+            ItemStack shellsIcon = new ItemStack(Material.TURTLE_HELMET);
+            shells.put("iconItem", shellsIcon.serialize());
+
+            // Required items: golden apple, enchanted golden apple
+            List<Map<String, Object>> shellsRequiredList = new ArrayList<>();
+            shellsRequiredList.add(ItemRegistry.getShallowShell().serialize());
+            shellsRequiredList.add(ItemRegistry.getShell().serialize());
+            shellsRequiredList.add(ItemRegistry.getDeepShell().serialize());
+            shellsRequiredList.add(ItemRegistry.getAbyssalShell().serialize());
+
+            shells.put("requiredItems", shellsRequiredList);
+
+            // Reward items: gold ingot, xp bottle
+            List<Map<String, Object>> shellsRewardList = new ArrayList<>();
+            shellsRewardList.add(new ItemStack(Material.EMERALD_BLOCK, 16).serialize());
+            ItemStack shellStack = ItemRegistry.getShell().clone(); // Clone to avoid modifying the original
+            shellStack.setAmount(64);
+            shellsRewardList.add(shellStack.serialize());
+            shells.put("rewardItems", shellsRewardList);
+
+            shells.put("rewardMessage", "&aYou have collected all the shells!");
+            shells.put("claimed", new ArrayList<>());
+
+            config.set("collections.default_shells", shells);
+
+            saveConfig();
+// Another example: "Skulls"
+            Map<String, Object> skulls = new HashMap<>();
+            skulls.put("name", "Collector of Skulls");
+
+// Skull icon
+            ItemStack skullsIcon = new ItemStack(Material.WITHER_SKELETON_SKULL);
+            skulls.put("iconItem", skullsIcon.serialize());
+
+// Required items: Different types of skulls
+            List<Map<String, Object>> skullsRequiredList = new ArrayList<>();
+            skullsRequiredList.add(new ItemStack(Material.WITHER_SKELETON_SKULL).serialize());
+            skullsRequiredList.add(new ItemStack(Material.SKELETON_SKULL).serialize());
+            skullsRequiredList.add(new ItemStack(Material.ZOMBIE_HEAD).serialize());
+            skullsRequiredList.add(new ItemStack(Material.CREEPER_HEAD).serialize());
+
+            skulls.put("requiredItems", skullsRequiredList);
+
+// Reward items: Diamonds and a stack of skeleton skulls
+            List<Map<String, Object>> skullsRewardList = new ArrayList<>();
+            skullsRewardList.add(new ItemStack(Material.EMERALD_BLOCK, 16).serialize());
+            skulls.put("rewardItems", skullsRewardList);
+
+            skulls.put("rewardMessage", "&aYou have collected all the skulls!");
+            skulls.put("claimed", new ArrayList<>());
+
+            config.set("collections.default_skulls", skulls);
+
+            saveConfig();
+
+
             // Another example: "Apples"
             Map<String, Object> apples = new HashMap<>();
             apples.put("name", "Apple Mania");

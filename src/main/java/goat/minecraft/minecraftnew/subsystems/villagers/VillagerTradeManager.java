@@ -474,14 +474,14 @@ public class VillagerTradeManager implements Listener {
         fishermanPurchases.add(createTradeMap("FISHING_ROD", 1, 6, 1)); // Material
         fishermanPurchases.add(createTradeMap("BUCKET", 1, 8, 2)); // Material
         fishermanPurchases.add(createTradeMap("LAPIS_LAZULI", 4, 8, 2)); // Material
-        fishermanPurchases.add(createTradeMap("SHALLOW_SHELL", 1, 16, 2)); // Custom Item
-        fishermanPurchases.add(createTradeMap("SHELL", 1, 32, 3)); // Custom Item
+        fishermanPurchases.add(createTradeMap("SHALLOW_SHELL", 1, 8, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("SHELL", 1, 12, 3)); // Custom Item
         fishermanPurchases.add(createTradeMap("FISHERMAN_REFORGE", 1, 64, 3)); // Custom Item
         fishermanPurchases.add(createTradeMap("CAMPFIRE", 2, 12, 3)); // Material
-        fishermanPurchases.add(createTradeMap("DEEP_SHELL", 1, 64, 4)); // Custom Item
+        fishermanPurchases.add(createTradeMap("DEEP_SHELL", 1, 24, 4)); // Custom Item
         fishermanPurchases.add(createTradeMap("FISHERMAN_LURE", 1, 64, 4)); // Custom Item
         fishermanPurchases.add(createTradeMap("FISHERMAN_LUCK_OF_THE_SEA", 1, 64, 4)); // Custom Item
-        fishermanPurchases.add(createTradeMap("ABYSSAL_SHELL", 1, 64, 5)); // Custom Item
+        fishermanPurchases.add(createTradeMap("ABYSSAL_SHELL", 1, 32, 5)); // Custom Item
         fishermanPurchases.add(createTradeMap("ABYSSAL_INK", 1, 64, 5)); // Custom Item
         fishermanPurchases.add(createTradeMap("ABYSSAL_VENOM", 1, 64, 5)); // Custom Item
         fishermanPurchases.add(createTradeMap("FISHER_ENCHANT", 1, 40, 5)); // Custom Item
