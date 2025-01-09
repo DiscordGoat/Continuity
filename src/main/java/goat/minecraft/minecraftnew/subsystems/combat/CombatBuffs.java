@@ -47,15 +47,6 @@ public class CombatBuffs implements Listener {
 
                     // Check if the shooter's bow has Infinity enchantment
                     ItemStack bow = shooter.getInventory().getItemInMainHand();
-                    boolean hasInfinity = bow.getType() == Material.BOW && bow.containsEnchantment(Enchantment.ARROW_INFINITE);
-
-                    if (hasInfinity) {
-                        shooter.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
-                                ChatColor.AQUA + "Infinity Bow hit a mob for reduced damage!"
-                        ));
-                        return;
-                    }
-
                     // Retrieve the player's level in the "Combat" skill
                     int level = xpManager.getPlayerLevel(shooter, "Combat");
 
