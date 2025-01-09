@@ -1307,7 +1307,7 @@ Random random = new Random();
         int zOrigin = loc.getBlockZ();
 
         for (int x = xOrigin - radius; x <= xOrigin + radius; x++) {
-            for (int y = yOrigin - 2; y <= yOrigin + 4; y++) {
+            for (int y = yOrigin - 2; y <= yOrigin + 5; y++) {
                 for (int z = zOrigin - radius; z <= zOrigin + radius; z++) {
                     Block block = loc.getWorld().getBlockAt(x, y, z);
                     if (block.getType() == Material.CHEST) {
