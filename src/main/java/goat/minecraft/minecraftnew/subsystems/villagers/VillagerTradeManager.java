@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -173,6 +174,7 @@ public class VillagerTradeManager implements Listener {
         masonSells.add(createTradeMap("CLAY", 4, 1, 1));
         masonSells.add(createTradeMap("COBBLESTONE", 32, 1, 1));
         masonSells.add(createTradeMap("COPPER_INGOT", 3, 1, 1));
+        masonSells.add(createTradeMap("OBSIDIAN", 1, 1, 1));
         defaultConfig.set("MASON.sells", masonSells);
 
 
@@ -1021,29 +1023,6 @@ public class VillagerTradeManager implements Listener {
         return false;
     }
 
-    /**
-     * Removes a specified quantity of the targetItem from inventory.
-     */
-    private void removeCustomItems(Inventory inventory, ItemStack targetItem, int quantity) {
-        int remaining = quantity;
-        for (int slot = 0; slot < inventory.getSize(); slot++) {
-            ItemStack item = inventory.getItem(slot);
-            if (item == null) continue;
-
-            if (isMatchingItem(item, targetItem)) {
-                if (remaining <= 0) break;
-
-                int itemAmount = item.getAmount();
-                if (itemAmount <= remaining) {
-                    inventory.setItem(slot, null);
-                    remaining -= itemAmount;
-                } else {
-                    item.setAmount(itemAmount - remaining);
-                    remaining = 0;
-                }
-            }
-        }
-    }
 
     /**
      * Determines if two ItemStacks match by type, display name, and lore.
@@ -1153,33 +1132,125 @@ public class VillagerTradeManager implements Listener {
         }
     }
 
+    // Main method to process the selling transaction
     private void processSell(Player player, Villager villager, TradeItem tradeItem) {
         XPManager xpManager = new XPManager(plugin);
         int emeraldReward = tradeItem.getEmeraldValue();
         int quantity = tradeItem.getQuantity();
         ItemStack tradeItemStack = tradeItem.getItem();
 
-        if (hasEnoughItems(player.getInventory(), tradeItemStack, quantity)) {
-            removeCustomItems(player.getInventory(), tradeItemStack, quantity);
-            ItemStack emeralds = new ItemStack(Material.EMERALD, emeraldReward);
-            Map<Integer, ItemStack> remainingEmeralds = player.getInventory().addItem(emeralds);
-            if (!remainingEmeralds.isEmpty()) {
-                for (ItemStack leftover : remainingEmeralds.values()) {
-                    player.getWorld().dropItemNaturally(player.getLocation(), leftover);
-                }
-                player.sendMessage(ChatColor.YELLOW + "Your inventory was full, so the emerald(s) were dropped on the ground.");
-            }
-
+        // Attempt to remove items (only unenchanted or Unbreaking I) and reward emeralds
+        boolean success = removeCustomItemsAndReward(player, tradeItemStack, quantity, emeraldReward);
+        if (success) {
+            // Give villager XP
             addVillagerExperience(villager, 1);
 
+            // Play sound and notify the player
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
             player.sendMessage(ChatColor.GREEN + "You sold " + quantity + " items for " + emeraldReward + " emeralds!");
-            xpManager.addXP(player, "Bartering", 11);
 
+            // Award Bartering XP to the player
+            xpManager.addXP(player, "Bartering", 11);
         } else {
-            player.sendMessage(ChatColor.RED + "You don't have enough of the required items to sell.");
+            // Not enough valid items were removed
+            player.sendMessage(ChatColor.RED + "You don't have enough required items to sell.");
         }
     }
+
+    // Removes valid items from the player's inventory and rewards emeralds if successful
+    private boolean removeCustomItemsAndReward(
+            Player player,
+            ItemStack targetItem,
+            int quantity,
+            int emeraldReward
+    ) {
+        Inventory inventory = player.getInventory();
+        int needed = quantity;
+
+        // First pass: Collect which slots (and how many items) we will remove
+        List<RemovalData> itemsToRemove = new ArrayList<>();
+        for (int slot = 0; slot < inventory.getSize(); slot++) {
+            if (needed <= 0) break;
+
+            ItemStack currentItem = inventory.getItem(slot);
+            if (currentItem == null) continue;
+
+            if (isMatchingType(currentItem, targetItem) && isValidItem(currentItem)) {
+                int itemAmount = currentItem.getAmount();
+                if (itemAmount <= needed) {
+                    itemsToRemove.add(new RemovalData(slot, itemAmount));
+                    needed -= itemAmount;
+                } else {
+                    itemsToRemove.add(new RemovalData(slot, needed));
+                    needed = 0;
+                }
+            }
+        }
+
+        // If we don't have enough valid items, do nothing
+        if (needed > 0) {
+            return false;
+        }
+
+        // Second pass: Actually remove the items
+        for (RemovalData data : itemsToRemove) {
+            ItemStack stack = inventory.getItem(data.slot);
+            if (stack == null) continue;
+
+            int currentAmount = stack.getAmount();
+            int removeAmount = data.amountToRemove;
+
+            if (removeAmount >= currentAmount) {
+                inventory.setItem(data.slot, null);
+            } else {
+                stack.setAmount(currentAmount - removeAmount);
+            }
+        }
+
+        // Reward emeralds only if all items were removed
+        ItemStack emeralds = new ItemStack(Material.EMERALD, emeraldReward);
+        Map<Integer, ItemStack> leftoverEmeralds = inventory.addItem(emeralds);
+
+        // Drop leftover emeralds if the inventory is full
+        if (!leftoverEmeralds.isEmpty()) {
+            for (ItemStack leftover : leftoverEmeralds.values()) {
+                player.getWorld().dropItemNaturally(player.getLocation(), leftover);
+            }
+            player.sendMessage(ChatColor.YELLOW
+                    + "Your inventory was full, so the emerald(s) were dropped on the ground.");
+        }
+        return true; // Items successfully removed and emeralds rewarded
+    }
+
+    // Checks if both items have the same type (optionally add more matching logic if needed)
+    private boolean isMatchingType(ItemStack item, ItemStack target) {
+        return item.getType() == target.getType();
+    }
+
+    // Determines if the item is either unenchanted or has exactly one enchantment: Unbreaking I
+    private boolean isValidItem(ItemStack item) {
+        // Unenchanted item
+        if (!item.hasItemMeta() || !item.getItemMeta().hasEnchants()) {
+            return true;
+        }
+        // Item has exactly one enchantment: Unbreaking I
+        Map<Enchantment, Integer> enchants = item.getEnchantments();
+        return enchants.size() == 1
+                && enchants.containsKey(Enchantment.DURABILITY)
+                && enchants.get(Enchantment.DURABILITY) == 1;
+    }
+
+    // Helper class to store removal data for the second pass
+    private static class RemovalData {
+        final int slot;
+        final int amountToRemove;
+
+        RemovalData(int slot, int amountToRemove) {
+            this.slot = slot;
+            this.amountToRemove = amountToRemove;
+        }
+    }
+
 
 
     /**
