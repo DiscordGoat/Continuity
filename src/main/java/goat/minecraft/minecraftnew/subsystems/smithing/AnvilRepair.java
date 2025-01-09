@@ -747,7 +747,7 @@ public class AnvilRepair implements Listener {
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "KB Ball") && isSword(repairee)){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "KB Ball") && MELEE.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.KNOCKBACK);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
