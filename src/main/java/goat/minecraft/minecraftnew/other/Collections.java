@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other;
 import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.other.ItemDisplayManager.ItemDisplay;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -184,6 +185,12 @@ public class Collections implements CommandExecutor, Listener {
 // Reward items: Diamonds and a stack of skeleton skulls
             List<Map<String, Object>> skullsRewardList = new ArrayList<>();
             skullsRewardList.add(new ItemStack(Material.EMERALD_BLOCK, 16).serialize());
+            skullsRewardList.add(ItemRegistry.getUndeadDrop().serialize());
+            skullsRewardList.add(ItemRegistry.getSpiderDrop().serialize());
+            skullsRewardList.add(ItemRegistry.getSkeletonDrop().serialize());
+            skullsRewardList.add(ItemRegistry.getBlazeDrop().serialize());
+            skullsRewardList.add(ItemRegistry.getCreeperDrop().serialize());
+            skullsRewardList.add(ItemRegistry.getDrownedDrop().serialize());
             skulls.put("rewardItems", skullsRewardList);
 
             skulls.put("rewardMessage", "&aYou have collected all the skulls!");
