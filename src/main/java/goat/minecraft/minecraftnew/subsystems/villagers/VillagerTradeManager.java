@@ -408,7 +408,7 @@ public class VillagerTradeManager implements Listener {
         defaultConfig.set("TOOLSMITH.sells", toolsmithSells);
 // Armorer Purchases
         List<Map<String, Object>> armorerPurchases = new ArrayList<>();
-        armorerPurchases.add(createTradeMap("IRON_ORE", 4, 7, 1)); // Material
+        armorerPurchases.add(createTradeMap("IRON_ORE", 3, 12, 1)); // Material
         armorerPurchases.add(createTradeMap("COMMON_ARMOR_REFORGE", 1, 8, 1)); // Custom Item
 
         armorerPurchases.add(createTradeMap("ANVIL", 1, 24, 2)); // Material
@@ -542,7 +542,7 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("BEETROOT_SEEDER", 1, 64, 3)); // Custom item
         farmerPurchases.add(createTradeMap("CARROT_SEEDER", 1, 64, 3)); // Custom item
         farmerPurchases.add(createTradeMap("POTATO_SEEDER", 1, 64, 3)); // Custom item
-        farmerPurchases.add(createTradeMap("WATER_BUCKET", 1, 3, 3)); // Level 3 trade
+        farmerPurchases.add(createTradeMap("MILK_BUCKET", 1, 3, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5)); // Level 5 trade
         farmerPurchases.add(createTradeMap("FARMER_ENCHANT", 1, 64, 5)); // Custom item

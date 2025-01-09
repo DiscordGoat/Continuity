@@ -216,7 +216,6 @@ public class Mining implements Listener {
 
             // Apply or extend Haste effect
             player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, hasteLevel, false));
-            player.sendMessage(ChatColor.YELLOW + "Gold Fever! Haste Level: " + (hasRedstoneGem ? "II" : "I"));
             player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_STEP, 1.0f, 1.0f);
         }
 

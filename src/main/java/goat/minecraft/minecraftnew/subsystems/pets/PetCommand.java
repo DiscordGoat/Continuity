@@ -72,7 +72,7 @@ public class PetCommand implements CommandExecutor {
             //treasure
             petManager.createPet(targetPlayer, "Golden Steve", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY, PetManager.PetPerk.TREASURE_HUNTER, PetManager.PetPerk.COMFORTABLE);
             //creatures
-            petManager.createPet(targetPlayer, "Leviathan", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY , PetManager.PetPerk.ANGLER, PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.TERROR_OF_THE_DEEP, PetManager.PetPerk.ELITE, PetManager.PetPerk.STRONG_SWIMMER);
+            petManager.createPet(targetPlayer, "Leviathan", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY , PetManager.PetPerk.ANGLER, PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.TERROR_OF_THE_DEEP, PetManager.PetPerk.ELITE, PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.COLLECTOR);
             petManager.createPet(targetPlayer, "Turtle", PetManager.Rarity.EPIC, 100, Particle.CRIMSON_SPORE , PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.COMFORTABLE);
             petManager.createPet(targetPlayer, "Dolphin", PetManager.Rarity.RARE, 100, Particle.WATER_SPLASH , PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.ANGLER);
             petManager.createPet(targetPlayer, "Glow Squid", PetManager.Rarity.UNCOMMON, 100, Particle.GLOW_SQUID_INK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANGLER);
