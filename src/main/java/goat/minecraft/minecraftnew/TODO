@@ -1,3 +1,2 @@
 collections still needs population
 make shepherd breed animals on workcycle
-fix difficulty resetting on server reload/restart by adding difficulty to hostility gui and implement file io.

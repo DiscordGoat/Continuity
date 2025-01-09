@@ -26,7 +26,8 @@ public class AutoComposter {
             Material.POISONOUS_POTATO,
             Material.MELON_SLICE,
             Material.PUMPKIN,
-            Material.BEETROOT
+            Material.BEETROOT,
+            Material.PUMPKIN_SEEDS
             // Add more crops if needed
     );
     private final Map<Player, Location> playerLastLocations = new HashMap<>();
@@ -61,6 +62,7 @@ public class AutoComposter {
         CROPS_TO_CONVERT.put(Material.MELON_SLICE, 32);
 
         CROPS_TO_CONVERT.put(Material.PUMPKIN, 4);
+        CROPS_TO_CONVERT.put(Material.PUMPKIN_SEEDS, 16);
 
         // Add more crops and their required amounts as needed
 
