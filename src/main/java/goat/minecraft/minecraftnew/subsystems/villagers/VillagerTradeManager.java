@@ -507,6 +507,8 @@ public class VillagerTradeManager implements Listener {
         fishermanSells.add(createTradeMap("FISH_BONE", 1, 1, 2)); // Custom Item
         fishermanSells.add(createTradeMap("TRIDENT", 1, 12, 2)); // Material
         fishermanSells.add(createTradeMap("LIGHTNING_BOLT", 1, 12, 2)); // Material
+        fishermanSells.add(createTradeMap("BAIT", 1, 12, 2)); // Material
+        fishermanSells.add(createTradeMap("LOYAL_DECLARATION", 1, 12, 2)); // Material
 
         defaultConfig.set("FISHERMAN.sells", fishermanSells);
 // Butcher Purchases
@@ -611,6 +613,10 @@ public class VillagerTradeManager implements Listener {
 
         // 2) Map custom IDs to ItemRegistry items
         switch (identifier.toUpperCase()) {
+            case "LOYAL_DECLARATION":
+                return ItemRegistry.getLoyaltyContract();
+            case "BAIT":
+                return ItemRegistry.getBait();
             case "WHEAT_SEEDER":
                 return ItemRegistry.getWheatSeeder();
             case "BEETROOT_SEEDER":
