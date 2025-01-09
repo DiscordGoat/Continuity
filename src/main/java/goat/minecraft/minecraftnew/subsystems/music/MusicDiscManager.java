@@ -972,8 +972,6 @@ public class MusicDiscManager implements Listener {
 
                         if (itemIndex >= 0 && itemIndex < selectedItems.size()) {
                             AuctionItem auctionItem = selectedItems.get(itemIndex);
-                            interactingPlayer.sendMessage(ChatColor.GRAY + "Auction item found: " + auctionItem.getItemStack().getType());
-
                             // Check if the player has already purchased this item
                             Set<Integer> playerPurchasedItems = purchasedItems.getOrDefault(
                                     interactingPlayer.getUniqueId(), new HashSet<>());
@@ -1095,7 +1093,6 @@ public class MusicDiscManager implements Listener {
         inventory.addItem(itemToGive);
 
         // Feedback and sound
-        player.sendMessage(ChatColor.GREEN + "You purchased " + itemToGive.getType() + " for " + cost + " emerald(s).");
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
         return true;
     }
