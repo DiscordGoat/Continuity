@@ -302,7 +302,7 @@ public class SeaCreatureRegistry implements Listener {
         List<SeaCreature.DropItem> abominationDrops = new ArrayList<>();
         abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 31, 1, 4));
         abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 31, 1, 4));
-        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalUnbreaking(), 1, 1, 1));
+        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalUnbreaking(), 1, 1, 3));
         abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getSwiftSneak(), 1, 1, 4));
         SEA_CREATURES.add(new SeaCreature(
                 "Abomination",
