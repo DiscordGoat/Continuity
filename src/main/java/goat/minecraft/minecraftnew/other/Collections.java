@@ -193,8 +193,10 @@ public class Collections implements CommandExecutor, Listener {
             skullsRewardList.add(ItemRegistry.getDrownedDrop().serialize());
             skulls.put("rewardItems", skullsRewardList);
 
-            skulls.put("rewardMessage", "&aYou have collected all the skulls!");
+            skulls.put("rewardMessage", "&aYou have unlocked Custom Disc Recipe! Use /recipes to view recipes");
             skulls.put("claimed", new ArrayList<>());
+
+            skulls.put("recipeKeysToUnlock", Arrays.asList("minecraftnew:custom_music_disc_recipe"));
 
             config.set("collections.default_skulls", skulls);
 

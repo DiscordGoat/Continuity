@@ -413,7 +413,7 @@ public class FishingEvent implements Listener {
                 new LootItem(new ItemStack(Material.NAUTILUS_SHELL), 10),
                 new LootItem(new ItemStack(Material.SADDLE), 25),
                 new LootItem(new ItemStack(Material.DIAMOND, random.nextInt(10) + 1), 10),
-                new LootItem(new ItemStack(Material.EMERALD, random.nextInt(3) + 1), 15),
+                new LootItem(new ItemStack(Material.EMERALD, 64), 15),
                 new LootItem(new ItemStack(Material.ANCIENT_DEBRIS), 5),
                 new LootItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE), 3),
                 new LootItem(new ItemStack(Material.TOTEM_OF_UNDYING), 13),

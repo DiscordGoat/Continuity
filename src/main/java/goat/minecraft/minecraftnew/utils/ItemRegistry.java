@@ -1907,6 +1907,14 @@ public class ItemRegistry {
                 ChatColor.DARK_PURPLE + "Smithing Item"
         ), 1, false, true);
     }
+    public static ItemStack getMusicDiscArtifact() {
+        return createCustomItem(Material.FEATHER, ChatColor.YELLOW +
+                "Inscriber", Arrays.asList(
+                ChatColor.GRAY + "Disc Technology.",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Drops a random Music Disc.",
+                ChatColor.DARK_PURPLE + "Artifact"
+        ), 1, false, true);
+    }
 
     public static ItemStack getImpaling() {
         return createCustomItem(Material.BONE, ChatColor.YELLOW +

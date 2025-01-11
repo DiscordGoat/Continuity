@@ -103,6 +103,14 @@ public class MinecraftNew extends JavaPlugin implements Listener {
                 recipeManager.getCustomRecipes().get(notchAppleKey),
                 false // We already called Bukkit.addRecipe(...) above
         );
+        NamespacedKey customMusicDiscKey = new NamespacedKey(this, "custom_music_disc_recipe");
+        lockedRecipeManager.addLockedRecipe(
+                customMusicDiscKey,
+                "Collector of Skulls", // EXACT name of the collection
+                recipeManager.getCustomRecipes().get(customMusicDiscKey),
+                false // We already called Bukkit.addRecipe(...) above
+        );
+
     }
     public LockedRecipeManager getLockedRecipeManager() {
         return lockedRecipeManager;

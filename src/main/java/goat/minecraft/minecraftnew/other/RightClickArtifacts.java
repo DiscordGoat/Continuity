@@ -185,6 +185,27 @@ public class RightClickArtifacts implements Listener {
                 return Material.AIR;
         }
     }
+    private static final Material[] MUSIC_DISCS = {
+            Material.MUSIC_DISC_13,
+            Material.MUSIC_DISC_BLOCKS,
+            Material.MUSIC_DISC_CAT,
+            Material.MUSIC_DISC_CHIRP,
+            Material.MUSIC_DISC_FAR,
+            Material.MUSIC_DISC_MALL,
+            Material.MUSIC_DISC_MELLOHI,
+            Material.MUSIC_DISC_PIGSTEP,
+            Material.MUSIC_DISC_STAL,
+            Material.MUSIC_DISC_STRAD,
+            Material.MUSIC_DISC_WAIT,
+            Material.MUSIC_DISC_WARD,
+            Material.MUSIC_DISC_5
+    };
+
+    public static ItemStack getRandomMusicDisc() {
+        Random random = new Random();
+        Material discMaterial = MUSIC_DISCS[random.nextInt(MUSIC_DISCS.length)];
+        return new ItemStack(discMaterial);
+    }
     /**
      * Event handler for player right-click interactions.
      * Handles usage of custom artifacts like Leviathan Heart, Hydrogen Bomb, and End Pearl.
@@ -289,6 +310,13 @@ public class RightClickArtifacts implements Listener {
                 player.setFoodLevel(20);
                 player.setSaturation(20);
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
+                decrementItemAmount(itemInHand, player);
+
+                return;
+            }
+            if (displayName.equals(ChatColor.YELLOW + "Inscriber")) {
+                player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0f, 1.0f);
+                player.getLocation().getWorld().dropItemNaturally(player.getLocation(), getRandomMusicDisc());
                 decrementItemAmount(itemInHand, player);
 
                 return;

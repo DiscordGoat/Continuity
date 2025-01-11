@@ -65,7 +65,7 @@ public class PetCommand implements CommandExecutor {
 
             //economical pets (trading/selling)
             //trading
-            petManager.createPet(targetPlayer, "Villager", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY, PetManager.PetPerk.HAGGLE, PetManager.PetPerk.PRACTICE);
+            petManager.createPet(targetPlayer, "Villager", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY, PetManager.PetPerk.HAGGLE, PetManager.PetPerk.PRACTICE, PetManager.PetPerk.SPEED_BOOST);
             //selling
 
             //fishing pets (treasure/creatures)

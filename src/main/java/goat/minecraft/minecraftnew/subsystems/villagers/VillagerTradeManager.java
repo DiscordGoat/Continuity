@@ -175,6 +175,7 @@ public class VillagerTradeManager implements Listener {
         masonSells.add(createTradeMap("COBBLESTONE", 32, 1, 1));
         masonSells.add(createTradeMap("COPPER_INGOT", 3, 1, 1));
         masonSells.add(createTradeMap("OBSIDIAN", 1, 1, 1));
+        masonSells.add(createTradeMap("COMPACT_STONE", 1, 2, 3)); // ItemRegistry.getRareSwordReforge()
         defaultConfig.set("MASON.sells", masonSells);
 
 
@@ -510,6 +511,8 @@ public class VillagerTradeManager implements Listener {
         fishermanSells.add(createTradeMap("LIGHTNING_BOLT", 1, 12, 2)); // Material
         fishermanSells.add(createTradeMap("BAIT", 1, 12, 2)); // Material
         fishermanSells.add(createTradeMap("LOYAL_DECLARATION", 1, 12, 2)); // Material
+        fishermanSells.add(createTradeMap("ANAKLUSMOS", 1, 12, 2)); // Material
+        fishermanSells.add(createTradeMap("SWIM_TRUNKS", 1, 12, 2)); // Material
 
         defaultConfig.set("FISHERMAN.sells", fishermanSells);
 // Butcher Purchases
@@ -625,8 +628,12 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getBeetrootSeeder();
             case "CARROT_SEEDER":
                 return ItemRegistry.getCarrotSeeder();
+            case "COMPACT_STONE":
+                return ItemRegistry.getCompactStone();
             case "POTATO_SEEDER":
                 return ItemRegistry.getPotatoSeeder();
+            case "SWIM_TRUNKS":
+                return ItemRegistry.getSwiftSneak();
             case "FARMER_ENCHANT":
                 return ItemRegistry.getFarmerEnchant();
             case "AUTO_COMPOSTER":
@@ -639,6 +646,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getShallowShell();
             case "SHELL":
                 return ItemRegistry.getShell();
+            case "ANAKLUSMOS":
+                return ItemRegistry.getRiptide();
             case "FISHERMAN_REFORGE":
                 return ItemRegistry.getFishermanReforge();
             case "DEEP_SHELL":

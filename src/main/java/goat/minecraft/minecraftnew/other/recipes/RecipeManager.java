@@ -24,6 +24,25 @@ public class RecipeManager {
 
     public void registerAllRecipes() {
         // Example: "Redstone" recipe
+        NamespacedKey musicDiscKey = new NamespacedKey(plugin, "custom_music_disc_recipe");
+
+        // Create the music disc item
+        ItemStack musicDiscArtifact = ItemRegistry.getMusicDiscArtifact(); // Choose the type of disc you want
+
+
+        // Define the shaped recipe
+        ShapedRecipe musicDiscRecipe = new ShapedRecipe(musicDiscKey, musicDiscArtifact);
+        musicDiscRecipe.shape("DDD", "DOD", "DDD");
+        musicDiscRecipe.setIngredient('D', Material.DIAMOND);
+        musicDiscRecipe.setIngredient('O', Material.OBSIDIAN);
+
+        // Register it with Bukkit
+        Bukkit.addRecipe(musicDiscRecipe);
+
+        // Optionally, store it in a customRecipes map if you manage recipes this way
+        customRecipes.put(musicDiscKey, musicDiscRecipe);
+
+
 
 
         NamespacedKey notchAppleKey = new NamespacedKey(plugin, "notch_apple_recipe");
@@ -41,6 +60,10 @@ public class RecipeManager {
 
         // 4) Store it in our customRecipes map
         customRecipes.put(notchAppleKey, notchAppleRecipe);
+
+
+
+
 
         NamespacedKey redstoneKey = new NamespacedKey(plugin, "engineering_degree_recipe");
         ShapedRecipe redstoneRecipe = new ShapedRecipe(redstoneKey, ItemRegistry.getEngineeringDegree());

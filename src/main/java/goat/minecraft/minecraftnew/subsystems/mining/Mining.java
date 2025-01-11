@@ -105,7 +105,7 @@ public class Mining implements Listener {
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
         } else {
             // Send a message if not enough blocks.
-            player.sendMessage(ChatColor.RED + "You need at least 32 stone-based blocks to create Compact Stone.");
+            player.sendMessage(ChatColor.RED + "You need at least 64 stone-based blocks to create Compact Stone.");
         }
     }
 
