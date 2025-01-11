@@ -1123,6 +1123,18 @@ public class ItemRegistry {
                 , true
         );
     }
+    public static ItemStack getCompactStone() {
+        return createCustomItem(
+                Material.CRACKED_DEEPSLATE_BRICKS,
+                ChatColor.YELLOW + "Compact Stone",
+                List.of(ChatColor.GRAY + "Compressed Stone.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Valuable.",
+                        ChatColor.DARK_PURPLE + "Trophy Item"),
+                1,
+                false // Set to true if you want it to be unbreakable
+                , true
+        );
+    }
     public static ItemStack getAutoComposter() {
         return createCustomItem(
                 Material.COMPOSTER,

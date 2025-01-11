@@ -72,7 +72,7 @@ public class CulinarySubsystem implements Listener {
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
-                Material.LIGHT_WEIGHTED_PRESSURE_PLATE,
+                Material.YELLOW_DYE,
                 "Slice of Cheese",
                 Arrays.asList("Milk", "Sea Salt"),
                 100

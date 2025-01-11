@@ -3,6 +3,9 @@ version: '${project.version}'
 main: goat.minecraft.minecraftnew.MinecraftNew
 api-version: '1.20'
 commands:
+  removeinvisiblestands:
+    description: Removes all invisible armor stands from the server.
+    usage: /removeinvisiblestands
   recipes:
     description: List all custom recipes in chat
   viewrecipe:

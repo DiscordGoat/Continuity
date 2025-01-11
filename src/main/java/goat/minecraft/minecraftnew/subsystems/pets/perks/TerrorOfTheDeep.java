@@ -30,11 +30,13 @@ public class TerrorOfTheDeep implements Listener {
 
             // Get the player's active pet
             PetManager petManager = PetManager.getInstance(plugin);
-            PetManager.Pet activePet = petManager.getActivePet(player);
-            int petLevel = activePet.getLevel();
-            // Check if the player has the Terror of the Deep perk
-            if (activePet != null && activePet.hasPerk(PetManager.PetPerk.TERROR_OF_THE_DEEP)) {
-                activateTerrorOfTheDeep(player, entity, petLevel);
+            if(petManager.getActivePet(player) != null) {
+                PetManager.Pet activePet = petManager.getActivePet(player);
+                int petLevel = activePet.getLevel();
+                // Check if the player has the Terror of the Deep perk
+                if (activePet != null && activePet.hasPerk(PetManager.PetPerk.TERROR_OF_THE_DEEP)) {
+                    activateTerrorOfTheDeep(player, entity, petLevel);
+                }
             }
         }
     }

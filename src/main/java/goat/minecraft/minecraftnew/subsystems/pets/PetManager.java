@@ -461,7 +461,7 @@ public class PetManager implements Listener {
 
         switch (perk) {
             case ROCK_EATER:
-                return ChatColor.GRAY + "Compacts 16 stone based blocks into " + ChatColor.DARK_BLUE + "Compact Stone every ore break.";
+                return ChatColor.GRAY + "Compacts 64 stone based blocks into " + ChatColor.DARK_BLUE + "Compact Stone every ore break.";
             case WATERLOGGED:
                 return ChatColor.GRAY + "Grants infinite " + ChatColor.AQUA + "Water Breathing.";
             case ASPECT_OF_THE_END:

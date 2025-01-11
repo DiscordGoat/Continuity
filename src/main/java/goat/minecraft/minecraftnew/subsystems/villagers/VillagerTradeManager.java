@@ -475,6 +475,7 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> fishermanPurchases = new ArrayList<>();
         fishermanPurchases.add(createTradeMap("FISHING_ROD", 1, 6, 1)); // Material
         fishermanPurchases.add(createTradeMap("BUCKET", 1, 8, 2)); // Material
+        fishermanPurchases.add(createTradeMap("TROPICAL_FISH", 1, 8, 2)); // Material
         fishermanPurchases.add(createTradeMap("LAPIS_LAZULI", 4, 8, 2)); // Material
         fishermanPurchases.add(createTradeMap("SHALLOW_SHELL", 1, 8, 2)); // Custom Item
         fishermanPurchases.add(createTradeMap("SHELL", 1, 12, 3)); // Custom Item
@@ -611,6 +612,7 @@ public class VillagerTradeManager implements Listener {
             // Not a valid Material, so check for custom items
         }
 
+        // 2) Map custom IDs to ItemRegistry items
         // 2) Map custom IDs to ItemRegistry items
         switch (identifier.toUpperCase()) {
             case "LOYAL_DECLARATION":

@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.mining;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
@@ -79,6 +80,99 @@ public class Mining implements Listener {
             Material.NETHER_GOLD_ORE,
             Material.ANCIENT_DEBRIS
     );
+    public void compactStoneBlocks(Player player) {
+        // Define the array of stone-based materials.
+        Material[] stoneBasedBlocks = {
+                Material.STONE, Material.GRANITE, Material.DIORITE, Material.ANDESITE,
+                Material.DEEPSLATE, Material.TUFF, Material.CALCITE
+        };
+
+        // Count total stone-based blocks in the player's inventory.
+        int totalStoneCount = 0;
+        for (Material material : stoneBasedBlocks) {
+            totalStoneCount += countMaterialInInventory(player, material);
+        }
+
+        // Check if the player has enough blocks to compact.
+        if (totalStoneCount >= 64) {
+            // Remove 64 stone-based blocks from inventory.
+            removeMaterialsFromInventory(player, stoneBasedBlocks, 64);
+
+            // Give the player the custom compact stone item.
+            giveCompactStone(player);
+
+            // Send a message to the player.
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
+        } else {
+            // Send a message if not enough blocks.
+            player.sendMessage(ChatColor.RED + "You need at least 32 stone-based blocks to create Compact Stone.");
+        }
+    }
+
+    /**
+     * Counts the total number of a specific material in a player's inventory.
+     * @param player The player whose inventory is being checked.
+     * @param material The material to count.
+     * @return The count of the material in the inventory.
+     */
+    private int countMaterialInInventory(Player player, Material material) {
+        ItemStack[] items = player.getInventory().getContents();
+        int count = 0;
+        for (ItemStack item : items) {
+            if (item != null && item.getType() == material) {
+                count += item.getAmount();
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Removes a specified number of stone-based blocks from the player's inventory.
+     * @param player The player from whose inventory materials are removed.
+     * @param materials The materials to remove.
+     * @param count The total number of blocks to remove.
+     */
+    private void removeMaterialsFromInventory(Player player, Material[] materials, int count) {
+        for (Material material : materials) {
+            if (count <= 0) break;
+            count = removeMaterialFromInventory(player, material, count);
+        }
+    }
+
+    /**
+     * Removes a specific amount of a material from the inventory.
+     * @param player The player.
+     * @param material The material to remove.
+     * @param count The number to remove.
+     * @return The remaining count to be removed.
+     */
+    private int removeMaterialFromInventory(Player player, Material material, int count) {
+        ItemStack[] items = player.getInventory().getContents();
+        for (int i = 0; i < items.length; i++) {
+            ItemStack item = items[i];
+            if (item != null && item.getType() == material) {
+                int inStack = item.getAmount();
+                if (inStack > count) {
+                    item.setAmount(inStack - count);
+                    return 0;
+                } else {
+                    player.getInventory().clear(i);
+                    count -= inStack;
+                }
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Give the compact stone item to the player.
+     * @param player The player to receive the item.
+     */
+    private void giveCompactStone(Player player) {
+        // Placeholder for giving the custom item to the player.
+        ItemStack compactStone = ItemRegistry.getCompactStone();
+        player.getInventory().addItem(compactStone);
+    }
     @EventHandler
     public void onOreMine(BlockBreakEvent e) {
         Block block = e.getBlock();
@@ -86,6 +180,10 @@ public class Mining implements Listener {
         ItemStack tool = player.getInventory().getItemInMainHand();
         if(onlyOres.contains(block.getType())){
             oreCountManager.incrementOreCount(player);
+            PetManager petManager = PetManager.getInstance(plugin);
+            if(petManager.getActivePet(player) != null && petManager.getActivePet(player).getPerks().contains(PetManager.PetPerk.ROCK_EATER)){
+                compactStoneBlocks(player);
+            }
         }
         if (ores.contains(block.getType())) {
             // Check if the player is using Silk Touch
@@ -236,34 +334,34 @@ public class Mining implements Listener {
         switch (ore) {
             case COAL_ORE:
             case DEEPSLATE_COAL_ORE:
-                return 2;
+                return 4;
             case IRON_ORE:
             case DEEPSLATE_IRON_ORE:
-                return 5;
+                return 10;
             case COPPER_ORE:
             case DEEPSLATE_COPPER_ORE:
-                return 2;
+                return 4;
             case GOLD_ORE:
             case DEEPSLATE_GOLD_ORE:
-                return 10;
+                return 20;
             case REDSTONE_ORE:
             case DEEPSLATE_REDSTONE_ORE:
-                return 5;
+                return 10;
             case LAPIS_ORE:
             case DEEPSLATE_LAPIS_ORE:
-                return 8;
+                return 16;
             case EMERALD_ORE:
             case DEEPSLATE_EMERALD_ORE:
-                return 50;
+                return 100;
             case DIAMOND_ORE:
             case DEEPSLATE_DIAMOND_ORE:
-                return 80;
+                return 160;
             case NETHER_QUARTZ_ORE:
-                return 3;
+                return 6;
             case NETHER_GOLD_ORE:
-                return 2;
+                return 4;
             case AMETHYST_BLOCK:
-                return 2;
+                return 4;
             case STONE:
             case DEEPSLATE:
             case GRANITE:
@@ -275,7 +373,7 @@ public class Mining implements Listener {
             case BLACKSTONE:
             case NETHERRACK:
             case END_STONE:
-                return 1; // Basic stones give minimal XP
+                return 2; // Basic stones give minimal XP
             case ANCIENT_DEBRIS:
                 return 850;
             default:

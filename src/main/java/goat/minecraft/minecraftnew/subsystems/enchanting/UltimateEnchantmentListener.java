@@ -478,15 +478,10 @@ public class UltimateEnchantmentListener implements Listener {
                     break;
                 case "warp":
                     Vector direction = player.getLocation().getDirection().normalize();
-                    Vector offset = direction.multiply(10);
+                    Vector offset = direction.multiply(8);
                     player.teleport(player.getLocation().add(offset));
-                    if(player.getSaturation() > 0){
-                        player.setSaturation(player.getSaturation() - 1);
-                    }else {
-                        player.setFoodLevel(player.getFoodLevel() - 1);
-                    }
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0f);
-                    cooldownMs = 100L;
+                    cooldownMs = 1_000L;
                     break;
                 case "disc seeker":
                     activateDiscSeeker(player);

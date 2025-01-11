@@ -110,6 +110,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
 
+        new ArmorStandCommand(this); // This will automatically set up the command
+
         recipeManager = new RecipeManager(this);
         recipeManager.registerAllRecipes();
 
@@ -160,7 +162,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         PetManager petManager = PetManager.getInstance(this);
         new SpeedBoost(petManager);
         // Initialize the culinary subsystem
-        CulinarySubsystem culinarySubsystem = CulinarySubsystem.getInstance(this);
+        culinarySubsystem = CulinarySubsystem.getInstance(this);
         new CulinaryCauldron(this);
         new ParticlePetEffects(this);
 
@@ -361,9 +363,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (meatCookingManager != null) {
             meatCookingManager.cancelAllCookingsOnShutdown();
         }
-        if (culinarySubsystem != null) {
-            culinarySubsystem.finalizeAllSessionsOnShutdown();
-        }
+        culinarySubsystem.finalizeAllSessionsOnShutdown();
         getLogger().info("MinecraftNew disabled, all sessions finalized.");
         Bukkit.getLogger().info("[CulinarySubsystem] Data saved and plugin disabled.");
         if (playerOxygenManager != null) {

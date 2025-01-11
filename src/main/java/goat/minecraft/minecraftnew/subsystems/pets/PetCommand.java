@@ -98,7 +98,7 @@ public class PetCommand implements CommandExecutor {
             //sustain
             petManager.createPet(targetPlayer, "Bat", PetManager.Rarity.RARE, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.ECHOLOCATION);
             //breaking
-            petManager.createPet(targetPlayer, "Warden", PetManager.Rarity.LEGENDARY, 100, Particle.WARPED_SPORE, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.ECHOLOCATION, PetManager.PetPerk.LASER_BEAM, PetManager.PetPerk.BONE_PLATING);
+            petManager.createPet(targetPlayer, "Warden", PetManager.Rarity.LEGENDARY, 100, Particle.WARPED_SPORE, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.ECHOLOCATION, PetManager.PetPerk.LASER_BEAM, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.ROCK_EATER);
             petManager.createPet(targetPlayer, "Dwarf", PetManager.Rarity.EPIC, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.MITHRIL_MINER, PetManager.PetPerk.EMERALD_SEEKER);
             petManager.createPet(targetPlayer, "Armadillo", PetManager.Rarity.RARE, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.DIGGING_CLAWS);
             petManager.createPet(targetPlayer, "Drowned", PetManager.Rarity.EPIC, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.WATERLOGGED, PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.DEVOUR);
