@@ -385,7 +385,7 @@ public class UltimateEnchantmentListener implements Listener {
                     return;
                 }
                 target.damage(damagePerTick, player);
-                player.sendMessage(ChatColor.GOLD + "Inferno Blade burns " + target.getName() + " for " + damagePerTick + " damage!");
+                //player.sendMessage(ChatColor.GOLD + "Inferno Blade burns " + target.getName() + " for " + damagePerTick + " damage!");
                 target.getWorld().spawnParticle(Particle.FLAME, target.getLocation().add(0, 1, 0), 20, 0.5, 0.5, 0.5, 0.02);
                 target.getWorld().spawnParticle(Particle.LAVA, target.getLocation().add(0, 1, 0), 10, 0.3, 0.3, 0.3, 0.01);
                 target.getWorld().spawnParticle(Particle.SMOKE_NORMAL, target.getLocation().add(0, 1, 0), 10, 0.3, 0.3, 0.3, 0.01);
