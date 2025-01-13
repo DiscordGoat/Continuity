@@ -74,7 +74,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.YELLOW_DYE,
                 "Slice of Cheese",
-                Arrays.asList("Milk", "Sea Salt"),
+                Arrays.asList("Milk"),
                 100
         ));
         recipeRegistry.add(new CulinaryRecipe(
@@ -98,21 +98,21 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.PUMPKIN_PIE,
                 "Sweet Feast",
-                Arrays.asList("Sugar", "Pumpkin", "Egg", "Wheat", "Cookie", "Cocoa Beans"),
+                Arrays.asList("Sugar", "Pumpkin", "Egg", "Wheat"),
                 1000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.CARROT,
                 "Vegetarian Feast",
-                Arrays.asList("Carrot", "Potato", "Golden Carrot", "Beetroot", "Brown Mushroom", "Red Mushroom"),
+                Arrays.asList("Carrot", "Potato", "Golden Carrot", "Beetroot"),
                 1000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKED_RABBIT,
                 "Meatlovers Feast",
-                Arrays.asList("Medium Rare Steak", "Cooked Chicken", "Butter", "Sea Salt", "Medium Rare Mutton", "Cooked Rabbit", "Bacon"),
+                Arrays.asList("Cooked Steak", "Cooked Chicken", "Butter", "Sea Salt", "Cooked Mutton", "Cooked Rabbit", "Cooked Porkchop"),
                 1000
         ));
         recipeRegistry.add(new CulinaryRecipe(
@@ -140,7 +140,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.BAKED_POTATO,
                 "Loaded Baked Potato",
-                Arrays.asList("Baked Potato", "Butter", "Slice of Cheese", "Bacon"),
+                Arrays.asList("Baked Potato", "Butter", "Slice of Cheese", "Cooked Porkchop"),
                 300
         ));
     }
@@ -424,6 +424,8 @@ public class CulinarySubsystem implements Listener {
                     event.setCancelled(true);
                     logger.info("[CulinarySubsystem] Finalizing recipe " + session.recipe.getName());
                     finalizeRecipe(session, player);
+                    player.getWorld().spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 50, 0.5, 0.5, 0.5, 0.1);
+                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 } else {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "Not all ingredients are placed yet!");

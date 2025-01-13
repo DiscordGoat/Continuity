@@ -248,10 +248,10 @@ public class FishingEvent implements Listener {
         int adjustedLevel = getAdjustedSeaCreatureLevel(baseLevel, hostilityLevel);
         plugin.getLogger().info("Adjusted Level of Sea Creature: " + adjustedLevel);
 
-        spawnMonsters.applyMobAttributes(livingEntity, adjustedLevel);
+        spawnMonsters.applyMobAttributes(livingEntity, baseLevel);
         plugin.getLogger().info("Applied attributes to Sea Creature with level: " + adjustedLevel);
 
-        spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + adjustedLevel + "] " + seaCreature.getColoredDisplayName());
+        spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + baseLevel + "] " + seaCreature.getColoredDisplayName());
         spawnedEntity.setCustomNameVisible(true);
         // Attach metadata with the sea creature's name
         spawnedEntity.setMetadata("SEA_CREATURE", new FixedMetadataValue(MinecraftNew.getInstance(), seaCreature.getDisplayName()));
