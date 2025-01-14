@@ -523,7 +523,10 @@ public class VillagerTradeManager implements Listener {
         butcherPurchases.add(createTradeMap("MUTTON", 1, 1, 1)); // Custom Item
         butcherPurchases.add(createTradeMap("CHICKEN", 1, 1, 1)); // Custom Item
         butcherPurchases.add(createTradeMap("RABBIT", 1, 1, 1)); // Custom Item
+        butcherPurchases.add(createTradeMap("SEA_SALT", 1, 4, 3)); // Custom Item
+        butcherPurchases.add(createTradeMap("CALAMARI", 1, 16, 3)); // Custom Item
         butcherPurchases.add(createTradeMap("BUTCHER_ENCHANT", 1, 16, 5)); // Custom Item
+
 
         defaultConfig.set("BUTCHER.purchases", butcherPurchases);
 
@@ -642,6 +645,10 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getOrganicSoil();
             case "BUTCHER_ENCHANT":
                 return ItemRegistry.getButcherEnchant();
+            case "SEA_SALT":
+                return ItemRegistry.getSeaSalt();
+            case "CALAMARI":
+                return ItemRegistry.getCalamari();
             case "SHALLOW_SHELL":
                 return ItemRegistry.getShallowShell();
             case "SHELL":

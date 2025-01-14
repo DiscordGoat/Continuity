@@ -126,7 +126,6 @@ public void startGlobalScheduler() {
             XPManager xpManager = new XPManager(MinecraftNew.getInstance());
             int playerBoost = xpManager.getPlayerLevel(getNearestPlayer(villager.getLocation()), "Farming");
             yield += playerBoost / 10;
-            Bukkit.getLogger().info("Farmer Farmed an extra " + playerBoost / 10 + " Crops from player farming level");
             switch (blockType) {
                 case WHEAT -> {
                     if (block.getBlockData() instanceof Ageable crop) {

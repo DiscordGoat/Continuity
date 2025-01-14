@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class Doors implements Listener {
@@ -18,9 +19,6 @@ public class Doors implements Listener {
     @EventHandler
     public void onDoorLeftClick(PlayerInteractEvent event) {
         if (event.getAction() != Action.LEFT_CLICK_BLOCK) {
-            return;
-        }
-        if (event.getPlayer().getInventory().getItemInMainHand() != null) {
             return;
         }
         Block clickedBlock = event.getClickedBlock();
