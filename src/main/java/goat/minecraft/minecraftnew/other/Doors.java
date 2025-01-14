@@ -20,7 +20,9 @@ public class Doors implements Listener {
         if (event.getAction() != Action.LEFT_CLICK_BLOCK) {
             return;
         }
-
+        if (event.getPlayer().getInventory().getItemInMainHand() != null) {
+            return;
+        }
         Block clickedBlock = event.getClickedBlock();
         if (clickedBlock == null) {
             return;
