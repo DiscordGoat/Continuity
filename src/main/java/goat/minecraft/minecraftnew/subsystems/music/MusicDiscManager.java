@@ -167,11 +167,8 @@ public class MusicDiscManager implements Listener {
         // Get all recipe items from the CulinarySubsystem
         List<ItemStack> allRecipeItems = CulinarySubsystem.getInstance(plugin).getAllRecipeItems();
 
-        // Shuffle the recipe items to randomize the order
-        Collections.shuffle(allRecipeItems);
-
-        // Define the total number of recipes to give (16)
-        final int totalRecipes = 16;
+        // Define the total number of recipes to give (64)
+        final int totalRecipes = 32;
 
         // Define the total duration of the song in ticks (345 seconds * 20 ticks per second)
         final long totalDurationTicks = 345 * 20L;
@@ -191,12 +188,12 @@ public class MusicDiscManager implements Listener {
                 if (recipesGiven >= totalRecipes || !player.isOnline()) {
                     // Cancel the task if all recipes have been given or the player is offline
                     this.cancel();
-                    player.sendMessage(ChatColor.GREEN + "You have received all 16 random recipes!");
+                    player.sendMessage(ChatColor.GREEN + "You have received all 64 random recipes!");
                     return;
                 }
 
-                // Get the next recipe item
-                ItemStack recipeItem = allRecipeItems.get(recipesGiven);
+                // Randomly select a recipe from the list
+                ItemStack recipeItem = allRecipeItems.get(new Random().nextInt(allRecipeItems.size())).clone();
 
                 // Give the recipe to the player
                 HashMap<Integer, ItemStack> remaining = player.getInventory().addItem(recipeItem);

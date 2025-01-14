@@ -1898,7 +1898,14 @@ public class ItemRegistry {
                 ChatColor.DARK_PURPLE + "Smithing Item"
         ), 1, false, true);
     }
-
+    public static ItemStack getCulinaryRecipe() {
+        return createCustomItem(Material.WRITABLE_BOOK, ChatColor.YELLOW +
+                "Cookbook", Arrays.asList(
+                ChatColor.GRAY + "Paper Technology.",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Grants 16 random Culinary Recipes.",
+                ChatColor.DARK_PURPLE + "Artifact"
+        ), 1, false, true);
+    }
     public static ItemStack getSwiftSneak() {
         return createCustomItem(Material.LEATHER_LEGGINGS, ChatColor.YELLOW +
                 "Swim Trunks", Arrays.asList(

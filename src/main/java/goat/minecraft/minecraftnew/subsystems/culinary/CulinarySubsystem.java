@@ -60,7 +60,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.COOKED_BEEF,
                 "Salted Steak",
-                Arrays.asList("Medium Rare Steak", "Sea Salt"),
+                Arrays.asList("Cooked Beef", "Sea Salt"),
                 100
         ));
         recipeRegistry.add(new CulinaryRecipe(
@@ -81,7 +81,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.BREAD,
                 "Ham and Cheese Sandwich",
-                Arrays.asList("Slice of Cheese", "Ham", "Bread"),
+                Arrays.asList("Slice of Cheese", "Cooked Porkchop", "Bread"),
                 200
         ));
         recipeRegistry.add(new CulinaryRecipe(
@@ -361,6 +361,13 @@ public class CulinarySubsystem implements Listener {
         Location tableLoc = event.getClickedBlock().getLocation().clone();
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            if(player.getInventory().getItemInMainHand().getType().equals(Material.PAPER)) {
+                if (activeRecipeSessions.containsKey(tableLoc)) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + "This crafting table is already being used for another recipe!");
+                    return;
+                }
+            }
             if (isRecipeItem(hand)) {
                 CulinaryRecipe recipe = parseRecipeFromItem(hand);
                 if (recipe == null) {
@@ -425,7 +432,7 @@ public class CulinarySubsystem implements Listener {
                     logger.info("[CulinarySubsystem] Finalizing recipe " + session.recipe.getName());
                     finalizeRecipe(session, player);
                     player.getWorld().spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 50, 0.5, 0.5, 0.5, 0.1);
-                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
                 } else {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "Not all ingredients are placed yet!");
@@ -446,6 +453,7 @@ public class CulinarySubsystem implements Listener {
         for (String ing : recipe.getIngredients()) {
             lore.add(ChatColor.GRAY + "- " + ing);
         }
+        lore.add(ChatColor.DARK_PURPLE + "Culinary Recipe");
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
@@ -462,8 +470,10 @@ public class CulinarySubsystem implements Listener {
             for (String ing : recipe.getIngredients()) {
                 lore.add(ChatColor.GRAY + "- " + ing);
             }
+            lore.add(ChatColor.DARK_PURPLE + "Culinary Ingredient");
             meta.setLore(lore);
             item.setItemMeta(meta);
+
             return item;
         }
         meta.setDisplayName(ChatColor.GOLD + recipe.getName() + " (Culinary)");
@@ -472,6 +482,7 @@ public class CulinarySubsystem implements Listener {
         for (String ing : recipe.getIngredients()) {
             lore.add(ChatColor.GRAY + "- " + ing);
         }
+        lore.add(ChatColor.DARK_PURPLE + "Culinary Delight");
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;

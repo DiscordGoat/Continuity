@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.subsystems.culinary;
+package goat.minecraft.minecraftnew.cut_content;
 
 import org.bukkit.*;
 import org.bukkit.block.data.type.Furnace;

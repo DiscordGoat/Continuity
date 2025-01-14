@@ -3,7 +3,6 @@ package goat.minecraft.minecraftnew;
 import goat.minecraft.minecraftnew.other.*;
 import goat.minecraft.minecraftnew.other.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionListener;
-import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionRecipe;
 import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
@@ -14,7 +13,7 @@ import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
-import goat.minecraft.minecraftnew.subsystems.culinary.MeatCookingManager;
+import goat.minecraft.minecraftnew.cut_content.MeatCookingManager;
 import goat.minecraft.minecraftnew.utils.KnightMob;
 import goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects.*;
 import goat.minecraft.minecraftnew.subsystems.farming.FarmingEvent;
@@ -66,7 +65,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     CancelBrewing cancelBrewing = new CancelBrewing(this);
     private AnvilRepair anvilRepair;
     private CulinarySubsystem culinarySubsystem;
-    private MeatCookingManager meatCookingManager;
+    //private MeatCookingManager meatCookingManager;
     private ItemDisplayManager displayManager;
     private PlayerOxygenManager playerOxygenManager;
     private UltimateEnchantingSystem ultimateEnchantmentManager;
@@ -176,7 +175,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         getLogger().info("MyPlugin has been enabled!");
 
-        meatCookingManager = new MeatCookingManager(this);
+        //meatCookingManager = new MeatCookingManager(this);
 
 
 
@@ -368,9 +367,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (displayManager != null) {
             displayManager.shutdown();
         }
-        if (meatCookingManager != null) {
-            meatCookingManager.cancelAllCookingsOnShutdown();
-        }
+//        if (meatCookingManager != null) {
+//            meatCookingManager.cancelAllCookingsOnShutdown();
+//        }
         culinarySubsystem.finalizeAllSessionsOnShutdown();
         getLogger().info("MinecraftNew disabled, all sessions finalized.");
         Bukkit.getLogger().info("[CulinarySubsystem] Data saved and plugin disabled.");

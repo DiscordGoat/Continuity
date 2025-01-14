@@ -290,18 +290,10 @@ public void startGlobalScheduler() {
 
         };
         Material food = edibleFoods[random.nextInt(edibleFoods.length)];
-        int yield = 1 + random.nextInt(3); // Base yield: 1-2 items
-
-        // Modify yield based on nearby blocks
-        if (influenceMap.containsKey(Material.CAMPFIRE)) {
-            yield += 1; // Increase yield if a campfire is nearby
-        }
+        int yield = 1 + random.nextInt(1); // Base yield: 1-2 items
 
         if (influenceMap.containsKey(Material.BELL)) {
             yield += 1; // Increase yield further if a bell is nearby
-        }
-        if (influenceMap.containsKey(Material.SMOKER)) {
-            yield += 1; // Increase yield further if another smoker is nearby
         }
 
 

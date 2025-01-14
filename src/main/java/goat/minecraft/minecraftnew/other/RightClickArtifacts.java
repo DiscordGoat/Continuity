@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.farming.SeederType;
 import goat.minecraft.minecraftnew.utils.*;
 import org.bukkit.*;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.bukkit.plugin.Plugin;
 
@@ -28,6 +30,9 @@ import java.util.*;
 public class RightClickArtifacts implements Listener {
     private static final List<ItemStack> armorTrims = new ArrayList<>();
     private static final Random random = new Random();
+
+
+
     static {
         // Add every armor trim ItemStack to the list
         armorTrims.add(new ItemStack(Material.COAST_ARMOR_TRIM_SMITHING_TEMPLATE));
@@ -63,6 +68,38 @@ public class RightClickArtifacts implements Listener {
     public RightClickArtifacts(Plugin plugin) {
         this.plugin = plugin;
     }
+
+    /**
+     * Drops 16 random recipes at the specified location.
+     *
+     * @param location The location where the recipes will be dropped.
+     */
+    public void dropRandomRecipes(Location location) {
+        // Get all recipe items from the CulinarySubsystem
+        List<ItemStack> allRecipeItems = CulinarySubsystem.getInstance(MinecraftNew.getInstance()).getAllRecipeItems();
+
+        // Ensure there are enough recipes to drop
+        if (allRecipeItems.isEmpty()) {
+            Bukkit.getLogger().warning("No recipes found in CulinarySubsystem.");
+            return;
+        }
+
+        // Randomly select 16 recipes from the list
+        Random random = new Random();
+        for (int i = 0; i < 16; i++) {
+            // Randomly select a recipe
+            ItemStack recipeItem = allRecipeItems.get(random.nextInt(allRecipeItems.size())).clone();
+
+            // Drop the recipe at the specified location
+            location.getWorld().dropItemNaturally(location, recipeItem);
+        }
+
+        // Optional: Play a sound or send a message
+        location.getWorld().playSound(location, Sound.ENTITY_ITEM_PICKUP, 1.0f, 1.0f);
+    }
+
+
+
     public static void summonXP(Player player) {
         // Get the player's location
         Location location = player.getLocation();
@@ -310,6 +347,13 @@ public class RightClickArtifacts implements Listener {
                 player.setFoodLevel(20);
                 player.setSaturation(20);
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
+                decrementItemAmount(itemInHand, player);
+
+                return;
+            }
+            if (displayName.equals(ChatColor.YELLOW + "Cookbook")) {
+                player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0f, 1.0f);
+                dropRandomRecipes(player.getLocation());
                 decrementItemAmount(itemInHand, player);
 
                 return;

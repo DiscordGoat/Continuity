@@ -518,7 +518,7 @@ public class VillagerTradeManager implements Listener {
 // Butcher Purchases
         List<Map<String, Object>> butcherPurchases = new ArrayList<>();
         butcherPurchases.add(createTradeMap("BEEF", 1, 1, 1)); // Custom Item
-        butcherPurchases.add(createTradeMap("MUSIC_DISC_BLOCKS", 1, 16, 1)); // Custom Item
+        butcherPurchases.add(createTradeMap("COOKBOOK", 1, 16, 1)); // Custom Item
         butcherPurchases.add(createTradeMap("PORKCHOP", 1, 1, 1)); // Custom Item
         butcherPurchases.add(createTradeMap("MUTTON", 1, 1, 1)); // Custom Item
         butcherPurchases.add(createTradeMap("CHICKEN", 1, 1, 1)); // Custom Item
@@ -643,6 +643,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getAutoComposter();
             case "ORGANIC_SOIL":
                 return ItemRegistry.getOrganicSoil();
+            case "COOKBOOK":
+                return ItemRegistry.getCulinaryRecipe();
             case "BUTCHER_ENCHANT":
                 return ItemRegistry.getButcherEnchant();
             case "SEA_SALT":
