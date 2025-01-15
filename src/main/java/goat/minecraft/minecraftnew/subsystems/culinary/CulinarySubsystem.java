@@ -45,6 +45,17 @@ public class CulinarySubsystem implements Listener {
 
         return recipeItems;
     }
+    public ItemStack getRecipeItemByName(String recipeName) {
+        // Iterate through the recipe registry to find the recipe by name
+        for (CulinaryRecipe recipe : recipeRegistry) {
+            if (recipe.getName().equalsIgnoreCase(recipeName)) {
+                // Create and return the recipe item
+                return createRecipeItem(recipe);
+            }
+        }
+        // If the recipe is not found, return null
+        return null;
+    }
     public static CulinarySubsystem getInstance(JavaPlugin plugin) {
         if (instance == null) {
             instance = new CulinarySubsystem(plugin);
@@ -74,7 +85,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.YELLOW_DYE,
                 "Slice of Cheese",
-                Arrays.asList("Milk"),
+                Arrays.asList("Milk Bucket"),
                 100
         ));
         recipeRegistry.add(new CulinaryRecipe(
@@ -112,7 +123,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.COOKED_RABBIT,
                 "Meatlovers Feast",
-                Arrays.asList("Cooked Steak", "Cooked Chicken", "Butter", "Sea Salt", "Cooked Mutton", "Cooked Rabbit", "Cooked Porkchop"),
+                Arrays.asList("Cooked Beef", "Cooked Chicken", "Butter", "Sea Salt", "Cooked Mutton", "Cooked Rabbit", "Cooked Porkchop"),
                 1000
         ));
         recipeRegistry.add(new CulinaryRecipe(
@@ -361,49 +372,52 @@ public class CulinarySubsystem implements Listener {
         Location tableLoc = event.getClickedBlock().getLocation().clone();
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            if(player.getInventory().getItemInMainHand().getType().equals(Material.PAPER)) {
+            // -- 1) Starting a new Recipe Session with a Recipe Paper --
+            if (player.getInventory().getItemInMainHand().getType().equals(Material.PAPER)) {
                 if (activeRecipeSessions.containsKey(tableLoc)) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "This crafting table is already being used for another recipe!");
                     return;
                 }
-            }
-            if (isRecipeItem(hand)) {
-                CulinaryRecipe recipe = parseRecipeFromItem(hand);
-                if (recipe == null) {
+                if (isRecipeItem(hand)) {
+                    CulinaryRecipe recipe = parseRecipeFromItem(hand);
+                    if (recipe == null) {
+                        event.setCancelled(true);
+                        player.sendMessage(ChatColor.RED + "This recipe is invalid or not recognized.");
+                        logger.warning("[CulinarySubsystem] Player " + player.getName() + " attempted to use an unregistered recipe item.");
+                        return;
+                    }
+
                     event.setCancelled(true);
-                    player.sendMessage(ChatColor.RED + "This recipe is invalid or not recognized.");
-                    logger.warning("[CulinarySubsystem] Player " + player.getName() + " attempted to use an unregistered recipe item.");
+                    logger.info("[CulinarySubsystem] Displaying recipe " + recipe.getName() + " at " + tableLoc);
+
+                    RecipeSession session = new RecipeSession(recipe, tableLoc);
+                    activeRecipeSessions.put(tableLoc, session);
+
+                    consumeItem(player, hand, 1);
+                    player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_PLACE, 1.0f, 1.0f);
+                    Location mainLoc = tableLoc.clone().add(0.5, 0.7, 0.5);
+                    UUID mainStand = spawnInvisibleArmorStand(
+                            mainLoc,
+                            ChatColor.GOLD + recipe.getName(),
+                            Arrays.asList(ChatColor.YELLOW + "Ingredients:"),
+                            true
+                    );
+                    session.mainArmorStandUUID = mainStand;
+
+// Instead of manually spawning label stands one by one, just call:
+                    updateIngredientLabels(session);
+
+                    player.sendMessage(ChatColor.GREEN + "Recipe " + recipe.getName() + " displayed! Right-click with ingredients to place them, left-click to finalize.");
                     return;
                 }
-
-                event.setCancelled(true);
-                logger.info("[CulinarySubsystem] Displaying recipe " + recipe.getName() + " at " + tableLoc);
-
-                RecipeSession session = new RecipeSession(recipe, tableLoc);
-                activeRecipeSessions.put(tableLoc, session);
-
-                consumeItem(player, hand, 1);
-
-                Location mainLoc = tableLoc.clone().add(0.5, 0.5, 0.5);
-                UUID mainStand = spawnInvisibleArmorStand(mainLoc, ChatColor.GOLD + recipe.getName(), Arrays.asList(ChatColor.YELLOW + "Ingredients:"), true);
-                session.mainArmorStandUUID = mainStand;
-
-                double offsetY = -0.25;
-                for (String ing : recipe.getIngredients()) {
-                    offsetY -= 0.3;
-                    Location ingLoc = mainLoc.clone().add(0, offsetY, 0);
-                    UUID ingStand = spawnInvisibleArmorStand(ingLoc, ChatColor.GRAY + ing, null, false);
-                    session.ingredientLabelStands.put(ing, ingStand);
-                }
-
-                player.sendMessage(ChatColor.GREEN + "Recipe " + recipe.getName() + " displayed! Right-click with ingredients to place them, left-click to finalize.");
-                return;
             }
 
+            // -- 2) Placing an ingredient on an ACTIVE recipe session --
             if (activeRecipeSessions.containsKey(tableLoc)) {
                 RecipeSession session = activeRecipeSessions.get(tableLoc);
                 CulinaryRecipe recipe = session.recipe;
+                // Identify if the held item is a needed ingredient and hasn't been placed yet
                 String ingredientName = matchIngredient(hand, recipe.getIngredients(), session.placedIngredientsStands.keySet());
                 if (ingredientName != null) {
                     event.setCancelled(true);
@@ -414,8 +428,26 @@ public class CulinarySubsystem implements Listener {
                     UUID standUUID = spawnIngredientAboveTableRandom(tableLoc, hand.getType(), hand);
                     session.placedIngredientsStands.put(ingredientName, standUUID);
 
+                    // Remove this ingredient’s label stand
+                    UUID labelStandUUID = session.ingredientLabelStands.get(ingredientName);
+                    removeEntityByUUID(labelStandUUID);
+                    session.ingredientLabelStands.remove(ingredientName);
+
+                    // Start spinning
                     BukkitTask spinTask = startSpinning(standUUID);
                     session.ingredientSpinTasks.put(ingredientName, spinTask);
+
+                    // Re-lay out the remaining ingredient labels with NO gaps:
+                    updateIngredientLabels(session);
+
+                    // Check if all ingredients are now placed
+                    if (session.placedIngredientsStands.size() == session.recipe.getIngredients().size()) {
+                        // All placed! Update the main armor stand's name to "[LEFT CLICK] To Combine!"
+                        ArmorStand mainStand = (ArmorStand) Bukkit.getEntity(session.mainArmorStandUUID);
+                        if (mainStand != null && mainStand.isValid()) {
+                            mainStand.setCustomName(ChatColor.GREEN + "[LEFT CLICK] To Combine!");
+                        }
+                    }
 
                     player.sendMessage(ChatColor.GREEN + ingredientName + " placed.");
                     return;
@@ -424,7 +456,10 @@ public class CulinarySubsystem implements Listener {
                     logger.info("[CulinarySubsystem] Irrelevant item or all ingredients placed.");
                 }
             }
-        } else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+        }
+
+        // -- 3) Finalizing the recipe (LEFT_CLICK_BLOCK) remains the same --
+        else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (activeRecipeSessions.containsKey(tableLoc)) {
                 RecipeSession session = activeRecipeSessions.get(tableLoc);
                 if (session.placedIngredientsStands.size() == session.recipe.getIngredients().size()) {
@@ -444,6 +479,7 @@ public class CulinarySubsystem implements Listener {
         }
     }
 
+
     public static ItemStack createRecipeItem(CulinaryRecipe recipe) {
         ItemStack item = new ItemStack(recipe.getRecipeItem(), 1);
         ItemMeta meta = item.getItemMeta();
@@ -457,6 +493,39 @@ public class CulinarySubsystem implements Listener {
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
+    }
+    /**
+     * Re-lays out the label stands (the named invisible armor stands)
+     * so they appear top-to-bottom without gaps for unplaced ingredients.
+     */
+    private void updateIngredientLabels(RecipeSession session) {
+        // Remove all existing label stands for this recipe session
+        for (UUID standUUID : session.ingredientLabelStands.values()) {
+            removeEntityByUUID(standUUID);
+        }
+        session.ingredientLabelStands.clear();
+
+        // We'll anchor them relative to the main stand's location or the table location
+        Location mainLoc = session.tableLocation.clone().add(0.5, 0.5, 0.5);
+
+        // Start offset so labels appear under the main stand
+        double offsetY = -0.25;
+
+        // Loop in the recipe's original ingredient order
+        for (String ing : session.recipe.getIngredients()) {
+            // If it is NOT already placed, spawn a label for it
+            if (!session.placedIngredientsStands.containsKey(ing)) {
+                offsetY -= 0.3;
+                Location ingLoc = mainLoc.clone().add(0, offsetY, 0);
+                UUID ingStand = spawnInvisibleArmorStand(
+                        ingLoc,
+                        ChatColor.GRAY + ing,
+                        null,  // no lore
+                        false
+                );
+                session.ingredientLabelStands.put(ing, ingStand);
+            }
+        }
     }
 
     private ItemStack createOutputItem(CulinaryRecipe recipe) {

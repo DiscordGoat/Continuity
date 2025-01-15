@@ -3,6 +3,8 @@ package goat.minecraft.minecraftnew.subsystems.enchanting;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.ChatColor;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -44,7 +46,7 @@ public class CustomEnchantmentManager {
      * @param level            The level of the enchantment.
      * @return                 The enchanted item.
      */
-    public static ItemStack addUltimateEnchantment(ItemStack billItem, ItemStack item, String enchantmentName, int level) {
+    public static ItemStack addUltimateEnchantment(Player player, ItemStack billItem, ItemStack item, String enchantmentName, int level) {
         if (item == null) return null;
 
         ItemMeta meta = item.getItemMeta();
@@ -75,6 +77,12 @@ public class CustomEnchantmentManager {
         if (billItem != null && billItem.getAmount() > 0) {
             billItem.setAmount(billItem.getAmount() - 1);
         }
+        player.getLocation().getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, player.getLocation(), 30, 0.5, 0.5, 0.5, 0.1);
+        player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
+
+        // 6) Send a message to the player
+        player.sendMessage(ChatColor.GOLD + "✨ " + ChatColor.BOLD + "Enchantment Success!" + ChatColor.GOLD + " ✨");
+        player.sendMessage(ChatColor.GRAY + "Your item has been enchanted with " + ChatColor.GREEN + enchantmentName + " " + numeral + ChatColor.GRAY + "!");
 
         return item;
     }

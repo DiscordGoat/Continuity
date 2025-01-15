@@ -226,6 +226,9 @@ public class CulinaryCauldron implements Listener {
 
         // Drop the output item at the cauldron location
         cauldronLoc.getWorld().dropItemNaturally(cauldronLoc.clone().add(0.5, 1.0, 0.5), output);
+        cauldronLoc.getWorld().dropItemNaturally(cauldronLoc.clone().add(0.5, 1.0, 0.5), output);
+        cauldronLoc.getWorld().dropItemNaturally(cauldronLoc.clone().add(0.5, 1.0, 0.5), output);
+        cauldronLoc.getWorld().dropItemNaturally(cauldronLoc.clone().add(0.5, 1.0, 0.5), output);
 
         activeCauldrons.remove(cauldronLoc);
     }

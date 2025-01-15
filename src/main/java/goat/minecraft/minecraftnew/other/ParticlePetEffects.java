@@ -72,7 +72,7 @@ public class ParticlePetEffects implements Listener {
             case "skeleton" -> Particle.WHITE_ASH;
             case "wither skeleton" -> Particle.ASH;
             case "zombie" -> Particle.HEART;
-            case "iron golem" -> Particle.REDSTONE;
+            case "iron golem" -> Particle.WHITE_ASH;
             case "drowned" -> Particle.NAUTILUS;
             case "enderman" -> Particle.SPELL_WITCH;
             case "blaze" -> Particle.FLAME;

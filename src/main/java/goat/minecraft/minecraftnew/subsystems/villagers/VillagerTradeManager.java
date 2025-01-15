@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.XPManager;
@@ -525,6 +526,7 @@ public class VillagerTradeManager implements Listener {
         butcherPurchases.add(createTradeMap("RABBIT", 1, 1, 1)); // Custom Item
         butcherPurchases.add(createTradeMap("SEA_SALT", 1, 4, 3)); // Custom Item
         butcherPurchases.add(createTradeMap("CALAMARI", 1, 16, 3)); // Custom Item
+        butcherPurchases.add(createTradeMap("CHEESE", 1, 8, 3)); // Custom Item
         butcherPurchases.add(createTradeMap("BUTCHER_ENCHANT", 1, 16, 5)); // Custom Item
 
 
@@ -552,6 +554,7 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("CARROT_SEEDER", 1, 64, 3)); // Custom item
         farmerPurchases.add(createTradeMap("POTATO_SEEDER", 1, 64, 3)); // Custom item
         farmerPurchases.add(createTradeMap("MILK_BUCKET", 1, 3, 3)); // Level 3 trade
+        farmerPurchases.add(createTradeMap("EGG", 12, 12, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5)); // Level 5 trade
         farmerPurchases.add(createTradeMap("FARMER_ENCHANT", 1, 64, 5)); // Custom item
@@ -803,6 +806,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getCommonSwordReforge();
             case "UNCOMMON_SWORD_REFORGE":
                 return ItemRegistry.getUncommonSwordReforge();
+            case "CHEESE":
+                return CulinarySubsystem.getInstance(plugin).getRecipeItemByName("Slice of Cheese");
             case "WEAPONSMITH_REFORGE":
                 return ItemRegistry.getWeaponsmithReforge();
             case "WEAPONSMITH_REFORGE_TWO":
@@ -1098,7 +1103,7 @@ public class VillagerTradeManager implements Listener {
             double finalCost = emeraldCost;
             if (activePet != null && activePet.hasPerk(PetManager.PetPerk.HAGGLE)) {
                 int petLevel = activePet.getLevel();
-                double maxDiscount = 0.5; // 50% discount
+                double maxDiscount = 0.25; // 25% discount
                 int maxLevel = 100;
                 double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
                 finalCost *= (1 - discountFactor);
@@ -1112,7 +1117,6 @@ public class VillagerTradeManager implements Listener {
             finalCost *= (1 - barteringDiscount);
 
             int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));
-            player.sendMessage(ChatColor.GREEN + "Bartering level discount applied! You paid " + finalCostRounded + " emeralds.");
 
             // Remove emeralds
             removeItems(player.getInventory(), Material.EMERALD, finalCostRounded);

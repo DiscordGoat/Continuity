@@ -188,7 +188,7 @@ public class MusicDiscManager implements Listener {
                 if (recipesGiven >= totalRecipes || !player.isOnline()) {
                     // Cancel the task if all recipes have been given or the player is offline
                     this.cancel();
-                    player.sendMessage(ChatColor.GREEN + "You have received all 64 random recipes!");
+                    player.sendMessage(ChatColor.GREEN + "You have received all 32 random recipes!");
                     return;
                 }
 

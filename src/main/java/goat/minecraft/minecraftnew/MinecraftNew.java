@@ -45,6 +45,7 @@ import goat.minecraft.minecraftnew.utils.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Listener;
@@ -116,6 +117,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        Objects.requireNonNull(Bukkit.getWorld("world")).setGameRule(GameRule.DO_MOB_SPAWNING, true); // Re-enable monster spawns
 
         new ArmorStandCommand(this); // This will automatically set up the command
 

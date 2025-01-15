@@ -41,6 +41,11 @@ public class ArmorReforge implements Listener {
             return;
         }
 
+        // Check if the damage is from a monster
+        if (!isDamageFromMonster(event.getCause())) {
+            return;
+        }
+
         Player player = (Player) damagedEntity;
         ItemStack[] armorContents = player.getInventory().getArmorContents();
 
@@ -77,6 +82,21 @@ public class ArmorReforge implements Listener {
         if (totalReduction > 0) {
             Bukkit.getLogger().info(ChatColor.GREEN + "" + player + "'s reforges reduces incoming damage by " + totalReduction + "%!");
         }
+    }
 
+    /**
+     * Check if the damage is from a monster.
+     *
+     * @param cause The cause of the damage.
+     * @return True if the damage is from a monster, false otherwise.
+     */
+    private boolean isDamageFromMonster(EntityDamageEvent.DamageCause cause) {
+        switch (cause) {
+            case ENTITY_ATTACK: // Damage from mob attacks
+            case PROJECTILE: // Damage from projectiles (e.g., arrows, fireballs)
+                return true;
+            default:
+                return false;
+        }
     }
 }

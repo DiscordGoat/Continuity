@@ -170,43 +170,43 @@ public class UltimateEnchantingSystem implements Listener {
             return;
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Inferno")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Inferno", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Inferno", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Rage Mode")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Rage Mode", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Rage Mode", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Warp")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Warp", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Warp", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Snowstorm")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Snowstorm", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Snowstorm", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Parry")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Parry", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Parry", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Disc Seeker")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Disc Seeker", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Disc Seeker", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Leap")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Leap", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Leap", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Excavate")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Excavate", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Excavate", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Treecapitator")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Treecapitator", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Treecapitator", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Hammer")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Hammer", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Hammer", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Homing Arrows")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Homing Arrows", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Homing Arrows", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Leg Shot")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Leg Shot", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Leg Shot", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Headshot")){
-            CustomEnchantmentManager.addUltimateEnchantment(null, handItem, "Ultimate: Headshot", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Headshot", 1);
         }
 
 

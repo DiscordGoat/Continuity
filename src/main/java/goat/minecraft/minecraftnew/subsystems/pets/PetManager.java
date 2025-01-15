@@ -799,7 +799,7 @@ public class PetManager implements Listener {
         TERROR_OF_THE_DEEP("Terror Of The Deep","Activates bloodlust when hitting Sea Creatures."),
         HEART_OF_THE_SEA("Heart Of The Sea","+10 Sea Creature Chance."),
         GREEN_THUMB("Green Thumb","Increases tick speed while equipped."),
-        HAGGLE("Haggle","Provides a 50% discount to villager transactions."),
+        HAGGLE("Haggle","Provides a 25% discount to villager transactions."),
         PRACTICE("Practice","Boosts villager xp gains."),
         COMFORTABLE("Comfortable","Grants you with 1 bonus health per 10 levels when eating."),
         LULLABY("Lullaby","Lulls monsters back to sleep, preventing their spawning."),
