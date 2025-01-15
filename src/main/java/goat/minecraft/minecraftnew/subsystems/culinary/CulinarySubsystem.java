@@ -385,7 +385,7 @@ public class CulinarySubsystem implements Listener {
 
                 consumeItem(player, hand, 1);
 
-                Location mainLoc = tableLoc.clone().add(0.5, 0.7, 0.5);
+                Location mainLoc = tableLoc.clone().add(0.5, 0.5, 0.5);
                 UUID mainStand = spawnInvisibleArmorStand(mainLoc, ChatColor.GOLD + recipe.getName(), Arrays.asList(ChatColor.YELLOW + "Ingredients:"), true);
                 session.mainArmorStandUUID = mainStand;
 
@@ -520,19 +520,34 @@ public class CulinarySubsystem implements Listener {
 
     private String matchIngredient(ItemStack item, List<String> neededIngredients, Set<String> alreadyPlaced) {
         if (item == null || item.getType() == Material.AIR) return null;
+
+        // Get the name of the item in hand
         String handName = (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) ?
                 ChatColor.stripColor(item.getItemMeta().getDisplayName()).toLowerCase() :
                 item.getType().toString().toLowerCase().replace("_", " ");
 
+        // Iterate through the needed ingredients
         for (String ing : neededIngredients) {
+            // Skip if the ingredient is already placed
             if (alreadyPlaced.contains(ing)) continue;
+
+            // Normalize the ingredient name for comparison
             String ingLower = ing.toLowerCase();
-            if (handName.contains(ingLower) || handName.equals(ingLower)) {
+
+            // Check for exact match or specific conditions
+            if (handName.equals(ingLower)) {
                 return ing;
             }
+
+            // Handle cases like "Golden Carrot" vs "Carrot"
+            if (ingLower.equals("carrot") && handName.equals("golden carrot")) {
+                continue; // Skip if the ingredient is "Carrot" but the item is "Golden Carrot"
+            }
         }
-        return null;
+
+        return null; // No match found
     }
+
 
     private void consumeItem(Player player, ItemStack item, int amount) {
         player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
