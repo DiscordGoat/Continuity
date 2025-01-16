@@ -67,7 +67,7 @@ public class RareCombatDrops implements Listener {
                     break;
 
                 case ZOMBIFIED_PIGLIN:
-                    if (rollChance(1, 300, hostilityLevel)) { // 4% chance
+                    if (rollChance(1, 150, hostilityLevel)) { // 4% chance
                         event.getDrops().add(infernalLooting);
                     }
                     if (rollChance(1, 200, hostilityLevel)) { // 4% chance
@@ -90,18 +90,18 @@ public class RareCombatDrops implements Listener {
                     break;
 
                 case MAGMA_CUBE:
-                    if (rollChance(1, 100, hostilityLevel)) { // 3% chance
+                    if (rollChance(1, 75, hostilityLevel)) { // 3% chance
                         event.getDrops().add(infernalUnbreaking);
                     }
                     break;
 
                 case GHAST:
-                    if (rollChance(1, 25, hostilityLevel)) { // 3% chance
+                    if (rollChance(1, 10, hostilityLevel)) { // 3% chance
                         event.getDrops().add(infernalEfficiency);
                     }
                     break;
                 case HOGLIN:
-                    if (rollChance(1, 50, hostilityLevel)) { // 5% chance
+                    if (rollChance(1, 15, hostilityLevel)) { // 5% chance
                         event.getDrops().add(infernalBaneofAnthropods);
                     }
                     break;
@@ -112,10 +112,7 @@ public class RareCombatDrops implements Listener {
                     break;
 
                 case BLAZE:
-                    if (rollChance(1, 200, hostilityLevel)) { // 3% chance
-                        event.getDrops().add(infernalLure);
-                    }
-                    if (rollChance(1, 300, hostilityLevel)) { // 3% chance
+                    if (rollChance(1, 100, hostilityLevel)) { // 3% chance
                         petManager.createPet(player, "Blaze", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.FLIGHT);
                     }
 
@@ -180,10 +177,10 @@ public class RareCombatDrops implements Listener {
         Player player = event.getEntity().getKiller();
         HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
-        if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,50, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(piglinDrop);
         }
-        if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,50, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Vindicator", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SKEPTICISM, PetManager.PetPerk.GREED, PetManager.PetPerk.ELITE);
         }
 
@@ -192,7 +189,7 @@ public class RareCombatDrops implements Listener {
         Player player = event.getEntity().getKiller();
         HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
-        if (rollChance(1,360, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(undeadDrop);
         }
         if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
@@ -204,7 +201,7 @@ public class RareCombatDrops implements Listener {
         Player player = event.getEntity().getKiller();
         HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
-        if (rollChance(1,250, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(undeadDrop);
         }
         if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
@@ -217,7 +214,7 @@ public class RareCombatDrops implements Listener {
         Player player = event.getEntity().getKiller();
         HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
-        if (rollChance(1,250, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(skeletonDrop);
         }
         if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
@@ -229,7 +226,7 @@ public class RareCombatDrops implements Listener {
         Player player = event.getEntity().getKiller();
         HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
-        if (rollChance(1,250, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(creeperDrop);
         }
     }
@@ -237,7 +234,7 @@ public class RareCombatDrops implements Listener {
         Player player = event.getEntity().getKiller();
         HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
-        if (rollChance(1,250, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(spiderDrop);
         }
     }
@@ -245,7 +242,7 @@ public class RareCombatDrops implements Listener {
         Player player = event.getEntity().getKiller();
         HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
-        if (rollChance(1,75, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,25, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(enderDrop);
         }
         if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
@@ -276,7 +273,7 @@ public class RareCombatDrops implements Listener {
         if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(witherSkeletonDrop);
         }
-        if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Wither Skeleton", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.DECAY);
         }
 

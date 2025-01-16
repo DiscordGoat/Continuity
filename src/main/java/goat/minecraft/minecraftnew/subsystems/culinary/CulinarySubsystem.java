@@ -142,7 +142,7 @@ public class CulinarySubsystem implements Listener {
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
-                Material.MUSHROOM_STEW,
+                Material.BREAD,
                 "Mushroom Soup",
                 Arrays.asList("Red Mushroom", "Brown Mushroom", "Sea Salt"),
                 250

@@ -65,7 +65,7 @@ public class ParticlePetEffects implements Listener {
         return switch (petName.toLowerCase()) {
             case "stray" -> Particle.SNOWFLAKE;
             case "vindicator" -> Particle.CRIT_MAGIC;
-            case "warden" -> Particle.SCULK_CHARGE;
+            case "warden" -> Particle.CRIT_MAGIC;
             case "yeti" -> Particle.SNOWFLAKE;
             case "piglin brute" -> Particle.CRIMSON_SPORE;
             case "guardian" -> Particle.WATER_WAKE;

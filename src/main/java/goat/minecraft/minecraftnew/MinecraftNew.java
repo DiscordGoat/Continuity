@@ -110,6 +110,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
                 recipeManager.getCustomRecipes().get(customMusicDiscKey),
                 false // We already called Bukkit.addRecipe(...) above
         );
+        NamespacedKey amethystKey = new NamespacedKey(this, "amethyst_block_to_shards");
+        ShapedRecipe amethystRecipe = new ShapedRecipe(amethystKey, new ItemStack(Material.AMETHYST_SHARD, 4));
+        amethystRecipe.shape("B"); // Single block in the center
+        amethystRecipe.setIngredient('B', Material.AMETHYST_BLOCK);
+
+        // Register the recipe
+        Bukkit.addRecipe(amethystRecipe);
 
     }
     public LockedRecipeManager getLockedRecipeManager() {

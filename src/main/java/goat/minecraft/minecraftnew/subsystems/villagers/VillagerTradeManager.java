@@ -1107,8 +1107,10 @@ public class VillagerTradeManager implements Listener {
                 int maxLevel = 100;
                 double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
                 finalCost *= (1 - discountFactor);
-                player.sendMessage(ChatColor.GREEN + "Haggle perk applied! You paid " + finalCost + " emeralds.");
+                finalCost = Math.floor(finalCost); // Round down to the nearest whole number
+                player.sendMessage(ChatColor.GREEN + "Haggle perk applied! You paid " + (int) finalCost + " emeralds.");
             }
+
 
             // Bartering discount
             XPManager xpManager = new XPManager(plugin);

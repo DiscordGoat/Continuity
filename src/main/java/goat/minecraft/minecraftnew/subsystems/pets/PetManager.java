@@ -555,7 +555,7 @@ public class PetManager implements Listener {
             case PRACTICE:
                 return ChatColor.YELLOW + "Triples villager XP gains.";
             case HAGGLE:
-                return "Grants a trade discount of " + ChatColor.YELLOW + (level * 0.5) + "%.";
+                return "Grants a trade discount of " + ChatColor.YELLOW + (level * 0.25) + "%.";
             case LEAP:
                 return ChatColor.YELLOW + "Enables the ability to leap forward.";
             case SOFT_PAW:

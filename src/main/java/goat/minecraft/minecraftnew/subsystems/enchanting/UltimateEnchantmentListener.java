@@ -83,7 +83,9 @@ public class UltimateEnchantmentListener implements Listener {
         ItemStack tool = player.getInventory().getItemInMainHand();
         // Drop the block's natural drops
         for (ItemStack drop : block.getDrops(tool)) {
-            block.getWorld().dropItemNaturally(block.getLocation(), drop);
+            if (drop != null && drop.getType() != Material.AIR) { // Check for null or air
+                block.getWorld().dropItemNaturally(block.getLocation(), drop);
+            }
         }
         // Set the block to air
         block.setType(Material.AIR);
@@ -103,16 +105,9 @@ public class UltimateEnchantmentListener implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
                 }
             }
-            else {
-                Bukkit.getLogger().info("[DEBUG] Unbreaking enchantment prevented durability loss.");
-            }
-            // Optional: if it breaks, remove it from player's hand
-            if (tool.getDurability() >= tool.getType().getMaxDurability()) {
-                player.getInventory().setItemInMainHand(null);
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
-            }
         }
     }
+
 
     /**
      * Break surrounding 3×3 blocks ignoring ores, applying durability for each broken block.
@@ -423,7 +418,7 @@ public class UltimateEnchantmentListener implements Listener {
             switch (enchantName) {
                 case "homing arrows":
                     fireHomingArrows(player);
-                    cooldownMs = 5_000L;
+                    cooldownMs = 15_000L;
                     break;
                 case "leg shot":
                     fireLeapingArrowWithSlowness(player);
@@ -601,7 +596,7 @@ public class UltimateEnchantmentListener implements Listener {
     private void fireDamageArrow(Player player) {
         Arrow arrow = player.launchProjectile(Arrow.class);
         arrow.setDamage(100);
-        player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 10.f, 1.0f);
+        player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 10.f, 1.0f);
     }
     public void launchPlayerForward(Player player) {
         Vector direction = player.getLocation().getDirection().normalize();
