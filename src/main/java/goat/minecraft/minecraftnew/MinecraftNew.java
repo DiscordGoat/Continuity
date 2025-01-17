@@ -214,6 +214,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new WalkingFortress(this), this);
         getServer().getPluginManager().registerEvents(new DiggingClaws(this), this);
         getServer().getPluginManager().registerEvents(new XRay(this), this);
+        getServer().getPluginManager().registerEvents(new NoHibernation(this), this);
         getServer().getPluginManager().registerEvents(new Echolocation(this), this);
         getServer().getPluginManager().registerEvents(new MithrilMiner(this), this);
         getServer().getPluginManager().registerEvents(new EmeraldSeeker(this), this);
@@ -283,7 +284,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new AnvilRepair(this), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         getServer().getPluginManager().registerEvents(new EpicEnderDragonFight(this), this);
-        getServer().getPluginManager().registerEvents(new ForestSpiritManager(this), this);
+        ForestSpiritManager manager = ForestSpiritManager.getInstance(this);
+        getServer().getPluginManager().registerEvents(manager, this);
+
         getServer().getPluginManager().registerEvents(new RareCombatDrops(), this);
         getServer().getPluginManager().registerEvents(new PlayerOxygenManager(this), this);
         getServer().getPluginManager().registerEvents(new SeaCreatureRegistry(), this);

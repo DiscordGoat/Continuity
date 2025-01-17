@@ -32,6 +32,7 @@ public class ForestSpiritManager implements Listener {
     private final MinecraftNew plugin;
     private final XPManager xpManager;
     private final Random random = new Random();
+    private static ForestSpiritManager instance;
 
     // Define a constant for the metadata key
     private static final String PLAYER_PLACED_METADATA_KEY = "playerPlaced";
@@ -52,9 +53,17 @@ public class ForestSpiritManager implements Listener {
     );
 
     // Constructor
-    public ForestSpiritManager(MinecraftNew plugin) {
+    private ForestSpiritManager(MinecraftNew plugin) {
         this.plugin = plugin;
         this.xpManager = new XPManager(plugin);
+    }
+
+    // Public method to get instance
+    public static ForestSpiritManager getInstance(MinecraftNew plugin) {
+        if (instance == null) {
+            instance = new ForestSpiritManager(plugin);
+        }
+        return instance;
     }
 
     /**
@@ -177,7 +186,7 @@ public class ForestSpiritManager implements Listener {
      * @param location  The location to spawn the spirit.
      * @param player    The player who broke the block.
      */
-    private void spawnSpirit(Material blockType, Location location, Player player) {
+    public void spawnSpirit(Material blockType, Location location, Player player) {
         SpiritType spiritType = getSpiritType(blockType);
         if (spiritType == null) {
             return;

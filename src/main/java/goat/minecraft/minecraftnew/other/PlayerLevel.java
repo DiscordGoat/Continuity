@@ -28,7 +28,7 @@ public class PlayerLevel implements Listener {
         level = Math.min(level, 100);
 
         // Calculate health multiplier (max double health at level 50)
-        double healthMultiplier = 1 + ((Math.min(level, 50) * 0.02)); // 2% per level up to level 50
+        double healthMultiplier = 1 + ((Math.min(level, 100) * 0.01)); // 2% per level up to level 50
 
         // Apply health (max double)
         AttributeInstance healthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);

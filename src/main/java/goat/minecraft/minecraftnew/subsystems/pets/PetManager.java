@@ -564,6 +564,8 @@ public class PetManager implements Listener {
                 return "Increases " + ChatColor.YELLOW + "speed " + ChatColor.GRAY + "by " + ChatColor.YELLOW + (level * 0.4f) + "%.";
             case CLAW:
                 return "Increases " + ChatColor.RED + "melee damage " + ChatColor.GRAY + "by " + ChatColor.RED + (0.2 * level) + "%.";
+            case NO_HIBERNATION:
+                return "Increases " + ChatColor.RED + "Natural Regeneration " + ChatColor.GRAY + "by " + ChatColor.RED + (level) + "%.";
             default:
                 return ChatColor.GRAY + "Static effect or undefined scaling.";
         }
@@ -818,7 +820,8 @@ public class PetManager implements Listener {
         SPEED_BOOST("Speed Boost", ChatColor.GOLD + "Increases your walking speed by 100%."),
         SECOND_WIND("Second Wind", ChatColor.GOLD + "Provides [Lvl] seconds of regeneration when taking damage."),
         SHOTCALLING("Shotcalling", ChatColor.GOLD + "Increases arrow damage by 1% per [Lvl]"),
-        ROCK_EATER("Ore Magnet", ChatColor.GOLD + "");
+        ROCK_EATER("Ore Magnet", ChatColor.GOLD + ""),
+        NO_HIBERNATION("No Hibernation", ChatColor.GOLD + "");
 
         private final String displayName;
         private final String description;

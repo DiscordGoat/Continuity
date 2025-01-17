@@ -125,7 +125,7 @@ public class SkillsCommand implements CommandExecutor {
      * @return A formatted string showing the multipliers for the skill.
      */
     private List<String> getSkillStatLore(String skill, int level) {
-        double multiplier = 1 + (level * 0.02); // 2% per level
+        double multiplier = 1 + (level * 0.01); // 2% per level
         switch (skill) {
             case "Smithing":
                 return Arrays.asList(

@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -16,6 +17,37 @@ import static goat.minecraft.minecraftnew.utils.CustomItemManager.createCustomIt
 public class ItemRegistry {
     private ItemRegistry() {
     } // Private constructor to prevent instantiation
+
+
+
+    public static ItemStack getItemByName(String itemName) {
+        // Replace underscores with spaces
+        String formattedName = itemName.replace("_", " ");
+
+        for (Method method : ItemRegistry.class.getDeclaredMethods()) {
+            if (method.getReturnType().equals(ItemStack.class)) {
+                try {
+                    ItemStack item = (ItemStack) method.invoke(null);
+                    if (item != null) {
+                        ItemMeta meta = item.getItemMeta();
+                        if (meta != null) {
+                            // Compare stripped color from displayName with stripped color from input
+                            String displayNameNoColor = ChatColor.stripColor(meta.getDisplayName());
+                            String formattedNoColor   = ChatColor.stripColor(formattedName);
+
+                            if (displayNameNoColor.equalsIgnoreCase(formattedNoColor)) {
+                                return item;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return null;
+    }
+
     public static ItemStack getExperienceArtifact() {
         return CustomItemManager.createCustomItem(Material.GLASS_BOTTLE, ChatColor.YELLOW +
                 "Experience Artifact Tier 1", Arrays.asList(
@@ -1042,8 +1074,8 @@ public class ItemRegistry {
                 Material.DIAMOND,
                 ChatColor.DARK_PURPLE + "Diamond Gemstone",
                 List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to unlock triple drop chance.",
-                        "Smithing Item"),
+                        ChatColor.GRAY + "Apply it to equipment to unlock triple drop chance.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"),
                 1,
                 false,
                 true
@@ -1054,8 +1086,8 @@ public class ItemRegistry {
                 Material.LAPIS_LAZULI,
                 ChatColor.DARK_PURPLE + "Lapis Gemstone",
                 List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to enrich mining XP gains.",
-                        "Smithing Item"),
+                        ChatColor.GRAY + "Apply it to equipment to enrich mining XP gains.",
+                       ChatColor.DARK_PURPLE + "Smithing Item"),
                 1,
                 false,
                 true
@@ -1066,8 +1098,8 @@ public class ItemRegistry {
                 Material.REDSTONE,
                 ChatColor.DARK_PURPLE + "Redstone Gemstone",
                 List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to enrich Gold Fever.",
-                        "Smithing Item"),
+                        ChatColor.GRAY + "Apply it to equipment to enrich Gold Fever.",
+                        ChatColor.DARK_PURPLE +  "Smithing Item"),
                 1,
                 false,
                 true
@@ -1078,8 +1110,8 @@ public class ItemRegistry {
                 Material.EMERALD,
                 ChatColor.DARK_PURPLE + "Emerald Gemstone",
                 List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to unlock night vision chance.",
-                        "Smithing Item"),
+                        ChatColor.GRAY + "Apply it to equipment to unlock night vision chance.",
+                        ChatColor.DARK_PURPLE +  "Smithing Item"),
                 1,
                 false,
                 true

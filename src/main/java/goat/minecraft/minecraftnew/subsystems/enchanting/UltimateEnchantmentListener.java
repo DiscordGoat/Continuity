@@ -1,5 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.enchanting;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import net.minecraft.world.entity.monster.IMonster;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -88,10 +91,15 @@ public class UltimateEnchantmentListener implements Listener {
             }
         }
         // Set the block to air
+        if(isLeafBlock(block.getType())){
+            block.setType(Material.AIR);
+            return;
+        }
         block.setType(Material.AIR);
 
         // If it's not an ore, consume 1 durability (Hammer usage).
         // (Check if the tool can lose durability)
+
         if (consumeDurabilityIfNotOre && tool != null && tool.getType().getMaxDurability() > 0) {
             short currentDamage = tool.getDurability();
             int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.DURABILITY); // Get Unbreaking level
@@ -176,16 +184,26 @@ public class UltimateEnchantmentListener implements Listener {
     private void breakConnectedWoodAndLeaves(Player player, Block startBlock) {
         Queue<Block> queue = new ArrayDeque<>();
         Set<Block> visited = new HashSet<>();
+        Set<Block> tempVisited = new HashSet<>(); // Temporary set to store blocks during iteration
         int maxBlocks = 400;
-        int leavesRange = 5;
+        int leavesRange = 3;
 
         queue.add(startBlock);
         visited.add(startBlock);
 
         while (!queue.isEmpty() && visited.size() <= maxBlocks) {
             Block currentBlock = queue.poll();
-            // Break the current log block (consume durability for each)
+            // Break the current log block (consume durability for each) and give XP
             breakBlock(player, currentBlock, true);
+            givePlayerXp(player);  // Gives 1 XP to the player for each wood block broken
+            ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
+            Random random = new Random();
+            if (random.nextInt(100) < 2) { // 1% chance
+                if (isWoodBlock(currentBlock.getType())) {
+                    forestSpiritManager.spawnSpirit(currentBlock.getType(), player.getLocation(), player);
+                    player.sendMessage(ChatColor.LIGHT_PURPLE + "A Forest Spirit has been summoned!");
+                }
+            }
 
             // Check adjacent blocks
             for (int x = -1; x <= 1; x++) {
@@ -196,14 +214,16 @@ public class UltimateEnchantmentListener implements Listener {
 
                         if (isWoodBlock(adjacentBlock.getType()) && !visited.contains(adjacentBlock)) {
                             queue.add(adjacentBlock);
-                            visited.add(adjacentBlock);
+                            tempVisited.add(adjacentBlock);  // Add to temporary set instead of directly to visited
                         }
                     }
                 }
             }
         }
 
-        // Break leaves within 5 blocks
+        visited.addAll(tempVisited); // Add all at once after the iteration of the queue is complete
+
+        // Break leaves within 5 blocks range but do not give XP
         for (Block woodBlock : visited) {
             for (int x = -leavesRange; x <= leavesRange; x++) {
                 for (int y = -leavesRange; y <= leavesRange; y++) {
@@ -211,13 +231,22 @@ public class UltimateEnchantmentListener implements Listener {
                         Block leafBlock = woodBlock.getRelative(x, y, z);
                         if (isLeafBlock(leafBlock.getType()) && !visited.contains(leafBlock)) {
                             breakBlock(player, leafBlock, true);
-                            visited.add(leafBlock);
+                            // No XP given for breaking leaf blocks
+                            // Do not modify 'visited' during this nested iteration
                         }
                     }
                 }
             }
         }
     }
+
+
+
+    private void givePlayerXp(Player player) {
+        XPManager xpManager = new XPManager(plugin);
+        xpManager.addXP(player, "Forestry", 1);
+    }
+
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onBlockBreak(BlockBreakEvent event) {
