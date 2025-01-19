@@ -528,6 +528,7 @@ public class VillagerTradeManager implements Listener {
         butcherPurchases.add(createTradeMap("CALAMARI", 1, 16, 3)); // Custom Item
         butcherPurchases.add(createTradeMap("CHEESE", 1, 8, 3)); // Custom Item
         butcherPurchases.add(createTradeMap("BUTCHER_ENCHANT", 1, 16, 5)); // Custom Item
+        butcherPurchases.add(createTradeMap("COAL", 4, 15, 5)); // Custom Item
 
 
         defaultConfig.set("BUTCHER.purchases", butcherPurchases);

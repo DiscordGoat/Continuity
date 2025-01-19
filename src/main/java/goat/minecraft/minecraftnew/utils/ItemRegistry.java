@@ -1196,8 +1196,8 @@ public class ItemRegistry {
                 Material.LIGHT_BLUE_DYE,
                 ChatColor.BLUE + "Mithril Chunk",
                 List.of(ChatColor.GRAY + "A rare mineral.",
-                        "Apply it to equipment to unlock the secrets of Unbreaking.",
-                        "Smithing Item"),
+                        ChatColor.BLUE + "Apply it to equipment to unlock the secrets of Unbreaking.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"),
                 1,
                 false // Set to true if you want it to be unbreakable
                 , true

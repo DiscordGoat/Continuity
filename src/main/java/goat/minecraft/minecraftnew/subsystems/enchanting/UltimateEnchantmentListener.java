@@ -154,6 +154,8 @@ public class UltimateEnchantmentListener implements Listener {
                         // Break the block if it's not an ore
                         Bukkit.getLogger().info("[DEBUG] Breaking block: " + relativeBlock.getType() + " at " + relativeBlock.getLocation());
                         breakBlock(player, relativeBlock, true);
+                        XPManager xpManager = new XPManager(plugin);
+                        xpManager.addXP(player, "Mining", 1);
                     }
                 }
             }
