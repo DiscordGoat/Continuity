@@ -200,7 +200,7 @@ public class UltimateEnchantmentListener implements Listener {
             givePlayerXp(player);  // Gives 1 XP to the player for each wood block broken
             ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
             Random random = new Random();
-            if (random.nextInt(100) < 2) { // 1% chance
+            if (random.nextInt(100) < 4) { // 1% chance
                 if (isWoodBlock(currentBlock.getType())) {
                     forestSpiritManager.spawnSpirit(currentBlock.getType(), player.getLocation(), player);
                     player.sendMessage(ChatColor.LIGHT_PURPLE + "A Forest Spirit has been summoned!");
@@ -246,7 +246,7 @@ public class UltimateEnchantmentListener implements Listener {
 
     private void givePlayerXp(Player player) {
         XPManager xpManager = new XPManager(plugin);
-        xpManager.addXP(player, "Forestry", 1);
+        xpManager.addXP(player, "Forestry", 8);
     }
 
 

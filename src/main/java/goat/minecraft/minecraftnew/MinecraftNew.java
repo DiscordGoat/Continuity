@@ -236,7 +236,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
 
-        SpawnMonsters spawnMonsters = new SpawnMonsters(this, xpManager);
+        SpawnMonsters spawnMonsters = new SpawnMonsters(xpManager);
 
         // Register events
         getServer().getPluginManager().registerEvents(petManager, this);
@@ -270,18 +270,18 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("skills").setExecutor(new SkillsCommand(xpManager));
 
         getCommand("getpet").setExecutor(new PetCommand(petManager));
+        getServer().getPluginManager().registerEvents(new FishingEvent(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new SpawnMonsters(xpManager), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new KillMonster(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new CustomItemManager(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new Mining(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new PlayerLevel(MinecraftNew.getInstance(), xpManager), MinecraftNew.getInstance());
 
-        getServer().getPluginManager().registerEvents(new SpawnMonsters(this, xpManager), this);
-        getServer().getPluginManager().registerEvents(new KillMonster(), this);
-        getServer().getPluginManager().registerEvents(new CustomItemManager(), this);
-        getServer().getPluginManager().registerEvents(new Mining(), this);
-        getServer().getPluginManager().registerEvents(new PlayerLevel(this, xpManager), this);
-        getServer().getPluginManager().registerEvents(new FishingEvent(), this);
-        getServer().getPluginManager().registerEvents(new FarmingEvent(), this);
-        getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), this);
-        getServer().getPluginManager().registerEvents(new CancelBrewing(this), this);
-        getServer().getPluginManager().registerEvents(new RightClickArtifacts(this), this);
-        getServer().getPluginManager().registerEvents(new AnvilRepair(this), this);
+        getServer().getPluginManager().registerEvents(new FarmingEvent(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new CancelBrewing(MinecraftNew.getInstance()), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new RightClickArtifacts(MinecraftNew.getInstance()), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new AnvilRepair(MinecraftNew.getInstance()), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         getServer().getPluginManager().registerEvents(new EpicEnderDragonFight(this), this);
         ForestSpiritManager manager = ForestSpiritManager.getInstance(this);

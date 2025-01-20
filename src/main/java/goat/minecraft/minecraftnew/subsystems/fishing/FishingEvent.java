@@ -16,6 +16,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
@@ -37,8 +38,8 @@ public class FishingEvent implements Listener {
     private final Random random = new Random();
     private static final String SEA_CREATURE_METADATA = "SEA_CREATURE";
     private static final double SEA_CREATURE_REFORGE_BONUS = 4.0; // 4% bonus if reforged for sea creatures
+    @EventHandler(priority = EventPriority.HIGHEST)
 
-    @EventHandler
     public void onPlayerFish(PlayerFishEvent e) {
         //Bukkit.broadcastMessage("Luck chance = " + (0.05 + ((double) getLuckOfTheSeaLevel(e.getPlayer().getItemInUse()) /100)));
         if (e.getState() == PlayerFishEvent.State.CAUGHT_ENTITY) {
@@ -241,15 +242,11 @@ public class FishingEvent implements Listener {
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
         plugin.getLogger().info("Hostility Level for player " + player.getName() + ": " + hostilityLevel);
 
-        SpawnMonsters spawnMonsters = new SpawnMonsters(plugin, xpManager);
+        SpawnMonsters spawnMonsters = new SpawnMonsters(xpManager);
         int baseLevel = seaCreature.getLevel();
         plugin.getLogger().info("Base Level of Sea Creature: " + baseLevel);
 
-        int adjustedLevel = getAdjustedSeaCreatureLevel(baseLevel, hostilityLevel);
-        plugin.getLogger().info("Adjusted Level of Sea Creature: " + adjustedLevel);
-
         spawnMonsters.applyMobAttributes(livingEntity, baseLevel);
-        plugin.getLogger().info("Applied attributes to Sea Creature with level: " + adjustedLevel);
 
         spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + baseLevel + "] " + seaCreature.getColoredDisplayName());
         spawnedEntity.setCustomNameVisible(true);
@@ -375,8 +372,10 @@ public class FishingEvent implements Listener {
     private void rollForTreasure(Player player) {
         PetManager petManager = PetManager.getInstance(plugin);
         double treasureChance = 0.05; // Base chance of 5%
-        int petLevel = petManager.getActivePet(player).getLevel();
-
+        int petLevel = 1;
+        if(petManager.getActivePet(player) != null) {
+            petLevel = petManager.getActivePet(player).getLevel();
+        }
         // Check if the player has the Treasure Hunter perk
         if (petManager.getActivePet(player) != null && petManager.getActivePet(player).hasPerk(PetManager.PetPerk.TREASURE_HUNTER)) {
             treasureChance += (petLevel * 0.0045); // Scale to add 0.45 at pet level 100

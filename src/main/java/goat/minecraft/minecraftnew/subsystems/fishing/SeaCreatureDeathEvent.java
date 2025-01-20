@@ -104,14 +104,16 @@ public class SeaCreatureDeathEvent implements Listener {
 
 
         // Handle drops
-        List<ItemStack> drops = seaCreature.getDrops();
-        if (drops != null && !drops.isEmpty()) {
-            for (ItemStack drop : drops) {
-                if (drop != null && drop.getType() != Material.AIR) {
-                    event.getDrops().add(drop);
+        if(seaCreature.getDrops() != null) {
+            List<ItemStack> drops = seaCreature.getDrops();
+            if (drops != null && !drops.isEmpty()) {
+                for (ItemStack drop : drops) {
+                    if (drop != null && drop.getType() != Material.AIR) {
+                        event.getDrops().add(drop);
+                    }
                 }
+                killer.playSound(killer.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 10.f);
             }
-            killer.playSound(killer.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 10.f);
         }
 
         // Play effects    

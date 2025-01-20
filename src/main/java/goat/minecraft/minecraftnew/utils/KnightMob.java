@@ -49,7 +49,7 @@ public class KnightMob implements Listener {
             // Set mob attributes for increased difficulty
             // Optionally set a custom name for identification
 
-        SpawnMonsters spawnMonsters = new SpawnMonsters(plugin, xpManager);
+        SpawnMonsters spawnMonsters = new SpawnMonsters(xpManager);
         spawnMonsters.applyMobAttributes(mob, 100);
             mob.setCustomName(ChatColor.GRAY + "Knight");
             mob.setCustomNameVisible(true);

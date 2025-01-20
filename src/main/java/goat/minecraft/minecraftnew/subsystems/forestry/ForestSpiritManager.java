@@ -192,7 +192,7 @@ public class ForestSpiritManager implements Listener {
             return;
         }
 
-        SpawnMonsters spawnMonsters = new SpawnMonsters(plugin, xpManager);
+        SpawnMonsters spawnMonsters = new SpawnMonsters(xpManager);
         World world = location.getWorld();
         if (world == null) return;
 
@@ -211,14 +211,7 @@ public class ForestSpiritManager implements Listener {
             equipment.setChestplate(createColoredArmor(Material.LEATHER_CHESTPLATE, spiritType.getArmorColor()));
             equipment.setLeggings(createColoredArmor(Material.LEATHER_LEGGINGS, spiritType.getArmorColor()));
             equipment.setBoots(createColoredArmor(Material.LEATHER_BOOTS, spiritType.getArmorColor()));
-            equipment.setItemInMainHand(CustomItemManager.createCustomItem(
-                    Material.BOW,
-                    ChatColor.WHITE + "Spirit Bow",
-                    Arrays.asList(ChatColor.GRAY + "A bow wielded by the spirit."),
-                    1,
-                    false, // Unbreakable
-                    true   // Add enchantment shimmer
-            ));
+            equipment.setItemInMainHand(ItemRegistry.getSpiritBow());
 
             // Prevent equipment from dropping upon death
             equipment.setHelmetDropChance(0.0f);

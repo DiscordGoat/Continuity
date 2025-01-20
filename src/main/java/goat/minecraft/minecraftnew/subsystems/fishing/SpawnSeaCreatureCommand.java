@@ -52,7 +52,7 @@ public class SpawnSeaCreatureCommand implements CommandExecutor {
         if (spawnedEntity instanceof org.bukkit.entity.LivingEntity) {
             org.bukkit.entity.LivingEntity livingEntity = (org.bukkit.entity.LivingEntity) spawnedEntity;
             applySeaCreatureEquipment(livingEntity, seaCreature);
-            SpawnMonsters spawnMonsters = new SpawnMonsters(MinecraftNew.getInstance(), new XPManager(MinecraftNew.getInstance()));
+            SpawnMonsters spawnMonsters = new SpawnMonsters(new XPManager(MinecraftNew.getInstance()));
             spawnMonsters.applyMobAttributes(livingEntity, seaCreature.getLevel());
         }
 

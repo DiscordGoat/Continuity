@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.utils;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -15,19 +16,19 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Random;
 
 public class SpawnMonsters implements Listener {
 
     private XPManager xpManager; // Assume you have an XPManager class
-    private JavaPlugin plugin;
+    private final JavaPlugin plugin = MinecraftNew.getInstance();
 
     private static final int MAX_MONSTER_LEVEL = 200;
 
     // Constructor to pass in XPManager and plugin instance
-    public SpawnMonsters(JavaPlugin plugin, XPManager xpManager) {
-        this.plugin = plugin;
+    public SpawnMonsters(XPManager xpManager) {
         this.xpManager = xpManager;
     }
 
@@ -270,35 +271,43 @@ public class SpawnMonsters implements Listener {
 
 
         Random random = new Random();
-        if (entity instanceof LivingEntity) {
-            if (entity instanceof ArmorStand) return;
+        if (entity instanceof Monster) {
             LivingEntity mob = (LivingEntity) entity;
-            if (mob instanceof EnderDragon) {
-                int randomValue = 1000;
-                applyMobAttributes(mob, randomValue);
-                return;
-            }
 
-            double distance = getDistanceFromOrigin(entity);
-            Player nearestPlayer = getNearestPlayer(entity, 1000);
-            int mobLevel;
+            // Schedule a delayed task to apply attributes
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!mob.isValid()) {
+                        plugin.getLogger().info("Entity is no longer valid: " + mob.getType());
+                        return; // Skip if the entity is no longer valid
+                    }
 
-            if (nearestPlayer != null) {
-                int level = playerHostility * 10;
-                mobLevel = Math.min(level + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
-            } else {
-                mobLevel = Math.min((int) (distance / 100) + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
-            }
+                    // Check for SEA_CREATURE metadata after the delay
+                    if(mob.getEquipment().getItemInMainHand().equals(ItemRegistry.getSpiritBow())){
+                        return;
+                    }
 
-            applyMobAttributes(mob, mobLevel);
+                    if (!mob.hasMetadata("SEA_CREATURE")) {
+                        double distance = getDistanceFromOrigin(entity);
+                        Player nearestPlayer = getNearestPlayer(entity, 1000);
+                        int mobLevel;
+
+                        if (nearestPlayer != null) {
+                            int level = playerHostility * 10;
+                            mobLevel = Math.min(level + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
+                        } else {
+                            mobLevel = Math.min((int) (distance / 100) + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
+                        }
+
+                        applyMobAttributes(mob, mobLevel);
+                    } else {
+                        plugin.getLogger().info("Skipped attribute application for sea creature: " + mob.getType());
+                    }
+                }
+            }.runTaskLater(plugin, 40L); // Delay by 40 ticks (2 seconds)
         }
 
-        if (entity instanceof WaterMob) {
-            Player player = getNearestPlayer(entity, 1000);
-            int fishingLevel = xpManager.getPlayerLevel(player, "Fishing");
-            int level = Math.min(fishingLevel, MAX_MONSTER_LEVEL);
-            applyMobAttributes((LivingEntity) entity, level);
-        }
     }
 
     public double getDistanceFromOrigin(Entity mob) {

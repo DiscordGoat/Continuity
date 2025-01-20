@@ -26,10 +26,18 @@ public class VillagerWorkCycleManager implements Listener {
 
     private final JavaPlugin plugin;
     private static VillagerWorkCycleManager instance;
-    public VillagerWorkCycleManager(JavaPlugin plugin) {
+
+
+    private static final int WORK_CYCLE_TICKS = 24000;
+
+    // We will count down from WORK_CYCLE_TICKS to 0 every second.
+    private int ticksUntilNextWorkCycle = WORK_CYCLE_TICKS;
+
+    private VillagerWorkCycleManager(JavaPlugin plugin) {
         this.plugin = plugin;
-        startGlobalScheduler();
+        startGlobalScheduler();  // Start the new 1-second countdown
     }
+
     public static VillagerWorkCycleManager getInstance(JavaPlugin plugin) {
         if (instance == null) {
             instance = new VillagerWorkCycleManager(plugin);
@@ -37,21 +45,45 @@ public class VillagerWorkCycleManager implements Listener {
         return instance;
     }
 
-public void startGlobalScheduler() {
-    // Run villager work once per Minecraft day
-    new BukkitRunnable() {
-        @Override
-        public void run() {
-            // Iterate over all villagers in the world 
-            for (Villager villager : plugin.getServer().getWorlds().stream()
-                    .flatMap(world -> world.getEntitiesByClass(Villager.class).stream())
-                    .toList()) {
-                // Perform work for each villager
-                performVillagerWork(villager);
+    /**
+     * Starts a 1-second interval scheduler that counts down ticksUntilNextWorkCycle.
+     */
+    private void startGlobalScheduler() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                // Decrement the countdown by 20 (because this runs every 20 ticks = 1 second).
+                ticksUntilNextWorkCycle -= 20;
+
+                // Once we reach zero or below, run the cycle and reset the timer
+                if (ticksUntilNextWorkCycle <= 0) {
+                    runVillagerWorkCycle(); // your existing logic
+                    ticksUntilNextWorkCycle = WORK_CYCLE_TICKS;
+                }
             }
+        }.runTaskTimer(plugin, 0L, 20L); // run every 20 ticks (1 second)
+    }
+
+    /**
+     * Returns how many seconds remain before the next work cycle triggers.
+     */
+    public int getSecondsUntilNextWorkCycle() {
+        // Convert the remaining ticks to seconds
+        return ticksUntilNextWorkCycle / 20;
+    }
+
+    /**
+     * Runs the actual villager work cycle logic (previously in startGlobalScheduler()).
+     */
+    private void runVillagerWorkCycle() {
+        // Iterate over all villagers in all worlds
+        for (Villager villager : plugin.getServer().getWorlds().stream()
+                .flatMap(world -> world.getEntitiesByClass(Villager.class).stream())
+                .toList()) {
+            // Perform work for each villager
+            performVillagerWork(villager);
         }
-    }.runTaskTimer(plugin, 0L, 24000L); // Run once per Minecraft day (20 min)
-}
+    }
 
     private void performVillagerWork(Villager villager) {
         Villager.Profession profession = villager.getProfession();
@@ -1500,7 +1532,7 @@ Random random = new Random();
                  BLACK_GLAZED_TERRACOTTA -> true;
 
             // Brick Variants
-            case BRICKS, BRICK_STAIRS, BRICK_SLAB, BRICK_WALL,
+            case BRICKS, POLISHED_BLACKSTONE_BRICKS, BRICK_STAIRS, BRICK_SLAB, BRICK_WALL,
                  STONE_BRICKS, STONE_BRICK_STAIRS, STONE_BRICK_SLAB, STONE_BRICK_WALL,
                  MOSSY_STONE_BRICKS, MOSSY_STONE_BRICK_STAIRS, MOSSY_STONE_BRICK_SLAB, MOSSY_STONE_BRICK_WALL,
                  NETHER_BRICKS, NETHER_BRICK_STAIRS, NETHER_BRICK_SLAB, NETHER_BRICK_WALL,

@@ -130,7 +130,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.DRIED_KELP,
                 "Seafood Feast",
-                Arrays.asList("Dried Kelp Block", "Cod", "Salmon", "Tropical Fish", "Calamari", "Heart of the Sea"),
+                Arrays.asList("Dried Kelp Block", "Cod", "Salmon", "Tropical Fish", "Calamari"),
                 1000
         ));
         recipeRegistry.add(new CulinaryRecipe(
