@@ -196,16 +196,21 @@ public class UltimateEnchantmentListener implements Listener {
         while (!queue.isEmpty() && visited.size() <= maxBlocks) {
             Block currentBlock = queue.poll();
             // Break the current log block (consume durability for each) and give XP
-            breakBlock(player, currentBlock, true);
-            givePlayerXp(player);  // Gives 1 XP to the player for each wood block broken
-            ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
             Random random = new Random();
-            if (random.nextInt(100) < 4) { // 1% chance
+            ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
+            if (random.nextInt(100) < 1) { // 1% chance
+                System.out.println("Current block type: " + currentBlock.getType());
                 if (isWoodBlock(currentBlock.getType())) {
+                    System.out.println("Block is wood.");
                     forestSpiritManager.spawnSpirit(currentBlock.getType(), player.getLocation(), player);
                     player.sendMessage(ChatColor.LIGHT_PURPLE + "A Forest Spirit has been summoned!");
+                } else {
+                    System.out.println("Block is not wood.");
                 }
             }
+            breakBlock(player, currentBlock, true);
+            givePlayerXp(player);  // Gives 1 XP to the player for each wood block broken
+
 
             // Check adjacent blocks
             for (int x = -1; x <= 1; x++) {

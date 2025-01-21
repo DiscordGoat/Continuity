@@ -373,6 +373,7 @@ public class VillagerTradeManager implements Listener {
         defaultConfig.set("SHEPHERD.sells", shepherdSells);
 // Toolsmith Purchases
         List<Map<String, Object>> toolsmithPurchases = new ArrayList<>();
+        toolsmithPurchases.add(createTradeMap("IRON_INGOT", 1, 6, 1)); // Material
         toolsmithPurchases.add(createTradeMap("FISHING_ROD", 1, 6, 1)); // Material
         toolsmithPurchases.add(createTradeMap("SHEARS", 1, 6, 1)); // Material
         toolsmithPurchases.add(createTradeMap("BUCKET", 1, 8, 1)); // Material

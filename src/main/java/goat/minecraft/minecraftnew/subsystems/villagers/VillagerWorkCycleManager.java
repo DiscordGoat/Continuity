@@ -96,6 +96,9 @@ public class VillagerWorkCycleManager implements Listener {
                 performFishermanWork(villager, searchRadius);
                 performFishermanWork(villager, searchRadius);
                 performFishermanWork(villager, searchRadius);
+                performFishermanWork(villager, searchRadius);
+                performFishermanWork(villager, searchRadius);
+                performFishermanWork(villager, searchRadius);
             }
             case LIBRARIAN -> {
                 performLibrarianWork(villager, searchRadius);
