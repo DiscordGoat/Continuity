@@ -100,7 +100,8 @@ public class ForestSpiritManager implements Listener {
         if (!logsAndStems.contains(block.getType())) {
             return; // Not a log or stem, ignore
         }
-
+        ForestryManager forestryManager = MinecraftNew.getInstance().getForestryManager();
+        forestryManager.incrementForestryCount(player);
         // Award XP based on the log type
         int xpAwarded = getXPAwarded(block.getType());
         xpManager.addXP(player, "Forestry", xpAwarded);
@@ -117,25 +118,12 @@ public class ForestSpiritManager implements Listener {
 
         // 1% chance to receive a Brewing Apple
         if (random.nextInt(100) + 1 <= 1) { // 1% chance
-            ItemStack brewingApple = CustomItemManager.createCustomItem(
-                    Material.APPLE,
-                    ChatColor.GOLD + "Perfect Apple",
-                    Arrays.asList(
-                            ChatColor.GRAY + "An apple a day...",
-                            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "A rare consumable that heals and feeds.",
-                            ChatColor.DARK_PURPLE + "Artifact"
-                    ),
-                    1,
-                    true, // Unbreakable
-                    true  // Add enchantment shimmer
-            );
-            player.getInventory().addItem(brewingApple);
+            player.getInventory().addItem(ItemRegistry.getBrewingApple());
             player.sendMessage(ChatColor.YELLOW + "You received a healing Apple!");
         }
 
         // 0.5% chance to receive a "Secrets of Infinity" Arrow
         if (random.nextInt(1200) + 1 == 1) { // 0.5% chance
-
             player.getInventory().addItem(ItemRegistry.getSecretsOfInfinity());
             player.sendMessage(ChatColor.YELLOW + "You received Secrets of Infinity!");
         }

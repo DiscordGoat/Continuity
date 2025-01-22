@@ -112,6 +112,10 @@ public class PetCommand implements CommandExecutor {
             //forestry pets
             petManager.createPet(targetPlayer, "Piglin Brute", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.CHALLENGE, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.ELITE);
             petManager.createPet(targetPlayer, "Vindicator", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SKEPTICISM, PetManager.PetPerk.GREED, PetManager.PetPerk.ELITE);
+            petManager.createPet(targetPlayer, "Ent", PetManager.Rarity.LEGENDARY, 100, Particle.END_ROD, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.GROOT);
+            petManager.createPet(targetPlayer, "Monkey", PetManager.Rarity.EPIC, 100, Particle.VILLAGER_HAPPY, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.COLLECTOR);
+            petManager.createPet(targetPlayer, "Raccoon", PetManager.Rarity.RARE, 100, Particle.VILLAGER_HAPPY, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS);
+
             //farming pets
             petManager.createPet(targetPlayer, "Pig", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.SUPERIOR_ENDURANCE, PetManager.PetPerk.COLLECTOR);
             petManager.createPet(targetPlayer, "Mooshroom", PetManager.Rarity.EPIC, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR);

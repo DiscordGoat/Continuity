@@ -9,6 +9,8 @@ import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
 import goat.minecraft.minecraftnew.other.recipes.ViewRecipeCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
+import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
+import goat.minecraft.minecraftnew.subsystems.forestry.ForestryManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
@@ -74,6 +76,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private EngineerVillagerManager engineerVillagerManager;
     private LockedRecipeManager lockedRecipeManager;
     private RecipeManager recipeManager;
+    private ForestryManager forestryManager;
 
     public static Collections getCollectionsManager() {
         return collectionsManager;
@@ -124,6 +127,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        forestryManager = new ForestryManager(this);
+        getServer().getPluginManager().registerEvents(new Forestry(), this);
+
         Objects.requireNonNull(Bukkit.getWorld("world")).setGameRule(GameRule.DO_MOB_SPAWNING, true); // Re-enable monster spawns
 
         new ArmorStandCommand(this); // This will automatically set up the command
@@ -396,5 +402,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public static MinecraftNew getInstance() {
 
         return instance; // Provide a static method to get the instance
+    }
+    public ForestryManager getForestryManager() {
+        return forestryManager;
     }
 }

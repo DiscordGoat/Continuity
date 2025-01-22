@@ -80,35 +80,43 @@ public class Mining implements Listener {
             Material.NETHER_GOLD_ORE,
             Material.ANCIENT_DEBRIS
     );
-    public void compactStoneBlocks(Player player) {
-        // Define the array of stone-based materials.
-        Material[] stoneBasedBlocks = {
-                Material.STONE, Material.GRANITE, Material.DIORITE, Material.ANDESITE,
-                Material.DEEPSLATE, Material.TUFF, Material.CALCITE,
-                Material.COBBLED_DEEPSLATE, Material.TUFF, Material.COBBLESTONE
-        };
+        public void compactStoneBlocks(Player player) {
+            // Define the array of stone-based materials
+            Material[] stoneBasedBlocks = {
+                    Material.STONE, Material.GRANITE, Material.DIORITE, Material.ANDESITE,
+                    Material.DEEPSLATE, Material.TUFF, Material.CALCITE,
+                    Material.COBBLED_DEEPSLATE, Material.TUFF, Material.COBBLESTONE
+            };
 
-        // Count total stone-based blocks in the player's inventory.
-        int totalStoneCount = 0;
-        for (Material material : stoneBasedBlocks) {
-            totalStoneCount += countMaterialInInventory(player, material);
+            // Get the active pet level if the player has one
+            PetManager petManager = PetManager.getInstance(plugin);
+            int petLevel = petManager.getActivePet(player) != null ? petManager.getActivePet(player).getLevel() : 1;
+
+            // Calculate the required amount of materials based on pet level
+            int requiredMaterials = Math.max(256 - (petLevel - 1) * (256 - 64) / 99, 64);
+
+            // Count total stone-based blocks in the player's inventory
+            int totalStoneCount = 0;
+            for (Material material : stoneBasedBlocks) {
+                totalStoneCount += countMaterialInInventory(player, material);
+            }
+
+            // Check if the player has enough blocks to compact
+            if (totalStoneCount >= requiredMaterials) {
+                // Remove the required amount of stone-based blocks from inventory
+                removeMaterialsFromInventory(player, stoneBasedBlocks, requiredMaterials);
+
+                // Give the player the custom Compact Stone item
+                giveCompactStone(player);
+
+                // Notify the player
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
+                player.sendMessage(ChatColor.GOLD + "You have successfully created Compact Stone!");
+            } else {
+                // Notify the player if they don't have enough blocks
+                player.sendMessage(ChatColor.RED + "You need at least " + requiredMaterials + " stone-based blocks to create Compact Stone.");
+            }
         }
-
-        // Check if the player has enough blocks to compact.
-        if (totalStoneCount >= 64) {
-            // Remove 64 stone-based blocks from inventory.
-            removeMaterialsFromInventory(player, stoneBasedBlocks, 64);
-
-            // Give the player the custom compact stone item.
-            giveCompactStone(player);
-
-            // Send a message to the player.
-            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
-        } else {
-            // Send a message if not enough blocks.
-            player.sendMessage(ChatColor.RED + "You need at least 64 stone-based blocks to create Compact Stone.");
-        }
-    }
 
     /**
      * Counts the total number of a specific material in a player's inventory.

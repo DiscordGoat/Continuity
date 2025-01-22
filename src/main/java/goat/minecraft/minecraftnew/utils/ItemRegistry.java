@@ -1222,7 +1222,18 @@ public class ItemRegistry {
                 , true
         );
     }
-
+    public static ItemStack getCompactWood() {
+        return createCustomItem(
+                Material.STRIPPED_SPRUCE_LOG,
+                ChatColor.YELLOW + "Compact Wood",
+                List.of(ChatColor.GRAY + "Compressed Wood.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Valuable.",
+                        ChatColor.DARK_PURPLE + "Trophy Item"),
+                1,
+                false // Set to true if you want it to be unbreakable
+                , true
+        );
+    }
     public static ItemStack getCompactStone() {
         return createCustomItem(
                 Material.CRACKED_DEEPSLATE_BRICKS,
@@ -1270,6 +1281,20 @@ public class ItemRegistry {
                 1,
                 false // Set to true if you want it to be unbreakable
                 , true
+        );
+    }
+    public static ItemStack getBrewingApple() {
+        return createCustomItem(
+                Material.APPLE,
+                ChatColor.GOLD + "Perfect Apple",
+                Arrays.asList(
+                        ChatColor.GRAY + "An apple a day...",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "A rare consumable that heals and feeds.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                true, // Unbreakable
+                true  // Add enchantment shimmer
         );
     }
     public static ItemStack getMithrilChunk() {

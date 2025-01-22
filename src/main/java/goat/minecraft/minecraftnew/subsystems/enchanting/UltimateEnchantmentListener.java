@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.enchanting;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.ForestryManager;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import net.minecraft.world.entity.monster.IMonster;
 import org.bukkit.*;
@@ -109,12 +110,99 @@ public class UltimateEnchantmentListener implements Listener {
 
                 // Optional: If the tool breaks, remove it
                 if (tool.getDurability() >= tool.getType().getMaxDurability()) {
-                    tool.setAmount(0); // Break the tool
                     player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
                 }
             }
         }
     }
+    private void breakBlocksGradually(Player player, List<Block> blocks, boolean consumeDurabilityIfNotOre) {
+        final ItemStack tool = player.getInventory().getItemInMainHand();
+
+        // 1) Calculate total durability usage instantly if we want to consume it.
+        if (consumeDurabilityIfNotOre
+                && tool != null
+                && tool.getType().getMaxDurability() > 0) {
+
+            // Gather unbreaking level (e.g., Unbreaking VI => 6 => 90% skip chance).
+            int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.DURABILITY);
+            double skipChance = 0.15 * unbreakingLevel;  // 15% per Unbreaking level
+
+            // We will accumulate how many times durability is actually used
+            int totalDurabilityUsed = 0;
+
+            for (Block block : blocks) {
+                // If the block is NOT ore, we run the random skip check
+                if (!isOreBlock(block)) {
+                    // If random > skipChance => consume durability
+                    // (i.e. the "worst-case" scenario for the player)
+                    if (Math.random() > skipChance) {
+                        totalDurabilityUsed++;
+                    }
+                }
+            }
+
+            // Now apply all that durability at once
+            short currentDamage = tool.getDurability();
+            short newDamage = (short) (currentDamage + totalDurabilityUsed);
+            tool.setDurability(newDamage);
+
+            // If the tool breaks, play break sound (and optionally remove the item)
+            if (tool.getDurability() >= tool.getType().getMaxDurability()) {
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
+                // Optional: remove item from player’s hand
+                // player.getInventory().setItemInMainHand(null);
+            }
+        }
+
+        // 2) Break the blocks gradually, but SKIP any additional durability usage,
+        //    because we've already applied it instantly above.
+
+        // Decide how many blocks we break per tick (aim for ~20 seconds total).
+        // For 200 blocks, we have 400 ticks in 20 seconds => ~0.5 blocks/tick -> round up to 1.
+        // Tweak logic/variables as desired.
+        int totalTicks = 10 * 20; // 10 seconds * 20 = 200 ticks (adjust to your liking)
+        double rawBpt = (double) blocks.size() / (double) totalTicks;
+        int blocksPerTick = (int) Math.ceil(rawBpt);
+
+        // Cap between 1 and 10
+        if (blocksPerTick < 1) {
+            blocksPerTick = 1;
+        }
+        if (blocksPerTick > 10) {
+            blocksPerTick = 10;
+        }
+
+        int finalBlocksPerTick = blocksPerTick;
+
+        // Now schedule the actual block-breaking over time
+        new BukkitRunnable() {
+            int index = 0; // current block index
+
+            @Override
+            public void run() {
+                for (int i = 0; i < finalBlocksPerTick && index < blocks.size(); i++, index++) {
+                    Block block = blocks.get(index);
+
+                    // Drop the block's natural drops
+                    // (No more durability check here, we've already handled it.)
+                    for (ItemStack drop : block.getDrops(tool)) {
+                        if (drop != null && drop.getType() != Material.AIR) {
+                            block.getWorld().dropItemNaturally(block.getLocation(), drop);
+                        }
+                    }
+
+                    // Set block to AIR
+                    block.setType(Material.AIR);
+                }
+
+                // Stop the task if we've processed all blocks
+                if (index >= blocks.size()) {
+                    this.cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0, 1); // Run every tick
+    }
+
 
 
     /**
@@ -184,74 +272,89 @@ public class UltimateEnchantmentListener implements Listener {
      * Treecapitator logic: BFS to break connected logs and nearby leaves.
      */
     private void breakConnectedWoodAndLeaves(Player player, Block startBlock) {
+        // BFS to find connected logs
         Queue<Block> queue = new ArrayDeque<>();
-        Set<Block> visited = new HashSet<>();
-        Set<Block> tempVisited = new HashSet<>(); // Temporary set to store blocks during iteration
-        int maxBlocks = 400;
+        Set<Block> visitedLogs = new HashSet<>();
+        int maxBlocks = 400; // limit so players don’t accidentally chop entire forest
+
+        // For leaves around logs
+        Set<Block> leavesToBreak = new HashSet<>();
         int leavesRange = 3;
 
+        // Prepare BFS
         queue.add(startBlock);
-        visited.add(startBlock);
+        visitedLogs.add(startBlock);
 
-        while (!queue.isEmpty() && visited.size() <= maxBlocks) {
+        while (!queue.isEmpty() && visitedLogs.size() <= maxBlocks) {
             Block currentBlock = queue.poll();
-            // Break the current log block (consume durability for each) and give XP
-            Random random = new Random();
-            ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
-            if (random.nextInt(100) < 1) { // 1% chance
-                System.out.println("Current block type: " + currentBlock.getType());
-                if (isWoodBlock(currentBlock.getType())) {
-                    System.out.println("Block is wood.");
-                    forestSpiritManager.spawnSpirit(currentBlock.getType(), player.getLocation(), player);
-                    player.sendMessage(ChatColor.LIGHT_PURPLE + "A Forest Spirit has been summoned!");
-                } else {
-                    System.out.println("Block is not wood.");
-                }
+
+            // Make sure this block is actually wood before we branch out
+            if (!isWoodBlock(currentBlock.getType())) {
+                continue;
             }
-            breakBlock(player, currentBlock, true);
-            givePlayerXp(player);  // Gives 1 XP to the player for each wood block broken
 
+            // ---- Original BFS logic: If it’s wood, increment forestry count, 1% spirit spawn, etc. ----
+            ForestryManager forestryManager = MinecraftNew.getInstance().getForestryManager();
+            forestryManager.incrementForestryCount(player);
 
-            // Check adjacent blocks
+            // 1% chance to summon a Forest Spirit if the block is wood
+            Random random = new Random();
+            if (random.nextInt(100) < 1) { // 1% chance
+                ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
+                forestSpiritManager.spawnSpirit(currentBlock.getType(), player.getLocation(), player);
+                player.sendMessage(ChatColor.LIGHT_PURPLE + "A Forest Spirit has been summoned!");
+            }
+
+            // Check all neighbors within a 1-block radius for more wood
             for (int x = -1; x <= 1; x++) {
                 for (int y = -1; y <= 1; y++) {
                     for (int z = -1; z <= 1; z++) {
+                        // Skip (0,0,0)
                         if (x == 0 && y == 0 && z == 0) continue;
-                        Block adjacentBlock = currentBlock.getRelative(x, y, z);
 
-                        if (isWoodBlock(adjacentBlock.getType()) && !visited.contains(adjacentBlock)) {
-                            queue.add(adjacentBlock);
-                            tempVisited.add(adjacentBlock);  // Add to temporary set instead of directly to visited
+                        Block adjacent = currentBlock.getRelative(x, y, z);
+                        if (!visitedLogs.contains(adjacent) && isWoodBlock(adjacent.getType())) {
+                            visitedLogs.add(adjacent);
+                            queue.add(adjacent);
                         }
                     }
                 }
             }
         }
 
-        visited.addAll(tempVisited); // Add all at once after the iteration of the queue is complete
-
-        // Break leaves within 5 blocks range but do not give XP
-        for (Block woodBlock : visited) {
+        // ---- Now we have a set of all connected logs (visitedLogs). ----
+        // BFS is complete. Next, gather leaves around those logs:
+        for (Block log : visitedLogs) {
             for (int x = -leavesRange; x <= leavesRange; x++) {
                 for (int y = -leavesRange; y <= leavesRange; y++) {
                     for (int z = -leavesRange; z <= leavesRange; z++) {
-                        Block leafBlock = woodBlock.getRelative(x, y, z);
-                        if (isLeafBlock(leafBlock.getType()) && !visited.contains(leafBlock)) {
-                            breakBlock(player, leafBlock, true);
-                            // No XP given for breaking leaf blocks
-                            // Do not modify 'visited' during this nested iteration
+                        Block leafBlock = log.getRelative(x, y, z);
+                        if (isLeafBlock(leafBlock.getType())) {
+                            leavesToBreak.add(leafBlock);
                         }
                     }
                 }
             }
         }
-    }
 
-
-
-    private void givePlayerXp(Player player) {
+        // ---- Give XP for each wood block (similar to your BFS code). ----
+        // (Alternatively, you can do this inside BFS itself. Up to you.)
         XPManager xpManager = new XPManager(plugin);
-        xpManager.addXP(player, "Forestry", 8);
+        for (Block woodBlock : visitedLogs) {
+            xpManager.addXP(player, "Forestry", 5);
+        }
+
+        // ---- Finally, break them all gradually! ----
+        // 1) Break logs with durability usage, because they’re not ores.
+        //    We also want them to drop items.
+        //    This means "consumeDurabilityIfNotOre=true".
+        breakBlocksGradually(player, new ArrayList<>(visitedLogs), true);
+
+        // 2) Break leaves. Typically we do not give XP for leaves, nor skip tool durability,
+        //    but you can set it how you like.
+        //    For most “treecapitator” tools, you do use durability on leaves.
+        //    If you do *not* want that, set consumeDurabilityIfNotOre = false.
+        breakBlocksGradually(player, new ArrayList<>(leavesToBreak), true);
     }
 
 

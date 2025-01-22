@@ -74,6 +74,9 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Blaze", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTgwNDZkMzhhOTdjOTFmNTk5NDllYTc0MmVmZDc0ODI3Y2NlZGVmZTk4NTI4NTUyY2QzMjdiNGI2MWMzOWI1ZiJ9fX0=");
         PET_TEXTURES.put("Enderman", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGYyNDc2N2M4MTM4YjNkZmVjMDJmNzdiZDE1MTk5NGQ0ODBkNGU4Njk2NjRjZTA5YTI2YjE5Mjg5MjEyMTYyYiJ9fX0=");
         PET_TEXTURES.put("Drowned", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2JmOGM1NzJhNzM3ZDgyNzVlM2MzOGFiY2ZlYmRiMTI1YmUzYjkwZmMxZTVlNzllNmVkZDU0OTlhYTYyYmVkNiJ9fX0=");
+        PET_TEXTURES.put("Raccoon", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmU5ZGFhOTllZTQ1YzAxMWVkMDc5ZDhmYzhhN2ViNzFiNTk2Yjg2NDQxNzA4YWQwOTU5ODNiNjAxZGIyMTE0YiJ9fX0=");
+        PET_TEXTURES.put("Monkey", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDAxNjkzODM2ZjIwZjA0MWM2YjZhZDhhMDE4N2E0OTU2N2QwYzU3ZTM0MGEwMmU1NjFkNGQxNmU1NjkxZWI5YSJ9fX0=");
+        PET_TEXTURES.put("Ent", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmZmZjg2Yzk5MTQxY2ViMDI2MTVlODg4Y2VkNDk1ZGI3NGIzYmMzMmIyYjlkMWQyYTdhNTdhOTZiNmFmZTY4YiJ9fX0=");
 
         //sea creature textures...
         PET_TEXTURES.put("Shark", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2QyMTEzZmJhNTFiODM2NTIyOWUwZmYxZjIwMWY1MzMxNDgzMzcxZjE4NjA1N2JhNzQyMDMyOTRkMDYxMDgyZiJ9fX0=");
@@ -461,7 +464,8 @@ public class PetManager implements Listener {
 
         switch (perk) {
             case ROCK_EATER:
-                return ChatColor.GRAY + "Compacts 64 stone based blocks into " + ChatColor.DARK_BLUE + "Compact Stone every ore break.";
+                int requiredMaterials = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
+                return ChatColor.GRAY + "Compacts " + requiredMaterials + " stone into " + ChatColor.DARK_BLUE + "Compact Stone" + ChatColor.GRAY + " every ore break.";
             case WATERLOGGED:
                 return ChatColor.GRAY + "Grants infinite " + ChatColor.AQUA + "Water Breathing.";
             case ASPECT_OF_THE_END:
@@ -566,6 +570,10 @@ public class PetManager implements Listener {
                 return "Increases " + ChatColor.RED + "melee damage " + ChatColor.GRAY + "by " + ChatColor.RED + (0.2 * level) + "%.";
             case NO_HIBERNATION:
                 return "Increases " + ChatColor.RED + "Natural Regeneration " + ChatColor.GRAY + "by " + ChatColor.RED + (level) + "%.";
+            case GROOT:
+                int requiredMaterialsWood = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
+                return ChatColor.GRAY + "Compacts " + requiredMaterialsWood + " wood into " + ChatColor.GREEN + "Compact Logs" + ChatColor.GRAY + " when breaking wood";
+
             default:
                 return ChatColor.GRAY + "Static effect or undefined scaling.";
         }
@@ -821,7 +829,8 @@ public class PetManager implements Listener {
         SECOND_WIND("Second Wind", ChatColor.GOLD + "Provides [Lvl] seconds of regeneration when taking damage."),
         SHOTCALLING("Shotcalling", ChatColor.GOLD + "Increases arrow damage by 1% per [Lvl]"),
         ROCK_EATER("Ore Magnet", ChatColor.GOLD + ""),
-        NO_HIBERNATION("No Hibernation", ChatColor.GOLD + "");
+        NO_HIBERNATION("No Hibernation", ChatColor.GOLD + ""),
+        GROOT("Groot", ChatColor.GOLD + "");
 
         private final String displayName;
         private final String description;
