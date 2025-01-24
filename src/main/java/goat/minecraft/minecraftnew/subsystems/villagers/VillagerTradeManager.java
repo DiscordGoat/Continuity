@@ -28,7 +28,8 @@ public class VillagerTradeManager implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<Player, Villager> playerVillagerMap = new HashMap<>(); // Map to store player-villager interactions
-
+    private boolean toggleFlag = false;
+    private boolean toggleFlagVillagerButton = false;
     // Whitelists for trades
     private final Map<Villager.Profession, List<TradeItem>> purchaseWhitelist = new HashMap<>();
     private final Map<Villager.Profession, List<TradeItem>> sellWhitelist = new HashMap<>();
@@ -211,7 +212,7 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> weaponsmithSells = new ArrayList<>();
         weaponsmithSells.add(createTradeMap("IRON_INGOT", 3, 1, 1));
         weaponsmithSells.add(createTradeMap("GOLD_INGOT", 2, 1, 1));
-        weaponsmithSells.add(createTradeMap("DIAMOND", 1, 8, 1));
+        weaponsmithSells.add(createTradeMap("DIAMOND", 1, 4, 1));
         weaponsmithSells.add(createTradeMap("ZOMBIE_HEAD", 1, 8, 1));
         weaponsmithSells.add(createTradeMap("SKELETON_SKULL", 1, 8, 1));
         weaponsmithSells.add(createTradeMap("CREEPER_HEAD", 1, 8, 1));
@@ -402,7 +403,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithSells.add(createTradeMap("CHARCOAL", 3, 2, 1)); // Material
         toolsmithSells.add(createTradeMap("IRON_INGOT", 3, 1, 1)); // Material
         toolsmithSells.add(createTradeMap("GOLD_INGOT", 3, 2, 1)); // Material
-        toolsmithSells.add(createTradeMap("DIAMOND", 1, 6, 1)); // Material
+        toolsmithSells.add(createTradeMap("DIAMOND", 1, 4, 1)); // Material
         toolsmithSells.add(createTradeMap("LAPIS_GEMSTONE", 1, 32, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("EMERALD_GEMSTONE", 1, 64, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("REDSTONE_GEMSTONE", 1, 32, 3)); // Custom Item
@@ -447,7 +448,7 @@ public class VillagerTradeManager implements Listener {
 
         armorerSells.add(createTradeMap("IRON_INGOT", 3, 1, 1)); // Material
         armorerSells.add(createTradeMap("GOLD_INGOT", 3, 2, 1)); // Material
-        armorerSells.add(createTradeMap("DIAMOND", 1, 6, 1)); // Material
+        armorerSells.add(createTradeMap("DIAMOND", 1, 4, 1)); // Material
         armorerSells.add(createTradeMap("AQUA_AFFINITY", 1, 16, 2)); // Custom Item
         armorerSells.add(createTradeMap("SWIFT_SNEAK", 1, 16, 2)); // Custom Item
 
@@ -882,14 +883,37 @@ public class VillagerTradeManager implements Listener {
 
             playerVillagerMap.put(player, villager); // Store the villager in the map with the player
             if(!(villager.getProfession() == Villager.Profession.NONE)) {
-                openVillagerTradeGUI(player, villager);
+                openVillagerTradeGUI(player);
             }
         }
     }
+    private int calculateDiscountedPrice(Player player, int basePrice) {
+        PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
+        PetManager.Pet activePet = petManager.getActivePet(player);
 
-    private void openVillagerTradeGUI(Player player, Villager villager) {
+        double finalCost = basePrice;
+
+        // Apply Haggle perk
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.HAGGLE)) {
+            int petLevel = activePet.getLevel();
+            double maxDiscount = 0.25; // 25% discount
+            int maxLevel = 100;
+            double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
+            finalCost *= (1 - discountFactor);
+        }
+
+        // Apply Bartering discount
+        XPManager xpManager = new XPManager(plugin);
+        int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
+        double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001));
+        finalCost *= (1 - barteringDiscount);
+
+        return Math.max(1, (int) Math.floor(finalCost));
+    }
+
+    private void openVillagerTradeGUI(Player player) {
         Inventory tradeGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Villager Trading");
-        villager = playerVillagerMap.get(player); // Retrieve the stored villager directly
+        Villager villager = playerVillagerMap.get(player); // Retrieve the stored villager directly
 
         // Get villager profession and level
         Villager.Profession profession = villager.getProfession();
@@ -920,7 +944,13 @@ public class VillagerTradeManager implements Listener {
                 ItemMeta meta = displayItem.getItemMeta();
                 if (meta != null) {
                     List<String> lore = new ArrayList<>();
-                    lore.add(ChatColor.RED + "Price: " + tradeItem.getEmeraldValue() + " emerald(s)");
+
+                    // Calculate prices
+                    int basePrice = tradeItem.getEmeraldValue();
+                    int finalPrice = calculateDiscountedPrice(player, basePrice);
+
+                    lore.add(ChatColor.RED + "Original Price: " + basePrice + " emerald(s)");
+                    lore.add(ChatColor.GREEN + "Discounted Price: " + finalPrice + " emerald(s)");
                     lore.add(ChatColor.YELLOW + "Click to purchase " + tradeItem.getQuantity() + " item(s)");
                     meta.setLore(lore);
                     displayItem.setItemMeta(meta);
@@ -968,8 +998,107 @@ public class VillagerTradeManager implements Listener {
             }
         }
 
+        // Add Villager Pet Button (slot 49)
+        addVillagerPetButton(player, tradeGUI);
+
         player.openInventory(tradeGUI);
     }
+
+    /**
+     * Adds a Villager Pet Button at the bottom-middle of the GUI (slot 49).
+     * If the player has a Villager pet, show a simple "Summon Villager Pet" button.
+     * Otherwise, show a locked (gray pane) button.
+     */
+    private void addVillagerPetButton(Player player, Inventory tradeGUI) {
+        PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
+        PetManager.Pet villagerPet = petManager.getPet(player, "Villager");
+
+        if (villagerPet != null) {
+            // Player owns a Villager pet
+            ItemStack petButton = new ItemStack(Material.VILLAGER_SPAWN_EGG);
+            ItemMeta meta = petButton.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(ChatColor.GOLD + "Summon Villager Pet");
+                List<String> lore = new ArrayList<>();
+                lore.add(ChatColor.YELLOW + "Click to summon your Villager pet.");
+                meta.setLore(lore);
+                petButton.setItemMeta(meta);
+            }
+            tradeGUI.setItem(49, petButton);
+        } else {
+            // Player does not own a Villager pet
+            ItemStack lockedButton = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+            ItemMeta meta = lockedButton.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(ChatColor.RED + "No Villager Pet Found");
+                lockedButton.setItemMeta(meta);
+            }
+            tradeGUI.setItem(49, lockedButton);
+        }
+    }
+
+    /**
+     * Handles clicks in the "Villager Trading" GUI.
+     * Checks if the player clicked the bottom-middle slot (49) and summons the Villager pet.
+     */
+    @EventHandler
+    public void onVillagerPetButtonClick(InventoryClickEvent event) {
+        // Check if it's our Villager Trading GUI and the correct slot
+        if (!event.getView().getTitle().equals(ChatColor.GREEN + "Villager Trading")) return;
+        if (event.getSlot() != 49) return;
+
+        // Avoid double-click spam
+        if (!toggleFlagVillagerButton) {
+            toggleFlagVillagerButton = true;
+            event.setCancelled(true);
+
+            Player player = (Player) event.getWhoClicked();
+            openVillagerTradeGUI(player);
+
+            PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
+            PetManager.Pet villagerPet = petManager.getPet(player, "Villager");
+
+            // If the slot is a pane or player doesn't have a Villager pet, do nothing
+            if (event.getCurrentItem() == null
+                    || event.getCurrentItem().getType() == Material.GRAY_STAINED_GLASS_PANE
+                    || villagerPet == null) {
+                player.sendMessage(ChatColor.RED + "You do not have a Villager pet.");
+                openVillagerTradeGUI(player);
+                return;
+            }
+
+            // Remember the old pet
+            PetManager.Pet oldPet = petManager.getActivePet(player);
+
+            // Summon Villager pet
+            petManager.summonPet(player, "Villager");
+            player.sendMessage(ChatColor.GREEN + "Villager Pet summoned for 30 seconds!");
+            openVillagerTradeGUI(player);
+
+            // Schedule revert after 15 seconds
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                if (oldPet != null) {
+                    // Resummon the old pet
+                    petManager.summonPet(player, oldPet.getName());
+                    player.playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1.0f, 1.0f);
+
+                } else {
+                    // Despawn if there was no previously equipped pet
+                    petManager.despawnPet(player);
+                    player.playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1.0f, 1.0f);
+
+                }
+            }, 30 * 20L); // 15 seconds in ticks
+        } else {
+            // Just set the flag back to false if triggered again
+            toggleFlagVillagerButton = false;
+        }
+    }
+
+
+
+
+
 
     private ItemStack createLockedTradeItem() {
         ItemStack lockedItem = new ItemStack(Material.BARRIER);
@@ -985,7 +1114,7 @@ public class VillagerTradeManager implements Listener {
         return lockedItem;
     }
 
-    private boolean toggleFlag = false;
+
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {

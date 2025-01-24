@@ -996,7 +996,7 @@ public class MusicDiscManager implements Listener {
                             interactingPlayer.sendMessage(ChatColor.RED + "No auction item found at this index.");
                         }
                     } else {
-                        interactingPlayer.sendMessage(ChatColor.GRAY + "ArmorStand is not part of the auction.");
+                        //interactingPlayer.sendMessage(ChatColor.GRAY + "ArmorStand is not part of the auction.");
                     }
                 }
             }

@@ -167,7 +167,7 @@ public class SkillsCommand implements CommandExecutor {
             case "Combat":
                 return Arrays.asList(
                         ChatColor.RED + "Level: " + ChatColor.GREEN + level,
-                        ChatColor.RED + "Damage Multiplier: " + ChatColor.GREEN + String.format("%.2f", (1 + level * 0.01)) + "x"
+                        ChatColor.RED + "Damage Multiplier: " + ChatColor.GREEN + String.format("%.2f", (1 + level * 0.02)) + "x"
                 );
             case "Player":
                 multiplier = Math.min(multiplier, 2.00); // Cap multiplier at 2.00x
