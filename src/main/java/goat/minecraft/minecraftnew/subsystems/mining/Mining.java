@@ -84,7 +84,7 @@ public class Mining implements Listener {
             // Define the array of stone-based materials
             Material[] stoneBasedBlocks = {
                     Material.STONE, Material.GRANITE, Material.DIORITE, Material.ANDESITE,
-                    Material.DEEPSLATE, Material.TUFF, Material.CALCITE,
+                    Material.DEEPSLATE, Material.TUFF, Material.CALCITE, Material.GRAVEL,
                     Material.COBBLED_DEEPSLATE, Material.TUFF, Material.COBBLESTONE
             };
 
