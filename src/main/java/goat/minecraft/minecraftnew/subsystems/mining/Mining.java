@@ -112,9 +112,6 @@ public class Mining implements Listener {
                 // Notify the player
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
                 player.sendMessage(ChatColor.GOLD + "You have successfully created Compact Stone!");
-            } else {
-                // Notify the player if they don't have enough blocks
-                player.sendMessage(ChatColor.RED + "You need at least " + requiredMaterials + " stone-based blocks to create Compact Stone.");
             }
         }
 
