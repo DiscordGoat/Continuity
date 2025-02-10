@@ -15,7 +15,6 @@ import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
-import goat.minecraft.minecraftnew.cut_content.MeatCookingManager;
 import goat.minecraft.minecraftnew.utils.KnightMob;
 import goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects.*;
 import goat.minecraft.minecraftnew.subsystems.farming.FarmingEvent;
@@ -37,7 +36,7 @@ import goat.minecraft.minecraftnew.subsystems.smithing.talismans.*;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ArmorReforge;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.SwordReforge;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ToolReforge;
-import goat.minecraft.minecraftnew.subsystems.farming.AutoComposter;
+import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
 import goat.minecraft.minecraftnew.utils.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
@@ -127,6 +126,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
+
         forestryManager = new ForestryManager(this);
         getServer().getPluginManager().registerEvents(new Forestry(), this);
 

@@ -111,7 +111,6 @@ public class Mining implements Listener {
 
                 // Notify the player
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
-                player.sendMessage(ChatColor.GOLD + "You have successfully created Compact Stone!");
             }
         }
 
@@ -186,6 +185,9 @@ public class Mining implements Listener {
         ItemStack tool = player.getInventory().getItemInMainHand();
         if(onlyOres.contains(block.getType())){
             oreCountManager.incrementOreCount(player);
+        }
+        if(ores.contains(block.getType())){
+
             PetManager petManager = PetManager.getInstance(plugin);
             if(petManager.getActivePet(player) != null && petManager.getActivePet(player).getPerks().contains(PetManager.PetPerk.ROCK_EATER)){
                 compactStoneBlocks(player);

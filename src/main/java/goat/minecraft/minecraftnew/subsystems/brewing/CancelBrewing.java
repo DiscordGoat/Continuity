@@ -352,7 +352,7 @@ public class CancelBrewing implements Listener {
             } else if (durationItem.getType() == Material.REDSTONE_BLOCK) {
                 return 14400; // 12 minutes
             }else if(durationItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Abyssal Venom")){
-                return 28800;
+                return 28800*2;
             }
         }
         return 1200; // Default duration (3 minutes)
@@ -365,7 +365,7 @@ public class CancelBrewing implements Listener {
             } else if (potencyItem.getType() == Material.GLOWSTONE) {
                 return 2; // Potency level 2
             }else if(potencyItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Abyssal Ink")){
-                return 4;
+                return 6;
             }
         }
         return 0; // Default potency level

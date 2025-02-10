@@ -243,10 +243,7 @@ public class PetManager implements Listener {
                     spawnPetParticle(player, pet);
                 }
 
-                player.sendMessage(ChatColor.GREEN + "Your pet '" + pet.getName() + "' has been summoned!");
             }
-        } else {
-            player.sendMessage(ChatColor.RED + "You do not own a pet named " + petName);
         }
     }
 
@@ -573,7 +570,9 @@ public class PetManager implements Listener {
             case GROOT:
                 int requiredMaterialsWood = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
                 return ChatColor.GRAY + "Compacts " + requiredMaterialsWood + " wood into " + ChatColor.GREEN + "Compact Logs" + ChatColor.GRAY + " when breaking wood";
-
+            case COMPOSTER:
+                int requiredMaterialsOrganic = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
+                return ChatColor.GRAY + "Compacts " + requiredMaterialsOrganic + " crops into " + ChatColor.GREEN + "Organic Soil";
             default:
                 return ChatColor.GRAY + "Static effect or undefined scaling.";
         }
@@ -830,7 +829,8 @@ public class PetManager implements Listener {
         SHOTCALLING("Shotcalling", ChatColor.GOLD + "Increases arrow damage by 1% per [Lvl]"),
         ROCK_EATER("Ore Magnet", ChatColor.GOLD + ""),
         NO_HIBERNATION("No Hibernation", ChatColor.GOLD + ""),
-        GROOT("Groot", ChatColor.GOLD + "");
+        GROOT("Groot", ChatColor.GOLD + ""),
+        COMPOSTER("Composter", ChatColor.GOLD + "");
 
         private final String displayName;
         private final String description;

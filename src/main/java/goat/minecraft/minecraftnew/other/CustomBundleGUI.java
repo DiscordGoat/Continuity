@@ -1,13 +1,17 @@
 package goat.minecraft.minecraftnew.other;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -60,6 +64,43 @@ public class CustomBundleGUI implements Listener {
         }
 
         player.openInventory(bundleInventory);
+    }
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (event.getView().getTitle().equals("Backpack")) {
+            ItemStack clickedItem = event.getCurrentItem();
+            ItemStack cursorItem = event.getCursor();
+            Player player = (Player) event.getWhoClicked();
+
+            // Check if the clicked slot is in the Backpack GUI
+            if (event.getClickedInventory() != null
+                    && event.getClickedInventory().getType() != InventoryType.PLAYER) {
+
+                // If the player tries to place a backpack inside the backpack
+                if (isBackpackItem(cursorItem)) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + "You cannot store your backpack inside itself!");
+                }
+            }
+
+            // Prevent moving the backpack inside the GUI by clicking on it
+            if (isBackpackItem(clickedItem)) {
+                event.setCancelled(true);
+                player.sendMessage(ChatColor.RED + "You cannot move your backpack while in the backpack GUI!");
+            }
+        }
+    }
+
+    /**
+     * Checks if an item is a backpack.
+     * Adjust this method to fit your plugin’s backpack detection system.
+     */
+    private boolean isBackpackItem(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR || !item.hasItemMeta()) {
+            return false;
+        }
+        ItemMeta meta = item.getItemMeta();
+        return meta != null && meta.hasDisplayName() && meta.getDisplayName().contains(ChatColor.YELLOW + "Backpack");
     }
 
     @EventHandler

@@ -341,7 +341,7 @@ public class UltimateEnchantmentListener implements Listener {
         // (Alternatively, you can do this inside BFS itself. Up to you.)
         XPManager xpManager = new XPManager(plugin);
         for (Block woodBlock : visitedLogs) {
-            xpManager.addXP(player, "Forestry", 5);
+            xpManager.addXP(player, "Forestry", 3);
         }
 
         // ---- Finally, break them all gradually! ----
@@ -555,6 +555,13 @@ public class UltimateEnchantmentListener implements Listener {
             }
 
             switch (enchantName) {
+                case "warp":
+                    Vector direction = player.getLocation().getDirection().normalize();
+                    Vector offset = direction.multiply(8);
+                    player.teleport(player.getLocation().add(offset));
+                    player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0f);
+                    cooldownMs = 1_000L;
+                    break;
                 case "homing arrows":
                     fireHomingArrows(player);
                     cooldownMs = 15_000L;
@@ -609,13 +616,6 @@ public class UltimateEnchantmentListener implements Listener {
                     player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 600, 1));
                     player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 600, 1));
                     cooldownMs = 120_000L;
-                    break;
-                case "warp":
-                    Vector direction = player.getLocation().getDirection().normalize();
-                    Vector offset = direction.multiply(8);
-                    player.teleport(player.getLocation().add(offset));
-                    player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0f);
-                    cooldownMs = 1_000L;
                     break;
                 case "disc seeker":
                     activateDiscSeeker(player);

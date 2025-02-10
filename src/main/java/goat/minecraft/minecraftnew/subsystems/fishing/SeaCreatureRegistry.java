@@ -215,7 +215,7 @@ public class SeaCreatureRegistry implements Listener {
         List<SeaCreature.DropItem> waterSpiderDrops = new ArrayList<>();
         waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 7, 1, 5));
         waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 7, 1, 4));
-        waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalVenom(), 1, 1, 1));
+        waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalVenom(), 1, 1, 4));
         SEA_CREATURES.add(new SeaCreature(
                 "Water Spider",
                 Rarity.EPIC,
@@ -274,7 +274,7 @@ public class SeaCreatureRegistry implements Listener {
 
         //LEGENDARY
         List<SeaCreature.DropItem> bioluminescentGuardianDrops = new ArrayList<>();
-        bioluminescentGuardianDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalInk(), 3, 1, 1));
+        bioluminescentGuardianDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalInk(), 1, 1, 1));
         bioluminescentGuardianDrops.add(new SeaCreature.DropItem(ItemRegistry.getLuminescentInk(), 1, 1, 1));
         SEA_CREATURES.add(new SeaCreature(
                 "Bioluminescent Guardian",

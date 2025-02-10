@@ -71,7 +71,7 @@ public class KillMonster implements Listener {
             monsterLevel = Math.max(monsterLevel, 1);
 
             // Calculate XP gain
-            int xpGain = 5 + (monsterLevel / 4);
+            int xpGain = 5 + (monsterLevel / 3);
 
             // Add XP to the player
             xpManager.addXP(playerKiller, "Combat", xpGain);

@@ -52,14 +52,14 @@ public class FarmingEvent implements Listener {
     private static final Map<Material, Integer> cropXP = new HashMap<>();
 
     static {
-        cropXP.put(Material.WHEAT, 5); // Common crops
-        cropXP.put(Material.NETHER_WART, 7); // Common crops
-        cropXP.put(Material.POTATOES, 5);
-        cropXP.put(Material.CARROTS, 6);
-        cropXP.put(Material.CARROT, 6);
-        cropXP.put(Material.BEETROOTS, 6); // Slightly rarer crops
-        cropXP.put(Material.MELON, 8); // Uncommon crops
-        cropXP.put(Material.PUMPKIN, 8);
+        cropXP.put(Material.WHEAT, 3); // Common crops
+        cropXP.put(Material.NETHER_WART, 5); // Common crops
+        cropXP.put(Material.POTATOES, 3);
+        cropXP.put(Material.CARROTS, 4);
+        cropXP.put(Material.CARROT, 4);
+        cropXP.put(Material.BEETROOTS, 4); // Slightly rarer crops
+        cropXP.put(Material.MELON, 6); // Uncommon crops
+        cropXP.put(Material.PUMPKIN, 6);
     }
 
     CustomItemManager customItemManager = new CustomItemManager();

@@ -1,6 +1,7 @@
-package goat.minecraft.minecraftnew.subsystems.farming;
+package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,12 +12,19 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class AutoComposter {
 
     private final MinecraftNew plugin;
-    private final Map<Material, Integer> CROPS_TO_CONVERT = new HashMap<>();
+
+    /**
+     * Crops eligible for auto-composting.
+     */
     private final Set<Material> AUTO_COMPOSTER_ELIGIBLE_CROPS = EnumSet.of(
             Material.POTATO,
             Material.CARROT,
@@ -28,48 +36,18 @@ public class AutoComposter {
             Material.PUMPKIN,
             Material.BEETROOT,
             Material.PUMPKIN_SEEDS
-            // Add more crops if needed
+            // Add more crops if desired
     );
+
     private final Map<Player, Location> playerLastLocations = new HashMap<>();
-    private final ItemStack organicSoilItem;
 
     public AutoComposter(MinecraftNew plugin) {
         this.plugin = plugin;
-        initializeMappings();
-        this.organicSoilItem = ItemRegistry.getOrganicSoil();
         startAutoComposterTask();
     }
 
     /**
-     * Initializes the crop to conversion rate mappings.
-     */
-    private void initializeMappings() {
-
-        CROPS_TO_CONVERT.put(Material.POTATO, 32);
-
-        CROPS_TO_CONVERT.put(Material.CARROT, 32);
-
-        CROPS_TO_CONVERT.put(Material.WHEAT, 32);
-
-        CROPS_TO_CONVERT.put(Material.BEETROOT, 32);
-
-        CROPS_TO_CONVERT.put(Material.BEETROOT_SEEDS, 64);
-
-        CROPS_TO_CONVERT.put(Material.WHEAT_SEEDS, 64);
-
-        CROPS_TO_CONVERT.put(Material.POISONOUS_POTATO, 8);
-
-        CROPS_TO_CONVERT.put(Material.MELON_SLICE, 32);
-
-        CROPS_TO_CONVERT.put(Material.PUMPKIN, 4);
-        CROPS_TO_CONVERT.put(Material.PUMPKIN_SEEDS, 16);
-
-        // Add more crops and their required amounts as needed
-
-    }
-
-    /**
-     * Starts the scheduled task that runs every 30 seconds.
+     * Starts the scheduled task that runs every ~3 seconds (adjust as you like).
      */
     private void startAutoComposterTask() {
         new BukkitRunnable() {
@@ -79,10 +57,12 @@ public class AutoComposter {
                     Location currentLocation = player.getLocation();
                     Location lastLocation = playerLastLocations.get(player);
 
+                    // Check if player is moving (this method returns true for all, adjust if needed)
                     boolean isMoving = isPlayerMoving(lastLocation, currentLocation);
 
                     if (isMoving) {
-                        if (hasAutoComposter(player)) {
+                        // Only run if player's active pet has the COMPOSTER perk
+                        if (hasComposterPetPerk(player)) {
                             performConversion(player);
                         }
                     }
@@ -91,7 +71,7 @@ public class AutoComposter {
                     playerLastLocations.put(player, currentLocation.clone());
                 }
             }
-        }.runTaskTimer(plugin, 0L, 20 * 3); // 600 ticks = 30 seconds
+        }.runTaskTimer(plugin, 0L, 20L * 3); // every 3 seconds (60 ticks = 3s)
     }
 
     /**
@@ -102,79 +82,71 @@ public class AutoComposter {
      * @return True if the player has moved, false otherwise.
      */
     private boolean isPlayerMoving(Location last, Location current) {
+        // Simplified to always 'true' in your sample. Replace with actual logic if needed:
         return true;
     }
 
     /**
-     * Checks if the player has the Auto Composter item in their inventory.
-     *
-     * @param player The player to check.
-     * @return True if the player has the Auto Composter, false otherwise.
+     * Checks if the player's active pet has the COMPOSTER perk.
+     * Replace with your actual logic to detect the perk from your pet system.
      */
-    private boolean hasAutoComposter(Player player) {
-
-        for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && isAutoComposterItem(item)) {
-                return true;
-            }
+    private boolean hasComposterPetPerk(Player player) {
+        PetManager petManager = PetManager.getInstance(plugin);
+        if(petManager.getActivePet(player) == null){
+            return false;
         }
-        return false;
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        return activePet.hasPerk(PetManager.PetPerk.COMPOSTER);
     }
 
     /**
-     * Determines if the given ItemStack is the Auto Composter item.
-     *
-     * @param item The ItemStack to check.
-     * @return True if it's the Auto Composter, false otherwise.
+     * Gets the composter level from the player's active pet.
+     * Replace with your actual logic for retrieving the pet's level.
      */
-    private boolean isAutoComposterItem(ItemStack item) {
-        if (!item.hasItemMeta()) {
-
-            return false;
-        }
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null || !meta.hasDisplayName()) {
-
-            return false;
-        }
-        String itemName = meta.getDisplayName();
-        boolean isAutoComposter = (ChatColor.YELLOW + "Auto-Composter").equals(itemName);
-        return isAutoComposter;
+    private int getPetComposterLevel(Player player) {
+        PetManager petManager = PetManager.getInstance(plugin);
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        return activePet.getLevel();
     }
 
     /**
-     * Performs the crop to Organic Soil conversion for the player.
+     * Performs the crop-to-Organic-Soil conversion for the player, using the
+     * dynamic "required materials" formula:
      *
-     * @param player The player performing the conversion.
+     *  requiredMaterialsOrganic = max(256 - (level - 1)*(256 - 64)/99, 64)
      */
     private void performConversion(Player player) {
+        // 1) Get the player's composter level from their active pet
+        int level = getPetComposterLevel(player);
+
+        // 2) Calculate how many crops are required for 1 organic soil
+        int requiredMaterialsOrganic = Math.max(
+                256 - (level - 1) * (256 - 64) / 99,
+                64
+        );
+
+        // 3) Count how many of each eligible crop the player holds
         Map<Material, Integer> playerCropCounts = getPlayerCropCounts(player);
 
-        for (Map.Entry<Material, Integer> entry : CROPS_TO_CONVERT.entrySet()) {
-            Material crop = entry.getKey();
-            int requiredAmount = entry.getValue();
-
+        // 4) For each eligible crop, see how many conversions we can do
+        for (Material crop : AUTO_COMPOSTER_ELIGIBLE_CROPS) {
             int playerCropCount = playerCropCounts.getOrDefault(crop, 0);
-            if (playerCropCount >= requiredAmount) {
-                int conversions = playerCropCount / requiredAmount;
 
+            if (playerCropCount >= requiredMaterialsOrganic) {
+                // Number of times we can convert to organic soil
+                int conversions = playerCropCount / requiredMaterialsOrganic;
 
-                // Subtract the required crops
-                subtractCrops(player, crop, requiredAmount * conversions);
+                // Remove the used crops
+                subtractCrops(player, crop, requiredMaterialsOrganic * conversions);
 
-                // Add Organic Soil blocks
+                // Give player the organic soil
                 addOrganicSoil(player, conversions);
-
             }
-
         }
     }
 
     /**
      * Retrieves the count of each eligible crop in the player's inventory.
-     *
-     * @param player The player to check.
-     * @return A map of crop materials to their counts.
      */
     private Map<Material, Integer> getPlayerCropCounts(Player player) {
         Map<Material, Integer> cropCounts = new HashMap<>();
@@ -190,11 +162,7 @@ public class AutoComposter {
     }
 
     /**
-     * Subtracts a specific amount of a crop from the player's inventory.
-     *
-     * @param player The player whose inventory is to be modified.
-     * @param crop   The crop material to subtract.
-     * @param amount The total amount to subtract.
+     * Subtracts the specified amount of a given crop from the player's inventory.
      */
     private void subtractCrops(Player player, Material crop, int amount) {
         for (ItemStack item : player.getInventory().getContents()) {
@@ -205,27 +173,29 @@ public class AutoComposter {
                 } else {
                     amount -= item.getAmount();
                     player.getInventory().remove(item);
-                    if (amount <= 0) break;
+
+                    if (amount <= 0) {
+                        break;
+                    }
                 }
             }
         }
     }
 
     /**
-     * Adds Organic Soil blocks to the player's inventory.
-     *
-     * @param player   The player to receive Organic Soil.
-     * @param quantity The number of Organic Soil blocks to add.
+     * Adds the given number of Organic Soil items to the player's inventory.
+     * If full, drops them at the player's feet.
      */
     private void addOrganicSoil(Player player, int quantity) {
         ItemStack organicSoil = ItemRegistry.getOrganicSoil();
 
         for (int i = 0; i < quantity; i++) {
-            HashMap<Integer, ItemStack> overflow = player.getInventory().addItem(organicSoil.clone());
+            Map<Integer, ItemStack> overflow = player.getInventory().addItem(organicSoil.clone());
             if (!overflow.isEmpty()) {
-                // Inventory is full, drop the item at the player's location
+                // If the player's inventory is full, drop on the ground
                 player.getWorld().dropItemNaturally(player.getLocation(), organicSoil);
-                player.sendMessage(ChatColor.RED + "Your inventory is full! Organic Soil has been dropped on the ground.");
+                player.sendMessage(ChatColor.RED
+                        + "Your inventory is full! Organic Soil has been dropped on the ground.");
             }
         }
     }

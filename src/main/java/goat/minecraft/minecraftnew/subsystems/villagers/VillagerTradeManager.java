@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -175,9 +176,9 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> masonSells = new ArrayList<>();
         masonSells.add(createTradeMap("CLAY", 4, 1, 1));
         masonSells.add(createTradeMap("COBBLESTONE", 32, 1, 1));
-        masonSells.add(createTradeMap("COPPER_INGOT", 3, 1, 1));
+        masonSells.add(createTradeMap("COPPER_INGOT", 9, 3, 1));
         masonSells.add(createTradeMap("OBSIDIAN", 1, 1, 1));
-        masonSells.add(createTradeMap("COMPACT_STONE", 1, 2, 3)); // ItemRegistry.getRareSwordReforge()
+        masonSells.add(createTradeMap("COMPACT_STONE", 4, 8, 3)); // ItemRegistry.getRareSwordReforge()
         defaultConfig.set("MASON.sells", masonSells);
 
 
@@ -217,7 +218,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithSells.add(createTradeMap("SKELETON_SKULL", 1, 8, 1));
         weaponsmithSells.add(createTradeMap("CREEPER_HEAD", 1, 8, 1));
         weaponsmithSells.add(createTradeMap("SINGULARITY", 1, 8, 1)); // ItemRegistry.getSingularity()
-        weaponsmithSells.add(createTradeMap("SKELETON_DROP", 1, 150, 1)); // skeletonDrop
+        weaponsmithSells.add(createTradeMap("SKELETON_DROP", 1, 16, 1)); // skeletonDrop
         weaponsmithSells.add(createTradeMap("DROWNED_DROP", 1, 8, 1)); // drownedDrop
         weaponsmithSells.add(createTradeMap("CREEPER_DROP", 1, 8, 1)); // creeperDrop
         weaponsmithSells.add(createTradeMap("BLAZE_DROP", 1, 8, 1)); // blazeDrop
@@ -226,10 +227,11 @@ public class VillagerTradeManager implements Listener {
         weaponsmithSells.add(createTradeMap("ELDER_GUARDIAN_DROP", 1, 4, 1)); // elderGuardianDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_BRUTE_DROP", 1, 8, 1)); // piglinBruteDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_DROP", 1, 8, 1)); // piglinDrop
-        weaponsmithSells.add(createTradeMap("SPIDER_DROP", 1, 100, 1)); // spiderDrop
-        weaponsmithSells.add(createTradeMap("UNDEAD_DROP", 1, 100, 1)); // undeadDrop
+        weaponsmithSells.add(createTradeMap("SPIDER_DROP", 1, 16, 1)); // spiderDrop
+        weaponsmithSells.add(createTradeMap("UNDEAD_DROP", 1, 16, 1)); // undeadDrop
         weaponsmithSells.add(createTradeMap("VINDICATOR_DROP", 1, 8, 1)); // vindicatorDrop
         weaponsmithSells.add(createTradeMap("WITCH_DROP", 1, 32, 1)); // witchDrop
+        weaponsmithSells.add(createTradeMap("SWEEPING", 1, 32, 1)); // witchDrop
         defaultConfig.set("WEAPONSMITH.sells", weaponsmithSells);
 
         List<Map<String, Object>> fletcherPurchases = new ArrayList<>();
@@ -257,6 +259,7 @@ public class VillagerTradeManager implements Listener {
         fletcherSells.add(createTradeMap("STRING", 2, 1, 1));
         fletcherSells.add(createTradeMap("FEATHER", 2, 1, 1));
         fletcherSells.add(createTradeMap("ARROW", 16, 1, 1));
+        fletcherSells.add(createTradeMap("COMPACT_WOOD", 1, 2, 3));
         fletcherSells.add(createTradeMap("SECRETS_OF_INFINITY", 1, 128, 4)); // Custom item
         defaultConfig.set("FLETCHER.sells", fletcherSells);
 // Cartographer Purchases
@@ -561,7 +564,6 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5)); // Level 5 trade
         farmerPurchases.add(createTradeMap("FARMER_ENCHANT", 1, 64, 5)); // Custom item
-        farmerPurchases.add(createTradeMap("AUTO_COMPOSTER", 1, 128, 5)); // Custom item
 
         defaultConfig.set("FARMER.purchases", farmerPurchases);
 
@@ -731,6 +733,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getCommonToolReforge();
             case "UNCOMMON_TOOL_REFORGE":
                 return ItemRegistry.getUncommonToolReforge();
+            case "COMPACT_WOOD":
+                return ItemRegistry.getCompactWood();
             case "TOOLSMITH_REFORGE":
                 return ItemRegistry.getToolsmithReforge();
             case "RARE_TOOL_REFORGE":
@@ -769,6 +773,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getCartographerMineshaft();
             case "CARTOGRAPHER_VILLAGE":
                 return ItemRegistry.getCartographerVillage();
+            case "SWEEPING":
+                return ItemRegistry.getSweepingEdge();
             case "CARTOGRAPHER_SHIPWRECK":
                 return ItemRegistry.getCartographerShipwreck();
             case "CARTOGRAPHER_BURIED_TREASURE":
@@ -1047,14 +1053,13 @@ public class VillagerTradeManager implements Listener {
         if (!event.getView().getTitle().equals(ChatColor.GREEN + "Villager Trading")) return;
         if (event.getSlot() != 49) return;
 
+        event.setCancelled(true);
+
         // Avoid double-click spam
         if (!toggleFlagVillagerButton) {
             toggleFlagVillagerButton = true;
-            event.setCancelled(true);
 
             Player player = (Player) event.getWhoClicked();
-            openVillagerTradeGUI(player);
-
             PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
             PetManager.Pet villagerPet = petManager.getPet(player, "Villager");
 
@@ -1062,40 +1067,69 @@ public class VillagerTradeManager implements Listener {
             if (event.getCurrentItem() == null
                     || event.getCurrentItem().getType() == Material.GRAY_STAINED_GLASS_PANE
                     || villagerPet == null) {
-                player.sendMessage(ChatColor.RED + "You do not have a Villager pet.");
-                openVillagerTradeGUI(player);
+
+                toggleFlagVillagerButton = false; // Reset flag if we do nothing
                 return;
             }
 
-            // Remember the old pet
+            // Remember the old pet in metadata
             PetManager.Pet oldPet = petManager.getActivePet(player);
+            player.setMetadata("previousPet", new FixedMetadataValue(plugin,
+                    oldPet != null ? oldPet.getName() : null));
 
-            // Summon Villager pet
+            // Replace the Villager button with a Gray Stained Glass Pane
+            // to prevent clicking it again while the GUI is still open
+            ItemStack grayPane = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+            ItemMeta meta = grayPane.getItemMeta();
+            meta.setDisplayName(ChatColor.GRAY + "Villager Pet Active");
+            grayPane.setItemMeta(meta);
+            event.getInventory().setItem(49, grayPane);
+
+            // Summon the Villager pet
             petManager.summonPet(player, "Villager");
-            player.sendMessage(ChatColor.GREEN + "Villager Pet summoned for 30 seconds!");
+            player.sendMessage(ChatColor.GREEN + "Villager Pet summoned while trading!");
             openVillagerTradeGUI(player);
-
-            // Schedule revert after 15 seconds
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                if (oldPet != null) {
-                    // Resummon the old pet
-                    petManager.summonPet(player, oldPet.getName());
-                    player.playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1.0f, 1.0f);
-
-                } else {
-                    // Despawn if there was no previously equipped pet
-                    petManager.despawnPet(player);
-                    player.playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1.0f, 1.0f);
-
-                }
-            }, 30 * 20L); // 15 seconds in ticks
         } else {
-            // Just set the flag back to false if triggered again
+            // Another click toggles the flag off
             toggleFlagVillagerButton = false;
         }
     }
 
+    @EventHandler
+    public void onClose(InventoryCloseEvent event) {
+        // Check if it's our Villager Trading GUI
+        if (!event.getView().getTitle().equals(ChatColor.GREEN + "Villager Trading")) {
+            return;
+        }
 
+        Player player = (Player) event.getPlayer();
+
+        // Delay the logic by 1 second (20 ticks)
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            // Only run if the player is still not in the Villager Trading GUI
+            if (!player.getOpenInventory().getTitle().equals(ChatColor.GREEN + "Villager Trading")) {
+
+                // Retrieve stored old-pet name from metadata
+                if (player.hasMetadata("previousPet")) {
+                    String previousPetName = player.getMetadata("previousPet").get(0).asString();
+                    player.removeMetadata("previousPet", plugin);  // Clean up metadata
+
+                    PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
+                    if (previousPetName != "") {
+                        // Resummon old pet
+                        petManager.summonPet(player, previousPetName);
+                    } else {
+                        // Despawn if there was no previously active pet
+                        petManager.despawnPet(player);
+                    }
+                    player.playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1.0f, 1.0f);
+                }
+
+                // Reset the toggle-flag on close
+                toggleFlagVillagerButton = false;
+            }
+        }, 20L); // 20 ticks = 1 second
+    }
 
 
 
@@ -1121,6 +1155,9 @@ public class VillagerTradeManager implements Listener {
         Inventory clickedInventory = event.getClickedInventory();
         if (clickedInventory == null) return;
         if (event.getView().getTitle().equals(ChatColor.GREEN + "Villager Trading")) {
+            if (clickedInventory.equals(event.getWhoClicked().getInventory())) {
+                return; // Let the event proceed normally
+            }
             event.setCancelled(true); // Cancel all clicks
 
             if (event.getCurrentItem() == null) return;
@@ -1225,31 +1262,26 @@ public class VillagerTradeManager implements Listener {
     public void processPurchase(Player player, Villager villager, TradeItem tradeItem) {
         int emeraldCost = tradeItem.getEmeraldValue();
         int quantity = tradeItem.getQuantity();
+        // HAGGLE perk
+        PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        double finalCost = emeraldCost;
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.HAGGLE)) {
+            int petLevel = activePet.getLevel();
+            double maxDiscount = 0.25; // 25% discount
+            int maxLevel = 100;
+            double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
+            finalCost *= (1 - discountFactor);
+            finalCost = Math.floor(finalCost); // Round down to the nearest whole number
+        }
+        XPManager xpManager = new XPManager(plugin);
+        int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
+        double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001));
+        finalCost *= (1 - barteringDiscount);
+        int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));
 
-        if (hasEnoughItems(player.getInventory(), new ItemStack(Material.EMERALD), emeraldCost)) {
-            PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
-            PetManager.Pet activePet = petManager.getActivePet(player);
-
-            // HAGGLE perk
-            double finalCost = emeraldCost;
-            if (activePet != null && activePet.hasPerk(PetManager.PetPerk.HAGGLE)) {
-                int petLevel = activePet.getLevel();
-                double maxDiscount = 0.25; // 25% discount
-                int maxLevel = 100;
-                double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
-                finalCost *= (1 - discountFactor);
-                finalCost = Math.floor(finalCost); // Round down to the nearest whole number
-            }
-
-
+        if (hasEnoughItems(player.getInventory(), new ItemStack(Material.EMERALD), finalCostRounded)) {
             // Bartering discount
-            XPManager xpManager = new XPManager(plugin);
-            int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
-            double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001));
-            finalCost *= (1 - barteringDiscount);
-
-            int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));
-
             // Remove emeralds
             removeItems(player.getInventory(), Material.EMERALD, finalCostRounded);
 

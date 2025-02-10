@@ -13,7 +13,7 @@ import org.bukkit.util.Vector;
 
 public class ReforgeArmorToughness implements Listener {
 
-    private static final double DEFLECT_CHANCE_PER_PIECE = 0.15; // 5% chance per armor piece with the enchantment
+    private static final double DEFLECT_CHANCE_PER_PIECE = 0.15; // 15% chance per armor piece with the enchantment
 
     @EventHandler
     public void onPlayerDamage(EntityDamageByEntityEvent event)  {
@@ -24,7 +24,6 @@ public class ReforgeArmorToughness implements Listener {
 
             // Calculate total deflect chance based on armor pieces
             double totalDeflectChance = 0.0;
-
             for (ItemStack armorPiece : player.getEquipment().getArmorContents()) {
                 if (armorPiece != null && hasReforgedToughnessLore(armorPiece)) {
                     totalDeflectChance += DEFLECT_CHANCE_PER_PIECE;
@@ -35,7 +34,8 @@ public class ReforgeArmorToughness implements Listener {
             if (Math.random() < totalDeflectChance) {
                 // Push the attacker back
                 if (damager instanceof Entity) {
-                    Vector pushBack = damager.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(1.5);
+                    Vector pushBack = damager.getLocation().toVector().subtract(player.getLocation().toVector())
+                            .normalize().multiply(1.5);
                     damager.setVelocity(pushBack);
 
                     // Log the deflection event
@@ -44,6 +44,14 @@ public class ReforgeArmorToughness implements Listener {
 
                 // Cancel the damage event
                 event.setCancelled(true);
+
+                // Damage all armor by 1 durability
+                for (ItemStack armorPiece : player.getEquipment().getArmorContents()) {
+                    if (armorPiece != null) {
+                        short newDurability = (short) (armorPiece.getDurability() + 1);
+                        armorPiece.setDurability(newDurability);
+                    }
+                }
             }
         }
     }
