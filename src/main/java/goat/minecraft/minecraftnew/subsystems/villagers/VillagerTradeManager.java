@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.CustomBundleGUI;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
@@ -20,6 +21,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.units.qual.C;
 
 import java.io.File;
 import java.io.IOException;
@@ -255,9 +257,9 @@ public class VillagerTradeManager implements Listener {
 
         List<Map<String, Object>> fletcherSells = new ArrayList<>();
         fletcherSells.add(createTradeMap("STICK", 64, 1, 1));
-        fletcherSells.add(createTradeMap("FLINT", 2, 1, 1));
-        fletcherSells.add(createTradeMap("STRING", 2, 1, 1));
-        fletcherSells.add(createTradeMap("FEATHER", 2, 1, 1));
+        fletcherSells.add(createTradeMap("FLINT", 8, 1, 1));
+        fletcherSells.add(createTradeMap("STRING", 8, 1, 1));
+        fletcherSells.add(createTradeMap("FEATHER", 8, 1, 1));
         fletcherSells.add(createTradeMap("ARROW", 16, 1, 1));
         fletcherSells.add(createTradeMap("COMPACT_WOOD", 1, 2, 3));
         fletcherSells.add(createTradeMap("SECRETS_OF_INFINITY", 1, 128, 4)); // Custom item
@@ -315,13 +317,17 @@ public class VillagerTradeManager implements Listener {
 
 // Cleric Sells
         List<Map<String, Object>> clericSells = new ArrayList<>();
-        clericSells.add(createTradeMap("ROTTEN_FLESH", 4, 1, 1)); // Material
-        clericSells.add(createTradeMap("BONE", 8, 3, 1)); // Material
-        clericSells.add(createTradeMap("SPIDER_EYE", 4, 3, 1)); // Material
-        clericSells.add(createTradeMap("LAPIS_LAZULI", 8, 1, 2)); // Material
-        clericSells.add(createTradeMap("REDSTONE", 8, 1, 2)); // Material
-        clericSells.add(createTradeMap("ENDER_PEARL", 2, 8, 3)); // Material
+        clericSells.add(createTradeMap("ROTTEN_FLESH", 8, 1, 1)); // Material
+        clericSells.add(createTradeMap("BONE", 8, 1, 1)); // Material
+        clericSells.add(createTradeMap("SPIDER_EYE", 4, 2, 1)); // Material
+        clericSells.add(createTradeMap("LAPIS_LAZULI", 64, 8, 2)); // Material
+        clericSells.add(createTradeMap("REDSTONE", 64, 8, 2)); // Material
+        clericSells.add(createTradeMap("ENDER_PEARL", 1, 4, 3)); // Material
         clericSells.add(createTradeMap("GLOWSTONE", 1, 3, 4)); // Material
+        clericSells.add(createTradeMap("STRING", 8, 1, 4)); // Material
+        clericSells.add(createTradeMap("GUNPOWDER", 4, 1, 4)); // Material
+        clericSells.add(createTradeMap("PHANTOM_MEMBRANE", 4, 1, 4)); // Material
+
         defaultConfig.set("CLERIC.sells", clericSells);
 // Leatherworker Purchases
         List<Map<String, Object>> leatherworkerPurchases = new ArrayList<>();
@@ -1262,69 +1268,112 @@ public class VillagerTradeManager implements Listener {
     public void processPurchase(Player player, Villager villager, TradeItem tradeItem) {
         int emeraldCost = tradeItem.getEmeraldValue();
         int quantity = tradeItem.getQuantity();
-        // HAGGLE perk
+
+        // --- HAGGLE perk logic ---
         PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
         PetManager.Pet activePet = petManager.getActivePet(player);
+
         double finalCost = emeraldCost;
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.HAGGLE)) {
             int petLevel = activePet.getLevel();
-            double maxDiscount = 0.25; // 25% discount
+            double maxDiscount = 0.25; // 25% discount at level 100
             int maxLevel = 100;
             double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
             finalCost *= (1 - discountFactor);
-            finalCost = Math.floor(finalCost); // Round down to the nearest whole number
+            finalCost = Math.floor(finalCost);
         }
+
+        // --- Bartering discount logic ---
         XPManager xpManager = new XPManager(plugin);
         int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
-        double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001));
+        double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001)); // up to 10% discount
         finalCost *= (1 - barteringDiscount);
+
+        // Ensure at least cost of 1
         int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));
 
+        // 1) Check if player's main inventory has enough emeralds
         if (hasEnoughItems(player.getInventory(), new ItemStack(Material.EMERALD), finalCostRounded)) {
-            // Bartering discount
-            // Remove emeralds
+            // Remove emeralds from main inventory
             removeItems(player.getInventory(), Material.EMERALD, finalCostRounded);
 
-            // Give item and drop on ground if inventory is full
-            ItemStack itemToGive = tradeItem.getItem().clone();
-            itemToGive.setAmount(quantity);
-            Map<Integer, ItemStack> remainingItems = player.getInventory().addItem(itemToGive);
-            if (!remainingItems.isEmpty()) {
-                for (ItemStack leftover : remainingItems.values()) {
-                    player.getWorld().dropItemNaturally(player.getLocation(), leftover);
-                }
-                player.sendMessage(ChatColor.YELLOW + "Your inventory was full, so the item(s) were dropped on the ground.");
-            }
-            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
-
-            // Villager gains experience
-            int expGain = 1;
-            if (activePet != null && activePet.hasPerk(PetManager.PetPerk.PRACTICE)) {
-                expGain += 3;
-            }
-            addVillagerExperience(villager, expGain);
-
-            // Rare chance to get Villager pet
-            if (Math.random() < 0.001) {
-                petManager.createPet(
-                        player,
-                        "Villager",
-                        PetManager.Rarity.LEGENDARY,
-                        100,
-                        Particle.VILLAGER_HAPPY,
-                        PetManager.PetPerk.HAGGLE,
-                        PetManager.PetPerk.PRACTICE
-                );
-                player.sendMessage(ChatColor.GOLD + "Congratulations! You have received the Villager pet!");
-                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 1.0f);
-            }
-
-            // Add bartering experience
-            xpManager.addXP(player, "Bartering", 11);
         } else {
-            player.sendMessage(ChatColor.RED + "You don't have enough emeralds.");
+            // Not enough in main inventory
+            int invEmeraldCount = countEmeraldsInInventory(player);
+            // Remove whatever emeralds they do have
+            removeItems(player.getInventory(), Material.EMERALD, invEmeraldCount);
+
+            int shortfall = finalCostRounded - invEmeraldCount;
+
+            // Attempt removing shortfall from the backpack
+            CustomBundleGUI customBundleGUI = CustomBundleGUI.getInstance();
+            boolean success = customBundleGUI.removeEmeraldsFromBackpack(player, shortfall);
+
+            if (!success) {
+                // The player can't afford the cost from inventory + backpack
+                player.sendMessage(ChatColor.RED + "You don't have enough emeralds (in inventory or backpack).");
+                return;
+            }
         }
+
+        // If we get here, we've successfully removed "finalCostRounded" emeralds overall.
+        // --- Give the purchased item ---
+        ItemStack itemToGive = tradeItem.getItem().clone();
+        itemToGive.setAmount(quantity);
+
+        Map<Integer, ItemStack> remainingItems = player.getInventory().addItem(itemToGive);
+        if (!remainingItems.isEmpty()) {
+            // If the player's inventory is full, drop leftover on the ground
+            for (ItemStack leftover : remainingItems.values()) {
+                player.getWorld().dropItemNaturally(player.getLocation(), leftover);
+            }
+            player.sendMessage(ChatColor.YELLOW + "Your inventory was full, so leftover items were dropped on the ground.");
+        }
+
+        player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
+
+        // --- Add villager experience ---
+        int expGain = 1;
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.PRACTICE)) {
+            expGain += 3;
+        }
+        addVillagerExperience(villager, expGain);
+
+        // --- Rare chance to get Villager pet ---
+        if (Math.random() < 0.001) {
+            petManager.createPet(
+                    player,
+                    "Villager",
+                    PetManager.Rarity.LEGENDARY,
+                    100,
+                    Particle.VILLAGER_HAPPY,
+                    PetManager.PetPerk.HAGGLE,
+                    PetManager.PetPerk.PRACTICE
+            );
+            player.sendMessage(ChatColor.GOLD + "Congratulations! You have received the Villager pet!");
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 1.0f);
+        }
+
+        // --- Add bartering XP ---
+        xpManager.addXP(player, "Bartering", 11);
     }
+
+    /**
+     * Example helper to count how many Emeralds are in a player's main inventory.
+     */
+    private int countEmeraldsInInventory(Player player) {
+        int count = 0;
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item != null && item.getType() == Material.EMERALD) {
+                count += item.getAmount();
+            }
+        }
+        return count;
+    }
+
+
+
+
 
     // Main method to process the selling transaction
     private void processSell(Player player, Villager villager, TradeItem tradeItem) {

@@ -357,7 +357,9 @@ public class AnvilRepair implements Listener {
                     ItemStack repairee = event.getClickedInventory().getItem(10);
 
                     if (repairee != null && ARMOR.contains(repairee.getType())) {
-                        if (random.nextDouble() < 0.2) { // 20% chance to fail
+                        int smithingLevel = xpManager.getPlayerLevel(player, "Smithing");
+                        double failureChance = 0.5 * (1 - (smithingLevel / 100.0)); // Scales from 50% to 0%
+                        if (random.nextDouble() < failureChance) {
                             handleFailure(getNearestAnvil(player, 10), repairee, inventory, 2, Material.OBSIDIAN, player);
                             return;
                         }
@@ -396,7 +398,9 @@ public class AnvilRepair implements Listener {
                     ItemStack repairee = event.getClickedInventory().getItem(10);
 
                     if (repairee != null && TOOLS.contains(repairee.getType())) {
-                        if (random.nextDouble() < 0.2) { // 20% chance to fail
+                        int smithingLevel = xpManager.getPlayerLevel(player, "Smithing");
+                        double failureChance = 0.5 * (1 - (smithingLevel / 100.0)); // Scales from 50% to 0%
+                        if (random.nextDouble() < failureChance) {
                             handleFailure(getNearestAnvil(player, 10), repairee, inventory, 2, Material.GOLD_BLOCK, player);
                             return;
                         }
@@ -433,7 +437,9 @@ public class AnvilRepair implements Listener {
                     ItemStack billItem = event.getClickedInventory().getItem(13);
 
                     if (repairee != null && MELEE.contains(repairee.getType())) {
-                        if (random.nextDouble() < 0.2) { // 20% chance to fail
+                        int smithingLevel = xpManager.getPlayerLevel(player, "Smithing");
+                        double failureChance = 0.5 * (1 - (smithingLevel / 100.0)); // Scales from 50% to 0%
+                        if (random.nextDouble() < failureChance) {
                             handleFailure(getNearestAnvil(player, 10), repairee, inventory, 2, Material.DIAMOND, player);
                             return;
                         }

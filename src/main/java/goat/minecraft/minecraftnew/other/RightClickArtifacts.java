@@ -469,8 +469,7 @@ public class RightClickArtifacts implements Listener {
                 decrementItemAmount(itemInHand, player);
             }
             if(displayName.equals(ChatColor.YELLOW + "Backpack")){
-                CustomBundleGUI customBundleGUI = new CustomBundleGUI(MinecraftNew.getInstance());
-                customBundleGUI.openBundleGUI(player);
+                CustomBundleGUI.getInstance().openBundleGUI(player);
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 10, 10);
 
             }

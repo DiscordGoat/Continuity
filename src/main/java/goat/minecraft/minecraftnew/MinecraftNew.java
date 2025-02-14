@@ -126,6 +126,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        CustomBundleGUI.init(this);
         getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 
         forestryManager = new ForestryManager(this);
