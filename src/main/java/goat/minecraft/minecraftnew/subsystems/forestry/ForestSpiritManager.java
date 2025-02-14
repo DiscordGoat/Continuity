@@ -398,7 +398,7 @@ public class ForestSpiritManager implements Listener {
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Feather Falling.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
-                Material.JUNGLE_LOG),
+                Material.COCOA_BEANS),
         ACACIA_SPIRIT("Acacia Spirit", ChatColor.GOLD + "Acacia Spirit of the Forest", 40, Color.ORANGE, "Acacia Gum",
                 Arrays.asList(
                         ChatColor.GRAY + "Sticky gum from acacia trees.",

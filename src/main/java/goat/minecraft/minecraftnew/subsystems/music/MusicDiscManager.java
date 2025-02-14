@@ -374,12 +374,12 @@ public class MusicDiscManager implements Listener {
         player.playSound(player.getLocation(), Sound.MUSIC_DISC_MALL, 3.0f, 1.0f);
         Bukkit.getWorlds().forEach(world -> {
             world.setStorm(true); // Start rain
-            world.setWeatherDuration(40 * 60 * 20); // 40 minutes in ticks
+            world.setWeatherDuration(10 * 60 * 20); // 10 minutes in ticks
             world.setGameRule(GameRule.DO_MOB_SPAWNING, false); // Disable monster spawns
         });
 
         // Notify the player and others
-        Bukkit.broadcastMessage(ChatColor.AQUA + "A soothing rainstorm has begun, and monster spawns are disabled for 40 minutes!");
+        Bukkit.broadcastMessage(ChatColor.AQUA + "A soothing rainstorm has begun, and monster spawns are disabled for 10 minutes!");
         player.sendMessage(ChatColor.GREEN + "You feel empowered by the rain!");
 
         // Grant the player Conduit Power for 40 minutes

@@ -758,7 +758,7 @@ public class ItemRegistry {
 
     public static ItemStack getBait() {
         return CustomItemManager.createCustomItem(
-                Material.ROTTEN_FLESH,
+                Material.OAK_BUTTON,
                 ChatColor.YELLOW + "Fish Bait",
                 Arrays.asList(
                         ChatColor.GRAY + "Various snacks for fish that make them smile.",

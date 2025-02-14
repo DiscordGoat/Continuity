@@ -22,7 +22,6 @@ public class UltimateEnchantingSystem implements Listener {
 
     // Hard-coded costs
     private static final int ULTIMATE_ENCHANT_COST_LAPIS = 64;
-    private static final int COOLDOWN_UPGRADE_COST_LAPIS = 64;
     private static final int FORBIDDEN_BOOK_COST = 4;
 
     /**
@@ -166,7 +165,7 @@ public class UltimateEnchantingSystem implements Listener {
         // Check cost
         if (!playerHasEnoughMaterial(player, Material.LAPIS_LAZULI, ULTIMATE_ENCHANT_COST_LAPIS) ||
                 !playerHasEnoughForbiddenBooks(player, FORBIDDEN_BOOK_COST)) {
-            player.sendMessage(ChatColor.RED + "You need 64 Lapis Lazuli and 16 Forbidden Books to apply this enchantment!");
+            player.sendMessage(ChatColor.RED + "You need 64 Lapis Lazuli and 4 Forbidden Books to apply this enchantment!");
             return;
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Inferno")){
