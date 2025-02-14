@@ -70,7 +70,7 @@ public class RareCombatDrops implements Listener {
                     if (rollChance(1, 150, hostilityLevel)) { // 4% chance
                         event.getDrops().add(infernalLooting);
                     }
-                    if (rollChance(1, 200, hostilityLevel)) { // 4% chance
+                    if (rollChance(1, 100, hostilityLevel)) { // 4% chance
                         petManager.createPet(player, "Zombie Pigman", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SECRET_LEGION, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.FIREPROOF);
                     }
                     handleZombifiedPiglinDrop(event); // Ensure this method is defined
@@ -180,7 +180,7 @@ public class RareCombatDrops implements Listener {
         if (rollChance(1,50, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(piglinDrop);
         }
-        if (rollChance(1,50, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,1, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Vindicator", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SKEPTICISM, PetManager.PetPerk.GREED, PetManager.PetPerk.ELITE);
         }
 
@@ -192,7 +192,7 @@ public class RareCombatDrops implements Listener {
         if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(undeadDrop);
         }
-        if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,1, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Stray", PetManager.Rarity.LEGENDARY, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.QUICK_DRAW, PetManager.PetPerk.TIPPED_SLOWNESS, PetManager.PetPerk.BONE_COLD);
         }
 
@@ -285,7 +285,7 @@ public class RareCombatDrops implements Listener {
         if (rollChance(1,4, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(guardianDrop);
         }
-        if (rollChance(1,10, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,1, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Guardian", PetManager.Rarity.EPIC, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.LASER_BEAM);
 
         }
