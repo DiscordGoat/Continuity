@@ -126,6 +126,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        xpManager = new XPManager(this);
         CustomBundleGUI.init(this);
         getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 
@@ -245,7 +246,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
 
         SpawnMonsters spawnMonsters = new SpawnMonsters(xpManager);
-
+        getCommand("testskill").setExecutor(new TestSkillMessageCommand(xpManager));
         // Register events
         getServer().getPluginManager().registerEvents(petManager, this);
         // Register commands
@@ -271,7 +272,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         anvilRepair = new AnvilRepair(this);
         CustomItemManager customItemManager = new CustomItemManager();
         instance = this;
-        xpManager = new XPManager(this);
+
         new PlayerTabListUpdater(this, xpManager);
         this.getCommand("xp").setExecutor(xpManager);
         this.getCommand("loadsubsystems").setExecutor(new LoadSubsystemsCommand(this));

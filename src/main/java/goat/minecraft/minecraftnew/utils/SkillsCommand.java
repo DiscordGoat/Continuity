@@ -128,12 +128,14 @@ public class SkillsCommand implements CommandExecutor {
         double multiplier = 1 + (level * 0.01); // 2% per level
         switch (skill) {
             case "Smithing":
+                int successChance = 50 + (int) (0.5 * level);
+                if (successChance > 100) successChance = 100; // just to clamp it
                 return Arrays.asList(
-                        ChatColor.WHITE + "Level: " + ChatColor.GREEN + level,
-                        ChatColor.WHITE + "Repair Amount: " + (25+level),
-                        ChatColor.WHITE + "Sharpen Success Chance: " + 80 + "%",
-                        ChatColor.WHITE + "Polish Success Chance: " + 80 + "%",
-                        ChatColor.WHITE + "Reinforce Success Chance: " + 80 + "%"
+            ChatColor.WHITE + "Level: " + ChatColor.GREEN + level,
+            ChatColor.WHITE + "Repair Amount: " + (25 + level),
+            ChatColor.WHITE + "Sharpen Success Chance: " + successChance + "%",
+            ChatColor.WHITE + "Polish Success Chance: " + successChance + "%",
+            ChatColor.WHITE + "Reinforce Success Chance: " + successChance + "%"
                 );
             case "Culinary":
                 double additionalSaturation = Math.min(level * 0.05, 20.0); // Max 20 saturation at level 100
@@ -144,7 +146,7 @@ public class SkillsCommand implements CommandExecutor {
             case "Bartering":
                 return Arrays.asList(
                         ChatColor.BLUE + "Level: " + ChatColor.GREEN + level,
-                        ChatColor.BLUE + "Discount: " + ChatColor.GREEN +  + level * 0.1 + "%"
+                        ChatColor.BLUE + "Discount: " + ChatColor.GREEN +  + level * 0.25 + "%"
                 );
             case "Fishing":
                 return Arrays.asList(
@@ -167,7 +169,7 @@ public class SkillsCommand implements CommandExecutor {
             case "Combat":
                 return Arrays.asList(
                         ChatColor.RED + "Level: " + ChatColor.GREEN + level,
-                        ChatColor.RED + "Damage Multiplier: " + ChatColor.GREEN + String.format("%.2f", (1 + level * 0.02)) + "x"
+                        ChatColor.RED + "Damage Multiplier: " + ChatColor.GREEN + String.format("%.2f", (1 + level * 0.03)) + "x"
                 );
             case "Player":
                 multiplier = Math.min(multiplier, 2.00); // Cap multiplier at 2.00x

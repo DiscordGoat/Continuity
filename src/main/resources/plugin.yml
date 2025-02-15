@@ -3,6 +3,8 @@ version: '${project.version}'
 main: goat.minecraft.minecraftnew.MinecraftNew
 api-version: '1.20'
 commands:
+  testskill:
+    description: "Simulates a level-up message for testing."
   removeinvisiblestands:
     description: Removes all invisible armor stands from the server.
     usage: /removeinvisiblestands
