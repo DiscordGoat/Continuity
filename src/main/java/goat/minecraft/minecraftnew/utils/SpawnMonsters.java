@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.utils;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
+import goat.minecraft.minecraftnew.subsystems.combat.KnightMob;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
@@ -279,7 +280,6 @@ public class SpawnMonsters implements Listener {
                 @Override
                 public void run() {
                     if (!mob.isValid()) {
-                        plugin.getLogger().info("Entity is no longer valid: " + mob.getType());
                         return; // Skip if the entity is no longer valid
                     }
 

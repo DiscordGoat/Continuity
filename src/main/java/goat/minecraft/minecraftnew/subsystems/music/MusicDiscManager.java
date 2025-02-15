@@ -5,10 +5,11 @@ import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.utils.CustomItemManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.biomeutils.BiomeMapper;
 import org.bukkit.*;
+import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.Jukebox;
 import org.bukkit.enchantments.Enchantment;
@@ -21,6 +22,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
@@ -30,19 +32,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 import org.bukkit.loot.LootTables;
-import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.EulerAngle;
 
 import java.util.*;
-
-import static goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry.createAlchemyItem;
-import static goat.minecraft.minecraftnew.utils.CustomItemManager.createCustomItem;
 
 
 public class MusicDiscManager implements Listener {
@@ -50,9 +47,258 @@ public class MusicDiscManager implements Listener {
     private final JavaPlugin plugin;
 
     // Constructor to pass the main plugin instance
+
     public MusicDiscManager(JavaPlugin plugin) {
         this.plugin = plugin;
+
     }
+    private final Map<UUID, TeleportSession> relicSessions = new HashMap<>();
+    private static class TeleportSession {
+        private final Player player;
+        private final Location originalLocation;
+        private String chosenBiome;
+        private long returnDelay; // in ticks (0 if never)
+        private boolean isNear;   // true = near, false = far
+
+        public TeleportSession(Player player) {
+            this.player = player;
+            this.originalLocation = player.getLocation().clone();
+        }
+        // getters / setters ...
+        public Player getPlayer() { return player; }
+        public Location getOriginalLocation() { return originalLocation; }
+        public String getChosenBiome() { return chosenBiome; }
+        public void setChosenBiome(String chosenBiome) { this.chosenBiome = chosenBiome; }
+        public long getReturnDelay() { return returnDelay; }
+        public void setReturnDelay(long returnDelay) { this.returnDelay = returnDelay; }
+        public boolean isNear() { return isNear; }
+        public void setNear(boolean near) { this.isNear = near; }
+    }
+
+    /**
+     * List of interesting biomes to show in the first GUI. You can expand this as needed.
+     */
+
+    private static final List<String> BIOME_OPTIONS = Arrays.asList(
+            "Plains", "Snowy Plains", "Mushroom Field",
+            "Savanna", "Forest", "Birch Forest", "Dark Forest", "Flower Forest",
+            "Taiga", "Jungle", "Bamboo Jungle", "Grove", "Cherry Grove",
+            "Deep Dark", "Dripstone Caves", "Lush Caves", "Jagged Peaks",
+            "Meadow", "Swamp", "Mangrove Swamp", "Badlands", "Wooded Badlands",
+            "Eroded Badlands", "Beach", "Desert", "Ocean", "Cold Ocean",
+            "Deep Ocean", "Frozen Ocean", "Lukewarm Ocean", "Warm Ocean"
+    );
+    private void openBiomeGUI(Player player) {
+        // We’ll use 54 slots so we can list multiple biomes
+        Inventory gui = Bukkit.createInventory(null, 54, ChatColor.DARK_AQUA + "Select a Biome");
+
+        for (int i = 0; i < BIOME_OPTIONS.size() && i < 54; i++) {
+            String biomeName = BIOME_OPTIONS.get(i);
+
+            // We'll just use GRASS_BLOCK as an icon for all.
+            // You could pick different icons for each biome if you want.
+            ItemStack icon = new ItemStack(Material.GRASS_BLOCK);
+            ItemMeta meta = icon.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(ChatColor.GREEN + biomeName);
+                icon.setItemMeta(meta);
+            }
+            gui.setItem(i, icon);
+        }
+
+        // open for the player
+        player.openInventory(gui);
+    }
+    private void openDurationGUI(Player player) {
+        Inventory gui = Bukkit.createInventory(null, 9, ChatColor.BLUE + "Select Duration");
+
+        // (slot 0) 1 minute
+        gui.setItem(0, makeItem(Material.CLOCK, ChatColor.YELLOW + "1 Minute"));
+        // (slot 1) 5 minutes
+        gui.setItem(1, makeItem(Material.CLOCK, ChatColor.YELLOW + "5 Minutes"));
+        // (slot 2) 10 minutes
+        gui.setItem(2, makeItem(Material.CLOCK, ChatColor.YELLOW + "10 Minutes"));
+        // (slot 3) 20 minutes
+        gui.setItem(3, makeItem(Material.CLOCK, ChatColor.YELLOW + "20 Minutes"));
+        // (slot 4) 30 minutes
+        gui.setItem(4, makeItem(Material.CLOCK, ChatColor.YELLOW + "30 Minutes"));
+        // (slot 5) 1 hour
+        gui.setItem(5, makeItem(Material.CLOCK, ChatColor.YELLOW + "1 Hour"));
+        // (slot 6) 2 hours
+        gui.setItem(6, makeItem(Material.CLOCK, ChatColor.YELLOW + "2 Hours"));
+        // (slot 7) Never
+        gui.setItem(7, makeItem(Material.BARRIER, ChatColor.RED + "Never"));
+
+        player.openInventory(gui);
+    }
+
+    private void openRangeGUI(Player player) {
+        Inventory gui = Bukkit.createInventory(null, 9, ChatColor.DARK_PURPLE + "Select Range");
+
+        gui.setItem(0, makeItem(Material.ENDER_PEARL, ChatColor.GREEN + "Nearest (sub 20k blocks)"));
+
+
+        player.openInventory(gui);
+    }
+    private ItemStack makeItem(Material mat, String displayName) {
+        ItemStack stack = new ItemStack(mat);
+        ItemMeta meta = stack.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(displayName);
+        }
+        stack.setItemMeta(meta);
+        return stack;
+    }
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        Player player = (Player) event.getWhoClicked();
+        UUID uuid = player.getUniqueId();
+
+        if (!relicSessions.containsKey(uuid)) return;  // Not in the middle of a relic session
+
+        // Cancel any item pickup/move
+        String title = ChatColor.stripColor(event.getView().getTitle());
+        if (title == null) return;
+        if (title.equalsIgnoreCase("Select a Biome") || title.equalsIgnoreCase("Select Duration") || title.equalsIgnoreCase("Select Range")) {
+            event.setCancelled(true);
+        }
+        ItemStack clicked = event.getCurrentItem();
+        if (clicked == null || !clicked.hasItemMeta()) return;
+
+        // Get the raw, stripped title
+
+        String clickedName = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
+
+        TeleportSession session = relicSessions.get(uuid);
+
+        // 1) BIOME GUI
+        if (title.equalsIgnoreCase("Select a Biome")) {
+            // The item name is the biome name
+            session.setChosenBiome(clickedName);
+            // Now open the Duration GUI
+            Bukkit.getScheduler().runTask(plugin, () -> openDurationGUI(player));
+
+            // 2) DURATION GUI
+        } else if (title.equalsIgnoreCase("Select Duration")) {
+            // See what they clicked
+            if (clickedName.contains("1 Minute")) {
+                session.setReturnDelay(1 * 60L * 20L);
+            } else if (clickedName.contains("5 Minutes")) {
+                session.setReturnDelay(5 * 60L * 20L);
+            } else if (clickedName.contains("10 Minutes")) {
+                session.setReturnDelay(10 * 60L * 20L);
+            } else if (clickedName.contains("20 Minutes")) {
+                session.setReturnDelay(20 * 60L * 20L);
+            } else if (clickedName.contains("30 Minutes")) {
+                session.setReturnDelay(30 * 60L * 20L);
+            } else if (clickedName.contains("1 Hour")) {
+                session.setReturnDelay(60 * 60L * 20L);
+            } else if (clickedName.contains("2 Hours")) {
+                session.setReturnDelay(120 * 60L * 20L);
+            } else if (clickedName.contains("Never")) {
+                session.setReturnDelay(0L);
+            } else {
+                return;
+            }
+            Bukkit.getScheduler().runTask(plugin, () -> openRangeGUI(player));
+        } else if (title.equalsIgnoreCase("Select Range")) {
+            if (clickedName.contains("Near")) {
+                session.setNear(true);
+            } else if (clickedName.contains("Far")) {
+                session.setNear(false);
+            } else {
+                return;
+            }
+            // We have all choices now => do the teleport and end the session
+            event.getWhoClicked().closeInventory();
+            teleportPlayer(session);
+        }
+    }
+
+    private void teleportPlayer(TeleportSession session) {
+        Player player = session.getPlayer();
+        String chosenBiomeName = session.getChosenBiome(); // e.g., "Snowy Plains"
+        boolean near = session.isNear();
+        long returnDelay = session.getReturnDelay();
+
+        // Retrieve the corresponding Biome enum using the mapper
+        Biome targetBiome = BiomeMapper.getBiome(chosenBiomeName);
+
+        if (targetBiome == null) {
+            player.sendMessage(ChatColor.RED + "Invalid biome: " + chosenBiomeName);
+            relicSessions.remove(player.getUniqueId());
+            plugin.getLogger().warning("Invalid biome selected: " + chosenBiomeName + " by player: " + player.getName());
+            return;
+        }
+
+        String range = near ? "near" : "far";
+
+        player.sendMessage(ChatColor.YELLOW + "Searching for a " + chosenBiomeName + " biome location...");
+
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            World world = player.getWorld();
+            Location foundLocation = findRandomBiomeLocation(world, targetBiome, 300, 20000);
+
+            if (foundLocation == null) {
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    player.sendMessage(ChatColor.RED + "No biome nearby: " + chosenBiomeName + " (near=" + near + ")");
+                    relicSessions.remove(player.getUniqueId());
+                });
+                plugin.getLogger().warning("Biome not found: " + chosenBiomeName + " for player: " + player.getName());
+                return;
+            }
+
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                player.teleport(foundLocation);
+                player.sendMessage(ChatColor.GREEN + "Teleported you to " + chosenBiomeName + "! Return time: "
+                        + (returnDelay > 0 ? (returnDelay / 20) + "s" : "Never"));
+
+                if (returnDelay > 0) {
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        player.teleport(session.getOriginalLocation());
+                        player.sendMessage(ChatColor.YELLOW + "Returning you to your original location...");
+                        relicSessions.remove(player.getUniqueId());
+                    }, returnDelay);
+                } else {
+                    relicSessions.remove(player.getUniqueId());
+                }
+            });
+        });
+    }
+
+    private Location findRandomBiomeLocation(World world, Biome biome, int minRadius, int maxRadius) {
+        Random random = new Random();
+        Location referenceLocation = world.getSpawnLocation(); // Consider using player's current location
+        int attempts = 0;
+        int maxAttempts = 10000; // Increased attempts for better chances
+        int skipOvers = random.nextInt(10) + 1; // Randomly determine 1-10 skipovers
+
+        while (attempts < maxAttempts) {
+            double angle = random.nextDouble() * 2 * Math.PI;
+            int distance = random.nextInt(maxRadius - minRadius) + minRadius;
+
+            int x = (int) (referenceLocation.getX() + distance * Math.cos(angle));
+            int z = (int) (referenceLocation.getZ() + distance * Math.sin(angle));
+
+            Biome biomeAtLocation = world.getBiome(x, z);
+
+            if (biomeAtLocation == biome) {
+                if (skipOvers > 0) {
+                    skipOvers--;
+                    continue; // Skip this positive match and continue
+                }
+                // Get the highest block Y to ensure the location is on the surface
+                int y = world.getHighestBlockYAt(x, z);
+                return new Location(world, x + 0.5, y, z + 0.5); // +0.5 for center alignment
+            }
+
+            attempts++;
+        }
+
+        return null; // No suitable location found within maxAttempts
+    }
+
 
     /**
      * Event handler for player interactions.
@@ -508,26 +754,12 @@ public class MusicDiscManager implements Listener {
     }
 
     private void handleMusicDiscRelic(Player player, Location jukeboxLocation) {
-        Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Festivity Activated for 3 minutes 38 seconds!");
-        player.playSound(player.getLocation(), Sound.MUSIC_DISC_RELIC, 300.0f, 1.0f);
+        // Create a new TeleportSession for this player
+        TeleportSession session = new TeleportSession(player);
+        relicSessions.put(player.getUniqueId(), session);
 
-        // Duration of the effect in ticks (3 minutes 38 seconds = 218 seconds = 4360 ticks)
-        long durationTicks = 218 * 20L;
-
-        // Schedule Fireworks Task: Every 5 seconds
-        BukkitTask fireworksTask = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            spawnFireworks(jukeboxLocation);
-        }, 0L, 5 * 20L); // 0 tick initial delay, 5*20 ticks = 5 seconds
-
-        // Schedule Glowing Task: Every 30 seconds
-
-        // Schedule Particles Task: Every 3 seconds
-
-        // Schedule a task to cancel all repeating tasks after the duration
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            fireworksTask.cancel();
-            Bukkit.broadcastMessage(ChatColor.LIGHT_PURPLE + "Festivity has ended.");
-        }, durationTicks);
+        // Open the first GUI (pick a biome)
+        openBiomeGUI(player);
     }
 
     /**

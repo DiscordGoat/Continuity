@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.utils.biomeutils;
 
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
