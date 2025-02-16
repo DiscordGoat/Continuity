@@ -230,7 +230,7 @@ public class SpawnMonsters implements Listener {
         if(entity instanceof MagmaCube monster){
             if (shouldMutationOccur(playerHostility)) {
                 // Set the size of the Magma Cube to 6 (giant size)
-                monster.setSize(10);
+                monster.setSize(4);
 
                 // Optionally, you can give it a trident and a custom name
                 monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
@@ -256,7 +256,7 @@ public class SpawnMonsters implements Listener {
         if(entity instanceof Slime monster){
             if (shouldMutationOccur(playerHostility)) {
                 // Set the size of the Magma Cube to 6 (giant size)
-                monster.setSize(10);
+                monster.setSize(4);
 
                 // Optionally, you can give it a trident and a custom name
                 monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());

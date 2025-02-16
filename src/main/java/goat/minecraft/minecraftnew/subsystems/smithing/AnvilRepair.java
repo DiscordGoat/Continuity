@@ -371,7 +371,7 @@ public class AnvilRepair implements Listener {
                         inventory.removeItem(new ItemStack(Material.OBSIDIAN, 2));
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
                         player.sendMessage(ChatColor.AQUA + "Your item has been enchanted with Protection!");
-                        xpManager.addXP(player, "Smithing", 500.0); // Add XP here
+                        xpManager.addXP(player, "Smithing", 200.0); // Add XP here
 
                     } else {
                         player.sendMessage("Please place armor to enchant!");
@@ -412,7 +412,7 @@ public class AnvilRepair implements Listener {
                         inventory.removeItem(new ItemStack(Material.GOLD_BLOCK, 2));
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
                         player.sendMessage(ChatColor.AQUA + "Your item has been enchanted with Efficiency!");
-                        xpManager.addXP(player, "Smithing", 500.0); // Add XP here
+                        xpManager.addXP(player, "Smithing", 200.0); // Add XP here
 
                     } else {
                         player.sendMessage("Please place a tool to enchant!");
@@ -451,7 +451,7 @@ public class AnvilRepair implements Listener {
                         inventory.removeItem(new ItemStack(Material.DIAMOND, 2));
                         player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
                         player.sendMessage(ChatColor.AQUA + "Your item has been sharpened!");
-                        xpManager.addXP(player, "Smithing", 500.0); // Add XP here
+                        xpManager.addXP(player, "Smithing", 200.0); // Add XP here
 
                     } else {
                         player.sendMessage("Please place a sword to be sharpened!");
@@ -649,19 +649,19 @@ public class AnvilRepair implements Listener {
             xpManager.addXP(player, "Smithing", repairAmount);
         } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
             repairAmount = 100;
-            xpManager.addXP(player, "Smithing", 200.0);
+            xpManager.addXP(player, "Smithing", 100.0);
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shell")){
             repairAmount = 200;
-            xpManager.addXP(player, "Smithing", 200.0);
+            xpManager.addXP(player, "Smithing", 100.0);
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Deep Shell")){
             repairAmount = 400;
-            xpManager.addXP(player, "Smithing", 200.0);
+            xpManager.addXP(player, "Smithing", 100.0);
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Abyssal Shell")){
             repairAmount = 800;
-            xpManager.addXP(player, "Smithing", 200.0);
+            xpManager.addXP(player, "Smithing", 100.0);
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Mithril Chunk") && isDurable(repairee)){
             incrementEnchantment(player, repairee, billItem,Enchantment.DURABILITY);
 
@@ -947,22 +947,22 @@ public class AnvilRepair implements Listener {
 
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Emerald Gemstone")&& TOOLS.contains(repairee.getType())) {
             MiningGemManager gemManager = new MiningGemManager();
-            xpManager.addXP(player, "Smithing", 250.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             gemManager.applyGem(repairee, MiningGemManager.MiningGem.EMERALD_GEM);
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Diamond Gemstone")&& TOOLS.contains(repairee.getType())) {
             MiningGemManager gemManager = new MiningGemManager();
-            xpManager.addXP(player, "Smithing", 250.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             gemManager.applyGem(repairee, MiningGemManager.MiningGem.DIAMOND_GEM);
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Lapis Gemstone")&& TOOLS.contains(repairee.getType())) {
             MiningGemManager gemManager = new MiningGemManager();
-            xpManager.addXP(player, "Smithing", 250.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             gemManager.applyGem(repairee, MiningGemManager.MiningGem.LAPIS_GEM);
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Redstone Gemstone")&& TOOLS.contains(repairee.getType())) {
             MiningGemManager gemManager = new MiningGemManager();
-            xpManager.addXP(player, "Smithing", 250.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             gemManager.applyGem(repairee, MiningGemManager.MiningGem.REDSTONE_GEM);
         }
 
@@ -1078,28 +1078,28 @@ public class AnvilRepair implements Listener {
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Uncommon Sword Reforge")&& isSword(repairee)){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_2);
-            xpManager.addXP(player, "Smithing", 250.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Rare Sword Reforge")&& isSword(repairee)){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_3);
-            xpManager.addXP(player, "Smithing", 500.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             billItem.setAmount(billItem.getAmount() - 1);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Epic Sword Reforge")&& isSword(repairee)){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_4);
-            xpManager.addXP(player, "Smithing", 750);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Legendary Sword Reforge")&& isSword(repairee)){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_5);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
@@ -1114,28 +1114,28 @@ public class AnvilRepair implements Listener {
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Uncommon Armor Reforge")&& ARMOR.contains(repairee.getType())){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_2);
-            xpManager.addXP(player, "Smithing", 250);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Rare Armor Reforge")&& ARMOR.contains(repairee.getType())){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_3);
-            xpManager.addXP(player, "Smithing", 500.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Epic Armor Reforge")&& ARMOR.contains(repairee.getType())){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_4);
-            xpManager.addXP(player, "Smithing", 750);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Legendary Armor Reforge")&& ARMOR.contains(repairee.getType())){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_5);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
@@ -1153,28 +1153,28 @@ public class AnvilRepair implements Listener {
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Uncommon Tool Reforge")&& isDurable(repairee)){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_2);
-            xpManager.addXP(player, "Smithing", 250);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Rare Tool Reforge")&& isDurable(repairee)){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_3);
-            xpManager.addXP(player, "Smithing", 500);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Epic Tool Reforge")&& isDurable(repairee)){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_4);
-            xpManager.addXP(player, "Smithing", 750);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Legendary Tool Reforge")&& isDurable(repairee)){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_5);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
@@ -1190,62 +1190,62 @@ public class AnvilRepair implements Listener {
 
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Midas Gold") && MELEE.contains(repairee.getType())){
             incrementInfernalEnchantment(repairee, billItem, Enchantment.LOOT_BONUS_MOBS);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Unbreakable") && isDurable(repairee)){
             setEnchantment(repairee, Enchantment.DURABILITY, 5);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "LavaStride") && ARMOR.contains(repairee.getType())){
             setEnchantment(repairee, Enchantment.DEPTH_STRIDER, 5);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Howl") && isFishingRod(repairee)){
             setEnchantment(repairee, Enchantment.LURE, 5);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Cure") && MELEE.contains(repairee.getType())){
             setEnchantment(repairee, Enchantment.DAMAGE_UNDEAD, 7);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Shrapnel") && MELEE.contains(repairee.getType())){
             setEnchantment(repairee, Enchantment.DAMAGE_ALL, 7);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Hellfire") && MELEE.contains(repairee.getType())){
             setEnchantment(repairee, Enchantment.FIRE_ASPECT, 4);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Weak Spot") && TOOLS.contains(repairee.getType())){
             setEnchantment(repairee, Enchantment.DIG_SPEED, 6);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Extinction") && MELEE.contains(repairee.getType())){
             setEnchantment(repairee, Enchantment.DAMAGE_ARTHROPODS, 7);
-            xpManager.addXP(player, "Smithing", 1000.0);
+            xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;

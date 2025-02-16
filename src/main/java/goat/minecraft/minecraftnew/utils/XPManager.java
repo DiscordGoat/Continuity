@@ -172,7 +172,13 @@ public class XPManager implements CommandExecutor {
     // =================================================
     // ===============     CORE XP LOGIC   =============
     // =================================================
+    private void sendHotbarMessage(Player player, String skill, double xpGained, int currentXP, int xpToNextLevel) {
+        String message = ChatColor.AQUA + "[+" + (int) xpGained + " XP] " + ChatColor.GREEN + skill +
+                ChatColor.GRAY + " | Current XP: " + ChatColor.YELLOW + currentXP +
+                ChatColor.GRAY + " | Next Level: " + ChatColor.GOLD + xpToNextLevel;
 
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+    }
     /**
      * This is the main XP-adding method. If a player gains XP in a skill,
      * we check if they leveled up. If so, we play a sound and send them
@@ -197,6 +203,9 @@ public class XPManager implements CommandExecutor {
         int oldLevel = calculateLevel(currentXP);
         int newLevel = calculateLevel(newXP);
 
+        // Send hotbar message with XP details
+        sendHotbarMessage(player, skill, xp, newXP, getXPToNextLevel(player, skill));
+
         // Check if we leveled up
         if (newLevel > oldLevel) {
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F);
@@ -205,7 +214,7 @@ public class XPManager implements CommandExecutor {
 
         // If skill != Player, also add 10% XP to "Player" skill
         if (!skill.equalsIgnoreCase("Player")) {
-            addXPToSkill(player, "Player", xp * 0.10);
+            addXPToSkill(player, "Player", Math.max(xp * 0.5, 1));
         }
     }
 
@@ -280,7 +289,7 @@ public class XPManager implements CommandExecutor {
         int currentLevel = calculateLevel(currentXP);
 
         if (currentLevel >= xpThresholds.length) {
-            return -1; // Max level
+            return 0; // Max level
         }
 
         int nextLevelXP = xpThresholds[currentLevel];
