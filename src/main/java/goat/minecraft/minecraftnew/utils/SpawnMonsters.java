@@ -26,7 +26,7 @@ public class SpawnMonsters implements Listener {
     private XPManager xpManager; // Assume you have an XPManager class
     private final JavaPlugin plugin = MinecraftNew.getInstance();
 
-    private static final int MAX_MONSTER_LEVEL = 200;
+    private static final int MAX_MONSTER_LEVEL = 300;
 
     // Constructor to pass in XPManager and plugin instance
     public SpawnMonsters(XPManager xpManager) {
@@ -294,7 +294,7 @@ public class SpawnMonsters implements Listener {
                         int mobLevel;
 
                         if (nearestPlayer != null) {
-                            int level = playerHostility * 10;
+                            int level = playerHostility * 10 - new Random().nextInt(11);
                             mobLevel = Math.min(level + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
                         } else {
                             mobLevel = Math.min((int) (distance / 100) + getRandomLevelVariation(), MAX_MONSTER_LEVEL);

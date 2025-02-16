@@ -525,6 +525,7 @@ public class VillagerTradeManager implements Listener {
         fishermanSells.add(createTradeMap("LOYAL_DECLARATION", 1, 12, 2)); // Material
         fishermanSells.add(createTradeMap("ANAKLUSMOS", 1, 12, 2)); // Material
         fishermanSells.add(createTradeMap("SWIM_TRUNKS", 1, 12, 2)); // Material
+        fishermanSells.add(createTradeMap("HOWL", 1, 32, 2)); // Material
 
         defaultConfig.set("FISHERMAN.sells", fishermanSells);
 // Butcher Purchases
@@ -827,6 +828,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getWeaponsmithReforge();
             case "WEAPONSMITH_REFORGE_TWO":
                 return ItemRegistry.getWeaponsmithReforgeTwo();
+            case "HOWL":
+                return ItemRegistry.getInfernalLure();
             case "RARE_SWORD_REFORGE":
                 return ItemRegistry.getRareSwordReforge();
             case "WEAPONSMITH_SHARPNESS":

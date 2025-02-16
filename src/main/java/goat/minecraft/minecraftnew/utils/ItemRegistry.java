@@ -1029,7 +1029,7 @@ public class ItemRegistry {
 
     public static ItemStack getSingularity() {
         return createCustomItem(
-                Material.IRON_NUGGET,
+                Material.IRON_INGOT,
                 ChatColor.BLUE + "Singularity",
                 List.of(ChatColor.GRAY + "A rare blueprint entrusted to the Knights",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reforges Items to the first Tier.",
@@ -1594,7 +1594,7 @@ public class ItemRegistry {
 
     public static ItemStack getSpiderDrop() {
         return CustomItemManager.createCustomItem(
-                Material.SPIDER_EYE,
+                Material.FERMENTED_SPIDER_EYE,
                 ChatColor.YELLOW + "SpiderBane",
                 Arrays.asList(
                         ChatColor.GRAY + "A strange substance lethal against spiders.",
@@ -1878,7 +1878,7 @@ public class ItemRegistry {
 
     public static ItemStack getInfernalLure() {
         return CustomItemManager.createCustomItem(
-                Material.HEART_OF_THE_SEA,
+                Material.GOAT_HORN,
                 ChatColor.GOLD + "Howl",
                 Arrays.asList(
                         ChatColor.GRAY + "A hellish material that inspires fish hunger.",

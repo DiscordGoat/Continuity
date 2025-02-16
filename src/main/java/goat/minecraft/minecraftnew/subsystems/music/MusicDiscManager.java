@@ -459,13 +459,25 @@ public class MusicDiscManager implements Listener {
         }.runTaskTimer(plugin, 0L, intervalTicks); // Start immediately and repeat every intervalTicks
     }
 
-
-
+    public void resetHostilityLevelsOnDisable() {
+        Bukkit.getOnlinePlayers().forEach(player -> {
+            HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
+            int currentTier = hostilityManager.getPlayerDifficultyTier(player);
+            if (currentTier > 10) {
+                hostilityManager.setPlayerTier(player, 10);
+            }
+        });
+    }
     private void handleMusicDisc11(Player player) {
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
         hostilityManager.setPlayerTier(player, 20);
-        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Somehow, you've made monsters even angrier... Hostility set to Tier XX");
+        Bukkit.broadcastMessage(ChatColor.DARK_RED + "Somehow, you've made monsters even angrier... Hostility set to Tier 20 for 20 minutes");
 
+        // Schedule to reset the hostility after 20 minutes (20 minutes * 60 seconds * 20 ticks)
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            hostilityManager.setPlayerTier(player, 0); // Reset hostility to default
+            player.sendMessage(ChatColor.GREEN + "The increased hostility has subsided.");
+        }, 20 * 60 * 20L);
     }
     private void handleMusicDiscFar(Player player) {
         // Play the music disc sound

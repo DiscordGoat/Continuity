@@ -172,6 +172,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
+
         // Register the /hostility command executor
         getCommand("hostility").setExecutor(hostilityManagermanager.new HostilityCommand());
 
@@ -385,6 +386,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+
+        MusicDiscManager musicDiscManager = new MusicDiscManager(this);
+        musicDiscManager.resetHostilityLevelsOnDisable();
         if (displayManager != null) {
             displayManager.shutdown();
         }
