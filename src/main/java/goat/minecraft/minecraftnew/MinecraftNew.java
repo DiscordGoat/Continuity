@@ -127,6 +127,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        getServer().getPluginManager().registerEvents(new ShulkerBox(), this);
+
+
         getCommand("end").setExecutor(new EndCommand());
         getCommand("nether").setExecutor(new NetherCommand());
         getCommand("overworld").setExecutor(new OverworldCommand());
