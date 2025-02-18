@@ -3,6 +3,18 @@ version: '${project.version}'
 main: goat.minecraft.minecraftnew.MinecraftNew
 api-version: '1.20'
 commands:
+  resetend:
+    description: Resets The End dimension.
+    usage: /resetend
+  end:
+    description: Teleports the player to The End.
+    usage: /end
+  nether:
+    description: Teleports the player to The Nether.
+    usage: /nether
+  overworld:
+    description: Teleports the player to The Overworld.
+    usage: /overworld
   testskill:
     description: "Simulates a level-up message for testing."
   removeinvisiblestands:

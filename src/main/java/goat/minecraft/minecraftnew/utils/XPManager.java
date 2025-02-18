@@ -118,11 +118,11 @@ public class XPManager implements CommandExecutor {
             49135*2, // Level 93
             50554*2, // Level 94
             52010*2, // Level 95
-            53505*2, // Level 96
-            55039*2, // Level 97
-            56614*2, // Level 98
-            58231*2, // Level 99
-            59891*2  // Level 100
+            53505*3, // Level 96
+            55039*3, // Level 97
+            56614*3, // Level 98
+            58231*3, // Level 99
+            59891*3  // Level 100
     };
 
     public XPManager(JavaPlugin plugin) {

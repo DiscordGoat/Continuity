@@ -160,6 +160,13 @@ public class SpawnMonsters implements Listener {
         Entity entity = e.getEntity();
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
         int playerHostility = hostilityManager.getPlayerDifficultyTier(getNearestPlayer(entity, 1000));
+        if (entity instanceof Creeper) {
+            Random random = new Random();
+            int randomValue = random.nextInt(100) + 1; // Generate a random number between 1 and 100
+            if (randomValue <= 80) { // Removes 80% of creepers
+                entity.remove();
+            }
+        }
         if(entity instanceof LivingEntity monster){
             if(shouldMutationOccur(playerHostility)) {
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, true));

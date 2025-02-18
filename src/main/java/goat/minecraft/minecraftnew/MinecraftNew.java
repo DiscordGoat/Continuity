@@ -45,6 +45,7 @@ import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.utils.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
+import goat.minecraft.minecraftnew.utils.developercommands.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
@@ -126,6 +127,12 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        getCommand("end").setExecutor(new EndCommand());
+        getCommand("nether").setExecutor(new NetherCommand());
+        getCommand("overworld").setExecutor(new OverworldCommand());
+        getCommand("resetend").setExecutor(new ResetEndCommand());
+
+
         xpManager = new XPManager(this);
         CustomBundleGUI.init(this);
         getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
