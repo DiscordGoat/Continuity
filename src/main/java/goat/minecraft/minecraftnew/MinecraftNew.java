@@ -127,6 +127,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        new Sleep(this);
         getServer().getPluginManager().registerEvents(new ShulkerBox(), this);
 
 

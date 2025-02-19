@@ -192,7 +192,7 @@ public class RareCombatDrops implements Listener {
         if (rollChance(1,200, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(undeadDrop);
         }
-        if (rollChance(1,1, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,2, hostilityLevel)) { // 1-4% chance
             petManager.createPet(event.getEntity().getKiller(), "Stray", PetManager.Rarity.LEGENDARY, 100, Particle.WHITE_ASH, PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.QUICK_DRAW, PetManager.PetPerk.TIPPED_SLOWNESS, PetManager.PetPerk.BONE_COLD);
         }
 

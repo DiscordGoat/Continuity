@@ -370,7 +370,6 @@ public class ForestSpiritManager implements Listener {
      * Defines different types of Forest Spirits with unique attributes.
      */
     private enum SpiritType {
-
         OAK_SPIRIT("Oak Spirit", ChatColor.GREEN + "Oak Spirit of the Forest", 20, Color.fromRGB(102, 51, 0), "Petrified Log",
                 Arrays.asList(
                         ChatColor.GRAY + "A hardened log infused with forest magic.",

@@ -1729,7 +1729,7 @@ public class ItemRegistry {
 
     public static ItemStack getPiglinDrop() {
         return CustomItemManager.createCustomItem(
-                Material.ARROW,
+                Material.SPECTRAL_ARROW,
                 ChatColor.YELLOW + "High Caliber Arrow",
                 Arrays.asList(
                         ChatColor.GRAY + "A heavy arrow.",
@@ -2084,7 +2084,7 @@ public class ItemRegistry {
         );
     }
     public static ItemStack getSweepingEdge() {
-        return createCustomItem(Material.IRON_SWORD, ChatColor.YELLOW +
+        return createCustomItem(Material.STICK, ChatColor.YELLOW +
                 "Sweeping Edge", Arrays.asList(
                 ChatColor.GRAY + "Air Technology.",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Sweeping Edge.",

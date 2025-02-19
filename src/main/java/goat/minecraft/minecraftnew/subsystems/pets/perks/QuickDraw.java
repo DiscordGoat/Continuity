@@ -37,6 +37,16 @@ public class QuickDraw implements Listener {
             return;
         }
 
+        // Ensure the bow has at least 25% durability
+        if (itemInHand.getItemMeta() instanceof Damageable damageable) {
+            int maxDurability = itemInHand.getType().getMaxDurability();
+            int currentDurability = maxDurability - damageable.getDamage();
+            if (currentDurability < maxDurability * 0.25) {
+                player.sendMessage(ChatColor.RED + "Your bow is too damaged to use Quick Draw!");
+                return;
+            }
+        }
+        
         // Get the player's active pet
         PetManager.Pet activePet = petManager.getActivePet(player);
 
@@ -59,8 +69,12 @@ public class QuickDraw implements Listener {
 
         // Damage the bow by 1 durability
         if (itemInHand.getItemMeta() instanceof Damageable damageable) {
-            damageable.setDamage(damageable.getDamage() + 1);
-            itemInHand.setItemMeta((ItemMeta) damageable);
+            int unbreakingLevel = itemInHand.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.DURABILITY);
+            double chance = 1 - (0.15 * unbreakingLevel);
+            if (Math.random() > chance) {
+                damageable.setDamage(damageable.getDamage() + 1);
+                itemInHand.setItemMeta((ItemMeta) damageable);
+            }
         }
 
         // Fire an arrow from the player's location
