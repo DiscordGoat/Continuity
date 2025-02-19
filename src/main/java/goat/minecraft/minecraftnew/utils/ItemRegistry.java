@@ -1032,7 +1032,7 @@ public class ItemRegistry {
                 Material.IRON_INGOT,
                 ChatColor.BLUE + "Singularity",
                 List.of(ChatColor.GRAY + "A rare blueprint entrusted to the Knights",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reforges Items to the first Tier.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reforges Equipment to the first Tier.",
                         ChatColor.DARK_PURPLE + "Smithing Item"),
                 1,
                 false // Set to true if you want it to be unbreakable
@@ -1530,7 +1530,7 @@ public class ItemRegistry {
             true);
     }
     public static ItemStack getSkeletonDrop() {
-        return CustomItemManager.createCustomItem(Material.BOW, ChatColor.YELLOW +
+        return CustomItemManager.createCustomItem(Material.STRING, ChatColor.YELLOW +
             "Bowstring", Arrays.asList(
             ChatColor.GRAY + "Air Technology.",
             ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Power.",

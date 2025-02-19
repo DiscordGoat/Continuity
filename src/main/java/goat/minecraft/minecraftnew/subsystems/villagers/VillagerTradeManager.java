@@ -188,7 +188,6 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> weaponsmithPurchases = new ArrayList<>();
         weaponsmithPurchases.add(createTradeMap("IRON_INGOT", 1, 4, 1));    // item, quantity, emeralds, level, experience
         weaponsmithPurchases.add(createTradeMap("COAL", 4, 2, 1));
-        weaponsmithPurchases.add(createTradeMap("COMMON_SWORD_REFORGE", 1, 32, 1)); // ItemRegistry.getCommonSwordReforge()
 
         weaponsmithPurchases.add(createTradeMap("UNCOMMON_SWORD_REFORGE", 1, 64, 2)); // ItemRegistry.getUncommonSwordReforge()
 
@@ -387,7 +386,6 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("FISHING_ROD", 1, 6, 1)); // Material
         toolsmithPurchases.add(createTradeMap("SHEARS", 1, 6, 1)); // Material
         toolsmithPurchases.add(createTradeMap("BUCKET", 1, 8, 1)); // Material
-        toolsmithPurchases.add(createTradeMap("COMMON_TOOL_REFORGE", 1, 4, 1)); // Custom Item
 
         toolsmithPurchases.add(createTradeMap("SHIELD", 1, 10, 2)); // Material
         toolsmithPurchases.add(createTradeMap("UNCOMMON_TOOL_REFORGE", 1, 8, 2)); // Custom Item
@@ -422,7 +420,6 @@ public class VillagerTradeManager implements Listener {
 // Armorer Purchases
         List<Map<String, Object>> armorerPurchases = new ArrayList<>();
         armorerPurchases.add(createTradeMap("IRON_ORE", 3, 12, 1)); // Material
-        armorerPurchases.add(createTradeMap("COMMON_ARMOR_REFORGE", 1, 8, 1)); // Custom Item
 
         armorerPurchases.add(createTradeMap("ANVIL", 1, 24, 2)); // Material
         armorerPurchases.add(createTradeMap("UNCOMMON_ARMOR_REFORGE", 1, 16, 2)); // Custom Item
