@@ -540,7 +540,9 @@ public class UltimateEnchantmentListener implements Listener {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
         if (item == null) return;
-
+        if (player.isSneaking()) {
+            return;
+        }
         CustomEnchantmentManager.UltimateEnchantmentData ueData = CustomEnchantmentManager.getUltimateEnchantment(item);
         if (ueData == null) return;
 
