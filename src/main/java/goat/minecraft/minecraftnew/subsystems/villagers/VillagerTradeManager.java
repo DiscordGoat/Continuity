@@ -337,7 +337,7 @@ public class VillagerTradeManager implements Listener {
 
         leatherworkerPurchases.add(createTradeMap("BUNDLE", 1, 64, 3)); // Material
         leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ENCHANT", 1, 32, 4)); // Custom Item
-        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ARTIFACT", 1, 64, 5)); // Custom Item
+        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ARTIFACT", 1, 512, 5)); // Custom Item
         defaultConfig.set("LEATHERWORKER.purchases", leatherworkerPurchases);
 
 // Leatherworker Sells
