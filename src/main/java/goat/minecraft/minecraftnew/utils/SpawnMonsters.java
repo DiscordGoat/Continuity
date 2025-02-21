@@ -5,6 +5,9 @@ import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.combat.KnightMob;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -338,32 +341,98 @@ public class SpawnMonsters implements Listener {
         }
         return nearestPlayer;
     }
+    public void applyEnderDragonAttributes(EnderDragon dragon) {
+        int level = 300; // Set EnderDragon level to 300
+        // Apply regeneration effect.
+        dragon.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
 
+        // Update health.
+        double healthMultiplier = 1 + (level * 0.1);
+        double originalHealth = dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+        double newHealth = Math.min(originalHealth * healthMultiplier, 2000); // Cap health at 2000
+        dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
+        dragon.setHealth(newHealth);
+
+        // Set metadata and custom name.
+        dragon.setMetadata("mobLevel", new FixedMetadataValue(MinecraftNew.getInstance(), level));
+        String color = getColorForLevel(level);
+        dragon.setCustomName(color + "Level: " + level + " " + formatMobType(dragon.getType().toString()));
+        dragon.setCustomNameVisible(true);
+        dragon.setRemoveWhenFarAway(true);
+
+        // Override custom name with a fixed boss name.
+        dragon.setCustomName(ChatColor.DARK_RED + "Ender Dragon");
+
+        // Configure the boss bar.
+        BossBar bossBar = dragon.getBossBar();
+        bossBar.setColor(BarColor.RED);
+        bossBar.setStyle(BarStyle.SEGMENTED_20);
+
+        // Ensure its health is synced.
+        dragon.setHealth(dragon.getMaxHealth());
+    }
     public void applyMobAttributes(LivingEntity mob, int level) {
         level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL)); // Cap level between 1 and 300
-        if (mob instanceof EnderDragon){
-            level = 200;
-            mob.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 2, true));
-            mob.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 2, true));
-        }
-        double healthMultiplier = 1 + (level * 0.1);
 
+        if (mob instanceof EnderDragon) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    // Force EnderDragon level to 200 and apply special potion effects.
+                    int level = 200;
+                    mob.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
+
+                    // Calculate health multiplier and update health.
+                    double healthMultiplier = 1 + (level * 0.1);
+                    double originalHealth = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+                    double newHealth = Math.min(originalHealth * healthMultiplier, 2000); // Cap health at 2000
+                    mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
+                    mob.setHealth(newHealth);
+
+                    // Set metadata and custom name.
+                    mob.setMetadata("mobLevel", new FixedMetadataValue(plugin, level));
+                    String color = getColorForLevel(level);
+                    mob.setCustomName(color + "Level: " + level + " " + formatMobType(mob.getType().toString()));
+                    mob.setCustomNameVisible(true);
+                    mob.setRemoveWhenFarAway(true);
+                    EnderDragon dragon = (EnderDragon) mob;
+                    dragon.setCustomName(ChatColor.DARK_RED + "Ender Dragon");
+                    dragon.setCustomNameVisible(true);
+
+                    // Check if the player already has a boss bar named "Ender Dragon" and remove it
+
+                    // Set BossBar with segments
+                    BossBar bossBar = dragon.getBossBar();
+                    bossBar.setColor(BarColor.RED);
+                    bossBar.setStyle(BarStyle.SEGMENTED_20);
+
+                    // Add health effects
+                    dragon.setHealth(dragon.getMaxHealth());
+
+                }
+            }.runTaskLater(plugin, 60L); // delay 40 ticks (2 seconds)
+            return;
+        }
+
+
+        // Processing for non-EnderDragon mobs.
+        double healthMultiplier = 1 + (level * 0.1);
         double originalHealth = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-        double newHealth = originalHealth * healthMultiplier;
-        newHealth = Math.min(newHealth, 2000); // Cap health at 2000
+        double newHealth = Math.min(originalHealth * healthMultiplier, 2000); // Cap health at 2000
         mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
         mob.setHealth(newHealth);
 
         mob.setMetadata("mobLevel", new FixedMetadataValue(plugin, level));
 
         String color = getColorForLevel(level);
-        if(mob.getCustomName() != null && mob.getCustomName().equals(ChatColor.GRAY + "Knight")){
+        if (mob.getCustomName() != null && mob.getCustomName().equals(ChatColor.GRAY + "Knight")) {
             return;
         }
         mob.setCustomName(color + "Level: " + level + " " + formatMobType(mob.getType().toString()));
         mob.setCustomNameVisible(true);
         mob.setRemoveWhenFarAway(true);
     }
+
 
     private String getColorForLevel(int level) {
         if (level <= 20) return ChatColor.GRAY.toString();

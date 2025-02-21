@@ -47,10 +47,9 @@ import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
+import goat.minecraft.minecraftnew.utils.end.CustomEndArchipelago;
+
+import org.bukkit.*;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -141,6 +140,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        CustomEndArchipelago.init(this);
+
+
+
+
         new Sleep(this);
         getServer().getPluginManager().registerEvents(new ShulkerBox(), this);
 

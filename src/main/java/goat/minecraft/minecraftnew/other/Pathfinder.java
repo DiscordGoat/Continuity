@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.other;
 
+import me.gamercoder215.mobchip.EntityBody;
 import me.gamercoder215.mobchip.EntityBrain;
 import me.gamercoder215.mobchip.bukkit.BukkitBrain;
 import org.bukkit.Location;
@@ -24,6 +25,11 @@ public class Pathfinder
     public void moveTo(Mob mob, Location location) {
         EntityBrain brain = BukkitBrain.getBrain(mob);
         brain.getController().moveTo(location);
+    }
+    public void flyFast(Mob mob) {
+        EntityBrain brain = BukkitBrain.getBrain(mob);
+        EntityBody body = brain.getBody();
+        body.setFlyingSpeed(1000);
     }
     public void lookAt(Mob mob, Player player, int seconds, Plugin plugin) {
         // Get the entity's global brain
