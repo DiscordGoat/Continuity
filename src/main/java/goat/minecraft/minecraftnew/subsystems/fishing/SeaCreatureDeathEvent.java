@@ -3,7 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;

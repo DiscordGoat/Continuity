@@ -44,6 +44,24 @@ public class RecipeManager {
 
 
 
+        NamespacedKey petTrainingKey = new NamespacedKey(plugin, "pet_training_recipe");
+
+        // Create the music disc item
+        ItemStack artifact = ItemRegistry.getPetTraining(); // Choose the type of disc you want
+
+
+        // Define the shaped recipe
+        ShapedRecipe petTrainingRecipe = new ShapedRecipe(petTrainingKey, artifact);
+        petTrainingRecipe.shape("DDD", "DDD", "DDD");
+        petTrainingRecipe.setIngredient('D', Material.LAPIS_BLOCK);
+
+        // Register it with Bukkit
+        Bukkit.addRecipe(petTrainingRecipe);
+
+        // Optionally, store it in a customRecipes map if you manage recipes this way
+        customRecipes.put(petTrainingKey, petTrainingRecipe);
+
+
 
         NamespacedKey notchAppleKey = new NamespacedKey(plugin, "notch_apple_recipe");
 

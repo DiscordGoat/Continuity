@@ -1,5 +1,6 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.utils.commands;
 
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

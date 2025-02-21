@@ -3,16 +3,21 @@ package goat.minecraft.minecraftnew.other;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.Slab;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
-import org.bukkit.event.*;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.*;
-import org.bukkit.event.block.Action;
-import org.bukkit.inventory.*;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerInteractEvent.*;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -40,6 +45,7 @@ public class ItemDisplayManager implements Listener {
     private static final String PARTICLE_GUI_TITLE = ChatColor.DARK_PURPLE + "Select Particle Effect / Display Mode";
     private static final int MODE_TOGGLE_SLOT = 53;
 
+    // List of all available particle effects for the GUI
     private final List<Particle> availableParticles = Arrays.asList(
             Particle.FLAME,
             Particle.HEART,
@@ -103,15 +109,22 @@ public class ItemDisplayManager implements Listener {
             }
         }
 
+        // Register this class as an event listener
         Bukkit.getPluginManager().registerEvents(this, plugin);
 
+        // Load any saved displays
         loadData();
+        // Respawn the display stands
         respawnAllDisplays();
 
         logger.info("[ItemDisplay] Manager initialized.");
     }
 
+    /**
+     * The inner class representing one individual item display.
+     */
     public class ItemDisplay {
+
         public UUID id;
         public Location blockLocation;
         public UUID standUUID;
@@ -137,7 +150,8 @@ public class ItemDisplayManager implements Listener {
 
             double yOffset = blockMode ? 0.4 : 0.1;
             Block block = blockLocation.getBlock();
-            // Only set type if not set or you want to forcibly keep it quartz by default
+
+            // If the block is air, set it to quartz by default
             if (block.getType() == Material.AIR) {
                 block.setType(Material.QUARTZ_PILLAR);
             }
@@ -205,12 +219,13 @@ public class ItemDisplayManager implements Listener {
                     }
                     angle += 12.0;
                     if (angle >= 360.0) angle -= 360.0;
+
                     ArmorStand stand = (ArmorStand) e;
                     Location loc = stand.getLocation();
                     loc.setYaw((float) angle);
                     stand.teleport(loc);
                 }
-            }.runTaskTimer(plugin, 0, 1);
+            }.runTaskTimer(plugin, 0, 1); // rotate fast
         }
 
         public void startParticleTask() {
@@ -230,12 +245,14 @@ public class ItemDisplayManager implements Listener {
                     Location loc = e.getLocation().add(0, 0.25, 0);
                     loc.getWorld().spawnParticle(particle, loc, 20, 0.2, 1.2, 0.2, 0.01);
                 }
-            }.runTaskTimer(plugin, 0, 40);
+            }.runTaskTimer(plugin, 0, 40); // spawn particles every 2 seconds
         }
 
         public void setParticle(Particle particle) {
             this.particle = particle;
-            if (particleTask != null) particleTask.cancel();
+            if (particleTask != null) {
+                particleTask.cancel();
+            }
             if (standSpawned) {
                 startParticleTask();
             }
@@ -264,9 +281,11 @@ public class ItemDisplayManager implements Listener {
             if (storedItem == null) {
                 stand.getEquipment().setHelmet(null);
             } else {
+                // Ensure we only show 1 item
                 ItemStack copy = storedItem.clone();
                 copy.setAmount(1);
                 stand.getEquipment().setHelmet(copy);
+                // Keep stand's head pose level
                 stand.setHeadPose(new EulerAngle(0, 0, 0));
             }
         }
@@ -278,7 +297,6 @@ public class ItemDisplayManager implements Listener {
                 Particle prevParticle = particle;
                 UUID oldId = this.id;
                 UUID oldPlacer = this.placerUUID;
-                boolean oldSpawned = this.standSpawned;
 
                 remove();
                 this.id = oldId;
@@ -287,12 +305,16 @@ public class ItemDisplayManager implements Listener {
                 this.placerUUID = oldPlacer;
                 this.standSpawned = false;
                 displays.put(this.id, this);
+
                 spawn();
                 updateStandItem();
             }
         }
     }
 
+    /**
+     * Checks if an ItemStack is our special "Item Display" item
+     */
     private boolean isItemDisplayItem(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return false;
         ItemMeta meta = item.getItemMeta();
@@ -322,8 +344,8 @@ public class ItemDisplayManager implements Listener {
     }
 
     /**
-     * Handles LEFT_CLICK (with SHIFT) to change block type,
-     * and RIGHT_CLICK for display interactions (retrieving item, placing item, opening particle GUI, etc.).
+     * Handles SHIFT + LEFT CLICK to change block type
+     * and RIGHT CLICK for display interactions (retrieving item, placing item, opening particle GUI).
      */
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -341,23 +363,28 @@ public class ItemDisplayManager implements Listener {
         Player player = event.getPlayer();
         ItemStack hand = player.getInventory().getItemInMainHand();
 
-        // === SHIFT + LEFT CLICK to change the block type ===
+        // SHIFT + LEFT CLICK to change the block type
         if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.isSneaking()) {
             // Does the player have a block in their hand?
             if (hand != null && hand.getType().isBlock() && hand.getAmount() > 0) {
-                // Change the display's block to the block in the player's hand
-                block.setType(hand.getType());
-                // Optional: Decrement 1 from the player's stack
-                hand.setAmount(hand.getAmount() - 1);
-                player.sendMessage(ChatColor.YELLOW + "Display block changed to " + hand.getType());
-                event.setCancelled(true);
+                Material type = hand.getType();
+                // If it's a slab, place it as a TOP slab
+                if (type.name().endsWith("_SLAB")) {
+                    block.setType(type);
+                    Slab slab = (Slab) block.getBlockData();
+                    slab.setType(Slab.Type.TOP);
+                    block.setBlockData(slab);
+                } else {
+                    block.setType(type);
+                }
+                // Optionally decrement 1 from the player's hand stack
+                // (only if you want the block to be "used up")
             }
-            return;
         }
 
-        // === RIGHT CLICK interactions with the display ===
+        // RIGHT CLICK interactions
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            // If the stand isn't spawned for some reason, spawn it
+            // If stand is missing for some reason, re-spawn it
             if (!display.standSpawned) {
                 display.spawn();
                 return;
@@ -383,7 +410,7 @@ public class ItemDisplayManager implements Listener {
                     player.sendMessage(ChatColor.RED + "No item is displayed here.");
                 }
             } else {
-                // If there's no stored item, place the item in hand
+                // If there's no stored item, place the current item in hand
                 if (display.storedItem == null) {
                     ItemStack toPlace = hand.clone();
                     toPlace.setAmount(1);
@@ -400,7 +427,7 @@ public class ItemDisplayManager implements Listener {
     }
 
     /**
-     * When the block is broken, if there's an ItemDisplay there, drop the item displays properly.
+     * If the block is broken and there's an ItemDisplay, drop it properly.
      */
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
@@ -423,13 +450,13 @@ public class ItemDisplayManager implements Listener {
     }
 
     /**
-     * Opens the particle selection GUI
+     * Opens the particle selection GUI for a given player & ItemDisplay.
      */
     public void openParticleGUI(Player player, ItemDisplay display) {
         Inventory inv = Bukkit.createInventory(null, 54, PARTICLE_GUI_TITLE);
 
         for (int i = 0; i < availableParticles.size(); i++) {
-            if (i >= 53) break; // Keep last slot for mode toggle
+            if (i >= 53) break; // keep slot 53 for the mode toggle
             Particle p = availableParticles.get(i);
             ItemStack item = new ItemStack(Material.FIREWORK_STAR);
             ItemMeta meta = item.getItemMeta();
@@ -438,7 +465,7 @@ public class ItemDisplayManager implements Listener {
             inv.setItem(i, item);
         }
 
-        // Mode Toggle
+        // Mode Toggle lever in slot 53
         ItemStack modeToggle = new ItemStack(Material.LEVER);
         ItemMeta meta = modeToggle.getItemMeta();
         meta.setDisplayName(ChatColor.YELLOW + "Toggle Display Mode");
@@ -453,9 +480,12 @@ public class ItemDisplayManager implements Listener {
         player.openInventory(inv);
     }
 
+    /**
+     * Handles clicks in our custom particle GUI.
+     */
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        // Particle GUI check
+        // Check the inventory title
         if (!event.getView().getTitle().equals(PARTICLE_GUI_TITLE)) return;
         event.setCancelled(true);
 
@@ -479,10 +509,11 @@ public class ItemDisplayManager implements Listener {
             return;
         }
 
-        // Set the chosen particle
+        // Otherwise, they clicked on a particle item
         if (!clicked.hasItemMeta()) return;
         String name = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
         Particle selected = null;
+
         for (Particle p : availableParticles) {
             if (p.name().equalsIgnoreCase(name)) {
                 selected = p;
@@ -496,6 +527,9 @@ public class ItemDisplayManager implements Listener {
         }
     }
 
+    /**
+     * Refreshes the lore on the "Toggle Display Mode" item so it shows the correct current mode.
+     */
     private void updateModeToggleItem(Inventory inv, ItemDisplay display) {
         ItemStack modeToggle = inv.getItem(MODE_TOGGLE_SLOT);
         if (modeToggle == null) return;
@@ -512,7 +546,7 @@ public class ItemDisplayManager implements Listener {
     }
 
     /**
-     * Retrieves the ItemDisplay at a specific location, if any.
+     * Retrieves the ItemDisplay at a specific block location, if any.
      */
     private ItemDisplay getDisplayByLocation(Location loc) {
         for (ItemDisplay d : displays.values()) {
@@ -524,7 +558,7 @@ public class ItemDisplayManager implements Listener {
     }
 
     /**
-     * Return all displays placed by a specific player
+     * Returns all displays placed by a specific player.
      */
     public List<ItemDisplay> getDisplaysByPlayer(UUID playerUUID) {
         List<ItemDisplay> result = new ArrayList<>();
@@ -537,7 +571,7 @@ public class ItemDisplayManager implements Listener {
     }
 
     /**
-     * Persists ItemDisplays to file
+     * Save all ItemDisplays to file.
      */
     public void saveData() {
         synchronized (displays) {
@@ -557,7 +591,7 @@ public class ItemDisplayManager implements Listener {
                 map.put("standUUID", d.standUUID != null ? d.standUUID.toString() : null);
                 map.put("placerUUID", d.placerUUID != null ? d.placerUUID.toString() : null);
 
-                // Serialize item
+                // Serialize the stored item
                 if (d.storedItem != null) {
                     map.put("item", d.storedItem.serialize());
                 } else {
@@ -578,7 +612,9 @@ public class ItemDisplayManager implements Listener {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    /**
+     * Load all ItemDisplays from the data file.
+     */
     public void loadData() {
         dataConfig = YamlConfiguration.loadConfiguration(dataFile);
         if (dataConfig.contains(DISPLAYS_KEY)) {
@@ -630,11 +666,13 @@ public class ItemDisplayManager implements Listener {
                         }
 
                         Object itemData = map.get("item");
-                        if (itemData != null && itemData instanceof Map) {
+                        if (itemData instanceof Map) {
                             try {
+                                //noinspection unchecked
                                 d.storedItem = ItemStack.deserialize((Map<String, Object>) itemData);
                             } catch (Exception ex) {
-                                logger.warning("[ItemDisplay] Failed to deserialize item for display " + id + ": " + ex.getMessage());
+                                logger.warning("[ItemDisplay] Failed to deserialize item for display "
+                                        + id + ": " + ex.getMessage());
                                 d.storedItem = null;
                             }
                         }
@@ -651,7 +689,7 @@ public class ItemDisplayManager implements Listener {
     }
 
     /**
-     * Respawn all ArmorStands on server startup
+     * Respawn all displays on server startup.
      */
     public void respawnAllDisplays() {
         for (ItemDisplay d : displays.values()) {
@@ -663,7 +701,7 @@ public class ItemDisplayManager implements Listener {
     }
 
     /**
-     * Shut down & remove all displays
+     * Gracefully shut down and remove all displays, then save data.
      */
     public void shutdown() {
         saveData();

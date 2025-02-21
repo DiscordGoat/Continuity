@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.utils.developercommands;
 
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.ChatColor;

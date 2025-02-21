@@ -2,7 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.farming;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.ChatColor;
@@ -11,7 +11,6 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -106,7 +105,7 @@ public class FarmingEvent implements Listener {
             // Award Farming XP
             int xp = cropXP.get(blockType);
             ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawn(block.getLocation(), ExperienceOrb.class);
-            orb.setExperience(4);
+            orb.setExperience(1);
             xpManager.addXP(player, "Farming", xp);
             // Play harvest sound
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);

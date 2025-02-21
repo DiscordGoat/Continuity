@@ -2,7 +2,6 @@ package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.utils.CustomItemManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.XPManager;

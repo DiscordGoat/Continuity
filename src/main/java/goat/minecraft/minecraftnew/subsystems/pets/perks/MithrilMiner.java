@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.utils.ItemRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

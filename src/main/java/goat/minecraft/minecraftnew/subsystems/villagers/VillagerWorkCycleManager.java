@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.*;

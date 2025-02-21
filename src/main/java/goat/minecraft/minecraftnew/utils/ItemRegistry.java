@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.utils;
 
+import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -11,8 +12,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import static goat.minecraft.minecraftnew.utils.CustomItemManager.createCustomItem;
 
 public class ItemRegistry {
     private ItemRegistry() {
@@ -2057,6 +2056,14 @@ public class ItemRegistry {
                 "Inscriber", Arrays.asList(
                 ChatColor.GRAY + "Disc Technology.",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Drops a random Music Disc.",
+                ChatColor.DARK_PURPLE + "Artifact"
+        ), 1, false, true);
+    }
+    public static ItemStack getPetTraining() {
+        return createCustomItem(Material.BONE, ChatColor.YELLOW +
+                "Pet Training", Arrays.asList(
+                ChatColor.GRAY + "Training Technology.",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Grants 1000 pet XP.",
                 ChatColor.DARK_PURPLE + "Artifact"
         ), 1, false, true);
     }

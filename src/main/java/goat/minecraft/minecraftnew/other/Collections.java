@@ -232,6 +232,47 @@ public class Collections implements CommandExecutor, Listener {
             config.set("collections.default_apples", apples);
 
             saveConfig();
+
+
+
+
+
+            //minerals
+            Map<String, Object> minerals = new HashMap<>();
+            minerals.put("name", "Minerals");
+
+            // Apple icon
+            ItemStack mineralsIcon = new ItemStack(Material.DIAMOND);
+            minerals.put("iconItem", mineralsIcon.serialize());
+
+            // Required items: golden apple, enchanted golden apple
+            List<Map<String, Object>> mineralsRequiredList = new ArrayList<>();
+            mineralsRequiredList.add(new ItemStack(Material.COAL).serialize());
+            mineralsRequiredList.add(new ItemStack(Material.COPPER_INGOT).serialize());
+            mineralsRequiredList.add(new ItemStack(Material.IRON_INGOT).serialize());
+            mineralsRequiredList.add(new ItemStack(Material.GOLD_INGOT).serialize());
+            mineralsRequiredList.add(new ItemStack(Material.LAPIS_LAZULI).serialize());
+            mineralsRequiredList.add(new ItemStack(Material.REDSTONE).serialize());
+            mineralsRequiredList.add(new ItemStack(Material.DIAMOND).serialize());
+            mineralsRequiredList.add(new ItemStack(Material.EMERALD).serialize());
+
+
+            minerals.put("requiredItems", mineralsRequiredList);
+
+            // Reward items: gold ingot, xp bottle
+            List<Map<String, Object>> mineralsRewardList = new ArrayList<>();
+            mineralsRewardList.add(new ItemStack(Material.NETHERITE_INGOT, 1).serialize());
+            minerals.put("rewardItems", mineralsRewardList);
+
+            minerals.put("rewardMessage", "&aYou have collected all the minerals! Unlocked Pet Training recipe!");
+            minerals.put("claimed", new ArrayList<>());
+
+            minerals.put("recipeKeysToUnlock", Arrays.asList("minecraftnew:pet_training_recipe"));
+
+            config.set("collections.default_minterals", minerals);
+
+            saveConfig();
+
         } else {
             config = YamlConfiguration.loadConfiguration(configFile);
         }

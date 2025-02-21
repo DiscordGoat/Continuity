@@ -1,7 +1,9 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.subsystems.forestry;
 
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -19,8 +21,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
-
-import static goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry.createAlchemyItem;
 
 public class CustomItemManager implements Listener {
     // Method to create a custom item

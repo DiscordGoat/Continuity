@@ -37,7 +37,7 @@ import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.Armo
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.SwordReforge;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ToolReforge;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
-import goat.minecraft.minecraftnew.utils.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.other.PlayerLevel;
@@ -45,6 +45,7 @@ import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.utils.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
+import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
@@ -106,6 +107,19 @@ public class MinecraftNew extends JavaPlugin implements Listener {
                 recipeManager.getCustomRecipes().get(notchAppleKey),
                 false // We already called Bukkit.addRecipe(...) above
         );
+
+
+
+        NamespacedKey petTrainingKey = new NamespacedKey(this, "pet_training_recipe");
+        lockedRecipeManager.addLockedRecipe(
+                petTrainingKey,
+                "Minerals", // EXACT name of the collection
+                recipeManager.getCustomRecipes().get(petTrainingKey),
+                false // We already called Bukkit.addRecipe(...) above
+        );
+
+
+
         NamespacedKey customMusicDiscKey = new NamespacedKey(this, "custom_music_disc_recipe");
         lockedRecipeManager.addLockedRecipe(
                 customMusicDiscKey,

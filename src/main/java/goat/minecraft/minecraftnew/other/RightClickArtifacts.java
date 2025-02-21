@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.farming.SeederType;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.*;
 import goat.minecraft.minecraftnew.utils.biomeutils.StructureUtils;
 import org.bukkit.*;
@@ -457,6 +458,20 @@ public class RightClickArtifacts implements Listener {
                 player.getWorld().spawnEntity(player.getLocation(), EntityType.VILLAGER);
                 decrementItemAmount(itemInHand, player);
                 return;
+            }
+
+            if (displayName.equals(ChatColor.YELLOW + "Pet Training")) {
+                PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
+                PetManager.Pet activePet = petManager.getActivePet(player);
+                if(activePet != null){
+                    player.playSound(player.getLocation(), Sound.ENTITY_WOLF_AMBIENT, 1.0f, 1.0f);
+                    player.getWorld().spawnParticle(Particle.FLAME, player.getLocation().add(0, 1, 0), 50, 0.5, 1.0, 0.5, 0.05);
+                    activePet.addXP(1000);
+                    decrementItemAmount(itemInHand, player);
+                }else {
+                    player.sendMessage(ChatColor.RED + "You do not have a Pet summoned!");
+                    return;
+                }
             }
             if(displayName.equals(ChatColor.YELLOW + "Draw Random Armor Trim")){
                 player.getWorld().dropItem(player.getLocation(), getRandomArmorTrim());

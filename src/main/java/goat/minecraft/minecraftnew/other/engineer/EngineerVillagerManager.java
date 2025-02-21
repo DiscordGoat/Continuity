@@ -24,53 +24,61 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
-/**
- * Demonstrates how to add special Engineer-specific trades when:
- * - The villager is named ChatColor.RED + "Engineer"
- * - The villager has certain redstone components nearby (in a 20-block radius).
- * - Each discovered component creates a separate trade option requiring emeralds + redstone.
- * - Left-click = buy 1 item, Right-click = buy 4 items
- */
 public class EngineerVillagerManager implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<Player, Villager> engineerInteractionMap = new HashMap<>();
 
-    // For quickly looking up default trade costs for each recognized redstone component:
-    // (Feel free to adjust or add more entries.)
+    /**
+     * Now we only store how many Redstone Blocks are required.
+     */
+    private static class TradeCost {
+        public final int redstoneBlockCost;
+
+        public TradeCost(int redstoneBlockCost) {
+            this.redstoneBlockCost = redstoneBlockCost;
+        }
+    }
+
+    /**
+     * Define the cost of each recognized redstone component in Redstone Blocks.
+     * Adjust the numbers as desired.
+     */
     private static final Map<Material, TradeCost> COMPONENT_COSTS = new HashMap<>() {{
-        put(Material.REDSTONE_BLOCK,   new TradeCost(4, 4));
-        put(Material.REDSTONE_TORCH,   new TradeCost(0, 1));
-        put(Material.REPEATER,         new TradeCost(3, 3));
-        put(Material.COMPARATOR,       new TradeCost(8, 3));
-        put(Material.TARGET,           new TradeCost(2, 4));
-        put(Material.LEVER,            new TradeCost(1, 0));
-        put(Material.DAYLIGHT_DETECTOR,new TradeCost(8, 3));
-        put(Material.PISTON,           new TradeCost(3, 1));
-        put(Material.STICKY_PISTON,    new TradeCost(9, 3));
-        put(Material.SLIME_BLOCK,      new TradeCost(9, 0));
-        put(Material.HONEY_BLOCK,      new TradeCost(12, 0));
-        put(Material.DISPENSER,        new TradeCost(8, 3));
-        put(Material.DROPPER,          new TradeCost(4, 1));
-        put(Material.HOPPER,           new TradeCost(4, 6));
-        put(Material.OBSERVER,         new TradeCost(7, 2));
-        put(Material.RAIL,             new TradeCost(6, 1));
-        put(Material.POWERED_RAIL,     new TradeCost(12, 3));
-        put(Material.DETECTOR_RAIL,    new TradeCost(5, 5));
-        put(Material.ACTIVATOR_RAIL,   new TradeCost(4, 4));
-        put(Material.TNT,              new TradeCost(12, 12));
-        put(Material.REDSTONE_LAMP,    new TradeCost(4, 4));
-        put(Material.IRON_DOOR,    new TradeCost(5, 5));
-        put(Material.IRON_TRAPDOOR,    new TradeCost(3, 3));
-        put(Material.STONE_BUTTON,    new TradeCost(1, 0));
-        put(Material.OAK_BUTTON,    new TradeCost(0, 1));
+        put(Material.REDSTONE_BLOCK,    new TradeCost(1));
+        put(Material.REDSTONE_TORCH,    new TradeCost(1));
+        put(Material.REPEATER,          new TradeCost(2));
+        put(Material.COMPARATOR,        new TradeCost(3));
+        put(Material.TARGET,            new TradeCost(2));
+        put(Material.LEVER,             new TradeCost(1));
+        put(Material.DAYLIGHT_DETECTOR, new TradeCost(3));
+        put(Material.PISTON,            new TradeCost(2));
+        put(Material.STICKY_PISTON,     new TradeCost(4));
+        put(Material.SLIME_BLOCK,       new TradeCost(4));
+        put(Material.HONEY_BLOCK,       new TradeCost(4));
+        put(Material.DISPENSER,         new TradeCost(3));
+        put(Material.DROPPER,           new TradeCost(2));
+        put(Material.HOPPER,            new TradeCost(4));
+        put(Material.OBSERVER,          new TradeCost(3));
+        put(Material.RAIL,              new TradeCost(2));
+        put(Material.POWERED_RAIL,      new TradeCost(3));
+        put(Material.DETECTOR_RAIL,     new TradeCost(3));
+        put(Material.ACTIVATOR_RAIL,    new TradeCost(3));
+        put(Material.TNT,               new TradeCost(4));
+        put(Material.REDSTONE_LAMP,     new TradeCost(2));
+        put(Material.IRON_DOOR,         new TradeCost(2));
+        put(Material.IRON_TRAPDOOR,     new TradeCost(2));
+        put(Material.STONE_BUTTON,      new TradeCost(1));
+        put(Material.OAK_BUTTON,        new TradeCost(1));
     }};
 
-    // All redstone-related blocks we might detect
+    // All redstone-related blocks we want to detect
     private static final Set<Material> REDSTONE_COMPONENTS = COMPONENT_COSTS.keySet();
 
-    // For storing each player's dynamic trades in this session:
-    // Key = Player, Value = Map<displayName, TradeCost> so we know cost when they click
+    /**
+     * For storing each player's dynamic trades in this session:
+     * Key = Player, Value = Map<displayName, TradeCost> so we know the cost when they click.
+     */
     private final Map<Player, Map<String, TradeCost>> tradeCostsByPlayer = new HashMap<>();
 
     public EngineerVillagerManager(JavaPlugin plugin) {
@@ -111,13 +119,11 @@ public class EngineerVillagerManager implements Listener {
             // No redstone components found => no trades
             player.sendMessage(ChatColor.GRAY + "[Engineer] "
                     + ChatColor.RED + "I can craft more of whatever’s around here... but there's nothing!");
-            // You can optionally fill the inventory with a BARRIER or do nothing
             inv.setItem(22, createNoComponentsItem());
         } else {
             // Build a map of "displayName -> TradeCost" for referencing when the player clicks
             Map<String, TradeCost> costMapping = new HashMap<>();
 
-            // Place one item per discovered component
             int slotIndex = 0;
             for (Material mat : foundComponents) {
                 TradeCost cost = COMPONENT_COSTS.get(mat);
@@ -133,7 +139,6 @@ public class EngineerVillagerManager implements Listener {
                 slotIndex++;
                 if (slotIndex >= 54) break; // inventory is full
             }
-
             // Store this cost mapping for the player
             tradeCostsByPlayer.put(player, costMapping);
         }
@@ -173,6 +178,7 @@ public class EngineerVillagerManager implements Listener {
             meta.setDisplayName(ChatColor.GRAY + "No Redstone Components Nearby");
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.RED + "The Engineer cannot produce any trades!");
+            meta.setLore(lore);
             lockedItem.setItemMeta(meta);
         }
         return lockedItem;
@@ -181,7 +187,7 @@ public class EngineerVillagerManager implements Listener {
     /**
      * Creates an engineer trade item representing one discovered component.
      * Display name uses a prettified version of the Material name.
-     * Lore shows the cost for a single item.
+     * Lore shows the cost in Redstone Blocks.
      */
     private ItemStack createEngineerTradeItem(Material componentMat, TradeCost cost) {
         // Use the component material as the base item
@@ -190,20 +196,14 @@ public class EngineerVillagerManager implements Listener {
         if (meta != null) {
             // Convert the material name to properly capitalized words
             String matName = formatMaterialName(componentMat.name());
-
-            // Set the display name with proper capitalization
             meta.setDisplayName(ChatColor.YELLOW + matName);
 
-            // Add the cost details to the lore (for a single unit)
+            // Add the cost details to the lore
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.GRAY + "Left-click: Buy 1 for "
-                    + ChatColor.GREEN + cost.emeraldCost + " emeralds "
-                    + ChatColor.GRAY + "AND "
-                    + ChatColor.RED + cost.redstoneCost + " redstone");
+                    + ChatColor.RED + cost.redstoneBlockCost + " Redstone Block(s)");
             lore.add(ChatColor.GRAY + "Right-click: Buy 4 for "
-                    + ChatColor.GREEN + (cost.emeraldCost * 4) + " emeralds "
-                    + ChatColor.GRAY + "AND "
-                    + ChatColor.RED + (cost.redstoneCost * 4) + " redstone");
+                    + ChatColor.RED + (cost.redstoneBlockCost * 4) + " Redstone Block(s)");
             lore.add(ChatColor.GRAY + "Click to purchase!");
             meta.setLore(lore);
 
@@ -237,12 +237,10 @@ public class EngineerVillagerManager implements Listener {
         ItemStack clickedItem = event.getCurrentItem();
         if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
 
-        // Retrieve the cost mapping for this player
         Player player = (Player) event.getWhoClicked();
         Map<String, TradeCost> costMapping = tradeCostsByPlayer.get(player);
         if (costMapping == null) return;
 
-        // Check if the clicked item is one of our known trades
         String displayName = (clickedItem.hasItemMeta() && clickedItem.getItemMeta().hasDisplayName())
                 ? clickedItem.getItemMeta().getDisplayName()
                 : "";
@@ -261,28 +259,22 @@ public class EngineerVillagerManager implements Listener {
     }
 
     /**
-     * Removes the required amounts (emeralds + redstone) and gives the purchased item(s).
+     * Removes the required number of Redstone Blocks and gives the purchased item(s).
      * 'quantity' is how many of the item to buy in one click.
      */
     private void processEngineerPurchase(Player player, ItemStack itemForSale, TradeCost cost, int quantity) {
-        int totalEmeraldCost = cost.emeraldCost * quantity;
-        int totalRedstoneCost = cost.redstoneCost * quantity;
+        int totalRedstoneBlockCost = cost.redstoneBlockCost * quantity;
 
-        // Check if player has enough resources
-        if (!hasEnoughMaterial(player, Material.EMERALD, totalEmeraldCost)) {
+        // Check if player has enough Redstone Blocks
+        if (!hasEnoughMaterial(player, Material.REDSTONE_BLOCK, totalRedstoneBlockCost)) {
             player.sendMessage(ChatColor.RED + "You need at least "
-                    + totalEmeraldCost + " emeralds to buy " + quantity + " of this item!");
-            return;
-        }
-        if (!hasEnoughMaterial(player, Material.REDSTONE, totalRedstoneCost)) {
-            player.sendMessage(ChatColor.RED + "You need at least "
-                    + totalRedstoneCost + " redstone to buy " + quantity + " of this item!");
+                    + totalRedstoneBlockCost + " Redstone Block(s) to buy "
+                    + quantity + " of this item!");
             return;
         }
 
-        // Remove the required items
-        removeMaterial(player, Material.EMERALD, totalEmeraldCost);
-        removeMaterial(player, Material.REDSTONE, totalRedstoneCost);
+        // Remove the required Redstone Blocks
+        removeMaterial(player, Material.REDSTONE_BLOCK, totalRedstoneBlockCost);
 
         // Give the purchased items to the player
         ItemStack purchasedStack = new ItemStack(itemForSale.getType(), quantity);
@@ -331,19 +323,6 @@ public class EngineerVillagerManager implements Listener {
         if (event.getView().getTitle().equals(ChatColor.DARK_RED + "Engineer Trades")) {
             engineerInteractionMap.remove(event.getPlayer());
             tradeCostsByPlayer.remove(event.getPlayer());
-        }
-    }
-
-    /**
-     * Simple record for emerald+redstone cost.
-     */
-    private static class TradeCost {
-        public final int emeraldCost;
-        public final int redstoneCost;
-
-        public TradeCost(int emeraldCost, int redstoneCost) {
-            this.emeraldCost = emeraldCost;
-            this.redstoneCost = redstoneCost;
         }
     }
 }

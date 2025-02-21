@@ -1,11 +1,11 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.subsystems.enchanting;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.XPManager;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * Utility class for handling enchantments on ItemStacks.
