@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.UUID;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager; // <-- if you want to reference it
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -179,10 +180,12 @@ public class XPManager implements CommandExecutor {
 
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
+
     /**
-     * This is the main XP-adding method. If a player gains XP in a skill,
-     * we check if they leveled up. If so, we play a sound and send them
-     * one consolidated chat message with their new stats.
+     * Main XP-adding method. If a player gains XP:
+     *  - We check if they leveled up (oldLevel < newLevel).
+     *  - If so, we send them a single consolidated chat message.
+     *  - If skill != "Player", we also funnel some extra XP into the "Player" skill.
      */
     public void addXP(Player player, String skill, double xp) {
         UUID uuid = player.getUniqueId();
@@ -210,17 +213,35 @@ public class XPManager implements CommandExecutor {
         if (newLevel > oldLevel) {
             player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0F, 1.0F);
             sendSkillLevelUpMessage(player, skill, newLevel);
+
+            // ---------- ADDITIONAL CHECK FOR HOSTILITY UNLOCKS ----------
+            // Only do this check if the skill is "Player"
+            // (assuming that's what controls hostility tier).
+            if (skill.equalsIgnoreCase("Player")) {
+                int oldTier = getTierFromLevel(oldLevel);
+                int newTier = getTierFromLevel(newLevel);
+
+                if (newTier > oldTier) {
+                    // They have unlocked a higher hostility tier; let them know.
+                    // We’re not forcibly setting it, just telling them they can do it.
+                    player.sendMessage(ChatColor.GREEN + "You have unlocked Hostility Tier "
+                            + newTier + "! Use "
+                            + ChatColor.YELLOW + "/hostility"
+                            + ChatColor.GREEN + " to select it.");
+                }
+            }
+            // -----------------------------------------------------------
         }
 
-        // If skill != Player, also add 10% XP to "Player" skill
+        // If skill != "Player", also add some XP to "Player"
         if (!skill.equalsIgnoreCase("Player")) {
             addXPToSkill(player, "Player", Math.max(xp * 0.5, 1));
         }
     }
 
     /**
-     * Similar to addXP, but this method DOES NOT also push XP into "Player" skill.
-     * It's used internally so you don't recursively keep adding XP into Player.
+     * Internal method to add XP specifically to a skill
+     * (bypassing the "add some to 'Player'" recursion).
      */
     private void addXPToSkill(Player player, String skill, double xp) {
         UUID uuid = player.getUniqueId();
@@ -231,7 +252,6 @@ public class XPManager implements CommandExecutor {
         int oldLevel = calculateLevel(currentXP);
         int newLevel = calculateLevel(newXP);
 
-        // If skill leveled up, show the consolidated message
         if (newLevel > oldLevel) {
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
             sendSkillLevelUpMessage(player, skill, newLevel);
@@ -239,32 +259,27 @@ public class XPManager implements CommandExecutor {
     }
 
     /**
-     * Directly sets a player's XP for a given skill. If it causes a level-up,
-     * we do the same single-message approach.
+     * Directly sets a player's XP for a given skill.
      */
     public void setXP(Player player, String skill, int xp) {
         UUID uuid = player.getUniqueId();
         int currentXP = loadXP(uuid, skill);
         int oldLevel = calculateLevel(currentXP);
 
-        // Ensure the file for that skill exists
         createDatabase(uuid, skill);
-
-        // Save the new XP
         saveXP(uuid, skill, xp);
 
         int newLevel = calculateLevel(xp);
 
-        // If skill leveled up, show the consolidated message
         if (newLevel > oldLevel) {
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
             sendSkillLevelUpMessage(player, skill, newLevel);
-        }
 
-        // If the skill is not "Player", distribute 10% to "Player"
-        if (!skill.equalsIgnoreCase("Player")) {
-            double additionalXP = xp * 0.10;
-            addXPToSkill(player, "Player", additionalXP);
+            // Also pass some XP to "Player" if it's not the "Player" skill
+            if (!skill.equalsIgnoreCase("Player")) {
+                double additionalXP = xp * 0.10;
+                addXPToSkill(player, "Player", additionalXP);
+            }
         }
     }
 
@@ -308,18 +323,10 @@ public class XPManager implements CommandExecutor {
     // =================================================
     // ===============  SINGLE LEVEL-UP MESSAGE  =======
     // =================================================
-    /**
-     * Sends a single chat message that says "You leveled up to X in skill Y!"
-     * and includes all relevant stat changes for that skill. Replaces all old
-     * messages, titles, etc.
-     *
-     * If it's the "Player" skill, we also apply the regeneration/glowing effects
-     * that used to be in sendPlayerStatsMessage(), but with a single chat message.
-     */
     public void sendSkillLevelUpMessage(Player player, String skill, int newLevel) {
 
         //==========================
-        // 1) Special "Player" logic
+        // 1) If it's "Player", do special effects
         //==========================
         if (skill.equalsIgnoreCase("Player")) {
             player.setSaturation(20.0f);
@@ -328,26 +335,25 @@ public class XPManager implements CommandExecutor {
             player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 600, 0));
 
             // Adjust max health
-            double healthMultiplier = 1 + (Math.min(newLevel, 50) * 0.02);
+            double healthMultiplier = 1 + (Math.min(newLevel, 50) * 0.01);
             double newMaxHealth = 20.0 * healthMultiplier;
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHealth);
         }
 
         //==========================
-        // 2) Build the skill message
+        // 2) Build the chat message
         //==========================
         String borderTop    = ChatColor.DARK_AQUA + "╔═════════════════════╗";
         String borderBottom = ChatColor.DARK_AQUA + "╚═════════════════════╝";
-        // We’ll fill this in below:
+
         StringBuilder body = new StringBuilder();
 
-        // Put a big label so it’s clear
         body.append(ChatColor.DARK_AQUA).append("   ❖ ").append(ChatColor.WHITE)
                 .append("Level Up: ").append(ChatColor.AQUA).append("[").append(skill).append("] ")
                 .append(ChatColor.WHITE).append("→ Level ").append(ChatColor.YELLOW).append(newLevel)
                 .append("\n\n");
 
-        // Then skill-specific details:
+        // Then skill-specific details
         switch (skill.toLowerCase()) {
             case "player":
                 double healthMultiplier = 1 + ((Math.min(newLevel, 50) * 0.02));
@@ -392,7 +398,7 @@ public class XPManager implements CommandExecutor {
                 break;
 
             case "forestry":
-                int doubleLogsChance = newLevel; // 1% per level
+                int doubleLogsChance = newLevel;
                 body.append(ChatColor.WHITE).append("Your ")
                         .append(ChatColor.GOLD).append("Double Logs Chance ")
                         .append(ChatColor.WHITE).append("is now ")
@@ -426,25 +432,19 @@ public class XPManager implements CommandExecutor {
                 break;
 
             default:
-                // Unknown skill fallback
                 body.append(ChatColor.WHITE).append("Enjoy your new level in ")
                         .append(skill).append("!\n");
                 break;
         }
 
-        //==========================
-        // 3) Combine the message, send
-        //==========================
         player.sendMessage(borderTop);
-        player.sendMessage(body.toString().trim()); // trim in case of trailing newlines
+        player.sendMessage(body.toString().trim());
         player.sendMessage(borderBottom);
     }
-
 
     // =================================================
     // ===============      COMMAND EXECUTOR  ==========
     // =================================================
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
@@ -486,9 +486,6 @@ public class XPManager implements CommandExecutor {
                     return false;
                 }
                 saveXP(player.getUniqueId(), skill, currentXP - amount);
-
-                // Optionally, you can also check if this lost XP means they
-                // dropped a level, but typically you don’t do “down-level” messages.
                 player.sendMessage(ChatColor.GREEN + "Subtracted " + amount + " XP from your " + skill + " skill.");
                 break;
 
@@ -507,5 +504,29 @@ public class XPManager implements CommandExecutor {
                 return false;
         }
         return true;
+    }
+
+    // =================================================
+    // ===============  HOSTILITY TIER UTILITY  ========
+    // =================================================
+    /**
+     * Figures out which Hostility Tier a given Player-level unlocks:
+     *
+     *  - Level < 10 => Tier 1
+     *  - Level = 10..19 => Tier 2
+     *  - Level = 20..29 => Tier 3
+     *  ...
+     *  - Level = 90..99 => Tier 10
+     *  - Level >= 100 => still Tier 10, but doesn't unlock anything new at 100
+     */
+    public int getTierFromLevel(int level) {
+        if (level < 10) {
+            return 1;
+        } else if (level >= 90) {
+            return 10;
+        } else {
+            // e.g. Level=10 => 2, 20 => 3, 30 =>4, ... up to 80 =>9
+            return (level / 10) + 1;
+        }
     }
 }

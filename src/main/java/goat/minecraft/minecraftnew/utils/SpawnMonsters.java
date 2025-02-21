@@ -163,7 +163,7 @@ public class SpawnMonsters implements Listener {
         if (entity instanceof Creeper) {
             Random random = new Random();
             int randomValue = random.nextInt(100) + 1; // Generate a random number between 1 and 100
-            if (randomValue <= 80) { // Removes 80% of creepers
+            if (randomValue <= 90) { // Removes 90% of creepers
                 entity.remove();
             }
         }

@@ -1,14 +1,11 @@
 package goat.minecraft.minecraftnew.other.engineer;
 
+import goat.minecraft.minecraftnew.other.CustomBundleGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -30,46 +27,54 @@ public class EngineerVillagerManager implements Listener {
     private final Map<Player, Villager> engineerInteractionMap = new HashMap<>();
 
     /**
-     * Now we only store how many Redstone Blocks are required.
+     * TradeCost now holds:
+     * - The number of Redstone Blocks required.
+     * - The base amount of items given in a single (left-click) purchase.
      */
     private static class TradeCost {
         public final int redstoneBlockCost;
+        public final int baseOutput;
 
-        public TradeCost(int redstoneBlockCost) {
+        public TradeCost(int redstoneBlockCost, int baseOutput) {
             this.redstoneBlockCost = redstoneBlockCost;
+            this.baseOutput = baseOutput;
         }
     }
 
     /**
-     * Define the cost of each recognized redstone component in Redstone Blocks.
-     * Adjust the numbers as desired.
+     * Define each recognized redstone component with:
+     * - The cost in Redstone Blocks (redstoneBlockCost).
+     * - The base output of items (baseOutput).
+     *
+     * If you want the purchase to yield a lot of items, increase `baseOutput`.
+     * The total output for a right-click is baseOutput * 4.
      */
     private static final Map<Material, TradeCost> COMPONENT_COSTS = new HashMap<>() {{
-        put(Material.REDSTONE_BLOCK,    new TradeCost(1));
-        put(Material.REDSTONE_TORCH,    new TradeCost(1));
-        put(Material.REPEATER,          new TradeCost(2));
-        put(Material.COMPARATOR,        new TradeCost(3));
-        put(Material.TARGET,            new TradeCost(2));
-        put(Material.LEVER,             new TradeCost(1));
-        put(Material.DAYLIGHT_DETECTOR, new TradeCost(3));
-        put(Material.PISTON,            new TradeCost(2));
-        put(Material.STICKY_PISTON,     new TradeCost(4));
-        put(Material.SLIME_BLOCK,       new TradeCost(4));
-        put(Material.HONEY_BLOCK,       new TradeCost(4));
-        put(Material.DISPENSER,         new TradeCost(3));
-        put(Material.DROPPER,           new TradeCost(2));
-        put(Material.HOPPER,            new TradeCost(4));
-        put(Material.OBSERVER,          new TradeCost(3));
-        put(Material.RAIL,              new TradeCost(2));
-        put(Material.POWERED_RAIL,      new TradeCost(3));
-        put(Material.DETECTOR_RAIL,     new TradeCost(3));
-        put(Material.ACTIVATOR_RAIL,    new TradeCost(3));
-        put(Material.TNT,               new TradeCost(4));
-        put(Material.REDSTONE_LAMP,     new TradeCost(2));
-        put(Material.IRON_DOOR,         new TradeCost(2));
-        put(Material.IRON_TRAPDOOR,     new TradeCost(2));
-        put(Material.STONE_BUTTON,      new TradeCost(1));
-        put(Material.OAK_BUTTON,        new TradeCost(1));
+        // Material    -> new TradeCost(blockCost, baseOutput)
+        put(Material.REDSTONE_TORCH,     new TradeCost(1, 9));
+        put(Material.REPEATER,           new TradeCost(1, 3));
+        put(Material.COMPARATOR,         new TradeCost(1, 2));
+        put(Material.TARGET,             new TradeCost(1, 2));
+        put(Material.LEVER,              new TradeCost(1, 5));
+        put(Material.DAYLIGHT_DETECTOR,  new TradeCost(1, 3));
+        put(Material.PISTON,             new TradeCost(1, 2));
+        put(Material.STICKY_PISTON,      new TradeCost(1, 1));
+        put(Material.SLIME_BLOCK,        new TradeCost(1, 1));
+        put(Material.HONEY_BLOCK,        new TradeCost(2, 1));
+        put(Material.DISPENSER,          new TradeCost(1, 2));
+        put(Material.DROPPER,            new TradeCost(1, 4));
+        put(Material.HOPPER,             new TradeCost(1, 2));
+        put(Material.OBSERVER,           new TradeCost(1, 2));
+        put(Material.RAIL,               new TradeCost(1, 16));  // Example: 8 rails at once
+        put(Material.POWERED_RAIL,       new TradeCost(1, 8));
+        put(Material.DETECTOR_RAIL,      new TradeCost(1, 8));
+        put(Material.ACTIVATOR_RAIL,     new TradeCost(1, 8));
+        put(Material.TNT,                new TradeCost(1, 2));
+        put(Material.REDSTONE_LAMP,      new TradeCost(1, 4));
+        put(Material.IRON_DOOR,          new TradeCost(1, 2));
+        put(Material.IRON_TRAPDOOR,      new TradeCost(1, 2));
+        put(Material.STONE_BUTTON,       new TradeCost(1, 9));
+        put(Material.OAK_BUTTON,         new TradeCost(1, 9));
     }};
 
     // All redstone-related blocks we want to detect
@@ -121,7 +126,6 @@ public class EngineerVillagerManager implements Listener {
                     + ChatColor.RED + "I can craft more of whatever’s around here... but there's nothing!");
             inv.setItem(22, createNoComponentsItem());
         } else {
-            // Build a map of "displayName -> TradeCost" for referencing when the player clicks
             Map<String, TradeCost> costMapping = new HashMap<>();
 
             int slotIndex = 0;
@@ -133,13 +137,12 @@ public class EngineerVillagerManager implements Listener {
                 ItemStack tradeItem = createEngineerTradeItem(mat, cost);
                 inv.setItem(slotIndex, tradeItem);
 
-                // Record the cost so we can look it up on click by item name
+                // Record the cost so we can look it up by item display name
                 costMapping.put(tradeItem.getItemMeta().getDisplayName(), cost);
 
                 slotIndex++;
                 if (slotIndex >= 54) break; // inventory is full
             }
-            // Store this cost mapping for the player
             tradeCostsByPlayer.put(player, costMapping);
         }
 
@@ -186,24 +189,26 @@ public class EngineerVillagerManager implements Listener {
 
     /**
      * Creates an engineer trade item representing one discovered component.
-     * Display name uses a prettified version of the Material name.
-     * Lore shows the cost in Redstone Blocks.
+     * The lore shows the cost and the *base* amount of items you get on a left-click.
+     * Right-click multiplies both the cost & the output by 4.
      */
     private ItemStack createEngineerTradeItem(Material componentMat, TradeCost cost) {
-        // Use the component material as the base item
         ItemStack item = new ItemStack(componentMat);
         ItemMeta meta = item.getItemMeta();
         if (meta != null) {
-            // Convert the material name to properly capitalized words
             String matName = formatMaterialName(componentMat.name());
             meta.setDisplayName(ChatColor.YELLOW + matName);
 
-            // Add the cost details to the lore
+            int baseCost = cost.redstoneBlockCost;
+            int baseAmount = cost.baseOutput;
+            int bulkCost = baseCost * 4;
+            int bulkAmount = baseAmount * 4;
+
             List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GRAY + "Left-click: Buy 1 for "
-                    + ChatColor.RED + cost.redstoneBlockCost + " Redstone Block(s)");
-            lore.add(ChatColor.GRAY + "Right-click: Buy 4 for "
-                    + ChatColor.RED + (cost.redstoneBlockCost * 4) + " Redstone Block(s)");
+            lore.add(ChatColor.GRAY + "Left-click: Buy " + baseAmount + " for "
+                    + ChatColor.RED + baseCost + ChatColor.GRAY + " Redstone Block(s)");
+            lore.add(ChatColor.GRAY + "Right-click: Buy " + bulkAmount + " for "
+                    + ChatColor.RED + bulkCost + ChatColor.GRAY + " Redstone Block(s)");
             lore.add(ChatColor.GRAY + "Click to purchase!");
             meta.setLore(lore);
 
@@ -230,10 +235,9 @@ public class EngineerVillagerManager implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (!event.getView().getTitle().equals(ChatColor.DARK_RED + "Engineer Trades")) return;
-
         event.setCancelled(true);
-        if (event.getClickedInventory() == null) return;
 
+        if (event.getClickedInventory() == null) return;
         ItemStack clickedItem = event.getCurrentItem();
         if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
 
@@ -247,55 +251,77 @@ public class EngineerVillagerManager implements Listener {
         TradeCost cost = costMapping.get(displayName);
         if (cost == null) return; // Not one of our trades
 
-        // Determine if the user did left-click or right-click
         ClickType clickType = event.getClick();
         if (clickType.isRightClick()) {
-            // Buying 4 items
+            // Buying 4x
             processEngineerPurchase(player, clickedItem, cost, 4);
         } else {
-            // Default: left-click => buy 1
+            // Left-click => buy 1x
             processEngineerPurchase(player, clickedItem, cost, 1);
         }
     }
 
     /**
      * Removes the required number of Redstone Blocks and gives the purchased item(s).
-     * 'quantity' is how many of the item to buy in one click.
+     * 'multiplier' is 1 for left-click, 4 for right-click.
      */
-    private void processEngineerPurchase(Player player, ItemStack itemForSale, TradeCost cost, int quantity) {
-        int totalRedstoneBlockCost = cost.redstoneBlockCost * quantity;
+    private void processEngineerPurchase(Player player, ItemStack itemForSale, TradeCost cost, int multiplier) {
+        // Total cost in Redstone Blocks
+        int totalRedstoneBlockCost = cost.redstoneBlockCost * multiplier;
+        // Total number of items the player gets
+        int totalOutputAmount = cost.baseOutput * multiplier;
 
-        // Check if player has enough Redstone Blocks
-        if (!hasEnoughMaterial(player, Material.REDSTONE_BLOCK, totalRedstoneBlockCost)) {
-            player.sendMessage(ChatColor.RED + "You need at least "
-                    + totalRedstoneBlockCost + " Redstone Block(s) to buy "
-                    + quantity + " of this item!");
-            return;
+        // 1) Count how many Redstone Blocks the player has in their main inventory
+        int blocksInInventory = countRedstoneBlocksInInventory(player);
+
+        if (blocksInInventory >= totalRedstoneBlockCost) {
+            // The main inventory alone is enough
+            removeMaterial(player, Material.REDSTONE_BLOCK, totalRedstoneBlockCost);
+        } else {
+            // The player doesn't have enough in main inventory
+            // Remove whatever they do have from main inventory
+            removeMaterial(player, Material.REDSTONE_BLOCK, blocksInInventory);
+
+            // We still need this many
+            int shortfall = totalRedstoneBlockCost - blocksInInventory;
+
+            // Attempt removing shortfall from the backpack
+            boolean success = CustomBundleGUI.getInstance().removeRedstoneBlocksFromBackpack(player, shortfall);
+            if (!success) {
+                // They can’t afford the cost from inventory + backpack
+                player.sendMessage(ChatColor.RED + "You don't have enough Redstone Blocks (in inventory or backpack).");
+                return; // Stop here
+            }
         }
 
-        // Remove the required Redstone Blocks
-        removeMaterial(player, Material.REDSTONE_BLOCK, totalRedstoneBlockCost);
-
-        // Give the purchased items to the player
-        ItemStack purchasedStack = new ItemStack(itemForSale.getType(), quantity);
-        player.getInventory().addItem(purchasedStack);
+        // If we get here, we've successfully removed enough blocks overall.
+        // --- Give the purchased items ---
+        ItemStack purchasedStack = new ItemStack(itemForSale.getType(), totalOutputAmount);
+        Map<Integer, ItemStack> leftover = player.getInventory().addItem(purchasedStack);
+        for (ItemStack leftoverItem : leftover.values()) {
+            // If inventory is full, drop any leftover items on the ground
+            player.getWorld().dropItemNaturally(player.getLocation(), leftoverItem);
+        }
 
         // Feedback
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
-        player.sendMessage(ChatColor.GREEN + "Purchase successful! You got " + quantity + "x "
+        player.sendMessage(ChatColor.GREEN + "Purchase successful! You got " + totalOutputAmount + "x "
                 + formatMaterialName(itemForSale.getType().name()) + ".");
     }
 
-    private boolean hasEnoughMaterial(Player player, Material mat, int requiredAmount) {
+    /**
+     * Helper to count how many Redstone Blocks are in a player's main inventory.
+     */
+    private int countRedstoneBlocksInInventory(Player player) {
         int count = 0;
         for (ItemStack stack : player.getInventory().getContents()) {
-            if (stack != null && stack.getType() == mat) {
+            if (stack != null && stack.getType() == Material.REDSTONE_BLOCK) {
                 count += stack.getAmount();
-                if (count >= requiredAmount) return true;
             }
         }
-        return false;
+        return count;
     }
+
 
     private void removeMaterial(Player player, Material mat, int amountToRemove) {
         int remaining = amountToRemove;

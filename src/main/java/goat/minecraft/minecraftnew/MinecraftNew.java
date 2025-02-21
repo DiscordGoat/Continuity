@@ -153,7 +153,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         xpManager = new XPManager(this);
         CustomBundleGUI.init(this);
-        getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
+        //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 
         forestryManager = new ForestryManager(this);
         getServer().getPluginManager().registerEvents(new Forestry(), this);

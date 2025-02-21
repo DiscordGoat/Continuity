@@ -26,9 +26,6 @@ public class HostilityManager implements Listener {
 
     private static final String CONFIG_KEY = "playerTiers";
 
-    /**
-     * Private constructor to enforce Singleton pattern.
-     */
     public HostilityManager(JavaPlugin plugin) {
         this.plugin = plugin;
 
@@ -49,13 +46,6 @@ public class HostilityManager implements Listener {
         plugin.getLogger().info("[HostilityManager] Initialized and registered.");
     }
 
-    /**
-     * Returns the singleton instance of HostilityManager.
-     * If it doesn't exist, creates it.
-     *
-     * @param plugin The main plugin instance.
-     * @return The HostilityManager instance.
-     */
     public static synchronized HostilityManager getInstance(JavaPlugin plugin) {
         if (instance == null) {
             instance = new HostilityManager(plugin);
@@ -63,13 +53,6 @@ public class HostilityManager implements Listener {
         return instance;
     }
 
-    /**
-     * Method to get a player's difficulty tier.
-     * Defaults to 1 if not set.
-     *
-     * @param player The player whose tier is to be retrieved.
-     * @return The difficulty tier as an integer.
-     */
     public int getPlayerDifficultyTier(Player player) {
         if(player == null){
             return 1;
@@ -79,9 +62,6 @@ public class HostilityManager implements Listener {
         return hostilityConfig.getInt(path, 1); // Default tier is 1
     }
 
-    /**
-     * Saves the current configuration to the file.
-     */
     public void saveConfig() {
         try {
             hostilityConfig.save(hostilityFile);
@@ -92,12 +72,6 @@ public class HostilityManager implements Listener {
         }
     }
 
-    /**
-     * Sets the player's difficulty tier and saves it to the configuration.
-     *
-     * @param player The player whose tier is to be set.
-     * @param tier   The tier to set.
-     */
     public void setPlayerTier(Player player, int tier) {
         UUID uuid = player.getUniqueId();
         String path = CONFIG_KEY + "." + uuid.toString();
@@ -106,10 +80,18 @@ public class HostilityManager implements Listener {
     }
 
     /**
-     * Handles clicks within the Hostility GUI.
-     *
-     * @param event The inventory click event.
+     * Checks if the given tier is unlocked for a player's current level.
+     * Tier 1 = level >= 0
+     * Tier 2 = level >= 10
+     * Tier 3 = level >= 20
+     * ...
+     * Tier 10 = level >= 90
      */
+    private boolean isTierUnlocked(Player player, int tier) {
+        int requiredLevel = (tier - 1) * 10;
+        return player.getLevel() >= requiredLevel;
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getView().getTitle().equals(ChatColor.DARK_RED + "Select Hostility Tier")) {
@@ -134,13 +116,21 @@ public class HostilityManager implements Listener {
             }
 
             // Handle tier selection
-            if (clickedItem.getType() == Material.RED_STAINED_GLASS_PANE) {
+            if (clickedItem.getType() == Material.RED_STAINED_GLASS_PANE
+                    || clickedItem.getType() == Material.GRAY_STAINED_GLASS_PANE) {
                 ItemMeta meta = clickedItem.getItemMeta();
                 if (meta != null && meta.hasDisplayName()) {
                     String displayName = ChatColor.stripColor(meta.getDisplayName());
                     if (displayName.startsWith("Tier ")) {
                         try {
                             int tier = Integer.parseInt(displayName.substring(5).trim());
+                            // Check if tier is unlocked
+                            if (!isTierUnlocked(player, tier)) {
+                                player.sendMessage(ChatColor.RED + "You haven't unlocked Tier " + tier + " yet!");
+                                player.closeInventory();
+                                return;
+                            }
+                            // If it is unlocked, set it
                             if (tier >= 1 && tier <= 10) {
                                 setPlayerTier(player, tier);
                                 player.sendMessage(ChatColor.GREEN + "Your hostility tier has been set to Tier " + tier + "!");
@@ -157,12 +147,6 @@ public class HostilityManager implements Listener {
         }
     }
 
-    /**
-     * Inner class to handle the /hostility command.
-     * Note: Do not register the command here.
-     * Register it in your main plugin class like this:
-     * getCommand("hostility").setExecutor(HostilityManager.getInstance(this).new HostilityCommand());
-     */
     public class HostilityCommand implements org.bukkit.command.CommandExecutor {
 
         @Override
@@ -178,12 +162,11 @@ public class HostilityManager implements Listener {
         }
 
         /**
-         * Opens the improved Hostility GUI for the player.
-         *
-         * @param player The player to open the GUI for.
+         * Opens the improved Hostility GUI for the player,
+         * showing only the tiers they've unlocked in red,
+         * and locked tiers in gray.
          */
         public void openHostilityGUI(Player player) {
-            // Create a 6-row (54-slot) inventory GUI
             Inventory gui = Bukkit.createInventory(null, 54, ChatColor.DARK_RED + "Select Hostility Tier");
 
             // Add decorative borders
@@ -195,21 +178,38 @@ public class HostilityManager implements Listener {
             }
             for (int i = 0; i < 54; i++) {
                 if (i < 9 || i >= 45 || i % 9 == 0 || i % 9 == 8) {
-                    gui.setItem(i, borderItem); // Place borders in top, bottom, and side slots
+                    gui.setItem(i, borderItem);
                 }
             }
 
-            // Add tier items (10 tiers distributed evenly)
-            int[] tierSlots = {11, 13, 15, 20, 22, 24, 29, 31, 33, 40}; // Centered slots for tiers
+            // Slots where tiers go
+            int[] tierSlots = {11, 13, 15, 20, 22, 24, 29, 31, 33, 40};
+            // Tier 1 -> 10
             for (int i = 0; i < 10; i++) {
-                ItemStack tierItem = new ItemStack(Material.RED_STAINED_GLASS_PANE);
+                int tierNum = i + 1;
+                Material mat;
+                String display;
+                String lore;
+
+                if (isTierUnlocked(player, tierNum)) {
+                    mat = Material.RED_STAINED_GLASS_PANE;
+                    display = ChatColor.BOLD + "Tier " + tierNum;
+                    lore = ChatColor.GRAY + "Click to select Tier " + tierNum;
+                } else {
+                    // locked
+                    mat = Material.GRAY_STAINED_GLASS_PANE;
+                    display = ChatColor.BOLD + "Tier " + tierNum;
+                    lore = ChatColor.RED + "Locked until level " + ((tierNum - 1) * 10);
+                }
+
+                ItemStack tierItem = new ItemStack(mat);
                 ItemMeta meta = tierItem.getItemMeta();
                 if (meta != null) {
-                    meta.setDisplayName(ChatColor.BOLD + "Tier " + (i + 1));
-                    meta.setLore(Collections.singletonList(ChatColor.GRAY + "Click to select Tier " + (i + 1)));
+                    meta.setDisplayName(display);
+                    meta.setLore(Collections.singletonList(lore));
                     tierItem.setItemMeta(meta);
                 }
-                gui.setItem(tierSlots[i], tierItem); // Place the tier item in the designated slot
+                gui.setItem(tierSlots[i], tierItem);
             }
 
             // Add "Close" button at the bottom center
@@ -219,9 +219,8 @@ public class HostilityManager implements Listener {
                 closeMeta.setDisplayName(ChatColor.RED + "Close");
                 closeItem.setItemMeta(closeMeta);
             }
-            gui.setItem(49, closeItem); // Bottom center slot
+            gui.setItem(49, closeItem);
 
-            // Open the inventory for the player
             player.openInventory(gui);
         }
     }

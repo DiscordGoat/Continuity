@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.subsystems.enchanting;
+package goat.minecraft.minecraftnew.cut_content;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

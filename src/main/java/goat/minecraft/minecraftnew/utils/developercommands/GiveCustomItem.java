@@ -12,8 +12,13 @@ public class GiveCustomItem implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "Only players can use this command.");
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can use this command!");
+            return true;
+        }
+
+        if (!player.hasPermission("continuity.admin")) {
+            player.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
             return true;
         }
 
@@ -22,7 +27,6 @@ public class GiveCustomItem implements CommandExecutor {
             return true;
         }
 
-        Player player = (Player) sender;
 
         // Combine arguments into the item name using underscores
         // e.g. /givecustomitem Carrot_Seeder -> itemName = "Carrot_Seeder"

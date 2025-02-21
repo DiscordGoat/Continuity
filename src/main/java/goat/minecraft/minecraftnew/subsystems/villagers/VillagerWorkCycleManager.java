@@ -28,7 +28,7 @@ public class VillagerWorkCycleManager implements Listener {
     private static VillagerWorkCycleManager instance;
 
 
-    private static final int WORK_CYCLE_TICKS = 24000;
+    private static final int WORK_CYCLE_TICKS = 5*20*60;
 
     // We will count down from WORK_CYCLE_TICKS to 0 every second.
     private int ticksUntilNextWorkCycle = WORK_CYCLE_TICKS;

@@ -2,6 +2,13 @@ name: MinecraftNew
 version: '${project.version}'
 main: goat.minecraft.minecraftnew.MinecraftNew
 api-version: '1.20'
+permissions:
+  continuity.use:
+    description: "Allows the player to use the main feature of Continuity"
+    default: true  # true = granted to everyone by default
+  continuity.admin:
+    description: "Grants admin access to Continuity"
+    default: op     # op = only given to server operators (OPs) by default
 commands:
   resetend:
     description: Resets The End dimension.

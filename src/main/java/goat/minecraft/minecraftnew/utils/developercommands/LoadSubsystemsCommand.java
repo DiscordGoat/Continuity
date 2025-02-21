@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 import goat.minecraft.minecraftnew.utils.XPManager;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,7 +16,15 @@ public class LoadSubsystemsCommand implements CommandExecutor {
         // Empty command for now
         XPManager xpManager = new XPManager(plugin);
         if (command.getName().equalsIgnoreCase("loadsubsystems")) {
-            Player p = (Player) sender;
+            if (!(sender instanceof Player p)) {
+                sender.sendMessage(ChatColor.RED + "Only players can use this command!");
+                return true;
+            }
+
+            if (!p.hasPermission("continuity.admin")) {
+                p.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
+                return true;
+            }
             sender.sendMessage("Load subsystems command triggered. Creating Databases...");
             xpManager.createDatabase(p.getUniqueId(), "Forestry");
             sender.sendMessage("Successfully Created Forestry Subsystem");

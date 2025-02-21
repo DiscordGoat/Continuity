@@ -126,7 +126,7 @@ public class SkillsCommand implements CommandExecutor {
      * @return A formatted string showing the multipliers for the skill.
      */
     private List<String> getSkillStatLore(String skill, int level) {
-        double multiplier = 1 + (level * 0.01); // 2% per level
+        double multiplier = 1 + (level * 0.01); // 1% per level
         switch (skill) {
             case "Smithing":
                 int successChance = 50 + (int) (0.5 * level);
@@ -173,10 +173,12 @@ public class SkillsCommand implements CommandExecutor {
                         ChatColor.RED + "Damage Multiplier: " + ChatColor.GREEN + String.format("%.2f", (1 + level * 0.03)) + "x"
                 );
             case "Player":
+
                 multiplier = Math.min(multiplier, 2.00); // Cap multiplier at 2.00x
                 return Arrays.asList(
                         ChatColor.AQUA + "Level: " + ChatColor.GREEN + level,
-                        ChatColor.AQUA + "Health Boost: " + ChatColor.GREEN + String.format("%.2f", multiplier) + "x"
+                        ChatColor.AQUA + "Health Boost: " + ChatColor.GREEN + String.format("%.2f", multiplier) + "x",
+                        ChatColor.RED + "Max Hostility Tier: " + ChatColor.DARK_RED + xpManager.getTierFromLevel(level)
                 );
             case "Forestry":
                 int forestryLevel = level; // Forestry level

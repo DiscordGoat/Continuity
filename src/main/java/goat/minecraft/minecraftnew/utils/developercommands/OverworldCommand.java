@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -11,12 +12,22 @@ import org.bukkit.entity.Player;
 public class OverworldCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
-            sender.sendMessage("This command can only be used by a player!");
+
+        if (!(sender instanceof Player player)) {
+            sender.sendMessage(ChatColor.RED + "Only players can use this command!");
             return true;
         }
 
-        Player player = (Player) sender;
+        if (!player.hasPermission("continuity.admin")) {
+            player.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
+            return true;
+        }
+
+        if (!player.hasPermission("continuity.admin")) {
+            player.sendMessage(ChatColor.RED + "You lack the required permission to do this!");
+        return false;
+        }
+
         World overworld = Bukkit.getWorlds().stream()
                 .filter(world -> world.getEnvironment() == World.Environment.NORMAL)
                 .findFirst()

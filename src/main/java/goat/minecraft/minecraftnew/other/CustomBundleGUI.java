@@ -133,7 +133,68 @@ public class CustomBundleGUI implements Listener {
             saveBundleInventory(player, event.getInventory());
         }
     }
+    public boolean removeRedstoneBlocksFromBackpack(Player player, int neededBlocks) {
+        String playerUUID = player.getUniqueId().toString();
 
+        if (!storageConfig.contains(playerUUID)) {
+            return false;
+        }
+
+        int totalBlocks = 0;
+        List<SlotData> blockSlots = new ArrayList<>();
+
+        // 1) Tally up the Redstone Blocks
+        for (int slot = 0; slot < 54; slot++) {
+            String path = playerUUID + "." + slot;
+            if (!storageConfig.contains(path)) continue;
+
+            ItemStack stack = storageConfig.getItemStack(path);
+            if (stack == null || stack.getType() == Material.AIR) {
+                continue;
+            }
+            int amount = stack.getAmount();
+
+            if (stack.getType() == Material.REDSTONE_BLOCK) {
+                totalBlocks += amount;
+                blockSlots.add(new SlotData(slot, amount));
+            }
+        }
+
+        if (totalBlocks < neededBlocks) {
+            return false; // Not enough blocks in total
+        }
+
+        int stillNeeded = neededBlocks;
+
+        // 2) Remove from the found Redstone Block stacks
+        for (SlotData slotData : blockSlots) {
+            if (stillNeeded <= 0) break;
+
+            String path = playerUUID + "." + slotData.slotIndex;
+            int stackAmt = slotData.amount;
+
+            if (stackAmt <= stillNeeded) {
+                // Remove the entire stack
+                storageConfig.set(path, null);
+                stillNeeded -= stackAmt;
+            } else {
+                // Partial removal from this stack
+                int leftover = stackAmt - stillNeeded;
+                stillNeeded = 0;
+                ItemStack newStack = new ItemStack(Material.REDSTONE_BLOCK, leftover);
+                storageConfig.set(path, newStack);
+            }
+        }
+
+        // 3) Save changes
+        try {
+            storageConfig.save(storageFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
     public boolean removeEmeraldsFromBackpack(Player player, int neededEmeralds) {
         String playerUUID = player.getUniqueId().toString();
 
