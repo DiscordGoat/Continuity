@@ -441,6 +441,7 @@ public class VillagerTradeManager implements Listener {
         armorerPurchases.add(createTradeMap("ARMORER_ENCHANT", 1, 16, 5)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE", 1, 32, 5)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE_TWO", 1, 64, 5)); // Custom Item
+        armorerPurchases.add(createTradeMap("CONTINGENCY", 1, 64, 5)); // Custom Item
 
         armorerPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
 
@@ -784,6 +785,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getSweepingEdge();
             case "CARTOGRAPHER_SHIPWRECK":
                 return ItemRegistry.getCartographerShipwreck();
+            case "CONTINGENCY":
+                return ItemRegistry.getPreservation();
             case "CARTOGRAPHER_BURIED_TREASURE":
                 return ItemRegistry.getCartographerBuriedTreasure();
             case "CARTOGRAPHER_IGLOO":

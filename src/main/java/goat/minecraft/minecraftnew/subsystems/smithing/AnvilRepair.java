@@ -479,6 +479,7 @@ public class AnvilRepair implements Listener {
 
                     billableItems.add(Material.YELLOW_DYE);
                     billableItems.add(Material.TURTLE_HELMET);
+                    billableItems.add(Material.ENDER_CHEST);
                     billableItems.add(Material.SCUTE);
                     billableItems.add(Material.CYAN_DYE);
 
@@ -860,6 +861,11 @@ public class AnvilRepair implements Listener {
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Everflame")&& TOOLS.contains(repairee.getType())) {
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Forge", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Forge") + 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Contingency Plan")&& ARMOR.contains(repairee.getType())) {
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Preservation", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Preservation") + 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
 
             return;

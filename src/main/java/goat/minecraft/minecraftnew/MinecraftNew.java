@@ -352,6 +352,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new LethalReaction(), this);
         getServer().getPluginManager().registerEvents(new Bloodlust(), this);
         getServer().getPluginManager().registerEvents(new Rappel(), this);
+        getServer().getPluginManager().registerEvents(new Preservation(), this);
 
         CustomEnchantmentManager.registerEnchantment("Feed", 3, true);
         CustomEnchantmentManager.registerEnchantment("Cleaver", 5, true);
@@ -369,6 +370,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomEnchantmentManager.registerEnchantment("Bloodlust", 5, true);
         CustomEnchantmentManager.registerEnchantment("Experience", 5, true);
         CustomEnchantmentManager.registerEnchantment("Rappel", 1, true);
+        CustomEnchantmentManager.registerEnchantment("Preservation", 1, true);
 
 
         getServer().getPluginManager().registerEvents(new KnightMob(this), this);
