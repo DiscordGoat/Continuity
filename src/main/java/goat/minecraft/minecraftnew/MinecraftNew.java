@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
 import goat.minecraft.minecraftnew.other.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionListener;
+import goat.minecraft.minecraftnew.other.meritperks.*;
 import goat.minecraft.minecraftnew.other.qol.*;
 import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
@@ -141,6 +142,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public LockedRecipeManager getLockedRecipeManager() {
         return lockedRecipeManager;
     }
+
+
     @Override
     public void onEnable() {
         if (!getDataFolder().exists()) {
@@ -154,6 +157,16 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         // Register event listener for inventory clicks
         getServer().getPluginManager().registerEvents(new MeritCommand(this, playerData), this);
+
+        //add merit perks
+        getServer().getPluginManager().registerEvents(new EnderMind(playerData), this);
+        getServer().getPluginManager().registerEvents(new ObsidianPlating(playerData), this);
+        getServer().getPluginManager().registerEvents(new BerserkersRage(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new TacticalRetreat(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new VampiricStrike(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new LordOfThunder(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new QuickSwap(this, playerData), this);
+
 
 
 

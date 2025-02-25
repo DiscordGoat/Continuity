@@ -1,12 +1,14 @@
 package goat.minecraft.minecraftnew.other.qol;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Openable;
 import org.bukkit.block.data.type.Door;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
@@ -34,28 +36,31 @@ public class Doors implements Listener {
         if (doorData.isOpen()) {
             return;
         }
+        PlayerDataManager playerDataManager = new PlayerDataManager(MinecraftNew.getInstance());
+        Player player = event.getPlayer();
+        if(playerDataManager.hasPerk(player.getUniqueId(), "Motion Sensor")) {
+            openOrCloseDoor(bottomDoorBlock, true);
+            playDoorSound(bottomDoorBlock, true);
 
-        openOrCloseDoor(bottomDoorBlock, true);
-        playDoorSound(bottomDoorBlock, true);
-
-        Block doubleDoorBlock = findDoubleDoor(bottomDoorBlock);
-        if (doubleDoorBlock != null) {
-            openOrCloseDoor(getBottomPart(doubleDoorBlock), true);
-            playDoorSound(doubleDoorBlock, true);
-        }
-
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                openOrCloseDoor(bottomDoorBlock, false);
-                playDoorSound(bottomDoorBlock, false);
-
-                if (doubleDoorBlock != null) {
-                    openOrCloseDoor(getBottomPart(doubleDoorBlock), false);
-                    playDoorSound(doubleDoorBlock, false);
-                }
+            Block doubleDoorBlock = findDoubleDoor(bottomDoorBlock);
+            if (doubleDoorBlock != null) {
+                openOrCloseDoor(getBottomPart(doubleDoorBlock), true);
+                playDoorSound(doubleDoorBlock, true);
             }
-        }.runTaskLater(MinecraftNew.getInstance(), 40L);
+
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    openOrCloseDoor(bottomDoorBlock, false);
+                    playDoorSound(bottomDoorBlock, false);
+
+                    if (doubleDoorBlock != null) {
+                        openOrCloseDoor(getBottomPart(doubleDoorBlock), false);
+                        playDoorSound(doubleDoorBlock, false);
+                    }
+                }
+            }.runTaskLater(MinecraftNew.getInstance(), 40L);
+        }
     }
 
     private boolean isDoor(Material material) {

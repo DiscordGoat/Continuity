@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -60,32 +61,38 @@ public class ShulkerBox implements Listener {
 
         // ========== SHULKER BOX LOGIC ==========
         if (ALL_SHULKERS.contains(clickedItem.getType())) {
-            e.setCancelled(true);
+            PlayerDataManager playerDataManager = new PlayerDataManager(MinecraftNew.getInstance());
+            if(playerDataManager.hasPerk(player.getUniqueId(), "Shulkl Box")) {
+                e.setCancelled(true);
 
-            // Get ShulkerBox block state
-            BlockStateMeta meta = (BlockStateMeta) clickedItem.getItemMeta();
-            org.bukkit.block.ShulkerBox shulkerBox = (org.bukkit.block.ShulkerBox) meta.getBlockState();
+                // Get ShulkerBox block state
+                BlockStateMeta meta = (BlockStateMeta) clickedItem.getItemMeta();
+                org.bukkit.block.ShulkerBox shulkerBox = (org.bukkit.block.ShulkerBox) meta.getBlockState();
 
-            // Create new inventory to show contents
-            Inventory shulkerInventory = Bukkit.createInventory(null, 27, "Shulker Box");
-            shulkerInventory.setContents(shulkerBox.getInventory().getContents());
+                // Create new inventory to show contents
+                Inventory shulkerInventory = Bukkit.createInventory(null, 27, "Shulker Box");
+                shulkerInventory.setContents(shulkerBox.getInventory().getContents());
 
-            openShulkers.put(player.getUniqueId(), clickedItem);
-            previousInventories.put(player.getUniqueId(), e.getView().getTopInventory());
+                openShulkers.put(player.getUniqueId(), clickedItem);
+                previousInventories.put(player.getUniqueId(), e.getView().getTopInventory());
 
-            player.openInventory(shulkerInventory);
+                player.openInventory(shulkerInventory);
+            }
         }
         // ========== NEW CRAFTING TABLE LOGIC ==========
         else if (clickedItem.getType() == Material.CRAFTING_TABLE) {
-            e.setCancelled(true);
+            PlayerDataManager playerDataManager = new PlayerDataManager(MinecraftNew.getInstance());
+            if(playerDataManager.hasPerk(player.getUniqueId(), "Workbench")) {
+                e.setCancelled(true);
 
-            // Save their current (backpack) inventory
-            previousInventories.put(player.getUniqueId(), e.getView().getTopInventory());
-            openCrafting.add(player.getUniqueId());
+                // Save their current (backpack) inventory
+                previousInventories.put(player.getUniqueId(), e.getView().getTopInventory());
+                openCrafting.add(player.getUniqueId());
 
-            // Open the built-in 3x3 crafting UI
-            // (passing null as Location is fine)
-            player.openWorkbench(player.getLocation(), true);
+                // Open the built-in 3x3 crafting UI
+                // (passing null as Location is fine)
+                player.openWorkbench(player.getLocation(), true);
+            }
         }
     }
 
