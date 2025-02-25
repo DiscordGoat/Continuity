@@ -5,8 +5,8 @@ import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManage
 import goat.minecraft.minecraftnew.subsystems.mining.MiningGemManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentUtils;
-import goat.minecraft.minecraftnew.utils.TalismanManager;
-import goat.minecraft.minecraftnew.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;

@@ -1,10 +1,9 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.utils.devtools;
 
 import java.io.*;
 import java.util.UUID;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
-import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager; // <-- if you want to reference it
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;

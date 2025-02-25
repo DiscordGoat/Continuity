@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other;
+package goat.minecraft.minecraftnew.cut_content;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;

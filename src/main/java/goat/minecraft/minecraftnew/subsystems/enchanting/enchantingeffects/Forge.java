@@ -2,7 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
-import goat.minecraft.minecraftnew.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;

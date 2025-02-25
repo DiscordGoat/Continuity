@@ -1,7 +1,7 @@
-package goat.minecraft.minecraftnew.other;
+package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;

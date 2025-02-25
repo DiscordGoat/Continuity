@@ -1,8 +1,8 @@
 package goat.minecraft.minecraftnew.utils.end;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.utils.SpawnMonsters;
-import goat.minecraft.minecraftnew.utils.XPManager;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.SpawnMonsters;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -13,7 +13,6 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.EnderCrystal;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerPortalEvent;

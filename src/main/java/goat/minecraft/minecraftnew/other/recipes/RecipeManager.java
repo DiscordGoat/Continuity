@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.other.recipes;
 
-import goat.minecraft.minecraftnew.utils.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

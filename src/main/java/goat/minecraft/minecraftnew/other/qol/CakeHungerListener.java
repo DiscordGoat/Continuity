@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other;
+package goat.minecraft.minecraftnew.other.qol;
 
 import org.bukkit.Material;
 import org.bukkit.event.EventHandler;

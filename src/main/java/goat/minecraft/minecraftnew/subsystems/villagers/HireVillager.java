@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
-import goat.minecraft.minecraftnew.utils.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,7 +9,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class HireVillager implements Listener {

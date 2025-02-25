@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.culinary;
 
-import goat.minecraft.minecraftnew.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;

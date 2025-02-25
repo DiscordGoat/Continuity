@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 
-import goat.minecraft.minecraftnew.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

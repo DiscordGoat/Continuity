@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.culinary;
 
-import goat.minecraft.minecraftnew.utils.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;

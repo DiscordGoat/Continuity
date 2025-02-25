@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.other.engineer;
 
-import goat.minecraft.minecraftnew.other.CustomBundleGUI;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

@@ -1,8 +1,9 @@
 package goat.minecraft.minecraftnew;
 
-import goat.minecraft.minecraftnew.other.*;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
 import goat.minecraft.minecraftnew.other.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionListener;
+import goat.minecraft.minecraftnew.other.qol.*;
 import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
@@ -40,13 +41,13 @@ import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
 import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
-import goat.minecraft.minecraftnew.other.PlayerLevel;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
-import goat.minecraft.minecraftnew.utils.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.end.CustomEndArchipelago;
 
 import org.bukkit.*;

@@ -1,9 +1,9 @@
-package goat.minecraft.minecraftnew.other;
+package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
+import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager;
 import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
-import goat.minecraft.minecraftnew.utils.ItemRegistry;
-import goat.minecraft.minecraftnew.other.ItemDisplayManager.ItemDisplay;
-import goat.minecraft.minecraftnew.utils.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager.ItemDisplay;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;

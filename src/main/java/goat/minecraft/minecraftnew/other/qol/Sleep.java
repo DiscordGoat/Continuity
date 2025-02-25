@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.other.qol;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;

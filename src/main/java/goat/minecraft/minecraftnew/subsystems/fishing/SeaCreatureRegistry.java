@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.fishing;
 
-import goat.minecraft.minecraftnew.utils.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
 import org.bukkit.Material;

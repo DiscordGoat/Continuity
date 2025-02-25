@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.utils.devtools;
 
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;

@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other;
+package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;

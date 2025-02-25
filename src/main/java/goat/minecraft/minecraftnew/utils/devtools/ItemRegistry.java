@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.utils.devtools;
 
 import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import org.bukkit.ChatColor;

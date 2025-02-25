@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils;
+package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.Bukkit;

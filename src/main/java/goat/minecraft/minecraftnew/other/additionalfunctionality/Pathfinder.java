@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other;
+package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import me.gamercoder215.mobchip.EntityBody;
 import me.gamercoder215.mobchip.EntityBrain;

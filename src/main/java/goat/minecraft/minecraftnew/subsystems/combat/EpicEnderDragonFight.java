@@ -1,22 +1,13 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.other.Pathfinder;
-import goat.minecraft.minecraftnew.utils.SpawnMonsters;
-import goat.minecraft.minecraftnew.utils.XPManager;
-import net.minecraft.world.BossBattle;
 import org.bukkit.*;
 import org.bukkit.boss.*;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.world.WorldLoadEvent;
-import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.*;
 
 import java.util.*;
 

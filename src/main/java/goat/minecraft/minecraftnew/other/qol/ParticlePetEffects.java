@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other;
+package goat.minecraft.minecraftnew.other.qol;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.Bukkit;
@@ -53,7 +53,7 @@ public class ParticlePetEffects implements Listener {
                     target.getLocation().add(0, 1, 0), // Slightly above the target
                     level, // Number of particles is the pet's level
                     0.5, 0.5, 0.5, // Spread around the target
-                    0.05 // Speed
+                    0.25 // Speed
             );
         }
     }
