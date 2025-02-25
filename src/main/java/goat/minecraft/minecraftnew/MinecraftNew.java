@@ -44,9 +44,11 @@ import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
+import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.end.CustomEndArchipelago;
 
@@ -141,10 +143,21 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     @Override
     public void onEnable() {
+        if (!getDataFolder().exists()) {
+            getDataFolder().mkdirs();
+        }
+        PlayerDataManager playerData = new PlayerDataManager(this);
+
+        // Register commands
+        getCommand("merits").setExecutor(new MeritCommand(this, playerData));
+        getCommand("grantmerit").setExecutor(new GrantMerit(this, playerData));
+
+        // Register event listener for inventory clicks
+        getServer().getPluginManager().registerEvents(new MeritCommand(this, playerData), this);
+
+
+
         CustomEndArchipelago.init(this);
-
-
-
 
         new Sleep(this);
         getServer().getPluginManager().registerEvents(new ShulkerBox(), this);

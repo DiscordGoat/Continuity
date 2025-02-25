@@ -10,6 +10,11 @@ permissions:
     description: "Grants admin access to Continuity"
     default: op     # op = only given to server operators (OPs) by default
 commands:
+  merits:
+    description: Open the merits GUI
+  grantmerit:
+    description: Grants a merit point to a player
+    usage: /grantmerit <playerName>
   resetend:
     description: Resets The End dimension.
     usage: /resetend
