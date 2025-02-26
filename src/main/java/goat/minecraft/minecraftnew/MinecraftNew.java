@@ -221,6 +221,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         engineerVillagerManager = new EngineerVillagerManager(this);
 
         getServer().getPluginManager().registerEvents(new UltimateEnchantmentListener(this), this);
+        getServer().getPluginManager().registerEvents(new LightningFirePreventionListener(), this);
 
         UltimateEnchantingSystem ultimateEnchantingSystem = new UltimateEnchantingSystem();
         ultimateEnchantingSystem.registerCustomEnchants();
