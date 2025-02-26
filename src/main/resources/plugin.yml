@@ -10,6 +10,8 @@ permissions:
     description: "Grants admin access to Continuity"
     default: op     # op = only given to server operators (OPs) by default
 commands:
+  discs:
+    description: Opens the music discs information GUI.
   merits:
     description: Open the merits GUI
   grantmerit:

@@ -45,9 +45,11 @@ import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
+import goat.minecraft.minecraftnew.utils.commands.DiscsCommand;
 import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
+import goat.minecraft.minecraftnew.utils.devtools.DiscsInventoryListener;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -197,6 +199,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         recipeManager.registerAllRecipes();
 
         getCommand("recipes").setExecutor(new RecipesCommand(recipeManager));
+        getCommand("discs").setExecutor(new DiscsCommand());
+        getServer().getPluginManager().registerEvents(new DiscsInventoryListener(), this);
         getCommand("viewrecipe").setExecutor(new ViewRecipeCommand(recipeManager));
         getServer().getPluginManager().registerEvents(new Doors(), this);
         getServer().getPluginManager().registerEvents(new ViewRecipeCommand.ViewRecipeListener(), this);
