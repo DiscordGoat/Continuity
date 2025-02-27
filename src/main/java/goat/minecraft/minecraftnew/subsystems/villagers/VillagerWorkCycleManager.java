@@ -82,6 +82,8 @@ public class VillagerWorkCycleManager implements Listener {
                 .toList()) {
             // Perform work for each villager
             performVillagerWork(villager);
+            VillagerTradeManager villagerTradeManager = new VillagerTradeManager(plugin);
+            villagerTradeManager.passivelyAddVillagerXP(villager);
         }
     }
 
@@ -94,15 +96,8 @@ public class VillagerWorkCycleManager implements Listener {
             case BUTCHER -> performButcherWork(villager, searchRadius);
             case FISHERMAN -> {
                 performFishermanWork(villager, searchRadius);
-                performFishermanWork(villager, searchRadius);
-                performFishermanWork(villager, searchRadius);
-                performFishermanWork(villager, searchRadius);
-                performFishermanWork(villager, searchRadius);
-                performFishermanWork(villager, searchRadius);
             }
             case LIBRARIAN -> {
-                performLibrarianWork(villager, searchRadius);
-                performLibrarianWork(villager, searchRadius);
                 performLibrarianWork(villager, searchRadius);
             }
             case CLERIC -> performClericWork(villager);
@@ -110,8 +105,6 @@ public class VillagerWorkCycleManager implements Listener {
             case FLETCHER -> performFletcherWork(villager, 50);
             case LEATHERWORKER -> performLeatherworkerWork(villager, searchRadius);
             case MASON -> {
-                performMasonWork(villager, searchRadius);
-                performMasonWork(villager, searchRadius);
                 performMasonWork(villager, searchRadius);
             }
             case SHEPHERD -> performShepherdWork(villager, searchRadius);
@@ -367,6 +360,8 @@ public class VillagerWorkCycleManager implements Listener {
                 Material.COD,
                 Material.SALMON,
                 Material.INK_SAC,
+                Material.PUFFERFISH,
+                Material.TROPICAL_FISH,
 
         };
         Material[] treasureItems = {
@@ -416,7 +411,7 @@ public class VillagerWorkCycleManager implements Listener {
 
         int roll = random.nextInt(100);
         Material item;
-        int quantity = 0;
+        int quantity = 5;
         if (influenceMap.containsKey(Material.WATER)) {
             quantity += 2; // Increase yield if water is nearby
         }

@@ -927,6 +927,41 @@ public class VillagerTradeManager implements Listener {
 
         return Math.max(1, (int) Math.floor(finalCost));
     }
+    /**
+     * Creates a custom item whose display name shows the villager's XP progress.
+     * The name is formatted as: (<current xp> | <current xp>/<xp required for next level>).
+     *
+     * @param villager The villager whose XP is used.
+     * @return An ItemStack (using PAPER) with the custom display name.
+     */
+    public ItemStack createVillagerXPDisplayItem(Villager villager) {
+        // Get the current XP and level of the villager.
+        int currentXP = villager.getVillagerExperience();
+        int currentLevel = villager.getVillagerLevel();
+
+        // Retrieve the XP required for the next level.
+        int xpForNextLevel = getExperienceForNextLevel(currentLevel);
+        if(xpForNextLevel > 1000){
+            xpForNextLevel = 0;
+        }
+
+        // Create the display name using the format: (<current xp> | <current xp>/<xp for next level>)
+        String displayName = "(" + currentXP + "/" + xpForNextLevel + ")";
+
+        // Create a new item; here we're using PAPER as an example.
+        ItemStack xpDisplayItem = new ItemStack(Material.PAPER);
+        ItemMeta meta = xpDisplayItem.getItemMeta();
+        if (meta != null) {
+            // Optionally, add color to the display name.
+            meta.setDisplayName(ChatColor.AQUA + displayName);
+            xpDisplayItem.setItemMeta(meta);
+        }
+
+        // Debug log: print out the values.
+        plugin.getLogger().info("[XP Display Item] Created item with name: " + displayName);
+
+        return xpDisplayItem;
+    }
 
     private void openVillagerTradeGUI(Player player) {
         Inventory tradeGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Villager Trading");
@@ -942,6 +977,8 @@ public class VillagerTradeManager implements Listener {
 
         // Create the divider item
         ItemStack dividerItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+
+        ItemStack xpItem = createVillagerXPDisplayItem(villager);
         ItemMeta dividerMeta = dividerItem.getItemMeta();
         if (dividerMeta != null) {
             dividerMeta.setDisplayName(ChatColor.DARK_GRAY + " ");
@@ -951,6 +988,7 @@ public class VillagerTradeManager implements Listener {
         // Place the divider between buys and sells (middle column)
         for (int i = 0; i < 6; i++) {
             tradeGUI.setItem(i * 9 + 4, dividerItem);
+            tradeGUI.setItem(4, xpItem);
         }
 
         // Populate the GUI with purchases (items villager is selling)
@@ -1549,19 +1587,93 @@ public class VillagerTradeManager implements Listener {
             villagerLevel++;
             villager.setVillagerLevel(villagerLevel);
             villager.setVillagerExperience(0);
+            // Reset xpThreshold for the new level
+            int newBaseThreshold = getExperienceForNextLevel(villagerLevel);
+            villager.setMetadata("xpThreshold", new FixedMetadataValue(plugin, newBaseThreshold));
             villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         }
+
     }
+    /**
+     * Passively adds XP to the villager when it "works".
+     * The villager gains 5% of the XP required for the next level (rounded down, minimum 1 XP),
+     * but only if at least one player is within 150 blocks.
+     * This method should be called every workcycle (e.g., every 5 minutes).
+     *
+     * @param villager The villager to add XP to.
+     */
+    public void passivelyAddVillagerXP(Villager villager) {
+        // Check for any player within 150 blocks of the villager.
+        boolean playerNearby = false;
+        for (Player player : villager.getWorld().getPlayers()) {
+            double distance = player.getLocation().distance(villager.getLocation());
+            if (distance <= 1000) {
+                playerNearby = true;
+                plugin.getLogger().info("[XP Update] Player '" + player.getName() + "' is within " + distance + " blocks.");
+                break;
+            }
+        }
+        if (!playerNearby) {
+            plugin.getLogger().info("[XP Update] No player found within 1000 blocks. No XP will be added this cycle.");
+            return;
+        }
+
+        // Get the villager's current level and XP information.
+
+        int currentLevel = villager.getVillagerLevel();
+        int xpForNextLevel = getExperienceForNextLevel(currentLevel);
+        int currentXP = villager.getVillagerExperience();
+        if(currentXP < -5){
+            currentXP = 1000;
+        }
+        plugin.getLogger().info("[XP Update] Villager Level: " + currentLevel
+                + " | Current XP: " + currentXP
+                + " | XP required for next level: " + xpForNextLevel);
+
+        // Calculate 5% of xpForNextLevel (rounded down), ensuring at least 1 XP is gained.
+        int xpIncrease = (int) Math.floor(xpForNextLevel * 0.05);
+        if (xpIncrease < 1) {
+            xpIncrease = 1;
+        }
+        if(villager.getVillagerLevel() == 5){
+            xpIncrease = 0;
+        }
+        plugin.getLogger().info("[XP Update] Calculated 5% XP increase: " + xpIncrease);
+
+        // Add the calculated XP to the villager's current XP.
+        int newXP = currentXP + xpIncrease;
+        villager.setVillagerExperience(newXP);
+        plugin.getLogger().info("[XP Update] New XP after addition: " + newXP);
+
+        // Check if the new XP meets or exceeds the threshold for leveling up.
+        if(newXP < 0){
+            newXP = 1000;
+        }
+        if (newXP >= xpForNextLevel && currentLevel < MAX_VILLAGER_LEVEL) {
+            // Calculate any leftover XP (if you want to carry over excess XP).
+            int leftoverXP = newXP - xpForNextLevel;
+            int newLevel = currentLevel + 1;
+            villager.setVillagerLevel(newLevel);
+            villager.setVillagerExperience(leftoverXP);
+            plugin.getLogger().info("[XP LevelUp] Villager leveled up from " + currentLevel + " to " + newLevel
+                    + ". XP reset to " + leftoverXP + " (excess XP carried over).");
+            villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+        } else {
+            plugin.getLogger().info("[XP Update] Villager has not reached the next level yet.");
+        }
+    }
+
+
 
     /**
      * Determines how much XP is needed for a villager to level up.
      */
     private int getExperienceForNextLevel(int currentLevel) {
         switch (currentLevel) {
-            case 1: return 10;
-            case 2: return 70;
-            case 3: return 150;
-            case 4: return 250;
+            case 1: return 10 *3;
+            case 2: return 70*3;
+            case 3: return 150 *3;
+            case 4: return 250 *3;
             default: return Integer.MAX_VALUE;
         }
     }

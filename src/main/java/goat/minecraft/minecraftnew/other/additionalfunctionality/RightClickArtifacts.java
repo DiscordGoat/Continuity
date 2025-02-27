@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.biomeutils.StructureUtils;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ReforgeItemProvider;
+import goat.minecraft.minecraftnew.utils.devtools.VillagerUtils;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -457,10 +458,20 @@ public class RightClickArtifacts implements Listener {
             }
             if (displayName.equals(ChatColor.YELLOW + "Hire Villager")) {
                 player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 1.0f);
-                player.getWorld().spawnEntity(player.getLocation(), EntityType.VILLAGER);
+                Villager villager = (Villager) player.getWorld().spawnEntity(player.getLocation(), EntityType.VILLAGER);
+
+                // Retrieve a funny name based on the villager's current profession.
+                // If there's no matching funny name, a random male name is returned.
+                String villagerName = VillagerUtils.getRandomMaleName();
+
+                // Set the custom name of the villager and make it visible.
+                villager.setCustomName(ChatColor.GREEN + villagerName);
+                villager.setCustomNameVisible(true);
+
                 decrementItemAmount(itemInHand, player);
                 return;
             }
+
 
             if (displayName.equals(ChatColor.YELLOW + "Pet Training")) {
                 PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
