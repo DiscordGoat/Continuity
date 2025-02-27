@@ -54,9 +54,6 @@ public class Shear implements Listener {
         mobStandardDrops.put(EntityType.SPIDER, Collections.singletonList(
                 new ItemStack(Material.STRING, 1)
         ));
-        mobStandardDrops.put(EntityType.ENDERMAN, Collections.singletonList(
-                new ItemStack(Material.ENDER_PEARL, 1)
-        ));
         mobStandardDrops.put(EntityType.ZOMBIFIED_PIGLIN, Arrays.asList( // Deprecated in newer versions; use ZOMBIFIED_PIGLIN
                 new ItemStack(Material.ROTTEN_FLESH, 1),
                 new ItemStack(Material.GOLD_NUGGET, 1)
@@ -198,7 +195,7 @@ public class Shear implements Listener {
         }
 
         // Calculate the activation chance (ShearLevel * 5)%
-        int chancePercentage = shearLevel * 7;
+        int chancePercentage = shearLevel * 2;
         int randomNumber = random.nextInt(100) + 1; // Generates a number between 1 and 100
 
         if (randomNumber <= chancePercentage) {
