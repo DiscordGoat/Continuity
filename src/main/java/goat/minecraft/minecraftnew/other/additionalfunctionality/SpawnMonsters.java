@@ -347,6 +347,7 @@ public class SpawnMonsters implements Listener {
         int level = 300; // Set EnderDragon level to 300
         // Apply regeneration effect.
         dragon.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
+        dragon.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, Integer.MAX_VALUE, 255, true));
 
         // Update health.
         double healthMultiplier = 1 + (level * 0.1);
@@ -381,7 +382,9 @@ public class SpawnMonsters implements Listener {
                 @Override
                 public void run() {
                     // Force EnderDragon level to 200 and apply special potion effects.
-                    int level = 200;
+                    int level = 300;
+                    mob.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
+                    mob.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, Integer.MAX_VALUE, 255, true));
                     mob.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
 
                     // Calculate health multiplier and update health.

@@ -1400,7 +1400,6 @@ public class VillagerTradeManager implements Listener {
 
         // --- Add bartering XP ---
         xpManager.addXP(player, "Bartering", 11);
-        openVillagerTradeGUI(player);
     }
 
     /**
@@ -1439,7 +1438,6 @@ public class VillagerTradeManager implements Listener {
 
             // Award Bartering XP to the player
             xpManager.addXP(player, "Bartering", 11);
-            openVillagerTradeGUI(player);
 
         } else {
             // Not enough valid items were removed
