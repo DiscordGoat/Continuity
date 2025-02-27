@@ -31,8 +31,8 @@ public class VillagerTradeManager implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<Player, Villager> playerVillagerMap = new HashMap<>(); // Map to store player-villager interactions
-    private boolean toggleFlag = false;
-    private boolean toggleFlagVillagerButton = false;
+
+
     // Whitelists for trades
     private static VillagerTradeManager instance;
 
@@ -1113,8 +1113,7 @@ public class VillagerTradeManager implements Listener {
         event.setCancelled(true);
 
         // Avoid double-click spam
-        if (!toggleFlagVillagerButton) {
-            toggleFlagVillagerButton = true;
+
 
             Player player = (Player) event.getWhoClicked();
             PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
@@ -1125,7 +1124,6 @@ public class VillagerTradeManager implements Listener {
                     || event.getCurrentItem().getType() == Material.GRAY_STAINED_GLASS_PANE
                     || villagerPet == null) {
 
-                toggleFlagVillagerButton = false; // Reset flag if we do nothing
                 return;
             }
 
@@ -1146,10 +1144,6 @@ public class VillagerTradeManager implements Listener {
             petManager.summonPet(player, "Villager");
             player.sendMessage(ChatColor.GREEN + "Villager Pet summoned while trading!");
             openVillagerTradeGUI(player);
-        } else {
-            // Another click toggles the flag off
-            toggleFlagVillagerButton = false;
-        }
     }
 
     @EventHandler
@@ -1183,7 +1177,7 @@ public class VillagerTradeManager implements Listener {
                 }
 
                 // Reset the toggle-flag on close
-                toggleFlagVillagerButton = false;
+
             }
         }, 20L); // 20 ticks = 1 second
     }
@@ -1224,8 +1218,7 @@ public class VillagerTradeManager implements Listener {
                 return; // Locked trade or divider
             }
 
-            if(!toggleFlag) {
-                toggleFlag = true;
+
                 int slot = event.getSlot();
                 Player player = (Player) event.getWhoClicked();
                 Villager villager = playerVillagerMap.get(player);
@@ -1257,9 +1250,6 @@ public class VillagerTradeManager implements Listener {
                         }
                     }
                 }
-            } else {
-                toggleFlag = false;
-            }
         }
     }
 

@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManage
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -48,7 +49,14 @@ public class Alchemy implements Listener {
         transformationMap.put(Material.DEEPSLATE_EMERALD_ORE, Material.EMERALD_BLOCK);
         // Add more transformations as needed
     }
-
+    public static boolean hasSilkTouch(Player player) {
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (item == null) {
+            return false;
+        }
+        // Using containsEnchantment is a quick check for the presence of Silk Touch.
+        return item.containsEnchantment(Enchantment.SILK_TOUCH);
+    }
     /**
      * Handles the BlockBreakEvent to apply the Alchemy enchantment effect.
      *
@@ -61,6 +69,9 @@ public class Alchemy implements Listener {
 
         // Check if the tool has the "Alchemy" enchantment
         if (!CustomEnchantmentManager.hasEnchantment(tool, "Alchemy")) {
+            return;
+        }
+        if (hasSilkTouch(player)) {
             return;
         }
 
