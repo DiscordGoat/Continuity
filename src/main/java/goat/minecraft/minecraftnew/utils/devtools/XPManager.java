@@ -172,13 +172,20 @@ public class XPManager implements CommandExecutor {
     // =================================================
     // ===============     CORE XP LOGIC   =============
     // =================================================
-    private void sendHotbarMessage(Player player, String skill, double xpGained, int currentXP, int xpToNextLevel) {
-        String message = ChatColor.AQUA + "[+" + (int) xpGained + " XP] " + ChatColor.GREEN + skill +
-                ChatColor.GRAY + " | Current XP: " + ChatColor.YELLOW + currentXP +
-                ChatColor.GRAY + " | Next Level: " + ChatColor.GOLD + xpToNextLevel;
+    // Updated sendHotbarMessage to include bonus XP info
+    private void sendHotbarMessage(Player player, String skill, double xpGained, int currentXP, int xpToNextLevel, double bonusXP) {
+        String bonusMessage = "";
+        if (bonusXP > 0) {
+            bonusMessage = ChatColor.LIGHT_PURPLE + " + Bonus: " + (int) bonusXP + " XP";
+        }
+        String message = ChatColor.AQUA + "[+" + (int) xpGained + " XP]" + bonusMessage + " "
+                + ChatColor.GREEN + skill
+                + ChatColor.GRAY + " | Current XP: " + ChatColor.YELLOW + currentXP
+                + ChatColor.GRAY + " | Next Level: " + ChatColor.GOLD + xpToNextLevel;
 
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
     }
+
 
     /**
      * Main XP-adding method. If a player gains XP:
@@ -190,13 +197,14 @@ public class XPManager implements CommandExecutor {
         UUID uuid = player.getUniqueId();
         int currentXP = loadXP(uuid, skill);
 
-        // Count how many 'Savant' enchantment items they have for a bonus
+        // Count how many 'Savant' enchantment items they have for a bonus.
         int savantCount = 0;
         for (ItemStack item : player.getInventory().getContents()) {
             if (item != null && CustomEnchantmentManager.hasEnchantment(item, "Savant")) {
                 savantCount++;
             }
         }
+        // Calculate bonus XP (5% per Savant)
         double bonusXP = xp * 0.05 * savantCount;
         int newXP = (int) (currentXP + xp + bonusXP);
 
@@ -205,8 +213,9 @@ public class XPManager implements CommandExecutor {
         int oldLevel = calculateLevel(currentXP);
         int newLevel = calculateLevel(newXP);
 
-        // Send hotbar message with XP details
-        sendHotbarMessage(player, skill, xp, newXP, getXPToNextLevel(player, skill));
+        // Now send the hotbar message with bonus XP information
+        sendHotbarMessage(player, skill, xp, newXP, getXPToNextLevel(player, skill), bonusXP);
+
 
         // Check if we leveled up
         if (newLevel > oldLevel) {
