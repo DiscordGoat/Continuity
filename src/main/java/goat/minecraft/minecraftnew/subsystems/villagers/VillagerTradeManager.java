@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.ServerUtils;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -1399,6 +1400,7 @@ public class VillagerTradeManager implements Listener {
 
         // --- Add bartering XP ---
         xpManager.addXP(player, "Bartering", 11);
+        openVillagerTradeGUI(player);
     }
 
     /**
@@ -1437,6 +1439,8 @@ public class VillagerTradeManager implements Listener {
 
             // Award Bartering XP to the player
             xpManager.addXP(player, "Bartering", 11);
+            openVillagerTradeGUI(player);
+
         } else {
             // Not enough valid items were removed
             player.sendMessage(ChatColor.RED + "You don't have enough required items to sell.");
@@ -1603,27 +1607,32 @@ public class VillagerTradeManager implements Listener {
      * @param villager The villager to add XP to.
      */
     public void passivelyAddVillagerXP(Villager villager) {
-        // Check for any player within 150 blocks of the villager.
-        boolean playerNearby = false;
+        // Check for any active (non-AFK) player within 1000 blocks of the villager.
+        boolean activePlayerNearby = false;
         for (Player player : villager.getWorld().getPlayers()) {
             double distance = player.getLocation().distance(villager.getLocation());
             if (distance <= 1000) {
-                playerNearby = true;
-                plugin.getLogger().info("[XP Update] Player '" + player.getName() + "' is within " + distance + " blocks.");
-                break;
+                if (!ServerUtils.isPlayerAFK(player)) {
+                    activePlayerNearby = true;
+                    plugin.getLogger().info("[XP Update] Active player '" + player.getName()
+                            + "' is within " + distance + " blocks.");
+                    break;
+                } else {
+                    plugin.getLogger().info("[XP Update] Player '" + player.getName()
+                            + "' is within " + distance + " blocks but is AFK.");
+                }
             }
         }
-        if (!playerNearby) {
-            plugin.getLogger().info("[XP Update] No player found within 1000 blocks. No XP will be added this cycle.");
+        if (!activePlayerNearby) {
+            plugin.getLogger().info("[XP Update] No active (non-AFK) player found within 1000 blocks. No XP will be added this cycle.");
             return;
         }
 
         // Get the villager's current level and XP information.
-
         int currentLevel = villager.getVillagerLevel();
         int xpForNextLevel = getExperienceForNextLevel(currentLevel);
         int currentXP = villager.getVillagerExperience();
-        if(currentXP < -5){
+        if (currentXP < -5) {
             currentXP = 1000;
         }
         plugin.getLogger().info("[XP Update] Villager Level: " + currentLevel
@@ -1635,7 +1644,8 @@ public class VillagerTradeManager implements Listener {
         if (xpIncrease < 1) {
             xpIncrease = 1;
         }
-        if(villager.getVillagerLevel() == 5){
+        // If villager is at max level, no XP is added.
+        if (villager.getVillagerLevel() == 5) {
             xpIncrease = 0;
         }
         plugin.getLogger().info("[XP Update] Calculated 5% XP increase: " + xpIncrease);
@@ -1645,23 +1655,24 @@ public class VillagerTradeManager implements Listener {
         villager.setVillagerExperience(newXP);
         plugin.getLogger().info("[XP Update] New XP after addition: " + newXP);
 
-        // Check if the new XP meets or exceeds the threshold for leveling up.
-        if(newXP < 0){
+        // If newXP is somehow negative, reset it.
+        if (newXP < 0) {
             newXP = 1000;
         }
+        // Check if the new XP meets or exceeds the threshold for leveling up.
         if (newXP >= xpForNextLevel && currentLevel < MAX_VILLAGER_LEVEL) {
-            // Calculate any leftover XP (if you want to carry over excess XP).
-            int leftoverXP = newXP - xpForNextLevel;
+            int leftoverXP = newXP - xpForNextLevel; // Carry over any extra XP.
             int newLevel = currentLevel + 1;
             villager.setVillagerLevel(newLevel);
             villager.setVillagerExperience(leftoverXP);
-            plugin.getLogger().info("[XP LevelUp] Villager leveled up from " + currentLevel + " to " + newLevel
-                    + ". XP reset to " + leftoverXP + " (excess XP carried over).");
+            plugin.getLogger().info("[XP LevelUp] Villager leveled up from " + currentLevel
+                    + " to " + newLevel + ". XP reset to " + leftoverXP + " (excess XP carried over).");
             villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         } else {
             plugin.getLogger().info("[XP Update] Villager has not reached the next level yet.");
         }
     }
+
 
 
 

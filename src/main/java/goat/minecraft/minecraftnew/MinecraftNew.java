@@ -49,10 +49,7 @@ import goat.minecraft.minecraftnew.utils.commands.DiscsCommand;
 import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
-import goat.minecraft.minecraftnew.utils.devtools.DiscsInventoryListener;
-import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
-import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.*;
 import goat.minecraft.minecraftnew.utils.end.CustomEndArchipelago;
 
 import org.bukkit.*;
@@ -172,6 +169,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
+        getServer().getPluginManager().registerEvents(new ServerUtils.PlayerMoveListener(), this);
         CustomEndArchipelago.init(this);
 
         new Sleep(this);
