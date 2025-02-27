@@ -82,7 +82,7 @@ public class VillagerWorkCycleManager implements Listener {
                 .toList()) {
             // Perform work for each villager
             performVillagerWork(villager);
-            VillagerTradeManager villagerTradeManager = new VillagerTradeManager(plugin);
+            VillagerTradeManager villagerTradeManager = VillagerTradeManager.getInstance(plugin);
             villagerTradeManager.passivelyAddVillagerXP(villager);
         }
     }

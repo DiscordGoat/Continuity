@@ -359,7 +359,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new RareCombatDrops(), this);
         getServer().getPluginManager().registerEvents(new PlayerOxygenManager(this), this);
         getServer().getPluginManager().registerEvents(new SeaCreatureRegistry(), this);
-        getServer().getPluginManager().registerEvents(new VillagerTradeManager(this), this);
+        VillagerTradeManager tradeManager = VillagerTradeManager.getInstance(this);
         getServer().getPluginManager().registerEvents(new CakeHungerListener(), this);
         getServer().getPluginManager().registerEvents(new CakeHungerListener(), this);
         getServer().getPluginManager().registerEvents(new PetDrops(this, PetManager.getInstance(this)), this);

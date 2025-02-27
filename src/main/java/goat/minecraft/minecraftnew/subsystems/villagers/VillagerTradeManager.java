@@ -34,6 +34,8 @@ public class VillagerTradeManager implements Listener {
     private boolean toggleFlag = false;
     private boolean toggleFlagVillagerButton = false;
     // Whitelists for trades
+    private static VillagerTradeManager instance;
+
     private final Map<Villager.Profession, List<TradeItem>> purchaseWhitelist = new HashMap<>();
     private final Map<Villager.Profession, List<TradeItem>> sellWhitelist = new HashMap<>();
 
@@ -49,7 +51,12 @@ public class VillagerTradeManager implements Listener {
         // Register events
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
-
+    public static VillagerTradeManager getInstance(JavaPlugin plugin) {
+        if (instance == null) {
+            instance = new VillagerTradeManager(plugin);
+        }
+        return instance;
+    }
     /**
      * Initializes the purchase and sell whitelists by reading from villagerTrades.yml.
      */
