@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.music;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.SpawnMonsters;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
@@ -1634,77 +1635,124 @@ public class MusicDiscManager implements Listener {
     }
 
     private void handleMusicDiscPigstep(Player player) {
-        player.playSound(player.getLocation(), Sound.MUSIC_DISC_PIGSTEP, 300.0f, 1.0f);
+        // Play the disc sound
 
-        World world = player.getWorld();
-        Location spawnLocation = findNearestJukebox(player.getLocation(), 10).getLocation();
 
-        // Spawn an angry Zombie Pigman (Zombified Piglin)
-        PigZombie pigman = (PigZombie) world.spawnEntity(spawnLocation, EntityType.ZOMBIFIED_PIGLIN);
-
-        // Set Pigman attributes
-        pigman.setCustomName(ChatColor.RED + "Angry Pigman");
-
-        pigman.setCustomNameVisible(true);
-        pigman.setAnger(Integer.MAX_VALUE); // Stay angry forever
-        pigman.setTarget(player); // Target the player who triggered the event
-
-        // Equip Pigman with enchanted golden armor and sword
-        pigman.getEquipment().setHelmet(createEnchantedItem(Material.GOLDEN_HELMET));
-        pigman.getEquipment().setChestplate(createEnchantedItem(Material.GOLDEN_CHESTPLATE));
-        pigman.getEquipment().setLeggings(createEnchantedItem(Material.GOLDEN_LEGGINGS));
-        pigman.getEquipment().setBoots(createEnchantedItem(Material.GOLDEN_BOOTS));
-        pigman.getEquipment().setItemInMainHand(createEnchantedItem(Material.GOLDEN_SWORD));
-        pigman.getEquipment().setHelmetDropChance(0.0f);
-        pigman.getEquipment().setChestplateDropChance(0.0f);
-        pigman.getEquipment().setLeggingsDropChance(0.0f);
-        pigman.getEquipment().setBootsDropChance(0.0f);
-        pigman.getEquipment().setItemInMainHandDropChance(0.0f);
-
-        // Handle the Pigman's death event
-        Bukkit.getPluginManager().registerEvents(new Listener() {
-            @EventHandler
-            public void onPigmanDeath(EntityDeathEvent event) {
-                if (event.getEntity().equals(pigman)) {
-                    // Placeholder for actions to perform when the Pigman dies
-                    // Example: player.sendMessage(ChatColor.GOLD + "You defeated the Angry Pigman!");
-
-                    PetManager petManager = PetManager.getInstance(plugin);
-                    Random random = new Random();
-                    if(random.nextDouble() < 0.1) {
-                        petManager.createPet(player, "Piglin Brute", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.CHALLENGE, PetManager.PetPerk.SECOND_WIND);
-                    }
-                    if (random.nextDouble() < 1) { // Always true
-                        int goldIngots = random.nextInt(49) + 16; // Random between 16 and 64
-                        ItemStack goldStack = new ItemStack(Material.GOLD_INGOT, goldIngots);
-                        player.getInventory().addItem(goldStack); // Add to player's inventory
-                        player.sendMessage(ChatColor.GOLD + "You received " + goldIngots + " gold ingots!");
-                    }
-
-// Second condition: 20% chance to give a Notch Apple
-                    if (random.nextDouble() < 0.2) { // 20% chance
-                        ItemStack notchApple = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE, 1);
-                        player.getInventory().addItem(notchApple); // Add to player's inventory
-                        player.sendMessage(ChatColor.GOLD + "You received an Enchanted Golden Apple!");
-                    }
-                    // Unregister the listener after handling the event
-                    EntityDeathEvent.getHandlerList().unregister(this);
-                }
-            }
-        }, plugin);
-    }
-
-    // Utility method to create enchanted items
-    private ItemStack createEnchantedItem(Material material) {
-        ItemStack item = new ItemStack(material);
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3, true); // Add example enchantment
-            meta.addEnchant(Enchantment.DURABILITY, 2, true); // Add another example enchantment
-            item.setItemMeta(meta);
+        // Get the custom Nether world (assumes a world named "custom_nether" exists)
+        World customNether = Bukkit.getWorld("custom_nether");
+        if (customNether == null) {
+            player.sendMessage(ChatColor.RED + "Custom Nether not found!");
+            return;
         }
-        return item;
+
+        // Define the location of the large, circular bastion-esque platform in the center of a lava ocean.
+        // (Adjust these coordinates as necessary for your custom nether.)
+        Location platformCenter = new Location(customNether, 0, 103, 0);
+
+        // Teleport the player to the custom nether platform.
+        player.teleport(platformCenter);
+
+        // Spawn the boss in the center of the platform.
+        // Boss level should be 300. (Leave the custom boss attribute code blank for now.)
+        Entity boss = customNether.spawnEntity(platformCenter, EntityType.PIGLIN_BRUTE);
+        boss.setCustomNameVisible(true);
+
+        SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(new XPManager(MinecraftNew.getInstance()));
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            spawnMonsters.applyMobAttributes((LivingEntity) boss, 300);
+            player.playSound(player.getLocation(), Sound.MUSIC_DISC_PIGSTEP, 300.0f, 1.0f);
+        }, 41L);
+        boss.setCustomName(ChatColor.RED + "[Lvl 300] Boss"); // Placeholder name
+        ((LivingEntity) boss).addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 2));
+        // Register a listener to handle if the player dies during the event.
+        PlayerDeathListener deathListener = new PlayerDeathListener(player);
+        Bukkit.getPluginManager().registerEvents(deathListener, plugin);
+
+        // Register a listener to handle when the boss dies.
+        BossDeathListener bossDeathListener = new BossDeathListener(player, boss);
+        Bukkit.getPluginManager().registerEvents(bossDeathListener, plugin);
+
+        // Schedule the end of the Pigstep event (e.g. 300 seconds later)
+        int eventDurationTicks = 300 * 20; // 300 seconds (5 minutes)
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            // End of event: Teleport the player back to their spawn
+            Location spawn = player.getBedSpawnLocation();
+            if (spawn == null) {
+                spawn = player.getWorld().getSpawnLocation();
+            }
+            player.teleport(spawn);
+            player.sendMessage(ChatColor.RED + "The Pigstep event has ended. You have been returned to your spawn.");
+
+            // Unregister our temporary listeners
+            HandlerList.unregisterAll(deathListener);
+            HandlerList.unregisterAll(bossDeathListener);
+
+            // If the boss is still alive, remove it.
+            if (!boss.isDead()) {
+                boss.remove();
+            }
+        }, eventDurationTicks);
     }
+
+    // Listener to handle player death during the event.
+    private class PlayerDeathListener implements Listener {
+        private final Player eventPlayer;
+
+        public PlayerDeathListener(Player player) {
+            this.eventPlayer = player;
+        }
+
+        @EventHandler
+        public void onPlayerDeath(org.bukkit.event.entity.PlayerDeathEvent event) {
+            if (event.getEntity().equals(eventPlayer)) {
+                // Clear default drops so the player keeps their items.
+                event.getDrops().clear();
+                // Teleport the player back to their spawn shortly after death.
+                Location spawn = eventPlayer.getBedSpawnLocation();
+                if (spawn == null) {
+                    spawn = eventPlayer.getWorld().getSpawnLocation();
+                }
+                Location finalSpawn = spawn;
+                Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                    eventPlayer.teleport(finalSpawn);
+                    eventPlayer.sendMessage(ChatColor.RED + "You died during the Pigstep event. Your items have been preserved and you have been returned to your spawn.");
+                }, 1L);
+            }
+        }
+    }
+
+    // Listener to handle the boss death.
+    private class BossDeathListener implements Listener {
+        private final Player eventPlayer;
+        private final Entity bossEntity;
+
+        public BossDeathListener(Player player, Entity boss) {
+            this.eventPlayer = player;
+            this.bossEntity = boss;
+        }
+
+        @EventHandler
+        public void onBossDeath(org.bukkit.event.entity.EntityDeathEvent event) {
+            if (event.getEntity().equals(bossEntity)) {
+                // When the boss dies, teleport the player back to spawn and spawn rewards on their feet.
+                Location spawn = eventPlayer.getBedSpawnLocation();
+                if (spawn == null) {
+                    spawn = eventPlayer.getWorld().getSpawnLocation();
+                }
+
+
+
+                eventPlayer.teleport(spawn);
+                eventPlayer.sendMessage(ChatColor.GOLD + "You defeated the boss! Rewards have been dropped at your feet, and you have been returned to your spawn.");
+                //TODO rewards
+                // Unregister this listener.
+                PetManager petManager = PetManager.getInstance(plugin);
+                petManager.createPet(eventPlayer, "Piglin Brute", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.CHALLENGE, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.ELITE);
+                HandlerList.unregisterAll(this);
+            }
+        }
+    }
+
 
     private void handleMusicDisc5(Player player) {
         PlayerOxygenManager playerOxygenManager = PlayerOxygenManager.getInstance();

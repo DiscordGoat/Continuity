@@ -247,7 +247,7 @@ public class FishingEvent implements Listener {
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
         plugin.getLogger().info("Hostility Level for player " + player.getName() + ": " + hostilityLevel);
 
-        SpawnMonsters spawnMonsters = new SpawnMonsters(xpManager);
+        SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         int baseLevel = seaCreature.getLevel();
         plugin.getLogger().info("Base Level of Sea Creature: " + baseLevel);
 

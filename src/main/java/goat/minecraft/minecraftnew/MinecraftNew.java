@@ -50,8 +50,9 @@ import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.devtools.*;
-import goat.minecraft.minecraftnew.utils.end.CustomEndArchipelago;
+import goat.minecraft.minecraftnew.utils.dimensions.CustomEndArchipelago;
 
+import goat.minecraft.minecraftnew.utils.dimensions.CustomNetherCreator;
 import org.bukkit.*;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -145,6 +146,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+
+        CustomNetherCreator.init(this);
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
@@ -306,7 +309,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
 
-        SpawnMonsters spawnMonsters = new SpawnMonsters(xpManager);
+
         getCommand("testskill").setExecutor(new TestSkillMessageCommand(xpManager));
         // Register events
         getServer().getPluginManager().registerEvents(petManager, this);
@@ -341,7 +344,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         getCommand("getpet").setExecutor(new PetCommand(petManager));
         getServer().getPluginManager().registerEvents(new FishingEvent(), MinecraftNew.getInstance());
-        getServer().getPluginManager().registerEvents(new SpawnMonsters(xpManager), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(SpawnMonsters.getInstance(xpManager), this);
         getServer().getPluginManager().registerEvents(new KillMonster(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new CustomItemManager(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new Mining(), MinecraftNew.getInstance());

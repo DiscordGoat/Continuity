@@ -28,25 +28,44 @@ import java.util.Random;
 
 public class SpawnMonsters implements Listener {
 
-    private XPManager xpManager; // Assume you have an XPManager class
+    private static SpawnMonsters instance; // <-- Singleton instance
+
+    private XPManager xpManager;
     private final JavaPlugin plugin = MinecraftNew.getInstance();
 
     private static final int MAX_MONSTER_LEVEL = 300;
 
-    // Constructor to pass in XPManager and plugin instance
-    public SpawnMonsters(XPManager xpManager) {
+    // Private constructor so it can’t be called externally
+    private SpawnMonsters(XPManager xpManager) {
         this.xpManager = xpManager;
     }
+
+    // The public method to retrieve the singleton instance.
+    // You call this once, passing in your XPManager, and from then on
+    // you'll just call SpawnMonsters.getInstance(null) (or the same XPManager).
+    public static synchronized SpawnMonsters getInstance(XPManager xpManager) {
+        if (instance == null) {
+            instance = new SpawnMonsters(xpManager);
+        }
+        return instance;
+    }
+
+    // If desired, you can also have a no-arg getInstance() that simply returns instance:
+    // public static SpawnMonsters getInstance() {
+    //     return instance;
+    // }
 
     public static int getDayCount(Player player) {
         int playTimeTicks = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
         return playTimeTicks / 24000; // 1 Minecraft day = 24000 ticks
     }
+
     public boolean shouldMutationOccur(int playerHostility) {
         Random random = new Random();
         int randomValue = random.nextInt(100) + 1; // Generate a random number between 1 and 100
-        return randomValue <= playerHostility; // Return true if the random number is less than or equal to the hostility percentage
+        return randomValue <= playerHostility; // Return true if the random number is <= the hostility percentage
     }
+
     public void applyRandomArmor(LivingEntity entity) {
         if (entity == null) return;
 
@@ -116,15 +135,6 @@ public class SpawnMonsters implements Listener {
         ItemStack leggingsItem = new ItemStack(leggings);
         ItemStack bootsItem = new ItemStack(boots);
 
-        // Optionally, customize the armor items (e.g., set unbreakable, add enchantments)
-        // For example, to make armor unbreakable:
-        /*
-        makeUnbreakable(helmetItem);
-        makeUnbreakable(chestplateItem);
-        makeUnbreakable(leggingsItem);
-        makeUnbreakable(bootsItem);
-        */
-
         // Set the armor on the entity
         EntityEquipment equipment = entity.getEquipment();
         if (equipment != null) {
@@ -142,6 +152,7 @@ public class SpawnMonsters implements Listener {
         EntityEquipment equipment = entity.getEquipment();
         equipment.setItemInMainHand(new ItemStack(weaponMaterial));
     }
+
     public void enchantArmorWithProtection(LivingEntity entity) {
         EntityEquipment equipment = entity.getEquipment();
 
@@ -160,11 +171,13 @@ public class SpawnMonsters implements Listener {
             }
         }
     }
+
     @EventHandler
     public void alterMonsters(EntitySpawnEvent e) {
         Entity entity = e.getEntity();
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
         int playerHostility = hostilityManager.getPlayerDifficultyTier(getNearestPlayer(entity, 1000));
+
         if (entity instanceof Creeper) {
             Random random = new Random();
             int randomValue = random.nextInt(100) + 1; // Generate a random number between 1 and 100
@@ -172,11 +185,13 @@ public class SpawnMonsters implements Listener {
                 entity.remove();
             }
         }
+
         if(entity instanceof LivingEntity monster){
             if(shouldMutationOccur(playerHostility)) {
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, true));
             }
         }
+
         if(entity instanceof Zombie zombie){
             if(shouldMutationOccur(playerHostility)){
                 KnightMob knightMob = new KnightMob(plugin);
@@ -199,6 +214,7 @@ public class SpawnMonsters implements Listener {
                 enchantArmorWithProtection(zombie);
             }
         }
+
         if(entity instanceof WitherSkeleton ws){
             if(shouldMutationOccur(playerHostility)){
                 KnightMob knightMob = new KnightMob(plugin);
@@ -221,17 +237,20 @@ public class SpawnMonsters implements Listener {
                 enchantArmorWithProtection(ws);
             }
         }
+
         if(entity instanceof Creeper creeper){
             if(shouldMutationOccur(playerHostility)){
                 creeper.setPowered(true);
             }
         }
+
         if(entity instanceof Blaze monster){
             if(shouldMutationOccur(playerHostility)){
                 monster.setCustomName(ChatColor.RED + "High Flying Blaze");
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, Integer.MAX_VALUE, 1, true));
             }
         }
+
         if(entity instanceof Drowned monster){
             if(shouldMutationOccur(playerHostility)){
                 monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
@@ -239,49 +258,40 @@ public class SpawnMonsters implements Listener {
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, Integer.MAX_VALUE, 3, true));
             }
         }
+
         if(entity instanceof MagmaCube monster){
             if (shouldMutationOccur(playerHostility)) {
-                // Set the size of the Magma Cube to 6 (giant size)
+                // Set the size to something bigger
                 monster.setSize(4);
 
-                // Optionally, you can give it a trident and a custom name
                 monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
                 monster.setCustomName(ChatColor.RED + "Giant Cube");
-                monster.setCustomNameVisible(true); // Make the custom name visible
+                monster.setCustomNameVisible(true);
             }
         }
+
         if (entity instanceof Skeleton monster) {
             if (shouldMutationOccur(playerHostility)) {
-                // Set the custom name
                 monster.setCustomName(ChatColor.RED + "Sniper");
-                monster.setCustomNameVisible(true); // Make the custom name visible
+                monster.setCustomNameVisible(true);
 
-                // Create a sniper helmet (e.g., a diamond helmet with custom enchantments)
                 ItemStack sniperHelmet = new ItemStack(Material.DIAMOND_HELMET);
-                sniperHelmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2); // Example enchantment
-                sniperHelmet.addEnchantment(Enchantment.OXYGEN, 1); // Example enchantment
+                sniperHelmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
+                sniperHelmet.addEnchantment(Enchantment.OXYGEN, 1);
 
-                // Set the helmet on the skeleton
                 monster.getEquipment().setHelmet(sniperHelmet);
             }
         }
+
         if(entity instanceof Slime monster){
             if (shouldMutationOccur(playerHostility)) {
-                // Set the size of the Magma Cube to 6 (giant size)
                 monster.setSize(4);
 
-                // Optionally, you can give it a trident and a custom name
                 monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
                 monster.setCustomName(ChatColor.RED + "Giant Cube");
-                monster.setCustomNameVisible(true); // Make the custom name visible
+                monster.setCustomNameVisible(true);
             }
         }
-
-
-
-
-
-
 
         Random random = new Random();
         if (entity instanceof Monster) {
@@ -292,7 +302,7 @@ public class SpawnMonsters implements Listener {
                 @Override
                 public void run() {
                     if (!mob.isValid()) {
-                        return; // Skip if the entity is no longer valid
+                        return; // Skip if entity is no longer valid
                     }
 
                     // Check for SEA_CREATURE metadata after the delay
@@ -317,9 +327,8 @@ public class SpawnMonsters implements Listener {
                         plugin.getLogger().info("Skipped attribute application for sea creature: " + mob.getType());
                     }
                 }
-            }.runTaskLater(plugin, 40L); // Delay by 40 ticks (2 seconds)
+            }.runTaskLater(plugin, 40L); // Delay 40 ticks (2 seconds)
         }
-
     }
 
     public double getDistanceFromOrigin(Entity mob) {
@@ -343,87 +352,75 @@ public class SpawnMonsters implements Listener {
         }
         return nearestPlayer;
     }
+
     public void applyEnderDragonAttributes(EnderDragon dragon) {
-        int level = 300; // Set EnderDragon level to 300
-        // Apply regeneration effect.
+        int level = 300; // Force EnderDragon level to 300
         dragon.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
         dragon.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, Integer.MAX_VALUE, 255, true));
 
-        // Update health.
         double healthMultiplier = 1 + (level * 0.1);
         double originalHealth = dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-        double newHealth = Math.min(originalHealth * healthMultiplier, 2000); // Cap health at 2000
+        double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
         dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
         dragon.setHealth(newHealth);
 
-        // Set metadata and custom name.
         dragon.setMetadata("mobLevel", new FixedMetadataValue(MinecraftNew.getInstance(), level));
         String color = getColorForLevel(level);
         dragon.setCustomName(color + "Level: " + level + " " + formatMobType(dragon.getType().toString()));
         dragon.setCustomNameVisible(true);
         dragon.setRemoveWhenFarAway(true);
 
-        // Override custom name with a fixed boss name.
+        // Override custom name with a more “bossy” name
         dragon.setCustomName(ChatColor.DARK_RED + "Ender Dragon");
 
-        // Configure the boss bar.
         BossBar bossBar = dragon.getBossBar();
         bossBar.setColor(BarColor.RED);
         bossBar.setStyle(BarStyle.SEGMENTED_20);
 
-        // Ensure its health is synced.
         dragon.setHealth(dragon.getMaxHealth());
     }
+
     public void applyMobAttributes(LivingEntity mob, int level) {
-        level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL)); // Cap level between 1 and 300
+        level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL));
 
         if (mob instanceof EnderDragon) {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    // Force EnderDragon level to 200 and apply special potion effects.
                     int level = 300;
                     mob.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
                     mob.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, Integer.MAX_VALUE, 255, true));
                     mob.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
 
-                    // Calculate health multiplier and update health.
                     double healthMultiplier = 1 + (level * 0.1);
                     double originalHealth = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-                    double newHealth = Math.min(originalHealth * healthMultiplier, 2000); // Cap health at 2000
+                    double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
                     mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
                     mob.setHealth(newHealth);
 
-                    // Set metadata and custom name.
                     mob.setMetadata("mobLevel", new FixedMetadataValue(plugin, level));
                     String color = getColorForLevel(level);
                     mob.setCustomName(color + "Level: " + level + " " + formatMobType(mob.getType().toString()));
                     mob.setCustomNameVisible(true);
                     mob.setRemoveWhenFarAway(true);
+
                     EnderDragon dragon = (EnderDragon) mob;
                     dragon.setCustomName(ChatColor.DARK_RED + "Ender Dragon");
                     dragon.setCustomNameVisible(true);
 
-                    // Check if the player already has a boss bar named "Ender Dragon" and remove it
-
-                    // Set BossBar with segments
                     BossBar bossBar = dragon.getBossBar();
                     bossBar.setColor(BarColor.RED);
                     bossBar.setStyle(BarStyle.SEGMENTED_20);
 
-                    // Add health effects
                     dragon.setHealth(dragon.getMaxHealth());
-
                 }
-            }.runTaskLater(plugin, 60L); // delay 40 ticks (2 seconds)
+            }.runTaskLater(plugin, 60L);
             return;
         }
 
-
-        // Processing for non-EnderDragon mobs.
         double healthMultiplier = 1 + (level * 0.1);
         double originalHealth = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-        double newHealth = Math.min(originalHealth * healthMultiplier, 2000); // Cap health at 2000
+        double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
         mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
         mob.setHealth(newHealth);
 
@@ -437,7 +434,6 @@ public class SpawnMonsters implements Listener {
         mob.setCustomNameVisible(true);
         mob.setRemoveWhenFarAway(true);
     }
-
 
     private String getColorForLevel(int level) {
         if (level <= 20) return ChatColor.GRAY.toString();

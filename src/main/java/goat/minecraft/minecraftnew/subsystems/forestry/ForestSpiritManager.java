@@ -179,7 +179,7 @@ public class ForestSpiritManager implements Listener {
             return;
         }
 
-        SpawnMonsters spawnMonsters = new SpawnMonsters(xpManager);
+        SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         World world = location.getWorld();
         if (world == null) return;
 

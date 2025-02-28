@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils.end;
+package goat.minecraft.minecraftnew.utils.dimensions;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.SpawnMonsters;
@@ -132,7 +132,7 @@ public class CustomEndArchipelago implements Listener {
                         for (Entity entity : customEndWorld.getEntities()) {
                             if (entity instanceof EnderDragon) {
                                 EnderDragon dragon = (EnderDragon) entity;
-                                SpawnMonsters spawnMonsters = new SpawnMonsters(new XPManager(MinecraftNew.getInstance()));
+                                SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(new XPManager(MinecraftNew.getInstance()));
                                 spawnMonsters.applyEnderDragonAttributes(dragon);
                             }
                         }
