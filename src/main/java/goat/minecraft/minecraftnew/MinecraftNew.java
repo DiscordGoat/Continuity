@@ -165,6 +165,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new VampiricStrike(this, playerData), this);
         getServer().getPluginManager().registerEvents(new LordOfThunder(this, playerData), this);
         getServer().getPluginManager().registerEvents(new QuickSwap(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new Trainer(playerData), this);
 
 
 

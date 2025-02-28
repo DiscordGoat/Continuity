@@ -126,6 +126,11 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Obviously grants more oxygen you idiot.",
                             ChatColor.BLUE + "On Regenerate Oxygen: " + ChatColor.GRAY + "+100 Oxygen."
                     )),
+            new Perk(ChatColor.DARK_GRAY + "Trainer", 1, Material.LEAD,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Boosts pet XP gains.",
+                            ChatColor.BLUE + "On Gain Experience: " + ChatColor.GRAY + "+1 Bonus Pet XP."
+                    )),
             new Perk(ChatColor.DARK_GRAY + "QuickSwap", 1, Material.TRIPWIRE_HOOK,
                     Arrays.asList(
                             ChatColor.GRAY + "Replenishes your supply of blocks.",
