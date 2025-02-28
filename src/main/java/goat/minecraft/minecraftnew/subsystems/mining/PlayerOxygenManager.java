@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.mining;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager; // Remove this if no longer needed anywhere else
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -35,7 +36,7 @@ public class PlayerOxygenManager implements Listener {
     private final Map<UUID, Objective> oxygenObjectives = new HashMap<>();
 
     // Constants
-    private static final int DEFAULT_OXYGEN_SECONDS = 180; // Base oxygen in seconds
+    private static final int DEFAULT_OXYGEN_SECONDS = 100; // Base oxygen in seconds
     private static final int OXYGEN_UPDATE_INTERVAL = 20;  // Update every second
     private static final int SIDEBAR_UPDATE_INTERVAL = 10; // Update every 0.5 seconds (not strictly needed now)
     private static final int FULL_RECOVERY_TICKS = 24000;  // ~40 minutes
@@ -205,10 +206,15 @@ public class PlayerOxygenManager implements Listener {
     public int calculateInitialOxygen(Player player) {
         // If you still have a way to get Mining level, implement it here.
         // Otherwise, assume zero for demonstration.
+        PlayerDataManager playerDataManager = PlayerDataManager.getInstance(plugin);
         XPManager xpManager = new XPManager(plugin);
         int miningLevel = xpManager.getPlayerLevel(player, "Mining");
-        int ventilationBonus = getTotalVentilationEnchantmentLevel(player) * 30;
-        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (miningLevel * 5) + ventilationBonus;
+        int ventilationBonus = getTotalVentilationEnchantmentLevel(player) * 25;
+        int deepbreath = 0;
+        if(playerDataManager.hasPerk(player.getUniqueId(), "Deep Breath")){
+            deepbreath = 100;
+        }
+        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (miningLevel * 4) + ventilationBonus + deepbreath;
         return initialOxygen;
     }
 

@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.music;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
+import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
@@ -50,7 +51,6 @@ public class MusicDiscManager implements Listener {
 
     public MusicDiscManager(JavaPlugin plugin) {
         this.plugin = plugin;
-
     }
     private final Map<UUID, TeleportSession> relicSessions = new HashMap<>();
     private static class TeleportSession {
@@ -865,60 +865,62 @@ public class MusicDiscManager implements Listener {
                     return;
                 }
 
-                // Check if the broken block is a log
+                // Check if the broken block is one of the logs we're interested in
                 Material brokenMaterial = event.getBlock().getType();
-                if (brokenMaterial == Material.OAK_LOG || brokenMaterial == Material.BIRCH_LOG ||
-                        brokenMaterial == Material.SPRUCE_LOG || brokenMaterial == Material.JUNGLE_LOG ||
-                        brokenMaterial == Material.ACACIA_LOG || brokenMaterial == Material.DARK_OAK_LOG) {
+                if (brokenMaterial == Material.OAK_LOG ||
+                        brokenMaterial == Material.BIRCH_LOG ||
+                        brokenMaterial == Material.SPRUCE_LOG ||
+                        brokenMaterial == Material.JUNGLE_LOG ||
+                        brokenMaterial == Material.ACACIA_LOG ||
+                        brokenMaterial == Material.DARK_OAK_LOG) {
 
-                    // Determine the bonus logs based on roll chance
-                    double roll = Math.random() * 100; // Generate a random number between 0 and 100
+                    // Determine the bonus logs based on a roll chance
+                    double roll = Math.random() * 100; // 0 to 100
                     int bonusLogs = 0;
-                    Sound jingle = Sound.BLOCK_NOTE_BLOCK_BASS; // Default sound for common rarity
+                    Sound jingle = Sound.BLOCK_NOTE_BLOCK_BASS; // default sound
                     float pitch = 1.0f;
 
                     if (roll <= 0.2) { // Legendary (0.5% chance)
                         bonusLogs = 64;
                         jingle = Sound.ENTITY_ENDER_DRAGON_GROWL;
-                        pitch = 2.0f; // High-intensity pitch for legendary
+                        pitch = 2.0f;
                         xpManager.addXP(player, "Forestry", 500);
                     } else if (roll <= 1) { // Epic (1% chance)
                         bonusLogs = 32;
                         jingle = Sound.UI_TOAST_CHALLENGE_COMPLETE;
                         pitch = 1.8f;
                         xpManager.addXP(player, "Forestry", 250);
-
                     } else if (roll <= 2) { // Rare (2% chance)
                         bonusLogs = 16;
                         jingle = Sound.ENTITY_PLAYER_LEVELUP;
                         pitch = 1.5f;
                         xpManager.addXP(player, "Forestry", 175);
-
                     } else if (roll <= 3.5) { // Uncommon (3% chance)
                         bonusLogs = 8;
                         jingle = Sound.BLOCK_NOTE_BLOCK_PLING;
                         pitch = 1.2f;
                         xpManager.addXP(player, "Forestry", 100);
-
                     } else if (roll <= 5.5) { // Common (4% chance)
                         bonusLogs = 4;
                         jingle = Sound.BLOCK_NOTE_BLOCK_BASS;
                         pitch = 1.0f;
                         xpManager.addXP(player, "Forestry", 50);
-
                     }
 
                     // If bonus logs were rolled, drop them and notify the player
                     if (bonusLogs > 0) {
                         ItemStack bonusLogStack = new ItemStack(brokenMaterial, bonusLogs);
                         event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), bonusLogStack);
-
-                        // Play the jingle based on rarity
                         player.playSound(player.getLocation(), jingle, 3.0f, pitch);
+                        event.getPlayer().sendMessage(ChatColor.GOLD + "Bonus Logs! You received "
+                                + bonusLogs + " extra "
+                                + brokenMaterial.name().toLowerCase().replace("_", " ") + "!");
+                    }
 
-                        // Notify the player of their bonus
-                        event.getPlayer().sendMessage(ChatColor.GOLD + "Bonus Logs! You received " + bonusLogs + " extra " +
-                                brokenMaterial.name().toLowerCase().replace("_", " ") + "!");
+                    // Additional 4% chance to spawn an extra Forest Spirit for the duration of the disc
+                    if (Math.random() * 100 < 4) { // 4% chance
+                        ForestSpiritManager.getInstance(MinecraftNew.getInstance()).spawnSpirit(brokenMaterial, event.getBlock().getLocation(), player);
+                        player.sendMessage(ChatColor.LIGHT_PURPLE + "An additional Forest Spirit has been summoned!");
                     }
                 }
             }
@@ -927,12 +929,13 @@ public class MusicDiscManager implements Listener {
         // Register the listener
         Bukkit.getPluginManager().registerEvents(logBreakListener, plugin);
 
-        // Schedule a task to unregister the listener after 3 minutes and 5 seconds
+        // Unregister the listener after 185 seconds (3 minutes and 5 seconds)
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             HandlerList.unregisterAll(logBreakListener);
             player.sendMessage(ChatColor.RED + "The Timber Boost event has ended!");
-        }, 185 * 20L); // 185 seconds converted to ticks (20 ticks = 1 second)
+        }, 185 * 20L); // 20 ticks = 1 second
     }
+
     private void handleMusicDiscMellohi(Player player) {
         // Play the Mellohi music disc sound
         player.playSound(player.getLocation(), Sound.MUSIC_DISC_MELLOHI, 100000, 1.0f);

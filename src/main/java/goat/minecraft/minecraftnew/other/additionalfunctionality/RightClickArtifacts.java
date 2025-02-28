@@ -15,13 +15,16 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -364,11 +367,10 @@ public class RightClickArtifacts implements Listener {
             }
             if (displayName.equals(ChatColor.YELLOW + "Inscriber")) {
                 player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0f, 1.0f);
-                player.getLocation().getWorld().dropItemNaturally(player.getLocation(), getRandomMusicDisc());
-                decrementItemAmount(itemInHand, player);
-
+                openDiscSelectionGUI(player, itemInHand);
                 return;
             }
+
             // Handle Leviathan Heart
             if (displayName.equals(ChatColor.LIGHT_PURPLE + "Leviathan Heart")) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 180 * 20, 7));
@@ -794,6 +796,8 @@ public class RightClickArtifacts implements Listener {
         }
     }
 
+
+
     /**
      * Event handler to check if the landed EnderPearl is custom and spawn another one if it is.
      *
@@ -826,4 +830,235 @@ public class RightClickArtifacts implements Listener {
             }
         }
     }
+    public void openDiscSelectionGUI(Player player, ItemStack inscriber) {
+        // Create a 27-slot GUI titled "Select a Music Disc"
+        Inventory gui = Bukkit.createInventory(null, 27, ChatColor.DARK_AQUA + "Select a Music Disc");
+
+        // Populate the GUI with discs using our disc data map.
+        Map<Material, DiscData> discDataMap = getDiscDataMap();
+        int slot = 0;
+        for (Map.Entry<Material, DiscData> entry : discDataMap.entrySet()) {
+            Material discMaterial = entry.getKey();
+            DiscData data = entry.getValue();
+            ItemStack discItem = new ItemStack(discMaterial);
+            ItemMeta meta = discItem.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(data.getName());
+                meta.setLore(data.getLore());
+                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                discItem.setItemMeta(meta);
+            }
+            gui.setItem(slot, discItem);
+            slot++;
+        }
+        player.openInventory(gui);
+
+        // Register a temporary listener to handle the disc selection.
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            public void onInventoryClick(InventoryClickEvent event) {
+                // Check that the click is in our custom disc GUI.
+                if (!event.getView().getTitle().equals(ChatColor.DARK_AQUA + "Select a Music Disc")) {
+                    return;
+                }
+                event.setCancelled(true);
+                if (event.getCurrentItem() == null || event.getCurrentItem().getType() == Material.AIR) {
+                    return;
+                }
+                // Get the selected disc.
+                ItemStack selectedDisc = event.getCurrentItem();
+                // Add the disc to the player's inventory.
+                player.getInventory().addItem(selectedDisc);
+                player.sendMessage(ChatColor.GREEN + "You have taken the "
+                        + selectedDisc.getItemMeta().getDisplayName() + "!");
+                // Remove one Inscriber item from the player's hand.
+                decrementItemAmount(inscriber, player);
+                // Close the GUI.
+                player.closeInventory();
+                // Unregister this temporary listener.
+                HandlerList.unregisterAll(this);
+            }
+        }, plugin);
+    }
+
+    // Example helper method to create a disc data map.
+    private Map<Material, DiscData> getDiscDataMap() {
+            Map<Material, DiscData> map = new HashMap<>();
+
+            map.put(Material.MUSIC_DISC_11, new DiscData(
+                    ChatColor.DARK_RED + "Music Disc 11",
+                    ChatColor.RED,
+                    List.of(
+                            ChatColor.GRAY + "Boosts monster hostility to Tier 20",
+                            ChatColor.GRAY + "Lasts 20 minutes, making mobs very aggressive"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_13, new DiscData(
+                    ChatColor.AQUA + "Music Disc 13",
+                    ChatColor.AQUA,
+                    List.of(
+                            ChatColor.GRAY + "Activates the BaroTrauma Virus for 3 minutes",
+                            ChatColor.GRAY + "Infected mobs glow and drop extra XP"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_BLOCKS, new DiscData(
+                    ChatColor.GREEN + "Music Disc Blocks",
+                    ChatColor.GREEN,
+                    List.of(
+                            ChatColor.GRAY + "Activates Recipe Writer feature",
+                            ChatColor.GRAY + "Grants 32 random recipes over time"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_CAT, new DiscData(
+                    ChatColor.LIGHT_PURPLE + "Music Disc Cat",
+                    ChatColor.LIGHT_PURPLE,
+                    List.of(
+                            ChatColor.GRAY + "Starts Harvest Frenzy for 3 minutes 5 seconds",
+                            ChatColor.GRAY + "Boosts crop growth and extra resource yield"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_CHIRP, new DiscData(
+                    ChatColor.YELLOW + "Music Disc Chirp",
+                    ChatColor.YELLOW,
+                    List.of(
+                            ChatColor.GRAY + "Triggers Timber Boost for 3 minutes 5 seconds",
+                            ChatColor.GRAY + "Chance to yield bonus logs and extra Forestry XP, as well as Forest Spirits"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_FAR, new DiscData(
+                    ChatColor.GOLD + "Music Disc Far",
+                    ChatColor.GOLD,
+                    List.of(
+                            ChatColor.GRAY + "Begins a Random Loot Crate event",
+                            ChatColor.GRAY + "Spawns 16 loot chests with themed drops"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_MALL, new DiscData(
+                    ChatColor.AQUA + "Music Disc Mall",
+                    ChatColor.AQUA,
+                    List.of(
+                            ChatColor.GRAY + "Starts a 10-minute rainstorm",
+                            ChatColor.GRAY + "Disables mob spawns and grants Conduit Power"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_MELLOHI, new DiscData(
+                    ChatColor.DARK_GREEN + "Music Disc Mellohi",
+                    ChatColor.DARK_GREEN,
+                    List.of(
+                            ChatColor.GRAY + "Initiates a Zombie Apocalypse for 96 seconds",
+                            ChatColor.GRAY + "Transforms spawns into zombies with extra drops"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_STAL, new DiscData(
+                    ChatColor.DARK_PURPLE + "Music Disc Stal",
+                    ChatColor.DARK_PURPLE,
+                    List.of(
+                            ChatColor.GRAY + "Launches the Grand Auction Event",
+                            ChatColor.GRAY + "Displays auction items for purchase with emeralds"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_STRAD, new DiscData(
+                    ChatColor.LIGHT_PURPLE + "Music Disc Strad",
+                    ChatColor.LIGHT_PURPLE,
+                    List.of(
+                            ChatColor.GRAY + "Repairs your items gradually over 188 seconds",
+                            ChatColor.GRAY + "Restores durability for inventory and armor"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_WAIT, new DiscData(
+                    ChatColor.BLUE + "Music Disc Wait",
+                    ChatColor.BLUE,
+                    List.of(
+                            ChatColor.GRAY + "Activates an Experience Surge event for 231 seconds",
+                            ChatColor.GRAY + "Randomly awards small amounts of XP to skills"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_WARD, new DiscData(
+                    ChatColor.AQUA + "Music Disc Ward",
+                    ChatColor.AQUA,
+                    List.of(
+                            ChatColor.GRAY + "Rains XP near a jukebox for 251 seconds",
+                            ChatColor.GRAY + "Spawns XP orbs with visual effects"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_PIGSTEP, new DiscData(
+                    ChatColor.RED + "Music Disc Pigstep",
+                    ChatColor.RED,
+                    List.of(
+                            ChatColor.GRAY + "Summons an Angry Pigman boss",
+                            ChatColor.GRAY + "Defeat it for gold, enchanted apples, or pet rewards"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_5, new DiscData(
+                    ChatColor.GRAY + "Music Disc 5",
+                    ChatColor.GRAY,
+                    List.of(
+                            ChatColor.GRAY + "Resets your oxygen level",
+                            ChatColor.GRAY + "Grants Night Vision for 20 minutes"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_OTHERSIDE, new DiscData(
+                    ChatColor.GOLD + "Music Disc Otherside",
+                    ChatColor.GOLD,
+                    List.of(
+                            ChatColor.GRAY + "Accelerates time for 195 seconds",
+                            ChatColor.GRAY + "Spawns parrots or fireworks depending on time of day"
+                    )
+            ));
+
+            map.put(Material.MUSIC_DISC_RELIC, new DiscData(
+                    ChatColor.DARK_AQUA + "Music Disc Relic",
+                    ChatColor.DARK_AQUA,
+                    List.of(
+                            ChatColor.GRAY + "Opens a teleportation session",
+                            ChatColor.GRAY + "Choose a target biome and teleport with optional return"
+                    )
+            ));
+
+            return map;
+    }
+
+    // Example helper class for disc data.
+    private static class DiscData {
+        private final String name;
+        private final ChatColor color;
+        private final List<String> lore;
+
+        public DiscData(String name, ChatColor color, List<String> lore) {
+            this.name = name;
+            this.color = color;
+            // Optionally, prepend a gray color to each lore line.
+            this.lore = new ArrayList<>();
+            for (String line : lore) {
+                this.lore.add(line);
+            }
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public ChatColor getColor() {
+            return color;
+        }
+
+        public List<String> getLore() {
+            return lore;
+        }
+    }
+
 }

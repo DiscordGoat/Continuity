@@ -241,7 +241,15 @@ public class ForestSpiritManager implements Listener {
 
         return armor;
     }
-
+    public void summonSpiritByMaterial(Material blockType, Location location, Player player) {
+        SpiritType spiritType = getSpiritType(blockType);
+        if (spiritType == null) {
+            plugin.getLogger().info("No SpiritType defined for material: " + blockType);
+            return;
+        }
+        // Call the existing spawnSpirit method which uses the block type to determine the spirit type.
+        spawnSpirit(blockType, location, player);
+    }
     /**
      * Determines the type of spirit to spawn based on the block type.
      *
