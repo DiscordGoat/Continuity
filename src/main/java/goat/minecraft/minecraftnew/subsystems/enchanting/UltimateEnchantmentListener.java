@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.enchanting;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -557,11 +558,15 @@ public class UltimateEnchantmentListener implements Listener {
 
             switch (enchantName) {
                 case "warp":
+                    PlayerDataManager playerDataManager = PlayerDataManager.getInstance(plugin);
                     Vector direction = player.getLocation().getDirection().normalize();
                     Vector offset = direction.multiply(8);
                     player.teleport(player.getLocation().add(offset));
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0f);
                     cooldownMs = 1_000L;
+                    if(playerDataManager.hasPerk(player.getUniqueId(), "Instant Transmission")){
+                        cooldownMs = 1;
+                    }
                     break;
                 case "homing arrows":
                     fireHomingArrows(player);

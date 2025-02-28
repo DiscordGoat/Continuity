@@ -148,7 +148,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
-        PlayerDataManager playerData = new PlayerDataManager(this);
+        PlayerDataManager playerData = PlayerDataManager.getInstance(this);
 
         // Register commands
         getCommand("merits").setExecutor(new MeritCommand(this, playerData));

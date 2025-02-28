@@ -28,6 +28,7 @@ import java.util.*;
 
 
 import static goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentUtils.*;
+import static goat.minecraft.minecraftnew.utils.devtools.ItemRegistry.createCustomItem;
 
 public class AnvilRepair implements Listener {
     // Mapping of player UUIDs to their custom anvil inventories
@@ -107,9 +108,51 @@ public class AnvilRepair implements Listener {
         // Define GUI panes and items for decoration and instructions
         ItemStack blackPane = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, "");
         ItemStack resultPane = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair");
-        ItemStack sharpnessItem = createGuiItem(Material.DIAMOND_SWORD, ChatColor.DARK_PURPLE + "Sharpen: 2 Diamonds");
-        ItemStack efficiencyItem = createGuiItem(Material.GOLDEN_PICKAXE, ChatColor.DARK_PURPLE + "Polish: 2 Gold Blocks");
-        ItemStack protectionItem = createGuiItem(Material.OBSIDIAN, ChatColor.DARK_PURPLE + "Reinforce: 2 Obsidian");
+        // Create lore for the "Sharpen" button
+        List<String> sharpnessLore = new ArrayList<>();
+        sharpnessLore.add(ChatColor.GRAY + "+1 Sharpness Level");
+        sharpnessLore.add(ChatColor.GRAY + "Cost: 2 Diamonds");
+
+// Create the Sharpness button using a diamond sword
+        ItemStack sharpnessItem = createCustomItem(
+                Material.DIAMOND_SWORD,
+                ChatColor.DARK_PURPLE + "Sharpen",
+                sharpnessLore,
+                1,
+                false,
+                true
+        );
+
+// Create lore for the "Polish" button
+        List<String> efficiencyLore = new ArrayList<>();
+        efficiencyLore.add(ChatColor.GRAY + "+1 Efficiency Level");
+        efficiencyLore.add(ChatColor.GRAY + "Cost: 2 Gold Blocks");
+
+// Create the Efficiency button using a golden pickaxe
+        ItemStack efficiencyItem = createCustomItem(
+                Material.GOLDEN_PICKAXE,
+                ChatColor.DARK_PURPLE + "Polish",
+                efficiencyLore,
+                1,
+                false,
+                true
+        );
+
+// Create lore for the "Reinforce" button
+        List<String> protectionLore = new ArrayList<>();
+        protectionLore.add(ChatColor.GRAY + "+1 Protection Level");
+        protectionLore.add(ChatColor.GRAY + "Cost: 2 Obsidian");
+
+// Create the Protection button using an obsidian block
+        ItemStack protectionItem = createCustomItem(
+                Material.OBSIDIAN,
+                ChatColor.DARK_PURPLE + "Reinforce",
+                protectionLore,
+                1,
+                false,
+                true
+        );
+
 
         // Set up the GUI layout with decorative panes
         for (int i = 0; i < 27; i++) {

@@ -272,7 +272,7 @@ public class VillagerTradeManager implements Listener {
         defaultConfig.set("FLETCHER.sells", fletcherSells);
 // Cartographer Purchases
         List<Map<String, Object>> cartographerPurchases = new ArrayList<>();
-        cartographerPurchases.add(createTradeMap("ASPECT_OF_THE_JOURNEY", 1, 512, 1)); // Custom item
+        //cartographerPurchases.add(createTradeMap("ASPECT_OF_THE_JOURNEY", 1, 512, 1)); // Custom item
         cartographerPurchases.add(createTradeMap("CARTOGRAPHER_MINESHAFT", 1, 16, 1)); // Custom item
         cartographerPurchases.add(createTradeMap("CARTOGRAPHER_VILLAGE", 1, 16, 1)); // Custom item
         cartographerPurchases.add(createTradeMap("CARTOGRAPHER_SHIPWRECK", 1, 16, 1)); // Custom item

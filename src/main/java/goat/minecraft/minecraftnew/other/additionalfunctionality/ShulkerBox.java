@@ -61,7 +61,7 @@ public class ShulkerBox implements Listener {
 
         // ========== SHULKER BOX LOGIC ==========
         if (ALL_SHULKERS.contains(clickedItem.getType())) {
-            PlayerDataManager playerDataManager = new PlayerDataManager(MinecraftNew.getInstance());
+            PlayerDataManager playerDataManager = PlayerDataManager.getInstance(MinecraftNew.getInstance());
             if(playerDataManager.hasPerk(player.getUniqueId(), "Shulkl Box")) {
                 e.setCancelled(true);
 
@@ -81,7 +81,7 @@ public class ShulkerBox implements Listener {
         }
         // ========== NEW CRAFTING TABLE LOGIC ==========
         else if (clickedItem.getType() == Material.CRAFTING_TABLE) {
-            PlayerDataManager playerDataManager = new PlayerDataManager(MinecraftNew.getInstance());
+            PlayerDataManager playerDataManager = PlayerDataManager.getInstance(MinecraftNew.getInstance());
             if(playerDataManager.hasPerk(player.getUniqueId(), "Workbench")) {
                 e.setCancelled(true);
 

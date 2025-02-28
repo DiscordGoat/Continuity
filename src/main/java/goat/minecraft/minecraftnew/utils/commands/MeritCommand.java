@@ -111,12 +111,23 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Smites your foe.",
                             ChatColor.BLUE + "On Deal Damage Rarely (5%): " + ChatColor.GRAY + "Strike your foe with lightning."
                     )),
+            new Perk(ChatColor.DARK_GRAY + "Deep Hook", 1, Material.FISHING_ROD,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Taunts Sea Creatures.",
+                            ChatColor.BLUE + "Reel In Fish: " + ChatColor.GRAY + "+5 Sea Creature Chance."
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Instant Transmission", 1, Material.ENDER_EYE,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Breaks the rules of teleportation.",
+                            ChatColor.BLUE + "On Use Ultimate: Warp: " + ChatColor.GRAY + "Removes cooldown."
+                    )),
             new Perk(ChatColor.DARK_GRAY + "QuickSwap", 1, Material.TRIPWIRE_HOOK,
                     Arrays.asList(
                             ChatColor.GRAY + "Replenishes your supply of blocks.",
                             ChatColor.BLUE + "On Place Block: " + ChatColor.GRAY + "Replenishes your block supply."
                     ))
             );
+
 
     public MeritCommand(JavaPlugin plugin, PlayerDataManager playerData) {
         this.plugin = plugin;

@@ -36,7 +36,7 @@ public class Doors implements Listener {
         if (doorData.isOpen()) {
             return;
         }
-        PlayerDataManager playerDataManager = new PlayerDataManager(MinecraftNew.getInstance());
+        PlayerDataManager playerDataManager = PlayerDataManager.getInstance(MinecraftNew.getInstance());
         Player player = event.getPlayer();
         if(playerDataManager.hasPerk(player.getUniqueId(), "Motion Sensor")) {
             openOrCloseDoor(bottomDoorBlock, true);
