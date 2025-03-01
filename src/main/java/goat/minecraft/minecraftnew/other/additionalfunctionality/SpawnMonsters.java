@@ -7,6 +7,8 @@ import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -24,6 +26,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class SpawnMonsters implements Listener {
@@ -381,56 +384,41 @@ public class SpawnMonsters implements Listener {
     }
 
     public void applyMobAttributes(LivingEntity mob, int level) {
+        // Clamp the level between 1 and MAX_MONSTER_LEVEL.
         level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL));
 
-        if (mob instanceof EnderDragon) {
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    int level = 300;
-                    mob.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
-                    mob.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, Integer.MAX_VALUE, 255, true));
-                    mob.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
-
-                    double healthMultiplier = 1 + (level * 0.1);
-                    double originalHealth = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-                    double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
-                    mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
-                    mob.setHealth(newHealth);
-
-                    mob.setMetadata("mobLevel", new FixedMetadataValue(plugin, level));
-                    String color = getColorForLevel(level);
-                    mob.setCustomName(color + "Level: " + level + " " + formatMobType(mob.getType().toString()));
-                    mob.setCustomNameVisible(true);
-                    mob.setRemoveWhenFarAway(true);
-
-                    EnderDragon dragon = (EnderDragon) mob;
-                    dragon.setCustomName(ChatColor.DARK_RED + "Ender Dragon");
-                    dragon.setCustomNameVisible(true);
-
-                    BossBar bossBar = dragon.getBossBar();
-                    bossBar.setColor(BarColor.RED);
-                    bossBar.setStyle(BarStyle.SEGMENTED_20);
-
-                    dragon.setHealth(dragon.getMaxHealth());
-                }
-            }.runTaskLater(plugin, 60L);
-            return;
+        // Get the health attribute instance.
+        AttributeInstance healthAttribute = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (healthAttribute != null) {
+            // Remove all existing modifiers to prevent stacking.
+            for (AttributeModifier modifier : new ArrayList<>(healthAttribute.getModifiers())) {
+                healthAttribute.removeModifier(modifier);
+            }
+            // Reset base health to its default value.
+            double defaultHealth = healthAttribute.getDefaultValue();
+            healthAttribute.setBaseValue(defaultHealth);
         }
 
+        // Calculate the new health multiplier.
         double healthMultiplier = 1 + (level * 0.1);
         double originalHealth = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
         double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
+
+        // Apply the new health value.
         mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
         mob.setHealth(newHealth);
 
-        mob.setMetadata("mobLevel", new FixedMetadataValue(plugin, level));
+        // Set metadata to store the mob's level.
+        mob.setMetadata("mobLevel", new FixedMetadataValue(MinecraftNew.getInstance(), level));
 
+        // If the mob is a "Knight" (custom-named in gray), skip renaming.
         String color = getColorForLevel(level);
         if (mob.getCustomName() != null && mob.getCustomName().equals(ChatColor.GRAY + "Knight")) {
             return;
         }
-        mob.setCustomName(color + "Level: " + level + " " + formatMobType(mob.getType().toString()));
+
+        // Set the custom name with level and mob type.
+        mob.setCustomName(ChatColor.GRAY + "[" + color + "Lv: " + level + ChatColor.GRAY + "] " + formatMobType(mob.getType().toString()));
         mob.setCustomNameVisible(true);
         mob.setRemoveWhenFarAway(true);
     }

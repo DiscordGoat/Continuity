@@ -53,9 +53,12 @@ public class KnightMob implements Listener {
             // Optionally set a custom name for identification
 
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
-        spawnMonsters.applyMobAttributes(mob, 100);
-            mob.setCustomName(ChatColor.GRAY + "Knight");
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            spawnMonsters.applyMobAttributes(mob, 300);
+            mob.setCustomName(ChatColor.GRAY + "[Lvl 300] Knight");
             mob.setCustomNameVisible(true);
+        }, 41L);
+
     }
 
     // Event listener to play sound and particles when the knight is hit

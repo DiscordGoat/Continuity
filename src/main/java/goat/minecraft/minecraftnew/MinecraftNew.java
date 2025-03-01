@@ -445,7 +445,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
-        getServer().getPluginManager().registerEvents(new RealTimeDamageFeedback(), this);
+        //getServer().getPluginManager().registerEvents(new RealTimeDamageFeedback(), this);
     }
 
 

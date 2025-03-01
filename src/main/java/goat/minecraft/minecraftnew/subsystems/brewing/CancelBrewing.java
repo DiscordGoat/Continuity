@@ -365,7 +365,7 @@ public class CancelBrewing implements Listener {
             } else if (potencyItem.getType() == Material.GLOWSTONE) {
                 return 2; // Potency level 2
             }else if(potencyItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Abyssal Ink")){
-                return 6;
+                return 4;
             }
         }
         return 0; // Default potency level
