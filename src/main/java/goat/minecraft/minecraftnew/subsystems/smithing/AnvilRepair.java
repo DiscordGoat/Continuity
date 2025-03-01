@@ -530,6 +530,15 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.STRING);
                     billableItems.add(Material.ARROW);
 
+
+
+                    billableItems.add(Material.OAK_PLANKS);
+                    billableItems.add(Material.BIRCH_PLANKS);
+                    billableItems.add(Material.SPRUCE_PLANKS);
+                    billableItems.add(Material.ACACIA_PLANKS);
+                    billableItems.add(Material.DARK_OAK_PLANKS);
+
+
                     billableItems.add(Material.NETHER_WART);
                     billableItems.add(Material.CRIMSON_HYPHAE);
                     billableItems.add(Material.PINK_TULIP);
@@ -1148,6 +1157,41 @@ public class AnvilRepair implements Listener {
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Legendary Sword Reforge")&& isSword(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_5);
+            xpManager.addXP(player, "Smithing", 100.0);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.WHITE + "Oak Bow")&& isBow(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_1);
+            xpManager.addXP(player, "Smithing", 100.0);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GREEN + "Birch Bow")&& isBow(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_2);
+            xpManager.addXP(player, "Smithing", 100.0);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Spruce Bow")&& isBow(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_3);
+            xpManager.addXP(player, "Smithing", 100.0);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.DARK_PURPLE + "Acacia Bow")&& isBow(repairee)){
+            reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_4);
+            xpManager.addXP(player, "Smithing", 100.0);
+            billItem.setAmount(billItem.getAmount() - 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Dark Oak Bow")&& isBow(repairee)){
             reforgeManager.applyReforge(repairee, ReforgeManager.ReforgeTier.TIER_5);
             xpManager.addXP(player, "Smithing", 100.0);
             billItem.setAmount(billItem.getAmount() - 1);

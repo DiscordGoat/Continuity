@@ -10,9 +10,11 @@ import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
 import goat.minecraft.minecraftnew.other.recipes.ViewRecipeCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
+
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryManager;
+import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
@@ -33,11 +35,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.petdrops.AllayInteractEvent;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.AxolotlInteractEvent;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.CatTameEvent;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.PetDrops;
-import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.talismans.*;
-import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ArmorReforge;
-import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.SwordReforge;
-import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ToolReforge;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
 import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
@@ -420,9 +418,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("clearpets").setExecutor(new ClearPetsCommand(this, petManager));
 
         getServer().getPluginManager().registerEvents(new CombatBuffs(), this);
-
+        getServer().getPluginManager().registerEvents(new BowReforge(), this);
         villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
+
         //nms >
 
 
@@ -445,7 +444,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
-
+        getServer().getPluginManager().registerEvents(new RealTimeDamageFeedback(), this);
     }
 
 

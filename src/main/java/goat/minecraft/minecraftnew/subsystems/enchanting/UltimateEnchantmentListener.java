@@ -740,7 +740,7 @@ public class UltimateEnchantmentListener implements Listener {
     }
     private void fireDamageArrow(Player player) {
         Arrow arrow = player.launchProjectile(Arrow.class);
-        arrow.setDamage(100);
+        arrow.setDamage(20);
         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 10.f, 1.0f);
     }
     public void launchPlayerForward(Player player) {

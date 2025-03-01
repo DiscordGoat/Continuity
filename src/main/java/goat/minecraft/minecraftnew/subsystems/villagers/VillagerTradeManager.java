@@ -245,9 +245,12 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> fletcherPurchases = new ArrayList<>();
         fletcherPurchases.add(createTradeMap("ARROW", 4, 1, 1)); // item, quantity, emeralds, level, experience
         fletcherPurchases.add(createTradeMap("BOW", 1, 4, 1));
+        fletcherPurchases.add(createTradeMap("OAK_BOW", 1, 16, 1));
         fletcherPurchases.add(createTradeMap("CROSSBOW", 1, 4, 2));
+        fletcherPurchases.add(createTradeMap("BIRCH_BOW", 1, 32, 2));
         fletcherPurchases.add(createTradeMap("FEATHER", 1, 2, 2));
 
+        fletcherPurchases.add(createTradeMap("SPRUCE_BOW", 1, 64, 3));
         fletcherPurchases.add(createTradeMap("OAK_SAPLING", 4, 2, 3));
         fletcherPurchases.add(createTradeMap("JUNGLE_SAPLING", 4, 2, 3));
         fletcherPurchases.add(createTradeMap("DARK_OAK_SAPLING", 4, 2, 3));
@@ -256,8 +259,10 @@ public class VillagerTradeManager implements Listener {
         fletcherPurchases.add(createTradeMap("ACACIA_SAPLING", 4, 2, 3));
         fletcherPurchases.add(createTradeMap("CHERRY_SAPLING", 4, 2, 3));
 
+        fletcherPurchases.add(createTradeMap("ACACIA_BOW", 1, 128, 4)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_BOW_ENCHANT", 1, 16, 4)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_POWER", 1, 64, 4)); // Custom item
+        fletcherPurchases.add(createTradeMap("DARK_OAK_BOW", 1, 128*2, 5)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_CROSSBOW_ENCHANT", 1, 32, 5)); // Custom item
         defaultConfig.set("FLETCHER.purchases", fletcherPurchases);
 
@@ -848,6 +853,16 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getEpicSwordReforge();
             case "WEAPONSMITH_SWEEPING_EDGE":
                 return ItemRegistry.getWeaponsmithSweepingEdge();
+            case "OAK_BOW":
+                return ItemRegistry.getOakBowFrameUpgrade();
+            case "BIRCH_BOW":
+                return ItemRegistry.getBirchBowFrameUpgrade();
+            case "SPRUCE_BOW":
+                return ItemRegistry.getSpruceBowFrameUpgrade();
+            case "ACACIA_BOW":
+                return ItemRegistry.getAcaciaBowFrameUpgrade();
+            case "DARK_OAK_BOW":
+                return ItemRegistry.getDarkOakBowFrameUpgrade();
             case "WEAPONSMITH_LOOTING":
                 return ItemRegistry.getWeaponsmithLooting();
             case "WEAPONSMITH_KNOCKBACK":

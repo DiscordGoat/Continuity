@@ -51,11 +51,6 @@ public class SeaCreatureDeathEvent implements Listener {
     @EventHandler
     public void onSeaCreatureDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
-        if (entity instanceof LivingEntity) {
-            ((LivingEntity) entity).getEquipment().setHelmet(null);
-            ((LivingEntity) entity).getEquipment().setItemInOffHandDropChance(1);
-        }
-        // Ensure metadata exists
         List<MetadataValue> metadata = entity.getMetadata("SEA_CREATURE");
         if (metadata == null || metadata.isEmpty()) {
             // Debug: Print all metadata keys
@@ -64,6 +59,11 @@ public class SeaCreatureDeathEvent implements Listener {
             }
             return;
         }
+        if (entity instanceof LivingEntity) {
+            ((LivingEntity) entity).getEquipment().setHelmet(null);
+            ((LivingEntity) entity).getEquipment().setItemInOffHandDropChance(1);
+        }
+
 
 
         String creatureName = metadata.get(0).asString();

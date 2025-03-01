@@ -2,48 +2,40 @@ package goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerItemDamageEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 public class Preservation implements Listener {
 
     @EventHandler
-    public void onPlayerItemDamage(PlayerItemDamageEvent event) {
-        ItemStack item = event.getItem();
+    public void onPlayerItemBreak(PlayerItemBreakEvent event) {
+        ItemStack item = event.getBrokenItem();
         Player player = event.getPlayer();
 
-        // Only proceed if the item has "Preservation" enchantment
+        // Only proceed if the item has the "Preservation" enchantment
         if (!CustomEnchantmentManager.hasEnchantment(item, "Preservation")) return;
 
-        // Check if this item is about to break
-        int newDurability = item.getDurability() + event.getDamage();
-        if (newDurability >= item.getType().getMaxDurability()) {
-            // Cancel the standard durability reduction
-            event.setCancelled(true);
+        // Instead of letting the item break, "save" it by resetting its durability.
+        item.setDurability((short) (item.getType().getMaxDurability() - 1));
 
-            // Instead of breaking, set the durability to 1
-            item.setDurability((short) (item.getType().getMaxDurability() - 1));
+        // If the item was worn (armor), remove it from its slot
+        player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+        player.sendMessage(ChatColor.GREEN + "Your " + item.getType().toString() + " was saved from breaking!");
+        removeIfWorn(player, item);
 
-            // If it's armor, remove it from the armor slot
-            removeIfWorn(player, item);
-
-            // Try to give it back to the player’s main inventory
-            if (!addToInventory(player, item)) {
-                // If player's main inventory is full, try adding to the backpack
-                player.getWorld().dropItemNaturally(player.getLocation(), item);
-
-            }
-
-            // Optional sound or message
-            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
-            player.sendMessage(ChatColor.GREEN + "Your " + item.getType().toString() + " was saved from breaking!");
+        // Try to add the saved item back to the player's main inventory.
+        // If inventory is full, drop it at the player's location.
+        if (!addToInventory(player, item)) {
+            player.getWorld().dropItemNaturally(player.getLocation(), item);
         }
+
+        // Play a sound and notify the player that the item was saved.
+
     }
 
     /**
@@ -51,7 +43,6 @@ public class Preservation implements Listener {
      */
     private void removeIfWorn(Player player, ItemStack item) {
         PlayerInventory inv = player.getInventory();
-        // Compare references to remove the exact item
         if (inv.getHelmet() != null && inv.getHelmet().equals(item)) {
             inv.setHelmet(null);
         } else if (inv.getChestplate() != null && inv.getChestplate().equals(item)) {
@@ -68,36 +59,26 @@ public class Preservation implements Listener {
      * @return true if successful, false if inventory is full.
      */
     private boolean addToInventory(Player player, ItemStack item) {
-        // Temporarily clone and set the original stack to 1, since we only want to move that single item stack
-        // If your enchant only deals with single items and not stacks, you can skip the cloning logic.
+        // Clone the item for safe transfer since the broken item might be partially "removed"
         ItemStack clone = item.clone();
-        item.setAmount(0); // effectively remove it from its current spot
+        item.setAmount(0); // Remove it from its current slot
 
-        // Attempt to add the clone to the player's main inventory
         if (player.getInventory().addItem(clone).isEmpty()) {
-            return true;  // success
+            return true;
         } else {
-            // If cannot add, revert the item stack
+            // If adding fails, restore the item amount and return false.
             item.setAmount(1);
             return false;
         }
     }
 
     /**
+     * Placeholder for a backpack system.
      * Attempts to put the item in the player's "backpack".
-     * Replace this with however your code handles a "backpack" system.
      * @return true if successful, false otherwise.
      */
     private boolean addToBackpack(Player player, ItemStack item) {
-        // Pseudocode: if you have a custom backpack inventory, do something like:
-        // BackpackInventory backpack = getBackpackForPlayer(player);
-        // if (backpack.hasSpace()) {
-        //     backpack.addItem(item);
-        //     return true;
-        // }
-        // return false;
-
-        // Placeholder for demonstration: simply return false
+        // Implement your custom backpack logic here.
         return false;
     }
 }

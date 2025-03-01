@@ -949,7 +949,80 @@ public class ItemRegistry {
                 true
         );
     }
+    public static ItemStack getOakBowFrameUpgrade() {
+        return CustomItemManager.createCustomItem(
+                Material.OAK_PLANKS,
+                ChatColor.WHITE + "Oak Bow",
+                Arrays.asList(
+                        ChatColor.GRAY + "Upgrades a bow frame using Oak wood",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Enhances base stats of bows.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
 
+    public static ItemStack getBirchBowFrameUpgrade() {
+        return CustomItemManager.createCustomItem(
+                Material.BIRCH_PLANKS,
+                ChatColor.GREEN + "Birch Bow",
+                Arrays.asList(
+                        ChatColor.GRAY + "Upgrades a bow frame using Birch wood",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Enhances base stats of bows.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getSpruceBowFrameUpgrade() {
+        return CustomItemManager.createCustomItem(
+                Material.SPRUCE_PLANKS,
+                ChatColor.BLUE + "Spruce Bow",
+                Arrays.asList(
+                        ChatColor.GRAY + "Upgrades a bow frame using Spruce wood",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Enhances base stats of bows.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getAcaciaBowFrameUpgrade() {
+        return CustomItemManager.createCustomItem(
+                Material.ACACIA_PLANKS,
+                ChatColor.DARK_PURPLE + "Acacia Bow",
+                Arrays.asList(
+                        ChatColor.GRAY + "Upgrades a bow frame using Acacia wood",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Enhances base stats of bows.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getDarkOakBowFrameUpgrade() {
+        return CustomItemManager.createCustomItem(
+                Material.DARK_OAK_PLANKS,
+                ChatColor.GOLD + "Dark Oak Bow",
+                Arrays.asList(
+                        ChatColor.GRAY + "Upgrades a bow frame using Dark Oak wood",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Enhances base stats of bows.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
     public static ItemStack getLegendarySwordReforge() {
         return CustomItemManager.createCustomItem(
                 Material.YELLOW_DYE,
