@@ -68,7 +68,7 @@ public class KnightMob implements Listener {
             World world = mob.getWorld();
 
             // Play iron clang sound
-            world.playSound(loc, Sound.BLOCK_METAL_BREAK, 1.0f, 1.0f);
+            world.playSound(loc, Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1.0f, 1.0f);
 
             // Spawn iron particles
             world.spawnParticle(Particle.CRIT, loc, 10, 0.5, 1, 0.5);
@@ -98,7 +98,7 @@ public class KnightMob implements Listener {
             }
 
             // Drop a rare item with a chance
-            if (random.nextDouble() < 1.0) { // 10% chance to drop the rare item
+            if (random.nextDouble() < 8.0) { // 10% chance to drop the rare item
                 Bukkit.getLogger().info("Adding rare item drop for knight: " + event.getEntity().getUniqueId());
                 event.getDrops().add(ItemRegistry.getSingularity());
             }
