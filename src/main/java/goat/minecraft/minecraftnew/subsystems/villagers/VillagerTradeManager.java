@@ -235,6 +235,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithSells.add(createTradeMap("ELDER_GUARDIAN_DROP", 1, 4, 1)); // elderGuardianDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_BRUTE_DROP", 1, 8, 1)); // piglinBruteDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_DROP", 1, 8, 1)); // piglinDrop
+        weaponsmithSells.add(createTradeMap("MIDAS", 1, 64, 1)); // piglinDrop
         weaponsmithSells.add(createTradeMap("GOLD_BAR", 1, 16, 1)); // piglinDrop
         weaponsmithSells.add(createTradeMap("SPIDER_DROP", 1, 16, 1)); // spiderDrop
         weaponsmithSells.add(createTradeMap("UNDEAD_DROP", 1, 16, 1)); // undeadDrop
@@ -832,8 +833,10 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getFletcherCrossbowEnchant();
             case "SECRETS_OF_INFINITY":
                 return ItemRegistry.getSecretsOfInfinity();
-            case "GOLD_BAR":
+            case "MIDAS":
                 return ItemRegistry.getInfernalLooting();
+            case "GOLD_BAR":
+                return ItemRegistry.getZombifiedPiglinDrop();
             case "CUSTOM_ITEM_DISPLAY":
                 return ItemRegistry.getItemDisplayItem();
             case "COMMON_SWORD_REFORGE":
