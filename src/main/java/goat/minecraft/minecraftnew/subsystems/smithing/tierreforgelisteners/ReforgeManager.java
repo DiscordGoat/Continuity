@@ -14,46 +14,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages the reforging system for weapons, armor, and tools.
+ * Manages the reforging system for weapons, armor, tools, and bows.
  */
 public class ReforgeManager {
 
     private final JavaPlugin plugin = MinecraftNew.getInstance();
 
-
     /**
      * Represents the different tiers of reforging with associated properties.
      */
     public enum ReforgeTier {
-        TIER_0(0, ChatColor.RESET, "Sword", "Armor", "Tool", 0, 0, 0),
-        TIER_1(1, ChatColor.WHITE, "Sturdy Blade", "Sturdy Armor", "Sturdy Tool", 10, 1, 5),
-        TIER_2(2, ChatColor.GREEN, "Sharpened Blade", "Reinforced Armor", "Enhanced Tool", 20, 2, 10),
-        TIER_3(3, ChatColor.BLUE, "Reinforced Blade", "Fortified Armor", "Refined Tool", 30, 3, 15),
-        TIER_4(4, ChatColor.DARK_PURPLE, "Lethal Blade", "Battle Armor", "Superior Tool", 40, 4, 20),
-        TIER_5(5, ChatColor.GOLD, "Fatal Blade", "Legendary Armor", "Masterwork Tool", 50, 5, 25);
+        TIER_0(0, ChatColor.RESET, "Sword", "Armor", "Tool", "Bow", 0, 0, 0, 0),
+        TIER_1(1, ChatColor.WHITE, "Sturdy Blade", "Sturdy Armor", "Sturdy Tool", "Oak Bow", 10, 1, 5, 20),
+        TIER_2(2, ChatColor.GREEN, "Sharpened Blade", "Reinforced Armor", "Enhanced Tool", "Birch Bow", 20, 2, 10, 40),
+        TIER_3(3, ChatColor.BLUE, "Reinforced Blade", "Fortified Armor", "Refined Tool", "Spruce Bow", 30, 3, 15, 60),
+        TIER_4(4, ChatColor.DARK_PURPLE, "Lethal Blade", "Battle Armor", "Superior Tool", "Acacia Bow", 40, 4, 20, 80),
+        TIER_5(5, ChatColor.GOLD, "Fatal Blade", "Legendary Armor", "Masterwork Tool", "Dark Oak Bow", 50, 5, 25, 100);
 
         private final int tier;
         private final ChatColor color;
         private final String swordName;
         private final String armorName;
         private final String toolName;
+        private final String bowName;
         private final int weaponDamageIncrease; // In percent
         private final int armorDamageReduction; // In percent
         private final int toolDurabilityChance; // In percent
+        private final int bowDamageIncrease; // In percent
 
         /**
          * Constructs a ReforgeTier enum constant.
          */
-        ReforgeTier(int tier, ChatColor color, String swordName, String armorName, String toolName,
-                    int weaponDamageIncrease, int armorDamageReduction, int toolDurabilityChance) {
+        ReforgeTier(int tier, ChatColor color, String swordName, String armorName, String toolName, String bowName,
+                    int weaponDamageIncrease, int armorDamageReduction, int toolDurabilityChance, int bowDamageIncrease) {
             this.tier = tier;
             this.color = color;
             this.swordName = swordName;
             this.armorName = armorName;
             this.toolName = toolName;
+            this.bowName = bowName;
             this.weaponDamageIncrease = weaponDamageIncrease;
             this.armorDamageReduction = armorDamageReduction;
             this.toolDurabilityChance = toolDurabilityChance;
+            this.bowDamageIncrease = bowDamageIncrease;
         }
 
         public int getTier() {
@@ -76,6 +79,10 @@ public class ReforgeManager {
             return toolName;
         }
 
+        public String getBowName() {
+            return bowName;
+        }
+
         public int getWeaponDamageIncrease() {
             return weaponDamageIncrease;
         }
@@ -86,6 +93,10 @@ public class ReforgeManager {
 
         public int getToolDurabilityChance() {
             return toolDurabilityChance;
+        }
+
+        public int getBowDamageIncrease() {
+            return bowDamageIncrease;
         }
     }
 
@@ -103,8 +114,9 @@ public class ReforgeManager {
         boolean isSword = isSword(item);
         boolean isArmor = isArmor(item);
         boolean isTool = isTool(item);
+        boolean isBow = isBow(item);
 
-        if (!isSword && !isArmor && !isTool) {
+        if (!isSword && !isArmor && !isTool && !isBow) {
             return item; // Not a valid item for reforging
         }
 
@@ -129,7 +141,8 @@ public class ReforgeManager {
         // Update item's display name and color
         String newName = isSword ? targetTier.getColor() + targetTier.getSwordName()
                 : isArmor ? targetTier.getColor() + targetTier.getArmorName()
-                : targetTier.getColor() + targetTier.getToolName();
+                : isTool ? targetTier.getColor() + targetTier.getToolName()
+                : isBow ? targetTier.getColor() + targetTier.getBowName() : meta.getDisplayName();
         meta.setDisplayName(newName);
 
         // Step 6: Update the item's lore with the appropriate percentage, preserving other lore
@@ -147,6 +160,8 @@ public class ReforgeManager {
             lore.add(ChatColor.DARK_GRAY + "Damage Reduction: " + ChatColor.AQUA + targetTier.getArmorDamageReduction() + "%");
         } else if (isTool) {
             lore.add(ChatColor.DARK_GRAY + "Chance to repair durability: " + ChatColor.AQUA + targetTier.getToolDurabilityChance() + "%");
+        } else if (isBow) {
+            lore.add(ChatColor.DARK_GRAY + "Damage Increase: " + ChatColor.AQUA + targetTier.getBowDamageIncrease() + "%");
         }
 
         meta.setLore(lore);
@@ -238,5 +253,15 @@ public class ReforgeManager {
         return typeName.endsWith("_PICKAXE") || typeName.endsWith("_AXE")
                 || typeName.endsWith("_SHOVEL") || typeName.endsWith("_HOE")
                 || typeName.equals("SHEARS") || typeName.equals("FISHING_ROD");
+    }
+
+    /**
+     * Checks if an ItemStack is a bow.
+     */
+    public boolean isBow(ItemStack item) {
+        if (item == null) {
+            return false;
+        }
+        return item.getType() == Material.BOW;
     }
 }
