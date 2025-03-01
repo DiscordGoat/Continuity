@@ -235,6 +235,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithSells.add(createTradeMap("ELDER_GUARDIAN_DROP", 1, 4, 1)); // elderGuardianDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_BRUTE_DROP", 1, 8, 1)); // piglinBruteDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_DROP", 1, 8, 1)); // piglinDrop
+        weaponsmithSells.add(createTradeMap("GOLD_BAR", 1, 16, 1)); // piglinDrop
         weaponsmithSells.add(createTradeMap("SPIDER_DROP", 1, 16, 1)); // spiderDrop
         weaponsmithSells.add(createTradeMap("UNDEAD_DROP", 1, 16, 1)); // undeadDrop
         weaponsmithSells.add(createTradeMap("VINDICATOR_DROP", 1, 8, 1)); // vindicatorDrop
@@ -831,6 +832,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getFletcherCrossbowEnchant();
             case "SECRETS_OF_INFINITY":
                 return ItemRegistry.getSecretsOfInfinity();
+            case "GOLD_BAR":
+                return ItemRegistry.getInfernalLooting();
             case "CUSTOM_ITEM_DISPLAY":
                 return ItemRegistry.getItemDisplayItem();
             case "COMMON_SWORD_REFORGE":
@@ -1438,7 +1441,7 @@ public class VillagerTradeManager implements Listener {
         int quantity = tradeItem.getQuantity();
         ItemStack tradeItemStack = tradeItem.getItem();
 
-        // Attempt to remove items (only unenchanted or Unbreaking I) and reward emeralds
+        // Attempt to remove items that match the trade item's criteria and reward emeralds.
         boolean success = removeCustomItemsAndReward(player, tradeItemStack, quantity, emeraldReward);
         if (success) {
             // Give villager XP
@@ -1457,7 +1460,15 @@ public class VillagerTradeManager implements Listener {
         }
     }
 
-    // Removes valid items from the player's inventory and rewards emeralds if successful
+    /**
+     * Removes items from the player's inventory that match the target item's criteria.
+     *
+     * For items with a custom name, only those with the exact same display name are counted.
+     * For default items (no custom name), all items without a custom display name (or without ItemMeta)
+     * of the same type are counted.
+     *
+     * If enough items are found and removed, the player is rewarded with emeralds.
+     */
     private boolean removeCustomItemsAndReward(
             Player player,
             ItemStack targetItem,
@@ -1467,7 +1478,12 @@ public class VillagerTradeManager implements Listener {
         Inventory inventory = player.getInventory();
         int needed = quantity;
 
-        // First pass: Collect which slots (and how many items) we will remove
+        // Determine whether the target item is custom (has a display name) or default.
+        boolean isCustom = targetItem.hasItemMeta() && targetItem.getItemMeta().hasDisplayName();
+        String targetName = isCustom ? targetItem.getItemMeta().getDisplayName() : null;
+        Material targetType = targetItem.getType();
+
+        // First pass: Determine which inventory slots contain valid items.
         List<RemovalData> itemsToRemove = new ArrayList<>();
         for (int slot = 0; slot < inventory.getSize(); slot++) {
             if (needed <= 0) break;
@@ -1475,31 +1491,50 @@ public class VillagerTradeManager implements Listener {
             ItemStack currentItem = inventory.getItem(slot);
             if (currentItem == null) continue;
 
-            if (isMatchingType(currentItem, targetItem) && isValidItem(currentItem)) {
-                int itemAmount = currentItem.getAmount();
-                if (itemAmount <= needed) {
-                    itemsToRemove.add(new RemovalData(slot, itemAmount));
-                    needed -= itemAmount;
-                } else {
-                    itemsToRemove.add(new RemovalData(slot, needed));
-                    needed = 0;
+            // Must match the same type.
+            if (!currentItem.getType().equals(targetType)) continue;
+
+            if (isCustom) {
+                // For custom items, only count items with a matching display name.
+                if (currentItem.hasItemMeta() && currentItem.getItemMeta().hasDisplayName()) {
+                    String currentName = currentItem.getItemMeta().getDisplayName();
+                    if (targetName.equals(currentName)) {
+                        int itemAmount = currentItem.getAmount();
+                        if (itemAmount <= needed) {
+                            itemsToRemove.add(new RemovalData(slot, itemAmount));
+                            needed -= itemAmount;
+                        } else {
+                            itemsToRemove.add(new RemovalData(slot, needed));
+                            needed = 0;
+                        }
+                    }
+                }
+            } else {
+                // For default items, count only items that don't have a custom display name.
+                if (!currentItem.hasItemMeta() || !currentItem.getItemMeta().hasDisplayName()) {
+                    int itemAmount = currentItem.getAmount();
+                    if (itemAmount <= needed) {
+                        itemsToRemove.add(new RemovalData(slot, itemAmount));
+                        needed -= itemAmount;
+                    } else {
+                        itemsToRemove.add(new RemovalData(slot, needed));
+                        needed = 0;
+                    }
                 }
             }
         }
 
-        // If we don't have enough valid items, do nothing
+        // If not enough valid items were found, return false.
         if (needed > 0) {
             return false;
         }
 
-        // Second pass: Actually remove the items
+        // Second pass: Remove the determined items from the inventory.
         for (RemovalData data : itemsToRemove) {
             ItemStack stack = inventory.getItem(data.slot);
             if (stack == null) continue;
-
             int currentAmount = stack.getAmount();
             int removeAmount = data.amountToRemove;
-
             if (removeAmount >= currentAmount) {
                 inventory.setItem(data.slot, null);
             } else {
@@ -1507,11 +1542,11 @@ public class VillagerTradeManager implements Listener {
             }
         }
 
-        // Reward emeralds only if all items were removed
+        // Reward emeralds only if all items were successfully removed.
         ItemStack emeralds = new ItemStack(Material.EMERALD, emeraldReward);
         Map<Integer, ItemStack> leftoverEmeralds = inventory.addItem(emeralds);
 
-        // Drop leftover emeralds if the inventory is full
+        // If the inventory is full, drop any leftover emeralds on the ground.
         if (!leftoverEmeralds.isEmpty()) {
             for (ItemStack leftover : leftoverEmeralds.values()) {
                 player.getWorld().dropItemNaturally(player.getLocation(), leftover);
@@ -1519,28 +1554,10 @@ public class VillagerTradeManager implements Listener {
             player.sendMessage(ChatColor.YELLOW
                     + "Your inventory was full, so the emerald(s) were dropped on the ground.");
         }
-        return true; // Items successfully removed and emeralds rewarded
+        return true; // Items were successfully removed and emeralds rewarded.
     }
 
-    // Checks if both items have the same type (optionally add more matching logic if needed)
-    private boolean isMatchingType(ItemStack item, ItemStack target) {
-        return item.getType() == target.getType();
-    }
-
-    // Determines if the item is either unenchanted or has exactly one enchantment: Unbreaking I
-    private boolean isValidItem(ItemStack item) {
-        // Unenchanted item
-        if (!item.hasItemMeta() || !item.getItemMeta().hasEnchants()) {
-            return true;
-        }
-        // Item has exactly one enchantment: Unbreaking I
-        Map<Enchantment, Integer> enchants = item.getEnchantments();
-        return enchants.size() == 1
-                && enchants.containsKey(Enchantment.DURABILITY)
-                && enchants.get(Enchantment.DURABILITY) == 1;
-    }
-
-    // Helper class to store removal data for the second pass
+    // Helper class to store removal data for a given inventory slot.
     private static class RemovalData {
         final int slot;
         final int amountToRemove;
@@ -1550,8 +1567,6 @@ public class VillagerTradeManager implements Listener {
             this.amountToRemove = amountToRemove;
         }
     }
-
-
 
     /**
      * Removes a specified amount of a material from an inventory.
