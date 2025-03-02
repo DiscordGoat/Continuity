@@ -14,6 +14,9 @@ import goat.minecraft.minecraftnew.subsystems.combat.*;
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryManager;
+
+import goat.minecraft.minecraftnew.subsystems.pets.petdrops.*;
+import goat.minecraft.minecraftnew.subsystems.pets.petdrops.WitherPetGrantListener;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
 import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
@@ -31,10 +34,6 @@ import goat.minecraft.minecraftnew.subsystems.music.MusicDiscManager;
 import goat.minecraft.minecraftnew.subsystems.pets.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.Float;
-import goat.minecraft.minecraftnew.subsystems.pets.petdrops.AllayInteractEvent;
-import goat.minecraft.minecraftnew.subsystems.pets.petdrops.AxolotlInteractEvent;
-import goat.minecraft.minecraftnew.subsystems.pets.petdrops.CatTameEvent;
-import goat.minecraft.minecraftnew.subsystems.pets.petdrops.PetDrops;
 import goat.minecraft.minecraftnew.subsystems.smithing.talismans.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
 import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
@@ -159,6 +158,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("grantmerit").setExecutor(new GrantMerit(this, playerData));
 
         // Register event listener for inventory clicks
+        getServer().getPluginManager().registerEvents(new WitherPetGrantListener(petManager), this);
         getServer().getPluginManager().registerEvents(new MeritCommand(this, playerData), this);
 
         //add merit perks
