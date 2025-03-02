@@ -127,6 +127,7 @@ public class PetRegistry {
                 Particle.WHITE_ASH,
                 Arrays.asList(PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.RECOVERY, PetManager.PetPerk.LASER_BEAM)
         ));
+
         registry.put("Skeleton", new PetDefinition(
                 "Skeleton",
                 PetManager.Rarity.UNCOMMON,
@@ -331,6 +332,13 @@ public class PetRegistry {
                 100,
                 Particle.FIREWORKS_SPARK,
                 Arrays.asList(PetManager.PetPerk.GREEN_THUMB)
+        ));
+        registry.put("Wither", new PetDefinition(
+                "Wither",
+                PetManager.Rarity.EPIC,
+                100,
+                Particle.ASH,
+                Arrays.asList(PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.FLIGHT, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.ELITE, PetManager.PetPerk.DECAY)
         ));
     }
     // Inside PetManager class
