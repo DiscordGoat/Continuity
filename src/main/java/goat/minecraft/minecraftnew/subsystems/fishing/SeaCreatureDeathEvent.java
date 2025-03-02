@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
@@ -50,6 +51,8 @@ public class SeaCreatureDeathEvent implements Listener {
 
     @EventHandler
     public void onSeaCreatureDeath(EntityDeathEvent event) {
+        PetRegistry petRegistry = new PetRegistry();
+
         Entity entity = event.getEntity();
         List<MetadataValue> metadata = entity.getMetadata("SEA_CREATURE");
         if (metadata == null || metadata.isEmpty()) {
@@ -90,15 +93,13 @@ public class SeaCreatureDeathEvent implements Listener {
             PetManager petManager = PetManager.getInstance(plugin);
             int pirateChance = random.nextInt(100) + 1;
             if (pirateChance <= 10) {
-                petManager.createPet(killer, "Golden Steve", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY, PetManager.PetPerk.TREASURE_HUNTER, PetManager.PetPerk.COMFORTABLE);
-            }
+                petRegistry.addPetByName(killer, "Golden Steve");            }
         }
         if(seaCreature.getSkullName().equals("Yeti")){
             PetManager petManager = PetManager.getInstance(plugin);
             int pirateChance = random.nextInt(100) + 1;
             if (pirateChance <= 10) {
-                petManager.createPet(killer, "Yeti", PetManager.Rarity.EPIC, 100, Particle.CRIT_MAGIC, PetManager.PetPerk.ASPECT_OF_THE_FROST, PetManager.PetPerk.BLIZZARD, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.BONE_COLD, PetManager.PetPerk.ELITE);
-            }
+                petRegistry.addPetByName(killer, "Yeti");            }
         }
 
 
@@ -131,29 +132,31 @@ public class SeaCreatureDeathEvent implements Listener {
         if (chance >= 90) {
             entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), forbiddenBook);
         }
+
+
         if (seaCreature.getRarity() == Rarity.COMMON) {
             if (chance >= 90) {
-                petManager.createPet(killer, "Fish", PetManager.Rarity.COMMON, 100, Particle.GLOW_SQUID_INK, PetManager.PetPerk.ANGLER);
+                petRegistry.addPetByName(killer, "Fish");
             }
         }
         if (seaCreature.getRarity() == Rarity.UNCOMMON) {
             if (chance >= 90) {
-                petManager.createPet(killer, "Glow Squid", PetManager.Rarity.UNCOMMON, 100, Particle.GLOW_SQUID_INK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANGLER);
+                petRegistry.addPetByName(killer, "Glow Squid");
             }
         }
         if (seaCreature.getRarity() == Rarity.RARE) {
             if (chance >= 90) {
-                petManager.createPet(killer, "Dolphin", PetManager.Rarity.RARE, 100, Particle.WATER_SPLASH, PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.ANGLER);
+                petRegistry.addPetByName(killer, "Dolphin");
             }
         }
         if (seaCreature.getRarity() == Rarity.EPIC) {
             if (chance >= 90) {
-                petManager.createPet(killer, "Turtle", PetManager.Rarity.EPIC, 100, Particle.CRIMSON_SPORE, PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.COMFORTABLE);
+                petRegistry.addPetByName(killer, "Turtle");
             }
         }
         if (seaCreature.getRarity() == Rarity.LEGENDARY) {
             if (chance >= 90) {
-                petManager.createPet(killer, "Leviathan", PetManager.Rarity.LEGENDARY, 100, Particle.VILLAGER_ANGRY, PetManager.PetPerk.ANGLER, PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.TERROR_OF_THE_DEEP);
+                petRegistry.addPetByName(killer, "Leviathan");
             }
         }
     }

@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -55,6 +56,7 @@ public class ForestryManager {
      * @param player The player who harvested a tree
      */
     public void incrementForestryCount(Player player) {
+        PetRegistry petRegistry = new PetRegistry();
         UUID playerUUID = player.getUniqueId();
         String path = playerUUID.toString() + ".forestry_count";
 
@@ -69,18 +71,15 @@ public class ForestryManager {
         if (currentCount == 10){
             player.sendMessage(ChatColor.GREEN + "Congratulations! You've harvested " + currentCount + " trees.");
             player.playSound(player.getLocation(), Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
-            petManager.createPet(player, "Raccoon", PetManager.Rarity.RARE, 100, Particle.VILLAGER_HAPPY, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS);
-        }
+            petRegistry.addPetByName(player, "Racoon");        }
         if(currentCount == 100){
             player.sendMessage(ChatColor.GREEN + "Congratulations! You've harvested " + currentCount + " trees.");
             player.playSound(player.getLocation(), Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
-            petManager.createPet(player, "Monkey", PetManager.Rarity.EPIC, 100, Particle.VILLAGER_HAPPY, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.COLLECTOR);
-        }
+            petRegistry.addPetByName(player, "Monkey");        }
         if(currentCount == 1000) {
             player.sendMessage(ChatColor.GREEN + "Congratulations! You've harvested " + currentCount + " trees.");
             player.playSound(player.getLocation(), Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
-            petManager.createPet(player, "Ent", PetManager.Rarity.LEGENDARY, 100, Particle.END_ROD, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.GROOT);
-        }
+            petRegistry.addPetByName(player, "Ent");        }
     }
 
     /**

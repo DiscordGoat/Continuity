@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.biomeutils.BiomeMapper;
@@ -1747,7 +1748,8 @@ public class MusicDiscManager implements Listener {
                 //TODO rewards
                 // Unregister this listener.
                 PetManager petManager = PetManager.getInstance(plugin);
-                petManager.createPet(eventPlayer, "Piglin Brute", PetManager.Rarity.LEGENDARY, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.CHALLENGE, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.ELITE);
+                PetRegistry petRegistry = new PetRegistry();
+                petRegistry.addPetByName(eventPlayer, "Piglin Brute");
                 HandlerList.unregisterAll(this);
             }
         }
@@ -1768,8 +1770,8 @@ public class MusicDiscManager implements Listener {
         Random random = new Random();
         World world = player.getWorld();
         PetManager petManager = PetManager.getInstance(plugin);
-        petManager.createPet(player, "Parrot", PetManager.Rarity.LEGENDARY, 100, Particle.TOTEM, PetManager.PetPerk.FLIGHT, PetManager.PetPerk.LULLABY);
-
+        PetRegistry petRegistry = new PetRegistry();
+        petRegistry.addPetByName(player, "Parrot");
         // Play the music disc sound
         world.playSound(player.getLocation(), Sound.MUSIC_DISC_OTHERSIDE, SoundCategory.RECORDS, 1000.0f, 1.0f);
         player.sendMessage(ChatColor.GREEN + "Time accelerates around you!");

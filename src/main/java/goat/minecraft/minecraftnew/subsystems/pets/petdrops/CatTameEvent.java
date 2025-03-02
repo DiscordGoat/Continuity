@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.pets.petdrops;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -27,12 +28,10 @@ public class CatTameEvent implements Listener {
             // Check if the tamer is a player
             if (event.getOwner() instanceof Player) {
                 Player player = (Player) event.getOwner();
-
+                PetRegistry petRegistry = new PetRegistry();
                 // Grant the player the Cat pet
-                petManager.createPet(player, "Cat", PetManager.Rarity.LEGENDARY, 100, Particle.ASH, PetManager.PetPerk.CLAW, PetManager.PetPerk.SOFT_PAW, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.LEAP);
-
+                petRegistry.addPetByName(player, "Cat");
                 // Notify the player
-                player.sendMessage(ChatColor.GREEN + "Congratulations! You've tamed a cat and received the Cat pet!");
                 player.playSound(player.getLocation(), Sound.ENTITY_CAT_AMBIENT, 1.0f, 1.0f);
 
                 // Remove the tamed cat from the world

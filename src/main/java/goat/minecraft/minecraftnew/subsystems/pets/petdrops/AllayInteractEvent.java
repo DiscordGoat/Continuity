@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.pets.petdrops;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -30,13 +31,12 @@ public class AllayInteractEvent implements Listener {
 
             // Check if the player is holding an empty bucket in their main hand
             ItemStack itemInHand = player.getInventory().getItemInMainHand();
+            PetRegistry petRegistry = new PetRegistry();
             if (itemInHand.getType() == Material.BUCKET) {
 
                 // Grant the player the Allay pet
-                petManager.createPet(player, "Allay", PetManager.Rarity.EPIC, 100, Particle.END_ROD, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.FLIGHT);
-
+                petRegistry.addPetByName(player, "Allay");
                 // Notify the player
-                player.sendMessage(ChatColor.LIGHT_PURPLE + "You interacted with an Allay and received the Allay pet!");
                 player.playSound(player.getLocation(), Sound.ENTITY_ALLAY_AMBIENT_WITHOUT_ITEM, 1.0f, 1.2f);
 
                 // Spawn a particle effect at the Allay's location

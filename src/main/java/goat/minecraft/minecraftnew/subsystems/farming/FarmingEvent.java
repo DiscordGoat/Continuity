@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.farming;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.ChatColor;
@@ -217,29 +218,22 @@ public class FarmingEvent implements Listener {
          * @param rarity The rarity of the pet.
          */
         private void grantPet(Player player, PetManager.Rarity rarity) {
+            PetRegistry petRegistry = new PetRegistry();
             switch (rarity) {
                 case COMMON:
-                    petManager.createPet(player, "Squirrel", rarity, 100, Particle.FIREWORKS_SPARK, PetManager.PetPerk.GREEN_THUMB);
+                    petRegistry.addPetByName(player, "Squirrel");
                     break;
                 case UNCOMMON:
-                    petManager.createPet(player, "Sheep", rarity, 100, Particle.FIREWORKS_SPARK,
-                            PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB);
+                    petRegistry.addPetByName(player, "Sheep");
                     break;
                 case RARE:
-                    petManager.createPet(player, "Cow", rarity, 100, Particle.FIREWORKS_SPARK,
-                            PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB,
-                            PetManager.PetPerk.ANTIDOTE, PetManager.PetPerk.COLLECTOR);
+                    petRegistry.addPetByName(player, "Cow");
                     break;
                 case EPIC:
-                    petManager.createPet(player, "Mooshroom", rarity, 100, Particle.FIREWORKS_SPARK,
-                            PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB,
-                            PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR);
+                    petRegistry.addPetByName(player, "Mooshroom");
                     break;
                 case LEGENDARY:
-                    petManager.createPet(player, "Pig", rarity, 100, Particle.FIREWORKS_SPARK,
-                            PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB,
-                            PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.SUPERIOR_ENDURANCE,
-                            PetManager.PetPerk.COLLECTOR);
+                    petRegistry.addPetByName(player, "Pig");
                     break;
                 default:
                     break;

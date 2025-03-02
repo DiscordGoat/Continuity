@@ -408,7 +408,8 @@ public class PetManager implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         PetManager petManager = PetManager.getInstance(plugin);
-        petManager.createPet(player, "Horse", PetManager.Rarity.COMMON, 10, Particle.HEART, PetManager.PetPerk.SPEED_BOOST);
+        PetRegistry petRegistry = new PetRegistry();
+        petRegistry.addPetByName(player, "Horse");
         despawnPet(player);
     }
 

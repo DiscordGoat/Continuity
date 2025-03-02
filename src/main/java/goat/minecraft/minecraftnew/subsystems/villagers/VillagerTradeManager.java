@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ServerUtils;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -1403,15 +1404,9 @@ public class VillagerTradeManager implements Listener {
 
         // --- Rare chance to get Villager pet ---
         if (Math.random() < 0.001) {
-            petManager.createPet(
-                    player,
-                    "Villager",
-                    PetManager.Rarity.LEGENDARY,
-                    100,
-                    Particle.VILLAGER_HAPPY,
-                    PetManager.PetPerk.HAGGLE,
-                    PetManager.PetPerk.PRACTICE
-            );
+            PetRegistry petRegistry = new PetRegistry();
+
+            petRegistry.addPetByName(player, "Villager");
             player.sendMessage(ChatColor.GOLD + "Congratulations! You have received the Villager pet!");
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 1.0f);
         }

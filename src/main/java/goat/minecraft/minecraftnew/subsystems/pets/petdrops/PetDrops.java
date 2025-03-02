@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.pets.petdrops;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -62,6 +63,7 @@ public class PetDrops implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
+        PetRegistry petRegistry = new PetRegistry();
         Entity entity = event.getEntity();
         EntityType entityType = entity.getType();
         Player player = event.getEntity().getKiller();
@@ -79,22 +81,19 @@ public class PetDrops implements Listener {
                 // Configurable drop chance (e.g., 5%)
                 if (random.nextDouble() < 1) {
                     // Drop the pet item
-                    petManager.createPet(player, "Iron Golem", PetManager.Rarity.RARE, 100, Particle.ASH, PetManager.PetPerk.WALKING_FORTRESS, PetManager.PetPerk.ELITE);
-                }
+                    petRegistry.addPetByName(player, "Iron Golem");                }
             }
             if(entityType.equals(EntityType.BAT)) {
                 // Configurable drop chance (e.g., 5%)
                 if (random.nextDouble() < 0.1) {
                     // Drop the pet item
-                    petManager.createPet(player, "Bat", PetManager.Rarity.RARE, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.ECHOLOCATION);
-                }
+                    petRegistry.addPetByName(player, "Bat");                }
             }
             if(entityType.equals(EntityType.WARDEN)) {
                 // Configurable drop chance (e.g., 5%)
                 if (random.nextDouble() < 0.5) {
                     // Drop the pet item
-                    petManager.createPet(player, "Warden", PetManager.Rarity.LEGENDARY, 100, Particle.WARPED_SPORE, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.ECHOLOCATION, PetManager.PetPerk.ELITE);
-                }
+                    petRegistry.addPetByName(player, "Warden");                }
             }
         }
     }

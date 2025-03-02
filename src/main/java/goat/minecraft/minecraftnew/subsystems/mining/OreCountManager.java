@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.mining;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -68,24 +69,21 @@ public class OreCountManager {
 
         // Check for milestones and create empty reward sections
         PetManager petManager = PetManager.getInstance(plugin);
+        PetRegistry petRegistry = new PetRegistry();
         if (currentCount == 10){
             player.sendMessage(ChatColor.GOLD + "Congratulations! You've mined " + currentCount + " ores.");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-
-            petManager.createPet(player, "Armadillo", PetManager.Rarity.RARE, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.DIGGING_CLAWS);
 
         }
         if(currentCount == 100){
             player.sendMessage(ChatColor.GOLD + "Congratulations! You've mined " + currentCount + " ores.");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-            petManager.createPet(player, "Dwarf", PetManager.Rarity.EPIC, 100, Particle.DAMAGE_INDICATOR, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.MITHRIL_MINER, PetManager.PetPerk.EMERALD_SEEKER);
-
+            petRegistry.addPetByName(player, "Dwarf");
         }
         if(currentCount == 1000) {
             player.sendMessage(ChatColor.GOLD + "Congratulations! You've mined " + currentCount + " ores.");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-            petManager.createPet(player, "Warden", PetManager.Rarity.LEGENDARY, 100, Particle.WARPED_SPORE, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.ECHOLOCATION, PetManager.PetPerk.LASER_BEAM, PetManager.PetPerk.BONE_PLATING);
-
+            petRegistry.addPetByName(player, "Warden");
         }
     }
 
