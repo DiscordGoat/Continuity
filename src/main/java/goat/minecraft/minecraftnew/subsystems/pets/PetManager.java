@@ -77,6 +77,7 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Raccoon", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmU5ZGFhOTllZTQ1YzAxMWVkMDc5ZDhmYzhhN2ViNzFiNTk2Yjg2NDQxNzA4YWQwOTU5ODNiNjAxZGIyMTE0YiJ9fX0=");
         PET_TEXTURES.put("Monkey", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDAxNjkzODM2ZjIwZjA0MWM2YjZhZDhhMDE4N2E0OTU2N2QwYzU3ZTM0MGEwMmU1NjFkNGQxNmU1NjkxZWI5YSJ9fX0=");
         PET_TEXTURES.put("Ent", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmZmZjg2Yzk5MTQxY2ViMDI2MTVlODg4Y2VkNDk1ZGI3NGIzYmMzMmIyYjlkMWQyYTdhNTdhOTZiNmFmZTY4YiJ9fX0=");
+        PET_TEXTURES.put("Wither", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzRmMzI4ZjUwNDQxMjliNWQxZjk2YWZmZDFiOGMwNWJjZGU2YmQ4ZTc1NmFmZjVjNTAyMDU4NWVlZjhhM2RhZiJ9fX0=");
 
         //sea creature textures...
         PET_TEXTURES.put("Shark", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2QyMTEzZmJhNTFiODM2NTIyOWUwZmYxZjIwMWY1MzMxNDgzMzcxZjE4NjA1N2JhNzQyMDMyOTRkMDYxMDgyZiJ9fX0=");
@@ -497,7 +498,7 @@ public class PetManager implements Listener {
             case LULLABY:
                 return "Prevents " + ChatColor.DARK_GRAY + "monsters from spawning " + ChatColor.GRAY + "within " + ChatColor.YELLOW + ((level * 4) + 40) + " blocks.";
             case FLIGHT:
-                return "Gain the ability to " + ChatColor.YELLOW + "Fly for " + level * 0.05 + " km";
+                return "Gain the ability to " + ChatColor.YELLOW + "Fly for " + level * 0.01 + " km";
             case EMERALD_SEEKER:
                 return "Gain a " + ChatColor.GREEN + "4% chance " + ChatColor.GRAY + "to mine an " + ChatColor.GREEN + "Emerald.";
             case MITHRIL_MINER:

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 public class Flight implements Listener {
 
-    private static final double MAX_FLIGHT_DISTANCE_AT_LEVEL_100 = 5.0; // Max flight distance at level 100 in km
+    private static final double MAX_FLIGHT_DISTANCE_AT_LEVEL_100 = 1.0; // Max flight distance at level 100 in km
     private static final double DRAIN_RATE_PER_SECOND = 0.01; // Drain rate per second in kilometers
     private static final int TICKS_PER_SECOND = 20; // Number of ticks in one second
     private final PetManager petManager;
