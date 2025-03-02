@@ -144,6 +144,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        PetManager petManager = PetManager.getInstance(this);
+        this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));
+
 
         CustomNetherCreator.init(this);
         if (!getDataFolder().exists()) {
@@ -246,7 +249,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             getDataFolder().mkdirs();
         }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
-        PetManager petManager = PetManager.getInstance(this);
         new SpeedBoost(petManager);
         // Initialize the culinary subsystem
         culinarySubsystem = CulinarySubsystem.getInstance(this);

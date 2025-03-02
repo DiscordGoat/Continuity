@@ -10,6 +10,9 @@ permissions:
     description: "Grants admin access to Continuity"
     default: op     # op = only given to server operators (OPs) by default
 commands:
+  testpet:
+    description: Adds a pet to the player’s collection for testing.
+    usage: /testpet <petName>
   discs:
     description: Opens the music discs information GUI.
   merits:

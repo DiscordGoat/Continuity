@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.pets.petdrops;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -33,10 +34,10 @@ public class AxolotlInteractEvent implements Listener {
             if (itemInHand.getType() == Material.BUCKET) {
 
                 // Grant the player the Axolotl pet
-                petManager.createPet(player, "Axolotl", PetManager.Rarity.EPIC, 100, Particle.WATER_SPLASH, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.REBIRTH);
+                PetRegistry petRegistry = new PetRegistry();
+                petRegistry.addPetByName(player, "Axolotl");
 
                 // Notify the player
-                player.sendMessage(ChatColor.AQUA + "You interacted with an Axolotl and received the Axolotl pet!");
                 player.playSound(player.getLocation(), Sound.ENTITY_AXOLOTL_SPLASH, 1.0f, 1.0f);
 
                 // Spawn a particle effect where the Axolotl was
