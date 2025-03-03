@@ -50,7 +50,7 @@ public class WitherPetGrantListener implements Listener {
 
                     // Force the Wither's maximum and current health to 2000.
                     SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(new XPManager(MinecraftNew.getInstance()));
-                    spawnMonsters.applyMobAttributes(wither, 300);
+                    spawnMonsters.applyMobAttributes(wither, 100);
                     double newHealth = 2000.0;
                     healthAttr.setBaseValue(newHealth);
                     wither.setHealth(newHealth);
