@@ -78,4 +78,4 @@ public class WitherPetGrantListener implements Listener {
         PetRegistry petRegistry = new PetRegistry();
         petRegistry.addPetByName(wither.getKiller(), "Wither");
     }
-}
+}//yup
