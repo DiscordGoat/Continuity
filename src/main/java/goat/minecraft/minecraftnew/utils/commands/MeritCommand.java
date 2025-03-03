@@ -71,12 +71,12 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Nullifies Ender Pearl Damage by 100%",
                             ChatColor.BLUE + "On Pearl Land: " + ChatColor.GRAY + "+20 Hunger, +20 Saturation."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Workbench", 1, Material.CRAFTING_TABLE,
+            new Perk(ChatColor.DARK_GRAY + "Workbench", 3, Material.CRAFTING_TABLE,
                     Arrays.asList(
                             ChatColor.GRAY + "Enables Backpack Crafting Table usage.",
                             ChatColor.BLUE + "On Right Click Crafting Table In Backpack: " + ChatColor.GRAY + "Opens Crafting Table."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Shulkl Box", 1, Material.SHULKER_SHELL,
+            new Perk(ChatColor.DARK_GRAY + "Shulkl Box", 7, Material.SHULKER_SHELL,
                     Arrays.asList(
                             ChatColor.GRAY + "Enables Backpack Shulker Box usage.",
                             ChatColor.BLUE + "On Right Click Shulker Box In Backpack: " + ChatColor.GRAY + "Opens it."
@@ -111,12 +111,12 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Smites your foe.",
                             ChatColor.BLUE + "On Deal Damage Rarely (5%): " + ChatColor.GRAY + "Strike your foe with lightning."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Deep Hook", 1, Material.FISHING_ROD,
+            new Perk(ChatColor.DARK_GRAY + "Deep Hook", 2, Material.FISHING_ROD,
                     Arrays.asList(
                             ChatColor.GRAY + "Taunts Sea Creatures.",
                             ChatColor.BLUE + "Reel In Fish: " + ChatColor.GRAY + "+5 Sea Creature Chance."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Instant Transmission", 1, Material.ENDER_EYE,
+            new Perk(ChatColor.DARK_GRAY + "Instant Transmission", 7, Material.ENDER_EYE,
                     Arrays.asList(
                             ChatColor.GRAY + "Breaks the rules of teleportation.",
                             ChatColor.BLUE + "On Use Ultimate: Warp: " + ChatColor.GRAY + "Removes cooldown."
@@ -126,12 +126,12 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Obviously grants more oxygen you idiot.",
                             ChatColor.BLUE + "On Regenerate Oxygen: " + ChatColor.GRAY + "+100 Oxygen."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Trainer", 1, Material.LEAD,
+            new Perk(ChatColor.DARK_GRAY + "Trainer", 3, Material.LEAD,
                     Arrays.asList(
                             ChatColor.GRAY + "Boosts pet XP gains.",
                             ChatColor.BLUE + "On Gain Experience: " + ChatColor.GRAY + "+1 Bonus Pet XP."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "QuickSwap", 1, Material.TRIPWIRE_HOOK,
+            new Perk(ChatColor.DARK_GRAY + "QuickSwap", 3, Material.TRIPWIRE_HOOK,
                     Arrays.asList(
                             ChatColor.GRAY + "Replenishes your supply of blocks.",
                             ChatColor.BLUE + "On Place Block: " + ChatColor.GRAY + "Replenishes your block supply."

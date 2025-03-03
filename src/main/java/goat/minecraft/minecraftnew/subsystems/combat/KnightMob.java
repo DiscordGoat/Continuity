@@ -54,8 +54,8 @@ public class KnightMob implements Listener {
 
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            spawnMonsters.applyMobAttributes(mob, 300);
-            mob.setCustomName(ChatColor.GRAY + "[Lvl 300] Knight");
+            spawnMonsters.applyMobAttributes(mob, 200);
+            mob.setCustomName(ChatColor.GRAY + "[Lvl 200] Knight");
             mob.setCustomNameVisible(true);
         }, 41L);
 
