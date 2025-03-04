@@ -16,10 +16,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 
 public class XPManager implements CommandExecutor {
 
     private final JavaPlugin plugin;
+    private final java.util.Map<String, HotbarAnimation> activeAnimations = new java.util.HashMap<>();
 
     // XP thresholds for levels 0 to 100
     private final int[] xpThresholds = new int[] {
@@ -174,18 +176,104 @@ public class XPManager implements CommandExecutor {
     // =================================================
     // Updated sendHotbarMessage to include bonus XP info
     private void sendHotbarMessage(Player player, String skill, double xpGained, int currentXP, int xpToNextLevel, double bonusXP) {
-        String bonusMessage = "";
-        if (bonusXP > 0) {
-            bonusMessage = ChatColor.LIGHT_PURPLE + " + Bonus: " + (int) bonusXP + " XP";
+        int finalXP = (int) xpGained;
+        if(finalXP <= 0) {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(
+                    ChatColor.AQUA + "[+0 XP " + ChatColor.DARK_AQUA + "(0.00%)]" +
+                            (bonusXP > 0 ? ChatColor.LIGHT_PURPLE + " + Bonus: " + (int) bonusXP + " XP" : "") +
+                            " " + ChatColor.GREEN + skill
+            ));
+            return;
         }
-        String message = ChatColor.AQUA + "[+" + (int) xpGained + " XP]" + bonusMessage + " "
-                + ChatColor.GREEN + skill
-                + ChatColor.GRAY + " | Current XP: " + ChatColor.YELLOW + currentXP
-                + ChatColor.GRAY + " | Next Level: " + ChatColor.GOLD + xpToNextLevel;
 
-        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+        // We'll recalc the increment dynamically so that the animation never exceeds 7 seconds (140 ticks).
+        // Calculate the player's final progress toward the next level based on the new currentXP.
+        int levelFinal = calculateLevel(currentXP);
+        int levelStart = getLevelStartXP(levelFinal);
+        int levelEnd = getLevelEndXP(levelFinal);
+        int xpNeeded = levelEnd - levelStart;
+        int newXPInLevel = currentXP - levelStart;
+        double finalProgressPercentage = (xpNeeded > 0) ? ((double)newXPInLevel / xpNeeded * 100.0) : 100.0;
+
+        // Compute the previous progress (before this addition).
+        int previousXP = currentXP - finalXP - (int) bonusXP;
+        int previousXPInLevel = previousXP - levelStart;
+        if(previousXPInLevel < 0) {
+            previousXPInLevel = 0;
+        }
+        double previousPercentage = (xpNeeded > 0) ? ((double) previousXPInLevel / xpNeeded * 100.0) : 100.0;
+
+        // Create a key for stacking animations.
+        String key = player.getUniqueId().toString() + ":" + skill;
+
+        // If an animation is already active for this skill, update it.
+        if(activeAnimations.containsKey(key)) {
+            HotbarAnimation anim = activeAnimations.get(key);
+            double currentAnimatedPerc = anim.getAnimatedPercentage();
+            anim.addXP(finalXP, bonusXP, finalProgressPercentage, currentAnimatedPerc);
+            return;
+        }
+
+        // Otherwise, create a new animation.
+        HotbarAnimation anim = new HotbarAnimation(player, skill, finalXP, bonusXP, previousPercentage, finalProgressPercentage);
+        activeAnimations.put(key, anim);
+
+        // Create the runnable.
+        BukkitRunnable runnable = new BukkitRunnable() {
+            @Override
+            public void run() {
+                anim.tickCount++;
+                // Calculate remaining ticks until 7 seconds (140 ticks) are reached.
+                int remainingTicks = 140 - anim.tickCount;
+                if (remainingTicks <= 0) {
+                    // Accelerate: if we're out of time, finish the animation.
+                    anim.displayedXP = anim.finalXP;
+                } else {
+                    int needed = anim.finalXP - anim.displayedXP;
+                    // Calculate a dynamic increment so that the remaining xp is animated over the remaining ticks.
+                    int calculatedIncrement = (int) Math.ceil((double) needed / remainingTicks);
+                    if (calculatedIncrement < 1) calculatedIncrement = 1;
+                    anim.displayedXP += calculatedIncrement;
+                    if (anim.displayedXP > anim.finalXP) {
+                        anim.displayedXP = anim.finalXP;
+                    }
+                }
+                double animatedPercentage = anim.getAnimatedPercentage();
+                String bonusMessage = "";
+                if(anim.bonusXP > 0) {
+                    bonusMessage = ChatColor.LIGHT_PURPLE + " + Bonus: " + (int) anim.bonusXP + " XP";
+                }
+                String message = ChatColor.AQUA + "[+" + anim.displayedXP + " XP " + ChatColor.DARK_AQUA + "(" +
+                        String.format("%.2f", animatedPercentage) + "%)]" +
+                        bonusMessage + " " + ChatColor.GREEN + skill;
+                player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+                if(anim.displayedXP >= anim.finalXP) {
+                    activeAnimations.remove(key);
+                    cancel();
+                }
+            }
+        };
+        // Schedule the runnable and store its reference.
+        runnable.runTaskTimer(plugin, 0L, 1L);
+        anim.task = runnable;
     }
 
+
+    public int getLevelStartXP(int level) {
+        if (level <= 0) return 0;
+        // If level exceeds our threshold array, return the last threshold as base.
+        if (level > xpThresholds.length) return xpThresholds[xpThresholds.length - 1];
+        return xpThresholds[level - 1];
+    }
+
+    /**
+     * Returns the XP threshold required to reach the given level.
+     * If the level is beyond our thresholds, return the highest threshold.
+     */
+    public int getLevelEndXP(int level) {
+        if (level >= xpThresholds.length) return xpThresholds[xpThresholds.length - 1];
+        return xpThresholds[level];
+    }
 
     /**
      * Main XP-adding method. If a player gains XP:
@@ -535,6 +623,45 @@ public class XPManager implements CommandExecutor {
         } else {
             // e.g. Level=10 => 2, 20 => 3, 30 =>4, ... up to 80 =>9
             return (level / 10) + 1;
+        }
+
+    }
+
+    private class HotbarAnimation {
+        Player player;
+        String skill;
+        int finalXP;          // Total xp to animate for this batch (sum of consecutive additions)
+        int displayedXP;      // Current animated xp
+        double previousPercentage; // Baseline percentage when this batch began.
+        double finalPercentage;    // Target percentage (computed from the player's new xp total).
+        double bonusXP;            // Bonus xp associated with this batch.
+        int tickCount;             // Number of ticks elapsed.
+        BukkitRunnable task;
+
+        HotbarAnimation(Player player, String skill, int initialXP, double bonus, double prevPerc, double finalPerc) {
+            this.player = player;
+            this.skill = skill;
+            this.finalXP = initialXP;
+            this.bonusXP = bonus;
+            this.displayedXP = 0;
+            this.previousPercentage = prevPerc;
+            this.finalPercentage = finalPerc;
+            this.tickCount = 0;
+        }
+
+        // Interpolate the current animated percentage from previousPercentage to finalPercentage.
+        double getAnimatedPercentage() {
+            if (finalXP == 0) return previousPercentage;
+            return previousPercentage + ((double) displayedXP / finalXP) * (finalPercentage - previousPercentage);
+        }
+
+        // When new xp is added during an active animation.
+        void addXP(int xp, double bonus, double newFinalPercentage, double newPrevPercentage) {
+            // Set new baseline from current animated percentage.
+            this.previousPercentage = newPrevPercentage;
+            this.finalXP += xp;
+            this.bonusXP += bonus;
+            this.finalPercentage = newFinalPercentage;
         }
     }
 }

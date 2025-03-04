@@ -9,6 +9,7 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.block.Biome;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
@@ -20,6 +21,7 @@ import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -27,6 +29,8 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class SpawnMonsters implements Listener {
@@ -38,25 +42,77 @@ public class SpawnMonsters implements Listener {
 
     private static final int MAX_MONSTER_LEVEL = 300;
 
+    // Mapping from biomes to leather armor colors
+    private static final Map<Biome, org.bukkit.Color> BIOME_COLOR_MAP = new HashMap<>();
+    static {
+        // Overworld
+        BIOME_COLOR_MAP.put(Biome.OCEAN, org.bukkit.Color.fromRGB(28, 107, 160));
+        BIOME_COLOR_MAP.put(Biome.DEEP_OCEAN, org.bukkit.Color.fromRGB(24, 90, 140));
+        BIOME_COLOR_MAP.put(Biome.FROZEN_OCEAN, org.bukkit.Color.fromRGB(180, 210, 230));
+        BIOME_COLOR_MAP.put(Biome.RIVER, org.bukkit.Color.fromRGB(30, 144, 255));
+        BIOME_COLOR_MAP.put(Biome.FROZEN_RIVER, org.bukkit.Color.fromRGB(173, 216, 230));
+        BIOME_COLOR_MAP.put(Biome.BEACH, org.bukkit.Color.fromRGB(250, 250, 210));
+        BIOME_COLOR_MAP.put(Biome.PLAINS, org.bukkit.Color.fromRGB(141, 182, 0));
+        BIOME_COLOR_MAP.put(Biome.SUNFLOWER_PLAINS, org.bukkit.Color.fromRGB(150, 190, 0));
+        BIOME_COLOR_MAP.put(Biome.SNOWY_PLAINS, org.bukkit.Color.fromRGB(240, 248, 255));
+        BIOME_COLOR_MAP.put(Biome.DESERT, org.bukkit.Color.fromRGB(210, 180, 140));
+        BIOME_COLOR_MAP.put(Biome.BADLANDS, org.bukkit.Color.fromRGB(189, 154, 122));
+        BIOME_COLOR_MAP.put(Biome.WOODED_BADLANDS, org.bukkit.Color.fromRGB(178, 131, 100));
+        BIOME_COLOR_MAP.put(Biome.ERODED_BADLANDS, org.bukkit.Color.fromRGB(160, 120, 90));
+        BIOME_COLOR_MAP.put(Biome.FOREST, org.bukkit.Color.fromRGB(34, 139, 34));
+        BIOME_COLOR_MAP.put(Biome.FLOWER_FOREST, org.bukkit.Color.fromRGB(60, 179, 113));
+        BIOME_COLOR_MAP.put(Biome.BIRCH_FOREST, org.bukkit.Color.fromRGB(107, 142, 35));
+        BIOME_COLOR_MAP.put(Biome.OLD_GROWTH_BIRCH_FOREST, org.bukkit.Color.fromRGB(85, 107, 47));
+        BIOME_COLOR_MAP.put(Biome.DARK_FOREST, org.bukkit.Color.fromRGB(0, 100, 0));
+        BIOME_COLOR_MAP.put(Biome.JUNGLE, org.bukkit.Color.fromRGB(34, 139, 34));
+        BIOME_COLOR_MAP.put(Biome.SPARSE_JUNGLE, org.bukkit.Color.fromRGB(46, 139, 87));
+        BIOME_COLOR_MAP.put(Biome.BAMBOO_JUNGLE, org.bukkit.Color.fromRGB(107, 142, 35));
+        BIOME_COLOR_MAP.put(Biome.TAIGA, org.bukkit.Color.fromRGB(107, 142, 35));
+        BIOME_COLOR_MAP.put(Biome.OLD_GROWTH_PINE_TAIGA, org.bukkit.Color.fromRGB(69, 139, 116));
+        BIOME_COLOR_MAP.put(Biome.SWAMP, org.bukkit.Color.fromRGB(63, 149, 63));
+        BIOME_COLOR_MAP.put(Biome.MUSHROOM_FIELDS, org.bukkit.Color.fromRGB(255, 0, 255));
+        // Mountains
+        BIOME_COLOR_MAP.put(Biome.WINDSWEPT_HILLS, org.bukkit.Color.fromRGB(119, 136, 153));
+        BIOME_COLOR_MAP.put(Biome.WINDSWEPT_GRAVELLY_HILLS, org.bukkit.Color.fromRGB(112, 128, 144));
+        BIOME_COLOR_MAP.put(Biome.WINDSWEPT_FOREST, org.bukkit.Color.fromRGB(95, 158, 160));
+        BIOME_COLOR_MAP.put(Biome.FROZEN_PEAKS, org.bukkit.Color.fromRGB(176, 196, 222));
+        BIOME_COLOR_MAP.put(Biome.SNOWY_SLOPES, org.bukkit.Color.fromRGB(240, 248, 255));
+        BIOME_COLOR_MAP.put(Biome.JAGGED_PEAKS, org.bukkit.Color.fromRGB(169, 169, 169));
+        BIOME_COLOR_MAP.put(Biome.STONY_PEAKS, org.bukkit.Color.fromRGB(112, 128, 144));
+        // Caves
+        BIOME_COLOR_MAP.put(Biome.DRIPSTONE_CAVES, org.bukkit.Color.fromRGB(102, 102, 102));
+        BIOME_COLOR_MAP.put(Biome.LUSH_CAVES, org.bukkit.Color.fromRGB(0, 153, 76));
+        BIOME_COLOR_MAP.put(Biome.DEEP_DARK, org.bukkit.Color.fromRGB(20, 20, 20));
+        // New biomes (1.20)
+        BIOME_COLOR_MAP.put(Biome.CHERRY_GROVE, org.bukkit.Color.fromRGB(255, 192, 203));
+        BIOME_COLOR_MAP.put(Biome.MEADOW, org.bukkit.Color.fromRGB(124, 252, 0));
+        BIOME_COLOR_MAP.put(Biome.GROVE, org.bukkit.Color.fromRGB(85, 107, 47));
+        // Nether
+        BIOME_COLOR_MAP.put(Biome.NETHER_WASTES, org.bukkit.Color.fromRGB(85, 0, 0));
+        BIOME_COLOR_MAP.put(Biome.SOUL_SAND_VALLEY, org.bukkit.Color.fromRGB(119, 85, 61));
+        BIOME_COLOR_MAP.put(Biome.CRIMSON_FOREST, org.bukkit.Color.fromRGB(128, 0, 0));
+        BIOME_COLOR_MAP.put(Biome.WARPED_FOREST, org.bukkit.Color.fromRGB(15, 128, 128));
+        BIOME_COLOR_MAP.put(Biome.BASALT_DELTAS, org.bukkit.Color.fromRGB(70, 70, 70));
+        // The End
+        BIOME_COLOR_MAP.put(Biome.THE_END, org.bukkit.Color.fromRGB(160, 160, 160));
+        BIOME_COLOR_MAP.put(Biome.END_HIGHLANDS, org.bukkit.Color.fromRGB(200, 200, 200));
+        BIOME_COLOR_MAP.put(Biome.END_MIDLANDS, org.bukkit.Color.fromRGB(150, 150, 150));
+        BIOME_COLOR_MAP.put(Biome.SMALL_END_ISLANDS, org.bukkit.Color.fromRGB(180, 180, 180));
+        BIOME_COLOR_MAP.put(Biome.END_BARRENS, org.bukkit.Color.fromRGB(140, 140, 140));
+    }
+
     // Private constructor so it can’t be called externally
     private SpawnMonsters(XPManager xpManager) {
         this.xpManager = xpManager;
     }
 
     // The public method to retrieve the singleton instance.
-    // You call this once, passing in your XPManager, and from then on
-    // you'll just call SpawnMonsters.getInstance(null) (or the same XPManager).
     public static synchronized SpawnMonsters getInstance(XPManager xpManager) {
         if (instance == null) {
             instance = new SpawnMonsters(xpManager);
         }
         return instance;
     }
-
-    // If desired, you can also have a no-arg getInstance() that simply returns instance:
-    // public static SpawnMonsters getInstance() {
-    //     return instance;
-    // }
 
     public static int getDayCount(Player player) {
         int playTimeTicks = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
@@ -65,8 +121,8 @@ public class SpawnMonsters implements Listener {
 
     public boolean shouldMutationOccur(int playerHostility) {
         Random random = new Random();
-        int randomValue = random.nextInt(100) + 1; // Generate a random number between 1 and 100
-        return randomValue <= playerHostility; // Return true if the random number is <= the hostility percentage
+        int randomValue = random.nextInt(100) + 1; // 1 to 100
+        return randomValue <= playerHostility;
     }
 
     public void applyRandomArmor(LivingEntity entity) {
@@ -75,23 +131,18 @@ public class SpawnMonsters implements Listener {
         Random random = new Random();
         int randomValue = random.nextInt(100);
 
-        // Determine the armor set type
         Material baseChestplate;
         if (randomValue < 80) {
             // 80% chance for leather, chainmail, or gold
             Material[] options = {Material.LEATHER_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.GOLDEN_CHESTPLATE};
             baseChestplate = options[random.nextInt(options.length)];
         } else if (randomValue < 95) {
-            // 15% chance for iron
             baseChestplate = Material.IRON_CHESTPLATE;
         } else {
-            // 5% chance for diamond
             baseChestplate = Material.DIAMOND_CHESTPLATE;
         }
 
-        // Determine the corresponding helmet, leggings, and boots based on the chestplate
         Material helmet, chestplate, leggings, boots;
-
         switch (baseChestplate) {
             case LEATHER_CHESTPLATE:
                 helmet = Material.LEATHER_HELMET;
@@ -124,7 +175,6 @@ public class SpawnMonsters implements Listener {
                 boots = Material.DIAMOND_BOOTS;
                 break;
             default:
-                // Default to leather set if somehow an unknown material is selected
                 helmet = Material.LEATHER_HELMET;
                 chestplate = Material.LEATHER_CHESTPLATE;
                 leggings = Material.LEATHER_LEGGINGS;
@@ -137,6 +187,35 @@ public class SpawnMonsters implements Listener {
         ItemStack chestplateItem = new ItemStack(chestplate);
         ItemStack leggingsItem = new ItemStack(leggings);
         ItemStack bootsItem = new ItemStack(boots);
+
+        // If using leather, camouflage the armor to the biome’s color scheme.
+        if (chestplate == Material.LEATHER_CHESTPLATE) {
+            // Get the biome at the entity’s location.
+            Biome biome = entity.getLocation().getBlock().getBiome();
+            org.bukkit.Color camoColor = BIOME_COLOR_MAP.get(biome);
+            if (camoColor == null) {
+                // Fallback color if the biome isn’t mapped.
+                camoColor = org.bukkit.Color.GRAY;
+            }
+
+            LeatherArmorMeta meta;
+
+            meta = (LeatherArmorMeta) helmetItem.getItemMeta();
+            meta.setColor(camoColor);
+            helmetItem.setItemMeta(meta);
+
+            meta = (LeatherArmorMeta) chestplateItem.getItemMeta();
+            meta.setColor(camoColor);
+            chestplateItem.setItemMeta(meta);
+
+            meta = (LeatherArmorMeta) leggingsItem.getItemMeta();
+            meta.setColor(camoColor);
+            leggingsItem.setItemMeta(meta);
+
+            meta = (LeatherArmorMeta) bootsItem.getItemMeta();
+            meta.setColor(camoColor);
+            bootsItem.setItemMeta(meta);
+        }
 
         // Set the armor on the entity
         EntityEquipment equipment = entity.getEquipment();
@@ -151,21 +230,18 @@ public class SpawnMonsters implements Listener {
     public void equipRandomWeapon(LivingEntity entity) {
         Random random = new Random();
         Material weaponMaterial = random.nextBoolean() ? Material.IRON_SWORD : Material.IRON_SHOVEL;
-
         EntityEquipment equipment = entity.getEquipment();
         equipment.setItemInMainHand(new ItemStack(weaponMaterial));
     }
 
     public void enchantArmorWithProtection(LivingEntity entity) {
         EntityEquipment equipment = entity.getEquipment();
-
         ItemStack[] armor = {
                 equipment.getHelmet(),
                 equipment.getChestplate(),
                 equipment.getLeggings(),
                 equipment.getBoots()
         };
-
         for (ItemStack item : armor) {
             if (item != null && item.getType() != Material.AIR) {
                 ItemMeta meta = item.getItemMeta();
@@ -183,90 +259,88 @@ public class SpawnMonsters implements Listener {
 
         if (entity instanceof Creeper) {
             Random random = new Random();
-            int randomValue = random.nextInt(100) + 1; // Generate a random number between 1 and 100
-            if (randomValue <= 90) { // Removes 90% of creepers
+            int randomValue = random.nextInt(100) + 1;
+            if (randomValue <= 90) { // Remove 90% of creepers.
                 entity.remove();
             }
         }
 
-        if(entity instanceof LivingEntity monster){
-            if(shouldMutationOccur(playerHostility)) {
+        if (entity instanceof LivingEntity monster) {
+            if (shouldMutationOccur(playerHostility)) {
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, true));
             }
         }
 
-        if(entity instanceof Zombie zombie){
-            if(shouldMutationOccur(playerHostility)){
+        if (entity instanceof Zombie zombie) {
+            if (shouldMutationOccur(playerHostility)) {
                 KnightMob knightMob = new KnightMob(plugin);
                 knightMob.transformToKnight(zombie);
                 zombie.setCustomName(ChatColor.GRAY + "Knight");
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 applyRandomArmor(zombie);
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 applyRandomArmor(zombie);
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 applyRandomArmor(zombie);
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 equipRandomWeapon(zombie);
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 enchantArmorWithProtection(zombie);
             }
         }
 
-        if(entity instanceof WitherSkeleton ws){
-            if(shouldMutationOccur(playerHostility)){
+        if (entity instanceof WitherSkeleton ws) {
+            if (shouldMutationOccur(playerHostility)) {
                 KnightMob knightMob = new KnightMob(plugin);
                 knightMob.transformToKnight(ws);
                 ws.setCustomName(ChatColor.GRAY + "Knight");
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 applyRandomArmor(ws);
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 applyRandomArmor(ws);
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 applyRandomArmor(ws);
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 equipRandomWeapon(ws);
             }
-            if(shouldMutationOccur(playerHostility)){
+            if (shouldMutationOccur(playerHostility)) {
                 enchantArmorWithProtection(ws);
             }
         }
 
-        if(entity instanceof Creeper creeper){
-            if(shouldMutationOccur(playerHostility)){
+        if (entity instanceof Creeper creeper) {
+            if (shouldMutationOccur(playerHostility)) {
                 creeper.setPowered(true);
             }
         }
 
-        if(entity instanceof Blaze monster){
-            if(shouldMutationOccur(playerHostility)){
+        if (entity instanceof Blaze monster) {
+            if (shouldMutationOccur(playerHostility)) {
                 monster.setCustomName(ChatColor.RED + "High Flying Blaze");
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, Integer.MAX_VALUE, 1, true));
             }
         }
 
-        if(entity instanceof Drowned monster){
-            if(shouldMutationOccur(playerHostility)){
+        if (entity instanceof Drowned monster) {
+            if (shouldMutationOccur(playerHostility)) {
                 monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
                 monster.setCustomName(ChatColor.RED + "Olympic Swimmer");
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, Integer.MAX_VALUE, 3, true));
             }
         }
 
-        if(entity instanceof MagmaCube monster){
+        if (entity instanceof MagmaCube monster) {
             if (shouldMutationOccur(playerHostility)) {
-                // Set the size to something bigger
                 monster.setSize(4);
-
                 monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
                 monster.setCustomName(ChatColor.RED + "Giant Cube");
                 monster.setCustomNameVisible(true);
@@ -277,19 +351,16 @@ public class SpawnMonsters implements Listener {
             if (shouldMutationOccur(playerHostility)) {
                 monster.setCustomName(ChatColor.RED + "Sniper");
                 monster.setCustomNameVisible(true);
-
                 ItemStack sniperHelmet = new ItemStack(Material.DIAMOND_HELMET);
                 sniperHelmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
                 sniperHelmet.addEnchantment(Enchantment.OXYGEN, 1);
-
                 monster.getEquipment().setHelmet(sniperHelmet);
             }
         }
 
-        if(entity instanceof Slime monster){
+        if (entity instanceof Slime monster) {
             if (shouldMutationOccur(playerHostility)) {
                 monster.setSize(4);
-
                 monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
                 monster.setCustomName(ChatColor.RED + "Giant Cube");
                 monster.setCustomNameVisible(true);
@@ -299,45 +370,35 @@ public class SpawnMonsters implements Listener {
         Random random = new Random();
         if (entity instanceof Monster) {
             LivingEntity mob = (LivingEntity) entity;
-
-            // Schedule a delayed task to apply attributes
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (!mob.isValid()) {
-                        return; // Skip if entity is no longer valid
-                    }
-
-                    // Check for SEA_CREATURE metadata after the delay
+                    if (!mob.isValid()) return;
                     if(mob.getEquipment().getItemInMainHand().equals(ItemRegistry.getSpiritBow())){
                         return;
                     }
-
                     if (!mob.hasMetadata("SEA_CREATURE")) {
                         double distance = getDistanceFromOrigin(entity);
                         Player nearestPlayer = getNearestPlayer(entity, 1000);
                         int mobLevel;
-
                         if (nearestPlayer != null) {
                             int level = playerHostility * 10 - new Random().nextInt(11);
                             mobLevel = Math.min(level + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
                         } else {
                             mobLevel = Math.min((int) (distance / 100) + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
                         }
-
                         applyMobAttributes(mob, mobLevel);
                     } else {
                         plugin.getLogger().info("Skipped attribute application for sea creature: " + mob.getType());
                     }
                 }
-            }.runTaskLater(plugin, 40L); // Delay 40 ticks (2 seconds)
+            }.runTaskLater(plugin, 40L);
         }
     }
 
     public double getDistanceFromOrigin(Entity mob) {
-        Location mobLocation = mob.getLocation();
-        double x = mobLocation.getX();
-        double z = mobLocation.getZ();
+        Location loc = mob.getLocation();
+        double x = loc.getX(), z = loc.getZ();
         return Math.sqrt(x * x + z * z);
     }
 
@@ -345,7 +406,6 @@ public class SpawnMonsters implements Listener {
         Location mobLocation = entity.getLocation();
         double nearestDistanceSquared = radius * radius;
         Player nearestPlayer = null;
-
         for (Player player : entity.getWorld().getPlayers()) {
             double distanceSquared = player.getLocation().distanceSquared(mobLocation);
             if (distanceSquared <= nearestDistanceSquared) {
@@ -357,67 +417,46 @@ public class SpawnMonsters implements Listener {
     }
 
     public void applyEnderDragonAttributes(EnderDragon dragon) {
-        int level = 300; // Force EnderDragon level to 300
+        int level = 300;
         dragon.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
         dragon.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, Integer.MAX_VALUE, 255, true));
-
         double healthMultiplier = 1 + (level * 0.1);
         double originalHealth = dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
         double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
         dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
         dragon.setHealth(newHealth);
-
         dragon.setMetadata("mobLevel", new FixedMetadataValue(MinecraftNew.getInstance(), level));
         String color = getColorForLevel(level);
         dragon.setCustomName(color + "Level: " + level + " " + formatMobType(dragon.getType().toString()));
         dragon.setCustomNameVisible(true);
         dragon.setRemoveWhenFarAway(true);
-
-        // Override custom name with a more “bossy” name
         dragon.setCustomName(ChatColor.DARK_RED + "Ender Dragon");
-
         BossBar bossBar = dragon.getBossBar();
         bossBar.setColor(BarColor.RED);
         bossBar.setStyle(BarStyle.SEGMENTED_20);
-
         dragon.setHealth(dragon.getMaxHealth());
     }
 
     public void applyMobAttributes(LivingEntity mob, int level) {
-        // Clamp the level between 1 and MAX_MONSTER_LEVEL.
         level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL));
-
-        // Get the health attribute instance.
         AttributeInstance healthAttribute = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if (healthAttribute != null) {
-            // Remove all existing modifiers to prevent stacking.
             for (AttributeModifier modifier : new ArrayList<>(healthAttribute.getModifiers())) {
                 healthAttribute.removeModifier(modifier);
             }
-            // Reset base health to its default value.
             double defaultHealth = healthAttribute.getDefaultValue();
             healthAttribute.setBaseValue(defaultHealth);
         }
-
-        // Calculate the new health multiplier.
         double healthMultiplier = 1 + (level * 0.1);
         double originalHealth = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
         double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
-
-        // Apply the new health value.
         mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
         mob.setHealth(newHealth);
-
-        // Set metadata to store the mob's level.
         mob.setMetadata("mobLevel", new FixedMetadataValue(MinecraftNew.getInstance(), level));
-
-        // If the mob is a "Knight" (custom-named in gray), skip renaming.
         String color = getColorForLevel(level);
         if (mob.getCustomName() != null && mob.getCustomName().equals(ChatColor.GRAY + "Knight")) {
             return;
         }
-
-        // Set the custom name with level and mob type.
         mob.setCustomName(ChatColor.GRAY + "[" + color + "Lv: " + level + ChatColor.GRAY + "] " + formatMobType(mob.getType().toString()));
         mob.setCustomNameVisible(true);
         mob.setRemoveWhenFarAway(true);
