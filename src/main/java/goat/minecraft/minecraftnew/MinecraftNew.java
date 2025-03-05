@@ -83,7 +83,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         return collectionsManager;
     }
 
-
     private void registerCustomRecipeCluster() {
         ItemStack engineeringItem = ItemRegistry.getEngineeringDegree();
         NamespacedKey key = new NamespacedKey(this, "engineering_profession");
@@ -145,6 +144,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public void onEnable() {
         PetManager petManager = PetManager.getInstance(this);
         this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));
+        this.getCommand("island").setExecutor(new IslandCommand());
 
 
         CustomNetherCreator.init(this);

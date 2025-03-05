@@ -70,7 +70,7 @@ public class VampiricStrike implements Listener {
                     // Deal massive damage instead of insta-kill for special entities
                     target.damage(100.0);
                 } else {
-                    target.setHealth(0);
+                    target.setHealth(1);
                 }
             } else {
                 // Deal significant damage to bosses

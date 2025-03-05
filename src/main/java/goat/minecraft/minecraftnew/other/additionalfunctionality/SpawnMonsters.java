@@ -457,7 +457,7 @@ public class SpawnMonsters implements Listener {
         if (mob.getCustomName() != null && mob.getCustomName().equals(ChatColor.GRAY + "Knight")) {
             return;
         }
-        mob.setCustomName(ChatColor.GRAY + "[" + color + "Lv: " + level + ChatColor.GRAY + "] " + formatMobType(mob.getType().toString()));
+        mob.setCustomName(ChatColor.GRAY + "[" + color + "Lv: " + level + ChatColor.GRAY + "] " + color + formatMobType(mob.getType().toString()));
         mob.setCustomNameVisible(true);
         mob.setRemoveWhenFarAway(true);
     }
