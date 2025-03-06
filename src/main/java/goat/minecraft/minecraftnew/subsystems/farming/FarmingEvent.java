@@ -144,7 +144,7 @@ public class FarmingEvent implements Listener {
                 if (rareItem != null) {
                     // Drop the rare item naturally at the block's location
                     block.getWorld().dropItemNaturally(block.getLocation(), rareItem);
-
+ //yup
                     // Optional: Play a unique sound to indicate a rare drop
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
 
