@@ -744,7 +744,7 @@ public class AnvilRepair implements Listener {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Pinecone") && ARMOR.contains(repairee.getType())){
-            incrementEnchantment(player, repairee, billItem,Enchantment.THORNS);
+            incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;

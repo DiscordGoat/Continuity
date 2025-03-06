@@ -388,7 +388,7 @@ public class ForestSpiritManager implements Listener {
         SPRUCE_SPIRIT("Spruce Spirit", ChatColor.DARK_GREEN + "Spruce Spirit of the Forest", 30, Color.fromRGB(51, 25, 0), "Pinecone",
                 Arrays.asList(
                         ChatColor.GRAY + "A pinecone that never withers.",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Thorns.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Blast Protection.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
                 Material.SPRUCE_SAPLING),
@@ -409,7 +409,7 @@ public class ForestSpiritManager implements Listener {
         ACACIA_SPIRIT("Acacia Spirit", ChatColor.GOLD + "Acacia Spirit of the Forest", 40, Color.ORANGE, "Acacia Gum",
                 Arrays.asList(
                         ChatColor.GRAY + "Sticky gum from acacia trees.",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Fire Resistance.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Fire Protection.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
                 Material.HONEY_BOTTLE),
