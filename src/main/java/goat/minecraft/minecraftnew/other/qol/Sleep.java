@@ -40,58 +40,57 @@ public class Sleep implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         // Only handle main-hand interactions
-        if (event.getHand() == null || !event.getHand().equals(EquipmentSlot.HAND)) {
-            event.setCancelled(true);
-            return;
-        }
+        if (event.getHand() == EquipmentSlot.HAND) {
 
-        Player player = event.getPlayer();
-        UUID playerUUID = player.getUniqueId();
 
-        // Check if clicked block is a bed and it's day (time < 12541)
-        if (event.hasBlock()
-                && event.getClickedBlock() != null
-                && event.getClickedBlock().getType().name().contains("BED")
-                && player.getWorld().getTime() < 12541) {
+            Player player = event.getPlayer();
+            UUID playerUUID = player.getUniqueId();
 
-            // Check cooldown for the player initiating the vote
-            long currentTime = System.currentTimeMillis();
-            if (lastVoteTime.containsKey(playerUUID)) {
-                long timeSinceLastVote = currentTime - lastVoteTime.get(playerUUID);
-                if (timeSinceLastVote < VOTE_COOLDOWN) {
-                    long secondsLeft = (VOTE_COOLDOWN - timeSinceLastVote) / 1000;
-                    player.sendMessage(ChatColor.RED + "You must wait " + secondsLeft + "s before starting another vote!");
+            // Check if clicked block is a bed and it's day (time < 12541)
+            if (event.hasBlock()
+                    && event.getClickedBlock() != null
+                    && event.getClickedBlock().getType().name().contains("BED")
+                    && player.getWorld().getTime() < 12541) {
+
+                // Check cooldown for the player initiating the vote
+                long currentTime = System.currentTimeMillis();
+                if (lastVoteTime.containsKey(playerUUID)) {
+                    long timeSinceLastVote = currentTime - lastVoteTime.get(playerUUID);
+                    if (timeSinceLastVote < VOTE_COOLDOWN) {
+                        long secondsLeft = (VOTE_COOLDOWN - timeSinceLastVote) / 1000;
+                        player.sendMessage(ChatColor.RED + "You must wait " + secondsLeft + "s before starting another vote!");
+                        return;
+                    }
+                }
+
+                // If a vote is already in progress, don’t start another
+                if (voteInProgress) {
+                    player.sendMessage(ChatColor.RED + "A vote to skip to night is already in progress!");
                     return;
                 }
+
+                // Start a new vote
+                voteInProgress = true;
+                voteInitiator = player;
+                yesVotes.clear();
+                noVotes.clear();
+                yesVotes.add(playerUUID); // Let the initiator auto-vote yes if you wish
+
+                lastVoteTime.put(playerUUID, currentTime);
+
+                // Broadcast so people know how to vote
+                Bukkit.broadcastMessage(ChatColor.YELLOW + player.getName() + " has started a vote to skip to night! "
+                        + "Type \"yes\" or \"no\" in chat to cast your vote. (10s remains!)");
+
+                // After 10 seconds, process the results
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        voteInProgress = false;
+                        handleVoteResults(player.getWorld());
+                    }
+                }.runTaskLater(plugin, 200L); // 200 ticks = 10 seconds
             }
-
-            // If a vote is already in progress, don’t start another
-            if (voteInProgress) {
-                player.sendMessage(ChatColor.RED + "A vote to skip to night is already in progress!");
-                return;
-            }
-
-            // Start a new vote
-            voteInProgress = true;
-            voteInitiator = player;
-            yesVotes.clear();
-            noVotes.clear();
-            yesVotes.add(playerUUID); // Let the initiator auto-vote yes if you wish
-
-            lastVoteTime.put(playerUUID, currentTime);
-
-            // Broadcast so people know how to vote
-            Bukkit.broadcastMessage(ChatColor.YELLOW + player.getName() + " has started a vote to skip to night! "
-                    + "Type \"yes\" or \"no\" in chat to cast your vote. (10s remains!)");
-
-            // After 10 seconds, process the results
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    voteInProgress = false;
-                    handleVoteResults(player.getWorld());
-                }
-            }.runTaskLater(plugin, 200L); // 200 ticks = 10 seconds
         }
     }
 

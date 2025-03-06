@@ -362,6 +362,7 @@ public class ForestSpiritManager implements Listener {
 
         // Award additional Forestry XP to the player who killed the spirit
         if (event.getEntity().getKiller() != null) {
+            event.setDroppedExp(500);
             Player player = event.getEntity().getKiller();
             int forestryLevel = xpManager.getPlayerLevel(player, "Forestry");
             int xpAwarded = 250; // Example calculation

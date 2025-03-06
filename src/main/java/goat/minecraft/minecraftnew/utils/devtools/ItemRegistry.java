@@ -1437,7 +1437,7 @@ public class ItemRegistry {
     }
     public static ItemStack getWheatSeeder() {
         return createCustomItem(
-                Material.WHEAT,
+                Material.BREAD,
                 ChatColor.YELLOW + "WheatSeeder",
                 Arrays.asList(
                         ChatColor.GRAY + "A bag of Wheat Seeds",

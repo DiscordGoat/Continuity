@@ -534,6 +534,20 @@ public class UltimateEnchantmentListener implements Listener {
 
     // The rest of your ultimate enchant code for arrows, parry, snowstorm, etc. remain as-is...
     // Note that we removed the "hammer" and "treecapitator" cases from onPlayerRightClick below:
+    private boolean isUltimateEnchantment(ItemStack item) {
+        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) {
+            return false;
+        }
+        List<String> lore = item.getItemMeta().getLore();
+        if (lore == null) return false;
+
+        for (String line : lore) {
+            if (line.contains("Ultimate:")) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
@@ -588,9 +602,7 @@ public class UltimateEnchantmentListener implements Listener {
 
         // Right-click logic, with Hammer/Treecap removed
         if(event.getAction() == Action.RIGHT_CLICK_AIR) {
-            if (!event.getHand().equals(EquipmentSlot.HAND) && event.getHand()!=null) {
-                return; // Ignore offhand interactions
-            }
+
             if (isOnCooldown(player.getUniqueId(), ueData.getName())) {
                 long timeLeft = getCooldownTimeLeft(player.getUniqueId(), ueData.getName());
                 player.sendMessage(ChatColor.RED + "This Ultimate Enchantment is on cooldown for "

@@ -36,7 +36,7 @@ public class PlayerOxygenManager implements Listener {
     private final Map<UUID, Objective> oxygenObjectives = new HashMap<>();
 
     // Constants
-    private static final int DEFAULT_OXYGEN_SECONDS = 100; // Base oxygen in seconds
+    private static final int DEFAULT_OXYGEN_SECONDS = 300; // Base oxygen in seconds
     private static final int OXYGEN_UPDATE_INTERVAL = 20;  // Update every second
     private static final int SIDEBAR_UPDATE_INTERVAL = 10; // Update every 0.5 seconds (not strictly needed now)
     private static final int FULL_RECOVERY_TICKS = 24000;  // ~40 minutes

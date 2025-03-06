@@ -373,7 +373,7 @@ public class XPManager implements CommandExecutor {
 
             // Also pass some XP to "Player" if it's not the "Player" skill
             if (!skill.equalsIgnoreCase("Player")) {
-                double additionalXP = xp * 0.10;
+                double additionalXP = xp * 0.5;
                 addXPToSkill(player, "Player", additionalXP);
             }
         }
@@ -431,7 +431,7 @@ public class XPManager implements CommandExecutor {
             player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 600, 0));
 
             // Adjust max health
-            double healthMultiplier = 1 + (Math.min(newLevel, 50) * 0.01);
+            double healthMultiplier = 1 + (Math.min(newLevel, 100) * 0.01);
             double newMaxHealth = 20.0 * healthMultiplier;
             player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHealth);
         }

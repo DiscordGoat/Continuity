@@ -349,77 +349,78 @@ public class ItemDisplayManager implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getClickedBlock() == null) return;
-        if (event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getHand() == EquipmentSlot.HAND) {
 
-        Block block = event.getClickedBlock();
-        Location loc = block.getLocation();
+            Block block = event.getClickedBlock();
+            Location loc = block.getLocation();
 
-        ItemDisplay display = getDisplayByLocation(loc);
-        if (display == null) {
-            return; // Not an ItemDisplay location
-        }
-
-        Player player = event.getPlayer();
-        ItemStack hand = player.getInventory().getItemInMainHand();
-
-        // SHIFT + LEFT CLICK to change the block type
-        if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.isSneaking()) {
-            // Does the player have a block in their hand?
-            if (hand != null && hand.getType().isBlock() && hand.getAmount() > 0) {
-                Material type = hand.getType();
-                // If it's a slab, place it as a TOP slab
-                if (type.name().endsWith("_SLAB")) {
-                    block.setType(type);
-                    Slab slab = (Slab) block.getBlockData();
-                    slab.setType(Slab.Type.TOP);
-                    block.setBlockData(slab);
-                } else {
-                    block.setType(type);
-                }
-                // Optionally decrement 1 from the player's hand stack
-                // (only if you want the block to be "used up")
-            }
-        }
-
-        // RIGHT CLICK interactions
-        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-            // If stand is missing for some reason, re-spawn it
-            if (!display.standSpawned) {
-                display.spawn();
-                return;
+            ItemDisplay display = getDisplayByLocation(loc);
+            if (display == null) {
+                return; // Not an ItemDisplay location
             }
 
-            // SHIFT RIGHT-CLICK with empty hand opens Particle GUI
-            if (player.isSneaking() && hand.getType() == Material.AIR) {
-                openParticleGUI(player, display);
-                return;
-            }
+            Player player = event.getPlayer();
+            ItemStack hand = player.getInventory().getItemInMainHand();
 
-            // If the player is empty-handed, retrieve the displayed item
-            if (hand.getType() == Material.AIR) {
-                if (display.storedItem != null) {
-                    HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(display.storedItem.clone());
-                    if (!leftover.isEmpty()) {
-                        // If inventory is full, drop item at player's feet
-                        player.getWorld().dropItemNaturally(player.getLocation(), display.storedItem.clone());
+            // SHIFT + LEFT CLICK to change the block type
+            if (event.getAction() == Action.LEFT_CLICK_BLOCK && player.isSneaking()) {
+                // Does the player have a block in their hand?
+                if (hand != null && hand.getType().isBlock() && hand.getAmount() > 0) {
+                    Material type = hand.getType();
+                    // If it's a slab, place it as a TOP slab
+                    if (type.name().endsWith("_SLAB")) {
+                        block.setType(type);
+                        Slab slab = (Slab) block.getBlockData();
+                        slab.setType(Slab.Type.TOP);
+                        block.setBlockData(slab);
+                    } else {
+                        block.setType(type);
                     }
-                    display.clearItem();
-                    player.sendMessage(ChatColor.YELLOW + "You retrieved the displayed item.");
-                } else {
-                    player.sendMessage(ChatColor.RED + "No item is displayed here.");
+                    // Optionally decrement 1 from the player's hand stack
+                    // (only if you want the block to be "used up")
                 }
-            } else {
-                // If there's no stored item, place the current item in hand
-                if (display.storedItem == null) {
-                    ItemStack toPlace = hand.clone();
-                    toPlace.setAmount(1);
-                    display.setItem(toPlace);
+            }
 
-                    hand.setAmount(hand.getAmount() - 1);
-                    player.sendMessage(ChatColor.GREEN + "Item displayed!");
-                    event.setCancelled(true);
+            // RIGHT CLICK interactions
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                // If stand is missing for some reason, re-spawn it
+                if (!display.standSpawned) {
+                    display.spawn();
+                    return;
+                }
+
+                // SHIFT RIGHT-CLICK with empty hand opens Particle GUI
+                if (player.isSneaking() && hand.getType() == Material.AIR) {
+                    openParticleGUI(player, display);
+                    return;
+                }
+
+                // If the player is empty-handed, retrieve the displayed item
+                if (hand.getType() == Material.AIR) {
+                    if (display.storedItem != null) {
+                        HashMap<Integer, ItemStack> leftover = player.getInventory().addItem(display.storedItem.clone());
+                        if (!leftover.isEmpty()) {
+                            // If inventory is full, drop item at player's feet
+                            player.getWorld().dropItemNaturally(player.getLocation(), display.storedItem.clone());
+                        }
+                        display.clearItem();
+                        player.sendMessage(ChatColor.YELLOW + "You retrieved the displayed item.");
+                    } else {
+                        player.sendMessage(ChatColor.RED + "No item is displayed here.");
+                    }
                 } else {
-                    player.sendMessage(ChatColor.RED + "An item is already displayed here.");
+                    // If there's no stored item, place the current item in hand
+                    if (display.storedItem == null) {
+                        ItemStack toPlace = hand.clone();
+                        toPlace.setAmount(1);
+                        display.setItem(toPlace);
+
+                        hand.setAmount(hand.getAmount() - 1);
+                        player.sendMessage(ChatColor.GREEN + "Item displayed!");
+                        event.setCancelled(true);
+                    } else {
+                        player.sendMessage(ChatColor.RED + "An item is already displayed here.");
+                    }
                 }
             }
         }

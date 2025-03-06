@@ -374,7 +374,7 @@ public class SpawnMonsters implements Listener {
                 @Override
                 public void run() {
                     if (!mob.isValid()) return;
-                    if(mob.getEquipment().getItemInMainHand().equals(ItemRegistry.getSpiritBow())){
+                    if (mob.getEquipment().getItemInMainHand().equals(ItemRegistry.getSpiritBow())) {
                         return;
                     }
                     if (!mob.hasMetadata("SEA_CREATURE")) {
@@ -387,6 +387,7 @@ public class SpawnMonsters implements Listener {
                         } else {
                             mobLevel = Math.min((int) (distance / 100) + getRandomLevelVariation(), MAX_MONSTER_LEVEL);
                         }
+
                         applyMobAttributes(mob, mobLevel);
                     } else {
                         plugin.getLogger().info("Skipped attribute application for sea creature: " + mob.getType());
@@ -394,6 +395,7 @@ public class SpawnMonsters implements Listener {
                 }
             }.runTaskLater(plugin, 40L);
         }
+
     }
 
     public double getDistanceFromOrigin(Entity mob) {

@@ -101,7 +101,7 @@ public class KnightMob implements Listener {
             }
 
             // Drop a rare item with a chance
-            if (random.nextDouble() < 8.0) { // 10% chance to drop the rare item
+            if (random.nextDouble() < 1.0) { // 10% chance to drop the rare item
                 Bukkit.getLogger().info("Adding rare item drop for knight: " + event.getEntity().getUniqueId());
                 event.getDrops().add(ItemRegistry.getSingularity());
             }

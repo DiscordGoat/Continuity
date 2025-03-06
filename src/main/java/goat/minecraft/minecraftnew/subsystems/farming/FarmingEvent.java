@@ -137,7 +137,7 @@ public class FarmingEvent implements Listener {
         // Check if the harvested crop is eligible for rare drops
         if (RARE_DROP_CROPS.contains(blockType)) {
             // 1/400 chance to drop a rare item
-            if (random.nextInt(400) == 0) {
+            if (random.nextInt(800) == 0) {
                 // Retrieve the rare item for this specific crop from ItemRegistry
                 ItemStack rareItem = ItemRegistry.getRareItem(blockType); // Ensure this method is implemented in ItemRegistry
 

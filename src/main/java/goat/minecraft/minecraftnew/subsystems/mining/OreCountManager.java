@@ -73,6 +73,7 @@ public class OreCountManager {
         if (currentCount == 10){
             player.sendMessage(ChatColor.GOLD + "Congratulations! You've mined " + currentCount + " ores.");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+            petRegistry.addPetByName(player, "Armadillo");
 
         }
         if(currentCount == 100){

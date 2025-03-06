@@ -71,12 +71,12 @@ public class ForestryManager {
         if (currentCount == 10){
             player.sendMessage(ChatColor.GREEN + "Congratulations! You've harvested " + currentCount + " trees.");
             player.playSound(player.getLocation(), Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
-            petRegistry.addPetByName(player, "Racoon");        }
-        if(currentCount == 100){
+            petRegistry.addPetByName(player, "Raccoon");        }
+        if(currentCount == 500){
             player.sendMessage(ChatColor.GREEN + "Congratulations! You've harvested " + currentCount + " trees.");
             player.playSound(player.getLocation(), Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
             petRegistry.addPetByName(player, "Monkey");        }
-        if(currentCount == 1000) {
+        if(currentCount == 1500) {
             player.sendMessage(ChatColor.GREEN + "Congratulations! You've harvested " + currentCount + " trees.");
             player.playSound(player.getLocation(), Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
             petRegistry.addPetByName(player, "Ent");        }
