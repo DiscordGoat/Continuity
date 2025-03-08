@@ -184,7 +184,7 @@ public class RareCombatDrops implements Listener {
         if (rollChance(1,50, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(piglinDrop);
         }
-        if (rollChance(1,1, hostilityLevel)) { // 1-4% chance
+        if (rollChance(1,4, hostilityLevel)) { // 1-4% chance
             petRegistry.addPetByName(player, "Vindicator");
         }
 

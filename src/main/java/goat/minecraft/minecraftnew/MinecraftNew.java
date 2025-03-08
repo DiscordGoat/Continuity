@@ -142,6 +142,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        this.getCommand("skin").setExecutor(new SkinCommand());
+
         PetManager petManager = PetManager.getInstance(this);
         this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));
         this.getCommand("island").setExecutor(new IslandCommand());

@@ -1,8 +1,11 @@
 package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.combat.KnightMob;
+import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.*;
@@ -17,21 +20,22 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.lang.reflect.Field;
+import java.util.*;
 
 public class SpawnMonsters implements Listener {
 
@@ -293,7 +297,35 @@ public class SpawnMonsters implements Listener {
                 enchantArmorWithProtection(zombie);
             }
         }
+        if(entity instanceof Drowned drowned){
+            if(shouldMutationOccur(playerHostility)) {
+                // Visual indicator that transformation is starting
+                drowned.getWorld().spawnParticle(Particle.BUBBLE_COLUMN_UP, drowned.getLocation(),
+                        50, 0.5, 1, 0.5, 0.1);
+                drowned.getWorld().playSound(drowned.getLocation(),
+                        Sound.ENTITY_DROWNED_AMBIENT_WATER, 1.0f, 0.5f);
 
+                // Add glowing effect during transformation
+                drowned.setGlowing(true);
+
+                // Schedule the transformation
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        if(drowned.isValid() && !drowned.isDead()) {  // Check if drowned still exists
+                            transformDrownedToDeepSeaDiver(drowned);
+                            drowned.setGlowing(false);  // Remove glowing effect
+
+                            // Transformation complete effects
+                            drowned.getWorld().spawnParticle(Particle.WATER_WAKE,
+                                    drowned.getLocation(), 100, 0.5, 1, 0.5);
+                            drowned.getWorld().playSound(drowned.getLocation(),
+                                    Sound.ENTITY_ZOMBIE_CONVERTED_TO_DROWNED, 1.0f, 1.0f);
+                        }
+                    }
+                }.runTaskLater(plugin, 60L); // 60 ticks = 3 seconds
+            }
+        }
         if (entity instanceof WitherSkeleton ws) {
             if (shouldMutationOccur(playerHostility)) {
                 KnightMob knightMob = new KnightMob(plugin);
@@ -438,7 +470,97 @@ public class SpawnMonsters implements Listener {
         bossBar.setStyle(BarStyle.SEGMENTED_20);
         dragon.setHealth(dragon.getMaxHealth());
     }
+    public void transformDrownedToDeepSeaDiver(Drowned drowned) {
+        // Set the custom name to identify our Deep Sea Diver.
+        drowned.setCustomName(ChatColor.DARK_AQUA + "Deep Sea Diver");
+        drowned.setCustomNameVisible(true);
 
+        // Copper color: you can adjust the RGB as desired.
+        Color copperColor = Color.fromRGB(184, 115, 51);
+
+        // Create a custom player head with the given texture.
+        ItemStack helmet = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta skullMeta = (SkullMeta) helmet.getItemMeta();
+        skullMeta = setCustomSkullTexture(skullMeta, "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTc4MzBjMWQ4Mjg0NWM5MWI4MzQyOWY5ZGM1OTczMTc4NDE1MzhlMTRkNGZiZWQ2MWFlMWEzYjBlYjdjY2QifX19");
+        helmet.setItemMeta(skullMeta);
+
+        // Create the chestplate, leggings, and boots as leather armor dyed copper.
+        ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
+        LeatherArmorMeta meta = (LeatherArmorMeta) chestplate.getItemMeta();
+        meta.setColor(copperColor);
+        chestplate.setItemMeta(meta);
+
+        ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
+        meta = (LeatherArmorMeta) leggings.getItemMeta();
+        meta.setColor(copperColor);
+        leggings.setItemMeta(meta);
+
+        ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+        meta = (LeatherArmorMeta) boots.getItemMeta();
+        meta.setColor(copperColor);
+        boots.setItemMeta(meta);
+
+        // Equip the Drowned with the suit.
+        EntityEquipment equipment = drowned.getEquipment();
+        if (equipment != null) {
+            equipment.setHelmet(helmet);
+            equipment.setChestplate(chestplate);
+            equipment.setLeggings(leggings);
+            equipment.setBoots(boots);
+        }
+    }
+
+    /**
+     * Helper method to set a custom texture on a SkullMeta.
+     */
+    private SkullMeta setCustomSkullTexture(SkullMeta skullMeta, String texture) {
+        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
+        profile.getProperties().put("textures", new Property("textures", texture));
+        try {
+            Field profileField = skullMeta.getClass().getDeclaredField("profile");
+            profileField.setAccessible(true);
+            profileField.set(skullMeta, profile);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return skullMeta;
+    }
+
+    // --- Example event handlers ---
+
+    /**
+     * When a Deep Sea Diver is killed, increase the player's oxygen.
+     */
+    @EventHandler
+    public void onDeepSeaDiverDeath(EntityDeathEvent event) {
+        if (event.getEntity() instanceof Drowned) {
+            Drowned drowned = (Drowned) event.getEntity();
+            if (drowned.getCustomName() != null && drowned.getCustomName().contains("Deep Sea Diver")) {
+                Player killer = drowned.getKiller();
+                if (killer != null) {
+                    PlayerOxygenManager oxygenManager = PlayerOxygenManager.getInstance();
+                    xpManager.addXP(killer, "Fishing", 800);
+                    int currentOxygen = oxygenManager.getPlayerOxygen(killer);
+                    oxygenManager.setPlayerOxygenLevel(killer, currentOxygen + 100);
+                    event.setDroppedExp(500);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * When a Deep Sea Diver is hit, play a metal clang sound.
+     */
+    @EventHandler
+    public void onDeepSeaDiverHit(EntityDamageByEntityEvent event) {
+        if (event.getEntity() instanceof Drowned) {
+            Drowned drowned = (Drowned) event.getEntity();
+            if (drowned.getCustomName() != null && drowned.getCustomName().contains("Deep Sea Diver")) {
+                drowned.getWorld().playSound(drowned.getLocation(), Sound.BLOCK_ANVIL_LAND, 1.0f, 1.0f);
+            }
+        }
+    }
     public void applyMobAttributes(LivingEntity mob, int level) {
         level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL));
         AttributeInstance healthAttribute = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);

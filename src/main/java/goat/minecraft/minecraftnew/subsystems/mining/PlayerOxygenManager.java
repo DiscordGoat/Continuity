@@ -5,12 +5,15 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager; // Remove this if no longer needed anywhere else
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.*;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -34,6 +37,28 @@ public class PlayerOxygenManager implements Listener {
     private final Map<UUID, Integer> playerOxygenLevels = new HashMap<>();
     private final Map<UUID, Scoreboard> playerScoreboards = new HashMap<>();
     private final Map<UUID, Objective> oxygenObjectives = new HashMap<>();
+
+    // Data structure for tracking player-placed blocks
+    private final Map<UUID, Set<Location>> playerPlacedBlocks = new HashMap<>();
+
+    // Define banned block types when oxygen is 0
+    private static final Set<Material> BANNED_BLOCKS = new HashSet<>(Arrays.asList(
+            Material.STONE,
+            Material.DEEPSLATE,
+            Material.ANDESITE,
+            Material.DIORITE,
+            Material.GRANITE,
+            Material.COAL_ORE,
+            Material.IRON_ORE,
+            Material.GOLD_ORE,
+            Material.REDSTONE_ORE,
+            Material.LAPIS_ORE,
+            Material.DIAMOND_ORE,
+            Material.EMERALD_ORE,
+            Material.NETHER_QUARTZ_ORE,
+            Material.NETHER_GOLD_ORE,
+            Material.COPPER_ORE
+    ));
 
     // Constants
     private static final int DEFAULT_OXYGEN_SECONDS = 300; // Base oxygen in seconds
@@ -165,33 +190,17 @@ public class PlayerOxygenManager implements Listener {
                 }
             }
 
-
-            // If oxygen is depleted, apply damage
-            Bukkit.getLogger().info("Current Oxygen: " + currentOxygen);
-            if (currentOxygen == 0 && player.getGameMode() == GameMode.SURVIVAL) {
-                player.setGameMode(GameMode.ADVENTURE);
-                Bukkit.getLogger().info("Player " + player.getName() + " switched to Adventure mode due to 0 oxygen.");
-            } else if (currentOxygen > 0 && player.getGameMode() == GameMode.ADVENTURE) {
-                player.setGameMode(GameMode.SURVIVAL);
-                Bukkit.getLogger().info("Player " + player.getName() + " switched back to Survival mode due to oxygen recovery.");
+            // When oxygen is depleted, now restrict block interactions instead of switching game mode
+            if (currentOxygen == 0) {
+                Bukkit.getLogger().info("Player " + player.getName() + " has 0 oxygen and is now restricted from breaking natural blocks.");
+                // Optionally, you can send a one-time message here to the player if desired.
             }
-
-
-
-
-
         } else {
             // Handle oxygen recovery
             if (currentOxygen < initialOxygen) {
                 if (recoveryCounter % RECOVERY_INTERVAL_SECONDS == 0) {
                     currentOxygen++;
                     playerOxygenLevels.put(uuid, currentOxygen);
-
-                    // Handle game mode transition when oxygen recovers
-                    if (currentOxygen > 0 && player.getGameMode() == GameMode.ADVENTURE) {
-                        player.setGameMode(GameMode.SURVIVAL);
-                        Bukkit.getLogger().info("Player " + player.getName() + " switched back to Survival mode due to oxygen recovery.");
-                    }
                 }
             }
         }
@@ -268,9 +277,8 @@ public class PlayerOxygenManager implements Listener {
         oxygenDataConfig.set(uuid.toString(), oxygenLevel);
         saveOxygenData();
 
-
         // Notify the player
-        player.sendMessage(ChatColor.AQUA + "Your oxygen level has been set to " + ChatColor.WHITE + oxygenLevel + " seconds.");
+        player.sendMessage(ChatColor.AQUA + "Your oxygen level has been increased to " + ChatColor.WHITE + oxygenLevel + " seconds.");
     }
     /**
      * Updates the player's sidebar with oxygen and temperature information.
@@ -375,7 +383,6 @@ public class PlayerOxygenManager implements Listener {
         updatePlayerSidebar(player);
     }
 
-
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
@@ -389,7 +396,9 @@ public class PlayerOxygenManager implements Listener {
         playerOxygenLevels.remove(uuid);
         playerScoreboards.remove(uuid);
         oxygenObjectives.remove(uuid);
+        playerPlacedBlocks.remove(uuid);
     }
+
     private void loadOxygenDataIntoMemory() {
         for (String key : oxygenDataConfig.getKeys(false)) {
             try {
@@ -412,6 +421,100 @@ public class PlayerOxygenManager implements Listener {
         updatePlayerOxygen(event.getPlayer());
     }
 
+    /**
+     * Event handler for block placement.
+     * When a player with 0 oxygen tries to place a banned block, cancel the event.
+     * Also record the block if placed.
+     */
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        int oxygen = playerOxygenLevels.getOrDefault(uuid, DEFAULT_OXYGEN_SECONDS);
+
+        Material blockType = event.getBlock().getType();
+        // If player has 0 oxygen and is trying to place a banned block, cancel placement.
+        if (oxygen == 0 && BANNED_BLOCKS.contains(blockType)) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "You cannot place that block when you have no oxygen.");
+            return;
+        }
+        // Record the block as player placed (using block coordinates to avoid precision issues)
+        recordPlacedBlock(player, event.getBlock().getLocation());
+    }
+
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        UUID uuid = player.getUniqueId();
+        int oxygen = playerOxygenLevels.getOrDefault(uuid, DEFAULT_OXYGEN_SECONDS);
+        Block block = event.getBlock();
+        Material blockType = block.getType();
+
+        // If the player is completely out of oxygen and is breaking a banned (natural) block
+        if (oxygen == 0 && BANNED_BLOCKS.contains(blockType) && !isPlayerPlacedBlock(player, block.getLocation())) {
+            // Inflict 4 true damage by directly reducing health (ignores armor)
+            double currentHealth = player.getHealth();
+            double newHealth = currentHealth - 4.0;
+            if (newHealth <= 0) {
+                newHealth = 0;
+            }
+            player.setHealth(newHealth);
+            player.sendMessage(ChatColor.RED + "Breaking natural blocks without oxygen hurts you!");
+        } else {
+            // If the block was player-placed, remove it from our record.
+            if (isPlayerPlacedBlock(player, block.getLocation())) {
+                removePlacedBlock(player, block.getLocation());
+            }
+        }
+    }
+
+
+
+    /**
+     * Records a block placed by the player.
+     *
+     * @param player The player who placed the block.
+     * @param loc The location of the placed block.
+     */
+    private void recordPlacedBlock(Player player, Location loc) {
+        UUID uuid = player.getUniqueId();
+        Location blockLoc = loc.getBlock().getLocation(); // normalize to block coordinates
+        playerPlacedBlocks.computeIfAbsent(uuid, k -> new HashSet<>()).add(blockLoc);
+    }
+
+    /**
+     * Checks if the block at the given location was placed by the player.
+     *
+     * @param player The player.
+     * @param loc The location of the block.
+     * @return True if the block was placed by the player, false otherwise.
+     */
+    private boolean isPlayerPlacedBlock(Player player, Location loc) {
+        UUID uuid = player.getUniqueId();
+        Location blockLoc = loc.getBlock().getLocation(); // normalize to block coordinates
+        return playerPlacedBlocks.getOrDefault(uuid, Collections.emptySet()).contains(blockLoc);
+    }
+
+    /**
+     * Removes a block from the record of player placed blocks.
+     *
+     * @param player The player.
+     * @param loc The location of the block.
+     */
+    private void removePlacedBlock(Player player, Location loc) {
+        UUID uuid = player.getUniqueId();
+        Location blockLoc = loc.getBlock().getLocation(); // normalize to block coordinates
+        Set<Location> locations = playerPlacedBlocks.get(uuid);
+        if (locations != null) {
+            locations.remove(blockLoc);
+        }
+    }
+    public int getPlayerOxygen(Player player) {
+        UUID uuid = player.getUniqueId();
+        // Return the current oxygen level, or if not present, calculate the initial value.
+        return playerOxygenLevels.getOrDefault(uuid, calculateInitialOxygen(player));
+    }
     /**
      * Optionally call this from onDisable in your main plugin class to ensure data is saved on shutdown.
      */

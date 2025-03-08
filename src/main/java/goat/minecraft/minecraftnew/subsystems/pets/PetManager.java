@@ -88,6 +88,8 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Luminescent_Drowned", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjQ4MDBlNWY1ZTM3NTJkNGY2OWI1MjVjYzAwZGNjYTg2ODdhZThjYTBmYjYyYzQ1NzE5ZDlmY2U0NTFlYTQ1YSJ9fX0=");
         PET_TEXTURES.put("Poseidon", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmVjYjJhYTNhNTE0MTQ4ODU3NzI4OGEyOGZmMzk0NmI0MzQyOWY1NmJkMjIzMDFkOTFmYTM3MWU3NjVmM2I4YSJ9fX0=");
         PET_TEXTURES.put("waterspider", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzZhZjM5N2Q5N2I0NjcwMTQ5NmRmMmJkNmFmNGU0ZDdjZjYxMGY3MzcyMzlmZDMzYzlhMGE5MzMxOWUwODBmYiJ9fX0=");
+        //mutations
+        PET_TEXTURES.put("diver", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTc4MzBjMWQ4Mjg0NWM5MWI4MzQyOWY5ZGM1OTczMTc4NDE1MzhlMTRkNGZiZWQ2MWFlMWEzYjBlYjdjY2QifX19");
     }
 
     public static PetManager getInstance(JavaPlugin plugin) {

@@ -21,7 +21,10 @@ public class SetPetLevelCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + "This command can only be used by a player.");
             return true;
         }
-
+        if (!sender.hasPermission("continuity.admin")) {
+            sender.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
+            return true;
+        }
         Player player = (Player) sender;
 
         // Check if the correct number of arguments is provided

@@ -55,27 +55,35 @@ public class KillMonster implements Listener {
     public void onKill(EntityDeathEvent e) {
         Entity entity = e.getEntity();
         Entity killer = e.getEntity().getKiller();
-
-
-
+    
         if (killer instanceof Player && entity instanceof Monster) {
             Player playerKiller = (Player) killer;
-
+    
             if (entity instanceof Zombie) {
-            Pathfinder pathfinder = new Pathfinder();
-            pathfinder.reinforceZombies(entity, 100);
+                Pathfinder pathfinder = new Pathfinder();
+                pathfinder.reinforceZombies(entity, 100);
             }
-
+    
             // Get the monster's level (ensure it's at least 1)
             int monsterLevel = extractIntegerFromEntityName(entity);
             monsterLevel = Math.max(monsterLevel, 1);
-
-            // Calculate XP gain
+    
+            // Calculate base XP gain
             int xpGain = 5 + (monsterLevel / 3);
-
+    
+            // Get player's combat level
+            int playerCombatLevel = xpManager.getPlayerLevel(playerKiller, "Combat");
+    
+            // Calculate bonus XP if monster level is higher than player's combat level
+            if (monsterLevel > playerCombatLevel) {
+                int levelDifference = monsterLevel - playerCombatLevel;
+                int bonusXP = levelDifference * 2;
+                xpGain += bonusXP;
+            }
+    
             // Add XP to the player
             xpManager.addXP(playerKiller, "Combat", xpGain);
-
+    
             // 20% chance for loot to drop normally, else clear drops
             Random random = new Random();
             if (entity instanceof Monster) {

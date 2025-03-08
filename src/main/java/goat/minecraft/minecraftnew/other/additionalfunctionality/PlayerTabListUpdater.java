@@ -33,7 +33,7 @@ public class PlayerTabListUpdater {
         }
     }
 
-    private int getDaysPlayed(Player player) {
+    public int getDaysPlayed(Player player) {
         int playTimeTicks = player.getStatistic(Statistic.PLAY_ONE_MINUTE);
         // 1 day in Minecraft = 24000 ticks
         return playTimeTicks / 24000;

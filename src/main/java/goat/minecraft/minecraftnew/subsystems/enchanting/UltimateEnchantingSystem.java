@@ -17,7 +17,6 @@ import java.util.*;
 
 public class UltimateEnchantingSystem implements Listener {
 
-
     // Hard-coded costs
     private static final int ULTIMATE_ENCHANT_COST_LAPIS = 64;
     private static final int FORBIDDEN_BOOK_COST = 4;
@@ -27,7 +26,6 @@ public class UltimateEnchantingSystem implements Listener {
      * E.g.: BOW -> ["Explosive Shots","Homing Arrows"]
      */
     private static final Map<Material, List<String>> CUSTOM_ENCHANTS_BY_TYPE = new HashMap<>();
-
 
     /**
      * Registers 8 custom enchantments:
@@ -42,21 +40,23 @@ public class UltimateEnchantingSystem implements Listener {
         // 1) Bows
         registerEnchantmentForType("Ultimate: Leg Shot", 1, false, Material.BOW, Material.CROSSBOW);
         registerEnchantmentForType("Ultimate: Headshot", 1, false, Material.BOW, Material.CROSSBOW);
-        registerEnchantmentForType("Ultimate: Homing Arrows",   1, false, Material.BOW, Material.CROSSBOW);
+        registerEnchantmentForType("Ultimate: Homing Arrows", 1, false, Material.BOW, Material.CROSSBOW);
 
         // 2) Melee
-        registerEnchantmentForType("Ultimate: Inferno",   1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Rage Mode",      1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Warp",      1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Snowstorm",      1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Parry",      1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Disc Seeker",      1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Leap",      1, false, MELEE.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Inferno", 1, false, MELEE.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Rage Mode", 1, false, MELEE.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Warp", 1, false, MELEE.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Snowstorm", 1, false, MELEE.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Parry", 1, false, MELEE.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Disc Seeker", 1, false, MELEE.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Leap", 1, false, MELEE.toArray(new Material[0]));
+        // New Enchantment for thrown sword
+        registerEnchantmentForType("Ultimate: Loyal", 1, false, MELEE.toArray(new Material[0]));
 
         // 3) Tools
-        registerEnchantmentForType("Ultimate: Hammer",      1, false, TOOLS.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Treecapitator",       1, false, TOOLS.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Excavate",      1, false, TOOLS.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Hammer", 1, false, TOOLS.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Treecapitator", 1, false, TOOLS.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Excavate", 1, false, TOOLS.toArray(new Material[0]));
     }
 
     /**
@@ -170,48 +170,49 @@ public class UltimateEnchantingSystem implements Listener {
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Inferno", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Rage Mode")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Rage Mode", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Rage Mode", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Warp")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Warp", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Warp", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Snowstorm")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Snowstorm", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Snowstorm", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Parry")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Parry", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Parry", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Disc Seeker")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Disc Seeker", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Disc Seeker", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Leap")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Leap", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Leap", 1);
+        }
+        // New check for the Loyal enchantment
+        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Loyal")){
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Loyal", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Excavate")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Excavate", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Excavate", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Treecapitator")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Treecapitator", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Treecapitator", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Hammer")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Hammer", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Hammer", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Homing Arrows")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Homing Arrows", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Homing Arrows", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Leg Shot")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Leg Shot", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Leg Shot", 1);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Headshot")){
-            CustomEnchantmentManager.addUltimateEnchantment(player,null, handItem, "Ultimate: Headshot", 1);
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Headshot", 1);
         }
-
 
         // Remove cost from player's inventory
         removeMaterialFromPlayer(player, Material.LAPIS_LAZULI, ULTIMATE_ENCHANT_COST_LAPIS);
         removeForbiddenBooksFromPlayer(player, FORBIDDEN_BOOK_COST);
-
-
     }
 
     /**

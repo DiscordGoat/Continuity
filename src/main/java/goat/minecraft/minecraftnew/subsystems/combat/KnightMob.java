@@ -54,8 +54,8 @@ public class KnightMob implements Listener {
 
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            spawnMonsters.applyMobAttributes(mob, 200);
-            mob.setCustomName(ChatColor.GRAY + "[Lvl 200] Knight");
+            spawnMonsters.applyMobAttributes(mob, 100);
+            mob.setCustomName(ChatColor.GRAY + "[Lvl 100] Knight");
             mob.setCustomNameVisible(true);
         }, 41L);
 
@@ -66,7 +66,7 @@ public class KnightMob implements Listener {
     public void onKnightHit(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof LivingEntity mob &&
                 mob.getCustomName() != null &&
-                mob.getCustomName().equals(ChatColor.GRAY + "Knight")) {
+                mob.getCustomName().equals(ChatColor.GRAY + "[Lvl 100] Knight")) {
             Location loc = mob.getLocation();
             World world = mob.getWorld();
 
@@ -83,7 +83,7 @@ public class KnightMob implements Listener {
     @EventHandler
     public void onKnightDeath(EntityDeathEvent event) {
         if (event.getEntity().getCustomName() != null &&
-                event.getEntity().getCustomName().equals(ChatColor.GRAY + "Knight")) {
+                event.getEntity().getCustomName().equals(ChatColor.GRAY + "[Lvl 100] Knight")) {
 
             // Check if the entity has a persistent data key to avoid double triggering
             if (event.getEntity().getPersistentDataContainer().has(new NamespacedKey(plugin, "processed_knight"), PersistentDataType.INTEGER)) {

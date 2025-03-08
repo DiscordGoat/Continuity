@@ -373,7 +373,7 @@ public class XPManager implements CommandExecutor {
 
             // Also pass some XP to "Player" if it's not the "Player" skill
             if (!skill.equalsIgnoreCase("Player")) {
-                double additionalXP = xp * 0.5;
+                double additionalXP = xp * 0.2;
                 addXPToSkill(player, "Player", additionalXP);
             }
         }
@@ -452,13 +452,15 @@ public class XPManager implements CommandExecutor {
         // Then skill-specific details
         switch (skill.toLowerCase()) {
             case "player":
-                double healthMultiplier = 1 + ((Math.min(newLevel, 50) * 0.02));
+                double healthMultiplier = 1 + (Math.min(newLevel, 100) * 0.01);
                 double newMaxHealth = 20.0 * healthMultiplier;
+                int displayHealth = (int)newMaxHealth + 1;  // add 1 to match the actual health
                 body.append(ChatColor.WHITE).append("Your ")
                         .append(ChatColor.GREEN).append("Max Health ")
                         .append(ChatColor.WHITE).append("is now ")
-                        .append(ChatColor.GREEN).append((int)newMaxHealth).append(" HP.\n");
+                        .append(ChatColor.GREEN).append(displayHealth).append(" HP.\n");
                 break;
+
 
             case "combat":
                 double damageMult = 1.0 + (0.03 * newLevel);
@@ -469,7 +471,7 @@ public class XPManager implements CommandExecutor {
                 break;
 
             case "fishing":
-                int seaChance = newLevel / 2;
+                int seaChance = newLevel / 4;
                 body.append(ChatColor.WHITE).append("Your base ")
                         .append(ChatColor.DARK_AQUA).append("Sea Creature Chance ")
                         .append(ChatColor.YELLOW).append("chance ")

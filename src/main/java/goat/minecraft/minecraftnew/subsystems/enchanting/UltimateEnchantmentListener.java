@@ -25,6 +25,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -43,7 +44,12 @@ public class UltimateEnchantmentListener implements Listener {
     // Removed hammerActive and treecapitatorActive
 
     // Removed activateTreecapitator(...) and activateHammer(...)
+    private static Map<UUID, LoyalSwordData> loyalSwordDataMap = new HashMap<>();
 
+    private static class LoyalSwordData {
+        double damageMultiplier = 1.0; // 1.0 = 100%
+        long lastUsage = System.currentTimeMillis();
+    }
     public UltimateEnchantmentListener(JavaPlugin plugin) {
         this.plugin = plugin;
         loadCooldowns();
@@ -548,6 +554,44 @@ public class UltimateEnchantmentListener implements Listener {
         }
         return false;
     }
+    private void activateLoyalSword(Player player, ItemStack sword) {
+        // Manage the damage multiplier data.
+        LoyalSwordData data = loyalSwordDataMap.get(player.getUniqueId());
+        if (data == null) {
+            data = new LoyalSwordData();
+            loyalSwordDataMap.put(player.getUniqueId(), data);
+        } else if (System.currentTimeMillis() - data.lastUsage > 60000) {
+            // Reset after 60 seconds without use.
+            data.damageMultiplier = 1.0;
+        }
+        data.lastUsage = System.currentTimeMillis();
+        // Every use drops the multiplier by 4%
+        data.damageMultiplier = Math.max(data.damageMultiplier - 0.04, 0.0);
+
+        // Remove the sword from the player's inventory.
+        player.getInventory().remove(sword);
+
+        // Spawn the armorstand 1 block lower than before (for a thrown sword effect).
+        Location spawnLoc = player.getLocation().add(0, 0.5, 0);
+        ArmorStand armorStand = player.getWorld().spawn(spawnLoc, ArmorStand.class, stand -> {
+            stand.setGravity(false);
+            stand.setVisible(false);
+            // Remove marker flag to let it visibly move.
+            // stand.setMarker(true);
+            // Equip the armorstand with a copy of the sword.
+            stand.setItemInHand(sword.clone());
+        });
+
+        // Play a goat jump sound.
+        player.playSound(player.getLocation(), Sound.ENTITY_GOAT_LONG_JUMP, 1.0f, 1.0f);
+
+        // Launch the armorstand in the direction the player is facing.
+        Vector direction = player.getLocation().getDirection().normalize();
+        armorStand.setVelocity(direction.multiply(1)); // Adjust speed if needed.
+
+        // Start the task that handles flight, collision, and return.
+        new LoyalSwordTask(player, armorStand, sword).runTaskTimer(plugin, 0L, 1L);
+    }
 
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
@@ -594,6 +638,7 @@ public class UltimateEnchantmentListener implements Listener {
                     fireDamageArrow(player);
                     cooldownMs = 15_000L;
                     break;
+
                 default:
                     cooldownMs = 1L;
                     break;
@@ -610,6 +655,11 @@ public class UltimateEnchantmentListener implements Listener {
                 return;
             }
             switch (enchantName) {
+                case "loyal":
+                    // Activate the loyal enchantment effect.
+                    activateLoyalSword(player, item);
+                    cooldownMs = 1L; // Example cooldown (30 seconds)
+                    break;
                 // Hammer/Treecapitator removed. No cooldown for them.
                 case "excavate":
                     player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.0f);
@@ -890,5 +940,139 @@ public class UltimateEnchantmentListener implements Listener {
         }
 
     }
+    private class LoyalSwordTask extends BukkitRunnable {
+        private final Player player;
+        private final ArmorStand armorStand;
+        private final ItemStack sword;
+        private final Vector flightVelocity; // Store the initial flight direction and speed
+        private int ticks = 0;
+        private int missCount = 0;
+        private boolean returning = false;
+        private double previousDistance = Double.MAX_VALUE;
+
+        public LoyalSwordTask(Player player, ArmorStand armorStand, ItemStack sword) {
+            this.player = player;
+            this.armorStand = armorStand;
+            this.sword = sword;
+            // Adjust multiplier as needed for forward speed.
+            this.flightVelocity = player.getLocation().getDirection().normalize().multiply(1);
+        }
+
+        @Override
+        public void run() {
+            // Cancel if player disconnects or armorstand becomes invalid.
+            if (!player.isOnline() || !armorStand.isValid()) {
+                if (armorStand.isValid()) {
+                    armorStand.remove();
+                }
+                player.getInventory().addItem(sword);
+                cancel();
+                return;
+            }
+
+            if (!returning) {
+                ticks++;
+
+                // Move forward by teleporting along the flight vector.
+                Location current = armorStand.getLocation();
+                Location next = current.clone().add(flightVelocity);
+                armorStand.teleport(next);
+
+                // Check collision with a block.
+                Block blockAt = next.getBlock();
+                if (blockAt.getType() != Material.AIR && blockAt.getType().isSolid()) {
+                    startReturn();
+                }
+
+                // Check for collision with an entity (other than the player).
+                for (Entity e : armorStand.getNearbyEntities(0.5, 0.5, 0.5)) {
+                    if (e instanceof LivingEntity && !(e instanceof Player)) {
+                        LivingEntity target = (LivingEntity) e;
+                        // Retrieve loyal data.
+                        LoyalSwordData data = loyalSwordDataMap.get(player.getUniqueId());
+                        if (data == null) {
+                            data = new LoyalSwordData();
+                            loyalSwordDataMap.put(player.getUniqueId(), data);
+                        }
+                        // Get player's combat level (assumed method).
+                        XPManager xpManager = new XPManager(plugin);
+                        int combatLevel = xpManager.getPlayerLevel(player, "Combat");
+                        double damage = combatLevel * data.damageMultiplier;
+                        target.damage(damage, player);
+                        // Increase damage multiplier by 4% on a successful melee hit (max 1.0).
+                        data.damageMultiplier = Math.min(data.damageMultiplier + 0.04, 1.0);
+                        // Display damage dealt in an action bar message.
+                        sendActionBar(player, ChatColor.GREEN + "Hit for " + String.format("%.1f", damage) +
+                                " damage (" + (int)(data.damageMultiplier * 100) + "%)");
+                        // Play a clang sound.
+                        armorStand.getWorld().playSound(armorStand.getLocation(), Sound.ENTITY_ZOMBIE_ATTACK_IRON_DOOR, 1.0f, 1.0f);
+                        startReturn();
+                        break;
+                    }
+                }
+
+                // After 2 seconds (40 ticks), trigger return.
+                if (ticks >= 40) {
+                    startReturn();
+                }
+            } else {
+                // Return phase: move armorstand toward the player.
+                Location current = armorStand.getLocation();
+                Location targetLoc = player.getLocation().add(0, 1, 0);
+                Vector toPlayer = targetLoc.toVector().subtract(current.toVector());
+                double distance = toPlayer.length();
+                if (distance < 1.5) {
+                    // Play a trident return sound when the sword comes back.
+                    armorStand.getWorld().playSound(armorStand.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
+                    armorStand.remove();
+                    player.getInventory().addItem(sword);
+                    cancel();
+                    return;
+                }
+                toPlayer.normalize();
+                // Teleport a short distance toward the player.
+                Location next = current.clone().add(toPlayer.multiply(0.5));
+                armorStand.teleport(next);
+
+                // Instead of random yaw/pitch, update the right arm pose to create a windmill effect.
+                EulerAngle currentArm = armorStand.getRightArmPose();
+                double newX = currentArm.getX() + Math.toRadians(15); // Rotate 10° per tick
+                EulerAngle newArmPose = new EulerAngle(newX, currentArm.getY(), currentArm.getZ());
+                armorStand.setRightArmPose(newArmPose);
+
+                // Spawn particle effects along the return path.
+                armorStand.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, armorStand.getLocation(), 10, 0.2, 0.2, 0.2, 0.01);
+
+                // Check if the distance isn't decreasing (indicating a "miss").
+                if (distance >= previousDistance - 0.1) {
+                    missCount++;
+                    if (missCount >= 4) {
+                        armorStand.remove();
+                        player.getInventory().addItem(sword);
+                        cancel();
+                        return;
+                    }
+                } else {
+                    missCount = 0;
+                }
+                previousDistance = distance;
+            }
+        }
+
+        // Switch to the return phase.
+        private void startReturn() {
+            if (!returning) {
+                returning = true;
+                ticks = 0;
+                previousDistance = armorStand.getLocation().distance(player.getLocation());
+            }
+        }
+        private void sendActionBar(Player player, String message) {
+            player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, new net.md_5.bungee.api.chat.TextComponent(message));
+        }
+    }
+
+
+
 
 }

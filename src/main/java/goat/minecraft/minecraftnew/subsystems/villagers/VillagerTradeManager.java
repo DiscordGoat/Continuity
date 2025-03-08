@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.PlayerTabListUpdater;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
@@ -957,49 +958,80 @@ public class VillagerTradeManager implements Listener {
 
         return Math.max(1, (int) Math.floor(finalCost));
     }
-    /**
-     * Creates a custom item whose display name shows the villager's XP progress.
-     * The name is formatted as: (<current xp> | <current xp>/<xp required for next level>).
-     *
-     * @param villager The villager whose XP is used.
-     * @return An ItemStack (using PAPER) with the custom display name.
-     */
-    public ItemStack createVillagerXPDisplayItem(Villager villager) {
-        // Get the current XP and level of the villager.
-        int currentXP = villager.getVillagerExperience();
-        int currentLevel = villager.getVillagerLevel();
-
-        // Retrieve the XP required for the next level.
-        int xpForNextLevel = getExperienceForNextLevel(currentLevel);
-        if(xpForNextLevel > 1000){
-            xpForNextLevel = 0;
+ 
+    public ItemStack createVillagerXPDisplayItem(Villager villager, int daysPlayed) {
+        // Calculate the villager level based on days played and cap it at level 5.
+        int newVillagerLevel;
+        if (daysPlayed >= 140) {
+            newVillagerLevel = 5;
+        } else if (daysPlayed >= 120) {
+            newVillagerLevel = 4;
+        } else if (daysPlayed >= 100) {
+            newVillagerLevel = 3;
+        } else if (daysPlayed >= 80) {
+            newVillagerLevel = 2;
+        } else {
+            newVillagerLevel = 1;
         }
-
-        // Create the display name using the format: (<current xp> | <current xp>/<xp for next level>)
-        String displayName = "(" + currentXP + "/" + xpForNextLevel + ")";
-
-        // Create a new item; here we're using PAPER as an example.
+    
+        // Create a new item (using PAPER as an example).
         ItemStack xpDisplayItem = new ItemStack(Material.PAPER);
         ItemMeta meta = xpDisplayItem.getItemMeta();
         if (meta != null) {
-            // Optionally, add color to the display name.
-            meta.setDisplayName(ChatColor.AQUA + displayName);
+            List<String> lore = new ArrayList<>();
+            meta.setDisplayName(ChatColor.AQUA + "Days Played: " + daysPlayed
+                    + " | Villager Level: " + newVillagerLevel);
+    
+            if (newVillagerLevel < 5) {
+                // Determine the threshold for the next level.
+                int nextThreshold = (newVillagerLevel * 20) + 60;
+                int daysRemaining = nextThreshold - daysPlayed;
+                lore.add(ChatColor.YELLOW + "Progress: " + daysPlayed + "/" + nextThreshold + " days");
+                if (daysRemaining > 0) {
+                    lore.add(ChatColor.GREEN + "" + daysRemaining + " days left to level up!");
+                } else {
+                    lore.add(ChatColor.GREEN + "Ready for the next level!");
+                }
+            } else {
+                // Level is capped at 5.
+                lore.add(ChatColor.YELLOW + "Maximum level reached!");
+            }
+            meta.setLore(lore);
             xpDisplayItem.setItemMeta(meta);
         }
-
-        // Debug log: print out the values.
-        plugin.getLogger().info("[XP Display Item] Created item with name: " + displayName);
-
+    
+        plugin.getLogger().info("[XP Display Item] Created item with display: " + meta.getDisplayName());
         return xpDisplayItem;
     }
+
+
+
 
     private void openVillagerTradeGUI(Player player) {
         Inventory tradeGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Villager Trading");
         Villager villager = playerVillagerMap.get(player); // Retrieve the stored villager directly
 
-        // Get villager profession and level
+        // Get villager profession and player's days played
         Villager.Profession profession = villager.getProfession();
-        int villagerLevel = villager.getVillagerLevel(); // Use built-in method
+        PlayerTabListUpdater playerTabListUpdater = new PlayerTabListUpdater(MinecraftNew.getInstance(), new XPManager(MinecraftNew.getInstance()));
+        int daysPlayed = playerTabListUpdater.getDaysPlayed(player);
+
+        // Determine villager level based on days played:
+        // day 20 = level 1, day 40 = level 2, day 60 = level 3, day 80 = level 4, day 100 = level 5
+        int villagerLevel;
+        if (daysPlayed >= 140) {
+            villagerLevel = 5;
+        } else if (daysPlayed >= 120) {
+            villagerLevel = 4;
+        } else if (daysPlayed >= 100) {
+            villagerLevel = 3;
+        } else if (daysPlayed >= 80) {
+            villagerLevel = 2;
+        } else {
+            villagerLevel = 1; // Below day 20, no level or level 0.
+        }
+        //make villagers invisible when trading
+
 
         // Get the trade items for the villager's profession
         List<TradeItem> purchases = purchaseWhitelist.getOrDefault(profession, Collections.emptyList());
@@ -1007,8 +1039,7 @@ public class VillagerTradeManager implements Listener {
 
         // Create the divider item
         ItemStack dividerItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-
-        ItemStack xpItem = createVillagerXPDisplayItem(villager);
+        ItemStack xpItem = createVillagerXPDisplayItem(villager, playerTabListUpdater.getDaysPlayed(player));
         ItemMeta dividerMeta = dividerItem.getItemMeta();
         if (dividerMeta != null) {
             dividerMeta.setDisplayName(ChatColor.DARK_GRAY + " ");
@@ -1088,6 +1119,7 @@ public class VillagerTradeManager implements Listener {
 
         player.openInventory(tradeGUI);
     }
+
 
     /**
      * Adds a Villager Pet Button at the bottom-middle of the GUI (slot 49).
