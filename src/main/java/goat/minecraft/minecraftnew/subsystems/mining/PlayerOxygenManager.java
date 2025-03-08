@@ -154,42 +154,46 @@ public class PlayerOxygenManager implements Listener {
         return totalLevel;
     }
 
+
     public void updatePlayerOxygen(Player player) {
         UUID uuid = player.getUniqueId();
         Location location = player.getLocation();
         World world = location.getWorld();
         if (world == null) return;
-
+    
         // Initialize oxygen level if not present
         if (!playerOxygenLevels.containsKey(uuid)) {
             int initialOxygen = calculateInitialOxygen(player);
             playerOxygenLevels.put(uuid, initialOxygen);
         }
-
+    
         int currentOxygen = playerOxygenLevels.get(uuid);
         int initialOxygen = calculateInitialOxygen(player);
-
+    
         // Determine oxygen depletion rate
         int oxygenDepletionRate = getOxygenDepletionRate(player);
-
-        if (oxygenDepletionRate > 0) {
-            // Deplete oxygen every second
+    
+        // Check if the player is underwater
+        boolean isUnderwater = player.getEyeLocation().getBlock().getType() == Material.WATER;
+    
+        if (oxygenDepletionRate > 0 && !isUnderwater) {
+            // Deplete oxygen every second if not underwater
             currentOxygen -= oxygenDepletionRate;
             if (currentOxygen < 0) currentOxygen = 0;
             playerOxygenLevels.put(uuid, currentOxygen);
-
+    
             // Effects and sounds when oxygen is low
             if (currentOxygen == 150) {
                 player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1F, 1F);
             }
-
+    
             if (currentOxygen <= 60 && currentOxygen > 15) {
                 // Play breathing sfx every 5 seconds
                 if (currentOxygen % 5 == 0) {
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 0.5F, 1.0F);
                 }
             }
-
+    
             // When oxygen is depleted, now restrict block interactions instead of switching game mode
             if (currentOxygen == 0) {
                 Bukkit.getLogger().info("Player " + player.getName() + " has 0 oxygen and is now restricted from breaking natural blocks.");

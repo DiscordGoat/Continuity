@@ -1101,7 +1101,7 @@ public class ItemRegistry {
 
     public static ItemStack getSingularity() {
         return createCustomItem(
-                Material.IRON_INGOT,
+                Material.IRON_NUGGET,
                 ChatColor.BLUE + "Singularity",
                 List.of(ChatColor.GRAY + "A rare blueprint entrusted to the Knights",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Reforges Equipment to the first Tier.",
