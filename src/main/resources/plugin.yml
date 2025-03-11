@@ -10,6 +10,12 @@ permissions:
     description: "Grants admin access to Continuity"
     default: op     # op = only given to server operators (OPs) by default
 commands:
+  forceworkcycle:
+    description: Forces the villager work cycle timer to 1 second.
+    usage: /<command>
+  testdragon:
+      description: Summon the initial and strong dragons in the End for testing.
+      usage: /testdragon
   skin:
     description: Applies a skin name to the item in your hand.
   island:

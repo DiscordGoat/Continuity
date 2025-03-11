@@ -7,6 +7,9 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Ageable;
 import org.bukkit.block.data.type.Slab;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,7 +25,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
 
-public class VillagerWorkCycleManager implements Listener {
+public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
     private final JavaPlugin plugin;
     private static VillagerWorkCycleManager instance;
@@ -37,7 +40,20 @@ public class VillagerWorkCycleManager implements Listener {
         this.plugin = plugin;
         startGlobalScheduler();  // Start the new 1-second countdown
     }
-
+    @Override
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        if (command.getName().equalsIgnoreCase("forceworkcycle")) {
+            // Set the work cycle timer to 20 ticks (1 second)
+            if (!sender.hasPermission("continuity.admin")) {
+                sender.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
+                return true;
+            }
+            ticksUntilNextWorkCycle = 60;
+            sender.sendMessage(ChatColor.GREEN + "Villager work cycle timer has been forced to 3 seconds.");
+            return true;
+        }
+        return false;
+    }
     public static VillagerWorkCycleManager getInstance(JavaPlugin plugin) {
         if (instance == null) {
             instance = new VillagerWorkCycleManager(plugin);
@@ -82,8 +98,6 @@ public class VillagerWorkCycleManager implements Listener {
                 .toList()) {
             // Perform work for each villager
             performVillagerWork(villager);
-            VillagerTradeManager villagerTradeManager = VillagerTradeManager.getInstance(plugin);
-            villagerTradeManager.passivelyAddVillagerXP(villager);
         }
     }
 
@@ -94,19 +108,13 @@ public class VillagerWorkCycleManager implements Listener {
         switch (profession) {
             case FARMER -> performFarmerWork(villager);
             case BUTCHER -> performButcherWork(villager, searchRadius);
-            case FISHERMAN -> {
-                performFishermanWork(villager, searchRadius);
-            }
-            case LIBRARIAN -> {
-                performLibrarianWork(villager, searchRadius);
-            }
+            case FISHERMAN -> performFishermanWork(villager, searchRadius);
+            case LIBRARIAN -> performLibrarianWork(villager, searchRadius);
             case CLERIC -> performClericWork(villager);
             case CARTOGRAPHER -> performCartographerWork(villager, 20);
             case FLETCHER -> performFletcherWork(villager, 50);
             case LEATHERWORKER -> performLeatherworkerWork(villager, searchRadius);
-            case MASON -> {
-                performMasonWork(villager, searchRadius);
-            }
+            case MASON -> performMasonWork(villager, searchRadius);
             case SHEPHERD -> performShepherdWork(villager, searchRadius);
             case TOOLSMITH -> performToolsmithWork(villager, searchRadius);
             case WEAPONSMITH -> performWeaponsmithWork(villager, searchRadius);
@@ -1530,7 +1538,7 @@ Random random = new Random();
                  BLACK_GLAZED_TERRACOTTA -> true;
 
             // Brick Variants
-            case BRICKS, POLISHED_BLACKSTONE_BRICKS, BRICK_STAIRS, BRICK_SLAB, BRICK_WALL,
+            case DEEPSLATE_BRICKS, BRICKS, POLISHED_BLACKSTONE_BRICKS, BRICK_STAIRS, BRICK_SLAB, BRICK_WALL,
                  STONE_BRICKS, STONE_BRICK_STAIRS, STONE_BRICK_SLAB, STONE_BRICK_WALL,
                  MOSSY_STONE_BRICKS, MOSSY_STONE_BRICK_STAIRS, MOSSY_STONE_BRICK_SLAB, MOSSY_STONE_BRICK_WALL,
                  NETHER_BRICKS, NETHER_BRICK_STAIRS, NETHER_BRICK_SLAB, NETHER_BRICK_WALL,

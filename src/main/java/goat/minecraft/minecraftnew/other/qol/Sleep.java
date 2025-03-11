@@ -6,6 +6,7 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -39,19 +40,17 @@ public class Sleep implements Listener {
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        // Only handle main-hand interactions
-        if (event.getHand() == EquipmentSlot.HAND) {
-
-
+        // Only handle main-hand interactions and ensure the player is sneaking (shift-clicking)
+        if (event.getHand() == EquipmentSlot.HAND && event.getPlayer().isSneaking()) {
             Player player = event.getPlayer();
             UUID playerUUID = player.getUniqueId();
-
+    
             // Check if clicked block is a bed and it's day (time < 12541)
-            if (event.hasBlock()
+            if (event.getAction() == Action.RIGHT_CLICK_BLOCK
                     && event.getClickedBlock() != null
                     && event.getClickedBlock().getType().name().contains("BED")
                     && player.getWorld().getTime() < 12541) {
-
+    
                 // Check cooldown for the player initiating the vote
                 long currentTime = System.currentTimeMillis();
                 if (lastVoteTime.containsKey(playerUUID)) {
@@ -62,26 +61,26 @@ public class Sleep implements Listener {
                         return;
                     }
                 }
-
-                // If a vote is already in progress, don’t start another
+    
+                // If a vote is already in progress, don't start another
                 if (voteInProgress) {
                     player.sendMessage(ChatColor.RED + "A vote to skip to night is already in progress!");
                     return;
                 }
-
+    
                 // Start a new vote
                 voteInProgress = true;
                 voteInitiator = player;
                 yesVotes.clear();
                 noVotes.clear();
                 yesVotes.add(playerUUID); // Let the initiator auto-vote yes if you wish
-
+    
                 lastVoteTime.put(playerUUID, currentTime);
-
+    
                 // Broadcast so people know how to vote
                 Bukkit.broadcastMessage(ChatColor.YELLOW + player.getName() + " has started a vote to skip to night! "
                         + "Type \"yes\" or \"no\" in chat to cast your vote. (10s remains!)");
-
+    
                 // After 10 seconds, process the results
                 new BukkitRunnable() {
                     @Override

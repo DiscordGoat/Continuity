@@ -22,11 +22,12 @@ public class SeaCreatureRegistry implements Listener {
 
     static {
         // Define weights for each rarity (sum should be 1.0)
-        RARITY_WEIGHTS.put(Rarity.COMMON, 0.25);
-        RARITY_WEIGHTS.put(Rarity.UNCOMMON, 0.25);
-        RARITY_WEIGHTS.put(Rarity.RARE, 0.20);
-        RARITY_WEIGHTS.put(Rarity.EPIC, 0.15);
-        RARITY_WEIGHTS.put(Rarity.LEGENDARY, 0.15);
+        RARITY_WEIGHTS.put(Rarity.COMMON, 0.50);
+        RARITY_WEIGHTS.put(Rarity.UNCOMMON, 0.30);
+        RARITY_WEIGHTS.put(Rarity.RARE, 0.12);
+        RARITY_WEIGHTS.put(Rarity.EPIC, 0.06);
+        RARITY_WEIGHTS.put(Rarity.LEGENDARY, 0.02);
+
 
         // Assign levels based on rarity
         RARITY_LEVELS.put(Rarity.COMMON, 10);

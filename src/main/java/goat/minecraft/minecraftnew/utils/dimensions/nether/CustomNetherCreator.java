@@ -1,11 +1,10 @@
-package goat.minecraft.minecraftnew.utils.dimensions;
+package goat.minecraft.minecraftnew.utils.dimensions.nether;
 
 import org.bukkit.*;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.WorldCreator;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 
 import java.util.Random;
 

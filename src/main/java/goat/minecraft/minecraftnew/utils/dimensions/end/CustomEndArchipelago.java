@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils.dimensions;
+package goat.minecraft.minecraftnew.utils.dimensions.end;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.SpawnMonsters;

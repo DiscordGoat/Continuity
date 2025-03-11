@@ -47,9 +47,9 @@ import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.devtools.*;
-import goat.minecraft.minecraftnew.utils.dimensions.CustomEndArchipelago;
+import goat.minecraft.minecraftnew.utils.dimensions.end.CustomEndArchipelago;
 
-import goat.minecraft.minecraftnew.utils.dimensions.CustomNetherCreator;
+import goat.minecraft.minecraftnew.utils.dimensions.nether.CustomNetherCreator;
 import org.bukkit.*;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -143,7 +143,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         this.getCommand("skin").setExecutor(new SkinCommand());
-
+        if (getCommand("testdragon") != null) {
+            getCommand("testdragon").setExecutor(new TestDragonCommand());
+        } else {
+            getLogger().severe("Command 'testdragon' not found in plugin.yml!");
+        }
         PetManager petManager = PetManager.getInstance(this);
         this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));
         this.getCommand("island").setExecutor(new IslandCommand());
@@ -425,6 +429,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new CombatBuffs(), this);
         getServer().getPluginManager().registerEvents(new BowReforge(), this);
         villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);
+        getCommand("forceworkcycle").setExecutor(villagerWorkCycleManager);
+
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
 
         //nms >

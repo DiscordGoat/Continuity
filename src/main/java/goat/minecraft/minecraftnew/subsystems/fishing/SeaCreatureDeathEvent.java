@@ -83,10 +83,17 @@ public class SeaCreatureDeathEvent implements Listener {
             Bukkit.getLogger().info("Sea creature killed by non-player entity: " + event.getEntity().getKiller());
             return;
         }
+        Player player = (Player) killer;
+
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(killer);
         int boostedXP = getBoostedXP(seaCreature.getRarity(), hostilityLevel);
         xpManager.addXP(killer, "Fishing", boostedXP);
+        event.setDroppedExp(500);
+        FishermansTally fishermansTally = FishermansTally.getInstance();
+
+        fishermansTally.incrementSeaCreatureKills(player);
+
         Bukkit.getLogger().info("Player " + killer.getName() + " gained " + boostedXP + " Fishing XP.");
 
         if(seaCreature.getSkullName().equals("Pirate")){
@@ -133,29 +140,29 @@ public class SeaCreatureDeathEvent implements Listener {
             entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), forbiddenBook);
         }
 
-
+        int kills = fishermansTally.getSeaCreatureKills(player);
         if (seaCreature.getRarity() == Rarity.COMMON) {
-            if (chance >= 90) {
+            if (kills == 3) {
                 petRegistry.addPetByName(killer, "Fish");
             }
         }
         if (seaCreature.getRarity() == Rarity.UNCOMMON) {
-            if (chance >= 90) {
+            if (kills == 9) {
                 petRegistry.addPetByName(killer, "Glow Squid");
             }
         }
         if (seaCreature.getRarity() == Rarity.RARE) {
-            if (chance >= 90) {
+            if (kills == 27) {
                 petRegistry.addPetByName(killer, "Dolphin");
             }
         }
         if (seaCreature.getRarity() == Rarity.EPIC) {
-            if (chance >= 90) {
+            if (kills == 81) {
                 petRegistry.addPetByName(killer, "Turtle");
             }
         }
         if (seaCreature.getRarity() == Rarity.LEGENDARY) {
-            if (chance >= 90) {
+            if (kills == 243) {
                 petRegistry.addPetByName(killer, "Leviathan");
             }
         }

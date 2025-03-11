@@ -962,13 +962,13 @@ public class VillagerTradeManager implements Listener {
     public ItemStack createVillagerXPDisplayItem(Villager villager, int daysPlayed) {
         // Calculate the villager level based on days played and cap it at level 5.
         int newVillagerLevel;
-        if (daysPlayed >= 140) {
+        if (daysPlayed >= 110) {
             newVillagerLevel = 5;
-        } else if (daysPlayed >= 120) {
+        } else if (daysPlayed >= 90) {
             newVillagerLevel = 4;
-        } else if (daysPlayed >= 100) {
+        } else if (daysPlayed >= 70) {
             newVillagerLevel = 3;
-        } else if (daysPlayed >= 80) {
+        } else if (daysPlayed >= 50) {
             newVillagerLevel = 2;
         } else {
             newVillagerLevel = 1;
@@ -984,7 +984,7 @@ public class VillagerTradeManager implements Listener {
     
             if (newVillagerLevel < 5) {
                 // Determine the threshold for the next level.
-                int nextThreshold = (newVillagerLevel * 20) + 60;
+                int nextThreshold = (newVillagerLevel * 20) + 50;
                 int daysRemaining = nextThreshold - daysPlayed;
                 lore.add(ChatColor.YELLOW + "Progress: " + daysPlayed + "/" + nextThreshold + " days");
                 if (daysRemaining > 0) {
@@ -1019,13 +1019,13 @@ public class VillagerTradeManager implements Listener {
         // Determine villager level based on days played:
         // day 20 = level 1, day 40 = level 2, day 60 = level 3, day 80 = level 4, day 100 = level 5
         int villagerLevel;
-        if (daysPlayed >= 140) {
+        if (daysPlayed >= 110) {
             villagerLevel = 5;
-        } else if (daysPlayed >= 120) {
+        } else if (daysPlayed >= 90) {
             villagerLevel = 4;
-        } else if (daysPlayed >= 100) {
+        } else if (daysPlayed >= 70) {
             villagerLevel = 3;
-        } else if (daysPlayed >= 80) {
+        } else if (daysPlayed >= 50) {
             villagerLevel = 2;
         } else {
             villagerLevel = 1; // Below day 20, no level or level 0.

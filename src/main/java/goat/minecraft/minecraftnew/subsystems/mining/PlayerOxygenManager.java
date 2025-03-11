@@ -176,7 +176,7 @@ public class PlayerOxygenManager implements Listener {
         // Check if the player is underwater
         boolean isUnderwater = player.getEyeLocation().getBlock().getType() == Material.WATER;
     
-        if (oxygenDepletionRate > 0 && !isUnderwater) {
+        if (oxygenDepletionRate > 0 && !player.isInWater()) {
             // Deplete oxygen every second if not underwater
             currentOxygen -= oxygenDepletionRate;
             if (currentOxygen < 0) currentOxygen = 0;
