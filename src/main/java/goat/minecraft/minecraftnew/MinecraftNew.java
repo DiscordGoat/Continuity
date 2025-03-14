@@ -423,9 +423,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new CatTameEvent(petManager), this);
         getServer().getPluginManager().registerEvents(new AxolotlInteractEvent(petManager), this);
         getServer().getPluginManager().registerEvents(new AllayInteractEvent(petManager), this);
-
+    
         this.getCommand("clearpets").setExecutor(new ClearPetsCommand(this, petManager));
-
+        // In your onEnable method
+        DamageNotifier damageNotifier = new DamageNotifier(this);
+        getServer().getPluginManager().registerEvents(damageNotifier, this);
         getServer().getPluginManager().registerEvents(new CombatBuffs(), this);
         getServer().getPluginManager().registerEvents(new BowReforge(), this);
         villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);

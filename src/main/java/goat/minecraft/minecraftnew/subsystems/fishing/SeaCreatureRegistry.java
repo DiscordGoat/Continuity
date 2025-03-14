@@ -140,8 +140,8 @@ public class SeaCreatureRegistry implements Listener {
 
         //RARE
         List<SeaCreature.DropItem> deepTurtleDrops = new ArrayList<>();
-        deepTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getDeepShell(), 1, 1, 1)); // Common drop for a cod fish
-        deepTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getRainArtifact(), 1, 1, 1)); // Common drop for a cod fish
+        deepTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getDeepShell(), 2, 1, 2)); // Common drop for a cod fish
+        deepTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getRainArtifact(), 1, 1, 2)); // Common drop for a cod fish
         SEA_CREATURES.add(new SeaCreature(
                 "Deep Sea Turtle", // Name of the sea creature
                 Rarity.RARE, // Rarity of the sea creature
@@ -152,11 +152,11 @@ public class SeaCreatureRegistry implements Listener {
                 RARITY_LEVELS.get(Rarity.RARE) // Rarity level for common creatures
         ));
         List<SeaCreature.DropItem> poseidonDrops = new ArrayList<>();
-        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 3, 1, 5));
+        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 6, 1, 3));
         poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getTrident(), 1, 1, 4));
-        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getRiptide(), 1, 1, 4));
-        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getChanneling(), 1, 1, 12));
-        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 5));
+        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getRiptide(), 1, 1, 3));
+        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getChanneling(), 1, 1, 6));
+        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 1));
         poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getLoyaltyContract(), 1, 1, 5));
         SEA_CREATURES.add(new SeaCreature(
                 "Poseidon",
@@ -168,9 +168,9 @@ public class SeaCreatureRegistry implements Listener {
                 RARITY_LEVELS.get(Rarity.RARE)
         ));
         List<SeaCreature.DropItem> sharkDrops = new ArrayList<>();
-        sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 3, 1, 5));
-        sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 3, 1, 5));
-        sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 3, 1, 5));
+        sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 12, 1, 5));
+        sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 6, 1, 5));
+        sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 3, 1, 2));
         SEA_CREATURES.add(new SeaCreature(
                 "Shark",
                 Rarity.RARE,
@@ -181,12 +181,11 @@ public class SeaCreatureRegistry implements Listener {
                 RARITY_LEVELS.get(Rarity.RARE)
         ));
         List<SeaCreature.DropItem> pirateDrops = new ArrayList<>();
-        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 3, 1, 5));
-        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 3, 1, 5));
-        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 3, 1, 5));
-        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getImpaling(), 1, 1, 1));
+        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 6, 1, 5));
+        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 6, 1, 5));
+        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getImpaling(), 1, 1, 2));
         pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getLuck(), 1, 1, 2));
-        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 5));
+        pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 3));
 
         SEA_CREATURES.add(new SeaCreature(
                 "Pirate",
@@ -203,7 +202,8 @@ public class SeaCreatureRegistry implements Listener {
 
         //EPIC
         List<SeaCreature.DropItem> abyssalTurtleDrops = new ArrayList<>();
-        abyssalTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalShell(), 1, 1, 1)); // Common drop for a cod fish
+        abyssalTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalShell(), 3, 1, 2)); // Common drop for a cod fish
+        abyssalTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getLuck(), 1, 1, 1)); // Common drop for a cod fish
         SEA_CREATURES.add(new SeaCreature(
                 "Abyssal Sea Turtle", // Name of the sea creature
                 Rarity.EPIC, // Rarity of the sea creature
@@ -214,9 +214,9 @@ public class SeaCreatureRegistry implements Listener {
                 RARITY_LEVELS.get(Rarity.EPIC) // Rarity level for common creatures
         ));
         List<SeaCreature.DropItem> waterSpiderDrops = new ArrayList<>();
-        waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 7, 1, 5));
-        waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 7, 1, 4));
-        waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalVenom(), 1, 1, 4));
+        waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 14, 1, 5));
+        waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 14, 1, 4));
+        waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalVenom(), 1, 1, 2));
         SEA_CREATURES.add(new SeaCreature(
                 "Water Spider",
                 Rarity.EPIC,
@@ -227,10 +227,10 @@ public class SeaCreatureRegistry implements Listener {
                 RARITY_LEVELS.get(Rarity.EPIC)
         ));
         List<SeaCreature.DropItem> greatWhiteSharkDrops = new ArrayList<>();
-        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 7, 1, 5));
-        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 7, 1, 4));
-        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getRespiration(), 1, 1, 2));
-        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 4));
+        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 14, 1, 5));
+        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 14, 1, 4));
+        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getRespiration(), 2, 1, 2));
+        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 3));
         SEA_CREATURES.add(new SeaCreature(
                 "Great White Shark",
                 Rarity.EPIC,
@@ -241,8 +241,8 @@ public class SeaCreatureRegistry implements Listener {
                 RARITY_LEVELS.get(Rarity.EPIC)
         ));
         List<SeaCreature.DropItem> leviathanDrops = new ArrayList<>();
-        leviathanDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 15, 1, 4));
-        leviathanDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 15, 1, 4));
+        leviathanDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 30, 1, 4));
+        leviathanDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 30, 1, 4));
         leviathanDrops.add(new SeaCreature.DropItem(ItemRegistry.getLeviathanHeart(), 1, 1, 10)); // Add Leviathan heart drop
         leviathanDrops.add(new SeaCreature.DropItem(ItemRegistry.getSweepingEdge(), 1, 1, 3)); // Add Leviathan heart drop
         SEA_CREATURES.add(new SeaCreature(
@@ -255,9 +255,9 @@ public class SeaCreatureRegistry implements Listener {
                 RARITY_LEVELS.get(Rarity.EPIC)
         ));
         List<SeaCreature.DropItem> yetiDrops = new ArrayList<>();
-        yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 10, 1, 3)); // Example drop
-        yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 10, 1, 3)); // Example drop
-        yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalSharpness(), 1, 1, 12)); // Yeti Fur drop
+        yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 20, 1, 3)); // Example drop
+        yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 20, 1, 3)); // Example drop
+        yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalSharpness(), 1, 1, 6)); // Yeti Fur drop
         SEA_CREATURES.add(new SeaCreature(
                 "Yeti", // Name of the sea creature
                 Rarity.EPIC, // Rarity of the sea creature
@@ -275,8 +275,8 @@ public class SeaCreatureRegistry implements Listener {
 
         //LEGENDARY
         List<SeaCreature.DropItem> bioluminescentGuardianDrops = new ArrayList<>();
-        bioluminescentGuardianDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalInk(), 1, 1, 1));
-        bioluminescentGuardianDrops.add(new SeaCreature.DropItem(ItemRegistry.getLuminescentInk(), 1, 1, 1));
+        bioluminescentGuardianDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalInk(), 2, 1, 2));
+        bioluminescentGuardianDrops.add(new SeaCreature.DropItem(ItemRegistry.getLuminescentInk(), 8, 1, 2));
         SEA_CREATURES.add(new SeaCreature(
                 "Bioluminescent Guardian",
                 Rarity.LEGENDARY,
@@ -287,9 +287,9 @@ public class SeaCreatureRegistry implements Listener {
                 RARITY_LEVELS.get(Rarity.LEGENDARY)
         ));
         List<SeaCreature.DropItem> megalodonDrops = new ArrayList<>();
-        megalodonDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 15, 1, 4));
-        megalodonDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 15, 1, 4));
-        megalodonDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalLure(), 1, 1, 6));
+        megalodonDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 30, 1, 4));
+        megalodonDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 30, 1, 4));
+        megalodonDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalLure(), 1, 1, 7));
         SEA_CREATURES.add(new SeaCreature(
                 "Megalodon",
                 Rarity.LEGENDARY,
@@ -300,10 +300,10 @@ public class SeaCreatureRegistry implements Listener {
                 RARITY_LEVELS.get(Rarity.LEGENDARY)
         ));
         List<SeaCreature.DropItem> abominationDrops = new ArrayList<>();
-        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 31, 1, 4));
-        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 31, 1, 4));
-        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalUnbreaking(), 1, 1, 3));
-        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getSwiftSneak(), 1, 1, 4));
+        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 64, 1, 4));
+        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 64, 1, 4));
+        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getInfernalUnbreaking(), 1, 1, 2));
+        abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getSwiftSneak(), 1, 1, 3));
         SEA_CREATURES.add(new SeaCreature(
                 "Abomination",
                 Rarity.LEGENDARY,

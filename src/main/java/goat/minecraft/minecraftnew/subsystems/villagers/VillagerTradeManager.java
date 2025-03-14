@@ -1021,14 +1021,19 @@ public class VillagerTradeManager implements Listener {
         int villagerLevel;
         if (daysPlayed >= 110) {
             villagerLevel = 5;
+            villager.setVillagerLevel(5);
         } else if (daysPlayed >= 90) {
             villagerLevel = 4;
+            villager.setVillagerLevel(4);
         } else if (daysPlayed >= 70) {
             villagerLevel = 3;
+            villager.setVillagerLevel(3);
         } else if (daysPlayed >= 50) {
             villagerLevel = 2;
+            villager.setVillagerLevel(2);
         } else {
             villagerLevel = 1; // Below day 20, no level or level 0.
+            villager.setVillagerLevel(1);
         }
         //make villagers invisible when trading
 

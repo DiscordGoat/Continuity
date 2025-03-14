@@ -138,7 +138,7 @@ public class UltimateEnchantmentListener implements Listener {
 
             for (Block block : blocks) {
                 // If the block is NOT ore, we run the random skip check
-                if (!isOreBlock(block)) {
+                if (!isOreBlock(block) && !isLeafBlock(block.getType())) {
                     // If random > skipChance => consume durability
                     // (i.e. the "worst-case" scenario for the player)
                     if (Math.random() > skipChance) {
@@ -281,11 +281,11 @@ public class UltimateEnchantmentListener implements Listener {
         // BFS to find connected logs
         Queue<Block> queue = new ArrayDeque<>();
         Set<Block> visitedLogs = new HashSet<>();
-        int maxBlocks = 400; // limit so players don’t accidentally chop entire forest
+        int maxBlocks = 100; // limit so players don’t accidentally chop entire forest
 
         // For leaves around logs
         Set<Block> leavesToBreak = new HashSet<>();
-        int leavesRange = 3;
+        int leavesRange = 5;
 
         // Prepare BFS
         queue.add(startBlock);
@@ -658,7 +658,7 @@ public class UltimateEnchantmentListener implements Listener {
                 case "loyal":
                     // Activate the loyal enchantment effect.
                     activateLoyalSword(player, item);
-                    cooldownMs = 1L; // Example cooldown (30 seconds)
+                    cooldownMs = 5000L; // Example cooldown (30 seconds)
                     break;
                 // Hammer/Treecapitator removed. No cooldown for them.
                 case "excavate":
@@ -986,7 +986,7 @@ public class UltimateEnchantmentListener implements Listener {
 
                 // Check for collision with an entity (other than the player).
                 for (Entity e : armorStand.getNearbyEntities(0.5, 0.5, 0.5)) {
-                    if (e instanceof LivingEntity && !(e instanceof Player)) {
+                    if (e instanceof Monster) {
                         LivingEntity target = (LivingEntity) e;
                         // Retrieve loyal data.
                         LoyalSwordData data = loyalSwordDataMap.get(player.getUniqueId());
@@ -997,7 +997,7 @@ public class UltimateEnchantmentListener implements Listener {
                         // Get player's combat level (assumed method).
                         XPManager xpManager = new XPManager(plugin);
                         int combatLevel = xpManager.getPlayerLevel(player, "Combat");
-                        double damage = combatLevel * data.damageMultiplier;
+                        double damage = combatLevel;
                         target.damage(damage, player);
                         // Increase damage multiplier by 4% on a successful melee hit (max 1.0).
                         data.damageMultiplier = Math.min(data.damageMultiplier + 0.04, 1.0);
@@ -1012,7 +1012,7 @@ public class UltimateEnchantmentListener implements Listener {
                 }
 
                 // After 2 seconds (40 ticks), trigger return.
-                if (ticks >= 40) {
+                if (ticks >= 60) {
                     startReturn();
                 }
             } else {
@@ -1022,13 +1022,35 @@ public class UltimateEnchantmentListener implements Listener {
                 Vector toPlayer = targetLoc.toVector().subtract(current.toVector());
                 double distance = toPlayer.length();
                 if (distance < 1.5) {
-                    // Play a trident return sound when the sword comes back.
+                    // Play a trident return sound when the sword comes back
                     armorStand.getWorld().playSound(armorStand.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
                     armorStand.remove();
-                    player.getInventory().addItem(sword);
+
+                    // Try to add the sword to inventory
+                    HashMap<Integer, ItemStack> remainingItems = player.getInventory().addItem(sword);
+
+                    // If there were remaining items (inventory was full)
+                    if (!remainingItems.isEmpty()) {
+                        // Get the first item in the player's inventory
+                        ItemStack firstSlotItem = player.getInventory().getItem(0);
+
+                        if (firstSlotItem != null) {
+                            // Clone the first item and drop it at player's feet
+                            ItemStack droppedItem = firstSlotItem.clone();
+                            player.getWorld().dropItemNaturally(player.getLocation(), droppedItem);
+
+                            // Set the first slot to the returning sword
+                            player.getInventory().setItem(0, sword);
+                        } else {
+                            // If first slot was empty, just set it
+                            player.getInventory().setItem(0, sword);
+                        }
+                    }
+
                     cancel();
                     return;
                 }
+
                 toPlayer.normalize();
                 // Teleport a short distance toward the player.
                 Location next = current.clone().add(toPlayer.multiply(0.5));

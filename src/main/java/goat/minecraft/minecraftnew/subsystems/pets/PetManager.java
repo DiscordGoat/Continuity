@@ -775,7 +775,12 @@ public class PetManager implements Listener {
         }
 
         public double getXPForNextLevel() {
-            return 100; // Example XP curve
+            // Base XP required for level 2
+            double baseXP = 20;
+            
+            // Calculate the XP required for the next level
+            // Each level requires 2 more XP than the previous level
+            return baseXP + (level - 1) * 2;
         }
     }
 

@@ -414,43 +414,41 @@ public class FishingEvent implements Listener {
     public ItemStack getRandomTreasure(Player player) {
         // Define a loot table with items and their weights
         List<LootItem> lootTable = Arrays.asList(
-                new LootItem(new ItemStack(Material.NAUTILUS_SHELL), 10),
-                new LootItem(new ItemStack(Material.SADDLE), 25),
+                new LootItem(new ItemStack(Material.NAUTILUS_SHELL, 8), 10),
+                new LootItem(new ItemStack(Material.SADDLE), 10),
                 new LootItem(new ItemStack(Material.DIAMOND, random.nextInt(10) + 1), 10),
-                new LootItem(new ItemStack(Material.EMERALD, 64), 15),
-                new LootItem(new ItemStack(Material.ANCIENT_DEBRIS), 5),
+                new LootItem(new ItemStack(Material.EMERALD, 64), 10),
+                new LootItem(new ItemStack(Material.ANCIENT_DEBRIS), 7),
                 new LootItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE), 3),
                 new LootItem(new ItemStack(Material.TOTEM_OF_UNDYING), 13),
                 new LootItem(new ItemStack(Material.HEART_OF_THE_SEA), 5),
-                new LootItem(new ItemStack(Material.SHULKER_SHELL), 12),
+                new LootItem(new ItemStack(Material.SHULKER_SHELL), 10),
                 new LootItem(new ItemStack(Material.SPONGE), 8),
                 new LootItem(new ItemStack(Material.SCUTE), 7),
                 new LootItem(new ItemStack(Material.WITHER_SKELETON_SKULL), 4),
-                new LootItem(new ItemStack(Material.CREEPER_HEAD), 11),
-                new LootItem(new ItemStack(Material.ZOMBIE_HEAD), 12),
-                new LootItem(new ItemStack(Material.SKELETON_SKULL), 10),
+                new LootItem(new ItemStack(Material.CREEPER_HEAD), 7),
+                new LootItem(new ItemStack(Material.ZOMBIE_HEAD), 7),
+                new LootItem(new ItemStack(Material.SKELETON_SKULL), 7),
                 new LootItem(new ItemStack(Material.NETHER_WART, random.nextInt(3) + 1), 10),
-                new LootItem(new ItemStack(Material.ENDER_EYE), 5),
                 new LootItem(new ItemStack(Material.EXPERIENCE_BOTTLE, 64), 7),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_13), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_CAT), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_BLOCKS), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_CHIRP), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_FAR), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_MALL), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_MELLOHI), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_STAL), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_STRAD), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_WARD), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_11), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_WAIT), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_PIGSTEP), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_OTHERSIDE), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_RELIC), 1),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_5), 1),
-                new LootItem(getRandomSeaCreatureAlchemyItem(), 15),
-                new LootItem(getRandomRareSapling(), 10),
-                new LootItem(getMessageInABottle(player), 5)
+                new LootItem(new ItemStack(Material.MUSIC_DISC_13), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_CAT), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_BLOCKS), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_CHIRP), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_FAR), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_MALL), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_MELLOHI), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_STAL), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_STRAD), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_WARD), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_11), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_WAIT), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_PIGSTEP), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_OTHERSIDE), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_RELIC), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_5), 2),
+                new LootItem(getRandomSeaCreatureAlchemyItem(), 1),
+                new LootItem(getRandomRareSapling(), 10)
         );
 
 
@@ -511,73 +509,6 @@ public class FishingEvent implements Listener {
         };
         Material saplingType = rareSaplings[random.nextInt(rareSaplings.length)];
         return new ItemStack(saplingType, random.nextInt(3) + 1);
-    }
-
-    /**
-     * Creates a map pointing to the nearest structure.
-     *
-     * @param player The player who will receive the map.
-     * @return An ItemStack representing the map.
-     */
-    public ItemStack getMessageInABottle(Player player) {
-        // Define the structures to look for
-        StructureType[] structures = {
-                StructureType.STRONGHOLD,
-                StructureType.OCEAN_MONUMENT,
-                StructureType.DESERT_PYRAMID,
-                StructureType.VILLAGE,
-                StructureType.JUNGLE_PYRAMID,
-                StructureType.WOODLAND_MANSION,
-                StructureType.BURIED_TREASURE,
-                StructureType.IGLOO,
-                StructureType.MINESHAFT,
-                StructureType.PILLAGER_OUTPOST,
-                StructureType.SWAMP_HUT
-        };
-
-        // Select a random StructureType from the array
-        StructureType selectedStructure = structures[random.nextInt(structures.length)];
-
-        // Get player's current location and world
-        Location playerLocation = player.getLocation();
-        World world = playerLocation.getWorld();
-
-        if (world == null) {
-            player.sendMessage(ChatColor.RED + "Error: World not found.");
-            return null;
-        }
-
-        // Locate the nearest structure of the selected type within a 100,000 block radius
-        Location structureLocation = world.locateNearestStructure(playerLocation, selectedStructure, 100000, true);
-
-        if (structureLocation != null) {
-            // Create the "Message in a Bottle" paper item
-            ItemStack paperItem = new ItemStack(Material.PAPER);
-            ItemMeta paperMeta = paperItem.getItemMeta();
-
-            if (paperMeta != null) {
-                // Set the display name with color
-                paperMeta.setDisplayName(ChatColor.AQUA + "Message in a Bottle");
-
-                // Prepare the lore with structure details
-                List<String> lore = Arrays.asList(
-                        ChatColor.GOLD + "Structure Type: " + ChatColor.WHITE + selectedStructure.getName(),
-                        ChatColor.GOLD + "Coordinates:",
-                        ChatColor.WHITE + "X: " + structureLocation.getBlockX(),
-                        ChatColor.WHITE + "Y: " + structureLocation.getBlockY(),
-                        ChatColor.WHITE + "Z: " + structureLocation.getBlockZ()
-                );
-
-                paperMeta.setLore(lore);
-                paperItem.setItemMeta(paperMeta);
-                return paperItem;
-            }
-        } else {
-            // Inform the player that no structure was found
-            player.sendMessage(ChatColor.RED + "No " + selectedStructure.getName().toLowerCase().replace("_", " ") + " found within 100,000 blocks.");
-        }
-
-        return null;
     }
 
     /**
