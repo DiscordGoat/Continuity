@@ -216,7 +216,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SMITE", 1, 64, 4)); // ItemRegistry.getWeaponsmithSmite()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_BANE_OF_ARTHROPODS", 1, 64, 4)); // ItemRegistry.getWeaponsmithBaneofAnthropods()
 
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_ENCHANT", 1, 64, 5)); // ItemRegistry.getWeaponsmithEnchant()
+        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_ENCHANT", 1, 64, 4)); // ItemRegistry.getWeaponsmithEnchant()
         weaponsmithPurchases.add(createTradeMap("LEGENDARY_SWORD_REFORGE", 1, 512, 5)); // ItemRegistry.getLegendarySwordReforge()
         defaultConfig.set("WEAPONSMITH.purchases", weaponsmithPurchases);
 
@@ -264,7 +264,7 @@ public class VillagerTradeManager implements Listener {
         fletcherPurchases.add(createTradeMap("CHERRY_SAPLING", 4, 2, 3));
 
         fletcherPurchases.add(createTradeMap("ACACIA_BOW", 1, 128, 4)); // Custom item
-        fletcherPurchases.add(createTradeMap("FLETCHER_BOW_ENCHANT", 1, 16, 4)); // Custom item
+        fletcherPurchases.add(createTradeMap("FLETCHER_BOW_ENCHANT", 1, 16, 2)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_POWER", 1, 64, 4)); // Custom item
         fletcherPurchases.add(createTradeMap("DARK_OAK_BOW", 1, 128*2, 5)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_CROSSBOW_ENCHANT", 1, 32, 5)); // Custom item
@@ -328,7 +328,7 @@ public class VillagerTradeManager implements Listener {
 
         clericPurchases.add(createTradeMap("DRAGON_BREATH", 4, 64, 5)); // Material
         clericPurchases.add(createTradeMap("TURTLE_HELMET", 1, 64, 5)); // Material
-        clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 5)); // Custom Item
+        clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 3)); // Custom Item
         defaultConfig.set("CLERIC.purchases", clericPurchases);
 
 // Cleric Sells
@@ -352,7 +352,7 @@ public class VillagerTradeManager implements Listener {
         leatherworkerPurchases.add(createTradeMap("SHULKER_SHELL", 1, 64, 3)); // Material
 
         leatherworkerPurchases.add(createTradeMap("BUNDLE", 1, 64, 3)); // Material
-        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ENCHANT", 1, 32, 4)); // Custom Item
+        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ENCHANT", 1, 32, 5)); // Custom Item
         leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ARTIFACT", 1, 512, 5)); // Custom Item
         defaultConfig.set("LEATHERWORKER.purchases", leatherworkerPurchases);
 
@@ -388,7 +388,7 @@ public class VillagerTradeManager implements Listener {
         shepherdPurchases.add(createTradeMap("GRAVEL", 8, 4, 5)); // Material
         shepherdPurchases.add(createTradeMap("SAND", 8, 4, 5)); // Material
         shepherdPurchases.add(createTradeMap("SHEPHERD_ARTIFACT", 8, 16, 5)); // Custom Item
-        shepherdPurchases.add(createTradeMap("SHEPHERD_ENCHANT", 1, 32, 5)); // Custom Item
+        shepherdPurchases.add(createTradeMap("SHEPHERD_ENCHANT", 1, 32, 4)); // Custom Item
         defaultConfig.set("SHEPHERD.purchases", shepherdPurchases);
 
 // Shepherd Sells
@@ -415,8 +415,8 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("EPIC_TOOL_REFORGE", 1, 32, 4)); // Custom Item
 
         toolsmithPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
-        toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT", 1, 64, 5)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT_TWO", 1, 128, 5)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT", 1, 64, 3)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT_TWO", 1, 128, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("LEGENDARY_TOOL_REFORGE", 1, 64, 5)); // Custom Item
 
         defaultConfig.set("TOOLSMITH.purchases", toolsmithPurchases);
@@ -437,6 +437,7 @@ public class VillagerTradeManager implements Listener {
 // Armorer Purchases
         List<Map<String, Object>> armorerPurchases = new ArrayList<>();
         armorerPurchases.add(createTradeMap("IRON_ORE", 3, 12, 1)); // Material
+        armorerPurchases.add(createTradeMap("CONTINGENCY", 1, 64, 1)); // Custom Item
 
         armorerPurchases.add(createTradeMap("ANVIL", 1, 24, 2)); // Material
         armorerPurchases.add(createTradeMap("UNCOMMON_ARMOR_REFORGE", 1, 16, 2)); // Custom Item
@@ -452,12 +453,11 @@ public class VillagerTradeManager implements Listener {
         armorerPurchases.add(createTradeMap("ARMOR_SMITH_RESPIRATION", 1, 64, 4)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMOR_SMITH_THORNS", 1, 64, 4)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMOR_SMITH_FEATHER_FALLING", 1, 64, 4)); // Custom Item
+        armorerPurchases.add(createTradeMap("ARMORER_ENCHANT", 1, 16, 4)); // Custom Item
 
         armorerPurchases.add(createTradeMap("LEGENDARY_ARMOR_REFORGE", 1, 128, 5)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMORER_ENCHANT", 1, 16, 5)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE", 1, 32, 5)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE_TWO", 1, 64, 5)); // Custom Item
-        armorerPurchases.add(createTradeMap("CONTINGENCY", 1, 64, 5)); // Custom Item
 
         armorerPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
 
@@ -483,9 +483,10 @@ public class VillagerTradeManager implements Listener {
         librarianPurchases.add(createTradeMap("BOOKSHELF", 3, 12, 2)); // Material
         librarianPurchases.add(createTradeMap("LANTERN", 3, 4, 2)); // Material
         librarianPurchases.add(createTradeMap("GLASS", 6, 9, 3)); // Material
+        librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANT", 1, 32, 3)); // Custom Item
         librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANTMENT_TWO", 1, 16, 3)); // Custom Item
         librarianPurchases.add(createTradeMap("IRON_GOLEM", 1, 16, 4)); // Custom Item
-        librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANT", 1, 32, 5)); // Custom Item
+
 
         defaultConfig.set("LIBRARIAN.purchases", librarianPurchases);
 
@@ -502,6 +503,8 @@ public class VillagerTradeManager implements Listener {
 // Fisherman Purchases
         List<Map<String, Object>> fishermanPurchases = new ArrayList<>();
         fishermanPurchases.add(createTradeMap("FISHING_ROD", 1, 6, 1)); // Material
+        fishermanPurchases.add(createTradeMap("FISHER_ENCHANT", 1, 40, 1)); // Custom Item
+        fishermanPurchases.add(createTradeMap("FISHING_ENCHANT", 1, 40, 1)); // Custom Item
         fishermanPurchases.add(createTradeMap("BUCKET", 1, 8, 2)); // Material
         fishermanPurchases.add(createTradeMap("TROPICAL_FISH", 1, 8, 2)); // Material
         fishermanPurchases.add(createTradeMap("LAPIS_LAZULI", 4, 8, 2)); // Material
@@ -515,8 +518,7 @@ public class VillagerTradeManager implements Listener {
         fishermanPurchases.add(createTradeMap("ABYSSAL_SHELL", 1, 32, 5)); // Custom Item
         fishermanPurchases.add(createTradeMap("ABYSSAL_INK", 1, 64, 5)); // Custom Item
         fishermanPurchases.add(createTradeMap("ABYSSAL_VENOM", 1, 64, 5)); // Custom Item
-        fishermanPurchases.add(createTradeMap("FISHER_ENCHANT", 1, 40, 5)); // Custom Item
-        fishermanPurchases.add(createTradeMap("FISHING_ENCHANT", 1, 40, 5)); // Custom Item
+
 
         defaultConfig.set("FISHERMAN.purchases", fishermanPurchases);
 
@@ -545,6 +547,7 @@ public class VillagerTradeManager implements Listener {
         defaultConfig.set("FISHERMAN.sells", fishermanSells);
 // Butcher Purchases
         List<Map<String, Object>> butcherPurchases = new ArrayList<>();
+        butcherPurchases.add(createTradeMap("BUTCHER_ENCHANT", 1, 16, 1)); // Custom Item
         butcherPurchases.add(createTradeMap("BEEF", 1, 1, 1)); // Custom Item
         butcherPurchases.add(createTradeMap("COOKBOOK", 1, 16, 1)); // Custom Item
         butcherPurchases.add(createTradeMap("PORKCHOP", 1, 1, 1)); // Custom Item
@@ -554,7 +557,6 @@ public class VillagerTradeManager implements Listener {
         butcherPurchases.add(createTradeMap("SEA_SALT", 1, 4, 3)); // Custom Item
         butcherPurchases.add(createTradeMap("CALAMARI", 1, 16, 3)); // Custom Item
         butcherPurchases.add(createTradeMap("CHEESE", 1, 8, 3)); // Custom Item
-        butcherPurchases.add(createTradeMap("BUTCHER_ENCHANT", 1, 16, 5)); // Custom Item
         butcherPurchases.add(createTradeMap("COAL", 4, 15, 5)); // Custom Item
 
 
@@ -576,6 +578,7 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("WHEAT_SEEDS", 12, 3, 1)); // Level 1 trade
         farmerPurchases.add(createTradeMap("PUMPKIN_SEEDS", 3, 32, 2)); // Level 2 trade
         farmerPurchases.add(createTradeMap("MELON_SEEDS", 3, 32, 2)); // Level 2 trade
+        farmerPurchases.add(createTradeMap("FARMER_ENCHANT", 1, 64, 2)); // Custom item
         farmerPurchases.add(createTradeMap("CAKE", 1, 8, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("WHEAT_SEEDER", 1, 64, 3)); // Custom item
         farmerPurchases.add(createTradeMap("BEETROOT_SEEDER", 1, 64, 3)); // Custom item
@@ -585,7 +588,6 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("EGG", 12, 12, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5)); // Level 5 trade
-        farmerPurchases.add(createTradeMap("FARMER_ENCHANT", 1, 64, 5)); // Custom item
 
         defaultConfig.set("FARMER.purchases", farmerPurchases);
 
@@ -962,11 +964,11 @@ public class VillagerTradeManager implements Listener {
     public ItemStack createVillagerXPDisplayItem(Villager villager, int daysPlayed) {
         // Calculate the villager level based on days played and cap it at level 5.
         int newVillagerLevel;
-        if (daysPlayed >= 110) {
+        if (daysPlayed >= 130) {
             newVillagerLevel = 5;
-        } else if (daysPlayed >= 90) {
+        } else if (daysPlayed >= 100) {
             newVillagerLevel = 4;
-        } else if (daysPlayed >= 70) {
+        } else if (daysPlayed >= 80) {
             newVillagerLevel = 3;
         } else if (daysPlayed >= 50) {
             newVillagerLevel = 2;
@@ -1019,13 +1021,13 @@ public class VillagerTradeManager implements Listener {
         // Determine villager level based on days played:
         // day 20 = level 1, day 40 = level 2, day 60 = level 3, day 80 = level 4, day 100 = level 5
         int villagerLevel;
-        if (daysPlayed >= 110) {
+        if (daysPlayed >= 130) {
             villagerLevel = 5;
             villager.setVillagerLevel(5);
-        } else if (daysPlayed >= 90) {
+        } else if (daysPlayed >= 100) {
             villagerLevel = 4;
             villager.setVillagerLevel(4);
-        } else if (daysPlayed >= 70) {
+        } else if (daysPlayed >= 80) {
             villagerLevel = 3;
             villager.setVillagerLevel(3);
         } else if (daysPlayed >= 50) {

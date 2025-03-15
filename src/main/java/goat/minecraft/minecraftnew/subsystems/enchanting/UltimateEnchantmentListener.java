@@ -940,7 +940,7 @@ public class UltimateEnchantmentListener implements Listener {
         }
 
     }
-    private class LoyalSwordTask extends BukkitRunnable {
+        private class LoyalSwordTask extends BukkitRunnable {
         private final Player player;
         private final ArmorStand armorStand;
         private final ItemStack sword;
@@ -949,6 +949,7 @@ public class UltimateEnchantmentListener implements Listener {
         private int missCount = 0;
         private boolean returning = false;
         private double previousDistance = Double.MAX_VALUE;
+        private final int MAX_LIFETIME_TICKS = 200; // 10 seconds (20 ticks per second)
 
         public LoyalSwordTask(Player player, ArmorStand armorStand, ItemStack sword) {
             this.player = player;
@@ -970,9 +971,15 @@ public class UltimateEnchantmentListener implements Listener {
                 return;
             }
 
-            if (!returning) {
-                ticks++;
+            // Force return after 10 seconds regardless of state
+            if (ticks >= MAX_LIFETIME_TICKS) {
+                forceReturnToPlayer();
+                return;
+            }
 
+            ticks++;
+
+            if (!returning) {
                 // Move forward by teleporting along the flight vector.
                 Location current = armorStand.getLocation();
                 Location next = current.clone().add(flightVelocity);
@@ -986,7 +993,7 @@ public class UltimateEnchantmentListener implements Listener {
 
                 // Check for collision with an entity (other than the player).
                 for (Entity e : armorStand.getNearbyEntities(0.5, 0.5, 0.5)) {
-                    if (e instanceof Monster) {
+                    if (e instanceof Monster || e.hasMetadata("SEA_CREATURE")) {
                         LivingEntity target = (LivingEntity) e;
                         // Retrieve loyal data.
                         LoyalSwordData data = loyalSwordDataMap.get(player.getUniqueId());
@@ -1011,7 +1018,7 @@ public class UltimateEnchantmentListener implements Listener {
                     }
                 }
 
-                // After 2 seconds (40 ticks), trigger return.
+                // After 3 seconds (60 ticks), trigger return.
                 if (ticks >= 60) {
                     startReturn();
                 }
@@ -1022,32 +1029,7 @@ public class UltimateEnchantmentListener implements Listener {
                 Vector toPlayer = targetLoc.toVector().subtract(current.toVector());
                 double distance = toPlayer.length();
                 if (distance < 1.5) {
-                    // Play a trident return sound when the sword comes back
-                    armorStand.getWorld().playSound(armorStand.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
-                    armorStand.remove();
-
-                    // Try to add the sword to inventory
-                    HashMap<Integer, ItemStack> remainingItems = player.getInventory().addItem(sword);
-
-                    // If there were remaining items (inventory was full)
-                    if (!remainingItems.isEmpty()) {
-                        // Get the first item in the player's inventory
-                        ItemStack firstSlotItem = player.getInventory().getItem(0);
-
-                        if (firstSlotItem != null) {
-                            // Clone the first item and drop it at player's feet
-                            ItemStack droppedItem = firstSlotItem.clone();
-                            player.getWorld().dropItemNaturally(player.getLocation(), droppedItem);
-
-                            // Set the first slot to the returning sword
-                            player.getInventory().setItem(0, sword);
-                        } else {
-                            // If first slot was empty, just set it
-                            player.getInventory().setItem(0, sword);
-                        }
-                    }
-
-                    cancel();
+                    returnSwordToPlayer();
                     return;
                 }
 
@@ -1058,7 +1040,7 @@ public class UltimateEnchantmentListener implements Listener {
 
                 // Instead of random yaw/pitch, update the right arm pose to create a windmill effect.
                 EulerAngle currentArm = armorStand.getRightArmPose();
-                double newX = currentArm.getX() + Math.toRadians(15); // Rotate 10° per tick
+                double newX = currentArm.getX() + Math.toRadians(15); // Rotate 15° per tick
                 EulerAngle newArmPose = new EulerAngle(newX, currentArm.getY(), currentArm.getZ());
                 armorStand.setRightArmPose(newArmPose);
 
@@ -1068,10 +1050,8 @@ public class UltimateEnchantmentListener implements Listener {
                 // Check if the distance isn't decreasing (indicating a "miss").
                 if (distance >= previousDistance - 0.1) {
                     missCount++;
-                    if (missCount >= 4) {
-                        armorStand.remove();
-                        player.getInventory().addItem(sword);
-                        cancel();
+                    if (missCount >= 20) { // Increased threshold to give more time to navigate obstacles
+                        forceReturnToPlayer();
                         return;
                     }
                 } else {
@@ -1089,6 +1069,57 @@ public class UltimateEnchantmentListener implements Listener {
                 previousDistance = armorStand.getLocation().distance(player.getLocation());
             }
         }
+
+        // Force the sword to return directly to the player's inventory
+        private void forceReturnToPlayer() {
+            if (armorStand.isValid()) {
+                armorStand.remove();
+            }
+            
+            // Play return sound at player's location
+            player.getWorld().playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
+            
+            // Get the first item in the player's inventory
+            ItemStack firstSlotItem = player.getInventory().getItem(0);
+
+            // Always replace the first slot with the returning sword
+            if (firstSlotItem != null && !firstSlotItem.isSimilar(sword)) {
+                // Clone the first item and drop it at player's feet
+                ItemStack droppedItem = firstSlotItem.clone();
+                player.getWorld().dropItemNaturally(player.getLocation(), droppedItem);
+            }
+            
+            // Set the first slot to the returning sword
+            player.getInventory().setItem(0, sword);
+            
+            // Visual effect to indicate the sword has returned
+            player.getWorld().spawnParticle(Particle.PORTAL, player.getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
+            
+            cancel();
+        }
+
+        // Normal return when the sword reaches the player
+        private void returnSwordToPlayer() {
+            // Play a trident return sound when the sword comes back
+            armorStand.getWorld().playSound(armorStand.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
+            armorStand.remove();
+
+            // Get the first item in the player's inventory
+            ItemStack firstSlotItem = player.getInventory().getItem(0);
+
+            // Always replace the first slot with the returning sword
+            if (firstSlotItem != null && !firstSlotItem.isSimilar(sword)) {
+                // Clone the first item and drop it at player's feet
+                ItemStack droppedItem = firstSlotItem.clone();
+                player.getWorld().dropItemNaturally(player.getLocation(), droppedItem);
+            }
+            
+            // Set the first slot to the returning sword
+            player.getInventory().setItem(0, sword);
+            
+            cancel();
+        }
+
         private void sendActionBar(Player player, String message) {
             player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, new net.md_5.bungee.api.chat.TextComponent(message));
         }

@@ -471,7 +471,7 @@ public class XPManager implements CommandExecutor {
                 break;
 
             case "fishing":
-                int seaChance = newLevel / 4;
+                double seaChance = (double) newLevel / 2;
                 body.append(ChatColor.WHITE).append("Your base ")
                         .append(ChatColor.DARK_AQUA).append("Sea Creature Chance ")
                         .append(ChatColor.YELLOW).append("chance ")

@@ -126,46 +126,32 @@ public class SeaCreatureDeathEvent implements Listener {
 
         // Play effects    
         playDeathEffects(entity, seaCreature.getRarity());
-        PetManager petManager = PetManager.getInstance(plugin);
-        int chance = random.nextInt(100) + 1;
-        ItemStack guardianDrop = ItemRegistry.getGuardianDrop();
-        ItemStack forbiddenBook = ItemRegistry.getForbiddenBook();
-        int rainChance = random.nextInt(100) + 1;
-        if (rainChance >= 99) {
-            entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), guardianDrop);
-            killer.sendMessage(ChatColor.AQUA + "You dropped a Rain Artifact!");
-        }
-
-        if (chance >= 90) {
-            entity.getLocation().getWorld().dropItemNaturally(entity.getLocation(), forbiddenBook);
-        }
 
         int kills = fishermansTally.getSeaCreatureKills(player);
-        if (seaCreature.getRarity() == Rarity.COMMON) {
-            if (kills == 3) {
+
+            if (kills >= 3) {
                 petRegistry.addPetByName(killer, "Fish");
             }
-        }
-        if (seaCreature.getRarity() == Rarity.UNCOMMON) {
-            if (kills == 9) {
+
+            if (kills >= 9) {
                 petRegistry.addPetByName(killer, "Glow Squid");
             }
-        }
-        if (seaCreature.getRarity() == Rarity.RARE) {
-            if (kills == 27) {
+
+
+            if (kills >= 27) {
                 petRegistry.addPetByName(killer, "Dolphin");
             }
-        }
-        if (seaCreature.getRarity() == Rarity.EPIC) {
-            if (kills == 81) {
+
+
+            if (kills >= 81) {
                 petRegistry.addPetByName(killer, "Turtle");
             }
-        }
-        if (seaCreature.getRarity() == Rarity.LEGENDARY) {
-            if (kills == 243) {
+
+
+            if (kills >= 243) {
                 petRegistry.addPetByName(killer, "Leviathan");
             }
-        }
+
     }
 
 

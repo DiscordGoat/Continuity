@@ -569,6 +569,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.EXPERIENCE_BOTTLE);
                     billableItems.add(Material.GLASS_BOTTLE);
                     billableItems.add(Material.TORCH);
+                    billableItems.add(Material.OAK_BUTTON);
                     billableItems.add(Material.GOLD_NUGGET);
                     billableItems.add(Material.SHEARS);
                     billableItems.add(Material.ENDER_PEARL);

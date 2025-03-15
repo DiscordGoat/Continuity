@@ -143,7 +143,7 @@ public class SkillsCommand implements CommandExecutor {
             case "Fishing":
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.BLUE + "Level: " + ChatColor.GREEN + level,
-                        ChatColor.BLUE + "Sea Creature Chance: " + ChatColor.GREEN + (level / 4) + "%"
+                        ChatColor.BLUE + "Sea Creature Chance: " + ChatColor.GREEN + (level / 2) + "%"
                 ));
                 break;
             case "Farming":
