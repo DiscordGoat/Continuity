@@ -118,7 +118,20 @@ public class ItemDisplayManager implements Listener {
 
         logger.info("[ItemDisplay] Manager initialized.");
     }
+    public Collection<ItemDisplay> getAllDisplays() {
+        return displays.values();
+    }
 
+    /**
+     * Updates an item display in the database.
+     */
+    public void updateDisplay(ItemDisplay display) {
+        if (display != null && displays.containsKey(display.id)) {
+            displays.put(display.id, display);
+            // Update the physical representation if needed
+            display.updateStandItem();
+        }
+    }
     /**
      * The inner class representing one individual item display.
      */

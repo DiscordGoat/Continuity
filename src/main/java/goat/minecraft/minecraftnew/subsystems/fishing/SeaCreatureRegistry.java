@@ -230,7 +230,7 @@ public class SeaCreatureRegistry implements Listener {
         greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 14, 1, 5));
         greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 14, 1, 4));
         greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getRespiration(), 2, 1, 2));
-        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 3));
+        greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 1));
         SEA_CREATURES.add(new SeaCreature(
                 "Great White Shark",
                 Rarity.EPIC,

@@ -1388,7 +1388,7 @@ public class VillagerTradeManager implements Listener {
         // --- Bartering discount logic ---
         XPManager xpManager = new XPManager(plugin);
         int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
-        double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001)); // up to 10% discount
+        double barteringDiscount = Math.min(0.1, (barteringLevel * 0.0025)); // up to 25% discount
         finalCost *= (1 - barteringDiscount);
 
         // Ensure at least cost of 1
@@ -1403,14 +1403,16 @@ public class VillagerTradeManager implements Listener {
             // Not enough in main inventory
             int invEmeraldCount = countEmeraldsInInventory(player);
             // Remove whatever emeralds they do have
-            removeItems(player.getInventory(), Material.EMERALD, invEmeraldCount);
+
 
             int shortfall = finalCostRounded - invEmeraldCount;
 
             // Attempt removing shortfall from the backpack
             CustomBundleGUI customBundleGUI = CustomBundleGUI.getInstance();
             boolean success = customBundleGUI.removeEmeraldsFromBackpack(player, shortfall);
-
+            if(success){
+                removeItems(player.getInventory(), Material.EMERALD, invEmeraldCount);
+            }
             if (!success) {
                 // The player can't afford the cost from inventory + backpack
                 player.sendMessage(ChatColor.RED + "You don't have enough emeralds (in inventory or backpack).");

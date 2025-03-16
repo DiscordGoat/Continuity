@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
@@ -48,8 +49,8 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
                 return true;
             }
-            ticksUntilNextWorkCycle = 60;
-            sender.sendMessage(ChatColor.GREEN + "Villager work cycle timer has been forced to 3 seconds.");
+            ticksUntilNextWorkCycle = 20;
+            sender.sendMessage(ChatColor.GREEN + "Villager work cycle timer has been forced to 1 seconds.");
             return true;
         }
         return false;
@@ -684,54 +685,47 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
 
 
+    /**
+     * Combines both ItemFrames and ItemDisplays to get all items on display
+     *
+     * @param villager The villager to search around
+     * @param radius The radius to search within
+     * @return Map of entities to their displayed items
+     */
+
+// Now update the repair methods to use the combined approach
+
     private void performWeaponsmithWork(Villager villager, int radius) {
-        // Search for nearby item frames displaying weapons
-        List<ItemFrame> itemFrames = findNearbyItemFrames(villager, radius);
+        // Get all displayed items (both frames and displays)
+        Map<Entity, ItemStack> displayedItems = findAllDisplayedItems(villager, radius);
 
-        // Map to hold gains per weapon type
-        Map<String, Integer> weaponGains = Map.of(
-                "WOODEN", 1,
-                "STONE", 2,
-                "IRON", 3,
-                "GOLDEN", 2,
-                "DIAMOND", 4,
-                "NETHERITE", 5
-        );
+        // Fixed repair amount of 500 for all weapons
+        int repairAmount = 500;
 
-        int totalGains = 0;
+        for (Map.Entry<Entity, ItemStack> entry : displayedItems.entrySet()) {
+            Entity entity = entry.getKey();
+            ItemStack item = entry.getValue();
+            Material type = item.getType();
 
-        for (ItemFrame itemFrame : itemFrames) {
-            ItemStack item = itemFrame.getItem();
-            if (item != null && (item.getType().name().endsWith("_SWORD") || item.getType().name().endsWith("_AXE"))) {
-                String weaponMaterial = item.getType().name().split("_")[0]; // Extract material (e.g., "IRON")
-                int gain = weaponGains.getOrDefault(weaponMaterial, 0);
-                totalGains += gain;
+            // Check if the item is a weapon or shield
+            if (type.name().endsWith("_SWORD") ||
+                    type.name().endsWith("_AXE") ||
+                    type == Material.TRIDENT ||
+                    type == Material.SHIELD ||
+                    type == Material.BOW ||
+                    type == Material.CROSSBOW) {
 
-                // Repair the item in the item frame
-                int repairAmount = gain * 1000; // Adjust repair multiplier as needed
+                // Repair the item
                 repairWeapons(item, repairAmount);
 
-                // Set the repaired item back in the item frame
-                itemFrame.setItem(item);
+                // Set the repaired item back
+                if (entity instanceof ItemFrame) {
+                    ((ItemFrame) entity).setItem(item);
+                } else if (entity instanceof ItemDisplay) {
+                    ((ItemDisplay) entity).setItemStack(item);
+                }
             }
         }
-
-        // Ensure there is an anvil nearby for more yield
-        Block anvil = findNearestBlock(villager, List.of(Material.ANVIL, Material.CHIPPED_ANVIL, Material.DAMAGED_ANVIL), radius);
-        if (anvil != null) {
-            totalGains += 5; // Additional gains for the anvil
-        }
-        Block lava = findNearestBlock(villager, List.of(Material.LAVA), radius);
-        if (lava != null) {
-            totalGains += 5; // Additional gains for the anvil
-        }
-        Block water = findNearestBlock(villager, List.of(Material.WATER), radius);
-        if (water != null) {
-            totalGains += 5; // Additional gains for the anvil
-        }
-
-        // Calculate the total repair amount based on nearby blocks
-        int finalRepairAmount = totalGains * 10;
 
         // Play sound to indicate repair action
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
@@ -748,60 +742,43 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
 
     // Toolsmiths repair the player's tools if the player is nearby
-    private void performToolsmithWork(Villager villager, int radius) {
-        // Search for nearby item frames displaying tools
-        List<ItemFrame> itemFrames = findNearbyItemFrames(villager, radius);
+        private void performToolsmithWork(Villager villager, int radius) {
+        // Search for nearby entities displaying items
+        Map<Entity, ItemStack> displayedItems = findAllDisplayedItems(villager, radius);
+        
+        // Fixed repair amount for all tools
+        int repairAmount = 1000;
 
-        // Map to hold gains per tool type for repair calculation
-        Map<String, Integer> toolGains = Map.of(
-                "WOODEN", 1,
-                "STONE", 2,
-                "IRON", 3,
-                "GOLDEN", 2,
-                "DIAMOND", 4,
-                "NETHERITE", 5
-        );
+        for (Map.Entry<Entity, ItemStack> entry : displayedItems.entrySet()) {
+            Entity entity = entry.getKey();
+            ItemStack item = entry.getValue();
+            
+            if (item == null) continue;
+            
+            Material type = item.getType();
 
-        int totalGains = 0;
+            // Check if the item is a tool
+            if (type.name().endsWith("_PICKAXE") ||
+                    type.name().endsWith("_SHOVEL") ||
+                    type.name().endsWith("_HOE") ||
+                    type.name().endsWith("_AXE") ||
+                    type == Material.SHEARS ||
+                    type == Material.FLINT_AND_STEEL ||
+                    type == Material.FISHING_ROD) {
 
-        for (ItemFrame itemFrame : itemFrames) {
-            ItemStack item = itemFrame.getItem();
-            if (item != null && (item.getType().name().endsWith("_PICKAXE") ||
-                    item.getType().name().endsWith("_SHOVEL") ||
-                    item.getType().name().endsWith("_HOE") ||
-                    item.getType().name().endsWith("_AXE"))) {
-
-                String toolMaterial = item.getType().name().split("_")[0]; // Extract tool material (e.g., "IRON")
-                int gain = toolGains.getOrDefault(toolMaterial, 0);
-                totalGains += gain;
-
-                // Repair the tool in the item frame
-                int repairAmount = gain * 1000; // Adjust the repair amount multiplier as needed
+                // Repair the item
                 repairTools(item, repairAmount);
 
-                // Update the repaired item in the item frame
-                itemFrame.setItem(item);
+                // Set the repaired item back
+                if (entity instanceof ItemFrame) {
+                    ((ItemFrame) entity).setItem(item);
+                } else if (entity instanceof ItemDisplay) {
+                    ((ItemDisplay) entity).setItemStack(item);
+                }
             }
         }
 
-        // Check for nearby blocks that provide additional gains
-        Block anvil = findNearestBlock(villager, List.of(Material.ANVIL, Material.CHIPPED_ANVIL, Material.DAMAGED_ANVIL), radius);
-        if (anvil != null) {
-            totalGains += 5; // Additional gains for having an anvil nearby
-        }
-        Block lava = findNearestBlock(villager, List.of(Material.LAVA), radius);
-        if (lava != null) {
-            totalGains += 5; // Additional gains for having lava nearby
-        }
-        Block water = findNearestBlock(villager, List.of(Material.WATER), radius);
-        if (water != null) {
-            totalGains += 5; // Additional gains for having water nearby
-        }
-
-        // Calculate the final repair amount based on total gains
-        int finalRepairAmount = totalGains * 10;
-
-        // Play sound to indicate the toolsmith's repair action
+        // Play sound to indicate repair action
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
     }
 
@@ -817,6 +794,46 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     private boolean isTool(ItemStack item) {
         String name = item.getType().name();
         return name.endsWith("_PICKAXE") || name.endsWith("_SHOVEL") || name.endsWith("_HOE") || name.endsWith("_AXE") || name.endsWith("_SHEARS");
+    }
+
+
+    private Map<Entity, ItemStack> findAllDisplayedItems(Villager villager, int radius) {
+        Map<Entity, ItemStack> displayedItems = new HashMap<>();
+
+        // Add items from item frames
+        for (ItemFrame frame : findNearbyItemFrames(villager, radius)) {
+            ItemStack item = frame.getItem();
+            if (item != null && item.getType() != Material.AIR) {
+                displayedItems.put(frame, item);
+            }
+        }
+        
+        // Add items from custom ItemDisplays
+        ItemDisplayManager displayManager = MinecraftNew.getInstance().getItemDisplayManager();
+        if (displayManager != null) {
+            Location villagerLoc = villager.getLocation();
+            
+            // Get all displays from the manager and filter by distance
+            for (ItemDisplayManager.ItemDisplay display : displayManager.getAllDisplays()) {
+                if (display.storedItem != null && display.blockLocation != null) {
+                    // Check if the display is within radius
+                    if (display.blockLocation.getWorld().equals(villagerLoc.getWorld()) && 
+                            display.blockLocation.distance(villagerLoc) <= radius) {
+                        
+                        // Get the ArmorStand entity
+                        if (display.standUUID != null) {
+                            Entity entity = Bukkit.getEntity(display.standUUID);
+                            if (entity != null && entity.isValid()) {
+                                displayedItems.put(entity, display.storedItem);
+                                Bukkit.broadcastMessage("Found item on display: " + display.storedItem.getType().name());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return displayedItems;
     }
 
 
@@ -1538,7 +1555,7 @@ Random random = new Random();
                  BLACK_GLAZED_TERRACOTTA -> true;
 
             // Brick Variants
-            case DEEPSLATE_BRICKS, BRICKS, POLISHED_BLACKSTONE_BRICKS, BRICK_STAIRS, BRICK_SLAB, BRICK_WALL,
+            case DEEPSLATE_BRICKS,DEEPSLATE_TILES, BRICKS, POLISHED_BLACKSTONE_BRICKS, BRICK_STAIRS, BRICK_SLAB, BRICK_WALL,
                  STONE_BRICKS, STONE_BRICK_STAIRS, STONE_BRICK_SLAB, STONE_BRICK_WALL,
                  MOSSY_STONE_BRICKS, MOSSY_STONE_BRICK_STAIRS, MOSSY_STONE_BRICK_SLAB, MOSSY_STONE_BRICK_WALL,
                  NETHER_BRICKS, NETHER_BRICK_STAIRS, NETHER_BRICK_SLAB, NETHER_BRICK_WALL,

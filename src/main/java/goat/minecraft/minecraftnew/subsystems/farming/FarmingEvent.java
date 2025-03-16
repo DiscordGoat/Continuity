@@ -106,7 +106,7 @@ public class FarmingEvent implements Listener {
             // Award Farming XP
             int xp = cropXP.get(blockType);
             ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawn(block.getLocation(), ExperienceOrb.class);
-            orb.setExperience(1);
+            orb.setExperience(2);
             xpManager.addXP(player, "Farming", xp);
             // Play harvest sound
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
@@ -116,7 +116,7 @@ public class FarmingEvent implements Listener {
             if (random.nextInt(100) < farmingLevel) {
                 Collection<ItemStack> drops = block.getDrops();
                 for (ItemStack drop : drops) {
-                    player.getInventory().addItem(drop.clone());
+                    Objects.requireNonNull(e.getBlock().getLocation().getWorld()).dropItem(e.getBlock().getLocation(), drop.clone());
                 }
                 player.playSound(player.getLocation(), Sound.BLOCK_ROOTED_DIRT_PLACE, 1.0f, 1.0f);
                 petGrantingManager.attemptGrantPet(player);
@@ -137,7 +137,7 @@ public class FarmingEvent implements Listener {
         // Check if the harvested crop is eligible for rare drops
         if (RARE_DROP_CROPS.contains(blockType)) {
             // 1/400 chance to drop a rare item
-            if (random.nextInt(800) == 0) {
+            if (random.nextInt(1600) == 0) {
                 // Retrieve the rare item for this specific crop from ItemRegistry
                 ItemStack rareItem = ItemRegistry.getRareItem(blockType); // Ensure this method is implemented in ItemRegistry
 

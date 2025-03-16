@@ -112,15 +112,15 @@ public class SkillsCommand implements CommandExecutor {
     /**
      * Generate dynamic lore for a skill based on its level and XP progress.
      */
-    private List<String> getSkillStatLore(Player player, String skill, int level) {
+    private List<String> getSkillStatLore(Player player, String skill, double level) {
         List<String> lore;
         double multiplier = 1 + (level * 0.01); // 1% per level
         switch (skill) {
             case "Smithing":
-                int successChance = 50 + (int) (0.5 * level);
+                double successChance = 50 + (0.5 *  level);
                 if (successChance > 100) successChance = 100;
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.WHITE + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.WHITE + "Level: " + ChatColor.GREEN + (int) level,
                         ChatColor.WHITE + "Repair Amount: " + (25 + level),
                         ChatColor.WHITE + "Sharpen Success Chance: " + successChance + "%",
                         ChatColor.WHITE + "Polish Success Chance: " + successChance + "%",
@@ -130,32 +130,32 @@ public class SkillsCommand implements CommandExecutor {
             case "Culinary":
                 double additionalSaturation = Math.min(level * 0.05, 20.0);
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.YELLOW + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.YELLOW + "Level: " + ChatColor.GREEN + (int) level,
                         ChatColor.YELLOW + "Extra Saturation: " + ChatColor.GREEN + String.format("%.2f", additionalSaturation) + " (Max 5)"
                 ));
                 break;
             case "Bartering":
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.BLUE + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.BLUE + "Level: " + ChatColor.GREEN + (int) level,
                         ChatColor.BLUE + "Discount: " + ChatColor.GREEN + (level * 0.25) + "%"
                 ));
                 break;
             case "Fishing":
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.BLUE + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.BLUE + "Level: " + ChatColor.GREEN + (int) level,
                         ChatColor.BLUE + "Sea Creature Chance: " + ChatColor.GREEN + (level / 2) + "%"
                 ));
                 break;
             case "Farming":
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.YELLOW + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.YELLOW + "Level: " + ChatColor.GREEN + (int) level,
                         ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (level / 2) + "%"
                 ));
                 break;
             case "Mining":
-                int duration = 200 + (level * 4);
+                double duration = 200 + (level * 4);
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.GRAY + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.GRAY + "Level: " + ChatColor.GREEN + (int) level,
                         ChatColor.GRAY + "Bonus Oxygen: +" + ChatColor.GREEN + (4 * level) + " seconds",
                         ChatColor.GRAY + "Double Drops Chance: " + ChatColor.GREEN + (level / 2) + "%",
                         ChatColor.GRAY + "Gold Fever: " + ChatColor.GREEN + "Haste " + 1 + " (" + duration / 20 + "s)"
@@ -163,25 +163,25 @@ public class SkillsCommand implements CommandExecutor {
                 break;
             case "Combat":
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.RED + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.RED + "Level: " + ChatColor.GREEN + (int) level,
                         ChatColor.RED + "Damage Multiplier: " + ChatColor.GREEN + String.format("%.2f", (1 + level * 0.03)) + "x"
                 ));
                 break;
             case "Player":
                 multiplier = Math.min(multiplier, 2.00); // Cap at 2.00x
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.AQUA + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.AQUA + "Level: " + ChatColor.GREEN + (int) level,
                         ChatColor.AQUA + "Health Boost: " + ChatColor.GREEN + String.format("%.2f", multiplier) + "x",
-                        ChatColor.RED + "Max Hostility Tier: " + ChatColor.DARK_RED + xpManager.getTierFromLevel(level)
+                        ChatColor.RED + "Max Hostility Tier: " + ChatColor.DARK_RED + xpManager.getTierFromLevel((int) level)
                 ));
                 break;
             case "Forestry":
-                int forestryLevel = level;
-                int doubleDropChance = forestryLevel;
+                double forestryLevel = level;
+                double doubleDropChance = forestryLevel;
                 double hasteDuration = 200 + (forestryLevel * 5);
                 int spiritSpawnChance = 1;
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + forestryLevel,
+                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) forestryLevel,
                         ChatColor.DARK_GREEN + "Double Logs Chance: " + ChatColor.GREEN + doubleDropChance + "%",
                         ChatColor.DARK_GREEN + "Haste Duration: " + ChatColor.GREEN + (hasteDuration / 20) + " seconds",
                         ChatColor.DARK_GREEN + "Spirit Spawn Chance: " + ChatColor.GREEN + spiritSpawnChance + "%"
@@ -189,7 +189,7 @@ public class SkillsCommand implements CommandExecutor {
                 break;
             default:
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.GRAY + "Level: " + ChatColor.GREEN + level,
+                        ChatColor.GRAY + "Level: " + ChatColor.GREEN + (int) level,
                         ChatColor.GRAY + "No stats available."
                 ));
                 break;

@@ -139,9 +139,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         return lockedRecipeManager;
     }
 
+    public ItemDisplayManager getItemDisplayManager() {
+        return displayManager;
+    }
 
     @Override
     public void onEnable() {
+        new SetDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
         if (getCommand("testdragon") != null) {
             getCommand("testdragon").setExecutor(new TestDragonCommand());
