@@ -1,7 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -18,11 +17,9 @@ import java.util.Random;
 public class MithrilMiner implements Listener {
 
     private final PetManager petManager;
-    private final CustomItemManager customItemManager;
 
     public MithrilMiner(JavaPlugin plugin) {
         this.petManager = PetManager.getInstance(plugin);
-        this.customItemManager = new CustomItemManager();
     }
 
     @EventHandler

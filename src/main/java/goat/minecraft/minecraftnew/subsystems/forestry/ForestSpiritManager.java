@@ -221,7 +221,7 @@ public class ForestSpiritManager implements Listener {
      * @return The customized armor ItemStack.
      */
     private ItemStack createColoredArmor(Material material, Color color) {
-        ItemStack armor = CustomItemManager.createCustomItem(
+        ItemStack armor = ItemRegistry.createCustomItem(
                 material,
                 null, // No custom name
                 new ArrayList<>(), // No lore
@@ -349,7 +349,7 @@ public class ForestSpiritManager implements Listener {
             }
         }
 
-        ItemStack rareDrop = CustomItemManager.createCustomItem(
+        ItemStack rareDrop = ItemRegistry.createCustomItem(
                 spiritType.getRareDropMaterial(),
                 ChatColor.GOLD + spiritType.getRareDropName(),
                 spiritType.getRareDropLore(),

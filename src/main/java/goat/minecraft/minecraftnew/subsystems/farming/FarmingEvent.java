@@ -2,7 +2,6 @@ package goat.minecraft.minecraftnew.subsystems.farming;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -62,7 +61,6 @@ public class FarmingEvent implements Listener {
         cropXP.put(Material.PUMPKIN, 6);
     }
 
-    CustomItemManager customItemManager = new CustomItemManager();
     PetManager petManager = PetManager.getInstance(plugin);
     PetGrantingManager petGrantingManager = new PetGrantingManager(petManager);
 

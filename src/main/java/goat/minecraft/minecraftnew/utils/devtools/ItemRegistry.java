@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.utils.devtools;
 
-import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -47,7 +47,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getExperienceArtifact() {
-        return CustomItemManager.createCustomItem(Material.GLASS_BOTTLE, ChatColor.YELLOW +
+        return createCustomItem(Material.GLASS_BOTTLE, ChatColor.YELLOW +
                 "Experience Artifact Tier 1", Arrays.asList(
                 ChatColor.GRAY + "Max level of 3",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summons 25,000 XP.",
@@ -56,7 +56,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getFarmerEnchant() {
-        return CustomItemManager.createCustomItem(Material.RABBIT_STEW, ChatColor.YELLOW +
+        return createCustomItem(Material.RABBIT_STEW, ChatColor.YELLOW +
                 "Well Balanced Meal", Arrays.asList(
                 ChatColor.GRAY + "Max level of III",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Feed to items.",
@@ -65,7 +65,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getButcherEnchant() {
-        return CustomItemManager.createCustomItem(Material.GOLDEN_AXE, ChatColor.YELLOW +
+        return createCustomItem(Material.GOLDEN_AXE, ChatColor.YELLOW +
                 "Brutal Tactics", Arrays.asList(
                 ChatColor.GRAY + "Max level of V",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Cleaver to items.",
@@ -74,7 +74,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getFisherEnchant() {
-        return CustomItemManager.createCustomItem(Material.COD, ChatColor.YELLOW + "Call of the Void", Arrays.asList(
+        return createCustomItem(Material.COD, ChatColor.YELLOW + "Call of the Void", Arrays.asList(
                 ChatColor.GRAY + "Max level of V",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Call of the Void to items.",
                 ChatColor.DARK_PURPLE + "Smithing Item"
@@ -82,7 +82,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getIronGolem() {
-        return CustomItemManager.createCustomItem(Material.IRON_BLOCK, ChatColor.YELLOW +
+        return createCustomItem(Material.IRON_BLOCK, ChatColor.YELLOW +
                 "Iron Golem", Arrays.asList(
                 ChatColor.GRAY + "Ancient Summoning Artifact.",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summon an Iron Golem.",
@@ -91,7 +91,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getLibrarianEnchant() {
-        return CustomItemManager.createCustomItem(Material.EXPERIENCE_BOTTLE, ChatColor.YELLOW +
+        return createCustomItem(Material.EXPERIENCE_BOTTLE, ChatColor.YELLOW +
                 "Savant", Arrays.asList(
                 ChatColor.GRAY + "Max level of 1",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Savant to items.",
@@ -100,7 +100,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getLibrarianEnchantmentTwo() {
-        return CustomItemManager.createCustomItem(Material.SOUL_LANTERN, ChatColor.YELLOW +
+        return createCustomItem(Material.SOUL_LANTERN, ChatColor.YELLOW +
                 "Soul Lantern", Arrays.asList(
                 ChatColor.GRAY + "Max level of 5",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Experience to items.",
@@ -109,7 +109,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getRandomArmorTrim() {
-        return CustomItemManager.createCustomItem(Material.PAPER, ChatColor.YELLOW +
+        return createCustomItem(Material.PAPER, ChatColor.YELLOW +
                 "Draw Random Armor Trim", Arrays.asList(
                 ChatColor.GRAY + "A collection of materials and tools",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Creates a random Armor Trim.",
@@ -118,7 +118,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getArmorerEnchant() {
-        return CustomItemManager.createCustomItem(Material.GLASS_BOTTLE, ChatColor.YELLOW +
+        return createCustomItem(Material.GLASS_BOTTLE, ChatColor.YELLOW +
                 "Oxygen Tank", Arrays.asList(
                 ChatColor.GRAY + "Max level of 4",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Ventilation to items.",
@@ -127,7 +127,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getToolsmithEnchant() {
-        return CustomItemManager.createCustomItem(Material.TORCH, ChatColor.YELLOW +
+        return createCustomItem(Material.TORCH, ChatColor.YELLOW +
                 "Everflame", Arrays.asList(
                 ChatColor.GRAY + "Max level of 5",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Forge to items.",
@@ -136,7 +136,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getToolsmithEnchantTwo() {
-        return CustomItemManager.createCustomItem(Material.CHAIN, ChatColor.YELLOW +
+        return createCustomItem(Material.CHAIN, ChatColor.YELLOW +
                 "Climbing Rope", Arrays.asList(
                 ChatColor.GRAY + "Max level of 1",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Rappel to items.",
@@ -145,7 +145,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getShepherdArtifact() {
-        return CustomItemManager.createCustomItem(Material.BRUSH, ChatColor.YELLOW +
+        return createCustomItem(Material.BRUSH, ChatColor.YELLOW +
                 "Creative Mind", Arrays.asList(
                 ChatColor.GRAY + "A collection of Colors and Mixes",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Hydrates All Concrete",
@@ -154,7 +154,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getShepherdEnchant() {
-        return CustomItemManager.createCustomItem(Material.SHEARS, ChatColor.YELLOW +
+        return createCustomItem(Material.SHEARS, ChatColor.YELLOW +
                 "Laceration", Arrays.asList(
                 ChatColor.GRAY + "Max level of 5",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Shear to items.",
@@ -163,7 +163,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getFishingEnchant() {
-        return CustomItemManager.createCustomItem(Material.GOLD_NUGGET, ChatColor.YELLOW +
+        return createCustomItem(Material.GOLD_NUGGET, ChatColor.YELLOW +
                 "Golden Hook", Arrays.asList(
                 ChatColor.GRAY + "Max level of 5",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Piracy to items.",
@@ -172,7 +172,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getLeatherworkerEnchant() {
-        return CustomItemManager.createCustomItem(Material.LEATHER, ChatColor.YELLOW +
+        return createCustomItem(Material.LEATHER, ChatColor.YELLOW +
                 "Hide", Arrays.asList(
                 ChatColor.GRAY + "Max level of 4",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Physical Protection to items.",
@@ -181,7 +181,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getLeatherworkerArtifact() {
-        return CustomItemManager.createCustomItem(Material.BOOK, ChatColor.YELLOW +
+        return createCustomItem(Material.BOOK, ChatColor.YELLOW +
                 "Backpack", Arrays.asList(
                 ChatColor.GRAY + "A storage device for items",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Opens Backpack.",
@@ -190,7 +190,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getClericEnchant() {
-        return CustomItemManager.createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
+        return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(
                 ChatColor.GRAY + "Max level of 4",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Alchemy to items.",
@@ -201,7 +201,7 @@ public class ItemRegistry {
 
     // Mineshaft Location
     public static ItemStack getCartographerMineshaft() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Mineshaft Location",
                 Arrays.asList(
@@ -217,7 +217,7 @@ public class ItemRegistry {
 
     // Stronghold Location
     public static ItemStack getCartographerStronghold() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Stronghold Location",
                 Arrays.asList(
@@ -233,7 +233,7 @@ public class ItemRegistry {
 
     // Village Location
     public static ItemStack getCartographerVillage() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Village Location",
                 Arrays.asList(
@@ -249,7 +249,7 @@ public class ItemRegistry {
 
     // Igloo Location
     public static ItemStack getCartographerIgloo() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Igloo Location",
                 Arrays.asList(
@@ -265,7 +265,7 @@ public class ItemRegistry {
 
     // Buried Treasure Location
     public static ItemStack getCartographerBuriedTreasure() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Buried Treasure Location",
                 Arrays.asList(
@@ -281,7 +281,7 @@ public class ItemRegistry {
 
     // Desert Pyramid Location
     public static ItemStack getCartographerDesertPyramid() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Desert Pyramid Location",
                 Arrays.asList(
@@ -297,7 +297,7 @@ public class ItemRegistry {
 
     // Jungle Pyramid Location
     public static ItemStack getCartographerJungleTemple() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Jungle Pyramid Location",
                 Arrays.asList(
@@ -313,7 +313,7 @@ public class ItemRegistry {
 
     // Ocean Monument Location
     public static ItemStack getCartographerOceanMonument() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Ocean Monument Location",
                 Arrays.asList(
@@ -329,7 +329,7 @@ public class ItemRegistry {
 
     // Pillager Outpost Location
     public static ItemStack getCartographerPillagerOutpost() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Pillager Outpost Location",
                 Arrays.asList(
@@ -345,7 +345,7 @@ public class ItemRegistry {
 
     // Swamp Hut Location
     public static ItemStack getCartographerSwampHut() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Swamp Hut Location",
                 Arrays.asList(
@@ -361,7 +361,7 @@ public class ItemRegistry {
 
     // Woodland Mansion Location
     public static ItemStack getCartographerWoodlandMansion() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Woodland Mansion Location",
                 Arrays.asList(
@@ -377,7 +377,7 @@ public class ItemRegistry {
 
     // Bastion Remnant Location
     public static ItemStack getCartographerBastionRemnant() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Bastion Remnant Location",
                 Arrays.asList(
@@ -393,7 +393,7 @@ public class ItemRegistry {
 
     // End City Location
     public static ItemStack getCartographerEndCity() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "End City Location",
                 Arrays.asList(
@@ -409,7 +409,7 @@ public class ItemRegistry {
 
     // Nether Fortress Location
     public static ItemStack getCartographerNetherFortress() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Nether Fortress Location",
                 Arrays.asList(
@@ -425,7 +425,7 @@ public class ItemRegistry {
 
     // Ocean Ruin Location
     public static ItemStack getCartographerOceanRuins() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Ocean Ruin Location",
                 Arrays.asList(
@@ -441,7 +441,7 @@ public class ItemRegistry {
 
     // Shipwreck Location
     public static ItemStack getCartographerShipwreck() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Shipwreck Location",
                 Arrays.asList(
@@ -456,7 +456,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getAspectoftheJourney() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.ENDER_EYE,
                 ChatColor.YELLOW + "Fast Travel",
                 Arrays.asList(
@@ -471,7 +471,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getFletcherBowEnchant() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.WHITE_DYE,
                 ChatColor.YELLOW + "Stun Coating",
                 Arrays.asList(
@@ -486,7 +486,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getFletcherCrossbowEnchant() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FIRE_CHARGE,
                 ChatColor.YELLOW + "Explosive Bolts",
                 Arrays.asList(
@@ -501,7 +501,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithEnchant() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.RED_DYE,
                 ChatColor.YELLOW + "Lethal Tempo",
                 Arrays.asList(
@@ -516,7 +516,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getArmorsmithReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MOJANG_BANNER_PATTERN,
                 ChatColor.YELLOW + "Armor Talisman",
                 Arrays.asList(
@@ -531,7 +531,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getArmorsmithReforgeTwo() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MOJANG_BANNER_PATTERN,
                 ChatColor.YELLOW + "Armor Toughness Talisman",
                 Arrays.asList(
@@ -546,7 +546,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getArmorsmithReforgeThree() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MOJANG_BANNER_PATTERN,
                 ChatColor.YELLOW + "Knockback Talisman",
                 Arrays.asList(
@@ -561,7 +561,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MOJANG_BANNER_PATTERN,
                 ChatColor.YELLOW + "Attack Damage Talisman",
                 Arrays.asList(
@@ -576,7 +576,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithReforgeTwo() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MOJANG_BANNER_PATTERN,
                 ChatColor.YELLOW + "Swift Blade Talisman",
                 Arrays.asList(
@@ -591,7 +591,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getFishermanReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MOJANG_BANNER_PATTERN,
                 ChatColor.YELLOW + "Sea Creature Talisman",
                 Arrays.asList(
@@ -606,7 +606,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getToolsmithReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MOJANG_BANNER_PATTERN,
                 ChatColor.YELLOW + "Durability Talisman",
                 Arrays.asList(
@@ -621,7 +621,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getToolsmithEfficiency() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOLDEN_PICKAXE,
                 ChatColor.YELLOW + "Efficiency Expertise",
                 Arrays.asList(
@@ -636,7 +636,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getToolsmithUnbreaking() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.OBSIDIAN,
                 ChatColor.YELLOW + "Unbreaking Expertise",
                 Arrays.asList(
@@ -651,7 +651,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithSharpness() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOLDEN_SWORD,
                 ChatColor.YELLOW + "Sharpness Expertise",
                 Arrays.asList(
@@ -666,7 +666,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithSweepingEdge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.WHEAT,
                 ChatColor.YELLOW + "Sweeping Edge Expertise",
                 Arrays.asList(
@@ -681,7 +681,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithLooting() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOLD_INGOT,
                 ChatColor.YELLOW + "Looting Expertise",
                 Arrays.asList(
@@ -696,7 +696,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithKnockback() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.SLIME_BLOCK,
                 ChatColor.YELLOW + "Knockback Expertise",
                 Arrays.asList(
@@ -711,7 +711,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithFireAspect() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FIRE_CHARGE,
                 ChatColor.YELLOW + "Fire Aspect Expertise",
                 Arrays.asList(
@@ -726,7 +726,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithSmite() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.BONE,
                 ChatColor.YELLOW + "Smite Expertise",
                 Arrays.asList(
@@ -741,7 +741,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWeaponsmithBaneofAnthropods() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FERMENTED_SPIDER_EYE,
                 ChatColor.YELLOW + "Bane of Anthropods Expertise",
                 Arrays.asList(
@@ -756,7 +756,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getBait() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.OAK_BUTTON,
                 ChatColor.YELLOW + "Fish Bait",
                 Arrays.asList(
@@ -771,7 +771,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getLuck() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOLD_NUGGET,
                 ChatColor.YELLOW + "Lucky",
                 Arrays.asList(
@@ -786,7 +786,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getFishermanLure() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.BRAIN_CORAL_BLOCK,
                 ChatColor.YELLOW + "Lure Expertise",
                 Arrays.asList(
@@ -801,7 +801,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getFishermanLuckoftheSea() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.STICK,
                 ChatColor.YELLOW + "Luck of the Sea Expertise",
                 Arrays.asList(
@@ -816,7 +816,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getArmorSmithProtection() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOLDEN_CHESTPLATE,
                 ChatColor.YELLOW + "Protection Expertise",
                 Arrays.asList(
@@ -831,7 +831,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getArmorSmithRespiration() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOLDEN_HELMET,
                 ChatColor.YELLOW + "Respiration Expertise",
                 Arrays.asList(
@@ -846,7 +846,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getArmorSmithThorns() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.CACTUS,
                 ChatColor.YELLOW + "Thorns Expertise",
                 Arrays.asList(
@@ -861,7 +861,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getArmorSmithFeatherFalling() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FEATHER,
                 ChatColor.YELLOW + "Feather Falling Expertise",
                 Arrays.asList(
@@ -876,7 +876,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getFletcherPower() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FEATHER,
                 ChatColor.YELLOW + "Power Expertise",
                 Arrays.asList(
@@ -891,7 +891,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getCommonSwordReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.WHITE_DYE,
                 ChatColor.YELLOW + "Common Sword Reforge",
                 Arrays.asList(
@@ -906,7 +906,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getUncommonSwordReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.LIME_DYE,
                 ChatColor.YELLOW + "Uncommon Sword Reforge",
                 Arrays.asList(
@@ -921,7 +921,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getRareSwordReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.BLUE_DYE,
                 ChatColor.YELLOW + "Rare Sword Reforge",
                 Arrays.asList(
@@ -936,7 +936,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getEpicSwordReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MAGENTA_DYE,
                 ChatColor.YELLOW + "Epic Sword Reforge",
                 Arrays.asList(
@@ -950,7 +950,7 @@ public class ItemRegistry {
         );
     }
     public static ItemStack getOakBowFrameUpgrade() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.OAK_PLANKS,
                 ChatColor.WHITE + "Oak Bow",
                 Arrays.asList(
@@ -965,7 +965,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getBirchBowFrameUpgrade() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.BIRCH_PLANKS,
                 ChatColor.GREEN + "Birch Bow",
                 Arrays.asList(
@@ -980,7 +980,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getSpruceBowFrameUpgrade() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.SPRUCE_PLANKS,
                 ChatColor.BLUE + "Spruce Bow",
                 Arrays.asList(
@@ -995,7 +995,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getAcaciaBowFrameUpgrade() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.ACACIA_PLANKS,
                 ChatColor.DARK_PURPLE + "Acacia Bow",
                 Arrays.asList(
@@ -1010,7 +1010,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getDarkOakBowFrameUpgrade() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.DARK_OAK_PLANKS,
                 ChatColor.GOLD + "Dark Oak Bow",
                 Arrays.asList(
@@ -1024,7 +1024,7 @@ public class ItemRegistry {
         );
     }
     public static ItemStack getLegendarySwordReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.YELLOW_DYE,
                 ChatColor.YELLOW + "Legendary Sword Reforge",
                 Arrays.asList(
@@ -1040,7 +1040,7 @@ public class ItemRegistry {
 
 
     public static ItemStack getCommonArmorReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.WHITE_STAINED_GLASS,
                 ChatColor.YELLOW + "Common Armor Reforge",
                 Arrays.asList(
@@ -1055,7 +1055,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getUncommonArmorReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.LIME_STAINED_GLASS,
                 ChatColor.YELLOW + "Uncommon Armor Reforge",
                 Arrays.asList(
@@ -1070,7 +1070,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getRareArmorReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.BLUE_STAINED_GLASS,
                 ChatColor.YELLOW + "Rare Armor Reforge",
                 Arrays.asList(
@@ -1085,7 +1085,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getEpicArmorReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MAGENTA_STAINED_GLASS,
                 ChatColor.YELLOW + "Epic Armor Reforge",
                 Arrays.asList(
@@ -1113,7 +1113,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getLegendaryArmorReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.YELLOW_STAINED_GLASS,
                 ChatColor.YELLOW + "Legendary Armor Reforge",
                 Arrays.asList(
@@ -1128,7 +1128,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getCommonToolReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.WHITE_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Common Tool Reforge",
                 Arrays.asList(
@@ -1143,7 +1143,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getUncommonToolReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.LIME_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Uncommon Tool Reforge",
                 Arrays.asList(
@@ -1158,7 +1158,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getRareToolReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.BLUE_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Rare Tool Reforge",
                 Arrays.asList(
@@ -1173,7 +1173,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getEpicToolReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.MAGENTA_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Epic Tool Reforge",
                 Arrays.asList(
@@ -1188,7 +1188,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getLegendaryToolReforge() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.YELLOW_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Legendary Tool Reforge",
                 Arrays.asList(
@@ -1602,7 +1602,7 @@ public class ItemRegistry {
             true);
     }
     public static ItemStack getSkeletonDrop() {
-        return CustomItemManager.createCustomItem(Material.STRING, ChatColor.YELLOW +
+        return createCustomItem(Material.STRING, ChatColor.YELLOW +
             "Bowstring", Arrays.asList(
             ChatColor.GRAY + "Air Technology.",
             ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Power.",
@@ -1610,7 +1610,7 @@ public class ItemRegistry {
     ), 1, false, true);
     }
     public static ItemStack getDrownedDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.LEATHER_BOOTS,
                 ChatColor.YELLOW + "Fins",
                 Arrays.asList(
@@ -1624,7 +1624,7 @@ public class ItemRegistry {
         );
     }
     public static ItemStack getZombifiedPiglinDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOLD_INGOT,
                 ChatColor.YELLOW + "Gold Bar",
                 Arrays.asList( ChatColor.GRAY +
@@ -1635,7 +1635,7 @@ public class ItemRegistry {
                         ChatColor.DARK_PURPLE + "Smithing Item" ),
                 1, false, true ); }
     public static ItemStack getUndeadDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.ROTTEN_FLESH,
                 ChatColor.YELLOW + "Beating Heart",
                 Arrays.asList(
@@ -1650,7 +1650,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getCreeperDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.TNT,
                 ChatColor.YELLOW + "Hydrogen Bomb",
                 Arrays.asList(
@@ -1665,7 +1665,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getSpiderDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FERMENTED_SPIDER_EYE,
                 ChatColor.YELLOW + "SpiderBane",
                 Arrays.asList(
@@ -1680,7 +1680,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getEnderDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.ENDER_PEARL,
                 ChatColor.YELLOW + "End Pearl",
                 Arrays.asList(
@@ -1695,7 +1695,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getBlazeDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.FIRE_CHARGE,
                 ChatColor.YELLOW + "Fire Ball",
                 Arrays.asList(
@@ -1710,7 +1710,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWitchDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.ENCHANTED_BOOK,
                 ChatColor.YELLOW + "Mending",
                 Arrays.asList(
@@ -1725,7 +1725,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getWitherSkeletonDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.WITHER_SKELETON_SKULL,
                 ChatColor.YELLOW + "Wither Skeleton Skull",
                 Arrays.asList(
@@ -1740,7 +1740,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getGuardianDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.PRISMARINE_SHARD,
                 ChatColor.YELLOW + "Rain",
                 Arrays.asList(
@@ -1755,7 +1755,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getElderGuardianDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.ICE,
                 ChatColor.YELLOW + "Frost Heart",
                 Arrays.asList(
@@ -1770,7 +1770,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getPillagerDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.IRON_BLOCK,
                 ChatColor.YELLOW + "Iron Golem",
                 Arrays.asList(
@@ -1785,7 +1785,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getVindicatorDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.SLIME_BALL,
                 ChatColor.YELLOW + "KB Ball",
                 Arrays.asList(
@@ -1800,7 +1800,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getPiglinDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.SPECTRAL_ARROW,
                 ChatColor.YELLOW + "High Caliber Arrow",
                 Arrays.asList(
@@ -1815,7 +1815,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getPiglinBruteDrop() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.SOUL_SOIL,
                 ChatColor.YELLOW + "Grains of Soul",
                 Arrays.asList(
@@ -1829,7 +1829,7 @@ public class ItemRegistry {
         );
     }
     public static ItemStack getInfernalLooting() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOLD_BLOCK,
                 ChatColor.GOLD + "Midas Gold",
                 Arrays.asList(
@@ -1844,7 +1844,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getInfernalUnbreaking() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.BEDROCK,
                 ChatColor.GOLD + "Unbreakable",
                 Arrays.asList(
@@ -1859,7 +1859,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getInfernalDepthStrider() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOLDEN_BOOTS,
                 ChatColor.GOLD + "LavaStride",
                 Arrays.asList(
@@ -1874,7 +1874,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getInfernalBaneofAnthropods() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.COBWEB,
                 ChatColor.GOLD + "Extinction",
                 Arrays.asList(
@@ -1889,7 +1889,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getInfernalEfficiency() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.OBSIDIAN,
                 ChatColor.GOLD + "Weak Spot",
                 Arrays.asList(
@@ -1904,7 +1904,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getInfernalFireAspect() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.LAVA_BUCKET,
                 ChatColor.GOLD + "Hellfire",
                 Arrays.asList(
@@ -1919,7 +1919,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getInfernalSharpness() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.IRON_SWORD,
                 ChatColor.GOLD + "Shrapnel",
                 Arrays.asList(
@@ -1934,7 +1934,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getInfernalSmite() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.WITHER_SKELETON_SKULL,
                 ChatColor.GOLD + "Cure",
                 Arrays.asList(
@@ -1949,7 +1949,7 @@ public class ItemRegistry {
     }
 
     public static ItemStack getInfernalLure() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.GOAT_HORN,
                 ChatColor.GOLD + "Howl",
                 Arrays.asList(
@@ -2158,7 +2158,7 @@ public class ItemRegistry {
         ), 1, false, true);
     }
     public static ItemStack getSecretsOfInfinity() {
-        return CustomItemManager.createCustomItem(
+        return createCustomItem(
                 Material.ARROW,
                 ChatColor.DARK_PURPLE + "Secrets of Infinity",
                 Arrays.asList(

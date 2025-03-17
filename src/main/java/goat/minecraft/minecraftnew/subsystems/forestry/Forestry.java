@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.forestry;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -150,6 +151,19 @@ public class Forestry implements Listener {
         Player player = event.getPlayer();
 
         if (woodMaterials.contains(block.getType())) {
+            int silkWormChance = random.nextInt(2400) + 1; // Generates a number between 1 and 500
+
+            // Implement a fixed 1/500 chance
+            if (silkWormChance == 1) {
+                // Drop the custom Silk Worm item at the block's location
+                event.getBlock().getLocation().getWorld().dropItem(event.getBlock().getLocation(), ItemRegistry.getSilkWorm());
+
+                // Send a message to the player
+                player.sendMessage(ChatColor.DARK_PURPLE + "A small insect falls to the ground...");
+
+                // Play a sound effect to the player
+                player.playSound(player.getLocation(), Sound.BLOCK_WET_GRASS_BREAK, 1.0f, 1.0f);
+            }
             PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
             if(petManager.getActivePet(player) != null) {
                 PetManager.Pet activePet = petManager.getActivePet(player);

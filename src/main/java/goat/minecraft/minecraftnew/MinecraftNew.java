@@ -36,7 +36,6 @@ import goat.minecraft.minecraftnew.subsystems.pets.perks.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.Float;
 import goat.minecraft.minecraftnew.subsystems.smithing.talismans.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
-import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
@@ -345,7 +344,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("setpetlevel").setExecutor(new SetPetLevelCommand(petManager));
 
         anvilRepair = new AnvilRepair(this);
-        CustomItemManager customItemManager = new CustomItemManager();
         instance = this;
 
         new PlayerTabListUpdater(this, xpManager);
@@ -357,7 +355,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new FishingEvent(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(SpawnMonsters.getInstance(xpManager), this);
         getServer().getPluginManager().registerEvents(new KillMonster(), MinecraftNew.getInstance());
-        getServer().getPluginManager().registerEvents(new CustomItemManager(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new Mining(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new PlayerLevel(MinecraftNew.getInstance(), xpManager), MinecraftNew.getInstance());
 

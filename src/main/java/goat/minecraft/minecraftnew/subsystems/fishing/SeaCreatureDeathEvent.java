@@ -3,7 +3,6 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -26,7 +25,6 @@ public class SeaCreatureDeathEvent implements Listener {
     private final MinecraftNew plugin = MinecraftNew.getInstance();
     private final XPManager xpManager = new XPManager(plugin);
     private final Random random = new Random();
-    CustomItemManager customItemManager = new CustomItemManager();
 
     ItemStack lapis = new ItemStack(Material.LAPIS_LAZULI, 4);
 

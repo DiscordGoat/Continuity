@@ -2,7 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager;
-import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -1047,7 +1047,7 @@ Random random = new Random();
     private ItemStack generateRandomLocationItem(Villager villager) {
         // Define the list of possible location items
         List<ItemStack> locationItems = List.of(
-                CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                         Material.FILLED_MAP,
                         ChatColor.YELLOW + "Mineshaft Location",
                         Arrays.asList(
@@ -1061,7 +1061,7 @@ Random random = new Random();
                 ),
 
         // Stronghold Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Stronghold Location",
                 Arrays.asList(
@@ -1075,7 +1075,7 @@ Random random = new Random();
         ),
 
         // Village Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Village Location",
                 Arrays.asList(
@@ -1089,7 +1089,7 @@ Random random = new Random();
         ),
 
         // Igloo Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Igloo Location",
                 Arrays.asList(
@@ -1103,7 +1103,7 @@ Random random = new Random();
         ),
 
         // Buried Treasure Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Buried Treasure Location",
                 Arrays.asList(
@@ -1117,7 +1117,7 @@ Random random = new Random();
         ),
 
         // Desert Pyramid Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Desert Pyramid Location",
                 Arrays.asList(
@@ -1131,7 +1131,7 @@ Random random = new Random();
         ),
 
         // Jungle Pyramid Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Jungle Pyramid Location",
                 Arrays.asList(
@@ -1145,7 +1145,7 @@ Random random = new Random();
         ),
 
         // Ocean Monument Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Ocean Monument Location",
                 Arrays.asList(
@@ -1159,7 +1159,7 @@ Random random = new Random();
         ),
 
         // Pillager Outpost Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Pillager Outpost Location",
                 Arrays.asList(
@@ -1173,7 +1173,7 @@ Random random = new Random();
         ),
 
         // Swamp Hut Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Swamp Hut Location",
                 Arrays.asList(
@@ -1187,7 +1187,7 @@ Random random = new Random();
         ),
 
         // Woodland Mansion Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Woodland Mansion Location",
                 Arrays.asList(
@@ -1201,7 +1201,7 @@ Random random = new Random();
         ),
 
         // Bastion Remnant Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Bastion Remnant Location",
                 Arrays.asList(
@@ -1215,7 +1215,7 @@ Random random = new Random();
         ),
 
         // End City Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "End City Location",
                 Arrays.asList(
@@ -1229,7 +1229,7 @@ Random random = new Random();
         ),
 
         // Nether Fortress Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Nether Fortress Location",
                 Arrays.asList(
@@ -1243,7 +1243,7 @@ Random random = new Random();
         ),
 
         // Ocean Ruin Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Ocean Ruin Location",
                 Arrays.asList(
@@ -1257,7 +1257,7 @@ Random random = new Random();
         ),
 
         // Shipwreck Location
-        CustomItemManager.createCustomItem(
+                ItemRegistry.createCustomItem(
                 Material.FILLED_MAP,
                 ChatColor.YELLOW + "Shipwreck Location",
                 Arrays.asList(

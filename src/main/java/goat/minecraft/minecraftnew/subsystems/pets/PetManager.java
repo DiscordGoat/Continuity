@@ -504,7 +504,7 @@ public class PetManager implements Listener {
             case EMERALD_SEEKER:
                 return "Gain a " + ChatColor.GREEN + "4% chance " + ChatColor.GRAY + "to mine an " + ChatColor.GREEN + "Emerald.";
             case MITHRIL_MINER:
-                return "Gain a " + ChatColor.GREEN + "0.5% chance " + ChatColor.GRAY + "to mine a " + ChatColor.YELLOW + "Mithril Chunk.";
+                return "Gain a " + ChatColor.GREEN + (level * 0.05) + " chance " + ChatColor.GRAY + "to mine a " + ChatColor.YELLOW + "Mithril Chunk.";
             case ECHOLOCATION:
                 return "Gain " + ChatColor.AQUA + "Night Vision.";
             case X_RAY:

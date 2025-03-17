@@ -6,7 +6,6 @@ import goat.minecraft.minecraftnew.subsystems.farming.SeederType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.biomeutils.StructureUtils;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.ReforgeItemProvider;
 import goat.minecraft.minecraftnew.utils.devtools.VillagerUtils;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
@@ -647,15 +646,6 @@ public class RightClickArtifacts implements Listener {
                 paper.setItemMeta(paperMeta);
                 decrementItemAmount(itemInHand, player);
                 player.getLocation().getWorld().dropItem(player.getLocation(), paper);
-            }
-            if(displayName.equals(ChatColor.BLUE + "Blueprints")){
-                player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 10, 10);
-
-                ReforgeItemProvider reforgeItemProvider = new ReforgeItemProvider();
-                ItemStack blueprint = reforgeItemProvider.getRandomReforge();
-
-                decrementItemAmount(itemInHand, player);
-                player.getLocation().getWorld().dropItem(player.getLocation(), blueprint);
             }
         }
     }

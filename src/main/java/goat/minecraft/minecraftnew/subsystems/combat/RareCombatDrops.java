@@ -2,7 +2,6 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.forestry.CustomItemManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.Particle;
@@ -48,7 +47,6 @@ public class RareCombatDrops implements Listener {
     ItemStack skeletonDrop = ItemRegistry.getSkeletonDrop();
 
     private Random random = new Random();
-    public CustomItemManager customItemManager = new CustomItemManager();
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
 
