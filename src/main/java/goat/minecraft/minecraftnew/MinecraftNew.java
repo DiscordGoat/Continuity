@@ -144,6 +144,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+
+
+
         new SetDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
         if (getCommand("testdragon") != null) {
@@ -201,7 +204,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 
         forestryPetManager = new ForestryPetManager(this);
-        getServer().getPluginManager().registerEvents(new Forestry(), this);
 
         Objects.requireNonNull(Bukkit.getWorld("world")).setGameRule(GameRule.DO_MOB_SPAWNING, true); // Re-enable monster spawns
 
@@ -316,6 +318,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new SecretLegion(this), this);
         getServer().getPluginManager().registerEvents(new Blaze(this), this);
         getServer().getPluginManager().registerEvents(new AspectOfTheEnd(petManager), this);
+        getServer().getPluginManager().registerEvents(new Groot(), this);
 
         this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
 
@@ -370,6 +373,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(new RareCombatDrops(), this);
         getServer().getPluginManager().registerEvents(new PlayerOxygenManager(this), this);
+
+
+        Forestry forestry = Forestry.getInstance(this);
+        forestry.init(this);
+
+
+        getServer().getPluginManager().registerEvents(new ContinuityBoardManager(), this);
         getServer().getPluginManager().registerEvents(new SeaCreatureRegistry(), this);
         VillagerTradeManager tradeManager = VillagerTradeManager.getInstance(this);
         getServer().getPluginManager().registerEvents(new CakeHungerListener(), this);

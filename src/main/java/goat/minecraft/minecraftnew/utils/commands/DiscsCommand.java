@@ -65,8 +65,8 @@ public class DiscsCommand implements CommandExecutor, Listener {
                 ChatColor.YELLOW + "Music Disc Chirp",
                 ChatColor.YELLOW,
                 Arrays.asList(
-                        "Triggers Timber Boost for 3 minutes 5 seconds",
-                        "Chance to yield bonus logs and extra Forestry XP, as well as Forest Spirits"
+                        "Enrages the Forest Spirits for 3 minutes 5 seconds",
+                        "Chance to yield bonus logs and extra Forestry XP, as well as Tier 5 Forest Spirits"
                 )
         ));
         discDataMap.put(Material.MUSIC_DISC_FAR, new DiscData(

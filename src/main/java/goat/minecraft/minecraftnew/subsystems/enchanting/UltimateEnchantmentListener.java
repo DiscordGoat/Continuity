@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.enchanting;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -299,16 +300,19 @@ public class UltimateEnchantmentListener implements Listener {
             }
 
             // ---- Original BFS logic: If it’s wood, increment forestry count, 1% spirit spawn, etc. ----
+            Forestry forestry = Forestry.getInstance(MinecraftNew.getInstance());
+            XPManager xpManager = new XPManager(plugin);
             ForestryPetManager forestryPetManager = MinecraftNew.getInstance().getForestryManager();
             forestryPetManager.incrementForestryCount(player);
+            forestry.processPerfectAppleChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"));
+            forestry.processDoubleDropChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"));
+            forestry.incrementNotoriety(player);
 
             // 1% chance to summon a Forest Spirit if the block is wood
-            Random random = new Random();
-            if (random.nextInt(100) < 1) { // 1% chance
-                ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
-                forestSpiritManager.spawnSpirit(currentBlock.getType(), player.getLocation(), player);
-                player.sendMessage(ChatColor.LIGHT_PURPLE + "A Forest Spirit has been summoned!");
-            }
+
+            ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
+            forestSpiritManager.attemptSpiritSpawn(0.05, currentBlock.getLocation(), currentBlock, player);
+
 
             // Check all neighbors within a 1-block radius for more wood
             for (int x = -1; x <= 1; x++) {

@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.other.additionalfunctionality.SpawnMonsters;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
@@ -854,14 +855,29 @@ public class MusicDiscManager implements Listener {
 
     private void handleMusicDiscChirp(Player player) {
         XPManager xpManager = new XPManager(plugin);
-        // Notify the player and play the music disc sound
         Bukkit.broadcastMessage(ChatColor.YELLOW + "Timber Boost! Bonus log-chopping event activated for 3 minutes and 5 seconds!");
         player.playSound(player.getLocation(), Sound.MUSIC_DISC_CHIRP, 1000.0f, 1.0f);
+
+        // Rapidly increase notoriety by 1 every tick for the duration of the song (185 seconds)
+        int durationTicks = 185 * 20; // 185 seconds * 20 ticks per second
+        new BukkitRunnable() {
+            int ticks = 0;
+            @Override
+            public void run() {
+                if (ticks >= durationTicks) {
+                    cancel();
+                    return;
+                }
+                // Increment notoriety by 1 every tick
+                Forestry.getInstance(MinecraftNew.getInstance()).incrementNotoriety(player);
+                ticks++;
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
 
         // Listener for block-breaking events during the Timber Boost
         Listener logBreakListener = new Listener() {
             @EventHandler
-            public void onLogChop(BlockBreakEvent event) {
+            public void onLogChop(org.bukkit.event.block.BlockBreakEvent event) {
                 // Ensure the event is triggered by the same player who activated the disc
                 if (!event.getPlayer().equals(player)) {
                     return;
@@ -882,7 +898,7 @@ public class MusicDiscManager implements Listener {
                     Sound jingle = Sound.BLOCK_NOTE_BLOCK_BASS; // default sound
                     float pitch = 1.0f;
 
-                    if (roll <= 0.2) { // Legendary (0.5% chance)
+                    if (roll <= 0.2) { // Legendary (0.2% chance)
                         bonusLogs = 64;
                         jingle = Sound.ENTITY_ENDER_DRAGON_GROWL;
                         pitch = 2.0f;
@@ -897,12 +913,12 @@ public class MusicDiscManager implements Listener {
                         jingle = Sound.ENTITY_PLAYER_LEVELUP;
                         pitch = 1.5f;
                         xpManager.addXP(player, "Forestry", 175);
-                    } else if (roll <= 3.5) { // Uncommon (3% chance)
+                    } else if (roll <= 3.5) { // Uncommon (3.5% chance)
                         bonusLogs = 8;
                         jingle = Sound.BLOCK_NOTE_BLOCK_PLING;
                         pitch = 1.2f;
                         xpManager.addXP(player, "Forestry", 100);
-                    } else if (roll <= 5.5) { // Common (4% chance)
+                    } else if (roll <= 5.5) { // Common (5.5% chance)
                         bonusLogs = 4;
                         jingle = Sound.BLOCK_NOTE_BLOCK_BASS;
                         pitch = 1.0f;
@@ -914,15 +930,8 @@ public class MusicDiscManager implements Listener {
                         ItemStack bonusLogStack = new ItemStack(brokenMaterial, bonusLogs);
                         event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), bonusLogStack);
                         player.playSound(player.getLocation(), jingle, 3.0f, pitch);
-                        event.getPlayer().sendMessage(ChatColor.GOLD + "Bonus Logs! You received "
-                                + bonusLogs + " extra "
-                                + brokenMaterial.name().toLowerCase().replace("_", " ") + "!");
-                    }
-
-                    // Additional 4% chance to spawn an extra Forest Spirit for the duration of the disc
-                    if (Math.random() * 100 < 4) { // 4% chance
-                        ForestSpiritManager.getInstance(MinecraftNew.getInstance()).spawnSpirit(brokenMaterial, event.getBlock().getLocation(), player);
-                        player.sendMessage(ChatColor.LIGHT_PURPLE + "An additional Forest Spirit has been summoned!");
+                        player.sendMessage(ChatColor.GOLD + "Bonus Logs! You received " + bonusLogs + " extra " +
+                                brokenMaterial.name().toLowerCase().replace("_", " ") + "!");
                     }
                 }
             }
@@ -933,10 +942,11 @@ public class MusicDiscManager implements Listener {
 
         // Unregister the listener after 185 seconds (3 minutes and 5 seconds)
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            HandlerList.unregisterAll(logBreakListener);
+            org.bukkit.event.HandlerList.unregisterAll(logBreakListener);
             player.sendMessage(ChatColor.RED + "The Timber Boost event has ended!");
-        }, 185 * 20L); // 20 ticks = 1 second
+        }, 185 * 20L);
     }
+
 
     private void handleMusicDiscMellohi(Player player) {
         // Play the Mellohi music disc sound

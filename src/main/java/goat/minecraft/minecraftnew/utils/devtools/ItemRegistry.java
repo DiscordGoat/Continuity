@@ -46,6 +46,116 @@ public class ItemRegistry {
         return null;
     }
 
+
+    public static ItemStack getPetrifiedLog() {
+        return createCustomItem(
+                Material.OAK_WOOD,
+                ChatColor.YELLOW + "Petrified Log",
+                Arrays.asList(
+                        ChatColor.GRAY + "A hardened log infused with forest magic.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Unbreaking.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+
+    }
+
+    public static ItemStack getPinecone() {
+        return createCustomItem(
+                Material.SPRUCE_SAPLING,
+                ChatColor.YELLOW + "Pinecone",
+                Arrays.asList(
+                        ChatColor.GRAY + "A pinecone that never withers.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Blast Protection.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+
+    }
+
+    public static ItemStack getBirchStrip() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.YELLOW + "Birch Strip",
+                Arrays.asList(
+                        ChatColor.GRAY + "A smooth strip from birch wood.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Projectile Protection.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+
+    }
+
+    public static ItemStack getHumidBark() {
+        return createCustomItem(
+                Material.COCOA_BEANS,
+                ChatColor.YELLOW + "Humid Bark",
+                Arrays.asList(
+                        ChatColor.GRAY + "Bark soaked in jungle moisture.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Feather Falling.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+
+    }
+
+    public static ItemStack getAcaciaGum() {
+        return createCustomItem(
+                Material.HONEY_BOTTLE,
+                ChatColor.YELLOW + "Acacia Gum",
+                Arrays.asList(
+                        ChatColor.GRAY + "Sticky gum from acacia trees.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Fire Protection.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+
+    }
+
+    public static ItemStack getAcorn() {
+        return createCustomItem(
+                Material.BEETROOT_SEEDS,
+                ChatColor.YELLOW + "Acorn",
+                Arrays.asList(
+                        ChatColor.GRAY + "An acorn with dark energy.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Blast Protection.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+
+    }
+
+    public static ItemStack getCherryBlossom() {
+        return createCustomItem(
+                Material.PINK_TULIP,
+                ChatColor.YELLOW + "Cherry Blossom",
+                Arrays.asList(
+                        ChatColor.GRAY + "A delicate cherry blossom.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Unbreaking +II.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+
+    }
+
+    public static ItemStack getMapleBark() {
+        return createCustomItem(
+                Material.CRIMSON_HYPHAE,
+                ChatColor.YELLOW + "Maple Bark",
+                Arrays.asList(
+                        ChatColor.GRAY + "Bark imbued with crimson essence.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Fire Protection.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+
+    }
+
+    public static ItemStack getBlueNetherWart() {
+        return createCustomItem(
+                Material.NETHER_WART,
+                ChatColor.YELLOW + "Blue Nether Wart",
+                Arrays.asList(
+                        ChatColor.GRAY + "A warped growth from the Nether.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Blast Protection.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+    }
+
+
+
     public static ItemStack getExperienceArtifact() {
         return createCustomItem(Material.GLASS_BOTTLE, ChatColor.YELLOW +
                 "Experience Artifact Tier 1", Arrays.asList(
