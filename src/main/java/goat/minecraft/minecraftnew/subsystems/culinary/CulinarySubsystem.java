@@ -644,7 +644,7 @@ public class CulinarySubsystem implements Listener {
 
         // Drop final output
         ItemStack result = createOutputItem(session.recipe);
-        session.tableLocation.getWorld().dropItemNaturally(session.tableLocation.clone().add(0.5, 1, 0.5), result);
+        session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result);
         XPManager xpManager = new XPManager(plugin);
         xpManager.addXP(player, "Culinary", session.recipe.getXpReward());
         player.sendMessage(ChatColor.GREEN + "You crafted " + session.recipe.getName() + "! You gained culinary XP.");

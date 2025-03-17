@@ -41,6 +41,21 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         this.plugin = plugin;
         startGlobalScheduler();  // Start the new 1-second countdown
     }
+    /**
+ * Checks if a villager is eligible for work cycles.
+ * Only villagers with custom names (green male names) are eligible.
+ *
+ * @param villager The villager to check
+ * @return true if the villager is eligible for work cycles, false otherwise
+ */
+private boolean isEligibleForWorkCycle(Villager villager) {
+    // Check if villager has a custom name
+    if(villager.getCustomName() != null){
+        return true;
+    } else {
+        return false;
+    }
+}
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("forceworkcycle")) {
@@ -98,7 +113,13 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 .flatMap(world -> world.getEntitiesByClass(Villager.class).stream())
                 .toList()) {
             // Perform work for each villager
-            performVillagerWork(villager);
+            if(!isEligibleForWorkCycle(villager)){
+                return; // Skip non-eligible villagers
+            }
+            else{
+                performVillagerWork(villager);
+            }
+
         }
     }
 

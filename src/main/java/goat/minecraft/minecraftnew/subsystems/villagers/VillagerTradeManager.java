@@ -405,6 +405,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("BUCKET", 1, 8, 1)); // Material
 
         toolsmithPurchases.add(createTradeMap("SHIELD", 1, 10, 2)); // Material
+        toolsmithPurchases.add(createTradeMap("CAULDRON", 1, 5, 2)); // Material
         toolsmithPurchases.add(createTradeMap("UNCOMMON_TOOL_REFORGE", 1, 8, 2)); // Custom Item
 
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_REFORGE", 1, 64, 3)); // Custom Item
@@ -584,7 +585,7 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("BEETROOT_SEEDER", 1, 64, 3)); // Custom item
         farmerPurchases.add(createTradeMap("CARROT_SEEDER", 1, 64, 3)); // Custom item
         farmerPurchases.add(createTradeMap("POTATO_SEEDER", 1, 64, 3)); // Custom item
-        farmerPurchases.add(createTradeMap("MILK_BUCKET", 1, 3, 3)); // Level 3 trade
+        farmerPurchases.add(createTradeMap("MILK_BUCKET", 5, 15, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("EGG", 12, 12, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5)); // Level 5 trade

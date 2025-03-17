@@ -254,12 +254,12 @@ public class Mining implements Listener {
 
             // Apply haste effect based on Mining level
             int miningLevel = xpManager.getPlayerLevel(player, "Mining");
-            int doubleDropChance = miningLevel / 2;
+            double doubleDropChance = (double) miningLevel / 2;
 
             boolean hasDiamondGem = gemManager.getGemsFromItem(tool).contains(MiningGemManager.MiningGem.DIAMOND_GEM);
-            int tripleDropChance = hasDiamondGem ? 10 : 0; // 10% chance for triple drops if Diamond Gem is applied
+            double tripleDropChance = hasDiamondGem ? 10 : 0; // 10% chance for triple drops if Diamond Gem is applied
 
-            int roll = random.nextInt(100) + 1;
+            double roll = random.nextInt(100) + 1;
 
             if (roll <= tripleDropChance) {
                 // Triple drop chance

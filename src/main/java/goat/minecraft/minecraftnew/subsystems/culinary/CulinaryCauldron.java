@@ -212,25 +212,58 @@ public class CulinaryCauldron implements Listener {
      * - Drop the output item on top of the cauldron
      * - Clear the cauldron from activeCauldrons
      */
-    private void finishCooking(Location cauldronLoc, ItemStack inputKey, Player player, ArmorStand stirStand) {
-        if (stirStand != null && !stirStand.isDead()) {
-            stirStand.remove();
-        }
-
-        // Retrieve the output from the recipes map
-        ItemStack output = recipes.get(inputKey);
-        if (output == null) {
-            // If something is off and no recipe found, just return the input
-            output = new ItemStack(inputKey);
-        }
-
-        // Drop the output item at the cauldron location
-        cauldronLoc.getWorld().dropItemNaturally(cauldronLoc.clone().add(0.5, 1.0, 0.5), output);
-        cauldronLoc.getWorld().dropItemNaturally(cauldronLoc.clone().add(0.5, 1.0, 0.5), output);
-        cauldronLoc.getWorld().dropItemNaturally(cauldronLoc.clone().add(0.5, 1.0, 0.5), output);
-        cauldronLoc.getWorld().dropItemNaturally(cauldronLoc.clone().add(0.5, 1.0, 0.5), output);
-
-        activeCauldrons.remove(cauldronLoc);
+    /**
+ * Finish the cooking process:
+ * - Remove stirring stand
+ * - Launch the output items towards the player
+ * - Clear the cauldron from activeCauldrons
+ */
+private void finishCooking(Location cauldronLoc, ItemStack inputKey, Player player, ArmorStand stirStand) {
+    if (stirStand != null && !stirStand.isDead()) {
+        stirStand.remove();
     }
+
+    // Retrieve the output from the recipes map
+    ItemStack output = recipes.get(inputKey);
+    if (output == null) {
+        // If something is off and no recipe found, just return the input
+        output = new ItemStack(inputKey);
+    }
+
+    // Play a completion sound and particles
+    cauldronLoc.getWorld().playSound(cauldronLoc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
+    cauldronLoc.getWorld().spawnParticle(
+            Particle.SPELL_WITCH,
+            cauldronLoc.clone().add(0.5, 1.0, 0.5),
+            20, 0.3, 0.3, 0.3, 0.05
+    );
+
+    // Calculate vector from cauldron to player
+    Location spawnLoc = cauldronLoc.clone().add(0.5, 1.0, 0.5);
+    org.bukkit.util.Vector direction = player.getLocation().toVector().subtract(spawnLoc.toVector());
+    
+    // Normalize and scale the vector for a nice arc
+    direction.normalize().multiply(0.3);
+    direction.setY(0.2); // Add some upward velocity for an arc effect
+    
+    // Drop multiple items with velocity towards the player
+    for (int i = 0; i < 4; i++) {
+        org.bukkit.entity.Item item = cauldronLoc.getWorld().dropItem(spawnLoc, output.clone());
+        item.setVelocity(direction);
+        
+        // Add a slight random variation to each item's trajectory
+        org.bukkit.util.Vector randomOffset = new org.bukkit.util.Vector(
+                (Math.random() - 0.5) * 0.1,
+                Math.random() * 0.1,
+                (Math.random() - 0.5) * 0.1
+        );
+        item.setVelocity(item.getVelocity().add(randomOffset));
+        
+        // Make items not despawn as quickly
+        item.setPickupDelay(10);
+    }
+
+    activeCauldrons.remove(cauldronLoc);
+}
 
 }
