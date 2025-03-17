@@ -482,7 +482,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         PetManager.getInstance(this).savePets();
         anvilRepair.saveAllInventories();
         cancelBrewing.saveAllInventories();
-        System.out.println("[MinecraftNew] Plugin disabled.");
+        System.out.println("[MinecraftNew] Plugin disabled.");//
     }
     public static MinecraftNew getInstance() {
 
