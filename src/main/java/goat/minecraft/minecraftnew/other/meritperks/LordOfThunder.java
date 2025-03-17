@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.other.meritperks;
 
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.entity.Boss;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -19,14 +19,14 @@ import java.util.UUID;
 
 public class LordOfThunder implements Listener {
 
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
     private final JavaPlugin plugin;
     private final Random random = new Random();
     private final long COOLDOWN_TIME = 1000 * 60 * 8; // 45 seconds cooldown
     private final Map<UUID, Long> lastActivationTime = new HashMap<>();
     private final double PROC_CHANCE = 0.05; // 5% chance
 
-    public LordOfThunder(JavaPlugin plugin, PlayerDataManager playerData) {
+    public LordOfThunder(JavaPlugin plugin, PlayerMeritManager playerData) {
         this.plugin = plugin;
         this.playerData = playerData;
     }

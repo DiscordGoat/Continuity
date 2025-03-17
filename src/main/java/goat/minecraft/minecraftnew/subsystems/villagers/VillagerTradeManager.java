@@ -7,12 +7,11 @@ import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.ServerUtils;
+import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -1677,7 +1676,7 @@ public class VillagerTradeManager implements Listener {
         for (Player player : villager.getWorld().getPlayers()) {
             double distance = player.getLocation().distance(villager.getLocation());
             if (distance <= 1000) {
-                if (!ServerUtils.isPlayerAFK(player)) {
+                if (!AFKDetector.isPlayerAFK(player)) {
                     activePlayerNearby = true;
                     plugin.getLogger().info("[XP Update] Active player '" + player.getName()
                             + "' is within " + distance + " blocks.");

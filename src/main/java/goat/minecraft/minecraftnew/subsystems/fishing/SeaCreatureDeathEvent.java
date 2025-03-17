@@ -4,7 +4,6 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -88,9 +87,9 @@ public class SeaCreatureDeathEvent implements Listener {
         int boostedXP = getBoostedXP(seaCreature.getRarity(), hostilityLevel);
         xpManager.addXP(killer, "Fishing", boostedXP);
         event.setDroppedExp(500);
-        FishermansTally fishermansTally = FishermansTally.getInstance();
+        FishingPetManager fishingPetManager = FishingPetManager.getInstance();
 
-        fishermansTally.incrementSeaCreatureKills(player);
+        fishingPetManager.incrementSeaCreatureKills(player);
 
         Bukkit.getLogger().info("Player " + killer.getName() + " gained " + boostedXP + " Fishing XP.");
 
@@ -125,7 +124,7 @@ public class SeaCreatureDeathEvent implements Listener {
         // Play effects    
         playDeathEffects(entity, seaCreature.getRarity());
 
-        int kills = fishermansTally.getSeaCreatureKills(player);
+        int kills = fishingPetManager.getSeaCreatureKills(player);
 
             if (kills >= 3) {
                 petRegistry.addPetByName(killer, "Fish");

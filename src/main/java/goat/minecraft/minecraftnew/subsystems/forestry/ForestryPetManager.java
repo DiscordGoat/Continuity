@@ -4,7 +4,6 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.ChatColor;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,13 +12,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
-public class ForestryManager {
+public class ForestryPetManager {
 
     private final MinecraftNew plugin;
     private final File countsFile;
     private final FileConfiguration countsConfig;
 
-    public ForestryManager(MinecraftNew plugin) {
+    public ForestryPetManager(MinecraftNew plugin) {
         this.plugin = plugin;
 
         // Ensure the data folder exists

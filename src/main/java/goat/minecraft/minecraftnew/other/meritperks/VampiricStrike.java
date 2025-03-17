@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.other.meritperks;
 
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.Sound;
 import org.bukkit.entity.Boss;
 import org.bukkit.entity.Entity;
@@ -18,14 +18,14 @@ import java.util.UUID;
 
 public class VampiricStrike implements Listener {
 
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
     private final JavaPlugin plugin;
     private final Random random = new Random();
     private final long COOLDOWN_TIME = 1000; // 1 seconds cooldown (1 minute)
     private final Map<UUID, Long> lastActivationTime = new HashMap<>();
     private final double PROC_CHANCE = 0.05; // 5% chance
 
-    public VampiricStrike(JavaPlugin plugin, PlayerDataManager playerData) {
+    public VampiricStrike(JavaPlugin plugin, PlayerMeritManager playerData) {
         this.plugin = plugin;
         this.playerData = playerData;
     }

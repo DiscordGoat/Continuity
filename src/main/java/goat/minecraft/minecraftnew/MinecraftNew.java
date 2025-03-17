@@ -13,7 +13,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.*;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
-import goat.minecraft.minecraftnew.subsystems.forestry.ForestryManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
 
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.*;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.WitherPetGrantListener;
@@ -46,9 +46,9 @@ import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.devtools.*;
-import goat.minecraft.minecraftnew.utils.dimensions.end.CustomEndArchipelago;
+import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 
-import goat.minecraft.minecraftnew.utils.dimensions.nether.CustomNetherCreator;
+import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import org.bukkit.*;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -76,7 +76,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private EngineerVillagerManager engineerVillagerManager;
     private LockedRecipeManager lockedRecipeManager;
     private RecipeManager recipeManager;
-    private ForestryManager forestryManager;
+    private ForestryPetManager forestryPetManager;
 
     public static Collections getCollectionsManager() {
         return collectionsManager;
@@ -156,11 +156,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("island").setExecutor(new IslandCommand());
 
 
-        CustomNetherCreator.init(this);
+        PigStepArena.init(this);
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
-        PlayerDataManager playerData = PlayerDataManager.getInstance(this);
+        PlayerMeritManager playerData = PlayerMeritManager.getInstance(this);
 
         // Register commands
         getCommand("merits").setExecutor(new MeritCommand(this, playerData));
@@ -183,8 +183,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
-        getServer().getPluginManager().registerEvents(new ServerUtils.PlayerMoveListener(), this);
-        CustomEndArchipelago.init(this);
+        getServer().getPluginManager().registerEvents(new AFKDetector.PlayerMoveListener(), this);
+        BetterEnd.init(this);
 
         new Sleep(this);
         getServer().getPluginManager().registerEvents(new ShulkerBox(), this);
@@ -200,7 +200,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomBundleGUI.init(this);
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 
-        forestryManager = new ForestryManager(this);
+        forestryPetManager = new ForestryPetManager(this);
         getServer().getPluginManager().registerEvents(new Forestry(), this);
 
         Objects.requireNonNull(Bukkit.getWorld("world")).setGameRule(GameRule.DO_MOB_SPAWNING, true); // Re-enable monster spawns
@@ -212,7 +212,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         getCommand("recipes").setExecutor(new RecipesCommand(recipeManager));
         getCommand("discs").setExecutor(new DiscsCommand());
-        getServer().getPluginManager().registerEvents(new DiscsInventoryListener(), this);
+        getServer().getPluginManager().registerEvents(new DiscsCommand(), this);
         getCommand("viewrecipe").setExecutor(new ViewRecipeCommand(recipeManager));
         getServer().getPluginManager().registerEvents(new Doors(), this);
         getServer().getPluginManager().registerEvents(new ViewRecipeCommand.ViewRecipeListener(), this);
@@ -488,7 +488,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         return instance; // Provide a static method to get the instance
     }
-    public ForestryManager getForestryManager() {
-        return forestryManager;
+    public ForestryPetManager getForestryManager() {
+        return forestryPetManager;
     }
 }

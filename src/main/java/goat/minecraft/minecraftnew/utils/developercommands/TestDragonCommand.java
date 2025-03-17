@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.utils.dimensions.end.dragons.StrongDragon;
+import goat.minecraft.minecraftnew.cut_content.dragons.StrongDragon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -15,8 +15,6 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.metadata.FixedMetadataValue;
 
 public class TestDragonCommand implements CommandExecutor, Listener {
 

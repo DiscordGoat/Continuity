@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -15,9 +15,9 @@ import java.util.UUID;
 public class GrantMerit implements CommandExecutor {
 
     private final JavaPlugin plugin;
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
 
-    public GrantMerit(JavaPlugin plugin, PlayerDataManager playerData) {
+    public GrantMerit(JavaPlugin plugin, PlayerMeritManager playerData) {
         this.plugin = plugin;
         this.playerData = playerData;
     }

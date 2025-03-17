@@ -6,17 +6,26 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public class DiscsCommand implements CommandExecutor {
+public class DiscsCommand implements CommandExecutor, Listener {
 
     // A mapping from each music disc Material to its display data.
     private final Map<Material, DiscData> discDataMap;
-
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        // Check if the inventory title is the one we set in our command
+        if (event.getView().getTitle().equals(ChatColor.DARK_AQUA + "Music Discs")) {
+            event.setCancelled(true);
+        }
+    }
     public DiscsCommand() {
         discDataMap = new HashMap<>();
         // Populate disc data for each music disc

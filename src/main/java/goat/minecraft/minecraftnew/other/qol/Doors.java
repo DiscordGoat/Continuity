@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.other.qol;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -36,9 +36,9 @@ public class Doors implements Listener {
         if (doorData.isOpen()) {
             return;
         }
-        PlayerDataManager playerDataManager = PlayerDataManager.getInstance(MinecraftNew.getInstance());
+        PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
         Player player = event.getPlayer();
-        if(playerDataManager.hasPerk(player.getUniqueId(), "Motion Sensor")) {
+        if(playerMeritManager.hasPerk(player.getUniqueId(), "Motion Sensor")) {
             openOrCloseDoor(bottomDoorBlock, true);
             playDoorSound(bottomDoorBlock, true);
 

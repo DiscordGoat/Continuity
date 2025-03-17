@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.utils.commands;
 
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,7 +25,7 @@ import java.util.List;
 public class MeritCommand implements CommandExecutor, Listener {
 
     private final JavaPlugin plugin;
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
 
     /**
      * Simple container for perk data: supports & color codes in name,
@@ -139,7 +139,7 @@ public class MeritCommand implements CommandExecutor, Listener {
             );
 
 
-    public MeritCommand(JavaPlugin plugin, PlayerDataManager playerData) {
+    public MeritCommand(JavaPlugin plugin, PlayerMeritManager playerData) {
         this.plugin = plugin;
         this.playerData = playerData;
     }

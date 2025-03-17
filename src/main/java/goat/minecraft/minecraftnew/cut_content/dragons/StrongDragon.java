@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils.dimensions.end.dragons;
+package goat.minecraft.minecraftnew.cut_content.dragons;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import me.gamercoder215.mobchip.DragonBrain;

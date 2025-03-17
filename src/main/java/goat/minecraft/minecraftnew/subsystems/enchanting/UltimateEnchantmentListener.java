@@ -2,8 +2,8 @@ package goat.minecraft.minecraftnew.subsystems.enchanting;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
-import goat.minecraft.minecraftnew.subsystems.forestry.ForestryManager;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -18,7 +18,6 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.event.block.Action;
@@ -300,8 +299,8 @@ public class UltimateEnchantmentListener implements Listener {
             }
 
             // ---- Original BFS logic: If it’s wood, increment forestry count, 1% spirit spawn, etc. ----
-            ForestryManager forestryManager = MinecraftNew.getInstance().getForestryManager();
-            forestryManager.incrementForestryCount(player);
+            ForestryPetManager forestryPetManager = MinecraftNew.getInstance().getForestryManager();
+            forestryPetManager.incrementForestryCount(player);
 
             // 1% chance to summon a Forest Spirit if the block is wood
             Random random = new Random();
@@ -616,13 +615,13 @@ public class UltimateEnchantmentListener implements Listener {
 
             switch (enchantName) {
                 case "warp":
-                    PlayerDataManager playerDataManager = PlayerDataManager.getInstance(plugin);
+                    PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
                     Vector direction = player.getLocation().getDirection().normalize();
                     Vector offset = direction.multiply(8);
                     player.teleport(player.getLocation().add(offset));
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0f);
                     cooldownMs = 1_000L;
-                    if(playerDataManager.hasPerk(player.getUniqueId(), "Instant Transmission")){
+                    if(playerMeritManager.hasPerk(player.getUniqueId(), "Instant Transmission")){
                         cooldownMs = 1;
                     }
                     break;

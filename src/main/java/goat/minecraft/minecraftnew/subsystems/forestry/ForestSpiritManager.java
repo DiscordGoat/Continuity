@@ -99,8 +99,8 @@ public class ForestSpiritManager implements Listener {
         if (!logsAndStems.contains(block.getType())) {
             return; // Not a log or stem, ignore
         }
-        ForestryManager forestryManager = MinecraftNew.getInstance().getForestryManager();
-        forestryManager.incrementForestryCount(player);
+        ForestryPetManager forestryPetManager = MinecraftNew.getInstance().getForestryManager();
+        forestryPetManager.incrementForestryCount(player);
         // Award XP based on the log type
         int xpAwarded = getXPAwarded(block.getType());
         xpManager.addXP(player, "Forestry", xpAwarded);

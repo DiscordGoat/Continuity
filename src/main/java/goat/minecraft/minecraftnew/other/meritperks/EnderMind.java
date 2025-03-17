@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.other.meritperks;
 
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,11 +14,11 @@ import java.util.UUID;
 
 public class EnderMind implements Listener {
 
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
     // Store players who teleported with an ender pearl and should be immune to its damage.
     private final Set<UUID> immunePlayers = new HashSet<>();
 
-    public EnderMind(PlayerDataManager playerData) {
+    public EnderMind(PlayerMeritManager playerData) {
         this.playerData = playerData;
     }
 

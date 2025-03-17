@@ -3,7 +3,7 @@ package goat.minecraft.minecraftnew.utils.devtools;
 import java.util.*;
 import org.bukkit.entity.Villager;
 
-public class VillagerUtils {
+public class VillagerNameRepository {
 
     private static final Random RANDOM = new Random();
 

@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.other.meritperks;
 
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,10 +14,10 @@ import java.util.UUID;
 
 public class QuickSwap implements Listener {
 
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
     private final JavaPlugin plugin;
 
-    public QuickSwap(JavaPlugin plugin, PlayerDataManager playerData) {
+    public QuickSwap(JavaPlugin plugin, PlayerMeritManager playerData) {
         this.plugin = plugin;
         this.playerData = playerData;
     }

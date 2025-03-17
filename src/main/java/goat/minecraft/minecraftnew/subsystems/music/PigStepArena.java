@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.utils.dimensions.nether;
+package goat.minecraft.minecraftnew.subsystems.music;
 
 import org.bukkit.*;
 import org.bukkit.generator.ChunkGenerator;
@@ -8,7 +8,7 @@ import org.bukkit.World;
 
 import java.util.Random;
 
-public class CustomNetherCreator {
+public class PigStepArena {
 
     /**
      * Initializes the custom nether world and arena if it doesn't already exist.

@@ -1,8 +1,7 @@
 package goat.minecraft.minecraftnew.other.meritperks;
 
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -19,13 +18,13 @@ import java.util.UUID;
 
 public class TacticalRetreat implements Listener {
 
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
     private final JavaPlugin plugin;
     private final Map<UUID, Double> playerHealthMap = new HashMap<>();
     private final long COOLDOWN_TIME = 30000; // 30 seconds cooldown
     private final Map<UUID, Long> lastActivationTime = new HashMap<>();
 
-    public TacticalRetreat(JavaPlugin plugin, PlayerDataManager playerData) {
+    public TacticalRetreat(JavaPlugin plugin, PlayerMeritManager playerData) {
         this.plugin = plugin;
         this.playerData = playerData;
     }

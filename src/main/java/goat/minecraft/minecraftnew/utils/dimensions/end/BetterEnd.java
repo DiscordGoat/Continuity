@@ -37,7 +37,7 @@ import java.util.Random;
  *
  * Usage: call CustomEndArchipelago.init(plugin) in your main onEnable().
  */
-public class CustomEndArchipelago implements Listener {
+public class BetterEnd implements Listener {
 
     // ---------------- Configuration ----------------
 
@@ -89,7 +89,7 @@ public class CustomEndArchipelago implements Listener {
         customEndWorld = Bukkit.createWorld(creator);
 
         // Register event listeners for redirecting players.
-        Bukkit.getPluginManager().registerEvents(new CustomEndArchipelago(), plugin);
+        Bukkit.getPluginManager().registerEvents(new BetterEnd(), plugin);
 
         // Optionally ensure the Ender Dragon is spawned in this custom world.
         spawnDragonIfNone(plugin);

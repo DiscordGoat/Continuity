@@ -2,7 +2,7 @@ package goat.minecraft.minecraftnew.other.meritperks;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,9 +11,9 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 
 public class Trainer implements Listener {
 
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
 
-    public Trainer(PlayerDataManager playerData) {
+    public Trainer(PlayerMeritManager playerData) {
         this.playerData = playerData;
     }
 

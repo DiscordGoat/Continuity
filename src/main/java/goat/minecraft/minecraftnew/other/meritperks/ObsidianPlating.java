@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.other.meritperks;
 
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -10,10 +10,10 @@ import java.util.Random;
 
 public class ObsidianPlating implements Listener {
 
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
     private final Random random = new Random();
 
-    public ObsidianPlating(PlayerDataManager playerData) {
+    public ObsidianPlating(PlayerMeritManager playerData) {
         this.playerData = playerData;
     }
 

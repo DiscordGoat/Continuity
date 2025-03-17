@@ -34,17 +34,6 @@ public class StructureUtils {
         return null;
     }
 
-    public Location getNearestStructureLocation(StructureType type, Entity entity) {
-        if (entity == null || entity.getWorld() == null) {
-            return null; // Invalid entity or world
-        }
-
-        // Locate the nearest structure of the specified type within a 100,000 block radius
-        Location structureLocation = entity.getWorld().locateNearestStructure(entity.getLocation(), type, 100000, false);
-
-        return structureLocation; // Return the Location object directly
-    }
-
 
     /**
      * Formats the structure type name to a more readable format.

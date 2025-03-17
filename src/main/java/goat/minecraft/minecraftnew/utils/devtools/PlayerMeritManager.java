@@ -9,16 +9,16 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-public class PlayerDataManager {
+public class PlayerMeritManager {
 
-    private static PlayerDataManager instance;
+    private static PlayerMeritManager instance;
 
     private final JavaPlugin plugin;
     private File dataFile;
     private FileConfiguration dataConfig;
 
     // Private constructor to prevent external instantiation.
-    private PlayerDataManager(JavaPlugin plugin) {
+    private PlayerMeritManager(JavaPlugin plugin) {
         this.plugin = plugin;
         init();
     }
@@ -30,9 +30,9 @@ public class PlayerDataManager {
      * @param plugin The JavaPlugin instance.
      * @return The singleton instance.
      */
-    public static PlayerDataManager getInstance(JavaPlugin plugin) {
+    public static PlayerMeritManager getInstance(JavaPlugin plugin) {
         if (instance == null) {
-            instance = new PlayerDataManager(plugin);
+            instance = new PlayerMeritManager(plugin);
         }
         return instance;
     }

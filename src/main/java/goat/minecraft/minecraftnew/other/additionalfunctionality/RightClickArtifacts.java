@@ -6,7 +6,7 @@ import goat.minecraft.minecraftnew.subsystems.farming.SeederType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.biomeutils.StructureUtils;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.VillagerUtils;
+import goat.minecraft.minecraftnew.utils.devtools.VillagerNameRepository;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -463,7 +463,7 @@ public class RightClickArtifacts implements Listener {
 
                 // Retrieve a funny name based on the villager's current profession.
                 // If there's no matching funny name, a random male name is returned.
-                String villagerName = VillagerUtils.getRandomMaleName();
+                String villagerName = VillagerNameRepository.getRandomMaleName();
 
                 // Set the custom name of the villager and make it visible.
                 villager.setCustomName(ChatColor.GREEN + villagerName);

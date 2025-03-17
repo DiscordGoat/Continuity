@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ServerUtils {
+public class AFKDetector {
 
     // Map to store the last time (in milliseconds) each player moved.
     private static final Map<UUID, Long> lastMovementTimestamps = new ConcurrentHashMap<>();

@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.other.meritperks;
 
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class BerserkersRage implements Listener {
 
-    private final PlayerDataManager playerData;
+    private final PlayerMeritManager playerData;
     private final JavaPlugin plugin;
     // Map to track players' health before damage
     private final Map<UUID, Double> playerHealthMap = new HashMap<>();
@@ -25,7 +25,7 @@ public class BerserkersRage implements Listener {
     // Map to track when each player last activated the effect
     private final Map<UUID, Long> lastActivationTime = new HashMap<>();
 
-    public BerserkersRage(JavaPlugin plugin, PlayerDataManager playerData) {
+    public BerserkersRage(JavaPlugin plugin, PlayerMeritManager playerData) {
         this.plugin = plugin;
         this.playerData = playerData;
     }

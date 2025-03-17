@@ -6,7 +6,7 @@ import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManage
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.SpawnMonsters;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerDataManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -100,9 +100,9 @@ public class FishingEvent implements Listener {
         if (isReforgedForSeaCreatures(player.getInventory().getItemInMainHand())) {
             seaCreatureChance += 4; // +4% if the item is reforged
         }
-        PlayerDataManager playerDataManager = PlayerDataManager.getInstance(plugin);
+        PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
 
-        if (playerDataManager.hasPerk(player.getUniqueId(), "Deep Hook")) {
+        if (playerMeritManager.hasPerk(player.getUniqueId(), "Deep Hook")) {
             seaCreatureChance += 5; // +4% if the item is reforged
         }
         // Check active pet perks

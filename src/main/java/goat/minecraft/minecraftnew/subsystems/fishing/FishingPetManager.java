@@ -5,13 +5,13 @@ import org.bukkit.entity.Player;
 
 import java.io.*;
 
-public class FishermansTally {
+public class FishingPetManager {
 
     // Directory to store each player's tally file.
     private static final File DATA_FOLDER = new File(MinecraftNew.getInstance().getDataFolder(), "fishermanTally");
 
     // Singleton instance.
-    private static FishermansTally instance;
+    private static FishingPetManager instance;
 
     // Ensure the directory exists.
     static {
@@ -21,16 +21,16 @@ public class FishermansTally {
     }
 
     // Private constructor to prevent instantiation.
-    private FishermansTally() { }
+    private FishingPetManager() { }
 
     /**
      * Returns the singleton instance of FishermansTally.
      *
      * @return the instance.
      */
-    public static FishermansTally getInstance() {
+    public static FishingPetManager getInstance() {
         if (instance == null) {
-            instance = new FishermansTally();
+            instance = new FishingPetManager();
         }
         return instance;
     }
