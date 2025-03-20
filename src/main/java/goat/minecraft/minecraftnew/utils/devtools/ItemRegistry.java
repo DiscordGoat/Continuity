@@ -58,7 +58,17 @@ public class ItemRegistry {
                 ), 1, false, true);
 
     }
+    public static ItemStack getWarp() {
+        return createCustomItem(
+                Material.GLOWSTONE_DUST,
+                ChatColor.YELLOW + "Warp",
+                Arrays.asList(
+                        ChatColor.GRAY + "A secret traveling technique.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Warps you forward 8 blocks.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ), 1, false, true);
 
+    }
     public static ItemStack getPinecone() {
         return createCustomItem(
                 Material.SPRUCE_SAPLING,

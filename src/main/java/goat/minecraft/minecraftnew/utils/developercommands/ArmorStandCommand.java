@@ -26,7 +26,7 @@ public class ArmorStandCommand implements CommandExecutor {
         return false;
     }
 
-    private void removeInvisibleArmorStands() {
+    public void removeInvisibleArmorStands() {
         // Assuming you want to remove armor stands in a specific world
         plugin.getServer().getWorlds().forEach(world -> {
             world.getEntities().stream()

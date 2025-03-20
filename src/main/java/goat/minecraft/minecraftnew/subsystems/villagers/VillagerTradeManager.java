@@ -8,6 +8,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
+import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -930,11 +931,18 @@ public class VillagerTradeManager implements Listener {
         if (event.getRightClicked() instanceof Villager villager) {
             event.setCancelled(true); // Cancel default trading
             Player player = event.getPlayer();
-
+            VillagerWorkCycleManager villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(MinecraftNew.getInstance());
+            if(!(villagerWorkCycleManager.isEligibleForWorkCycle(villager))){
+                Speech speech = new Speech(plugin);
+                speech.createText(villager.getLocation(), "If you had 4 emeralds and crouched, you could hire me to work at your base!", 1);
+                return;
+            }
             playerVillagerMap.put(player, villager); // Store the villager in the map with the player
             if(!(villager.getProfession() == Villager.Profession.NONE)) {
                 openVillagerTradeGUI(player);
             }
+
+
         }
     }
     private int calculateDiscountedPrice(Player player, int basePrice) {

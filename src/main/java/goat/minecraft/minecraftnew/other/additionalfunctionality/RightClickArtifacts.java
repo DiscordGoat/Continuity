@@ -258,11 +258,8 @@ public class RightClickArtifacts implements Listener {
     @EventHandler
     public void onRightClick(PlayerInteractEvent e) {
         // Ensure the event only triggers for the main hand
-
-
-        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
-
-            if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+        if (e.getAction() == Action.RIGHT_CLICK_AIR) {
+            if(e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
                 Player player = e.getPlayer();
                 ItemStack itemInHand = player.getInventory().getItemInMainHand();
                 if (e.getHand().equals(EquipmentSlot.HAND)) {
@@ -565,6 +562,14 @@ public class RightClickArtifacts implements Listener {
                 paper.setItemMeta(paperMeta);
                 decrementItemAmount(itemInHand, player);
                 player.getLocation().getWorld().dropItem(player.getLocation(), paper);
+            }
+            if(displayName.equals(ChatColor.YELLOW + "Warp")){
+                player.playSound(player.getLocation(), Sound.ENTITY_FOX_TELEPORT, 10, 10);
+                Vector direction = player.getLocation().getDirection().normalize();
+                Vector offset = direction.multiply(8);
+                player.teleport(player.getLocation().add(offset));
+                decrementItemAmount(itemInHand, player);
+
             }
             if(displayName.equals(ChatColor.YELLOW + "Ocean Monument Location")){
                 player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 10, 10);

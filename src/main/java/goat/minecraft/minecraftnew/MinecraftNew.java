@@ -144,7 +144,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-
+        ArmorStandCommand armorStandCommand = new ArmorStandCommand(this);
+        armorStandCommand.removeInvisibleArmorStands();
 
 
         new SetDurabilityCommand(this);
@@ -474,6 +475,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        Speech speech = new Speech(this);
+        speech.removeAllSpeech();
 
         MusicDiscManager musicDiscManager = new MusicDiscManager(this);
         musicDiscManager.resetHostilityLevelsOnDisable();

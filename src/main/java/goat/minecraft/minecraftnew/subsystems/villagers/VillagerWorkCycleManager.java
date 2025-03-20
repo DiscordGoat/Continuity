@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.villagers;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.*;
@@ -20,8 +21,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -48,7 +51,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
  * @param villager The villager to check
  * @return true if the villager is eligible for work cycles, false otherwise
  */
-private boolean isEligibleForWorkCycle(Villager villager) {
+    public boolean isEligibleForWorkCycle(Villager villager) {
     // Check if villager has a custom name
     if(villager.getCustomName() != null){
         return true;
@@ -126,6 +129,10 @@ private boolean isEligibleForWorkCycle(Villager villager) {
     private void performVillagerWork(Villager villager) {
         Villager.Profession profession = villager.getProfession();
         int searchRadius = 10; // Configurable radius
+        if(Bukkit.getOnlinePlayers().isEmpty()){
+            Bukkit.getLogger().info("No players online, skipping work cycle for villagers");
+            return; // No players online, do not perform work
+        }
 
         switch (profession) {
             case FARMER -> performFarmerWork(villager);
@@ -154,6 +161,8 @@ private boolean isEligibleForWorkCycle(Villager villager) {
         // First check if there's a hay bale nearby within radius 10
         Block hayBale = findNearestBlock(villager, List.of(Material.HAY_BLOCK), 10);
         if (hayBale == null) {
+            Speech speech = new Speech(plugin);
+            speech.createText(villager.getLocation(), "If you place a hay bale nearby, I can harvest your crops for you.", 1);
             return; // No hay bale nearby, don't perform farming
         }
 
@@ -199,7 +208,6 @@ private boolean isEligibleForWorkCycle(Villager villager) {
                             // Reset crop growth
                             crop.setAge(0);
                             block.setBlockData(crop);
-                            Bukkit.getLogger().info("Resetting crop: WHEAT Yield: " + yield + ", Seeds: " + seedYield);
                         }
                     }
                 }
@@ -263,8 +271,9 @@ private boolean isEligibleForWorkCycle(Villager villager) {
             }
         }
 
-        Bukkit.getLogger().info("Final Harvest Yield: " + harvestYield);
         sendHarvestToChest(villager, harvestYield);
+        Speech speech = new Speech(plugin);
+        speech.createText(villager.getLocation(), "I harvested your nearby crops and put them in that chest!", 1);
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ROOTED_DIRT_BREAK, 1.0f, 1.0f);
     }
 
@@ -316,55 +325,47 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
     private void performButcherWork(Villager villager, int radius) {
         Block smoker = findNearestBlock(villager, List.of(Material.SMOKER), radius);
-
+    
         if (smoker == null) {
             return;
         }
-
-        // Create a map to hold potential block influences
-        List<Material> nearbyInfluenceBlocks = List.of(Material.CAMPFIRE, Material.QUARTZ_BLOCK, Material.SMOKER, Material.BARREL, Material.CAULDRON, Material.BELL);
-        Map<Material, Integer> influenceMap = new HashMap<>();
-        Set<Block> processedBlocks = new HashSet<>(); // To ensure each block is counted only once
-
-        // Check for nearby influence blocks
-        for (Material blockType : nearbyInfluenceBlocks) {
-            Block influenceBlock = findNearestBlock(villager, List.of(blockType), radius);
-            if (influenceBlock != null && !processedBlocks.contains(influenceBlock)) {
-                influenceMap.put(blockType, influenceMap.getOrDefault(blockType, 0) + 1);
-                processedBlocks.add(influenceBlock); // Mark block as processed
-            }
-        }
-
+    
         Map<Material, Integer> harvestYield = new HashMap<>();
         Random random = new Random();
-
+    
         // List of all edible foods
         Material[] edibleFoods = {
                 Material.BAKED_POTATO, Material.COOKED_BEEF,
                 Material.COOKED_CHICKEN, Material.COOKED_MUTTON,
                 Material.COOKED_PORKCHOP, Material.COOKED_RABBIT,
-                Material.DRIED_KELP, Material.PUMPKIN_PIE,
-                Material.ROTTEN_FLESH
-
+                Material.DRIED_KELP
         };
-        Material food = edibleFoods[random.nextInt(edibleFoods.length)];
-        int yield = 1 + random.nextInt(1); // Base yield: 1-2 items
-
-        if (influenceMap.containsKey(Material.BELL)) {
-            yield += 1; // Increase yield further if a bell is nearby
+    
+        Material food;
+        int yield;
+    
+        // Occasionally make a cake
+        if (random.nextInt(100) < 20) {
+            food = Material.CAKE;
+            yield = 1; // Assuming one whole cake
+        } else {
+            food = edibleFoods[random.nextInt(edibleFoods.length)];
+            yield = 4; // Always cook 4 items
         }
-
-
-
+    
         harvestYield.put(food, yield); // Final yield
 
         storeOrDropHarvest(villager, harvestYield);
+        Speech speech = new Speech(plugin);
+        speech.createText(villager.getLocation(), "I cooked you some food.", 1);
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_FIRE_AMBIENT, 10, 10);
     }
 
     // Fishermen offer fish if there's water nearby
     private void performFishermanWork(Villager villager, int radius) {
         if (!isWaterNearby(villager, radius)) {
+            Speech speech = new Speech(plugin);
+            speech.createText(villager.getLocation(), "I can't fish here, but I can if theres some water nearby.", 1);
             return;
         }
 
@@ -469,7 +470,8 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
 
         harvestYield.put(item, quantity);
-
+        Speech speech = new Speech(plugin);
+        speech.createText(villager.getLocation(), "I caught you some fish, and a few pieces of junk.", 1);
         storeOrDropHarvest(villager, harvestYield);
         villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
     }
@@ -515,7 +517,8 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
         // Store or drop the bottles
         storeOrDropHarvestItemStack(villager, Collections.singletonMap(bottlesOfEnchanting, bottlesProduced));
-
+        Speech speech = new Speech(plugin);
+        speech.createText(villager.getLocation(), "I made you some Bottles of Enchanting!", 1);
         // Play sound for the work
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
     }
@@ -534,18 +537,6 @@ private boolean isEligibleForWorkCycle(Villager villager) {
         }
         return armorStands;
     }
-    private List<Player> findNearbyPlayers(Villager villager, int radius) {
-        Location loc = villager.getLocation();
-        List<Player> players = new ArrayList<>();
-
-        Collection<Entity> nearbyEntities = loc.getWorld().getNearbyEntities(loc, radius, radius, radius);
-        for (Entity entity : nearbyEntities) {
-            if (entity instanceof Player player) {
-                players.add(player);
-            }
-        }
-        return players;
-    }
     public static Player getNearestPlayer(Location location) {
         Player nearestPlayer = null;
         double nearestDistanceSquared = Double.MAX_VALUE;
@@ -560,23 +551,6 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
         return nearestPlayer;
     }
-    private void repairItem(ItemStack item, int repairAmount) {
-        if (!(item.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable)) {
-            return;
-        }
-
-        org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) item.getItemMeta();
-        int currentDamage = damageable.getDamage();
-        int newDamage = currentDamage - repairAmount;
-
-        // Ensure newDamage is not below zero
-        if (newDamage < 0) {
-            newDamage = 0;
-        }
-
-        damageable.setDamage(newDamage);
-        item.setItemMeta((ItemMeta) damageable);
-    }
 
     // Updated ArmorerWork method to repair armor on armor stands
     private void performArmorerWork(Villager villager, int radius) {
@@ -584,6 +558,8 @@ private boolean isEligibleForWorkCycle(Villager villager) {
         List<ArmorStand> armorStands = findNearbyArmorStands(villager, radius);
 
         if (armorStands.isEmpty()) {
+            Speech speech = new Speech(plugin);
+            speech.createText(villager.getLocation(), "If you want to display your armor on an armor stand nearby, I can repair it for you.", 1);
             return; // No armor stands nearby
         }
 
@@ -605,15 +581,13 @@ private boolean isEligibleForWorkCycle(Villager villager) {
                         item.getType().name().toUpperCase().endsWith("_CHESTPLATE") ||
                         item.getType().name().toUpperCase().endsWith("_LEGGINGS") ||
                         item.getType().name().toUpperCase().endsWith("_BOOTS"))) {
-
-                    String armorType = item.getType().name().split("_")[0];
-                    int gain = armorGains.getOrDefault(armorType, 0);
-
-                    int repairAmount = gain * 1000;
-
+                    XPManager xpManager = new XPManager(plugin);
+                    int miningLevel = xpManager.getPlayerLevel(getNearestPlayer(villager), "Mining");
+                    int repairAmount = miningLevel * 2;
+                    Speech speech = new Speech(plugin);
+                    speech.createText(villager.getLocation(), "I repaired your nearby armor for " + repairAmount + " for you.", 1);
                     // Repair the armor item
                     repairArmor(item, repairAmount);
-
                     // Update the modified item back to the equipment array
                     equipment[i] = item;
                 }
@@ -621,7 +595,6 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
             // Update the armor stand with the modified equipment
             armorStand.getEquipment().setArmorContents(equipment);
-
             // Play sound to indicate repair
             villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
         }
@@ -694,15 +667,25 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
             event.setCancelled(true);
             player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1.0f, 1.0f);
-        } else {
         }
     }
 
     // Utility method to repair items
 
+  private Player getNearestPlayer(Villager villager) {
+    Player nearestPlayer = null;
+    double nearestDistanceSquared = Double.MAX_VALUE;
 
+    for (Player player : Bukkit.getOnlinePlayers()) {
+        double distanceSquared = villager.getLocation().distanceSquared(player.getLocation());
+        if (distanceSquared < nearestDistanceSquared) {
+            nearestDistanceSquared = distanceSquared;
+            nearestPlayer = player;
+        }
+    }
 
-
+    return nearestPlayer;
+}
 
 
 
@@ -715,14 +698,23 @@ private boolean isEligibleForWorkCycle(Villager villager) {
      */
 
 // Now update the repair methods to use the combined approach
+    
 
     private void performWeaponsmithWork(Villager villager, int radius) {
+        XPManager xpManager = new XPManager(plugin);
         // Get all displayed items (both frames and displays)
         Map<Entity, ItemStack> displayedItems = findAllDisplayedItems(villager, radius);
 
         // Fixed repair amount of 500 for all weapons
-        int repairAmount = 500;
+        Player nearestPlayer = getNearestPlayer(villager.getLocation());
+        int combatLevel = xpManager.getPlayerLevel(nearestPlayer, "Combat");
+        int repairAmount = combatLevel * 5;
 
+        if(displayedItems.isEmpty()){
+            Speech speech = new Speech(plugin);
+            speech.createText(villager.getLocation(), "If you want, you can display your weapons nearby and I'll repair them.", 1);
+            return;
+        }
         for (Map.Entry<Entity, ItemStack> entry : displayedItems.entrySet()) {
             Entity entity = entry.getKey();
             ItemStack item = entry.getValue();
@@ -738,7 +730,8 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
                 // Repair the item
                 repairWeapons(item, repairAmount);
-
+                Speech speech = new Speech(plugin);
+                speech.createText(villager.getLocation(), "I repaired your displayed weapons " + repairAmount + " for you.", 1);
                 // Set the repaired item back
                 if (entity instanceof ItemFrame) {
                     ((ItemFrame) entity).setItem(item);
@@ -763,19 +756,25 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
 
     // Toolsmiths repair the player's tools if the player is nearby
-        private void performToolsmithWork(Villager villager, int radius) {
+    private void performToolsmithWork(Villager villager, int radius) {
         // Search for nearby entities displaying items
         Map<Entity, ItemStack> displayedItems = findAllDisplayedItems(villager, radius);
-        
+
+        if(displayedItems.isEmpty()){
+            Speech speech = new Speech(plugin);
+            speech.createText(villager.getLocation(), "If you want, you can display your tools nearby and I can repair them.", 1);
+        }
         // Fixed repair amount for all tools
-        int repairAmount = 1000;
+        XPManager xpManager = new XPManager(plugin);
+        int smithingLevel = xpManager.getPlayerLevel(getNearestPlayer(villager.getLocation()), "Smithing");
+        int repairAmount = smithingLevel * 10;
 
         for (Map.Entry<Entity, ItemStack> entry : displayedItems.entrySet()) {
             Entity entity = entry.getKey();
             ItemStack item = entry.getValue();
-            
+
             if (item == null) continue;
-            
+
             Material type = item.getType();
 
             // Check if the item is a tool
@@ -789,7 +788,8 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
                 // Repair the item
                 repairTools(item, repairAmount);
-
+                Speech speech = new Speech(plugin);
+                speech.createText(villager.getLocation(), "I repaired nearby displayed tools " + repairAmount + " for you.", 1);
                 // Set the repaired item back
                 if (entity instanceof ItemFrame) {
                     ((ItemFrame) entity).setItem(item);
@@ -875,6 +875,8 @@ private boolean isEligibleForWorkCycle(Villager villager) {
         List<Sheep> nearbySheep = findNearbySheep(villager, radius);
 
         if (nearbySheep.isEmpty()) {
+            Speech speech = new Speech(plugin);
+            speech.createText(villager.getLocation(), "I couldn't find any sheep nearby to shear.", 1);
             return; // No sheep nearby
         }
 
@@ -898,13 +900,15 @@ private boolean isEligibleForWorkCycle(Villager villager) {
             Material woolMaterial = Material.valueOf(color.name() + "_WOOL");
 
             // Yield is proportional to the number of sheep of that color
-            int yieldAmount = count * (1 + random.nextInt(1)); // Each sheep yields 1-3 wool
+            int yieldAmount = count * (1 + random.nextInt(10)); // Each sheep yields 1-10 wool
 
-            harvestYield.put(woolMaterial, (yieldAmount /2));
+            harvestYield.put(woolMaterial, (yieldAmount));
         }
 
         // Store or drop the harvested wool
         storeOrDropHarvest(villager, harvestYield);
+        Speech speech = new Speech(plugin);
+        speech.createText(villager.getLocation(), "I sheared your sheep for you and put the wool in that chest.", 1);
 
         // Play sound to indicate shepherd's work
         villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1.0f, 1.0f);
@@ -928,6 +932,8 @@ private boolean isEligibleForWorkCycle(Villager villager) {
         List<Block> cauldrons = findNearbyBlocks(villager, List.of(Material.CAULDRON), radius);
 
         if (cauldrons.isEmpty()) {
+            Speech speech = new Speech(plugin);
+            speech.createText(villager.getLocation(), "I couldn't find any cauldrons nearby to tan my leather.", 1);
             // No cauldrons nearby, no yield
             return;
         }
@@ -948,8 +954,8 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
         // Store or drop the items
         storeOrDropHarvest(villager, harvestYield);
-        Bukkit.getLogger().info("Leatherworker worked");
-
+        Speech speech = new Speech(plugin);
+        speech.createText(villager.getLocation(), "I tanned your leather and put the results in that chest.", 1);
         // Play sound effects
         villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1.0f, 1.0f);
         if (harvestYield.containsKey(Material.SADDLE)) {
@@ -1012,285 +1018,25 @@ private boolean isEligibleForWorkCycle(Villager villager) {
 
         // Store or drop the ingredients
         storeOrDropHarvest(villager, harvestYield);
+        Speech speech = new Speech(plugin);
+        speech.createText(villager.getLocation(), "I collected some ingredients and tried to make a potion for you.", 1);
         villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_BOTTLE_FILL, 1.0f, 1.0f);
     }
 
-
-
     private void performCartographerWork(Villager villager, int radius) {
-        // Find nearby item frames containing maps
-        List<ItemFrame> mapItemFrames = findItemFramesWithMaps(villager, radius);
 
-        if (mapItemFrames.isEmpty()) {
-            // No item frames with maps nearby, cartographer does not work
-            return;
-        }
+        // Generate a random location item (replace this with the custom item you'll set)
+        ItemStack rareItem = ItemRegistry.getWarp();
+        // Make sure to create a stack of the item
+        rareItem.setAmount(5); // Change the amount as needed
 
-        // Generate a random location item
-        ItemStack locationItem = generateRandomLocationItem(villager);
-
-        if (locationItem == null) {
-            // Failed to create the item, do not proceed
-            return;
-        }
-Random random = new Random();
         // Store or drop the item
-        if(random.nextBoolean()) {
-            if(random.nextBoolean()) {
-                storeOrDropCustomItem(villager, locationItem);
-            }
-        }
+        storeOrDropCustomItem(villager, rareItem);
+
         // Play a sound to indicate the cartographer's work
+        Speech speech = new Speech(plugin);
+        speech.createText(villager.getLocation(), "I found some rare items scattered around the world.", 1);
         villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0f, 1.0f);
-    }
-
-    private ItemStack generateRandomLocationItem(Villager villager) {
-        // Define the list of possible location items
-        List<ItemStack> locationItems = List.of(
-                ItemRegistry.createCustomItem(
-                        Material.FILLED_MAP,
-                        ChatColor.YELLOW + "Mineshaft Location",
-                        Arrays.asList(
-                                ChatColor.GRAY + "The coords of a location",
-                                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                                ChatColor.DARK_PURPLE + "Artifact"
-                        ),
-                        1,
-                        false,
-                        true
-                ),
-
-        // Stronghold Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Stronghold Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Village Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Village Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Igloo Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Igloo Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Buried Treasure Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Buried Treasure Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Desert Pyramid Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Desert Pyramid Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Jungle Pyramid Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Jungle Pyramid Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Ocean Monument Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Ocean Monument Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Pillager Outpost Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Pillager Outpost Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Swamp Hut Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Swamp Hut Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Woodland Mansion Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Woodland Mansion Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Bastion Remnant Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Bastion Remnant Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // End City Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "End City Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Nether Fortress Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Nether Fortress Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Ocean Ruin Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Ocean Ruin Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        ),
-
-        // Shipwreck Location
-                ItemRegistry.createCustomItem(
-                Material.FILLED_MAP,
-                ChatColor.YELLOW + "Shipwreck Location",
-                Arrays.asList(
-                        ChatColor.GRAY + "The coords of a location",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Locates the nearest structure",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        )
-        );
-
-        // Randomly select one of the location items
-        Random random = new Random();
-        ItemStack selectedItem = locationItems.get(random.nextInt(locationItems.size()));
-
-        return selectedItem;
-    }
-    private List<ItemFrame> findItemFramesWithMaps(Villager villager, int radius) {
-        Location loc = villager.getLocation();
-        List<ItemFrame> itemFrames = new ArrayList<>();
-
-        Collection<Entity> nearbyEntities = loc.getWorld().getNearbyEntities(loc, radius, radius, radius);
-        for (Entity entity : nearbyEntities) {
-            if (entity instanceof ItemFrame itemFrame) {
-                ItemStack item = itemFrame.getItem();
-                if (item != null && item.getType() == Material.FILLED_MAP) {
-                    itemFrames.add(itemFrame);
-                }
-            }
-        }
-        return itemFrames;
     }
 
     // Utility method to find nearby blocks of specific types
@@ -1397,28 +1143,51 @@ Random random = new Random();
     private void performFletcherWork(Villager villager, int radius) {
         // Find nearby log variants
         Set<Material> logVariants = findNearbyLogVariants(villager, radius);
-
+        if (logVariants.isEmpty()) {
+            Speech speech = new Speech(plugin);
+            speech.createText(villager.getLocation(), "Place a log near, I'll gather that wood for you!", 1);
+            return; // No suitable logs found
+        }
         // Find nearby target blocks
-        int targetCount = findNearbyTargets(villager, radius);
-
-        // Calculate yield
-
+    
         // Prepare the yield items
-        Map<Material, Integer> harvestYield = new HashMap<>();
-
+        Map<ItemStack, Integer> harvestYield = new HashMap<>();
+    
         // Add logs of each variant found
         for (Material logVariant : logVariants) {
-            harvestYield.put(logVariant, 4); // Each variant yields (multiplier * 2) logs
+            harvestYield.put(new ItemStack(logVariant), 16); // Each variant yields (multiplier * 2) logs
         }
-
-        // Add arrows
-        harvestYield.put(Material.ARROW, 2); // Yields (multiplier * 8) arrows
-
+    
+        // Add healing arrows
+        Random random = new Random();
+        for (int i = 0; i < 8; i++) {
+            ItemStack arrow;
+            if (random.nextFloat() < 0.01) {
+                // 1% chance to create an arrow of healing 100
+                arrow = createHealingArrow(100);
+            } else {
+                // 99% chance to create an arrow of healing 2
+                arrow = createHealingArrow(2);
+            }
+            harvestYield.merge(arrow, 1, Integer::sum);
+        }
+    
         // Store or drop the items
-        storeOrDropHarvest(villager, harvestYield);
-
+        storeOrDropHarvestItemStack(villager, harvestYield);
+        Speech speech = new Speech(plugin);
+        speech.createText(villager.getLocation(), "I gathered the wood and crafted some arrows for you!", 1);
         // Play sound to indicate the fletcher's work
-        villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, 1.0f, 1.0f);
+        villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
+    }
+    
+    private ItemStack createHealingArrow(int healingAmount) {
+        ItemStack arrow = new ItemStack(Material.TIPPED_ARROW);
+        PotionMeta meta = (PotionMeta) arrow.getItemMeta();
+        PotionData potionData = new PotionData(PotionType.INSTANT_HEAL);
+        meta.setBasePotionData(potionData);
+        meta.addCustomEffect(new PotionEffect(PotionEffectType.HEAL, 1, healingAmount - 1), true);
+        arrow.setItemMeta(meta);
+        return arrow;
     }
 
     private Set<Material> findNearbyLogVariants(Villager villager, int radius) {
@@ -1447,30 +1216,6 @@ Random random = new Random();
         return logVariants;
     }
 
-    private int findNearbyTargets(Villager villager, int radius) {
-        Location loc = villager.getLocation();
-        int targetCount = 0;
-
-        int xOrigin = loc.getBlockX();
-        int yOrigin = loc.getBlockY();
-        int zOrigin = loc.getBlockZ();
-
-        int minY = Math.max(0, yOrigin - radius);
-        int maxY = Math.min(loc.getWorld().getMaxHeight(), yOrigin + radius);
-
-        for (int x = xOrigin - radius; x <= xOrigin + radius; x++) {
-            for (int y = minY; y <= maxY; y++) {
-                for (int z = zOrigin - radius; z <= zOrigin + radius; z++) {
-                    Block block = loc.getWorld().getBlockAt(x, y, z);
-                    if (block.getType() == Material.TARGET) {
-                        targetCount++;
-                    }
-                }
-            }
-        }
-        return targetCount;
-    }
-
     private boolean isLogVariant(Material material) {
         return switch (material) {
             case OAK_LOG, SPRUCE_LOG, BIRCH_LOG, JUNGLE_LOG, ACACIA_LOG, DARK_OAK_LOG,
@@ -1488,6 +1233,8 @@ Random random = new Random();
         List<Block> blocksToReplicate = findBlocksToReplicate(villager, radius);
 
         if (blocksToReplicate.isEmpty()) {
+            Speech speech = new Speech(plugin);
+            speech.createText(villagerLoc, "Place a stone-like block nearby on a smooth stone slab, I'll make more of that!", 1);
             // No blocks to replicate, mason does not work
             return;
         }
@@ -1508,6 +1255,8 @@ Random random = new Random();
 
         // Store or drop the items
         storeOrDropHarvest(villager, harvestYield);
+        Speech speech = new Speech(plugin);
+        speech.createText(villagerLoc, "I made you more of those blocks!", 1);
 
         // Play sound to indicate the mason's work
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_STONE_PLACE, 1.0f, 1.0f);
@@ -1672,7 +1421,5 @@ Random random = new Random();
             }
             Bukkit.getLogger().info("Villager " + villager.getUniqueId() + " dropped items on the ground.");
         }
-
-
     }
 }
