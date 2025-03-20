@@ -170,7 +170,7 @@ public class SeaCreatureRegistry implements Listener {
         List<SeaCreature.DropItem> sharkDrops = new ArrayList<>();
         sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 12, 1, 5));
         sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 6, 1, 5));
-        sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 3, 1, 1));
+        sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 3, 1, 3));
         SEA_CREATURES.add(new SeaCreature(
                 "Shark",
                 Rarity.RARE,

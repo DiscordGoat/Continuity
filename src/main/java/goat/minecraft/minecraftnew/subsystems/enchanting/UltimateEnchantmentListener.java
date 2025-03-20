@@ -281,7 +281,7 @@ public class UltimateEnchantmentListener implements Listener {
         // BFS to find connected logs
         Queue<Block> queue = new ArrayDeque<>();
         Set<Block> visitedLogs = new HashSet<>();
-        int maxBlocks = 100; // limit so players don’t accidentally chop entire forest
+        int maxBlocks = 150; // limit so players don’t accidentally chop entire forest
 
         // For leaves around logs
         Set<Block> leavesToBreak = new HashSet<>();
@@ -311,7 +311,7 @@ public class UltimateEnchantmentListener implements Listener {
             // 1% chance to summon a Forest Spirit if the block is wood
 
             ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
-            forestSpiritManager.attemptSpiritSpawn(0.05, currentBlock.getLocation(), currentBlock, player);
+            forestSpiritManager.attemptSpiritSpawn(0.0001, currentBlock.getLocation(), currentBlock, player);
 
 
             // Check all neighbors within a 1-block radius for more wood
@@ -1080,7 +1080,7 @@ public class UltimateEnchantmentListener implements Listener {
             }
             
             // Play return sound at player's location
-            player.getWorld().playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
+            player.getWorld().playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1000.0f, 1.0f);
             
             // Get the first item in the player's inventory
             ItemStack firstSlotItem = player.getInventory().getItem(0);

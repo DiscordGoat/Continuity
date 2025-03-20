@@ -370,23 +370,27 @@ public class ForestSpiritManager implements Listener {
 
         // Retrieve tier from metadata.
         int tier = spirit.getMetadata("spiritTier").get(0).asInt();
-        // Award Forestry XP: 100 * tier.
+
+        // Award both generic XP and Forestry XP: 100 * tier each.
         Player killer = spirit.getKiller();
         if (killer != null) {
-            xpManager.addXP(killer, "Forestry", 100 * tier);
+            event.setDroppedExp(tier * 50);
+            xpManager.addXP(killer, "Forestry", 10 * tier);
         }
+
         // Clear normal drops.
         event.getDrops().clear();
 
         // Retrieve the spirit type from its custom name.
         String spiritName = getSpiritNameFromEntity(spirit);
+
         // Drop the rare drop item (100% chance).
         ItemStack rareDrop = rareDropMapping.getOrDefault(spiritName, null);
         if (rareDrop != null) {
             event.getDrops().add(rareDrop);
         }
 
-        // Death animation: spawn a falling sapling and gradually lower it.
+        // Death animation: spawn a falling sapling (using DEAD_BUSH as example) that sinks into the ground.
         Location loc = spirit.getLocation();
         World world = loc.getWorld();
         if (world != null) {

@@ -352,7 +352,7 @@ public class VillagerTradeManager implements Listener {
 
         leatherworkerPurchases.add(createTradeMap("BUNDLE", 1, 64, 3)); // Material
         leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ENCHANT", 1, 32, 5)); // Custom Item
-        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ARTIFACT", 1, 512, 5)); // Custom Item
+        leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ARTIFACT", 1, 512, 1)); // Custom Item
         defaultConfig.set("LEATHERWORKER.purchases", leatherworkerPurchases);
 
 // Leatherworker Sells
@@ -602,7 +602,7 @@ public class VillagerTradeManager implements Listener {
         farmerSells.add(createTradeMap("EGG", 6, 1, 2)); // Level 3 trade
         farmerSells.add(createTradeMap("SUGAR_CANE", 6, 1, 2)); // Level 3 trade
         farmerSells.add(createTradeMap("APPLE", 4, 1, 2)); // Level 3 trade
-        farmerSells.add(createTradeMap("MELON_SLICE", 16, 1, 3)); // Level 3 trade
+        farmerSells.add(createTradeMap("MELON", 8, 3, 3)); // Level 3 trade
         farmerSells.add(createTradeMap("PUMPKIN", 8, 1, 3)); // Level 3 trade
         farmerSells.add(createTradeMap("BROWN_MUSHROOM", 1, 1, 4)); // Level 4 trade
         farmerSells.add(createTradeMap("RED_MUSHROOM", 1, 1, 4)); // Level 4 trade
@@ -961,50 +961,7 @@ public class VillagerTradeManager implements Listener {
         return Math.max(1, (int) Math.floor(finalCost));
     }
  
-    public ItemStack createVillagerXPDisplayItem(Villager villager, int daysPlayed) {
-        // Calculate the villager level based on days played and cap it at level 5.
-        int newVillagerLevel;
-        if (daysPlayed >= 130) {
-            newVillagerLevel = 5;
-        } else if (daysPlayed >= 100) {
-            newVillagerLevel = 4;
-        } else if (daysPlayed >= 80) {
-            newVillagerLevel = 3;
-        } else if (daysPlayed >= 50) {
-            newVillagerLevel = 2;
-        } else {
-            newVillagerLevel = 1;
-        }
-    
-        // Create a new item (using PAPER as an example).
-        ItemStack xpDisplayItem = new ItemStack(Material.PAPER);
-        ItemMeta meta = xpDisplayItem.getItemMeta();
-        if (meta != null) {
-            List<String> lore = new ArrayList<>();
-            meta.setDisplayName(ChatColor.AQUA + "Days Played: " + daysPlayed
-                    + " | Villager Level: " + newVillagerLevel);
-    
-            if (newVillagerLevel < 5) {
-                // Determine the threshold for the next level.
-                int nextThreshold = (newVillagerLevel * 20) + 50;
-                int daysRemaining = nextThreshold - daysPlayed;
-                lore.add(ChatColor.YELLOW + "Progress: " + daysPlayed + "/" + nextThreshold + " days");
-                if (daysRemaining > 0) {
-                    lore.add(ChatColor.GREEN + "" + daysRemaining + " days left to level up!");
-                } else {
-                    lore.add(ChatColor.GREEN + "Ready for the next level!");
-                }
-            } else {
-                // Level is capped at 5.
-                lore.add(ChatColor.YELLOW + "Maximum level reached!");
-            }
-            meta.setLore(lore);
-            xpDisplayItem.setItemMeta(meta);
-        }
-    
-        plugin.getLogger().info("[XP Display Item] Created item with display: " + meta.getDisplayName());
-        return xpDisplayItem;
-    }
+
 
 
 
@@ -1021,13 +978,13 @@ public class VillagerTradeManager implements Listener {
         // Determine villager level based on days played:
         // day 20 = level 1, day 40 = level 2, day 60 = level 3, day 80 = level 4, day 100 = level 5
         int villagerLevel;
-        if (daysPlayed >= 130) {
+        if (daysPlayed >= 200) {
             villagerLevel = 5;
             villager.setVillagerLevel(5);
-        } else if (daysPlayed >= 100) {
+        } else if (daysPlayed >= 150) {
             villagerLevel = 4;
             villager.setVillagerLevel(4);
-        } else if (daysPlayed >= 80) {
+        } else if (daysPlayed >= 100) {
             villagerLevel = 3;
             villager.setVillagerLevel(3);
         } else if (daysPlayed >= 50) {
@@ -1046,7 +1003,6 @@ public class VillagerTradeManager implements Listener {
 
         // Create the divider item
         ItemStack dividerItem = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-        ItemStack xpItem = createVillagerXPDisplayItem(villager, playerTabListUpdater.getDaysPlayed(player));
         ItemMeta dividerMeta = dividerItem.getItemMeta();
         if (dividerMeta != null) {
             dividerMeta.setDisplayName(ChatColor.DARK_GRAY + " ");
@@ -1056,7 +1012,6 @@ public class VillagerTradeManager implements Listener {
         // Place the divider between buys and sells (middle column)
         for (int i = 0; i < 6; i++) {
             tradeGUI.setItem(i * 9 + 4, dividerItem);
-            tradeGUI.setItem(4, xpItem);
         }
 
         // Populate the GUI with purchases (items villager is selling)

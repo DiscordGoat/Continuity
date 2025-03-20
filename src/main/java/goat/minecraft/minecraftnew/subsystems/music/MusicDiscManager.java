@@ -1597,7 +1597,7 @@ public class MusicDiscManager implements Listener {
         int durationTicks = 251 * 20;
 
         // Interval in ticks (3 ticks per XP spawn)
-        int intervalTicks = 3;
+        int intervalTicks = 1;
 
         // Total number of cycles
         int totalCycles = durationTicks / intervalTicks;

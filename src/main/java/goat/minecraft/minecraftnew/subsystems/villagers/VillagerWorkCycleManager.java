@@ -846,7 +846,7 @@ private boolean isEligibleForWorkCycle(Villager villager) {
                             Entity entity = Bukkit.getEntity(display.standUUID);
                             if (entity != null && entity.isValid()) {
                                 displayedItems.put(entity, display.storedItem);
-                                Bukkit.broadcastMessage("Found item on display: " + display.storedItem.getType().name());
+                                //Bukkit.broadcastMessage("Found item on display: " + display.storedItem.getType().name());
                             }
                         }
                     }

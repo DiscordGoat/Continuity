@@ -96,7 +96,7 @@ public class KnightMob implements Listener {
             // Increase XP drop
             XPManager xpManager = new XPManager(plugin);
             if (event.getEntity().getKiller() instanceof Player) {
-                xpManager.addXP(Objects.requireNonNull(event.getEntity().getKiller()), "Combat", 800);
+                xpManager.addXP(Objects.requireNonNull(event.getEntity().getKiller()), "Combat", 50);
                 event.setDroppedExp(event.getDroppedExp() + 50);
             }
 
