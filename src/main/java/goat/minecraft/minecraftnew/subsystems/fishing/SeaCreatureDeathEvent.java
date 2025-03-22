@@ -86,7 +86,7 @@ public class SeaCreatureDeathEvent implements Listener {
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(killer);
         int boostedXP = getBoostedXP(seaCreature.getRarity(), hostilityLevel);
         xpManager.addXP(killer, "Fishing", boostedXP);
-        event.setDroppedExp(500);
+        event.setDroppedExp(100);
         FishingPetManager fishingPetManager = FishingPetManager.getInstance();
 
         fishingPetManager.incrementSeaCreatureKills(player);

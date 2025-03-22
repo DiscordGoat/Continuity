@@ -331,7 +331,7 @@ public class XPManager implements CommandExecutor {
 
         // If skill != "Player", also add some XP to "Player"
         if (!skill.equalsIgnoreCase("Player")) {
-            addXPToSkill(player, "Player", Math.max(xp * 0.5, 1));
+            addXPToSkill(player, "Player", Math.max(xp * 0.1, 1));
         }
     }
 

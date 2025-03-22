@@ -113,54 +113,11 @@ public class AnvilRepair implements Listener {
         sharpnessLore.add(ChatColor.GRAY + "+1 Sharpness Level");
         sharpnessLore.add(ChatColor.GRAY + "Cost: 2 Diamonds");
 
-// Create the Sharpness button using a diamond sword
-        ItemStack sharpnessItem = createCustomItem(
-                Material.DIAMOND_SWORD,
-                ChatColor.DARK_PURPLE + "Sharpen",
-                sharpnessLore,
-                1,
-                false,
-                true
-        );
-
-// Create lore for the "Polish" button
-        List<String> efficiencyLore = new ArrayList<>();
-        efficiencyLore.add(ChatColor.GRAY + "+1 Efficiency Level");
-        efficiencyLore.add(ChatColor.GRAY + "Cost: 2 Gold Blocks");
-
-// Create the Efficiency button using a golden pickaxe
-        ItemStack efficiencyItem = createCustomItem(
-                Material.GOLDEN_PICKAXE,
-                ChatColor.DARK_PURPLE + "Polish",
-                efficiencyLore,
-                1,
-                false,
-                true
-        );
-
-// Create lore for the "Reinforce" button
-        List<String> protectionLore = new ArrayList<>();
-        protectionLore.add(ChatColor.GRAY + "+1 Protection Level");
-        protectionLore.add(ChatColor.GRAY + "Cost: 2 Obsidian");
-
-// Create the Protection button using an obsidian block
-        ItemStack protectionItem = createCustomItem(
-                Material.OBSIDIAN,
-                ChatColor.DARK_PURPLE + "Reinforce",
-                protectionLore,
-                1,
-                false,
-                true
-        );
-
 
         // Set up the GUI layout with decorative panes
         for (int i = 0; i < 27; i++) {
             anvilInventory.setItem(i, blackPane);
         }
-        anvilInventory.setItem(8, sharpnessItem);
-        anvilInventory.setItem(17, efficiencyItem);
-        anvilInventory.setItem(26, protectionItem);
         // Place specific GUI items and interactive slots
         anvilInventory.setItem(10, null); // Slot for the item to repair
         anvilInventory.setItem(15, resultPane); // Slot for the repair material

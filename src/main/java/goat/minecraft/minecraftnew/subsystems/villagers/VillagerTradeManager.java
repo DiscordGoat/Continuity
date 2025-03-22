@@ -244,6 +244,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithSells.add(createTradeMap("VINDICATOR_DROP", 1, 8, 1)); // vindicatorDrop
         weaponsmithSells.add(createTradeMap("WITCH_DROP", 1, 32, 1)); // witchDrop
         weaponsmithSells.add(createTradeMap("SWEEPING", 1, 32, 1)); // witchDrop
+        weaponsmithSells.add(createTradeMap("WEAPONSMITH_SHARPNESS_7", 1, 64, 1)); // witchDrop
         defaultConfig.set("WEAPONSMITH.sells", weaponsmithSells);
 
         List<Map<String, Object>> fletcherPurchases = new ArrayList<>();
@@ -852,6 +853,8 @@ public class VillagerTradeManager implements Listener {
                 return CulinarySubsystem.getInstance(plugin).getRecipeItemByName("Slice of Cheese");
             case "WEAPONSMITH_REFORGE":
                 return ItemRegistry.getWeaponsmithReforge();
+            case "WEAPONSMITH_SHARPNESS_7":
+                return ItemRegistry.getInfernalSharpness();
             case "WEAPONSMITH_REFORGE_TWO":
                 return ItemRegistry.getWeaponsmithReforgeTwo();
             case "HOWL":

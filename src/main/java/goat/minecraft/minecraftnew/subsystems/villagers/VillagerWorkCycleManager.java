@@ -345,7 +345,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         int yield;
     
         // Occasionally make a cake
-        if (random.nextInt(100) < 20) {
+        if (random.nextInt(100) < 1) {
             food = Material.CAKE;
             yield = 1; // Assuming one whole cake
         } else {

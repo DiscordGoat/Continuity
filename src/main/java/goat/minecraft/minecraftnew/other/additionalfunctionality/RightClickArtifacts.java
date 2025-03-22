@@ -258,78 +258,82 @@ public class RightClickArtifacts implements Listener {
     @EventHandler
     public void onRightClick(PlayerInteractEvent e) {
         // Ensure the event only triggers for the main hand
-        if (e.getAction() == Action.RIGHT_CLICK_AIR) {
-            if(e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-                Player player = e.getPlayer();
-                ItemStack itemInHand = player.getInventory().getItemInMainHand();
-                if (e.getHand().equals(EquipmentSlot.HAND)) {
-                    // Validate the item in hand
-                    if (itemInHand == null || !itemInHand.hasItemMeta()) {
-                        return;
-                    }
-
-                    ItemMeta meta = itemInHand.getItemMeta();
-                    if (meta == null || !meta.hasDisplayName()) {
-                        return;
-                    }
-
-                    String displayName = meta.getDisplayName();
-                    SeederType seederType = SeederType.fromDisplayName(displayName);
-                    if (seederType == null) {
-                        return; // The item is not a recognized seeder
-                    }
-
-                    // Get the clicked block
-                    Block clickedBlock = e.getClickedBlock();
-                    if (clickedBlock == null) {
-                        return;
-                    }
-
-                    // Check if the clicked block is FARMLAND
-                    if (clickedBlock.getType() != Material.FARMLAND) {
-                        player.sendMessage(ChatColor.RED + "You must right-click on tilled soil to use the " + seederType.name().replace("_", "") + ".");
-                        return;
-                    }
-
-                    // Initialize BFS structures
-                    Queue<Block> queue = new LinkedList<>();
-                    Set<Block> visited = new HashSet<>();
-                    int plantedCount = 0;
-
-                    queue.add(clickedBlock);
-                    visited.add(clickedBlock);
-
-                    while (!queue.isEmpty() && plantedCount < 1000) {
-                        Block current = queue.poll();
-
-                        // Plant the specified seed on the current FARMLAND block
-                        boolean planted = plantSeed(current, seederType.getCropMaterial());
-                        if (planted) {
-                            plantedCount++;
-                        }
-
-                        // Iterate over adjacent blocks (North, South, East, West)
-                        for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
-                            Block adjacent = current.getRelative(face);
-
-                            // Check if the adjacent block is FARMLAND and not yet visited
-                            if (adjacent.getType() == Material.FARMLAND && !visited.contains(adjacent)) {
-                                queue.add(adjacent);
-                                visited.add(adjacent);
-                            }
-                        }
-                    }
-
-                    // Provide feedback to the player
-                    player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_BREAK, 1.0f, 1.0f);
-                    decrementItemAmount(itemInHand, player);
-                    player.sendMessage(ChatColor.GREEN + "Seeds planted on " + plantedCount + " blocks!");
-
-                    // Optional: Display particles at the clicked location
-                    clickedBlock.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
-
+        if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+            Player player = e.getPlayer();
+            ItemStack itemInHand = player.getInventory().getItemInMainHand();
+            if (e.getHand().equals(EquipmentSlot.HAND)) {
+                // Validate the item in hand
+                if (itemInHand == null || !itemInHand.hasItemMeta()) {
+                    return;
                 }
+
+                ItemMeta meta = itemInHand.getItemMeta();
+                if (meta == null || !meta.hasDisplayName()) {
+                    return;
+                }
+
+                String displayName = meta.getDisplayName();
+                SeederType seederType = SeederType.fromDisplayName(displayName);
+                if (seederType == null) {
+                    return; // The item is not a recognized seeder
+                }
+
+                // Get the clicked block
+                Block clickedBlock = e.getClickedBlock();
+                if (clickedBlock == null) {
+                    return;
+                }
+
+                // Check if the clicked block is FARMLAND
+                if (clickedBlock.getType() != Material.FARMLAND) {
+                    player.sendMessage(ChatColor.RED + "You must right-click on tilled soil to use the " + seederType.name().replace("_", "") + ".");
+                    return;
+                }
+
+                // Initialize BFS structures
+                Queue<Block> queue = new LinkedList<>();
+                Set<Block> visited = new HashSet<>();
+                int plantedCount = 0;
+
+                queue.add(clickedBlock);
+                visited.add(clickedBlock);
+
+                while (!queue.isEmpty() && plantedCount < 1000) {
+                    Block current = queue.poll();
+
+                    // Plant the specified seed on the current FARMLAND block
+                    boolean planted = plantSeed(current, seederType.getCropMaterial());
+                    if (planted) {
+                        plantedCount++;
+                    }
+
+                    // Iterate over adjacent blocks (North, South, East, West)
+                    for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
+                        Block adjacent = current.getRelative(face);
+
+                        // Check if the adjacent block is FARMLAND and not yet visited
+                        if (adjacent.getType() == Material.FARMLAND && !visited.contains(adjacent)) {
+                            queue.add(adjacent);
+                            visited.add(adjacent);
+                        }
+                    }
+                }
+
+                // Provide feedback to the player
+                player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_BREAK, 1.0f, 1.0f);
+                decrementItemAmount(itemInHand, player);
+                player.sendMessage(ChatColor.GREEN + "Seeds planted on " + plantedCount + " blocks!");
+
+                // Optional: Display particles at the clicked location
+                clickedBlock.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
+
             }
+        }
+        if (e.getAction() == Action.RIGHT_CLICK_AIR) {
+            if (!e.getHand().equals(EquipmentSlot.HAND)) {
+                return;
+            }
+
 
             Player player = e.getPlayer();
             ItemStack itemInHand = player.getInventory().getItemInMainHand();
@@ -345,13 +349,13 @@ public class RightClickArtifacts implements Listener {
 
 
             String displayName = meta.getDisplayName();
+
             if (displayName.equals(ChatColor.GOLD + "Perfect Apple")) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 4 * 20, 0));
                 player.setFoodLevel(20);
                 player.setSaturation(20);
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
                 decrementItemAmount(itemInHand, player);
-
                 return;
             }
             if (displayName.equals(ChatColor.YELLOW + "Cookbook")) {

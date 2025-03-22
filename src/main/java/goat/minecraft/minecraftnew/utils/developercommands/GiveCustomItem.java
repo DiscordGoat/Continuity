@@ -7,6 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class GiveCustomItem implements CommandExecutor {
 
@@ -36,14 +37,17 @@ public class GiveCustomItem implements CommandExecutor {
         ItemStack customItem = ItemRegistry.getItemByName(itemName);
 
         if (customItem != null) {
-            // Give it to the player
-            player.getInventory().addItem(customItem);
-            player.sendMessage(ChatColor.GREEN + "You have received: "
-                    + customItem.getItemMeta().getDisplayName());
+            ItemMeta meta = customItem.getItemMeta();
+            if (meta != null) {
+                // Give it to the player
+                player.getInventory().addItem(customItem);
+                player.sendMessage(ChatColor.GREEN + "You have received: " + meta.getDisplayName());
+            } else {
+                player.sendMessage(ChatColor.RED + "The item " + itemName.replace("_", " ") + " does not have metadata!");
+            }
         } else {
             // If item is null, no match was found
-            player.sendMessage(ChatColor.RED + "Item not found: "
-                    + itemName.replace("_", " "));
+            player.sendMessage(ChatColor.RED + "Item not found: " + itemName.replace("_", " "));
         }
 
         return true;

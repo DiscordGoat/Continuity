@@ -117,14 +117,9 @@ public class SkillsCommand implements CommandExecutor {
         double multiplier = 1 + (level * 0.01); // 1% per level
         switch (skill) {
             case "Smithing":
-                double successChance = 50 + (0.5 *  level);
-                if (successChance > 100) successChance = 100;
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.WHITE + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.WHITE + "Repair Amount: " + (25 + level),
-                        ChatColor.WHITE + "Sharpen Success Chance: " + successChance + "%",
-                        ChatColor.WHITE + "Polish Success Chance: " + successChance + "%",
-                        ChatColor.WHITE + "Reinforce Success Chance: " + successChance + "%"
+                        ChatColor.WHITE + "Repair Amount: " + (25 + level)
                 ));
                 break;
             case "Culinary":
