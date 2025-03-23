@@ -95,6 +95,7 @@ public class UltimateEnchantingSystem implements Listener {
     }
 
     /**
+     *
      * Helper to register enchantments with the CustomEnchantmentManager and populate the mapping.
      */
     private void registerEnchantmentForType(String enchantName, int maxLevel, boolean isTreasure, Material... types) {
