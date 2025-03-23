@@ -374,31 +374,39 @@ public class UltimateEnchantmentListener implements Listener {
         ItemStack tool = player.getInventory().getItemInMainHand();
 
         // If the player is sneaking (holding Shift) and the tool has "Treecapitator" ...
+
+        // ---------------------------
+        // Treecapitator branch
+        // ---------------------------
         if (player.isSneaking() && hasTreecapEnchant(tool)) {
-            // If the broken block is wood
+            // Check tool durability: if damage is at or above 90% of max, abort enchantment
+            if (tool != null && tool.getType().getMaxDurability() > 0 &&
+                    tool.getDurability() >= tool.getType().getMaxDurability() * 0.9) {
+                player.sendMessage(ChatColor.RED + "Your tool is too damaged to use Treecapitator!");
+                return;
+            }
+            // If the broken block is wood, cancel normal drop and process connected wood
             if (isWoodBlock(brokenBlock.getType())) {
-                // Cancel the normal block break drop because we’ll handle it
                 event.setCancelled(true);
-                // Chop all connected wood
                 breakConnectedWoodAndLeaves(player, brokenBlock);
             }
         }
 
         // If the player is sneaking (holding Shift) and the tool has "Hammer"
         if (player.isSneaking() && hasHammerEnchant(tool)) {
-            // Cancel the normal block break drop for the center block
-            // We’ll break it ourselves in code below so we can handle ore-skip + durability
-
-            // Break the center block the player actually mined
+            // Check tool durability: if damage is at or above 90% of max, abort enchantment
+            if (tool != null && tool.getType().getMaxDurability() > 0 &&
+                    tool.getDurability() >= tool.getType().getMaxDurability() * 0.9) {
+                player.sendMessage(ChatColor.RED + "Your tool is too damaged to use Hammer enchant!");
+                return;
+            }
+            // Break the center block normally (with durability consumption)
             boolean isOre = false;
-
             breakBlock(player, brokenBlock, !isOre);
 
-            // Determine if we’re breaking vertically or horizontally
+            // Determine break orientation and break surrounding 3×3 blocks
             BlockFace blockFace = event.getBlock().getFace(brokenBlock);
             boolean isVerticalBreak = (blockFace == BlockFace.UP || blockFace == BlockFace.DOWN);
-
-            // Break surrounding 3×3 ignoring ores and applying durability
             breakSurroundingBlocks(player, brokenBlock, isVerticalBreak);
         }
     }

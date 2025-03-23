@@ -521,12 +521,10 @@ public class XPManager implements CommandExecutor {
                 break;
 
             case "smithing":
-                double successChance = 50.0 + (0.5 * newLevel);
-                if (successChance > 100.0) successChance = 100.0;
                 body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.DARK_PURPLE).append("Sharpen/Polish/Reinforce success ")
-                        .append(ChatColor.WHITE).append("is now ")
-                        .append(ChatColor.YELLOW).append(String.format("%.0f", successChance)).append("%.\n");
+                        .append(ChatColor.DARK_GRAY).append("Repair Amount")
+                        .append(ChatColor.WHITE).append(" is now ")
+                        .append(ChatColor.YELLOW).append("" + (25+newLevel));
                 break;
 
             default:

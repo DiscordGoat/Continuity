@@ -546,7 +546,8 @@ public class PetManager implements Listener {
             case STRONG_SWIMMER:
                 return "Grants " + ChatColor.AQUA + "Dolphins Grace " + ChatColor.GRAY + "when swimming.";
             case COMFORTABLE:
-                return "Grants " + ChatColor.GREEN + (level * 0.1) + " bonus health " + ChatColor.GRAY + "when eating.";
+                double bonusHealth = Math.round(level * 0.1 * 100.0) / 100.0;
+                return "Grants " + ChatColor.GREEN + bonusHealth + " bonus health " + ChatColor.GRAY + "when eating.";
             case ANGLER:
                 int anglerBonus = 5;
                 return "Grants " + ChatColor.AQUA + anglerBonus + "% Sea Creature Chance.";
