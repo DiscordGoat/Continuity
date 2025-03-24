@@ -34,7 +34,7 @@ public class ShotCalling implements Listener {
                     int petLevel = activePet.getLevel();
 
                     // Calculate damage multiplier based on pet level
-                    double damageMultiplier = 1 + (petLevel * 0.01);
+                    double damageMultiplier = 1 + (petLevel * 0.005);
 
                     // Apply damage multiplier to the event
                     event.setDamage(event.getDamage() * damageMultiplier);
@@ -42,7 +42,7 @@ public class ShotCalling implements Listener {
                     // Optional: Chance to deal an additional effect (e.g., critical hit)
                     double chance = 0.25; // 25% chance for a critical hit
                     if (random.nextDouble() <= chance) {
-                        event.setDamage(event.getDamage() * 1.5); // Critical hit: 50% bonus damage
+                        event.setDamage(event.getDamage() * 1.2); // Critical hit: 20% bonus damage
                         player.sendMessage(ChatColor.BLUE + "Your ShotCalling perk triggered a critical hit!");
                     }
 

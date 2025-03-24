@@ -9,6 +9,8 @@ import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
 import goat.minecraft.minecraftnew.other.recipes.ViewRecipeCommand;
+import goat.minecraft.minecraftnew.subsystems.brewing.*;
+import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.PotionOfStrength;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
@@ -19,7 +21,6 @@ import goat.minecraft.minecraftnew.subsystems.pets.petdrops.*;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.WitherPetGrantListener;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
-import goat.minecraft.minecraftnew.subsystems.brewing.CancelBrewing;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.combat.KnightMob;
@@ -77,6 +78,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private LockedRecipeManager lockedRecipeManager;
     private RecipeManager recipeManager;
     private ForestryPetManager forestryPetManager;
+    private PotionBrewingSubsystem potionBrewing;
+
 
     public static Collections getCollectionsManager() {
         return collectionsManager;
@@ -144,6 +147,14 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        PotionManager.initialize(this);
+        PotionRegistry.initTestPotions();
+
+        potionBrewing = PotionBrewingSubsystem.getInstance(this);
+        potionBrewing.onEnable(); // Load and resume any brew timers
+
+
+
         ArmorStandCommand armorStandCommand = new ArmorStandCommand(this);
         armorStandCommand.removeInvisibleArmorStands();
 
@@ -171,6 +182,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("grantmerit").setExecutor(new GrantMerit(this, playerData));
 
         // Register event listener for inventory clicks
+
+        //potions
+        getServer().getPluginManager().registerEvents(new PotionOfStrength(), this);
+
+
+
+
         getServer().getPluginManager().registerEvents(new WitherPetGrantListener(petManager), this);
         getServer().getPluginManager().registerEvents(new MeritCommand(this, playerData), this);
 
@@ -278,6 +296,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new UltimateEnchantingSystem(), this);
 
         getServer().getPluginManager().registerEvents(new ArmorEquipListener(), this);
+
         getServer().getPluginManager().registerEvents(new Leap(this), this);
         getServer().getPluginManager().registerEvents(new MobDamageHandler(), this);
         getServer().getPluginManager().registerEvents(new SoftPaw(this), this);
@@ -296,6 +315,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Blizzard(this), this);
         getServer().getPluginManager().registerEvents(new SecondWind(this), this);
         getServer().getPluginManager().registerEvents(new Elite(this), this);
+        getServer().getPluginManager().registerEvents(new Claw(this), this);
         getServer().getPluginManager().registerEvents(new Rebirth(this), this);
         getServer().getPluginManager().registerEvents(new WalkingFortress(this), this);
         getServer().getPluginManager().registerEvents(new DiggingClaws(this), this);
@@ -364,7 +384,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(new FarmingEvent(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), MinecraftNew.getInstance());
-        getServer().getPluginManager().registerEvents(new CancelBrewing(MinecraftNew.getInstance()), MinecraftNew.getInstance());
+        //getServer().getPluginManager().registerEvents(new CancelBrewing(MinecraftNew.getInstance()), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new RightClickArtifacts(this), this);
         getServer().getPluginManager().registerEvents(new AnvilRepair(MinecraftNew.getInstance()), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
@@ -475,6 +495,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        potionBrewing.onDisable(); // Save brew timers
+
+
         Speech speech = new Speech(this);
         speech.removeAllSpeech();
 

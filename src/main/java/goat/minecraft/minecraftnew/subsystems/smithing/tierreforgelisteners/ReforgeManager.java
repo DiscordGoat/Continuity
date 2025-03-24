@@ -25,11 +25,11 @@ public class ReforgeManager {
      */
     public enum ReforgeTier {
         TIER_0(0, ChatColor.RESET, "Sword", "Armor", "Tool", "Bow", 0, 0, 0, 0),
-        TIER_1(1, ChatColor.WHITE, "Sturdy Blade", "Sturdy Armor", "Sturdy Tool", "Oak Bow", 10, 1, 5, 20),
-        TIER_2(2, ChatColor.GREEN, "Sharpened Blade", "Reinforced Armor", "Enhanced Tool", "Birch Bow", 20, 2, 10, 40),
-        TIER_3(3, ChatColor.BLUE, "Reinforced Blade", "Fortified Armor", "Refined Tool", "Spruce Bow", 30, 3, 15, 60),
-        TIER_4(4, ChatColor.DARK_PURPLE, "Lethal Blade", "Battle Armor", "Superior Tool", "Acacia Bow", 40, 4, 20, 80),
-        TIER_5(5, ChatColor.GOLD, "Fatal Blade", "Legendary Armor", "Masterwork Tool", "Dark Oak Bow", 50, 5, 25, 100);
+        TIER_1(1, ChatColor.WHITE, "Sturdy Blade", "Sturdy Armor", "Sturdy Tool", "Oak Bow", 4, 1, 5, 10),
+        TIER_2(2, ChatColor.GREEN, "Sharpened Blade", "Reinforced Armor", "Enhanced Tool", "Birch Bow", 8, 2, 10, 20),
+        TIER_3(3, ChatColor.BLUE, "Reinforced Blade", "Fortified Armor", "Refined Tool", "Spruce Bow", 12, 3, 15, 30),
+        TIER_4(4, ChatColor.DARK_PURPLE, "Lethal Blade", "Battle Armor", "Superior Tool", "Acacia Bow", 16, 4, 20, 40),
+        TIER_5(5, ChatColor.GOLD, "Fatal Blade", "Legendary Armor", "Masterwork Tool", "Dark Oak Bow", 20, 5, 25, 50);
 
         private final int tier;
         private final ChatColor color;

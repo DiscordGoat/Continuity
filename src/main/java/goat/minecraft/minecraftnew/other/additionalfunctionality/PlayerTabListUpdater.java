@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
@@ -8,7 +9,7 @@ import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
+import java.util.Map;
 public class PlayerTabListUpdater {
 
     private final JavaPlugin plugin;
@@ -24,7 +25,7 @@ public class PlayerTabListUpdater {
             public void run() {
                 updateAllPlayerTabLists();
             }
-        }.runTaskTimer(plugin, 0L, 20L); // update tab list every second (or 5s, your preference)
+        }.runTaskTimer(plugin, 0L, 20L); // update tab list every second
     }
 
     private void updateAllPlayerTabLists() {
@@ -62,6 +63,15 @@ public class PlayerTabListUpdater {
 
         // Add your villager work cycle countdown in the footer
         footer += "\n" + ChatColor.YELLOW + "Next Villager Work Cycle: " + ChatColor.WHITE + formattedTime;
+
+        // New segment: Active Potion Effects
+        Map<String, Integer> effects = PotionManager.getActiveEffects(player);
+        if (!effects.isEmpty()) {
+            footer += "\n" + ChatColor.LIGHT_PURPLE + "Active Potions: ";
+            for (Map.Entry<String, Integer> entry : effects.entrySet()) {
+                footer += ChatColor.WHITE + entry.getKey() + ": " + entry.getValue() + "s   ";
+            }
+        }
 
         player.setPlayerListHeaderFooter(header, footer);
     }

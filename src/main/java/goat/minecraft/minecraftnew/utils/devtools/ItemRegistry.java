@@ -47,6 +47,39 @@ public class ItemRegistry {
     }
 
 
+
+
+
+
+
+    public static ItemStack getStrengthPotionRecipePaper() {
+        // This returns a piece of PAPER with a custom name + lore that says "Potion of Strength Recipe".
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Strength Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Strength",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getPotionOfStrength() {
+        return createCustomItem(
+                Material.POTION,
+                ChatColor.RED + "Potion of Strength",
+                Arrays.asList(
+                        ChatColor.GRAY + "Test Potion of Strength",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Debug potion effect.",
+                        ChatColor.DARK_PURPLE + "Test Potion"
+                ),
+                1,
+                false,
+                true);
+    }
     public static ItemStack getPetrifiedLog() {
         return createCustomItem(
                 Material.OAK_WOOD,
