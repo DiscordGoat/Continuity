@@ -55,7 +55,7 @@ public class SkillsCommand implements CommandExecutor {
         Inventory skillsInventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "Your Skills");
 
         // Define the skills to display
-        String[] skills = {"Fishing", "Farming", "Mining", "Combat", "Player", "Forestry", "Bartering", "Culinary", "Smithing"};
+        String[] skills = {"Fishing", "Farming", "Mining", "Combat", "Player", "Forestry", "Bartering", "Culinary", "Smithing", "Brewing"};
 
         // Define icons for each skill (customize as desired)
         Material[] icons = {
@@ -67,7 +67,8 @@ public class SkillsCommand implements CommandExecutor {
                 Material.GOLDEN_AXE,     // Forestry
                 Material.EMERALD,        // Bartering
                 Material.FURNACE,        // Culinary
-                Material.DAMAGED_ANVIL    // Smithing
+                Material.DAMAGED_ANVIL,    // Smithing
+                Material.BREWING_STAND    // Brewing
         };
 
         // Populate the inventory with skill items
@@ -180,6 +181,12 @@ public class SkillsCommand implements CommandExecutor {
                         ChatColor.DARK_GREEN + "Double Logs Chance: " + ChatColor.GREEN + doubleDropChance + "%",
                         ChatColor.DARK_GREEN + "Haste Duration: " + ChatColor.GREEN + (hasteDuration / 20) + " seconds",
                         ChatColor.DARK_GREEN + "Spirit Spawn Chance: " + ChatColor.GREEN + spiritSpawnChance + "%"
+                ));
+                break;
+            case "Brewing":
+                lore = new ArrayList<>(Arrays.asList(
+                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level,
+                        ChatColor.LIGHT_PURPLE + "Bonus Potion Duration: " + (level * 10)
                 ));
                 break;
             default:

@@ -526,6 +526,12 @@ public class XPManager implements CommandExecutor {
                         .append(ChatColor.WHITE).append(" is now ")
                         .append(ChatColor.YELLOW).append("" + (25+newLevel));
                 break;
+            case "brewing":
+                body.append(ChatColor.WHITE).append("Your ")
+                        .append(ChatColor.LIGHT_PURPLE).append("Bonus Potion Duration")
+                        .append(ChatColor.WHITE).append(" is now ")
+                        .append(ChatColor.YELLOW).append("" + (newLevel * 10));
+                break;
 
             default:
                 body.append(ChatColor.WHITE).append("Enjoy your new level in ")

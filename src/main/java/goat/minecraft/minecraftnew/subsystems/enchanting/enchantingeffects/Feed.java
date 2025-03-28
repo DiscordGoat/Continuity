@@ -56,7 +56,7 @@ public class Feed implements Listener {
 
         // Define the chance percentage based on enchantment level
         // Example: Level 1 = 20%, Level 2 = 40%, ..., Level 4 = 80%
-        int chancePercentage = Math.min(feedLevel * 4, 16); // Caps at 80% for level 4 and above
+        int chancePercentage = Math.min(feedLevel * 10, 16); // Caps at 80% for level 4 and above
 
         int randomNumber = random.nextInt(100) + 1; // Generates a number between 1 and 100
 

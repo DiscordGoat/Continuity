@@ -557,7 +557,7 @@ public class PetManager implements Listener {
             case TERROR_OF_THE_DEEP:
                 return "Grants you " + ChatColor.RED + "Bloodlust " + ChatColor.GRAY + "when you strike a " + ChatColor.AQUA + "Sea Creature" + ChatColor.GRAY + " for " + level + " seconds.";
             case TREASURE_HUNTER:
-                return ChatColor.AQUA + "Treasure Chance: " + ChatColor.GOLD + (5 + (level * 0.45)) + "%";
+                return ChatColor.AQUA + "Treasure Chance: " + ChatColor.GOLD + (5 + (level * 0.1)) + "%";
             case PRACTICE:
                 return ChatColor.YELLOW + "Triples villager XP gains.";
             case HAGGLE:

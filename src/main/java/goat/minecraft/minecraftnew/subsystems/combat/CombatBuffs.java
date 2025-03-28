@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -58,6 +59,9 @@ public class CombatBuffs implements Listener {
                     double originalDamage = event.getDamage();
                     double newDamage = originalDamage * damageMultiplier;
 
+                    if(PotionManager.isActive("Potion of Recurve", shooter)){
+                        newDamage *= 1.25; // Double the damage from the recurve potion
+                    }
                     event.setDamage(newDamage);
 
                     // Notify the shooter about the damage boost via Action Bar

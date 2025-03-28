@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
@@ -96,9 +97,13 @@ public class FishingEvent implements Listener {
         int callOfTheVoidLevel = CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void");
         seaCreatureChance += callOfTheVoidLevel;
 
+        if(PotionManager.isActive("Potion of Fountains", player)){
+            seaCreatureChance += 20;
+        }
+
         // Check for reforged items for sea creatures
         if (isReforgedForSeaCreatures(player.getInventory().getItemInMainHand())) {
-            seaCreatureChance += 4; // +4% if the item is reforged
+            seaCreatureChance += 5; // +4% if the item is reforged
         }
         PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
 
@@ -383,7 +388,10 @@ public class FishingEvent implements Listener {
         }
         // Check if the player has the Treasure Hunter perk
         if (petManager.getActivePet(player) != null && petManager.getActivePet(player).hasPerk(PetManager.PetPerk.TREASURE_HUNTER)) {
-            treasureChance += (petLevel * 0.0045); // Scale to add 0.45 at pet level 100
+            treasureChance += (petLevel * 0.0010); // Scale to add 0.45 at pet level 100
+        }
+        if(PotionManager.isActive("Potion of Liquid Luck", player)){
+            treasureChance += 0.1;
         }
 
         // Add bonus from "Piracy" enchantment

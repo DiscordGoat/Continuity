@@ -507,6 +507,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.OAK_WOOD);
 
                     billableItems.add(Material.ROTTEN_FLESH);
+                    billableItems.add(Material.OAK_WOOD);
                     billableItems.add(Material.SPIDER_EYE);
                     billableItems.add(Material.FIRE_CHARGE);
                     billableItems.add(Material.ENCHANTED_BOOK);
@@ -696,47 +697,47 @@ public class AnvilRepair implements Listener {
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Petrified Log") && isDurable(repairee)){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Petrified Log") && isDurable(repairee)){
             incrementEnchantment(player, repairee, billItem,Enchantment.DURABILITY);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Pinecone") && ARMOR.contains(repairee.getType())){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Pinecone") && ARMOR.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Birch Strip") && ARMOR.contains(repairee.getType())){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Birch Strip") && ARMOR.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_PROJECTILE);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Humid Bark") && ARMOR.contains(repairee.getType())){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Humid Bark") && ARMOR.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_FALL);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Acacia Gum") && ARMOR.contains(repairee.getType())){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Acacia Gum") && ARMOR.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_FIRE);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Acorn") && ARMOR.contains(repairee.getType())){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Acorn") && ARMOR.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Cherry Blossom") && isDurable(repairee)){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Cherry Blossom") && isDurable(repairee)){
             incrementEnchantment(player, repairee, billItem,Enchantment.DURABILITY);
             incrementEnchantment(player, repairee, billItem,Enchantment.DURABILITY);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Maple Bark") && ARMOR.contains(repairee.getType())){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Maple Bark") && ARMOR.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_FIRE);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Blue Nether Wart") && ARMOR.contains(repairee.getType())){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Blue Nether Wart") && ARMOR.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.PROTECTION_EXPLOSIONS);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);

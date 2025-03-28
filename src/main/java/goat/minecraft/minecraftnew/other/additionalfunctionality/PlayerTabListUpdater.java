@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import java.util.Map;
+
 public class PlayerTabListUpdater {
 
     private final JavaPlugin plugin;
@@ -67,9 +68,9 @@ public class PlayerTabListUpdater {
         // New segment: Active Potion Effects
         Map<String, Integer> effects = PotionManager.getActiveEffects(player);
         if (!effects.isEmpty()) {
-            footer += "\n" + ChatColor.LIGHT_PURPLE + "Active Potions: ";
+            footer += "\n" + ChatColor.LIGHT_PURPLE + "Active Potions:";
             for (Map.Entry<String, Integer> entry : effects.entrySet()) {
-                footer += ChatColor.WHITE + entry.getKey() + ": " + entry.getValue() + "s   ";
+                footer += "\n" + ChatColor.WHITE + entry.getKey() + ": " + entry.getValue() + "s";
             }
         }
 

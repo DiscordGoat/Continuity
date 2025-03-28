@@ -306,7 +306,10 @@ public class UltimateEnchantmentListener implements Listener {
             forestryPetManager.incrementForestryCount(player);
             forestry.processPerfectAppleChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"));
             forestry.processDoubleDropChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"));
-            forestry.incrementNotoriety(player);
+
+            if (visitedLogs.size() % 4 == 0) {
+                forestry.incrementNotoriety(player);
+            }
 
             // 1% chance to summon a Forest Spirit if the block is wood
 
@@ -350,7 +353,7 @@ public class UltimateEnchantmentListener implements Listener {
         // (Alternatively, you can do this inside BFS itself. Up to you.)
         XPManager xpManager = new XPManager(plugin);
         for (Block woodBlock : visitedLogs) {
-            xpManager.addXP(player, "Forestry", 3);
+            xpManager.addXP(player, "Forestry", 1);
         }
 
         // ---- Finally, break them all gradually! ----

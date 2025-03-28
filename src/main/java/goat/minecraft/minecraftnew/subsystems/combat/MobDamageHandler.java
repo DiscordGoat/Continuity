@@ -43,11 +43,6 @@ public class MobDamageHandler implements Listener {
                     // Calculate the damage multiplier (4% per level)
                         double damageMultiplier = 1 + (attackerLevel * 0.06); // Multiplier should be 1 + (percentage increase)
                         double newDamage = originalDamage * damageMultiplier; // Apply the multiplier
-                    Bukkit.getLogger().info(player.getName() + "'s original damage: " + originalDamage);
-                    Bukkit.getLogger().info(player.getName() + "'s new Damage: " + newDamage);
-                        Bukkit.getLogger().info(player.getName() + " took an additional damage of: " + (newDamage - originalDamage) + " from " + attacker.getType());
-                        //yup
-                        // Set the new damage to the event
                         event.setDamage(newDamage);
                 }
             }

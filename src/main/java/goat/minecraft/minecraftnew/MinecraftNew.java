@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew;
 
+import goat.minecraft.minecraftnew.cut_content.CancelBrewing;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
 import goat.minecraft.minecraftnew.other.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionListener;
@@ -10,7 +11,7 @@ import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
 import goat.minecraft.minecraftnew.other.recipes.ViewRecipeCommand;
 import goat.minecraft.minecraftnew.subsystems.brewing.*;
-import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.PotionOfStrength;
+import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.*;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
@@ -78,7 +79,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private LockedRecipeManager lockedRecipeManager;
     private RecipeManager recipeManager;
     private ForestryPetManager forestryPetManager;
-    private PotionBrewingSubsystem potionBrewing;
+
+    private PotionBrewingSubsystem potionBrewingSubsystem;
 
 
     public static Collections getCollectionsManager() {
@@ -147,16 +149,16 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        PotionManager.initialize(this);
-        PotionRegistry.initTestPotions();
-
-        potionBrewing = PotionBrewingSubsystem.getInstance(this);
-        potionBrewing.onEnable(); // Load and resume any brew timers
-
-
-
         ArmorStandCommand armorStandCommand = new ArmorStandCommand(this);
         armorStandCommand.removeInvisibleArmorStands();
+
+
+        PotionManager.initialize(this);
+        potionBrewingSubsystem = PotionBrewingSubsystem.getInstance(this);
+
+
+
+
 
 
         new SetDurabilityCommand(this);
@@ -185,6 +187,12 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         //potions
         getServer().getPluginManager().registerEvents(new PotionOfStrength(), this);
+        getServer().getPluginManager().registerEvents(new PotionOfSovereignty(), this);
+        getServer().getPluginManager().registerEvents(new PotionOfLiquidLuck(), this);
+        getServer().getPluginManager().registerEvents(new PotionOfFountains(), this);
+        getServer().getPluginManager().registerEvents(new PotionOfSwiftStep(), this);
+        getServer().getPluginManager().registerEvents(new PotionOfRecurve(), this);
+
 
 
 
@@ -495,7 +503,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        potionBrewing.onDisable(); // Save brew timers
+        if(potionBrewingSubsystem != null){
+            potionBrewingSubsystem.onDisable();
+        }
+
+
 
 
         Speech speech = new Speech(this);

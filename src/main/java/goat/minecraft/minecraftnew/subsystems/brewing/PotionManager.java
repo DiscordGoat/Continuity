@@ -38,9 +38,12 @@ public class PotionManager {
     public static void addCustomPotionEffect(String name, Player player, int duration) {
         UUID uuid = player.getUniqueId();
         Map<String, Integer> playerEffects = activeEffects.getOrDefault(uuid, new HashMap<>());
-        playerEffects.put(name, duration);
+        // If the effect is already active, add the new duration to the current duration
+        int newDuration = playerEffects.getOrDefault(name, 0) + duration;
+        playerEffects.put(name, newDuration);
         activeEffects.put(uuid, playerEffects);
     }
+
 
     /**
      * Checks if a given effect is active for the player.

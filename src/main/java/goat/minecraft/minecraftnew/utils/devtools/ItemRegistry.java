@@ -50,7 +50,36 @@ public class ItemRegistry {
 
 
 
-
+    public static ItemStack getRecurvePotionRecipePaper() {
+        // This returns a piece of PAPER with a custom name + lore that says "Potion of Recurve Recipe".
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Recurve Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Recurve",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getSwiftStepPotionRecipePaper() {
+        // This returns a piece of PAPER with a custom name + lore that says "Potion of Swift Step Recipe".
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Swift Step Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Swift Step",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
 
     public static ItemStack getStrengthPotionRecipePaper() {
         // This returns a piece of PAPER with a custom name + lore that says "Potion of Strength Recipe".
@@ -67,19 +96,53 @@ public class ItemRegistry {
                 true
         );
     }
-    public static ItemStack getPotionOfStrength() {
+    public static ItemStack getSovereigntyPotionRecipePaper() {
         return createCustomItem(
-                Material.POTION,
-                ChatColor.RED + "Potion of Strength",
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Sovereignty Recipe (Potion Recipe)",
                 Arrays.asList(
-                        ChatColor.GRAY + "Test Potion of Strength",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Debug potion effect.",
-                        ChatColor.DARK_PURPLE + "Test Potion"
+                        ChatColor.GRAY + "Brewing instructions for Sovereignty",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
                 ),
                 1,
                 false,
-                true);
+                true
+        );
     }
+    public static ItemStack getLiquidLuckRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Liquid Luck Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Liquid Luck",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getFountainsRecipePaper() {
+        // This returns a piece of PAPER with a custom name + lore that says "Potion of Strength Recipe".
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Fountains Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Sea Creature Chance",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+
+
+
     public static ItemStack getPetrifiedLog() {
         return createCustomItem(
                 Material.OAK_WOOD,

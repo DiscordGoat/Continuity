@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.subsystems.brewing;
+package goat.minecraft.minecraftnew.cut_content;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;

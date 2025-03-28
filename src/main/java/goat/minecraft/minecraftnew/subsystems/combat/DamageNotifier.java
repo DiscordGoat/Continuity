@@ -90,13 +90,13 @@ public class DamageNotifier implements Listener {
         
         // Determine color based on damage amount
         ChatColor color;
-        if (damage < 10) {
+        if (damage < 20) {
             color = ChatColor.WHITE;
-        } else if (damage < 30) {
+        } else if (damage < 40) {
             color = ChatColor.GREEN;
-        } else if (damage < 50) {
+        } else if (damage < 80) {
             color = ChatColor.BLUE;
-        } else if (damage < 100) {
+        } else if (damage < 140) {
             color = ChatColor.LIGHT_PURPLE;
         } else {
             color = ChatColor.GOLD;

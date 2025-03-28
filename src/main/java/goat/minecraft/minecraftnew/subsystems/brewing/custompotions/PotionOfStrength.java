@@ -1,8 +1,11 @@
 package goat.minecraft.minecraftnew.subsystems.brewing.custompotions;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,11 +25,15 @@ public class PotionOfStrength implements Listener {
         ItemStack item = event.getItem();
         if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
             String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+            XPManager xpManager = new XPManager(MinecraftNew.getInstance());
+            int brewingLevel = xpManager.getPlayerLevel(event.getPlayer(), "Brewing");
+            int duration = (60 * 3) +  (brewingLevel * 10);
             if (displayName.equals("Potion of Strength")) {
                 Player player = event.getPlayer();
                 // Add the custom effect for 15 seconds
-                PotionManager.addCustomPotionEffect("Potion of Strength", player, 15);
-                player.sendMessage(ChatColor.GREEN + "Potion of Strength effect activated for 15 seconds!");
+                PotionManager.addCustomPotionEffect("Potion of Strength", player, duration);
+                player.sendMessage(ChatColor.GREEN + "Potion of Strength effect activated for " + duration + " seconds!");
+                xpManager.addXP(player, "Brewing", 100);
             }
         }
     }
@@ -41,10 +48,8 @@ public class PotionOfStrength implements Listener {
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
             if (PotionManager.isActive("Potion of Strength", player)) {
-                double extraDamage = event.getDamage() * 0.15;
+                double extraDamage = event.getDamage() * 0.25;
                 event.setDamage(event.getDamage() + extraDamage);
-                // Debug notification; in a production environment you might remove or adjust this.
-                player.sendMessage(ChatColor.YELLOW + "Potion of Strength: Damage increased by 15%!");
             }
         }
     }
