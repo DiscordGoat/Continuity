@@ -419,6 +419,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT", 1, 64, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT_TWO", 1, 128, 3)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("MERIT_ITEM", 1, 64, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("LEGENDARY_TOOL_REFORGE", 1, 64, 5)); // Custom Item
 
         defaultConfig.set("TOOLSMITH.purchases", toolsmithPurchases);
@@ -589,6 +590,7 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("MILK_BUCKET", 5, 15, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("EGG", 12, 12, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
+        farmerPurchases.add(createTradeMap("PESTICIDE", 1, 8, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5)); // Level 5 trade
 
         defaultConfig.set("FARMER.purchases", farmerPurchases);
@@ -777,6 +779,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getToolsmithEnchantTwo();
             case "LEGENDARY_TOOL_REFORGE":
                 return ItemRegistry.getLegendaryToolReforge();
+            case "MERIT_ITEM":
+                return ItemRegistry.getQualifiedItem();
             case "LAPIS_GEMSTONE":
                 return ItemRegistry.getLapisGemstone();
             case "EMERALD_GEMSTONE":
@@ -795,6 +799,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLeatherworkerArtifact();
             case "CLERIC_ENCHANT":
                 return ItemRegistry.getClericEnchant();
+            case "PESTICIDE":
+                return ItemRegistry.getPesticide();
             case "CARTOGRAPHER_MINESHAFT":
                 return ItemRegistry.getCartographerMineshaft();
             case "CARTOGRAPHER_VILLAGE":

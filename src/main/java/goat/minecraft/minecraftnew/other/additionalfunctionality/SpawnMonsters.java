@@ -128,6 +128,43 @@ public class SpawnMonsters implements Listener {
         int randomValue = random.nextInt(100) + 1; // 1 to 100
         return randomValue <= playerHostility;
     }
+    @EventHandler
+    public void onMobDeathForShatterproofDrop(EntityDeathEvent event) {
+        if (!(event.getEntity() instanceof LivingEntity mob)) return;
+
+        EntityEquipment equipment = mob.getEquipment();
+        if (equipment == null) return;
+
+        Player killer = mob.getKiller();
+        if (killer == null) return;
+
+        ItemStack chestplate = equipment.getChestplate();
+        if (chestplate == null) return;
+
+        Material armorType = chestplate.getType();
+        Random random = new Random();
+
+        boolean shouldDrop = false;
+
+        switch (armorType) {
+            case CHAINMAIL_CHESTPLATE:
+            case GOLDEN_CHESTPLATE:
+                shouldDrop = random.nextDouble() < 0.10; // 10% chance
+                break;
+            case DIAMOND_CHESTPLATE:
+                shouldDrop = true; // 100% chance
+                break;
+            default:
+                break;
+        }
+
+        if (shouldDrop) {
+            Location dropLoc = mob.getLocation();
+            dropLoc.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getVerdantRelicShatterproof());
+            killer.sendMessage(ChatColor.AQUA + "You found a " + ChatColor.GOLD + "Verdant Relic: Shatterproof!");
+            killer.playSound(killer.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.0f, 1.2f);
+        }
+    }
 
     public void applyRandomArmor(LivingEntity entity) {
         if (entity == null) return;
@@ -544,12 +581,30 @@ public class SpawnMonsters implements Listener {
                     xpManager.addXP(killer, "Fishing", 800);
                     int currentOxygen = oxygenManager.getPlayerOxygen(killer);
                     oxygenManager.setPlayerOxygenLevel(killer, currentOxygen + 100);
-                    event.setDroppedExp(500);
+                    event.setDroppedExp(100);
+                    drowned.getLocation().getWorld().dropItem(drowned.getLocation(), ItemRegistry.getVerdantRelicEntionPlastSeed());
                 }
             }
         }
     }
-
+    @EventHandler
+    public void onSpeedMutantDeath(EntityDeathEvent event) {
+        Random random = new Random();
+        if(!(event.getEntity() instanceof Monster)){
+            return;
+        }
+        Monster monster = (Monster) event.getEntity();
+        if (monster.hasPotionEffect(PotionEffectType.SPEED)) {
+            Player killer = monster.getKiller();
+            if (killer != null) {
+                xpManager.addXP(killer, "Combat", 100);
+                event.setDroppedExp(100);
+                if(random.nextBoolean()) {
+                    Objects.requireNonNull(monster.getLocation().getWorld()).dropItem(monster.getLocation(), ItemRegistry.getVerdantRelicEntropySeed());
+                }
+            }
+        }
+    }
 
     /**
      * When a Deep Sea Diver is hit, play a metal clang sound.
@@ -573,20 +628,32 @@ public class SpawnMonsters implements Listener {
             double defaultHealth = healthAttribute.getDefaultValue();
             healthAttribute.setBaseValue(defaultHealth);
         }
-        double healthMultiplier = 1 + (level * 0.1);
+
+        double healthMultiplier;
+
+        if (level <= 10) {
+            // Scale linearly from 0.1x to 1.0x from level 1 to 10
+            healthMultiplier = 0.1 + 0.1 * (level - 1);
+        } else {
+            // From level 11 upward, scale normally
+            healthMultiplier = 1 + ((level - 10) * 0.1);
+        }
+
         double originalHealth = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
         double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
         mob.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newHealth);
         mob.setHealth(newHealth);
         mob.setMetadata("mobLevel", new FixedMetadataValue(MinecraftNew.getInstance(), level));
+
+        // Skip renaming if it's a Knight
+        if (mob.getCustomName() != null && mob.getCustomName().equals(ChatColor.GRAY + "Knight")) return;
+
         String color = getColorForLevel(level);
-        if (mob.getCustomName() != null && mob.getCustomName().equals(ChatColor.GRAY + "Knight")) {
-            return;
-        }
         mob.setCustomName(ChatColor.GRAY + "[" + color + "Lv: " + level + ChatColor.GRAY + "] " + color + formatMobType(mob.getType().toString()));
         mob.setCustomNameVisible(true);
         mob.setRemoveWhenFarAway(true);
     }
+
 
     private String getColorForLevel(int level) {
         if (level <= 20) return ChatColor.GRAY.toString();

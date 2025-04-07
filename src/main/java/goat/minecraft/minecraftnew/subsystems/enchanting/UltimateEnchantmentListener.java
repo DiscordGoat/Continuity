@@ -1009,6 +1009,9 @@ public class UltimateEnchantmentListener implements Listener {
                 for (Entity e : armorStand.getNearbyEntities(0.5, 0.5, 0.5)) {
                     if (e instanceof Monster || e.hasMetadata("SEA_CREATURE")) {
                         LivingEntity target = (LivingEntity) e;
+                        if(target.isDead()){
+                            return;
+                        }
                         // Retrieve loyal data.
                         LoyalSwordData data = loyalSwordDataMap.get(player.getUniqueId());
                         if (data == null) {

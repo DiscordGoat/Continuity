@@ -203,7 +203,8 @@ public class PotionBrewingSubsystem implements Listener {
     private static final List<PotionRecipe> recipeRegistry = new ArrayList<>();
     static {
         // Existing recipe for Potion of Strength
-        List<String> strengthIngredients = Arrays.asList("Nether Wart", "Singularity");
+        //strength is farmed from Knights
+        List<String> strengthIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Singularity");
         int baseDuration = (60 * 3);
         List<String> strengthLore = Arrays.asList("Increases melee damage by 25%", "Base Duration of " + baseDuration);
         Color strengthColor = Color.fromRGB(101, 67, 33);
@@ -212,7 +213,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // New recipe for Sovereignty
-        List<String> sovereigntyIngredients = Arrays.asList("Nether Wart", "Obsidian");
+        List<String> sovereigntyIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Obsidian", "Shatterproof");
         baseDuration = 60 * 3; // 120 seconds cooldown (adjust as needed for effect duration)
         List<String> sovereigntyLore = Arrays.asList("Deflects the first 5 attacks", "Cooldown: 120 seconds");
         // Choose a color that fits a regal theme (adjust the RGB values as needed)
@@ -221,27 +222,27 @@ public class PotionBrewingSubsystem implements Listener {
                 new PotionRecipe("Potion of Sovereignty", sovereigntyIngredients, 60*10, new ItemStack(Material.POTION), sovereigntyColor, sovereigntyLore)
         );
 
-        List<String> liquidLuckIngredients = Arrays.asList("Nether Wart", "Enchanted Golden Apple");
+        List<String> liquidLuckIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Enchanted Golden Apple");
         baseDuration = 60 * 3; // 120 seconds cooldown (adjust as needed for effect duration)
-        List<String> liquidLuckLore = Arrays.asList("Increases Treasure Chance by 10%", "Base Duration of " + baseDuration);
+        List<String> liquidLuckLore = Arrays.asList("Increases Treasure Chance by 20%", "Base Duration of " + baseDuration);
         // Choose a color that fits a regal theme (adjust the RGB values as needed)
         Color liquidLuckColor = Color.fromRGB(253, 217, 5);
         recipeRegistry.add(
                 new PotionRecipe("Potion of Liquid Luck", liquidLuckIngredients, 60*20, new ItemStack(Material.POTION), liquidLuckColor, liquidLuckLore)
         );
-        List<String> fountainsIngredients = Arrays.asList("Nether Wart", "Heart of the Sea");
+        List<String> fountainsIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Heart of the Sea", "EntionPlast");
         List<String> fountainsLore = Arrays.asList("Boosts sea creature chance by 20%", "Base Duration of " + baseDuration);
         Color fountainsColor = Color.fromRGB(0, 255, 171);
         recipeRegistry.add(
                 new PotionRecipe("Potion of Fountains", fountainsIngredients, 60*4, new ItemStack(Material.POTION), fountainsColor, fountainsLore)
         );
-        List<String> swiftStepIngredients = Arrays.asList("Nether Wart", "Sugar", "Rabbit Foot");
+        List<String> swiftStepIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Sugar", "Entropy");
         List<String> swiftStepLore = Arrays.asList("Increases movement speed by 30%", "Base Duration of " + baseDuration);
         Color swiftStepColor = Color.fromRGB(150, 200, 255); // A light blue-ish color
         recipeRegistry.add(
                 new PotionRecipe("Potion of Swift Step", swiftStepIngredients, 60*30, new ItemStack(Material.POTION), swiftStepColor, swiftStepLore)
         );
-        List<String> recurveIngredients = Arrays.asList("Nether Wart", "Feather");
+        List<String> recurveIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Bowstring");
         List<String> recurveLore = Arrays.asList("Increases arrow damage by 25%", "Base Duration of " + baseDuration);
         Color recurveColor = Color.fromRGB(0, 0, 0); // A sleek violet-tinted archery vibe
         recipeRegistry.add(

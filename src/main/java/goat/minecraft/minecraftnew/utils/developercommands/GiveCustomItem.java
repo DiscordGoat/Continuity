@@ -23,27 +23,50 @@ public class GiveCustomItem implements CommandExecutor {
             return true;
         }
 
-        if (args.length == 0) {
-            sender.sendMessage(ChatColor.RED + "Please specify an item name.");
+        // We require at least two arguments:
+        // 1) The custom item name (which may contain spaces or underscores)
+        // 2) The amount (an integer)
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /givecustomitem <item_name> <amount>");
             return true;
         }
 
+        // The last argument is the amount
+        String amountArg = args[args.length - 1];
+        int amount;
+        try {
+            amount = Integer.parseInt(amountArg);
+        } catch (NumberFormatException e) {
+            sender.sendMessage(ChatColor.RED + "Invalid amount: " + amountArg);
+            return true;
+        }
 
-        // Combine arguments into the item name using underscores
-        // e.g. /givecustomitem Carrot_Seeder -> itemName = "Carrot_Seeder"
-        String itemName = String.join("_", args);
+        if (amount <= 0) {
+            sender.sendMessage(ChatColor.RED + "Amount must be a positive number.");
+            return true;
+        }
+
+        // The item name is all the arguments except for the last one, joined with underscores
+        String[] nameParts = new String[args.length - 1];
+        System.arraycopy(args, 0, nameParts, 0, args.length - 1);
+        String itemName = String.join("_", nameParts);
 
         // Attempt to find the custom item by that name
         ItemStack customItem = ItemRegistry.getItemByName(itemName);
 
         if (customItem != null) {
+            // Set the requested amount
+            customItem.setAmount(amount);
+
             ItemMeta meta = customItem.getItemMeta();
             if (meta != null) {
                 // Give it to the player
                 player.getInventory().addItem(customItem);
-                player.sendMessage(ChatColor.GREEN + "You have received: " + meta.getDisplayName());
+                player.sendMessage(ChatColor.GREEN + "You have received: " + meta.getDisplayName()
+                        + ChatColor.GREEN + " (x" + amount + ")");
             } else {
-                player.sendMessage(ChatColor.RED + "The item " + itemName.replace("_", " ") + " does not have metadata!");
+                player.sendMessage(ChatColor.RED + "The item " + itemName.replace("_", " ")
+                        + " does not have metadata!");
             }
         } else {
             // If item is null, no match was found

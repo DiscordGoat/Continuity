@@ -15,6 +15,7 @@ import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.*;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
+import goat.minecraft.minecraftnew.subsystems.farming.VerdantRelicsSubsystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
 
@@ -80,7 +81,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private RecipeManager recipeManager;
     private ForestryPetManager forestryPetManager;
 
+
     private PotionBrewingSubsystem potionBrewingSubsystem;
+    private VerdantRelicsSubsystem verdantRelicsSubsystem;
 
 
     public static Collections getCollectionsManager() {
@@ -155,6 +158,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         PotionManager.initialize(this);
         potionBrewingSubsystem = PotionBrewingSubsystem.getInstance(this);
+
+        verdantRelicsSubsystem = VerdantRelicsSubsystem.getInstance(this);
 
 
 
@@ -423,6 +428,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new WaterLogged(this), this);
 
         getServer().getPluginManager().registerEvents(new Feed(), this);
+        getServer().getPluginManager().registerEvents(new Merit(playerData), this);
         getServer().getPluginManager().registerEvents(new Cleaver(), this);
         getServer().getPluginManager().registerEvents(new Forge(), this);
         getServer().getPluginManager().registerEvents(new Shear(), this);
@@ -436,6 +442,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Preservation(), this);
 
         CustomEnchantmentManager.registerEnchantment("Feed", 3, true);
+        CustomEnchantmentManager.registerEnchantment("Merit", 5, true);
         CustomEnchantmentManager.registerEnchantment("Cleaver", 5, true);
         CustomEnchantmentManager.registerEnchantment("Call of the Void", 5, true);
         CustomEnchantmentManager.registerEnchantment("Savant", 1, true);
@@ -506,7 +513,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if(potionBrewingSubsystem != null){
             potionBrewingSubsystem.onDisable();
         }
-
+        if (verdantRelicsSubsystem != null) {
+            verdantRelicsSubsystem.onDisable();
+        }
 
 
 

@@ -391,7 +391,7 @@ public class FishingEvent implements Listener {
             treasureChance += (petLevel * 0.0010); // Scale to add 0.45 at pet level 100
         }
         if(PotionManager.isActive("Potion of Liquid Luck", player)){
-            treasureChance += 0.1;
+            treasureChance += 0.2;
         }
 
         // Add bonus from "Piracy" enchantment

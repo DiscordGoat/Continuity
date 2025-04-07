@@ -47,7 +47,105 @@ public class ItemRegistry {
     }
 
 
+    public static ItemStack getPesticide() {
+        return createCustomItem(
+                Material.POTION,
+                ChatColor.YELLOW + "Pesticide",
+                Arrays.asList(
+                        ChatColor.GRAY + "A specialized concoction sold by farmers.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Cures Infested complications on Verdant Relics.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
 
+
+    public static ItemStack getEntionPlastIngredient() {
+        return createCustomItem(
+                Material.PRISMARINE_SHARD,
+                ChatColor.GOLD + "EntionPlast",
+                Arrays.asList(
+                        ChatColor.GRAY + "A rare, mysterious substance",
+                        ChatColor.BLUE + "Key ingredient in the Potion of Fountains."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    public static ItemStack getShatterproof() {
+        return createCustomItem(
+                Material.AMETHYST_SHARD,
+                ChatColor.GOLD + "Shatterproof",
+                Arrays.asList(
+                        ChatColor.GRAY + "A crystalline relic, infused with sturdy magical essence.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Sovereignty."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getVerdantRelicShatterproof() {
+        return createCustomItem(
+                Material.AMETHYST_SHARD,
+                ChatColor.GOLD + "Verdant Relic Shatterproof",
+                Arrays.asList(
+                        ChatColor.GRAY + "A crystalline relic, infused with sturdy magical essence.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Sovereignty."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+
+    public static ItemStack getVerdantRelicEntionPlastSeed() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic EntionPlast",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic seed imbued with the essence of EntionPlast.",
+                        ChatColor.BLUE + "Dropped by divers. Right-click on dirt/grass to plant."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getEntropyIngredient() {
+        return createCustomItem(
+                Material.PRISMARINE_SHARD,
+                ChatColor.GOLD + "Entropy",
+                Arrays.asList(
+                        ChatColor.GRAY + "A rare, mysterious substance",
+                        ChatColor.BLUE + "Key ingredient in the Potion of Swift Step."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getVerdantRelicEntropySeed() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic Entropy",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic seed imbued with the essence of Entropy.",
+                        ChatColor.BLUE + "Dropped by divers. Right-click on dirt/grass to plant."
+                ),
+                1,
+                false,
+                true
+        );
+    }
 
 
     public static ItemStack getRecurvePotionRecipePaper() {
@@ -347,6 +445,14 @@ public class ItemRegistry {
                 "Everflame", Arrays.asList(
                 ChatColor.GRAY + "Max level of 5",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Forge to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+    public static ItemStack getQualifiedItem() {
+        return createCustomItem(Material.DIAMOND, ChatColor.YELLOW +
+                "Qualification", Arrays.asList(
+                ChatColor.GRAY + "Max level of 5",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Merit to Pickaxes.",
                 ChatColor.DARK_PURPLE + "Smithing Item"
         ), 1, false, true);
     }

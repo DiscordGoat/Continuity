@@ -143,11 +143,14 @@ public class SkillsCommand implements CommandExecutor {
                 ));
                 break;
             case "Farming":
+                double growthTimeDays = 10 - 5 * ((level - 1) / 99.0);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.YELLOW + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (level / 2) + "%"
+                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (level / 2) + "%",
+                        ChatColor.YELLOW + "Growth Time: " + ChatColor.GREEN + String.format("%.1f", growthTimeDays) + " days"
                 ));
                 break;
+
             case "Mining":
                 double duration = 200 + (level * 4);
                 lore = new ArrayList<>(Arrays.asList(
