@@ -313,24 +313,21 @@ public class SeaCreatureRegistry implements Listener {
                 "Abomination",  // unique texture for this creature
                 RARITY_LEVELS.get(Rarity.LEGENDARY)
         ));
+        List<SeaCreature.DropItem> midasDrops = new ArrayList<>();
+        midasDrops.add(new SeaCreature.DropItem(ItemRegistry.getVerdantRelicTreasury(), 1, 1, 1));
+
+        SEA_CREATURES.add(new SeaCreature(
+                "Midas",
+                Rarity.LEGENDARY,
+                EntityType.ZOMBIE,  // Choose an appropriate EntityType; DROWNED is used here for an aquatic theme.
+                midasDrops,
+                Color.fromRGB(212, 175, 55),  // A gold-like color.
+                "Midas",  // Unique texture for this creature (ensure your texture key/method is set up accordingly).
+                RARITY_LEVELS.get(Rarity.LEGENDARY)
+        ));
+
         //MYTHIC
 
-    }
-
-    /**
-     * Creates a placeholder alchemy item with the given name.
-     *
-     * @param name The name of the alchemy item.
-     * @return An ItemStack representing the alchemy item.
-     */
-    public static ItemStack createAlchemyItem(String name, Material material, List<String> lore) {
-        ItemStack item = new ItemStack(material); // Changed to GREEN_DYE as placeholder
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.LIGHT_PURPLE + name);
-        // Optionally, add lore or other metadata
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        return item;
     }
 
     /**

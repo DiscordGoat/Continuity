@@ -732,6 +732,15 @@ public class VerdantRelicsSubsystem implements Listener {
              else if (relicType.equalsIgnoreCase("Shatterproof")) {
                  return ItemRegistry.getShatterproof(); // Ensure this method exists in ItemRegistry
              }
+             else if (relicType.equalsIgnoreCase("Gravity")) {
+                 return ItemRegistry.getGravity(); // Ensure this method exists in ItemRegistry
+             }
+             else if (relicType.equalsIgnoreCase("Treasury")) {
+                 return ItemRegistry.getTreasury(); // Ensure this method exists in ItemRegistry
+             }
+             else if (relicType.equalsIgnoreCase("Marrow")) {
+                 return ItemRegistry.getMarrow(); // Ensure this method exists in ItemRegistry
+             }
             // Default fallback yield
             return null;
         }

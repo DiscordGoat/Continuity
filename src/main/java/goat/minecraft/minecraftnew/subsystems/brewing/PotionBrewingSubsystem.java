@@ -204,7 +204,7 @@ public class PotionBrewingSubsystem implements Listener {
     static {
         // Existing recipe for Potion of Strength
         //strength is farmed from Knights
-        List<String> strengthIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Singularity");
+        List<String> strengthIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Gravity");
         int baseDuration = (60 * 3);
         List<String> strengthLore = Arrays.asList("Increases melee damage by 25%", "Base Duration of " + baseDuration);
         Color strengthColor = Color.fromRGB(101, 67, 33);
@@ -222,7 +222,7 @@ public class PotionBrewingSubsystem implements Listener {
                 new PotionRecipe("Potion of Sovereignty", sovereigntyIngredients, 60*10, new ItemStack(Material.POTION), sovereigntyColor, sovereigntyLore)
         );
 
-        List<String> liquidLuckIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Enchanted Golden Apple");
+        List<String> liquidLuckIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Treasury");
         baseDuration = 60 * 3; // 120 seconds cooldown (adjust as needed for effect duration)
         List<String> liquidLuckLore = Arrays.asList("Increases Treasure Chance by 20%", "Base Duration of " + baseDuration);
         // Choose a color that fits a regal theme (adjust the RGB values as needed)
@@ -242,7 +242,7 @@ public class PotionBrewingSubsystem implements Listener {
         recipeRegistry.add(
                 new PotionRecipe("Potion of Swift Step", swiftStepIngredients, 60*30, new ItemStack(Material.POTION), swiftStepColor, swiftStepLore)
         );
-        List<String> recurveIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Bowstring");
+        List<String> recurveIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Marrow");
         List<String> recurveLore = Arrays.asList("Increases arrow damage by 25%", "Base Duration of " + baseDuration);
         Color recurveColor = Color.fromRGB(0, 0, 0); // A sleek violet-tinted archery vibe
         recipeRegistry.add(

@@ -46,7 +46,91 @@ public class ItemRegistry {
         return null;
     }
 
+    public static ItemStack getMarrow() {
+        return createCustomItem(
+                Material.BONE_BLOCK,
+                ChatColor.GOLD + "Marrow",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic forged from the essence of precision.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Recurve."
+                ),
+                1,
+                false,
+                true
+        );
+    }
 
+    public static ItemStack getVerdantRelicMarrow() {
+        return createCustomItem(
+                Material.BONE_MEAL,
+                ChatColor.GOLD + "Verdant Relic Marrow",
+                Arrays.asList(
+                        ChatColor.GRAY + "A refined echo of lethal essence.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Recurve."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+
+    public static ItemStack getTreasury() {
+        return createCustomItem(
+                Material.GOLD_BLOCK,
+                ChatColor.GOLD + "Treasury",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic of unmatched opulence and power.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Liquid Luck"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getVerdantRelicTreasury() {
+        return createCustomItem(
+                Material.GOLD_INGOT,
+                ChatColor.GOLD + "Verdant Relic Treasury",
+                Arrays.asList(
+                        ChatColor.GRAY + "An echo of ancient wealth reimagined.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Liquid Luck"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+
+    public static ItemStack getGravity() {
+        return createCustomItem(
+                Material.OBSIDIAN,
+                ChatColor.GOLD + "Gravity",
+                Arrays.asList(
+                        ChatColor.GRAY + "A theoretical relic, more idea than matter.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Strength."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getVerdantRelicGravity() {
+        return createCustomItem(
+                Material.BEETROOT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic Gravity",
+                Arrays.asList(
+                        ChatColor.GRAY + "A Theoretical relic, more idea than matter.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Strength."
+                ),
+                1,
+                false,
+                true
+        );
+    }
     public static ItemStack getPesticide() {
         return createCustomItem(
                 Material.POTION,
@@ -1923,6 +2007,7 @@ public class ItemRegistry {
             false,
             true);
     }
+
     public static ItemStack getSkeletonDrop() {
         return createCustomItem(Material.STRING, ChatColor.YELLOW +
             "Bowstring", Arrays.asList(

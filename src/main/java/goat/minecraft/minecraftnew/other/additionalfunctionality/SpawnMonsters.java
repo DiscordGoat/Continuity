@@ -128,6 +128,8 @@ public class SpawnMonsters implements Listener {
         int randomValue = random.nextInt(100) + 1; // 1 to 100
         return randomValue <= playerHostility;
     }
+
+    //armor mutation relic
     @EventHandler
     public void onMobDeathForShatterproofDrop(EntityDeathEvent event) {
         if (!(event.getEntity() instanceof LivingEntity mob)) return;
@@ -166,6 +168,7 @@ public class SpawnMonsters implements Listener {
         }
     }
 
+    //armor mutation
     public void applyRandomArmor(LivingEntity entity) {
         if (entity == null) return;
 
@@ -268,6 +271,7 @@ public class SpawnMonsters implements Listener {
         }
     }
 
+    //weapon mutation
     public void equipRandomWeapon(LivingEntity entity) {
         Random random = new Random();
         Material weaponMaterial = random.nextBoolean() ? Material.IRON_SWORD : Material.IRON_SHOVEL;
@@ -275,6 +279,7 @@ public class SpawnMonsters implements Listener {
         equipment.setItemInMainHand(new ItemStack(weaponMaterial));
     }
 
+    //enchantment mutation
     public void enchantArmorWithProtection(LivingEntity entity) {
         EntityEquipment equipment = entity.getEquipment();
         ItemStack[] armor = {
@@ -298,6 +303,7 @@ public class SpawnMonsters implements Listener {
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
         int playerHostility = hostilityManager.getPlayerDifficultyTier(getNearestPlayer(entity, 1000));
 
+        //creeper rarity
         if (entity instanceof Creeper) {
             Random random = new Random();
             int randomValue = random.nextInt(100) + 1;
@@ -306,6 +312,7 @@ public class SpawnMonsters implements Listener {
             }
         }
 
+        //speed mutation
         if (entity instanceof LivingEntity monster) {
             if (shouldMutationOccur(playerHostility)) {
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, true));
@@ -313,13 +320,18 @@ public class SpawnMonsters implements Listener {
         }
 
         if (entity instanceof Zombie zombie) {
+            //knight mutation
             if (shouldMutationOccur(playerHostility)) {
                 KnightMob knightMob = new KnightMob(plugin);
                 knightMob.transformToKnight(zombie);
                 zombie.setCustomName(ChatColor.GRAY + "Knight");
             }
+            //armor mutation
             if (shouldMutationOccur(playerHostility)) {
                 applyRandomArmor(zombie);
+            }
+            if(shouldMutationOccur(playerHostility)){
+                applyEnragedMutation(zombie);
             }
             if (shouldMutationOccur(playerHostility)) {
                 applyRandomArmor(zombie);
@@ -385,7 +397,7 @@ public class SpawnMonsters implements Listener {
                 enchantArmorWithProtection(ws);
             }
         }
-
+        //charged mutation
         if (entity instanceof Creeper creeper) {
             if (shouldMutationOccur(playerHostility)) {
                 creeper.setPowered(true);
@@ -393,12 +405,13 @@ public class SpawnMonsters implements Listener {
         }
 
         if (entity instanceof Blaze monster) {
+            //floating mutation
             if (shouldMutationOccur(playerHostility)) {
                 monster.setCustomName(ChatColor.RED + "High Flying Blaze");
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, Integer.MAX_VALUE, 1, true));
             }
         }
-
+        //fast swimmer mutation
         if (entity instanceof Drowned monster) {
             if (shouldMutationOccur(playerHostility)) {
                 monster.getEquipment().setItemInMainHand(ItemRegistry.getTrident());
@@ -406,7 +419,7 @@ public class SpawnMonsters implements Listener {
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, Integer.MAX_VALUE, 3, true));
             }
         }
-
+        //giant mutation
         if (entity instanceof MagmaCube monster) {
             if (shouldMutationOccur(playerHostility)) {
                 monster.setSize(4);
@@ -415,8 +428,11 @@ public class SpawnMonsters implements Listener {
                 monster.setCustomNameVisible(true);
             }
         }
-
+        //sniper mutation
         if (entity instanceof Skeleton monster) {
+            if(shouldMutationOccur(playerHostility)){
+                applyEnragedMutation(monster);
+            }
             if (shouldMutationOccur(playerHostility)) {
                 monster.setCustomName(ChatColor.RED + "Sniper");
                 monster.setCustomNameVisible(true);
@@ -426,7 +442,7 @@ public class SpawnMonsters implements Listener {
                 monster.getEquipment().setHelmet(sniperHelmet);
             }
         }
-
+        //giant mutation
         if (entity instanceof Slime monster) {
             if (shouldMutationOccur(playerHostility)) {
                 monster.setSize(4);
@@ -436,7 +452,7 @@ public class SpawnMonsters implements Listener {
             }
         }
 
-        Random random = new Random();
+
         if (entity instanceof Monster) {
             LivingEntity mob = (LivingEntity) entity;
             new BukkitRunnable() {
@@ -548,6 +564,44 @@ public class SpawnMonsters implements Listener {
             equipment.setBoots(boots);
         }
     }
+    // Call this method when you want to apply the Enraged mutation.
+    public void applyEnragedMutation(LivingEntity entity) {
+        // Set the custom name to "Enraged" in red.
+        entity.setCustomName(ChatColor.RED + "Enraged");
+        entity.setCustomNameVisible(true);
+
+        // Create red leather armor pieces.
+        ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
+        LeatherArmorMeta helmetMeta = (LeatherArmorMeta) helmet.getItemMeta();
+        helmetMeta.setColor(org.bukkit.Color.RED);
+        helmet.setItemMeta(helmetMeta);
+
+        ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
+        LeatherArmorMeta chestplateMeta = (LeatherArmorMeta) chestplate.getItemMeta();
+        chestplateMeta.setColor(org.bukkit.Color.RED);
+        chestplate.setItemMeta(chestplateMeta);
+
+        ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
+        LeatherArmorMeta leggingsMeta = (LeatherArmorMeta) leggings.getItemMeta();
+        leggingsMeta.setColor(org.bukkit.Color.RED);
+        leggings.setItemMeta(leggingsMeta);
+
+        ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+        LeatherArmorMeta bootsMeta = (LeatherArmorMeta) boots.getItemMeta();
+        bootsMeta.setColor(org.bukkit.Color.RED);
+        boots.setItemMeta(bootsMeta);
+
+        // Equip the armor and diamond sword.
+        EntityEquipment equipment = entity.getEquipment();
+        if (equipment != null) {
+            equipment.setHelmet(helmet);
+            equipment.setChestplate(chestplate);
+            equipment.setLeggings(leggings);
+            equipment.setBoots(boots);
+            // Equip a diamond sword in the main hand.
+            equipment.setItemInMainHand(new ItemStack(Material.DIAMOND_SWORD));
+        }
+    }
 
     /**
      * Helper method to set a custom texture on a SkullMeta.
@@ -600,11 +654,49 @@ public class SpawnMonsters implements Listener {
                 xpManager.addXP(killer, "Combat", 100);
                 event.setDroppedExp(100);
                 if(random.nextBoolean()) {
-                    Objects.requireNonNull(monster.getLocation().getWorld()).dropItem(monster.getLocation(), ItemRegistry.getVerdantRelicEntropySeed());
+                    if(random.nextBoolean()) {
+                        killer.sendMessage(ChatColor.AQUA + "You found a " + ChatColor.GOLD + "Verdant Relic: Entropy!");
+                        Objects.requireNonNull(monster.getLocation().getWorld()).dropItem(monster.getLocation(), ItemRegistry.getVerdantRelicEntropySeed());
+                    }
                 }
             }
         }
     }
+    @EventHandler
+    public void onSniperDeath(EntityDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+        // Check if the monster is mutated as "Enraged" by stripping color codes and comparing.
+        if (entity.getCustomName() != null
+                && ChatColor.stripColor(entity.getCustomName()).contains("Sniper")) {
+            // Optionally, you can add additional checks here such as the mob type.
+            Player killer = entity.getKiller();
+            if (killer != null) {
+                // Notify the player (optional)
+                killer.sendMessage(ChatColor.RED + "The Sniper has dropped a rare relic!");
+
+                // Drop the Enraged relic from your ItemRegistry at the location of the death.
+                entity.getWorld().dropItemNaturally(entity.getLocation(), ItemRegistry.getVerdantRelicMarrow());
+            }
+        }
+    }
+    @EventHandler
+    public void onEnragedMonsterDeath(EntityDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+        // Check if the monster is mutated as "Enraged" by stripping color codes and comparing.
+        if (entity.getCustomName() != null
+                && ChatColor.stripColor(entity.getCustomName()).contains("Enraged")) {
+            // Optionally, you can add additional checks here such as the mob type.
+            Player killer = entity.getKiller();
+            if (killer != null) {
+                // Notify the player (optional)
+                killer.sendMessage(ChatColor.RED + "The Enraged monster has dropped a rare relic!");
+
+                // Drop the Enraged relic from your ItemRegistry at the location of the death.
+                entity.getWorld().dropItemNaturally(entity.getLocation(), ItemRegistry.getVerdantRelicGravity());
+            }
+        }
+    }
+
 
     /**
      * When a Deep Sea Diver is hit, play a metal clang sound.
@@ -646,10 +738,16 @@ public class SpawnMonsters implements Listener {
         mob.setMetadata("mobLevel", new FixedMetadataValue(MinecraftNew.getInstance(), level));
 
         // Skip renaming if it's a Knight
-        if (mob.getCustomName() != null && mob.getCustomName().equals(ChatColor.GRAY + "Knight")) return;
+        String baseName;
+        if (mob.getCustomName() != null && !mob.getCustomName().isEmpty()) {
+            baseName = ChatColor.stripColor(mob.getCustomName());
+        } else {
+            baseName = formatMobType(mob.getType().toString());
+        }
 
         String color = getColorForLevel(level);
-        mob.setCustomName(ChatColor.GRAY + "[" + color + "Lv: " + level + ChatColor.GRAY + "] " + color + formatMobType(mob.getType().toString()));
+        // Build the final custom name combining the level with the mutation (or default mob type) name.
+        mob.setCustomName(ChatColor.GRAY + "[" + color + "Lv: " + level + ChatColor.GRAY + "] " + color + baseName);
         mob.setCustomNameVisible(true);
         mob.setRemoveWhenFarAway(true);
     }
