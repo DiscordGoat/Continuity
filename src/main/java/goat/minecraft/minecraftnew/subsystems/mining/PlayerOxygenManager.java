@@ -182,11 +182,13 @@ public class PlayerOxygenManager implements Listener {
             }
 
             if (currentOxygen <= 60 && currentOxygen > 15) {
-                // Play breathing sfx every 5 seconds
+                // Trigger the breath sound and darkness effect every 5 oxygen units decremented
                 if (currentOxygen % 5 == 0) {
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 0.5F, 1.0F);
+                    applyDarknessEffect(player);  // Flash darkness when breathing
                 }
             }
+
 
             // When oxygen is depleted, restrict block interactions
             if (currentOxygen == 0) {
@@ -260,7 +262,7 @@ public class PlayerOxygenManager implements Listener {
         playerOxygenLevels.put(uuid, oxygenLevel);
         oxygenDataConfig.set(uuid.toString(), oxygenLevel);
         saveOxygenData();
-        player.sendMessage(ChatColor.AQUA + "Your oxygen level has been increased to " +
+        player.sendMessage(ChatColor.AQUA + "Your oxygen level is now " +
                 ChatColor.WHITE + oxygenLevel + " seconds.");
     }
 

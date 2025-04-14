@@ -313,22 +313,13 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> clericPurchases = new ArrayList<>();
         clericPurchases.add(createTradeMap("GLASS_BOTTLE", 1, 2, 1)); // Material
         clericPurchases.add(createTradeMap("NETHER_WART", 1, 64, 1)); // Material
-        clericPurchases.add(createTradeMap("SUGAR", 1, 2, 1)); // Material
+        clericPurchases.add(createTradeMap("RECURVE", 1, 16, 3)); // Material
+        clericPurchases.add(createTradeMap("STRENGTH", 1, 16, 3)); // Material
+        clericPurchases.add(createTradeMap("SWIFT_STEP", 1, 16, 3)); // Material
+        clericPurchases.add(createTradeMap("SOVEREIGNTY", 1, 16, 3)); // Material
+        clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 4)); // Material
+        clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 4)); // Material
 
-        clericPurchases.add(createTradeMap("RABBIT_FOOT", 1, 12, 2)); // Material
-        clericPurchases.add(createTradeMap("GLISTERING_MELON_SLICE", 1, 8, 2)); // Material
-        clericPurchases.add(createTradeMap("FERMENTED_SPIDER_EYE", 3, 15, 2)); // Material
-        clericPurchases.add(createTradeMap("SPIDER_EYE", 3, 12, 2)); // Material
-
-        clericPurchases.add(createTradeMap("GUNPOWDER", 3, 6, 3)); // Material
-        clericPurchases.add(createTradeMap("MAGMA_CREAM", 3, 16, 3)); // Material
-        clericPurchases.add(createTradeMap("BLAZE_POWDER", 2, 48, 3)); // Material
-        clericPurchases.add(createTradeMap("PHANTOM_MEMBRANE", 2, 8, 3)); // Material
-
-        clericPurchases.add(createTradeMap("GHAST_TEAR", 2, 20, 4)); // Material
-
-        clericPurchases.add(createTradeMap("DRAGON_BREATH", 4, 64, 5)); // Material
-        clericPurchases.add(createTradeMap("TURTLE_HELMET", 1, 64, 5)); // Material
         clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 3)); // Custom Item
         defaultConfig.set("CLERIC.purchases", clericPurchases);
 
@@ -657,6 +648,21 @@ public class VillagerTradeManager implements Listener {
         // 2) Map custom IDs to ItemRegistry items
         // 2) Map custom IDs to ItemRegistry items
         switch (identifier.toUpperCase()) {
+
+            case "STRENGTH":
+                return ItemRegistry.getStrengthPotionRecipePaper();
+            case "RECURVE":
+                return ItemRegistry.getRecurvePotionRecipePaper();
+            case "SWIFT_STEP":
+                return ItemRegistry.getSwiftStepPotionRecipePaper();
+            case "SOVEREIGNTY":
+                return ItemRegistry.getSovereigntyPotionRecipePaper();
+            case "LIQUID_LUCK":
+                return ItemRegistry.getLiquidLuckRecipePaper();
+            case "FOUNTAINS":
+                return ItemRegistry.getFountainsRecipePaper();
+
+
             case "LOYAL_DECLARATION":
                 return ItemRegistry.getLoyaltyContract();
             case "BAIT":

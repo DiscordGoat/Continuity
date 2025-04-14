@@ -163,6 +163,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
+// In your onEnable method
+        PlayerOxygenManager oxygenManager = new PlayerOxygenManager(this);
+        this.getCommand("setplayeroxygen").setExecutor(new SetPlayerOxygenCommand());
 
 
 
