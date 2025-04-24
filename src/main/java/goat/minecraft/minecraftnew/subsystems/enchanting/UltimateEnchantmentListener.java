@@ -278,6 +278,8 @@ public class UltimateEnchantmentListener implements Listener {
      * Treecapitator logic: BFS to break connected logs and nearby leaves.
      */
     private void breakConnectedWoodAndLeaves(Player player, Block startBlock) {
+        boolean spiritSpawned = false;
+
         // BFS to find connected logs
         Queue<Block> queue = new ArrayDeque<>();
         Set<Block> visitedLogs = new HashSet<>();
@@ -313,9 +315,12 @@ public class UltimateEnchantmentListener implements Listener {
 
             // 1% chance to summon a Forest Spirit if the block is wood
 
-            ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
-            forestSpiritManager.attemptSpiritSpawn(0.0001, currentBlock.getLocation(), currentBlock, player);
-
+            ForestSpiritManager spiritMgr = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
+            if (!spiritSpawned) {
+                if (spiritMgr.attemptSpiritSpawn(0.0001, currentBlock.getLocation(), currentBlock, player)) {
+                    spiritSpawned = true;
+                }
+            }
 
             // Check all neighbors within a 1-block radius for more wood
             for (int x = -1; x <= 1; x++) {

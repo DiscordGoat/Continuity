@@ -127,7 +127,7 @@ public class SeaCreatureRegistry implements Listener {
         ));
         List<SeaCreature.DropItem> squidDrops = new ArrayList<>();
         squidDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 1, 1, 1)); // Luminescent Ink drop
-        squidDrops.add(new SeaCreature.DropItem(ItemRegistry.getCalamari(), 1, 1, 4)); // Luminescent Ink drop
+        squidDrops.add(new SeaCreature.DropItem(ItemRegistry.getCalamari(), 1, 1, 1)); // Luminescent Ink drop
         SEA_CREATURES.add(new SeaCreature(
                 "Squid", // Name of the sea creature
                 Rarity.UNCOMMON, // Rarity of the sea creature

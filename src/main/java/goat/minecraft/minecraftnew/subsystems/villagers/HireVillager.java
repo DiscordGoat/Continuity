@@ -1,8 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.EventHandler;
@@ -34,9 +33,18 @@ public class HireVillager implements Listener {
         if (player.getInventory().getItemInMainHand().getType().equals(Material.EMERALD) && player.getInventory().getItemInMainHand().getAmount() > 3) {
             ItemStack customItem = ItemRegistry.getHireVillager();
             villager.getWorld().dropItemNaturally(villager.getLocation(), customItem);
+
+            // Play cure villager sound effect
+            villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_BELL_RESONATE, 1.0f, 1.0f);
+
+            // Spawn happy villager particles
+            villager.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, villager.getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.2);
+
             villager.remove();
         }
-        player.sendMessage("You need at least 4 emeralds to hire this villager.");
+        else {
+            player.sendMessage(ChatColor.RED + "You need at least 4 emeralds to hire this villager.");
+        }
         // Remove 4 emeralds from the player's inventory
         player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 4);
 

@@ -45,6 +45,26 @@ public class CulinarySubsystem implements Listener {
 
         return recipeItems;
     }
+    public List<ItemStack> getAllNonFeastRecipeItems() {
+        List<ItemStack> recipeItems = new ArrayList<>();
+
+        // Iterate through each recipe in the recipe registry
+        for (CulinaryRecipe recipe : recipeRegistry) {
+            // Skip recipes containing "Feast"
+            if (recipe.getName().contains("Feast")) {
+                continue; // skip to next iteration
+            }
+
+            // Create the recipe item for the current non-feast recipe
+            ItemStack recipeItem = createRecipeItem(recipe);
+
+            // Add the recipe item to the list
+            recipeItems.add(recipeItem);
+        }
+
+        return recipeItems;
+    }
+
     public ItemStack getRecipeItemByName(String recipeName) {
         // Iterate through the recipe registry to find the recipe by name
         for (CulinaryRecipe recipe : recipeRegistry) {

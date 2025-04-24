@@ -584,10 +584,10 @@ public class VerdantRelicsSubsystem implements Listener {
                         return;
                     }
                     // Spawn multiple types of particles in a tight radius
-                    world.spawnParticle(Particle.VILLAGER_HAPPY, location, 150, 1.0, 1.0, 1.0, 0.2);
+                    world.spawnParticle(Particle.VILLAGER_HAPPY, location, 40, 1.0, 1.0, 1.0, 0.2);
                     count++;
                 }
-            }.runTaskTimer(plugin, 0L, 5L);
+            }.runTaskTimer(plugin, 0L, 1L);
         }
         public void spawnFire(Location location, JavaPlugin plugin) {
             World world = location.getWorld();
@@ -601,10 +601,10 @@ public class VerdantRelicsSubsystem implements Listener {
                         return;
                     }
                     // Spawn multiple types of particles in a tight radius
-                    world.spawnParticle(Particle.SOUL_FIRE_FLAME, location, 150, 1.0, 1.0, 1.0, 0.2);
+                    world.spawnParticle(Particle.SOUL_FIRE_FLAME, location, 40, 1.0, 1.0, 1.0, 0.2);
                     count++;
                 }
-            }.runTaskTimer(plugin, 0L, 5L);
+            }.runTaskTimer(plugin, 0L, 1L);
         }
         public void spawnWater(Location location, JavaPlugin plugin) {
             World world = location.getWorld();
@@ -618,10 +618,10 @@ public class VerdantRelicsSubsystem implements Listener {
                         return;
                     }
                     // Spawn multiple types of particles in a tight radius
-                    world.spawnParticle(Particle.DRIP_WATER, location, 150, 1.0, 1.0, 1.0, 0.2);
+                    world.spawnParticle(Particle.DRIP_WATER, location, 40, 1.0, 1.0, 1.0, 0.2);
                     count++;
                 }
-            }.runTaskTimer(plugin, 0L, 5L);
+            }.runTaskTimer(plugin, 0L, 1L);
         }
         public void spawnAsh(Location location, JavaPlugin plugin) {
             World world = location.getWorld();
@@ -635,10 +635,10 @@ public class VerdantRelicsSubsystem implements Listener {
                         return;
                     }
                     // Spawn multiple types of particles in a tight radius
-                    world.spawnParticle(Particle.WHITE_ASH, location, 150, 1.0, 1.0, 1.0, 0.2);
+                    world.spawnParticle(Particle.WHITE_ASH, location, 40, 1.0, 1.0, 1.0, 0.2);
                     count++;
                 }
-            }.runTaskTimer(plugin, 0L, 5L);
+            }.runTaskTimer(plugin, 0L, 1L);
         }
 
         // Remove all complications

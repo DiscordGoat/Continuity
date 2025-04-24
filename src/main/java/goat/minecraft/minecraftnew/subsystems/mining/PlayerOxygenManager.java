@@ -314,7 +314,7 @@ public class PlayerOxygenManager implements Listener {
      * @param player The player to affect.
      */
     public void applyDarknessEffect(Player player) {
-        player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 40, 0, false, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 80, 0, false, false, false));
     }
 
     @EventHandler

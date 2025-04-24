@@ -67,8 +67,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
                 return true;
             }
-            ticksUntilNextWorkCycle = 20;
-            sender.sendMessage(ChatColor.GREEN + "Villager work cycle timer has been forced to 1 seconds.");
+            ticksUntilNextWorkCycle = 100;
             return true;
         }
         return false;
@@ -162,7 +161,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         Block hayBale = findNearestBlock(villager, List.of(Material.HAY_BLOCK), 10);
         if (hayBale == null) {
             Speech speech = new Speech(plugin);
-            speech.createText(villager.getLocation(), "If you place a hay bale nearby, I can harvest your crops for you.", 1);
+            speech.createText(villager.getLocation(), "If you place a hay bale nearby, I can harvest your crops for you.", 30);
             return; // No hay bale nearby, don't perform farming
         }
 
@@ -273,7 +272,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         sendHarvestToChest(villager, harvestYield);
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I harvested your nearby crops and put them in that chest!", 1);
+        speech.createText(villager.getLocation(), "I harvested your nearby crops and put them in that chest!", 30);
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ROOTED_DIRT_BREAK, 1.0f, 1.0f);
     }
 
@@ -357,7 +356,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         storeOrDropHarvest(villager, harvestYield);
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I cooked you some food.", 1);
+        speech.createText(villager.getLocation(), "I cooked you some food.", 30);
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_FIRE_AMBIENT, 10, 10);
     }
 
@@ -365,7 +364,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     private void performFishermanWork(Villager villager, int radius) {
         if (!isWaterNearby(villager, radius)) {
             Speech speech = new Speech(plugin);
-            speech.createText(villager.getLocation(), "I can't fish here, but I can if theres some water nearby.", 1);
+            speech.createText(villager.getLocation(), "I can't fish here, but I can if theres some water nearby.", 30);
             return;
         }
 
@@ -471,7 +470,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         harvestYield.put(item, quantity);
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I caught you some fish, and a few pieces of junk.", 1);
+        speech.createText(villager.getLocation(), "I caught you some fish, and a few pieces of junk.", 30);
         storeOrDropHarvest(villager, harvestYield);
         villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
     }
@@ -518,7 +517,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         // Store or drop the bottles
         storeOrDropHarvestItemStack(villager, Collections.singletonMap(bottlesOfEnchanting, bottlesProduced));
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I made you some Bottles of Enchanting!", 1);
+        speech.createText(villager.getLocation(), "I made you some Bottles of Enchanting!", 30);
         // Play sound for the work
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
     }
@@ -559,7 +558,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         if (armorStands.isEmpty()) {
             Speech speech = new Speech(plugin);
-            speech.createText(villager.getLocation(), "If you want to display your armor on an armor stand nearby, I can repair it for you.", 1);
+            speech.createText(villager.getLocation(), "If you want to display your armor on an armor stand nearby, I can repair it for you.", 30);
             return; // No armor stands nearby
         }
 
@@ -585,11 +584,13 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                     int miningLevel = xpManager.getPlayerLevel(getNearestPlayer(villager), "Mining");
                     int repairAmount = miningLevel * 2;
                     Speech speech = new Speech(plugin);
-                    speech.createText(villager.getLocation(), "I repaired your nearby armor for " + repairAmount + " for you.", 1);
+                    speech.createText(villager.getLocation(), "I repaired your nearby armor for " + repairAmount + " for you.", 30);
                     // Repair the armor item
                     repairArmor(item, repairAmount);
                     // Update the modified item back to the equipment array
                     equipment[i] = item;
+                    Location effectLocation = armorStand.getLocation().clone().add(0, 1, 0); // Adjust vertical offset as needed
+                    villager.getWorld().spawnParticle(Particle.END_ROD, effectLocation, 10, 0.5, 0.5, 0.5, 0.05);
                 }
             }
 
@@ -712,7 +713,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         if(displayedItems.isEmpty()){
             Speech speech = new Speech(plugin);
-            speech.createText(villager.getLocation(), "If you want, you can display your weapons nearby and I'll repair them.", 1);
+            speech.createText(villager.getLocation(), "If you want, you can display your weapons nearby and I'll repair them.", 30);
             return;
         }
         for (Map.Entry<Entity, ItemStack> entry : displayedItems.entrySet()) {
@@ -731,7 +732,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 // Repair the item
                 repairWeapons(item, repairAmount);
                 Speech speech = new Speech(plugin);
-                speech.createText(villager.getLocation(), "I repaired your displayed weapons " + repairAmount + " for you.", 1);
+                speech.createText(villager.getLocation(), "I repaired your displayed weapons " + repairAmount + " for you.", 30);
                 // Set the repaired item back
                 if (entity instanceof ItemFrame) {
                     ((ItemFrame) entity).setItem(item);
@@ -762,7 +763,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         if(displayedItems.isEmpty()){
             Speech speech = new Speech(plugin);
-            speech.createText(villager.getLocation(), "If you want, you can display your tools nearby and I can repair them.", 1);
+            speech.createText(villager.getLocation(), "If you want, you can display your tools nearby and I can repair them.", 30);
         }
         // Fixed repair amount for all tools
         XPManager xpManager = new XPManager(plugin);
@@ -789,7 +790,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 // Repair the item
                 repairTools(item, repairAmount);
                 Speech speech = new Speech(plugin);
-                speech.createText(villager.getLocation(), "I repaired nearby displayed tools " + repairAmount + " for you.", 1);
+                speech.createText(villager.getLocation(), "I repaired nearby displayed tools " + repairAmount + " for you.", 30);
                 // Set the repaired item back
                 if (entity instanceof ItemFrame) {
                     ((ItemFrame) entity).setItem(item);
@@ -876,7 +877,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         if (nearbySheep.isEmpty()) {
             Speech speech = new Speech(plugin);
-            speech.createText(villager.getLocation(), "I couldn't find any sheep nearby to shear.", 1);
+            speech.createText(villager.getLocation(), "I couldn't find any sheep nearby to shear.", 30);
             return; // No sheep nearby
         }
 
@@ -908,7 +909,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         // Store or drop the harvested wool
         storeOrDropHarvest(villager, harvestYield);
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I sheared your sheep for you and put the wool in that chest.", 1);
+        speech.createText(villager.getLocation(), "I sheared your sheep for you and put the wool in that chest.", 30);
 
         // Play sound to indicate shepherd's work
         villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1.0f, 1.0f);
@@ -933,7 +934,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         if (cauldrons.isEmpty()) {
             Speech speech = new Speech(plugin);
-            speech.createText(villager.getLocation(), "I couldn't find any cauldrons nearby to tan my leather.", 1);
+            speech.createText(villager.getLocation(), "I couldn't find any cauldrons nearby to tan my leather.", 30);
             // No cauldrons nearby, no yield
             return;
         }
@@ -955,7 +956,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         // Store or drop the items
         storeOrDropHarvest(villager, harvestYield);
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I tanned your leather and put the results in that chest.", 1);
+        speech.createText(villager.getLocation(), "I tanned your leather and put the results in that chest.", 30);
         // Play sound effects
         villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1.0f, 1.0f);
         if (harvestYield.containsKey(Material.SADDLE)) {
@@ -1019,7 +1020,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         // Store or drop the ingredients
         storeOrDropHarvest(villager, harvestYield);
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I collected some ingredients and tried to make a potion for you.", 1);
+        speech.createText(villager.getLocation(), "I collected some ingredients and tried to make a potion for you.", 30);
         villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_BOTTLE_FILL, 1.0f, 1.0f);
     }
 
@@ -1035,7 +1036,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         // Play a sound to indicate the cartographer's work
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I found some rare items scattered around the world.", 1);
+        speech.createText(villager.getLocation(), "I found some rare items scattered around the world.", 30);
         villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0f, 1.0f);
     }
 
@@ -1145,7 +1146,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         Set<Material> logVariants = findNearbyLogVariants(villager, radius);
         if (logVariants.isEmpty()) {
             Speech speech = new Speech(plugin);
-            speech.createText(villager.getLocation(), "Place a log near, I'll gather that wood for you!", 1);
+            speech.createText(villager.getLocation(), "Place a log near, I'll gather that wood for you!", 30);
             return; // No suitable logs found
         }
         // Find nearby target blocks
@@ -1175,7 +1176,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         // Store or drop the items
         storeOrDropHarvestItemStack(villager, harvestYield);
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I gathered the wood and crafted some arrows for you!", 1);
+        speech.createText(villager.getLocation(), "I gathered the wood and crafted some arrows for you!", 30);
         // Play sound to indicate the fletcher's work
         villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
     }
@@ -1234,7 +1235,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         if (blocksToReplicate.isEmpty()) {
             Speech speech = new Speech(plugin);
-            speech.createText(villagerLoc, "Place a stone-like block nearby on a smooth stone slab, I'll make more of that!", 1);
+            speech.createText(villagerLoc, "Place a stone-like block nearby on a smooth stone slab, I'll make more of that!", 30);
             // No blocks to replicate, mason does not work
             return;
         }
@@ -1256,7 +1257,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         // Store or drop the items
         storeOrDropHarvest(villager, harvestYield);
         Speech speech = new Speech(plugin);
-        speech.createText(villagerLoc, "I made you more of those blocks!", 1);
+        speech.createText(villagerLoc, "I made you more of those blocks!", 30);
 
         // Play sound to indicate the mason's work
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_STONE_PLACE, 1.0f, 1.0f);

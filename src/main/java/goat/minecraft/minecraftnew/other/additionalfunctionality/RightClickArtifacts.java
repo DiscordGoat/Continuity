@@ -82,7 +82,7 @@ public class RightClickArtifacts implements Listener {
      */
     public void dropRandomRecipes(Location location) {
         // Get all recipe items from the CulinarySubsystem
-        List<ItemStack> allRecipeItems = CulinarySubsystem.getInstance(MinecraftNew.getInstance()).getAllRecipeItems();
+        List<ItemStack> allRecipeItems = CulinarySubsystem.getInstance(MinecraftNew.getInstance()).getAllNonFeastRecipeItems();
 
         // Ensure there are enough recipes to drop
         if (allRecipeItems.isEmpty()) {
@@ -362,7 +362,7 @@ public class RightClickArtifacts implements Listener {
                 player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0f, 1.0f);
                 dropRandomRecipes(player.getLocation());
                 decrementItemAmount(itemInHand, player);
-
+                player.closeInventory();
                 return;
             }
             if (displayName.equals(ChatColor.YELLOW + "Inscriber")) {

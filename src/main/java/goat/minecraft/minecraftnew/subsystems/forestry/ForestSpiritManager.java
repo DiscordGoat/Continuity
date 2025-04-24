@@ -201,14 +201,16 @@ public class ForestSpiritManager implements Listener {
      * @param block  The log block broken.
      * @param player The player responsible.
      */
-    public void attemptSpiritSpawn(double chance, Location loc, Block block, Player player) {
+    public boolean attemptSpiritSpawn(double chance, Location loc, Block block, Player player) {
         double clampedChance = Math.min(chance, 0.1);
         if (random.nextDouble() < clampedChance) {
             String spiritName = getSpiritNameFromBlock(block.getType());
             if (spiritName != null) {
                 spawnSpirit(spiritName, loc, block, player);
+                return true;
             }
         }
+        return false;
     }
 
     // Determines the spirit name from the type of log broken.

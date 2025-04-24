@@ -3,9 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.enchanting;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -318,6 +316,22 @@ public class UltimateEnchantingSystem implements Listener {
             EnchantmentUtils.incrementEnchantment(player, handItem, null, requiredEnchantment);
             // Award XP for a successful upgrade.
             xpManager.addXP(player, "Smithing", 100);
+            player.playSound(
+                    player.getLocation(),
+                    Sound.ENTITY_PLAYER_LEVELUP,   // nice chime
+                    1.0f,                          // volume
+                    1.0f                           // pitch
+            );
+
+// ─── NEW: spawn enchantment particles ──────────────────────────────────────────
+// this will create a swirl of enchantment particles around the player
+            player.getWorld().spawnParticle(
+                    Particle.END_ROD,   // Minecraft’s enchant‐table swirl
+                    player.getLocation().add(0, 1, 0), // center at head height
+                    30,                            // count
+                    0.5, 1.0, 0.5                  // x/y/z offsets for spread
+            );
+
             player.sendMessage(ChatColor.GREEN + upgradeName + " upgraded to tier " + clickedTier + "!");
             player.closeInventory();
             openUltimateEnchantmentGUI(player);

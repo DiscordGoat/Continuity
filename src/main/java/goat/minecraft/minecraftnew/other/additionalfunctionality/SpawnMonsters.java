@@ -313,7 +313,7 @@ public class SpawnMonsters implements Listener {
         }
 
         //speed mutation
-        if (entity instanceof LivingEntity monster) {
+        if (entity instanceof Monster monster) {
             if (shouldMutationOccur(playerHostility)) {
                 monster.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, true));
             }

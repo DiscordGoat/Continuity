@@ -948,8 +948,11 @@ public class VillagerTradeManager implements Listener {
             Player player = event.getPlayer();
             VillagerWorkCycleManager villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(MinecraftNew.getInstance());
             if(!(villagerWorkCycleManager.isEligibleForWorkCycle(villager))){
+                if(player.isSneaking()){
+                    return;
+                }
                 Speech speech = new Speech(plugin);
-                speech.createText(villager.getLocation(), "If you had 4 emeralds and crouched, you could hire me to work at your base!", 1);
+                speech.createText(villager.getLocation(), "If you had 4 emeralds and crouched, you could hire me to work at your base!", 3);
                 return;
             }
             playerVillagerMap.put(player, villager); // Store the villager in the map with the player

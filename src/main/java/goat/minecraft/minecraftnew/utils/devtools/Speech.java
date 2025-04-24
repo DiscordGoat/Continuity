@@ -19,7 +19,7 @@ public class Speech {
         this.plugin = plugin;
     }
 
-    public void createText(Location loc, String text, double duration) {
+    public void createText(Location loc, String text, double seconds) {
         ArmorStand armorStand = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
         armorStand.setVisible(false);
         armorStand.setGravity(false);
@@ -33,7 +33,7 @@ public class Speech {
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             armorStand.remove();
             speechArmorStands.remove(armorStand.getUniqueId());
-        }, (long) duration * 20 * 60); // Convert duration from minutes to ticks
+        }, (long) seconds * 20); // Convert duration from minutes to ticks
     }
 
     // Call this method on plugin disable to remove all speech armor stands

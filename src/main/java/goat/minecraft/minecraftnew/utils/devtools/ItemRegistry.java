@@ -1754,7 +1754,7 @@ public class ItemRegistry {
                 Material.WOODEN_HOE,
                 ChatColor.YELLOW + "Hire Villager",
                 List.of(ChatColor.GRAY + "A proverbially useful companion.",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summons a Villager.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summons a hired Villager.",
                         ChatColor.DARK_PURPLE + "Summoning Item"),
                 1,
                 false // Set to true if you want it to be unbreakable
@@ -2519,7 +2519,7 @@ public class ItemRegistry {
         return createCustomItem(Material.WRITABLE_BOOK, ChatColor.YELLOW +
                 "Cookbook", Arrays.asList(
                 ChatColor.GRAY + "Paper Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Grants 16 random Culinary Recipes.",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Grants 16 random non-feast Culinary Recipes.",
                 ChatColor.DARK_PURPLE + "Artifact"
         ), 1, false, true);
     }
