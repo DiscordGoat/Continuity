@@ -52,6 +52,7 @@ import goat.minecraft.minecraftnew.utils.devtools.*;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
+import goat.minecraft.minecraftnew.utils.dimensions.end.Tropic;
 import org.bukkit.*;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -71,7 +72,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     CancelBrewing cancelBrewing = new CancelBrewing(this);
     private AnvilRepair anvilRepair;
     private CulinarySubsystem culinarySubsystem;
-    //private MeatCookingManager meatCookingManager;
     private ItemDisplayManager displayManager;
     private PlayerOxygenManager playerOxygenManager;
     private UltimateEnchantingSystem ultimateEnchantmentManager;
@@ -152,6 +152,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        instance = this;
         ArmorStandCommand armorStandCommand = new ArmorStandCommand(this);
         armorStandCommand.removeInvisibleArmorStands();
 
@@ -161,7 +162,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         verdantRelicsSubsystem = VerdantRelicsSubsystem.getInstance(this);
 
-
+        Tropic tropicExecutor = new Tropic(this);
+        getCommand("tropic").setExecutor(tropicExecutor);
+        getCommand("decomission").setExecutor(tropicExecutor);
 
 // In your onEnable method
         PlayerOxygenManager oxygenManager = new PlayerOxygenManager(this);
