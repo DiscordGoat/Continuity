@@ -98,6 +98,11 @@
   </build>
   <repositories>
     <repository>
+      <id>enginehub</id>
+      <name>EngineHub Maven</name>
+      <url>https://maven.enginehub.org/repo/</url>
+    </repository>
+    <repository>
       <id>techscode</id>
       <url>https://repo.techscode.com/repository/techscode-apis/</url>
     </repository>
@@ -136,6 +141,12 @@
     </repository>
   </repositories>
   <dependencies>
+    <dependency>
+      <groupId>com.sk89q.worldedit</groupId>
+      <artifactId>worldedit-bukkit</artifactId>
+      <version>7.4.15</version>  <!-- match the latest 7.x for MC 1.20.1 -->
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>net.citizensnpcs</groupId>
       <artifactId>citizens-main</artifactId>

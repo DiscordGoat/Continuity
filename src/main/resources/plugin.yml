@@ -2,6 +2,8 @@ name: MinecraftNew
 version: '${project.version}'
 main: goat.minecraft.minecraftnew.MinecraftNew
 api-version: '1.20'
+softdepend:
+  - WorldEdit
 permissions:
   continuity.use:
     description: "Allows the player to use the main feature of Continuity"
@@ -10,6 +12,9 @@ permissions:
     description: "Grants admin access to Continuity"
     default: op     # op = only given to server operators (OPs) by default
 commands:
+  testschem:
+    description: Spawn a loaded schematic at your feet.
+    usage: /schem <name>
   tropic:
     description: Create or reload the single-island ocean world.
     usage: /<command>

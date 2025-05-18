@@ -23,6 +23,11 @@
 
     <repositories>
         <repository>
+            <id>enginehub</id>
+            <name>EngineHub Maven</name>
+            <url>https://maven.enginehub.org/repo/</url>
+        </repository>
+        <repository>
             <id>datatags-repo</id>
             <url>https://ci.datatags.dev/plugin/repository/everything/</url>
         </repository>
@@ -41,6 +46,12 @@
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>7.3.11</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- MobChipLite Core Dependency -->
         <dependency>
             <groupId>com.github.datatags</groupId>

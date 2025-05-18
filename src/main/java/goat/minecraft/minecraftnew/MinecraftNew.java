@@ -44,16 +44,19 @@ import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
+
 import goat.minecraft.minecraftnew.utils.commands.DiscsCommand;
 import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.devtools.*;
+import goat.minecraft.minecraftnew.utils.devtools.SchematicManager;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.utils.dimensions.end.Tropic;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -80,6 +83,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private LockedRecipeManager lockedRecipeManager;
     private RecipeManager recipeManager;
     private ForestryPetManager forestryPetManager;
+
 
 
     private PotionBrewingSubsystem potionBrewingSubsystem;
@@ -157,16 +161,27 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         armorStandCommand.removeInvisibleArmorStands();
 
 
+
         PotionManager.initialize(this);
         potionBrewingSubsystem = PotionBrewingSubsystem.getInstance(this);
 
         verdantRelicsSubsystem = VerdantRelicsSubsystem.getInstance(this);
+        SchematicManager schematicMgr = new SchematicManager(MinecraftNew.getInstance());
+        schematicMgr.loadAll();
+        getLogger().info("Schematics: " + schematicMgr.getAvailableSchematics());
+
+        getCommand("testschem").setExecutor(new TestSchemCommand(schematicMgr));
 
         Tropic tropicExecutor = new Tropic(this);
+
         getCommand("tropic").setExecutor(tropicExecutor);
         getCommand("decomission").setExecutor(tropicExecutor);
 
+
 // In your onEnable method
+
+
+
         PlayerOxygenManager oxygenManager = new PlayerOxygenManager(this);
         this.getCommand("setplayeroxygen").setExecutor(new SetPlayerOxygenCommand());
 

@@ -1,19 +1,34 @@
 package goat.minecraft.minecraftnew.utils.dimensions.end;
 
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.WorldEditException;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.extent.clipboard.Clipboard;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormat;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats;
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.operation.Operation;
+import com.sk89q.worldedit.function.operation.Operations;
+import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.session.ClipboardHolder;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.generator.ChunkGenerator.ChunkData;
-import org.bukkit.generator.ChunkGenerator.BiomeGrid;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.noise.SimplexNoiseGenerator;
+import org.bukkit.util.Vector;
+
+
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 public class Tropic implements CommandExecutor {
@@ -29,6 +44,11 @@ public class Tropic implements CommandExecutor {
     private final SimplexNoiseGenerator ravineNoise   = new SimplexNoiseGenerator(new Random().nextLong());
     private final SimplexNoiseGenerator warpNoise     = new SimplexNoiseGenerator(new Random().nextLong());
     private final SimplexNoiseGenerator baseNoise     = new SimplexNoiseGenerator(new Random().nextLong());
+    private boolean barPlaced = false;
+    private Clipboard barClip;
+    private Clipboard seamineClip;
+    private final Map<String, Clipboard> schematics = new HashMap<>();
+
 
     private final JavaPlugin plugin;
     private World tropicWorld;
@@ -39,6 +59,7 @@ public class Tropic implements CommandExecutor {
     public Tropic(JavaPlugin plugin) {
         this.plugin = plugin;
     }
+
 
     @Override
     public boolean onCommand(CommandSender s, Command cmd, String label, String[] args) {
@@ -101,7 +122,7 @@ public class Tropic implements CommandExecutor {
 
     private void prepareChunks() {
         chunkCoords.clear();
-        int r = ((ISLAND_RADIUS * 6) + 15) >> 4;
+        int r = ((ISLAND_RADIUS * 2) + 15) >> 4;
         for (int cx = -r; cx <= r; cx++)
             for (int cz = -r; cz <= r; cz++)
                 chunkCoords.add(new ChunkCoord(cx, cz));
@@ -455,7 +476,6 @@ public class Tropic implements CommandExecutor {
                         );
                         tropicWorld.generateTree(topLoc, TreeType.JUNGLE);
                     }
-
                     cancel();
                     plugin.getLogger().info("§aFlavor items placed!");
                     return;
