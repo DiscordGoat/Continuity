@@ -50,6 +50,7 @@ public class BartenderVillagerManager implements Listener {
         ItemStack pineapple = ItemRegistry.getPineapple();
         ItemStack coconut = ItemRegistry.getCoconut();
         ItemStack lime = ItemRegistry.getLime();
+        ItemStack hireme = ItemRegistry.getHireBartender();
 
         bartenderTrades.add(new TradeItem(banana,    64, 4, 1));
         bartenderTrades.add(new TradeItem(chocolate, 64, 4, 1));
@@ -57,6 +58,7 @@ public class BartenderVillagerManager implements Listener {
         bartenderTrades.add(new TradeItem(pineapple,  64, 4, 1));
         bartenderTrades.add(new TradeItem(coconut,  64, 4, 1));
         bartenderTrades.add(new TradeItem(lime,  64, 4, 1));
+        bartenderTrades.add(new TradeItem(hireme,  512, 1, 1));
     }
 
     @EventHandler

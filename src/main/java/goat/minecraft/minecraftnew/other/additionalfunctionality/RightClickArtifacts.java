@@ -473,6 +473,18 @@ public class RightClickArtifacts implements Listener {
                 decrementItemAmount(itemInHand, player);
                 return;
             }
+            if (displayName.equals(ChatColor.YELLOW + "Hire Bartender")) {
+                player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 2.0f);
+                Villager villager = (Villager) player.getWorld().spawnEntity(player.getLocation(), EntityType.VILLAGER);
+                String villagerName = "Bartender";
+
+                // Set the custom name of the villager and make it visible.
+                villager.setCustomName(ChatColor.GOLD + villagerName);
+                villager.setCustomNameVisible(true);
+
+                decrementItemAmount(itemInHand, player);
+                return;
+            }
 
 
             if (displayName.equals(ChatColor.YELLOW + "Pet Training")) {

@@ -96,6 +96,35 @@ public class CulinarySubsystem implements Listener {
 
 
     static {
+        oceanicRecipes.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.HONEY_BOTTLE,
+                "Tidal Shot",
+                Arrays.asList("Rum", "Gunpowder", "Ice"),
+                90
+        ));
+        oceanicRecipes.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.HONEY_BOTTLE,
+                "Coral Cooler",
+                Arrays.asList("Rum", "Ice", "Prismarine Shard", "Sea Pickle"),
+                200
+        ));
+        oceanicRecipes.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.HONEY_BOTTLE,
+                "Prismarita",
+                Arrays.asList("Rum", "Lime", "Sugar", "Ice", "Prismarine Shard"),
+                180
+        ));
+        oceanicRecipes.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.HONEY_BOTTLE,
+                "Kelp Mojito",
+                Arrays.asList("Rum", "Lime", "Sugar", "Ice", "Kelp"),
+                240
+        ));
+        // (Water Breathing)
         // Bananas Split is bartender-only
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
@@ -352,9 +381,29 @@ public class CulinarySubsystem implements Listener {
             xpManager.addXP(player, "Culinary", 125);
         }
         switch (displayName) {
+            case "Tidal Shot (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20*60*60, 4));
+                break;
+            case "Coral Cooler (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*60*60, 0));
+                break;
+            case "Prismarita (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*60*60, 0));
+                break;
+            case "Kelp Mojito (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*60, 0));
+                break;
             case "Pina Colada (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*30, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*60*60, 0));
                 break;
             case "Banana Split (Culinary)":

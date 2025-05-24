@@ -11,7 +11,6 @@ import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
 import goat.minecraft.minecraftnew.other.recipes.ViewRecipeCommand;
-import goat.minecraft.minecraftnew.regions.RegenerateCommand;
 import goat.minecraft.minecraftnew.subsystems.brewing.*;
 import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.*;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
@@ -56,7 +55,7 @@ import goat.minecraft.minecraftnew.utils.devtools.*;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
-import goat.minecraft.minecraftnew.regions.Tropic;
+import goat.minecraft.minecraftnew.realms.Tropic;
 import org.bukkit.*;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -177,13 +176,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         Tropic tropicExecutor = new Tropic(this);
 
         getCommand("tropic").setExecutor(tropicExecutor);
+        this.getCommand("tropic").setTabCompleter(tropicExecutor);
+
         getCommand("decomission").setExecutor(tropicExecutor);
 
         new BartenderVillagerManager(this);
         this.getCommand("getculinaryrecipe")
                 .setExecutor(new GetCulinaryRecipeCommand(this));
-        this.getCommand("regenerate")
-                .setExecutor(new RegenerateCommand(this));
 
 
 // In your onEnable method

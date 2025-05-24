@@ -1865,6 +1865,18 @@ public class ItemRegistry {
                 , true
         );
     }
+    public static ItemStack getHireBartender() {
+        return createCustomItem(
+                Material.GOLDEN_HOE,
+                ChatColor.YELLOW + "Hire Bartender",
+                List.of(ChatColor.GRAY + "A definitely useful companion.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Summons a Bartender.",
+                        ChatColor.DARK_PURPLE + "Summoning Item"),
+                1,
+                false // Set to true if you want it to be unbreakable
+                , true
+        );
+    }
     public static ItemStack getBrewingApple() {
         return createCustomItem(
                 Material.APPLE,
