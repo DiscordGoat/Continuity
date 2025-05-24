@@ -57,7 +57,14 @@ public class CulinaryCauldron implements Listener {
         ItemStack dough = ItemRegistry.getDough();
         recipes.put(wheat, dough);
 
-        // Add more recipes as desired
+        // ─── your new cocoa → chocolate recipe ────────────────────────────
+        ItemStack cocoa      = new ItemStack(Material.COCOA_BEANS, 1);
+        ItemStack chocolate  = ItemRegistry.getChocolate();  // ← your custom item
+        recipes.put(cocoa, chocolate);
+
+        ItemStack sugarcane      = new ItemStack(Material.SUGAR_CANE, 1);
+        ItemStack rum  = ItemRegistry.getRum();  // ← your custom item
+        recipes.put(sugarcane, rum);
     }
 
     /**

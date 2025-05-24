@@ -66,25 +66,60 @@ public class CulinarySubsystem implements Listener {
     }
 
     public ItemStack getRecipeItemByName(String recipeName) {
-        // Iterate through the recipe registry to find the recipe by name
+        // search the normal recipes
         for (CulinaryRecipe recipe : recipeRegistry) {
             if (recipe.getName().equalsIgnoreCase(recipeName)) {
-                // Create and return the recipe item
                 return createRecipeItem(recipe);
             }
         }
-        // If the recipe is not found, return null
+        // search the bartender-only (oceanic) recipes
+        for (CulinaryRecipe recipe : oceanicRecipes) {
+            if (recipe.getName().equalsIgnoreCase(recipeName)) {
+                return createRecipeItem(recipe);
+            }
+        }
+        // not found
         return null;
     }
+
     public static CulinarySubsystem getInstance(JavaPlugin plugin) {
         if (instance == null) {
             instance = new CulinarySubsystem(plugin);
         }
         return instance;
     }
+
     // Recipe registry
     public static List<CulinaryRecipe> recipeRegistry = new ArrayList<>();
+    // recipes that only the Bartender can craft
+    public static List<CulinaryRecipe> oceanicRecipes = new ArrayList<>();
 
+
+    static {
+        // Bananas Split is bartender-only
+        oceanicRecipes.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.MELON_SLICE,  // stand-in for the banana split bowl
+                "Banana Split",
+                Arrays.asList("Banana", "Snowball", "Chocolate", "Milk Bucket"),
+                180
+        ));
+        oceanicRecipes.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.HONEY_BOTTLE,  // stand-in for the banana split bowl
+                "Pina Colada",
+                Arrays.asList("Milk Bucket", "Rum", "Ice", "Pineapple", "Coconut"),
+                180
+        ));
+        oceanicRecipes.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.PUMPKIN_PIE,       // stand-in for the Key Lime Pie slice
+                "Key Lime Pie",
+                Arrays.asList("Lime", "Sugar", "Egg", "Milk Bucket"),
+                200
+        ));
+
+    }
     static {
         // Example recipes
         recipeRegistry.add(new CulinaryRecipe(
@@ -317,6 +352,21 @@ public class CulinarySubsystem implements Listener {
             xpManager.addXP(player, "Culinary", 125);
         }
         switch (displayName) {
+            case "Pina Colada (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*30, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*60*60, 0));
+                break;
+            case "Banana Split (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*60*60, 0));
+                break;
+            case "Key Lime Pie (Culinary)":
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*60*60, 0));
+                break;
             case "Salted Steak (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
                 break;
@@ -604,6 +654,9 @@ public class CulinarySubsystem implements Listener {
         for (CulinaryRecipe r : recipeRegistry) {
             if (r.getName().equalsIgnoreCase(name)) return r;
         }
+        for (CulinaryRecipe r : oceanicRecipes) {
+            if (r.getName().equalsIgnoreCase(name)) return r;
+        }
         return null;
     }
 
@@ -735,6 +788,32 @@ public class CulinarySubsystem implements Listener {
                 stand.teleport(loc);
             }
         }.runTaskTimer(plugin, 1, 1);
+    }
+    public List<ItemStack> getOceanicRecipeItems() {
+        List<ItemStack> items = new ArrayList<>();
+        for (CulinaryRecipe r : oceanicRecipes) {
+            items.add(createRecipeItem(r));
+        }
+        return items;
+    }
+    /**
+     * Returns the *crafted* output ItemStack for the given recipe name,
+     * searching both the normal and the exclusive (oceanic) registries.
+     */
+    public ItemStack getRecipeOutputByName(String recipeName) {
+        // search the public recipes
+        for (CulinaryRecipe r : recipeRegistry) {
+            if (r.getName().equalsIgnoreCase(recipeName)) {
+                return createOutputItem(r);
+            }
+        }
+        // search the bartender-only recipes
+        for (CulinaryRecipe r : oceanicRecipes) {
+            if (r.getName().equalsIgnoreCase(recipeName)) {
+                return createOutputItem(r);
+            }
+        }
+        return null;
     }
 
     private void removeEntityByUUID(UUID uuid) {

@@ -12,9 +12,14 @@ permissions:
     description: "Grants admin access to Continuity"
     default: op     # op = only given to server operators (OPs) by default
 commands:
-  testschem:
-    description: Spawn a loaded schematic at your feet.
-    usage: /schem <name>
+  getculinaryrecipe:
+    description: Gives you the crafted output for a culinary recipe.
+    usage: /getculinaryrecipe <recipe name>
+  regenerate:
+    description: Re-draws the region map in the tropic world.
+  pasteSchem:
+    description: Paste a .schem from your jar at your location
+    usage: /pasteSchem <name>
   tropic:
     description: Create or reload the single-island ocean world.
     usage: /<command>

@@ -2,18 +2,21 @@ package goat.minecraft.minecraftnew;
 
 import goat.minecraft.minecraftnew.cut_content.CancelBrewing;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
-import goat.minecraft.minecraftnew.other.engineer.EngineerVillagerManager;
-import goat.minecraft.minecraftnew.other.engineer.EngineeringProfessionListener;
+import goat.minecraft.minecraftnew.other.professions.bartender.BartenderVillagerManager;
+import goat.minecraft.minecraftnew.other.professions.engineer.EngineerVillagerManager;
+import goat.minecraft.minecraftnew.other.professions.engineer.EngineeringProfessionListener;
 import goat.minecraft.minecraftnew.other.meritperks.*;
 import goat.minecraft.minecraftnew.other.qol.*;
 import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
 import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
 import goat.minecraft.minecraftnew.other.recipes.ViewRecipeCommand;
+import goat.minecraft.minecraftnew.regions.RegenerateCommand;
 import goat.minecraft.minecraftnew.subsystems.brewing.*;
 import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.*;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
 
+import goat.minecraft.minecraftnew.subsystems.culinary.ShelfManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.farming.VerdantRelicsSubsystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
@@ -50,13 +53,11 @@ import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.devtools.*;
-import goat.minecraft.minecraftnew.utils.devtools.SchematicManager;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
-import goat.minecraft.minecraftnew.utils.dimensions.end.Tropic;
+import goat.minecraft.minecraftnew.regions.Tropic;
 import org.bukkit.*;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
@@ -83,6 +84,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private LockedRecipeManager lockedRecipeManager;
     private RecipeManager recipeManager;
     private ForestryPetManager forestryPetManager;
+    private ShelfManager shelfManager;
 
 
 
@@ -166,16 +168,22 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         potionBrewingSubsystem = PotionBrewingSubsystem.getInstance(this);
 
         verdantRelicsSubsystem = VerdantRelicsSubsystem.getInstance(this);
-        SchematicManager schematicMgr = new SchematicManager(MinecraftNew.getInstance());
-        schematicMgr.loadAll();
-        getLogger().info("Schematics: " + schematicMgr.getAvailableSchematics());
 
-        getCommand("testschem").setExecutor(new TestSchemCommand(schematicMgr));
+        this.getCommand("pasteSchem").setExecutor(new PasteSchemCommand(this));
+
+        this.shelfManager = new ShelfManager(this);
+
 
         Tropic tropicExecutor = new Tropic(this);
 
         getCommand("tropic").setExecutor(tropicExecutor);
         getCommand("decomission").setExecutor(tropicExecutor);
+
+        new BartenderVillagerManager(this);
+        this.getCommand("getculinaryrecipe")
+                .setExecutor(new GetCulinaryRecipeCommand(this));
+        this.getCommand("regenerate")
+                .setExecutor(new RegenerateCommand(this));
 
 
 // In your onEnable method
@@ -491,7 +499,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new CatTameEvent(petManager), this);
         getServer().getPluginManager().registerEvents(new AxolotlInteractEvent(petManager), this);
         getServer().getPluginManager().registerEvents(new AllayInteractEvent(petManager), this);
-    
+
         this.getCommand("clearpets").setExecutor(new ClearPetsCommand(this, petManager));
         // In your onEnable method
         DamageNotifier damageNotifier = new DamageNotifier(this);
@@ -531,6 +539,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        if (shelfManager != null) {
+            shelfManager.onDisable();
+        }
         if(potionBrewingSubsystem != null){
             potionBrewingSubsystem.onDisable();
         }
@@ -551,9 +562,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 //        if (meatCookingManager != null) {
 //            meatCookingManager.cancelAllCookingsOnShutdown();
 //        }
-        culinarySubsystem.finalizeAllSessionsOnShutdown();
-        getLogger().info("MinecraftNew disabled, all sessions finalized.");
-        Bukkit.getLogger().info("[CulinarySubsystem] Data saved and plugin disabled.");
+        if(culinarySubsystem != null) {
+            culinarySubsystem.finalizeAllSessionsOnShutdown();
+            getLogger().info("MinecraftNew disabled, all sessions finalized.");
+            Bukkit.getLogger().info("[CulinarySubsystem] Data saved and plugin disabled.");
+        }
         if (playerOxygenManager != null) {
             playerOxygenManager.saveOnShutdown();
         }

@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other.engineer;
+package goat.minecraft.minecraftnew.other.professions.engineer;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import org.bukkit.Bukkit;

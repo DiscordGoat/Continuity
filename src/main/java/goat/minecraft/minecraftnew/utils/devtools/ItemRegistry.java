@@ -45,7 +45,111 @@ public class ItemRegistry {
         }
         return null;
     }
+// in your ItemRegistry class:
 
+    public static ItemStack getShelfItem() {
+        return createCustomItem(
+                Material.OAK_TRAPDOOR,
+                ChatColor.GOLD + "Shelf",
+                Arrays.asList(
+                        ChatColor.GRAY + "Place on a wall to create a custom Shelf.",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + " to open its storage.",
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + " to extract one item.",
+                        ChatColor.DARK_PURPLE + "Stores up to 64 of a single item.",
+                        ChatColor.DARK_PURPLE + "Persistent across restarts."
+                ),
+                1,
+                false,  // not unbreakable
+                false   // no enchantment shimmer
+        );
+    }
+
+
+    public static ItemStack getLime() {
+        return createCustomItem(
+                Material.LIME_DYE,
+                ChatColor.GREEN + "Lime",
+                Arrays.asList(
+                        ChatColor.GRAY + "A zesty citrus fruit from the Oceanic Port.",
+                        ChatColor.BLUE   + "Use: " + ChatColor.GRAY + "Add tang to cocktails and desserts.",
+                        ChatColor.DARK_PURPLE + "Culinary Ingredient"
+                ),
+                1,      // amount
+                false,  // not unbreakable
+                false   // no enchantment glow
+        );
+    }
+
+    public static ItemStack getPineapple() {
+        return createCustomItem(
+                Material.BUCKET,
+                ChatColor.YELLOW + "Pineapple",
+                Arrays.asList(
+                        ChatColor.GRAY + "An exclusive Ingredient in the Oceanic Port.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to food to add Pineapple. Crazy.",
+                        ChatColor.DARK_PURPLE + "Culinary Ingredient"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
+    public static ItemStack getCoconut() {
+        return createCustomItem(
+                Material.MELON_SLICE,
+                ChatColor.YELLOW + "Coconut",
+                Arrays.asList(
+                        ChatColor.GRAY + "An exclusive Ingredient in the Oceanic Port.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to food to add Coconut. Crazy.",
+                        ChatColor.DARK_PURPLE + "Culinary Ingredient"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
+    public static ItemStack getRum() {
+        return createCustomItem(
+                Material.BUCKET,
+                ChatColor.YELLOW + "Rum",
+                Arrays.asList(
+                        ChatColor.GRAY + "An exclusive Ingredient in the Oceanic Port.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to food to add Alcohol. Crazy.",
+                        ChatColor.DARK_PURPLE + "Culinary Ingredient"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
+    public static ItemStack getChocolate() {
+        return createCustomItem(
+                Material.COCOA_BEANS,
+                ChatColor.YELLOW + "Chocolate",
+                Arrays.asList(
+                        ChatColor.GRAY + "An exclusive Ingredient in the Oceanic Port.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to food to add Chocolate. Crazy.",
+                        ChatColor.DARK_PURPLE + "Culinary Ingredient"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
+    public static ItemStack getBanana() {
+        return createCustomItem(
+                Material.MELON_SLICE,
+                ChatColor.YELLOW + "Banana",
+                Arrays.asList(
+                        ChatColor.GRAY + "An exclusive Fruit in the Oceanic Port.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to food to add bananas. Crazy.",
+                        ChatColor.DARK_PURPLE + "Culinary Ingredient"
+                ),
+                1,
+                false, // Not unbreakable
+                false   // Add enchantment shimmer
+        );
+    }
     public static ItemStack getMarrow() {
         return createCustomItem(
                 Material.BONE_BLOCK,

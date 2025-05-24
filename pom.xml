@@ -9,7 +9,6 @@
     <artifactId>Continuity</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-
     <name>MinecraftNew</name>
 
     <properties>
@@ -52,22 +51,17 @@
             <version>7.3.11</version>
             <scope>provided</scope>
         </dependency>
-        <!-- MobChipLite Core Dependency -->
         <dependency>
             <groupId>com.github.datatags</groupId>
             <artifactId>MobChipLite</artifactId>
             <version>1.10.8</version>
         </dependency>
-
-        <!-- Spigot API Dependency -->
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
             <version>${spigot.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- CraftBukkit (if needed) -->
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
@@ -79,7 +73,7 @@
 
     <build>
         <plugins>
-            <!-- Maven Compiler Plugin -->
+            <!-- 1) Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -90,7 +84,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Maven Assembly Plugin -->
+            <!-- 2) Assembly: build your fat JAR -->
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>3.7.1</version>
@@ -107,15 +101,39 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>make-assembly</id> <!-- this is used for inheritance merges -->
-                        <phase>package</phase> <!-- bind to the package phase -->
+                        <id>make-assembly</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
 
+            <!-- 3) Antrun: copy + overwrite-even-if-locked -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-fat-jar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy
+                                        file="${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar"
+                                        tofile="C:/Users/jacob/AppData/Roaming/.feather/player-server/servers/f5f0af46-afd9-419b-bbdf-0f9257f23cab/plugins/${project.artifactId}-${project.version}.jar"
+                                        overwrite="true"
+                                        failonerror="false"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

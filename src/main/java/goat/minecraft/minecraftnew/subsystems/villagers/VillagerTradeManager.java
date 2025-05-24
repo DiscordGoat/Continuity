@@ -41,6 +41,11 @@ public class VillagerTradeManager implements Listener {
     private final Map<Villager.Profession, List<TradeItem>> purchaseWhitelist = new HashMap<>();
     private final Map<Villager.Profession, List<TradeItem>> sellWhitelist = new HashMap<>();
 
+    // alongside your existing purchaseWhitelist & sellWhitelist:
+    private final Map<String, List<TradeItem>> bartenderPurchaseWhitelist = new HashMap<>();
+    private final Map<String, List<TradeItem>> bartenderSellWhitelist     = new HashMap<>();
+
+
     // Max villager level
     private static final int MAX_VILLAGER_LEVEL = 5;
 
@@ -957,13 +962,16 @@ public class VillagerTradeManager implements Listener {
             }
             playerVillagerMap.put(player, villager); // Store the villager in the map with the player
             if(!(villager.getProfession() == Villager.Profession.NONE)) {
+                if(villager.getCustomName().equals(ChatColor.GOLD + "Bartender")){
+                    return;
+                }
                 openVillagerTradeGUI(player);
             }
 
 
         }
     }
-    private int calculateDiscountedPrice(Player player, int basePrice) {
+    public int calculateDiscountedPrice(Player player, int basePrice) {
         PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
         PetManager.Pet activePet = petManager.getActivePet(player);
 
@@ -986,7 +994,7 @@ public class VillagerTradeManager implements Listener {
 
         return Math.max(1, (int) Math.floor(finalCost));
     }
- 
+
 
 
 
