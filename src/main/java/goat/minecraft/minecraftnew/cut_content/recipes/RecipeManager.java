@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other.recipes;
+package goat.minecraft.minecraftnew.cut_content.recipes;
 
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.Bukkit;

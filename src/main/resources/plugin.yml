@@ -74,8 +74,6 @@ commands:
     description: List all custom recipes in chat
   viewrecipe:
     description: Opens a GUI showing a particular recipe
-  collection:
-    description: lol
   hostility:
     description: opens difficulty GUI.
   spawnseacreature:

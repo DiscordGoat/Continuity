@@ -1,6 +1,5 @@
-package goat.minecraft.minecraftnew.other.recipes;
+package goat.minecraft.minecraftnew.cut_content.recipes;
 
-import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
 import net.md_5.bungee.api.chat.*;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;

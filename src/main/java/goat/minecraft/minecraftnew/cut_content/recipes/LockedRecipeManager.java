@@ -1,7 +1,7 @@
-package goat.minecraft.minecraftnew.other.recipes;
+package goat.minecraft.minecraftnew.cut_content.recipes;
 
-import goat.minecraft.minecraftnew.other.additionalfunctionality.Collections;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.Collections.CollectionData;
+import goat.minecraft.minecraftnew.cut_content.Collections;
+import goat.minecraft.minecraftnew.cut_content.Collections.CollectionData;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;

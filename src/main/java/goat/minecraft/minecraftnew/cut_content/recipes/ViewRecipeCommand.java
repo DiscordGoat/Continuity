@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other.recipes;
+package goat.minecraft.minecraftnew.cut_content.recipes;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,8 +11,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.*;
 
 public class ViewRecipeCommand implements CommandExecutor {
 

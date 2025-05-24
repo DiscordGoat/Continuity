@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other.professions.bartender;
+package goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
@@ -7,7 +7,6 @@ import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager.Tra
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.PlayerTabListUpdater;
 import org.bukkit.*;
 import org.bukkit.entity.*;

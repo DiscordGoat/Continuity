@@ -329,7 +329,7 @@ public class MeatCookingManager implements Listener {
     private List<String> getMeatStagesForMaterial(Material mat) {
         List<String> stages = meatStagesMap.get(mat);
         if (stages == null) {
-            return Collections.emptyList();
+
         }
         return stages;
     }

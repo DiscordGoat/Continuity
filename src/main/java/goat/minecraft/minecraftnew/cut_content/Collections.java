@@ -1,7 +1,7 @@
-package goat.minecraft.minecraftnew.other.additionalfunctionality;
+package goat.minecraft.minecraftnew.cut_content;
 
 import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager;
-import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
+import goat.minecraft.minecraftnew.cut_content.recipes.LockedRecipeManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager.ItemDisplay;
 import org.bukkit.Bukkit;

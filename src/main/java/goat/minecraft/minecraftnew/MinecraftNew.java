@@ -1,16 +1,17 @@
 package goat.minecraft.minecraftnew;
 
 import goat.minecraft.minecraftnew.cut_content.CancelBrewing;
+import goat.minecraft.minecraftnew.cut_content.Collections;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
-import goat.minecraft.minecraftnew.other.professions.bartender.BartenderVillagerManager;
-import goat.minecraft.minecraftnew.other.professions.engineer.EngineerVillagerManager;
-import goat.minecraft.minecraftnew.other.professions.engineer.EngineeringProfessionListener;
+import goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender.BartenderVillagerManager;
+import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineerVillagerManager;
+import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineeringProfessionListener;
 import goat.minecraft.minecraftnew.other.meritperks.*;
 import goat.minecraft.minecraftnew.other.qol.*;
-import goat.minecraft.minecraftnew.other.recipes.LockedRecipeManager;
-import goat.minecraft.minecraftnew.other.recipes.RecipeManager;
-import goat.minecraft.minecraftnew.other.recipes.RecipesCommand;
-import goat.minecraft.minecraftnew.other.recipes.ViewRecipeCommand;
+import goat.minecraft.minecraftnew.cut_content.recipes.LockedRecipeManager;
+import goat.minecraft.minecraftnew.cut_content.recipes.RecipeManager;
+import goat.minecraft.minecraftnew.cut_content.recipes.RecipesCommand;
+import goat.minecraft.minecraftnew.cut_content.recipes.ViewRecipeCommand;
 import goat.minecraft.minecraftnew.subsystems.brewing.*;
 import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.*;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
@@ -55,7 +56,7 @@ import goat.minecraft.minecraftnew.utils.devtools.*;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
-import goat.minecraft.minecraftnew.realms.Tropic;
+import goat.minecraft.minecraftnew.subsystems.realms.Tropic;
 import org.bukkit.*;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;

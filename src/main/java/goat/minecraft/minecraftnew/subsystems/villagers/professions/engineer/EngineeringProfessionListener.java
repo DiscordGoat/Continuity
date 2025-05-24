@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other.professions.engineer;
+package goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

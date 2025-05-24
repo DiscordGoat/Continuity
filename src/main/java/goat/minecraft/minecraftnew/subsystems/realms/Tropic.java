@@ -1,10 +1,8 @@
-package goat.minecraft.minecraftnew.realms;
+package goat.minecraft.minecraftnew.subsystems.realms;
 
-import com.sk89q.worldedit.extent.clipboard.Clipboard;
-import goat.minecraft.minecraftnew.realms.utils.TerrainUtils;
+import goat.minecraft.minecraftnew.subsystems.realms.utils.TerrainUtils;
 import goat.minecraft.minecraftnew.utils.devtools.SchemManager;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -13,7 +11,6 @@ import org.bukkit.entity.*;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.noise.SimplexNoiseGenerator;
 
 import java.io.File;
 import java.util.*;
