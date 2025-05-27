@@ -59,8 +59,6 @@ import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.subsystems.realms.Tropic;
 import org.bukkit.*;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -91,67 +89,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private PotionBrewingSubsystem potionBrewingSubsystem;
     private VerdantRelicsSubsystem verdantRelicsSubsystem;
 
-
-    public static Collections getCollectionsManager() {
-        return collectionsManager;
-    }
-
-    private void registerCustomRecipeCluster() {
-        ItemStack engineeringItem = ItemRegistry.getEngineeringDegree();
-        NamespacedKey key = new NamespacedKey(this, "engineering_profession");
-
-        ShapedRecipe recipe = new ShapedRecipe(key, engineeringItem);
-        recipe.shape("RRR", "RRR", "RRR");
-        recipe.setIngredient('R', Material.REDSTONE_BLOCK);
-
-        // Let’s lock this recipe behind the collection named "Redstone Collection"
-        lockedRecipeManager.addLockedRecipe(
-                key,
-                "Redstone Collection",
-                recipe,
-                true // add to server
-        );
-
-        NamespacedKey notchAppleKey = new NamespacedKey(this, "notch_apple_recipe");
-        lockedRecipeManager.addLockedRecipe(
-                notchAppleKey,
-                "Apple Mania", // EXACT name of the collection
-                recipeManager.getCustomRecipes().get(notchAppleKey),
-                false // We already called Bukkit.addRecipe(...) above
-        );
-
-
-
-        NamespacedKey petTrainingKey = new NamespacedKey(this, "pet_training_recipe");
-        lockedRecipeManager.addLockedRecipe(
-                petTrainingKey,
-                "Minerals", // EXACT name of the collection
-                recipeManager.getCustomRecipes().get(petTrainingKey),
-                false // We already called Bukkit.addRecipe(...) above
-        );
-
-
-
-        NamespacedKey customMusicDiscKey = new NamespacedKey(this, "custom_music_disc_recipe");
-        lockedRecipeManager.addLockedRecipe(
-                customMusicDiscKey,
-                "Collector of Skulls", // EXACT name of the collection
-                recipeManager.getCustomRecipes().get(customMusicDiscKey),
-                false // We already called Bukkit.addRecipe(...) above
-        );
-        NamespacedKey amethystKey = new NamespacedKey(this, "amethyst_block_to_shards");
-        ShapedRecipe amethystRecipe = new ShapedRecipe(amethystKey, new ItemStack(Material.AMETHYST_SHARD, 4));
-        amethystRecipe.shape("B"); // Single block in the center
-        amethystRecipe.setIngredient('B', Material.AMETHYST_BLOCK);
-
-        // Register the recipe
-        Bukkit.addRecipe(amethystRecipe);
-
-    }
-    public LockedRecipeManager getLockedRecipeManager() {
-        return lockedRecipeManager;
-    }
-
     public ItemDisplayManager getItemDisplayManager() {
         return displayManager;
     }
@@ -174,12 +111,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.shelfManager = new ShelfManager(this);
 
 
-        Tropic tropicExecutor = new Tropic(this);
+        Tropic tropicCommand = new Tropic(this);
+        getCommand("tropic").setExecutor(tropicCommand);
+        getCommand("tropic").setTabCompleter(tropicCommand);
+        getCommand("decomission").setExecutor(tropicCommand);
 
-        getCommand("tropic").setExecutor(tropicExecutor);
-        this.getCommand("tropic").setTabCompleter(tropicExecutor);
 
-        getCommand("decomission").setExecutor(tropicExecutor);
+
 
         new BartenderVillagerManager(this);
         this.getCommand("getculinaryrecipe")
@@ -281,20 +219,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ViewRecipeCommand.ViewRecipeListener(), this);
 
         displayManager = new ItemDisplayManager(this);
-        collectionsManager = new Collections(this, displayManager);
-
-        Objects.requireNonNull(getCommand("collection")).setExecutor(collectionsManager);
-
-
-        lockedRecipeManager = new LockedRecipeManager(this, collectionsManager);
-        lockedRecipeManager.init(); // registers event listener
-
-        // Now inject the lockedRecipeManager back into the collections manager
-        collectionsManager.setLockedRecipeManager(lockedRecipeManager);
-
-        // Register any locked recipes
-        registerCustomRecipeCluster();
-
 
         getServer().getPluginManager().registerEvents(new EngineeringProfessionListener(this), this);
         engineerVillagerManager = new EngineerVillagerManager(this);
