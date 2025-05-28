@@ -110,3 +110,7 @@ commands:
     usage: /setpetlevel <petName>
   forcebloodmoon:
     description: Forces a Blood Moon to rise.
+  combatreload:
+    description: Reloads the combat subsystem configuration
+    usage: /combatreload
+    permission: continuity.admin

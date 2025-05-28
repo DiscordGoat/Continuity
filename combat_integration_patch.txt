@@ -1,0 +1,98 @@
+# Combat Subsystem Integration Patch
+# Apply these changes to MinecraftNew.java to integrate the new combat subsystem
+
+## 1. Add field declaration after line 91:
+ADD AFTER: private VerdantRelicsSubsystem verdantRelicsSubsystem;
+ADD LINE: private CombatSubsystemManager combatSubsystemManager;
+
+## 2. Replace old combat initialization around line 205-206:
+FIND: xpManager = new XPManager(this);
+REPLACE WITH:
+        xpManager = new XPManager(this);
+        
+        // Initialize the new combat subsystem (replaces old combat event registrations)
+        try {
+            combatSubsystemManager = new CombatSubsystemManager(this, xpManager);
+            combatSubsystemManager.initialize();
+            getLogger().info("[Combat] New combat subsystem initialized successfully");
+        } catch (Exception e) {
+            getLogger().severe("[Combat] Failed to initialize new combat subsystem: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+## 3. Comment out old HostilityManager around lines 235-242:
+FIND: 
+        HostilityManager hostilityManagermanager = HostilityManager.getInstance(this);
+        // Register the /hostility command executor
+        getCommand("hostility").setExecutor(hostilityManagermanager.new HostilityCommand());
+
+REPLACE WITH:
+        // NOTE: Old HostilityManager commented out - new system handles hostility
+        // HostilityManager hostilityManagermanager = HostilityManager.getInstance(this);
+        // getCommand("hostility").setExecutor(hostilityManagermanager.new HostilityCommand());
+
+## 4. Comment out old MobDamageHandler around line 271:
+FIND: getServer().getPluginManager().registerEvents(new MobDamageHandler(), this);
+REPLACE WITH: // getServer().getPluginManager().registerEvents(new MobDamageHandler(), this); // Handled by new combat subsystem
+
+## 5. Comment out old combat handlers around lines 433-436:
+FIND:
+        DamageNotifier damageNotifier = new DamageNotifier(this);
+        getServer().getPluginManager().registerEvents(damageNotifier, this);
+        getServer().getPluginManager().registerEvents(new CombatBuffs(), this);
+
+REPLACE WITH:
+        // NOTE: Old combat handlers commented out - replaced by new combat subsystem
+        // DamageNotifier damageNotifier = new DamageNotifier(this);
+        // getServer().getPluginManager().registerEvents(damageNotifier, this);
+        // getServer().getPluginManager().registerEvents(new CombatBuffs(), this);
+
+## 6. Add cleanup in onDisable() after line 500:
+FIND: 
+        if (playerOxygenManager != null) {
+            playerOxygenManager.saveOnShutdown();
+        }
+
+ADD AFTER:
+        if (combatSubsystemManager != null) {
+            combatSubsystemManager.shutdown();
+        }
+
+## TESTING INSTRUCTIONS:
+
+After applying these changes:
+
+1. Build the plugin: mvn clean package
+2. Start your test server
+3. Test the following features:
+
+### Combat Damage Testing:
+- Attack mobs with different combat skill levels (use /xp set <player> Combat <level>)
+- Verify damage multipliers work (should see action bar feedback)
+- Test with bow/arrows for ranged damage
+- Use Potion of Recurve and verify bonus damage
+
+### Damage Notifications:
+- Attack any mob and verify floating damage indicators appear
+- Check that colors change based on damage amount (white < green < blue < purple < gold)
+
+### Hostility System:
+- Use /hostility command to open the new GUI
+- Verify tier selection works based on player level
+- Test that tiers are properly saved and loaded
+
+### Configuration Testing:
+- Check that combat.yml is created in the plugin folder
+- Modify values in combat.yml and use /reload to test hot-reload
+- Verify damage multipliers change when config values change
+
+### Error Handling:
+- Check server logs for any combat-related errors
+- Verify the system continues working even if individual components fail
+
+The new system will log initialization messages like:
+[INFO] Combat configuration loaded successfully
+[INFO] Registered damage strategy: Melee Combat Skill Damage (priority: 80)
+[INFO] Combat subsystem initialized successfully
+
+Any errors will be logged with detailed information for debugging.

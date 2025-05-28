@@ -1,0 +1,69 @@
+# Combat System Configuration
+# This file contains all configurable values for the combat subsystem
+
+# Damage calculation settings
+damage:
+  multipliers:
+    # Combat skill level multiplier for melee attacks (per level)
+    melee_per_level: 0.03
+    # Combat skill level multiplier for ranged attacks (per level)
+    ranged_per_level: 0.04
+    # Monster level damage multiplier (per level)
+    monster_per_level: 0.06
+    # Maximum skill level to consider for damage calculations
+    max_skill_level: 100
+    
+  # Potion effect multipliers
+  potions:
+    recurve_damage_bonus: 1.25
+
+# Damage notification settings
+notifications:
+  # Enable/disable damage indicators
+  enabled: true
+  # Duration in ticks (20 ticks = 1 second)
+  display_duration: 60
+  # Animation settings
+  animation:
+    upward_movement_per_tick: 0.05
+    fade_start_percentage: 0.7
+    random_position_offset: 0.5
+    vertical_offset_base: 1.0
+    vertical_offset_random: 0.5
+  
+  # Color thresholds for damage indicators
+  colors:
+    low_damage_threshold: 20.0
+    medium_damage_threshold: 40.0
+    high_damage_threshold: 80.0
+    critical_damage_threshold: 140.0
+
+# Hostility system settings
+hostility:
+  # Level requirements for each tier (tier number - 1) * level_per_tier
+  level_per_tier: 10
+  max_tier: 10
+  default_tier: 1
+  
+  # GUI settings
+  gui:
+    title: "§4Select Hostility Tier"
+    size: 54
+    unlocked_material: "RED_STAINED_GLASS_PANE"
+    locked_material: "GRAY_STAINED_GLASS_PANE"
+    border_material: "BLACK_STAINED_GLASS_PANE"
+    close_material: "BARRIER"
+
+# Sound effects
+sounds:
+  damage_boost: "ENTITY_ARROW_HIT_PLAYER"
+  volume: 1.0
+  pitch: 1.0
+
+# Combat buffs
+buffs:
+  # Enable/disable individual buff systems
+  skill_damage_scaling: true
+  potion_interactions: true
+  monster_level_scaling: true
+  projectile_bonuses: true

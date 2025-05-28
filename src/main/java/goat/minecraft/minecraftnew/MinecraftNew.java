@@ -15,6 +15,7 @@ import goat.minecraft.minecraftnew.cut_content.recipes.ViewRecipeCommand;
 import goat.minecraft.minecraftnew.subsystems.brewing.*;
 import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.*;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
+import goat.minecraft.minecraftnew.subsystems.combat.CombatSubsystemManager;
 
 import goat.minecraft.minecraftnew.subsystems.culinary.ShelfManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
@@ -88,6 +89,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     private PotionBrewingSubsystem potionBrewingSubsystem;
     private VerdantRelicsSubsystem verdantRelicsSubsystem;
+    private CombatSubsystemManager combatSubsystemManager;
 
     public ItemDisplayManager getItemDisplayManager() {
         return displayManager;
@@ -202,6 +204,17 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
         xpManager = new XPManager(this);
+
+        // Initialize the new combat subsystem (replaces old combat event registrations)
+        try {
+            combatSubsystemManager = new CombatSubsystemManager(this, xpManager);
+            combatSubsystemManager.initialize();
+            getLogger().info("[Combat] New combat subsystem initialized successfully");
+        } catch (Exception e) {
+            getLogger().severe("[Combat] Failed to initialize new combat subsystem: " + e.getMessage());
+            e.printStackTrace();
+        }
+
         CustomBundleGUI.init(this);
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 
@@ -231,13 +244,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         UltimateEnchantingSystem ultimateEnchantingSystem = new UltimateEnchantingSystem();
         ultimateEnchantingSystem.registerCustomEnchants();
-        HostilityManager hostilityManagermanager = HostilityManager.getInstance(this);
-
-
-
-
-        // Register the /hostility command executor
-        getCommand("hostility").setExecutor(hostilityManagermanager.new HostilityCommand());
+        // NOTE: Old HostilityManager commented out - new system handles hostility
+        // HostilityManager hostilityManagermanager = HostilityManager.getInstance(this);
+        // getCommand("hostility").setExecutor(hostilityManagermanager.new HostilityCommand());
 
 
 
@@ -267,8 +276,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ArmorEquipListener(), this);
 
         getServer().getPluginManager().registerEvents(new Leap(this), this);
-        getServer().getPluginManager().registerEvents(new MobDamageHandler(), this);
-        getServer().getPluginManager().registerEvents(new SoftPaw(this), this);
+// getServer().getPluginManager().registerEvents(new MobDamageHandler(), this); // Handled by new combat subsystem
         getServer().getPluginManager().registerEvents(new Comfortable(this), this);
         getServer().getPluginManager().registerEvents(new TerrorOfTheDeep(this), this);
         getServer().getPluginManager().registerEvents(new BonePlating(this), this);
@@ -429,9 +437,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         this.getCommand("clearpets").setExecutor(new ClearPetsCommand(this, petManager));
         // In your onEnable method
-        DamageNotifier damageNotifier = new DamageNotifier(this);
-        getServer().getPluginManager().registerEvents(damageNotifier, this);
-        getServer().getPluginManager().registerEvents(new CombatBuffs(), this);
+        // NOTE: Old combat handlers commented out - replaced by new combat subsystem
+        // DamageNotifier damageNotifier = new DamageNotifier(this);
+        // getServer().getPluginManager().registerEvents(damageNotifier, this);
+        // getServer().getPluginManager().registerEvents(new CombatBuffs(), this);
         getServer().getPluginManager().registerEvents(new BowReforge(), this);
         villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);
         getCommand("forceworkcycle").setExecutor(villagerWorkCycleManager);
@@ -497,6 +506,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (playerOxygenManager != null) {
             playerOxygenManager.saveOnShutdown();
         }
+
+        if (combatSubsystemManager != null) {
+            combatSubsystemManager.shutdown();
+        }
+
         PetManager.getInstance(this).savePets();
         anvilRepair.saveAllInventories();
         cancelBrewing.saveAllInventories();
