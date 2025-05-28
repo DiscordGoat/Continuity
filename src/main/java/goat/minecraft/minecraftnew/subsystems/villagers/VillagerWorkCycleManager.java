@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager;
+import goat.minecraft.minecraftnew.subsystems.culinary.ShelfManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -839,19 +840,19 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 displayedItems.put(frame, item);
             }
         }
-        
+
         // Add items from custom ItemDisplays
         ItemDisplayManager displayManager = MinecraftNew.getInstance().getItemDisplayManager();
         if (displayManager != null) {
             Location villagerLoc = villager.getLocation();
-            
+
             // Get all displays from the manager and filter by distance
             for (ItemDisplayManager.ItemDisplay display : displayManager.getAllDisplays()) {
                 if (display.storedItem != null && display.blockLocation != null) {
                     // Check if the display is within radius
-                    if (display.blockLocation.getWorld().equals(villagerLoc.getWorld()) && 
+                    if (display.blockLocation.getWorld().equals(villagerLoc.getWorld()) &&
                             display.blockLocation.distance(villagerLoc) <= radius) {
-                        
+
                         // Get the ArmorStand entity
                         if (display.standUUID != null) {
                             Entity entity = Bukkit.getEntity(display.standUUID);
@@ -865,9 +866,50 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             }
         }
 
+        // Add items from shelves
+        ShelfManager shelfManager = MinecraftNew.getInstance().getShelfManager();
+        if (shelfManager != null) {
+            Location villagerLoc = villager.getLocation();
+            World villagerWorld = villagerLoc.getWorld();
+
+            // Access shelf contents and display stands
+            // Note: We need to add getter methods to ShelfManager to access these maps
+            Map<String, ItemStack> shelfContents = shelfManager.getShelfContents();
+            Map<String, UUID> displayStands = shelfManager.getDisplayStands();
+
+            if (shelfContents != null && displayStands != null) {
+                for (Map.Entry<String, ItemStack> entry : shelfContents.entrySet()) {
+                    String locKey = entry.getKey();
+                    ItemStack item = entry.getValue();
+
+                    // Skip empty shelves
+                    if (item == null || item.getType() == Material.AIR) {
+                        continue;
+                    }
+
+                    // Get shelf location from locKey
+                    Location shelfLoc = shelfManager.fromLocKey(locKey);
+
+                    // Check if shelf is within radius
+                    if (shelfLoc.getWorld().equals(villagerWorld) &&
+                            shelfLoc.distance(villagerLoc) <= radius) {
+
+                        // Get the ArmorStand entity using UUID
+                        UUID standUUID = displayStands.get(locKey);
+                        if (standUUID != null) {
+                            Entity entity = Bukkit.getEntity(standUUID);
+                            if (entity != null && entity.isValid()) {
+                                displayedItems.put(entity, item);
+                                //Bukkit.broadcastMessage("Found item on shelf: " + item.getType().name());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         return displayedItems;
     }
-
 
     private List<ItemFrame> findNearbyItemFrames(Villager villager, int radius) {
         Location loc = villager.getLocation();

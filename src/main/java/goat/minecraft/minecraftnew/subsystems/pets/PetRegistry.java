@@ -310,7 +310,7 @@ public class PetRegistry {
                 PetManager.Rarity.EPIC,
                 100,
                 Particle.FIREWORKS_SPARK,
-                Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR)
+                Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANTIDOTE, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR)
         ));
         registry.put("Cow", new PetDefinition(
                 "Cow",

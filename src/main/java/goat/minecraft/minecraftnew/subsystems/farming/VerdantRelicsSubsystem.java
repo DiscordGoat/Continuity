@@ -472,15 +472,12 @@ public class VerdantRelicsSubsystem implements Listener {
 
         // Possibly add a complication with some chance
         private void maybeAddComplication() {
-            if (activeComplications.size() >= 4) return;
+            if (activeComplications.size() >= 1) return; // Changed from 4 to 1 since we only have one complication type now
             if (Math.random() < 0.1) { // 10% chance
-                List<String> possible = Arrays.asList("Drought","Overgrown","Infested","Malnutrition");
-                List<String> filtered = new ArrayList<>(possible);
-                filtered.removeAll(activeComplications);
-                if (!filtered.isEmpty()) {
-                    String newComp = filtered.get(new Random().nextInt(filtered.size()));
-                    activeComplications.add(newComp);
-                    spawnComplicationParticle(newComp);
+                // Only add "Overgrown" as a complication
+                if (!activeComplications.contains("Overgrown")) {
+                    activeComplications.add("Overgrown");
+                    spawnComplicationParticle("Overgrown");
                     spawnComplicationStands(); // show updated stands
                 }
             }

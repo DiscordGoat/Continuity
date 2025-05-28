@@ -105,7 +105,7 @@ public class ShelfManager implements Listener {
                 + ":" + loc.getBlockZ();
     }
 
-    private Location fromLocKey(String key) {
+    public Location fromLocKey(String key) {
         String[] p = key.split(":");
         World w = Bukkit.getWorld(p[0]);
         int x = Integer.parseInt(p[1]), y = Integer.parseInt(p[2]), z = Integer.parseInt(p[3]);
@@ -161,6 +161,36 @@ public class ShelfManager implements Listener {
         if (!shelfContents.containsKey(key)) return;
 
         e.setCancelled(true);
+        Player player = e.getPlayer();
+        ItemStack heldItem = player.getInventory().getItemInMainHand();
+
+        // Simple logic:
+        // 1. If player has no item -> open GUI
+        // 2. If shelf is empty AND player has an item -> store item, don't open GUI
+        // 3. Otherwise -> open GUI
+
+        if (heldItem != null && heldItem.getType() != Material.AIR && shelfContents.get(key) == null) {
+            // Store the item
+            ItemStack itemToStore = heldItem.clone();
+            shelfContents.put(key, itemToStore);
+
+            // Remove from player's hand
+            player.getInventory().setItemInMainHand(null);
+
+            // Update display
+            updateArmorStandDisplay(key);
+
+            // Effects
+            Location loc = b.getLocation().add(0.5, 0.5, 0.5);
+            World world = loc.getWorld();
+            if (world != null) {
+                world.playSound(loc, Sound.ENTITY_ITEM_FRAME_ADD_ITEM, 0.8f, 1.0f);
+                world.spawnParticle(Particle.ITEM_CRACK, loc, 10, 0.2, 0.2, 0.2, 0.05, itemToStore);
+            }
+            return; // Don't open GUI
+        }
+
+        // Open GUI in all other cases
         Inventory inv = Bukkit.createInventory(null, 9, ChatColor.GOLD + "Shelf");
 
         // Fill slots 1-8 with barriers (GUI decoration)
@@ -177,8 +207,8 @@ public class ShelfManager implements Listener {
         ItemStack stored = shelfContents.get(key);
         if (stored != null) inv.setItem(0, stored.clone());
 
-        e.getPlayer().openInventory(inv);
-        invHolderMap.put(e.getPlayer(), key);
+        player.openInventory(inv);
+        invHolderMap.put(player, key);
     }
 
     private final Map<Player, String> invHolderMap = new HashMap<>();
@@ -252,6 +282,8 @@ public class ShelfManager implements Listener {
     //=======================================================================
     // Left-click to extract (unless player holds an axe)
     //=======================================================================
+    // Fix for the onLeftClick method to properly update the shelf contents
+    // Fixed onLeftClick method to properly handle the last item in a stack
     @EventHandler
     public void onLeftClick(PlayerInteractEvent e) {
         if (e.getAction() != Action.LEFT_CLICK_BLOCK) return;
@@ -274,14 +306,24 @@ public class ShelfManager implements Listener {
         ItemStack stored = shelfContents.get(key);
         if (stored == null || stored.getAmount() <= 0) return;
 
-        // decrement stored count
+        // Check if this is the last item in the stack
+        boolean isLastItem = (stored.getAmount() == 1);
 
-        shelfContents.put(key, stored);
-        updateArmorStandDisplay(key);
-
-        // prepare the single-output item
+        // prepare the single-output item first (before modifying the stored item)
         ItemStack output = stored.clone();
         output.setAmount(1);
+
+        // NOW decrement stored count
+        stored.setAmount(stored.getAmount() - 1);
+
+        // If this was the last item, set the shelf contents to null
+        if (isLastItem) {
+            shelfContents.put(key, null);
+        } else {
+            shelfContents.put(key, stored);
+        }
+
+        updateArmorStandDisplay(key);
 
         // spawn effects & item entity
         Location spawnLoc = b.getLocation().add(0.5, 0.5, 0.5);
@@ -307,13 +349,12 @@ public class ShelfManager implements Listener {
 
         // drop the item and shoot it toward the player
         Item dropped = world.dropItem(spawnLoc, output);
-        dropped.setPickupDelay(0); // 1 second before auto-pickup
+        dropped.setPickupDelay(0); // No pickup delay
 
-        // compute velocity from drop to player’s eye height
+        // compute velocity from drop to player's eye height
         Vector toPlayer = p.getEyeLocation().toVector().subtract(spawnLoc.toVector()).normalize();
         dropped.setVelocity(toPlayer.multiply(0.6));
-        stored.setAmount(stored.getAmount() - 1);
-        updateArmorStandDisplay(key);
+
         // done — item will fly to you and then can be picked up
     }
 
@@ -398,5 +439,22 @@ public class ShelfManager implements Listener {
         stand.setHeadPose(new EulerAngle(Math.toRadians(15), 0, 0)); // positive angle leans back
         stand.getEquipment().setHelmet(stack!=null?stack.clone():null);
         return stand;
+    }
+    // Add these getter methods to your ShelfManager class
+
+    /**
+     * Get a map of all shelf contents (locKey -> ItemStack)
+     * @return Map of shelf contents
+     */
+    public Map<String, ItemStack> getShelfContents() {
+        return new HashMap<>(shelfContents);
+    }
+
+    /**
+     * Get a map of all display stand UUIDs (locKey -> UUID)
+     * @return Map of display stand UUIDs
+     */
+    public Map<String, UUID> getDisplayStands() {
+        return new HashMap<>(displayStands);
     }
 }

@@ -483,7 +483,7 @@ public class PetManager implements Listener {
             case SUPERIOR_ENDURANCE:
                 return "Gain " + ChatColor.GREEN + "eternal sustenance " + ChatColor.GRAY + "when grinding " + ChatColor.YELLOW + "crops.";
             case ANTIDOTE:
-                return "Lose a " + ChatColor.DARK_GRAY + "negative potion effect " + ChatColor.GRAY + "when eating.";
+                return "Makes you immune to " + ChatColor.DARK_GRAY + "negative potion effects";
             case CULTIVATION:
                 return "Gain " + ChatColor.GREEN + "+" + (level * 1) + "% Chance " + ChatColor.GRAY + "to harvest " + ChatColor.GREEN + "double crops.";
             case GREEN_THUMB:

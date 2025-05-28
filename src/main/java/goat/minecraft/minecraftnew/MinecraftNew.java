@@ -92,6 +92,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public ItemDisplayManager getItemDisplayManager() {
         return displayManager;
     }
+    public ShelfManager getShelfManager() {
+        return shelfManager;
+    }
 
     @Override
     public void onEnable() {
