@@ -45,7 +45,23 @@ public class ItemRegistry {
         }
         return null;
     }
-// in your ItemRegistry class:
+    public static ItemStack getExpandingStairs() {
+        return createCustomItem(
+                Material.OAK_STAIRS,
+                ChatColor.GOLD + "Expanding Stairs",
+                Arrays.asList(
+                        ChatColor.GRAY + "A mystical building item that constructs",
+                        ChatColor.GRAY + "large roof portions horizontally.",
+                        "",
+                        ChatColor.YELLOW + "Right-click on block",
+                        ChatColor.YELLOW + "to expand a roof segment!"
+                ),
+                1,
+                false,  // not unbreakable
+                false   // no enchantment shimmer
+        );
+    }
+
 
     public static ItemStack getShelfItem() {
         return createCustomItem(

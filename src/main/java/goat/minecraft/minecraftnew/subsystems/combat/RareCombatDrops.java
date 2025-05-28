@@ -236,11 +236,16 @@ public class RareCombatDrops implements Listener {
         }
     }
     private void handleSpiderDrop(EntityDeathEvent event) {
+        PetRegistry petRegistry = new PetRegistry();
+
         Player player = event.getEntity().getKiller();
         HostilityManager hostilityManager = HostilityManager.getInstance(MinecraftNew.getInstance());
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
         if (rollChance(1,100, hostilityLevel)) { // 1-4% chance
             event.getDrops().add(spiderDrop);
+        }
+        if (rollChance(1,10, hostilityLevel)) { // 1-4% chance
+            petRegistry.addPetByName(player, "Spider");
         }
     }
     private void handleEndermanDrop(EntityDeathEvent event) {

@@ -296,6 +296,14 @@ public class PetRegistry {
                 Particle.VILLAGER_HAPPY,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS)
         ));
+        //Building
+        registry.put("Spider", new PetDefinition(
+                "Spider",
+                PetManager.Rarity.LEGENDARY,
+                100,
+                Particle.SQUID_INK,
+                Arrays.asList(PetManager.PetPerk.LULLABY, PetManager.PetPerk.SPIDER_STEVE, PetManager.PetPerk.OBSESSION, PetManager.PetPerk.SOFT_PAW, PetManager.PetPerk.ECHOLOCATION, PetManager.PetPerk.EARTHWORM)
+        ));
 
         // Farming Pets
         registry.put("Pig", new PetDefinition(

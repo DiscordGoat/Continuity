@@ -78,6 +78,7 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Monkey", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDAxNjkzODM2ZjIwZjA0MWM2YjZhZDhhMDE4N2E0OTU2N2QwYzU3ZTM0MGEwMmU1NjFkNGQxNmU1NjkxZWI5YSJ9fX0=");
         PET_TEXTURES.put("Ent", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2JiZTFjNmEyNjg0Zjg1NGJjMmU1YjczNDA1NDRlOGVhZDM2NWY3YWQyY2M0NDJkMWZjOGY5NTE3MDNjM2QwNSJ9fX0=");
         PET_TEXTURES.put("Wither", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzRmMzI4ZjUwNDQxMjliNWQxZjk2YWZmZDFiOGMwNWJjZGU2YmQ4ZTc1NmFmZjVjNTAyMDU4NWVlZjhhM2RhZiJ9fX0=");
+        PET_TEXTURES.put("Spider", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzM4ODE3M2Y0ZjgyYTE0MTUzZTA4NmJmMTM3OTA3MjU2ZTUxMmIyMTczMWYwNDcwMDQ3YmYyZDQ1MzU0NWQyMSJ9fX0=");
 
         //sea creature textures...
         PET_TEXTURES.put("Shark", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2QyMTEzZmJhNTFiODM2NTIyOWUwZmYxZjIwMWY1MzMxNDgzMzcxZjE4NjA1N2JhNzQyMDMyOTRkMDYxMDgyZiJ9fX0=");
@@ -579,8 +580,23 @@ public class PetManager implements Listener {
             case COMPOSTER:
                 int requiredMaterialsOrganic = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
                 return ChatColor.GRAY + "Compacts " + requiredMaterialsOrganic + " crops into " + ChatColor.GREEN + "Organic Soil";
+            case EARTHWORM:
+                return "Grants " + ChatColor.YELLOW + "Haste 8 " + ChatColor.GRAY + "for " + ChatColor.WHITE + "0.5s " + ChatColor.GRAY + "when mining grass/dirt/gravel/sand";
+            case SPIDER_STEVE:
+                return "Allows the player to " + ChatColor.GOLD + "Scale Walls " + ChatColor.GRAY + "by " + ChatColor.YELLOW + "rapidly clicking them.";
+            case PARKOUR_ROLL:
+                // scale from 10→30 blocks over levels 1→100
+                int maxFallDistance = 10 + Math.round((level - 1) * 20f / 99f);
+                return "Take no "
+                        + ChatColor.RED + "fall damage "
+                        + ChatColor.GRAY + "from up to "
+                        + ChatColor.RED + maxFallDistance
+                        + ChatColor.GRAY + " blocks.";
+            case OBSESSION:
+                return "10% chance to gain " + ChatColor.YELLOW + "+1 Hunger " + ChatColor.GRAY + "when " + ChatColor.YELLOW + "placing blocks.";
             default:
                 return ChatColor.GRAY + "Static effect or undefined scaling.";
+
         }
 
     }
@@ -841,7 +857,11 @@ public class PetManager implements Listener {
         ROCK_EATER("Ore Magnet", ChatColor.GOLD + ""),
         NO_HIBERNATION("No Hibernation", ChatColor.GOLD + ""),
         GROOT("Groot", ChatColor.GOLD + ""),
-        COMPOSTER("Composter", ChatColor.GOLD + "");
+        COMPOSTER("Composter", ChatColor.GOLD + ""),
+        OBSESSION("Obsession", ChatColor.GOLD + ""),
+        SPIDER_STEVE("Spider Steve", ChatColor.GOLD + ""),
+        PARKOUR_ROLL("Parkour Roll", ChatColor.GOLD + ""),
+        EARTHWORM("Earthworm", ChatColor.GOLD + "");
 
         private final String displayName;
         private final String description;
