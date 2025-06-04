@@ -171,6 +171,13 @@ public class PetRegistry {
                 Particle.ASH,
                 Arrays.asList(PetManager.PetPerk.CLAW, PetManager.PetPerk.SOFT_PAW, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.LEAP)
         ));
+        registry.put("Wolf", new PetDefinition(
+                "Wolf",
+                PetManager.Rarity.RARE,
+                100,
+                Particle.CRIT,
+                Arrays.asList(PetManager.PetPerk.ALPHA, PetManager.PetPerk.CLAW, PetManager.PetPerk.DEVOUR)
+        ));
         registry.put("Yeti", new PetDefinition(
                 "Yeti",
                 PetManager.Rarity.EPIC,

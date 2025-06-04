@@ -296,6 +296,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new SecondWind(this), this);
         getServer().getPluginManager().registerEvents(new Elite(this), this);
         getServer().getPluginManager().registerEvents(new Claw(this), this);
+        getServer().getPluginManager().registerEvents(new Alpha(this), this);
         getServer().getPluginManager().registerEvents(new Rebirth(this), this);
         getServer().getPluginManager().registerEvents(new WalkingFortress(this), this);
         getServer().getPluginManager().registerEvents(new DiggingClaws(this), this);
@@ -464,6 +465,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Experience(), this);
 
         getServer().getPluginManager().registerEvents(new CatTameEvent(petManager), this);
+        getServer().getPluginManager().registerEvents(new WolfTameEvent(petManager), this);
         getServer().getPluginManager().registerEvents(new AxolotlInteractEvent(petManager), this);
         getServer().getPluginManager().registerEvents(new AllayInteractEvent(petManager), this);
 
