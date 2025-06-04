@@ -10,6 +10,7 @@ import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -1389,29 +1390,37 @@ public class VillagerTradeManager implements Listener {
         // Ensure at least cost of 1
         int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));
 
-        // 1) Check if player's main inventory has enough emeralds
-        if (hasEnoughItems(player.getInventory(), new ItemStack(Material.EMERALD), finalCostRounded)) {
-            // Remove emeralds from main inventory
-            removeItems(player.getInventory(), Material.EMERALD, finalCostRounded);
+        // --- Master Trader perk: make purchases free ---
+        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
+        if (meritManager.hasPerk(player.getUniqueId(), "Master Trader")) {
+            finalCostRounded = 0;
+        }
 
-        } else {
-            // Not enough in main inventory
-            int invEmeraldCount = countEmeraldsInInventory(player);
-            // Remove whatever emeralds they do have
+        if (finalCostRounded > 0) {
+            // 1) Check if player's main inventory has enough emeralds
+            if (hasEnoughItems(player.getInventory(), new ItemStack(Material.EMERALD), finalCostRounded)) {
+                // Remove emeralds from main inventory
+                removeItems(player.getInventory(), Material.EMERALD, finalCostRounded);
+
+            } else {
+                // Not enough in main inventory
+                int invEmeraldCount = countEmeraldsInInventory(player);
+                // Remove whatever emeralds they do have
 
 
-            int shortfall = finalCostRounded - invEmeraldCount;
+                int shortfall = finalCostRounded - invEmeraldCount;
 
-            // Attempt removing shortfall from the backpack
-            CustomBundleGUI customBundleGUI = CustomBundleGUI.getInstance();
-            boolean success = customBundleGUI.removeEmeraldsFromBackpack(player, shortfall);
-            if(success){
-                removeItems(player.getInventory(), Material.EMERALD, invEmeraldCount);
-            }
-            if (!success) {
-                // The player can't afford the cost from inventory + backpack
-                player.sendMessage(ChatColor.RED + "You don't have enough emeralds (in inventory or backpack).");
-                return;
+                // Attempt removing shortfall from the backpack
+                CustomBundleGUI customBundleGUI = CustomBundleGUI.getInstance();
+                boolean success = customBundleGUI.removeEmeraldsFromBackpack(player, shortfall);
+                if(success){
+                    removeItems(player.getInventory(), Material.EMERALD, invEmeraldCount);
+                }
+                if (!success) {
+                    // The player can't afford the cost from inventory + backpack
+                    player.sendMessage(ChatColor.RED + "You don't have enough emeralds (in inventory or backpack).");
+                    return;
+                }
             }
         }
 
