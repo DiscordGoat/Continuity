@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManage
 import goat.minecraft.minecraftnew.subsystems.mining.MiningGemManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentUtils;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
@@ -673,6 +674,11 @@ public class AnvilRepair implements Listener {
         int repairAmount = 25 + smithingLevel; // Just use this calculated repairAmount
         if(ironWhitelist.contains(repairee.getType())){
             repairAmount = repairAmount + 150;
+        }
+        PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
+        if(playerMeritManager.hasPerk(player.getUniqueId(), "Master Smith")){
+            repairAmount = repairAmount + 50;
+            Bukkit.getLogger().info("Master Smith added 50 durability to the repair!");
         }
         // Determine the type of repair material and set the repair amount accordingly
         if (billItem.getType() == Material.IRON_INGOT) {

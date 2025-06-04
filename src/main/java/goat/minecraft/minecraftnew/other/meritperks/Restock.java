@@ -18,7 +18,7 @@ import java.util.UUID;
  * <p>
  * When the player is holding a bow with no arrows in their inventory and has free space,
  * automatically grants them a single arrow. Costs 1 merit point.
- * A five second cooldown prevents continuous arrow generation.
+ * Implementation of the actual arrow granting will be added later.
  */
 public class Restock implements Listener {
 
@@ -57,5 +57,4 @@ public class Restock implements Listener {
         // Give the player a single arrow
         player.getInventory().addItem(new ItemStack(Material.ARROW, 1));
         lastRestock.put(id, now);
-    }
-}
+    }}

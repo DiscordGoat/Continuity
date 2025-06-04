@@ -1392,8 +1392,13 @@ public class VillagerTradeManager implements Listener {
 
         // --- Master Trader perk: make purchases free ---
         PlayerMeritManager meritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
-        if (meritManager.hasPerk(player.getUniqueId(), "Master Trader")) {
+        boolean freePurchase = false;
+        if (meritManager.hasPerk(player.getUniqueId(), "Master Trader") && Math.random() < 0.05) {
             finalCostRounded = 0;
+            freePurchase = true;
+        }
+        if (freePurchase) {
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 1.0f);
         }
 
         if (finalCostRounded > 0) {

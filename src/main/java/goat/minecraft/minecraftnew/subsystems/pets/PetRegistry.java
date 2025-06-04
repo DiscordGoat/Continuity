@@ -355,6 +355,13 @@ public class PetRegistry {
                 Particle.ASH,
                 Arrays.asList(PetManager.PetPerk.SHOTCALLING, PetManager.PetPerk.FLIGHT, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.ELITE, PetManager.PetPerk.DECAY)
         ));
+        registry.put("Phoenix", new PetDefinition(
+                "Phoenix",
+                PetManager.Rarity.LEGENDARY,
+                100,
+                Particle.FLAME,
+                Arrays.asList(PetManager.PetPerk.PHOENIX_REBIRTH, PetManager.PetPerk.FLAME_TRAIL, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.FLIGHT, PetManager.PetPerk.ELITE)
+        ));
     }
     // Inside PetManager class
     public void addPetByName(Player player, String petName) {

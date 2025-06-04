@@ -1,5 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.brewing;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -37,6 +39,12 @@ public class PotionManager {
      */
     public static void addCustomPotionEffect(String name, Player player, int duration) {
         UUID uuid = player.getUniqueId();
+        PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
+
+        if(playerMeritManager.hasPerk(player.getUniqueId(), "Strong Digestion")){
+            duration = duration * 2;
+            Bukkit.getLogger().info("Doubled Effect Duration from Strong Digestion Perk!");
+        }
         Map<String, Integer> playerEffects = activeEffects.getOrDefault(uuid, new HashMap<>());
         // If the effect is already active, add the new duration to the current duration
         int newDuration = playerEffects.getOrDefault(name, 0) + duration;

@@ -211,11 +211,6 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Loyal cooldown reduced to 1 second.",
                             ChatColor.BLUE + "On Use Loyal: " + ChatColor.GRAY + "Cooldown becomes 1 second."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Double Enderchest", 1, Material.ENDER_CHEST,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Ender chest storage doubled.",
-                            ChatColor.BLUE + "On Open Ender Chest: " + ChatColor.GRAY + "Opens 54-slot inventory."
-                    )),
             new Perk(ChatColor.DARK_GRAY + "Strong Digestion", 1, Material.GOLDEN_APPLE,
                     Arrays.asList(
                             ChatColor.GRAY + "Doubles potion duration.",
@@ -244,97 +239,7 @@ public class MeritCommand implements CommandExecutor, Listener {
             new Perk(ChatColor.DARK_GRAY + "Resurrection Charge 3", 1, Material.TOTEM_OF_UNDYING,
                     Arrays.asList(
                             ChatColor.GRAY + "Allows a third resurrection charge.",
-                            ChatColor.BLUE + "On Purchase: " + ChatColor.GRAY + "Adds another charge (max 3).",
-                            ChatColor.GRAY + "Grants arrows when holding a bow with none left."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Rebreather", 1, Material.TURTLE_HELMET,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Regenerates breath underwater below Y=50."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Keepinventory", 1, Material.CHEST,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Keeps your items on death after login."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Smith", 1, Material.ANVIL,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Adds +50 durability when repairing with iron." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Botanist", 1, Material.WHEAT_SEEDS,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Verdant relics mature 50% faster." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Brewer", 1, Material.BREWING_STAND,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Brews potions 50% faster." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Chef", 1, Material.COOKED_BEEF,
-                    Arrays.asList(
-                            ChatColor.GRAY + "50% chance to cook double culinary delights." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Thief", 1, Material.ENDER_EYE,
-                    Arrays.asList(
-                            ChatColor.GRAY + "50% chance for rare monster drops to double." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Duelist", 1, Material.IRON_SWORD,
-                    Arrays.asList(
-                            ChatColor.GRAY + "20% chance to crit for +50% damage." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Angler", 1, Material.FISHING_ROD,
-                    Arrays.asList(
-                            ChatColor.GRAY + "+5% sea creature chance." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Diplomat", 1, Material.WRITABLE_BOOK,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Reduces notoriety gains by 60%." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Diffuser", 1, Material.CREEPER_HEAD,
-                    Arrays.asList(
-                            ChatColor.GRAY + "50% chance for creepers to drop a disc." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Trader", 1, Material.EMERALD,
-                    Arrays.asList(
-                            ChatColor.GRAY + "5% chance for purchases to be free." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Employer", 1, Material.BELL,
-                    Arrays.asList(
-                            ChatColor.GRAY + "50% chance to halve villager work timers." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Loyalty II", 1, Material.NAME_TAG,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Loyal cooldown reduced to 1 second." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Double Enderchest", 1, Material.ENDER_CHEST,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Ender chest storage doubled." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Strong Digestion", 1, Material.GOLDEN_APPLE,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Doubles potion duration." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Icarus", 1, Material.ELYTRA,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Doubles flight pet distance." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "AutoStrad", 20, Material.NETHERITE_INGOT,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Repairs all gear after 10 minutes without damage." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Resurrection", 1, Material.TOTEM_OF_UNDYING,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Prevents death once, then must be repurchased." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Resurrection Charge 2", 1, Material.TOTEM_OF_UNDYING,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Allows a second resurrection charge." 
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Resurrection Charge 3", 1, Material.TOTEM_OF_UNDYING,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Allows a third resurrection charge."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Unlooting", 0, Material.BARRIER,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Destroys junk drops automatically.",
-                            ChatColor.BLUE + "On Pickup: " + ChatColor.GRAY + "Rotten flesh and similar items vanish."
+                            ChatColor.BLUE + "On Purchase: " + ChatColor.GRAY + "Adds another charge (max 3)."
                     ))
             );
 

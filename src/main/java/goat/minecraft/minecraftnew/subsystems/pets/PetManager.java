@@ -80,6 +80,7 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Wither", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzRmMzI4ZjUwNDQxMjliNWQxZjk2YWZmZDFiOGMwNWJjZGU2YmQ4ZTc1NmFmZjVjNTAyMDU4NWVlZjhhM2RhZiJ9fX0=");
         PET_TEXTURES.put("Spider", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzM4ODE3M2Y0ZjgyYTE0MTUzZTA4NmJmMTM3OTA3MjU2ZTUxMmIyMTczMWYwNDcwMDQ3YmYyZDQ1MzU0NWQyMSJ9fX0=");
         PET_TEXTURES.put("Wolf", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2MyNWQ1ZGMwYjViZDkxMjI2YTNhZWYzYzJkNjdhYjVlNTcyNjkxMDVkZTUxYjM5OWJlMzhiYzc1N2Y0MWQifX19");
+        PET_TEXTURES.put("Phoenix", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmRmZTU4ZGNhNDQ2ODg4MDlhNDRjMjczNjdmY2MyODgwODk3NzkyYWY4ODM4ZjkzZjJiNTg1YWZjYmU4ZjEzNyJ9fX0=");
 
         //sea creature textures...
         PET_TEXTURES.put("Shark", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2QyMTEzZmJhNTFiODM2NTIyOWUwZmYxZjIwMWY1MzMxNDgzMzcxZjE4NjA1N2JhNzQyMDMyOTRkMDYxMDgyZiJ9fX0=");
@@ -600,6 +601,13 @@ public class PetManager implements Listener {
                         + ChatColor.GRAY + " blocks.";
             case OBSESSION:
                 return "10% chance to gain " + ChatColor.YELLOW + "+1 Hunger " + ChatColor.GRAY + "when " + ChatColor.YELLOW + "placing blocks.";
+            case PHOENIX_REBIRTH:
+                double rebirthHealth = 25 + (level * 0.5);
+                int immunityDuration = 10 + (level / 10);
+                return "When you die, " + ChatColor.GOLD + "resurrect " + ChatColor.GRAY + "at " + ChatColor.GREEN + rebirthHealth + "% health " + ChatColor.GRAY + "with " + ChatColor.RED + "5 minute cooldown";
+            case FLAME_TRAIL:
+                double flameDamage = 3.0 + (level * 0.08);
+                return "Creates " + ChatColor.RED + "explosive fire bursts " + ChatColor.GRAY + "while moving that deal " + ChatColor.RED + String.format("%.1f", flameDamage) + " damage " + ChatColor.GRAY + "to monsters within " + ChatColor.YELLOW + "8 blocks" + ChatColor.GRAY + ". Distance reduces damage.";
             default:
                 return ChatColor.GRAY + "Static effect or undefined scaling.";
 
@@ -869,7 +877,9 @@ public class PetManager implements Listener {
         ALPHA("Alpha", ChatColor.GOLD + ""),
         FETCH("Fetch", ChatColor.GOLD + ""),
         PARKOUR_ROLL("Parkour Roll", ChatColor.GOLD + ""),
-        EARTHWORM("Earthworm", ChatColor.GOLD + "");
+        EARTHWORM("Earthworm", ChatColor.GOLD + ""),
+        PHOENIX_REBIRTH("Phoenix Rebirth", ChatColor.GOLD + ""),
+        FLAME_TRAIL("Flame Trail", ChatColor.GOLD + "");
 
         private final String displayName;
         private final String description;

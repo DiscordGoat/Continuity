@@ -105,6 +105,12 @@ public class SeaCreatureDeathEvent implements Listener {
             if (pirateChance <= 10) {
                 petRegistry.addPetByName(killer, "Yeti");            }
         }
+        if(seaCreature.getSkullName().equals("Midas")){
+            PetManager petManager = PetManager.getInstance(plugin);
+            // 100% drop chance for Phoenix from Midas
+            petRegistry.addPetByName(killer, "Phoenix");
+            killer.sendMessage(ChatColor.GOLD + "A legendary Phoenix has risen from the golden depths!");
+        }
 
 
 

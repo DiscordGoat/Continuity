@@ -351,6 +351,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Obsession(this), this);
         getServer().getPluginManager().registerEvents(new Earthworm(this), this);
         getServer().getPluginManager().registerEvents(new SpiderSteve(this), this);
+        getServer().getPluginManager().registerEvents(new PhoenixRebirth(this), this);
+        getServer().getPluginManager().registerEvents(new FlameTrail(this), this);
 
         this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
 

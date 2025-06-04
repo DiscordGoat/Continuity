@@ -216,6 +216,7 @@ public class VerdantRelicsSubsystem implements Listener {
         PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
         if (meritManager.hasPerk(p.getUniqueId(), "Master Botanist")) {
             growthDuration = growthDuration / 2;
+            Bukkit.getLogger().info("Reduced Verdant Relic Growth Time by 50%. Before: " + growthDuration*2 + " after: " +growthDuration);
         }
 
         RelicSession session = new RelicSession(locKey, relicName, growthDuration, growthDuration);
