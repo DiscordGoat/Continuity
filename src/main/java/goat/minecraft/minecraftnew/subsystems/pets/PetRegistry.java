@@ -176,7 +176,7 @@ public class PetRegistry {
                 PetManager.Rarity.RARE,
                 100,
                 Particle.CRIT,
-                Arrays.asList(PetManager.PetPerk.ALPHA, PetManager.PetPerk.CLAW, PetManager.PetPerk.DEVOUR)
+                Arrays.asList(PetManager.PetPerk.ALPHA, PetManager.PetPerk.FETCH, PetManager.PetPerk.CLAW, PetManager.PetPerk.DEVOUR)
         ));
         registry.put("Yeti", new PetDefinition(
                 "Yeti",
