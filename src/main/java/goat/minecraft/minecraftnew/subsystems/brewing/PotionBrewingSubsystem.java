@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.brewing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -462,6 +463,12 @@ public class PotionBrewingSubsystem implements Listener {
             brewing = true;
             if (!resuming) {
                 brewTimeRemaining = recipe.getBrewTime();
+                if (player != null) {
+                    PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
+                    if (meritManager.hasPerk(player.getUniqueId(), "Master Brewer")) {
+                        brewTimeRemaining = (int) Math.ceil(brewTimeRemaining * 0.5);
+                    }
+                }
             }
             spawnTimerArmorStand();
             startBrewTimer();
