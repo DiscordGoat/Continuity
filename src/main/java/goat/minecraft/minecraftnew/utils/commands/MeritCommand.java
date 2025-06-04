@@ -329,7 +329,12 @@ public class MeritCommand implements CommandExecutor, Listener {
                     )),
             new Perk(ChatColor.DARK_GRAY + "Resurrection Charge 3", 1, Material.TOTEM_OF_UNDYING,
                     Arrays.asList(
-                            ChatColor.GRAY + "Allows a third resurrection charge." 
+                            ChatColor.GRAY + "Allows a third resurrection charge."
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Unlooting", 0, Material.BARRIER,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Destroys junk drops automatically.",
+                            ChatColor.BLUE + "On Pickup: " + ChatColor.GRAY + "Rotten flesh and similar items vanish."
                     ))
             );
 
