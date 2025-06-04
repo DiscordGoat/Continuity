@@ -244,7 +244,7 @@ public class MeritCommand implements CommandExecutor, Listener {
             new Perk(ChatColor.DARK_GRAY + "Resurrection Charge 3", 1, Material.TOTEM_OF_UNDYING,
                     Arrays.asList(
                             ChatColor.GRAY + "Allows a third resurrection charge.",
-                            ChatColor.BLUE + "On Purchase: " + ChatColor.GRAY + "Adds another charge (max 3)."
+                            ChatColor.BLUE + "On Purchase: " + ChatColor.GRAY + "Adds another charge (max 3).",
                             ChatColor.GRAY + "Grants arrows when holding a bow with none left."
                     )),
             new Perk(ChatColor.DARK_GRAY + "Rebreather", 1, Material.TURTLE_HELMET,
