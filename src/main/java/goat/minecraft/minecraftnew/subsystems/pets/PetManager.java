@@ -584,6 +584,9 @@ public class PetManager implements Listener {
                 return "Grants " + ChatColor.YELLOW + "Haste 8 " + ChatColor.GRAY + "for " + ChatColor.WHITE + "0.5s " + ChatColor.GRAY + "when mining grass/dirt/gravel/sand";
             case ALPHA:
                 return "Getting hit summons a temporary wolf ally.";
+            case FETCH:
+                double catchChance = Math.min(level * 4, 100);
+                return "Has a " + ChatColor.YELLOW + catchChance + "%" + ChatColor.GRAY + " chance to catch incoming arrows.";
             case SPIDER_STEVE:
                 return "Allows the player to " + ChatColor.GOLD + "Scale Walls " + ChatColor.GRAY + "by " + ChatColor.YELLOW + "rapidly clicking them.";
             case PARKOUR_ROLL:
@@ -863,6 +866,7 @@ public class PetManager implements Listener {
         OBSESSION("Obsession", ChatColor.GOLD + ""),
         SPIDER_STEVE("Spider Steve", ChatColor.GOLD + ""),
         ALPHA("Alpha", ChatColor.GOLD + ""),
+        FETCH("Fetch", ChatColor.GOLD + ""),
         PARKOUR_ROLL("Parkour Roll", ChatColor.GOLD + ""),
         EARTHWORM("Earthworm", ChatColor.GOLD + "");
 
