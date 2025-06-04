@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Statistic;
@@ -21,6 +22,7 @@ public class Flight implements Listener {
     private static final double DRAIN_RATE_PER_SECOND = 0.01; // Drain rate per second in kilometers
     private static final int TICKS_PER_SECOND = 20; // Number of ticks in one second
     private final PetManager petManager;
+    private final PlayerMeritManager meritManager;
     private final Map<UUID, Double> dailyFlightTracker = new HashMap<>();
     private final Map<UUID, Long> lastFlightReset = new HashMap<>();
     private final Map<UUID, BukkitRunnable> flightTasks = new HashMap<>();
@@ -28,6 +30,7 @@ public class Flight implements Listener {
 
     public Flight(JavaPlugin plugin) {
         this.petManager = PetManager.getInstance(plugin);
+        this.meritManager = PlayerMeritManager.getInstance(plugin);
         this.plugin = plugin;
     }
 
@@ -49,7 +52,7 @@ public class Flight implements Listener {
 
         // Calculate the maximum flight distance based on player's level
         int petLevel = activePet != null ? activePet.getLevel() : 0;
-        double maxFlightDistanceKm = calculateMaxFlightDistance(petLevel);
+        double maxFlightDistanceKm = calculateMaxFlightDistance(player, petLevel);
 
         // Calculate remaining flight distance
         double flownDistanceKm = dailyFlightTracker.getOrDefault(playerId, 0.0);
@@ -78,9 +81,13 @@ public class Flight implements Listener {
      * @param level The pet level (0-100).
      * @return The maximum flight distance in kilometers.
      */
-    private double calculateMaxFlightDistance(int level) {
-        // Flight distance scales linearly with level from 0.0 km to 5.0 km
-        return MAX_FLIGHT_DISTANCE_AT_LEVEL_100 * (level / 100.0);
+    private double calculateMaxFlightDistance(Player player, int level) {
+        // Flight distance scales linearly with level from 0.0 km to 1.0 km at level 100
+        double distance = MAX_FLIGHT_DISTANCE_AT_LEVEL_100 * (level / 100.0);
+        if (meritManager.hasPerk(player.getUniqueId(), "Icarus")) {
+            distance *= 2;
+        }
+        return distance;
     }
 
     private void enableFlight(Player player) {
@@ -111,7 +118,7 @@ public class Flight implements Listener {
                     // Get the pet's level and max distance
                     PetManager.Pet activePet = petManager.getActivePet(player);
                     int petLevel = activePet != null ? activePet.getLevel() : 0;
-                    double maxDistance = calculateMaxFlightDistance(petLevel);
+                    double maxDistance = calculateMaxFlightDistance(player, petLevel);
 
                     // Check if the player exceeds the limit
                     if (flownDistance >= maxDistance) {

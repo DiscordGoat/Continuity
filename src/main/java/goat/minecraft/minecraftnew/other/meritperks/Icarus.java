@@ -8,7 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Icarus merit perk.
  * <p>
  * Doubles the maximum flying distance provided by the Flight pet perk.
- * Actual flight limit adjustments will be added later.
+ * The Flight perk automatically checks for this merit and adjusts its limit.
  */
 public class Icarus implements Listener {
 
@@ -20,5 +20,5 @@ public class Icarus implements Listener {
         this.playerData = playerData;
     }
 
-    // TODO: Increase allowable flight distance for players with this perk.
+    // Functionality handled in the Flight pet perk implementation
 }
