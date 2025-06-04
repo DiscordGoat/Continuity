@@ -7,8 +7,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Master Diplomat merit perk.
  * <p>
- * Reduces all notoriety gains for the player by 60%.
- * Implementation detail will be added later when the notoriety system is hooked up.
+ * Grants a chance to avoid notoriety when chopping logs.
+ * Players with this perk have a 60% chance to ignore
+ * forestry notoriety gained from breaking wood blocks.
  */
 public class MasterDiplomat implements Listener {
 
@@ -20,5 +21,5 @@ public class MasterDiplomat implements Listener {
         this.playerData = playerData;
     }
 
-    // TODO: Reduce notoriety gain events when this perk is active.
+    // Logic handled in Forestry.incrementNotoriety()
 }
