@@ -673,7 +673,11 @@ public class UltimateEnchantmentListener implements Listener {
                 case "loyal":
                     // Activate the loyal enchantment effect.
                     activateLoyalSword(player, item);
-                    cooldownMs = 5000L; // Example cooldown (30 seconds)
+                    cooldownMs = 5000L;
+                    PlayerMeritManager loyaltyManager = PlayerMeritManager.getInstance(plugin);
+                    if (loyaltyManager.hasPerk(player.getUniqueId(), "Loyalty II")) {
+                        cooldownMs = 1_000L;
+                    }
                     break;
                 // Hammer/Treecapitator removed. No cooldown for them.
                 case "excavate":

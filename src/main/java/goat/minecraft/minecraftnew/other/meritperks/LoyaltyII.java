@@ -7,8 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Loyalty II merit perk.
  * <p>
- * Reduces the cooldown of the "loyal" ability from 5 seconds to 1 second.
- * Actual cooldown modifications will be implemented later.
+ * Reduces the cooldown of the "loyal" ultimate enchantment from five seconds
+ * to one second when purchased.
  */
 public class LoyaltyII implements Listener {
 
