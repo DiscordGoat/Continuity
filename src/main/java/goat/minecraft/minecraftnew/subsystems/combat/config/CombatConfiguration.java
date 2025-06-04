@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 public class CombatConfiguration {
     
     private static final String CONFIG_FILE_NAME = "combat.yml";
+    private static CombatConfiguration instance;
     
     private final JavaPlugin plugin;
     private final Logger logger;
@@ -29,11 +30,22 @@ public class CombatConfiguration {
     private HostilityConfig hostilityConfig;
     private SoundConfig soundConfig;
     private BuffConfig buffConfig;
+    private MutationConfig mutationConfig;
     
     public CombatConfiguration(JavaPlugin plugin) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
         loadConfiguration();
+    }
+    
+    public static synchronized CombatConfiguration getInstance() {
+        return instance;
+    }
+    
+    public static synchronized void initialize(JavaPlugin plugin) {
+        if (instance == null) {
+            instance = new CombatConfiguration(plugin);
+        }
     }
     
     /**
@@ -94,6 +106,7 @@ public class CombatConfiguration {
         hostilityConfig = new HostilityConfig(config);
         soundConfig = new SoundConfig(config);
         buffConfig = new BuffConfig(config);
+        mutationConfig = new MutationConfig(config);
     }
     
     /**
@@ -122,6 +135,7 @@ public class CombatConfiguration {
     public HostilityConfig getHostilityConfig() { return hostilityConfig; }
     public SoundConfig getSoundConfig() { return soundConfig; }
     public BuffConfig getBuffConfig() { return buffConfig; }
+    public MutationConfig getMutationConfig() { return mutationConfig; }
     
     /**
      * Damage calculation configuration
@@ -269,6 +283,132 @@ public class CombatConfiguration {
         public boolean isProjectileBonuses() { return projectileBonuses; }
     }
     
+    /**
+     * Mutation system configuration
+     */
+    public static class MutationConfig {
+        private final boolean enabled;
+        private final int maxMonsterLevel;
+        private final boolean hostilityBasedChance;
+        private final YamlConfiguration config;
+        
+        public MutationConfig(YamlConfiguration config) {
+            this.config = config;
+            this.enabled = config.getBoolean("mutations.enabled", true);
+            this.maxMonsterLevel = config.getInt("mutations.max_monster_level", 300);
+            this.hostilityBasedChance = config.getBoolean("mutations.hostility_based_chance", true);
+        }
+        
+        public boolean isEnabled() { return enabled; }
+        public int getMaxMonsterLevel() { return maxMonsterLevel; }
+        public boolean isHostilityBasedChance() { return hostilityBasedChance; }
+        
+        // Mutation type specific getters
+        public boolean isMutationEnabled(String mutationType) {
+            return config.getBoolean("mutations.types." + mutationType + ".enabled", false);
+        }
+        
+        public double getMutationChance(String mutationType) {
+            return config.getDouble("mutations.types." + mutationType + ".chance", 1.0);
+        }
+        
+        public java.util.List<String> getMutationApplicableTypes(String mutationType) {
+            return config.getStringList("mutations.types." + mutationType + ".applies_to");
+        }
+        
+        public int getMutationEffectLevel(String mutationType) {
+            return config.getInt("mutations.types." + mutationType + ".effect_level", 0);
+        }
+        
+        public String getMutationEffect(String mutationType) {
+            return config.getString("mutations.types." + mutationType + ".effect", "");
+        }
+        
+        public String getMutationNamePrefix(String mutationType) {
+            return config.getString("mutations.types." + mutationType + ".name_prefix", "");
+        }
+        
+        public String getMutationNameSuffix(String mutationType) {
+            return config.getString("mutations.types." + mutationType + ".name_suffix", "");
+        }
+        
+        public String getMutationWeapon(String mutationType) {
+            return config.getString("mutations.types." + mutationType + ".weapon", "");
+        }
+        
+        public java.util.List<String> getMutationWeapons(String mutationType) {
+            return config.getStringList("mutations.types." + mutationType + ".weapons");
+        }
+        
+        public String getMutationHelmet(String mutationType) {
+            return config.getString("mutations.types." + mutationType + ".helmet", "");
+        }
+        
+        public String getMutationChestplate(String mutationType) {
+            return config.getString("mutations.types." + mutationType + ".chestplate", "");
+        }
+        
+        public String getMutationLeggings(String mutationType) {
+            return config.getString("mutations.types." + mutationType + ".leggings", "");
+        }
+        
+        public String getMutationBoots(String mutationType) {
+            return config.getString("mutations.types." + mutationType + ".boots", "");
+        }
+        
+        public int getMutationLevel(String mutationType) {
+            return config.getInt("mutations.types." + mutationType + ".level", 1);
+        }
+        
+        public int getMutationSize(String mutationType) {
+            return config.getInt("mutations.types." + mutationType + ".size", 1);
+        }
+        
+        public String getBiomeColor(String biome) {
+            return config.getString("mutations.biome_colors." + biome);
+        }
+        
+        // Helper methods for armor tiers
+        public java.util.Map<String, java.util.Map<String, Object>> getArmorTiers() {
+            org.bukkit.configuration.ConfigurationSection section = config.getConfigurationSection("mutations.types.armor.tiers");
+            if (section == null) {
+                return new java.util.HashMap<>();
+            }
+            
+            java.util.Map<String, java.util.Map<String, Object>> result = new java.util.HashMap<>();
+            for (String key : section.getKeys(false)) {
+                org.bukkit.configuration.ConfigurationSection tierSection = section.getConfigurationSection(key);
+                if (tierSection != null) {
+                    result.put(key, tierSection.getValues(false));
+                }
+            }
+            return result;
+        }
+        
+        public java.util.List<String> getArmorTierMaterials(String tier) {
+            return config.getStringList("mutations.types.armor.tiers." + tier + ".materials");
+        }
+        
+        public java.util.Map<String, Object> getMutationEquipment(String mutationType) {
+            return config.getConfigurationSection("mutations.types." + mutationType + ".equipment").getValues(false);
+        }
+        
+        public java.util.List<java.util.Map<String, Object>> getMutationEnchantments(String mutationType) {
+            return (java.util.List<java.util.Map<String, Object>>) 
+                config.getList("mutations.types." + mutationType + ".enchantments");
+        }
+        
+        public java.util.Map<String, Double> getArmorMutationDropRates() {
+            java.util.Map<String, Double> rates = new java.util.HashMap<>();
+            rates.put("leather", config.getDouble("mutations.verdant_drops.armor_mutations.leather", 0.1));
+            rates.put("chainmail", config.getDouble("mutations.verdant_drops.armor_mutations.chainmail", 0.15));
+            rates.put("gold", config.getDouble("mutations.verdant_drops.armor_mutations.gold", 0.2));
+            rates.put("iron", config.getDouble("mutations.verdant_drops.armor_mutations.iron", 0.5));
+            rates.put("diamond", config.getDouble("mutations.verdant_drops.armor_mutations.diamond", 1.0));
+            return rates;
+        }
+    }
+
     /**
      * Exception thrown when configuration operations fail
      */

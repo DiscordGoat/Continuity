@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.utils.dimensions.end;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.SpawnMonsters;
+import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

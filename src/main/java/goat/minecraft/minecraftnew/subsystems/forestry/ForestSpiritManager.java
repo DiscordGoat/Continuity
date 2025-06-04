@@ -1,9 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.SpawnMonsters;
+import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
@@ -15,7 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;

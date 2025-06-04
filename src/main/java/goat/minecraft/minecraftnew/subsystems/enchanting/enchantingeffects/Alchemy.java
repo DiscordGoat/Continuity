@@ -105,7 +105,6 @@ public class Alchemy implements Listener {
         player.getWorld().dropItemNaturally(event.getBlock().getLocation(), transformedBlock);
 
         // Optionally, send a feedback message to the player
-        player.playSound(player.getLocation(), Sound.ENTITY_HOGLIN_CONVERTED_TO_ZOMBIFIED, 5, 10);
         int enchantmentLevel = CustomEnchantmentManager.getEnchantmentLevel(tool, "Alchemy");
         player.getInventory().getItemInMainHand().setDurability((short) (player.getInventory().getItemInMainHand().getDurability() +(1*enchantmentLevel)));
 

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:spline",
+  "spline": {
+    "coordinate": "islands:spawn",
+    "points": [
+      {
+        "location": -10,
+        "derivative": 0,
+        "value": -0.9
+      },
+      {
+        "location": 0,
+        "derivative": 0,
+        "value": -0.16
+      },
+      {
+        "location": 10,
+        "derivative": 0,
+        "value": 0.2
+      }
+    ]
+  }
+}

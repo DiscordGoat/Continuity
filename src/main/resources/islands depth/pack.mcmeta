@@ -1,0 +1,17 @@
+{
+  "pack": {
+    "description": [
+      {
+        "text": "Vanilla Islands - Circular Island Generation",
+        "color": "#02c4d6"
+      },
+      "\n",
+      {
+        "text": "Vanilla-only version without More Density Functions",
+        "color": "#AAAAAA"
+      }
+    ],
+    "pack_format": 15,
+    "supported_formats": [15, 999]
+  }
+}

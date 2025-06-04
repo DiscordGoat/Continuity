@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Method;
@@ -45,6 +46,51 @@ public class ItemRegistry {
         }
         return null;
     }
+
+
+    public static ItemStack getHostility() {
+        // Create the base ItemStack
+        ItemStack book = new ItemStack(Material.WRITTEN_BOOK, 1);
+
+        // Create BookMeta and set title, author, and pages
+        BookMeta bookMeta = (BookMeta) book.getItemMeta();
+        if (bookMeta != null) {
+            bookMeta.setTitle("Hostility");  // Title shown on hover and in inventory
+            bookMeta.setAuthor("DiscordGoat");  // Author of the book
+
+            // Example pages (you can customize further)
+            bookMeta.addPage(ChatColor.GRAY + "A deep dive into the nature of hostility.\n\n"
+                    + ChatColor.BLUE + "Hostility can manifest in many forms.\n"
+                    + ChatColor.GOLD + "It is both a weapon and a shield.\n\n"
+                    + ChatColor.YELLOW + "Use it wisely.");
+        }
+        book.setItemMeta(bookMeta);
+
+        // Add lore and other item customizations using your method
+        ItemStack finalBook = createCustomItem(
+                book.getType(),
+                ChatColor.RED + "Hostility",
+                Arrays.asList(
+                        ChatColor.GRAY + "A deep dive into the nature of hostility."
+                ),
+                1,
+                false,
+                false
+        );
+
+        // Merge the BookMeta from book into finalBook
+        BookMeta finalMeta = (BookMeta) finalBook.getItemMeta();
+        if (finalMeta != null) {
+            finalMeta.setTitle(bookMeta.getTitle());
+            finalMeta.setAuthor(bookMeta.getAuthor());
+            finalMeta.setPages(bookMeta.getPages());
+            finalBook.setItemMeta(finalMeta);
+        }
+
+        return finalBook;
+    }
+
+
     public static ItemStack getExpandingStairs() {
         return createCustomItem(
                 Material.OAK_STAIRS,
@@ -2815,5 +2861,369 @@ public class ItemRegistry {
 
         }
         return item;
+    }
+
+    // ===== GEMSTONES =====
+    
+    // COMMON GEMSTONES (+1 Gemstone Power)
+    public static ItemStack getQuartz() {
+        return createCustomItem(
+                Material.QUARTZ,
+                ChatColor.WHITE + "Quartz",
+                Arrays.asList(
+                        ChatColor.GRAY + "A translucent crystal commonly found in nature.",
+                        ChatColor.BLUE + "Power: " + ChatColor.WHITE + "+1 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getHematite() {
+        return createCustomItem(
+                Material.IRON_NUGGET,
+                ChatColor.GRAY + "Hematite",
+                Arrays.asList(
+                        ChatColor.GRAY + "A metallic, iron-rich mineral with a dark luster.",
+                        ChatColor.BLUE + "Power: " + ChatColor.WHITE + "+1 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getObsidian() {
+        return createCustomItem(
+                Material.OBSIDIAN,
+                ChatColor.DARK_GRAY + "Obsidian",
+                Arrays.asList(
+                        ChatColor.GRAY + "Volcanic glass formed from rapidly cooling lava.",
+                        ChatColor.BLUE + "Power: " + ChatColor.WHITE + "+1 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getAgate() {
+        return createCustomItem(
+                Material.BROWN_DYE,
+                ChatColor.YELLOW + "Agate",
+                Arrays.asList(
+                        ChatColor.GRAY + "A banded variety of chalcedony with earthy tones.",
+                        ChatColor.BLUE + "Power: " + ChatColor.WHITE + "+1 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    // UNCOMMON GEMSTONES (+3 Gemstone Power)
+    public static ItemStack getTurquoise() {
+        return createCustomItem(
+                Material.CYAN_DYE,
+                ChatColor.DARK_AQUA + "Turquoise",
+                Arrays.asList(
+                        ChatColor.GRAY + "A blue-green mineral prized for its vibrant color.",
+                        ChatColor.BLUE + "Power: " + ChatColor.AQUA + "+3 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getAmethyst() {
+        return createCustomItem(
+                Material.AMETHYST_SHARD,
+                ChatColor.LIGHT_PURPLE + "Amethyst",
+                Arrays.asList(
+                        ChatColor.GRAY + "A purple variety of quartz known for its beauty.",
+                        ChatColor.BLUE + "Power: " + ChatColor.AQUA + "+3 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getCitrine() {
+        return createCustomItem(
+                Material.YELLOW_DYE,
+                ChatColor.GOLD + "Citrine",
+                Arrays.asList(
+                        ChatColor.GRAY + "A golden yellow variety of quartz that gleams warmly.",
+                        ChatColor.BLUE + "Power: " + ChatColor.AQUA + "+3 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getGarnet() {
+        return createCustomItem(
+                Material.RED_DYE,
+                ChatColor.DARK_RED + "Garnet",
+                Arrays.asList(
+                        ChatColor.GRAY + "A deep red gemstone symbolizing passion and energy.",
+                        ChatColor.BLUE + "Power: " + ChatColor.AQUA + "+3 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    // RARE GEMSTONES (+7 Gemstone Power)
+    public static ItemStack getTopaz() {
+        return createCustomItem(
+                Material.ORANGE_DYE,
+                ChatColor.GOLD + "Topaz",
+                Arrays.asList(
+                        ChatColor.GRAY + "A brilliant orange gemstone with exceptional clarity.",
+                        ChatColor.BLUE + "Power: " + ChatColor.YELLOW + "+7 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getPeridot() {
+        return createCustomItem(
+                Material.LIME_DYE,
+                ChatColor.GREEN + "Peridot",
+                Arrays.asList(
+                        ChatColor.GRAY + "An olive-green gemstone formed in volcanic rock.",
+                        ChatColor.BLUE + "Power: " + ChatColor.YELLOW + "+7 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getAquamarine() {
+        return createCustomItem(
+                Material.LIGHT_BLUE_DYE,
+                ChatColor.AQUA + "Aquamarine",
+                Arrays.asList(
+                        ChatColor.GRAY + "A pale blue beryl reminiscent of clear ocean waters.",
+                        ChatColor.BLUE + "Power: " + ChatColor.YELLOW + "+7 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getTanzanite() {
+        return createCustomItem(
+                Material.PURPLE_DYE,
+                ChatColor.BLUE + "Tanzanite",
+                Arrays.asList(
+                        ChatColor.GRAY + "A rare blue-violet gemstone found only in Tanzania.",
+                        ChatColor.BLUE + "Power: " + ChatColor.YELLOW + "+7 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // EPIC GEMSTONES (+10 Gemstone Power)
+    public static ItemStack getSapphire() {
+        return createCustomItem(
+                Material.LAPIS_LAZULI,
+                ChatColor.DARK_BLUE + "Sapphire",
+                Arrays.asList(
+                        ChatColor.GRAY + "A precious blue corundum of extraordinary hardness.",
+                        ChatColor.BLUE + "Power: " + ChatColor.LIGHT_PURPLE + "+10 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getRuby() {
+        return createCustomItem(
+                Material.REDSTONE,
+                ChatColor.RED + "Ruby",
+                Arrays.asList(
+                        ChatColor.GRAY + "A precious red corundum that burns like fire.",
+                        ChatColor.BLUE + "Power: " + ChatColor.LIGHT_PURPLE + "+10 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // LEGENDARY GEMSTONES (+20 Gemstone Power)
+    public static ItemStack getEmerald() {
+        return createCustomItem(
+                Material.EMERALD,
+                ChatColor.DARK_GREEN + "Emerald",
+                Arrays.asList(
+                        ChatColor.GRAY + "The most precious green beryl, rarer than diamonds.",
+                        ChatColor.BLUE + "Power: " + ChatColor.GOLD + "+20 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getDiamond() {
+        return createCustomItem(
+                Material.DIAMOND,
+                ChatColor.AQUA + "Diamond",
+                Arrays.asList(
+                        ChatColor.GRAY + "The hardest natural substance, brilliant and eternal.",
+                        ChatColor.BLUE + "Power: " + ChatColor.GOLD + "+20 Gemstone Power",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond tool in your inventory",
+                        ChatColor.YELLOW + "to apply its Gemstone Power to the tool.",
+                        ChatColor.GREEN + "Gemstone"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    
+    public static ItemStack getPowerCrystal() {
+        return createCustomItem(
+                Material.PRISMARINE_CRYSTALS,
+                ChatColor.LIGHT_PURPLE + "Power Crystal",
+                Arrays.asList(
+                        ChatColor.GRAY + "A rare crystal that expands the",
+                        ChatColor.GRAY + "gemstone power capacity of tools",
+                        "",
+                        ChatColor.YELLOW + "Effect: " + ChatColor.WHITE + "+100% Power Cap",
+                        ChatColor.YELLOW + "Maximum: " + ChatColor.WHITE + "500% Total Cap",
+                        "",
+                        ChatColor.DARK_PURPLE + "Drag onto diamond tools to apply"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+    
+    // ===== GEMSTONE UTILITY METHODS =====
+    
+    /**
+     * Gets a random gemstone based on rarity weights
+     * @return A random gemstone ItemStack
+     */
+    public static ItemStack getRandomGemstone() {
+        Random random = new Random();
+        double roll = random.nextDouble() * 100;
+        
+        if (roll < 4.0) { // 4% total for all common
+            ItemStack[] commonGems = {getQuartz(), getHematite(), getObsidian(), getAgate()};
+            return commonGems[random.nextInt(commonGems.length)];
+        } else if (roll < 6.0) { // 2% total for all uncommon  
+            ItemStack[] uncommonGems = {getTurquoise(), getAmethyst(), getCitrine(), getGarnet()};
+            return uncommonGems[random.nextInt(uncommonGems.length)];
+        } else if (roll < 7.0) { // 1% total for all rare
+            ItemStack[] rareGems = {getTopaz(), getPeridot(), getAquamarine(), getTanzanite()};
+            return rareGems[random.nextInt(rareGems.length)];
+        } else if (roll < 7.25) { // 0.25% total for all epic
+            ItemStack[] epicGems = {getSapphire(), getRuby()};
+            return epicGems[random.nextInt(epicGems.length)];
+        } else if (roll < 7.35) { // 0.1% total for all legendary
+            ItemStack[] legendaryGems = {getEmerald(), getDiamond()};
+            return legendaryGems[random.nextInt(legendaryGems.length)];
+        }
+        
+        // Default fallback (should never happen)
+        return getQuartz();
+    }
+    
+    /**
+     * Gets all gemstone ItemStacks
+     * @return Array of all 16 gemstone ItemStacks
+     */
+    public static ItemStack[] getAllGemstones() {
+        return new ItemStack[]{
+            // Common
+            getQuartz(), getHematite(), getObsidian(), getAgate(),
+            // Uncommon  
+            getTurquoise(), getAmethyst(), getCitrine(), getGarnet(),
+            // Rare
+            getTopaz(), getPeridot(), getAquamarine(), getTanzanite(),
+            // Epic
+            getSapphire(), getRuby(),
+            // Legendary
+            getEmerald(), getDiamond()
+        };
     }
 }

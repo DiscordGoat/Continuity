@@ -201,6 +201,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("nether").setExecutor(new NetherCommand());
         getCommand("overworld").setExecutor(new OverworldCommand());
         getCommand("resetend").setExecutor(new ResetEndCommand());
+        getCommand("generatecontinuityisland").setExecutor(new GenerateContinuityIslandCommand());
+        getCommand("continuitytp").setExecutor(new ContinuityTpCommand());
 
 
         xpManager = new XPManager(this);
@@ -241,6 +243,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(new UltimateEnchantmentListener(this), this);
         getServer().getPluginManager().registerEvents(new LightningFirePreventionListener(), this);
+        getServer().getPluginManager().registerEvents(new Lavabug(this), this);
 
         UltimateEnchantingSystem ultimateEnchantingSystem = new UltimateEnchantingSystem();
         ultimateEnchantingSystem.registerCustomEnchants();
@@ -363,6 +366,31 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(SpawnMonsters.getInstance(xpManager), this);
         getServer().getPluginManager().registerEvents(new KillMonster(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new Mining(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.GemstoneApplicationSystem(this), this);
+        // Initialize and register GemstoneUpgradeSystem, then set reference in Mining class
+        goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem gemstoneUpgradeSystem = new goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem(this);
+        getServer().getPluginManager().registerEvents(gemstoneUpgradeSystem, this);
+        goat.minecraft.minecraftnew.subsystems.mining.Mining.setUpgradeSystemInstance(gemstoneUpgradeSystem);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.PowerCrystalSystem(this), this);
+
+        // Register all gemstone upgrade listeners
+        goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.YieldUpgradeListener yieldUpgradeListener = new goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.YieldUpgradeListener(this);
+        yieldUpgradeListener.setUpgradeSystemInstance(gemstoneUpgradeSystem);
+        getServer().getPluginManager().registerEvents(yieldUpgradeListener, this);
+        
+
+        goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.UtilityUpgradeListener utilityUpgradeListener = new goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.UtilityUpgradeListener(this);
+        utilityUpgradeListener.setUpgradeSystemInstance(gemstoneUpgradeSystem);
+        getServer().getPluginManager().registerEvents(utilityUpgradeListener, this);
+
+        goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.MetalworkUpgradeListener metalworkUpgradeListener = new goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.MetalworkUpgradeListener(this);
+        metalworkUpgradeListener.setUpgradeSystemInstance(gemstoneUpgradeSystem);
+        getServer().getPluginManager().registerEvents(metalworkUpgradeListener, this);
+
+        goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.GoldFeverUpgradeListener goldFeverUpgradeListener = new goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.GoldFeverUpgradeListener(this);
+        goldFeverUpgradeListener.setUpgradeSystemInstance(gemstoneUpgradeSystem);
+        getServer().getPluginManager().registerEvents(goldFeverUpgradeListener, this);
+        
         getServer().getPluginManager().registerEvents(new PlayerLevel(MinecraftNew.getInstance(), xpManager), MinecraftNew.getInstance());
 
         getServer().getPluginManager().registerEvents(new FarmingEvent(), MinecraftNew.getInstance());
@@ -407,7 +435,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new AspectOfTheJourney(), this);
         getServer().getPluginManager().registerEvents(new Stun(), this);
         getServer().getPluginManager().registerEvents(new LethalReaction(), this);
-        getServer().getPluginManager().registerEvents(new Bloodlust(), this);
+        getServer().getPluginManager().registerEvents(new Bloodlust(this), this);
         getServer().getPluginManager().registerEvents(new Rappel(), this);
         getServer().getPluginManager().registerEvents(new Preservation(), this);
 
@@ -451,6 +479,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new BowReforge(), this);
         villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);
         getCommand("forceworkcycle").setExecutor(villagerWorkCycleManager);
+        getCommand("repair").setExecutor(new RepairCommand());
 
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
 

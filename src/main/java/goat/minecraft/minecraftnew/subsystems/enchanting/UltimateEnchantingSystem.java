@@ -157,6 +157,11 @@ public class UltimateEnchantingSystem implements Listener {
             inv.setItem(iconSlots[i], createCustomIcon(enchantName));
         }
 
+        // Add Gemstone Upgrade button for diamond tools only
+        if (isDiamondTool(heldItem.getType())) {
+            inv.setItem(53, createGemstoneUpgradeButton(heldItem)); // Top-right corner
+        }
+
         // ----------------------------
         // Add the Upgrade Segment (slots 47–51)
         // ----------------------------
@@ -237,6 +242,49 @@ public class UltimateEnchantingSystem implements Listener {
             icon.setItemMeta(meta);
         }
         return icon;
+    }
+
+    /**
+     * Creates a gemstone upgrade button for diamond tools.
+     */
+    private ItemStack createGemstoneUpgradeButton(ItemStack tool) {
+        ItemStack button = new ItemStack(Material.EMERALD);
+        ItemMeta meta = button.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.GREEN + "Gemstone Upgrades");
+            List<String> lore = new ArrayList<>();
+            
+            // Check if tool has gemstone power
+            int totalPower = getGemstonePower(tool);
+            if (totalPower > 0) {
+                lore.add(ChatColor.GRAY + "Total Power: " + ChatColor.WHITE + totalPower);
+                lore.add(ChatColor.YELLOW + "Click to open upgrade tree!");
+            } else {
+                lore.add(ChatColor.RED + "No gemstone power detected.");
+                lore.add(ChatColor.GRAY + "Apply gemstones to this tool first.");
+            }
+            
+            meta.setLore(lore);
+            button.setItemMeta(meta);
+        }
+        return button;
+    }
+
+    /**
+     * Checks if the item is a diamond tool.
+     */
+    private boolean isDiamondTool(Material material) {
+        return material == Material.DIAMOND_PICKAXE || material == Material.DIAMOND_AXE ||
+         material == Material.NETHERITE_PICKAXE ||
+               material == Material.DIAMOND_SHOVEL || material == Material.DIAMOND_HOE ||
+               material == Material.DIAMOND_SWORD;
+    }
+
+    /**
+     * Gets the total gemstone power from a tool.
+     */
+    private int getGemstonePower(ItemStack item) {
+        return goat.minecraft.minecraftnew.subsystems.mining.GemstoneApplicationSystem.getToolGemstonePower(item);
     }
 
     /**
@@ -336,6 +384,17 @@ public class UltimateEnchantingSystem implements Listener {
             player.closeInventory();
             openUltimateEnchantmentGUI(player);
             return;
+        }
+
+        // Handle Gemstone Upgrade Button Click (slot 53)
+        if (event.getSlot() == 53 && clickedItem.getType() == Material.EMERALD) {
+            if (isDiamondTool(handItem.getType())) {
+                // Get the gemstone upgrade system and open the upgrade GUI
+                goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem upgradeSystem = 
+                    new goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem(MinecraftNew.getInstance());
+                upgradeSystem.openUpgradeGUIFromExternal(player, handItem);
+                return;
+            }
         }
 
         // -------------

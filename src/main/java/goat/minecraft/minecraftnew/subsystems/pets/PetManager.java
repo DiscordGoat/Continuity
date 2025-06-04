@@ -79,6 +79,7 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Ent", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2JiZTFjNmEyNjg0Zjg1NGJjMmU1YjczNDA1NDRlOGVhZDM2NWY3YWQyY2M0NDJkMWZjOGY5NTE3MDNjM2QwNSJ9fX0=");
         PET_TEXTURES.put("Wither", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzRmMzI4ZjUwNDQxMjliNWQxZjk2YWZmZDFiOGMwNWJjZGU2YmQ4ZTc1NmFmZjVjNTAyMDU4NWVlZjhhM2RhZiJ9fX0=");
         PET_TEXTURES.put("Spider", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzM4ODE3M2Y0ZjgyYTE0MTUzZTA4NmJmMTM3OTA3MjU2ZTUxMmIyMTczMWYwNDcwMDQ3YmYyZDQ1MzU0NWQyMSJ9fX0=");
+        PET_TEXTURES.put("Wolf", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2MyNWQ1ZGMwYjViZDkxMjI2YTNhZWYzYzJkNjdhYjVlNTcyNjkxMDVkZTUxYjM5OWJlMzhiYzc1N2Y0MWQifX19");
 
         //sea creature textures...
         PET_TEXTURES.put("Shark", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2QyMTEzZmJhNTFiODM2NTIyOWUwZmYxZjIwMWY1MzMxNDgzMzcxZjE4NjA1N2JhNzQyMDMyOTRkMDYxMDgyZiJ9fX0=");
@@ -405,7 +406,7 @@ public class PetManager implements Listener {
         if (activePet != null) {
             double xpGained = event.getAmount();
             activePet.addXP(xpGained);
-            player.sendMessage(ChatColor.AQUA + activePet.getName() + " gained " + xpGained + " XP!");
+            //player.sendMessage(ChatColor.AQUA + activePet.getName() + " gained " + xpGained + " XP!");
         }
     }
 
