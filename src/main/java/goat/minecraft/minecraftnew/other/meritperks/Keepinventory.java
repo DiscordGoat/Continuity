@@ -1,7 +1,10 @@
 package goat.minecraft.minecraftnew.other.meritperks;
 
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import org.bukkit.GameRule;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -20,5 +23,14 @@ public class Keepinventory implements Listener {
         this.playerData = playerData;
     }
 
-    // TODO: Add login handler enabling keep inventory for the player.
+    /**
+     * Enables the keepInventory gamerule on the player's world when they join
+     * if they have purchased the Keepinventory perk.
+     */
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (playerData.hasPerk(event.getPlayer().getUniqueId(), "Keepinventory")) {
+            event.getPlayer().getWorld().setGameRule(GameRule.KEEP_INVENTORY, true);
+        }
+    }
 }
