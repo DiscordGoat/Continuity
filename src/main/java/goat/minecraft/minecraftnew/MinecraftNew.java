@@ -186,6 +186,28 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new LordOfThunder(this, playerData), this);
         getServer().getPluginManager().registerEvents(new QuickSwap(this, playerData), this);
         getServer().getPluginManager().registerEvents(new Trainer(playerData), this);
+        getServer().getPluginManager().registerEvents(new Restock(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new Rebreather(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new Keepinventory(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterSmith(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterBotanist(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterBrewer(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterChef(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterThief(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterDuelist(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterAngler(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterDiplomat(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterDiffuser(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterTrader(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new MasterEmployer(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new LoyaltyII(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new DoubleEnderchest(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new StrongDigestion(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new Icarus(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new AutoStrad(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new Resurrection(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new ResurrectionCharge2(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new ResurrectionCharge3(this, playerData), this);
 
 
 
