@@ -1390,10 +1390,12 @@ public class VillagerTradeManager implements Listener {
         // Ensure at least cost of 1
         int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));
 
-        // --- Master Trader perk: make purchases free ---
+        // --- Master Trader perk: small chance for free purchases ---
         PlayerMeritManager meritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
-        if (meritManager.hasPerk(player.getUniqueId(), "Master Trader")) {
+        boolean freePurchase = false;
+        if (meritManager.hasPerk(player.getUniqueId(), "Master Trader") && Math.random() < 0.05) {
             finalCostRounded = 0;
+            freePurchase = true;
         }
 
         if (finalCostRounded > 0) {
@@ -1436,6 +1438,10 @@ public class VillagerTradeManager implements Listener {
                 player.getWorld().dropItemNaturally(player.getLocation(), leftover);
             }
             player.sendMessage(ChatColor.YELLOW + "Your inventory was full, so leftover items were dropped on the ground.");
+        }
+
+        if (freePurchase) {
+            player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 1.0f);
         }
 
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
