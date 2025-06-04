@@ -105,4 +105,19 @@ public class PlayerMeritManager {
         dataConfig.set(uuid.toString() + ".perks", perks);
         saveConfig();
     }
+
+    /**
+     * Remove a perk from the player's list of purchased perks.
+     *
+     * @param uuid      The player's UUID.
+     * @param perkTitle The perk name to remove.
+     */
+    public void removePerk(UUID uuid, String perkTitle) {
+        List<String> perks = dataConfig.getStringList(uuid.toString() + ".perks");
+        if (perks.contains(perkTitle)) {
+            perks.remove(perkTitle);
+            dataConfig.set(uuid.toString() + ".perks", perks);
+            saveConfig();
+        }
+    }
 }
