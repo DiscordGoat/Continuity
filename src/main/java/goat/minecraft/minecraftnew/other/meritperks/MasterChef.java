@@ -8,7 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Master Chef merit perk.
  * <p>
  * Provides a 50% chance to produce two culinary delights instead of one when a
- * recipe completes. Implementation to be added later.
+ * recipe completes. The logic is handled inside the CulinarySubsystem
+ * finalizeRecipe method.
  */
 public class MasterChef implements Listener {
 
@@ -20,5 +21,5 @@ public class MasterChef implements Listener {
         this.playerData = playerData;
     }
 
-    // TODO: Hook into culinary system and double outputs when chance succeeds.
+    // Functionality implemented directly in CulinarySubsystem.finalizeRecipe()
 }

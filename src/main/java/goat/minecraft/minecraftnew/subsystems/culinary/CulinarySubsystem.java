@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.culinary;
 
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -764,8 +765,12 @@ public class CulinarySubsystem implements Listener {
             removeEntityByUUID(u);
         }
 
-        // Drop final output
+        // Drop final output with Master Chef perk consideration
         ItemStack result = createOutputItem(session.recipe);
+        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
+        if (meritManager.hasPerk(player.getUniqueId(), "Master Chef") && Math.random() < 0.5) {
+            result.setAmount(2);
+        }
         session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result);
         XPManager xpManager = new XPManager(plugin);
         xpManager.addXP(player, "Culinary", session.recipe.getXpReward());
