@@ -84,6 +84,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private RecipeManager recipeManager;
     private ForestryPetManager forestryPetManager;
     private ShelfManager shelfManager;
+    private DoubleEnderchest doubleEnderchest;
 
 
 
@@ -201,7 +202,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new MasterTrader(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterEmployer(this, playerData), this);
         getServer().getPluginManager().registerEvents(new LoyaltyII(this, playerData), this);
-        getServer().getPluginManager().registerEvents(new DoubleEnderchest(this, playerData), this);
+        doubleEnderchest = new DoubleEnderchest(this, playerData);
+        getServer().getPluginManager().registerEvents(doubleEnderchest, this);
         getServer().getPluginManager().registerEvents(new StrongDigestion(this, playerData), this);
         getServer().getPluginManager().registerEvents(new Icarus(this, playerData), this);
         getServer().getPluginManager().registerEvents(new AutoStrad(this, playerData), this);
@@ -572,6 +574,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         PetManager.getInstance(this).savePets();
         anvilRepair.saveAllInventories();
         cancelBrewing.saveAllInventories();
+        if (doubleEnderchest != null) {
+            doubleEnderchest.saveAllInventories();
+        }
         System.out.println("[MinecraftNew] Plugin disabled.");//
     }
     public static MinecraftNew getInstance() {
