@@ -7,8 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Master Employer merit perk.
  * <p>
- * Each time a villager work cycle occurs, there is a 50% chance for the next
- * cycle timer to be halved. Actual logic will be coded later.
+ * When a villager work cycle is performed and at least one online player owns
+ * this perk, the timer for the next cycle is reduced by 50%.
  */
 public class MasterEmployer implements Listener {
 
@@ -20,5 +20,5 @@ public class MasterEmployer implements Listener {
         this.playerData = playerData;
     }
 
-    // TODO: Integrate with VillagerWorkCycleManager to reduce timers.
+    // Logic handled in VillagerWorkCycleManager
 }

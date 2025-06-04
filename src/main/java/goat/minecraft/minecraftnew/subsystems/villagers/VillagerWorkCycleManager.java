@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.ShelfManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
@@ -93,7 +94,11 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 // Once we reach zero or below, run the cycle and reset the timer
                 if (ticksUntilNextWorkCycle <= 0) {
                     runVillagerWorkCycle(); // your existing logic
-                    ticksUntilNextWorkCycle = WORK_CYCLE_TICKS;
+                    if (isMasterEmployerActive()) {
+                        ticksUntilNextWorkCycle = WORK_CYCLE_TICKS / 2;
+                    } else {
+                        ticksUntilNextWorkCycle = WORK_CYCLE_TICKS;
+                    }
                 }
             }
         }.runTaskTimer(plugin, 0L, 20L); // run every 20 ticks (1 second)
@@ -105,6 +110,19 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     public int getSecondsUntilNextWorkCycle() {
         // Convert the remaining ticks to seconds
         return ticksUntilNextWorkCycle / 20;
+    }
+
+    /**
+     * Checks if any online player has the Master Employer perk.
+     */
+    private boolean isMasterEmployerActive() {
+        PlayerMeritManager playerData = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (playerData.hasPerk(player.getUniqueId(), "Master Employer")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
