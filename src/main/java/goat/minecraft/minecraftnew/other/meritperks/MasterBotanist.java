@@ -8,7 +8,8 @@ import org.bukkit.plugin.java.JavaPlugin;
  * Master Botanist merit perk.
  * <p>
  * Reduces the time it takes for Verdant Relics to mature by 50%.
- * Exact handling will be implemented later.
+ * The adjustment is applied when the relic is planted in
+ * {@link goat.minecraft.minecraftnew.subsystems.farming.VerdantRelicsSubsystem}.
  */
 public class MasterBotanist implements Listener {
 
@@ -20,5 +21,5 @@ public class MasterBotanist implements Listener {
         this.playerData = playerData;
     }
 
-    // TODO: Adjust Verdant Relic timers when player has this perk.
+    // Functionality handled in VerdantRelicsSubsystem when planting relics.
 }

@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.farming;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -210,6 +211,12 @@ public class VerdantRelicsSubsystem implements Listener {
         double diff = durationAtLevel1 - durationAtLevel100;
         double factor = (farmingLevel - 1) / 99.0; // Linear factor from level 1 to 100
         int growthDuration = (int)(durationAtLevel1 - diff * factor);
+
+        // Apply Master Botanist perk: halve the growth time
+        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
+        if (meritManager.hasPerk(p.getUniqueId(), "Master Botanist")) {
+            growthDuration = growthDuration / 2;
+        }
 
         RelicSession session = new RelicSession(locKey, relicName, growthDuration, growthDuration);
         activeSessions.put(locKey, session);
