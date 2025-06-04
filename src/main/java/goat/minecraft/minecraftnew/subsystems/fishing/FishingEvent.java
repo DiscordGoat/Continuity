@@ -108,7 +108,11 @@ public class FishingEvent implements Listener {
         PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
 
         if (playerMeritManager.hasPerk(player.getUniqueId(), "Deep Hook")) {
-            seaCreatureChance += 5; // +4% if the item is reforged
+            seaCreatureChance += 5;
+        }
+
+        if (playerMeritManager.hasPerk(player.getUniqueId(), "Master Angler")) {
+            seaCreatureChance += 5;
         }
         // Check active pet perks
         PetManager petManager = PetManager.getInstance(plugin);
