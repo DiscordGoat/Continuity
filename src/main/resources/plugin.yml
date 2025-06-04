@@ -114,3 +114,19 @@ commands:
     description: Reloads the combat subsystem configuration
     usage: /combatreload
     permission: continuity.admin
+  generatecontinuityisland:
+    description: Installs the Continuity Island world from resources
+    usage: /generatecontinuityisland
+    permission: continuity.admin
+  continuitytp:
+    description: Teleports player to the Continuity Island world
+    usage: /continuitytp
+    permission: continuity.use
+  clearlava:
+    description: Clears all lava blocks in a 64x64 area around the player
+    usage: /clearlava
+    permission: continuity.admin
+  repair:
+    description: Repairs the held item to full durability
+    usage: /repair
+    permission: continuity.admin

@@ -607,6 +607,8 @@ public class AnvilRepair implements Listener {
             }
         }
     }
+
+
     /**
      * Repairs the item in slot 10 using the material in slot 16.
      *
@@ -636,6 +638,20 @@ public class AnvilRepair implements Listener {
     private void repairItem(Inventory inventory, Player player) {
         ItemStack repairee = inventory.getItem(10);
         ItemStack billItem = inventory.getItem(13);
+
+        List<Material> ironWhitelist = new ArrayList<>();
+        //iron tool support
+        ironWhitelist.add(Material.IRON_SWORD);
+        ironWhitelist.add(Material.IRON_PICKAXE);
+        ironWhitelist.add(Material.IRON_AXE);
+        ironWhitelist.add(Material.IRON_SHOVEL);
+        ironWhitelist.add(Material.SHIELD);
+        //iron armor support
+        ironWhitelist.add(Material.IRON_HELMET);
+        ironWhitelist.add(Material.IRON_CHESTPLATE);
+        ironWhitelist.add(Material.IRON_LEGGINGS);
+        ironWhitelist.add(Material.IRON_BOOTS);
+
         if (repairee == null || billItem == null) {
             player.sendMessage(ChatColor.RED + "Both the item to repair and repair material must be present!");
             return;
@@ -655,7 +671,9 @@ public class AnvilRepair implements Listener {
         // Determine the repair amount based on the repair material
         int smithingLevel = xpManager.getPlayerLevel(player, "Smithing");
         int repairAmount = 25 + smithingLevel; // Just use this calculated repairAmount
-
+        if(ironWhitelist.contains(repairee.getType())){
+            repairAmount = repairAmount + 150;
+        }
         // Determine the type of repair material and set the repair amount accordingly
         if (billItem.getType() == Material.IRON_INGOT) {
             repairAmount = 25 + smithingLevel; // Just use this calculated repairAmount

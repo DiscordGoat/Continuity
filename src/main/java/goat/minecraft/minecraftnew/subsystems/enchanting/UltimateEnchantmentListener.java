@@ -236,17 +236,13 @@ public class UltimateEnchantmentListener implements Listener {
                         boolean isOre = isOreBlock(relativeBlock);
 
                         // Debug messages
-                        Bukkit.getLogger().info("[DEBUG] Checking block: " + relativeBlock.getType() + " at " + relativeBlock.getLocation());
-                        Bukkit.getLogger().info("[DEBUG] Is ore: " + isOre);
 
                         // Skip ores
                         if (isOre) {
-                            Bukkit.getLogger().info("[DEBUG] Skipping block: " + relativeBlock.getType() + " (ore detected).");
                             continue;
                         }
 
                         // Break the block if it's not an ore
-                        Bukkit.getLogger().info("[DEBUG] Breaking block: " + relativeBlock.getType() + " at " + relativeBlock.getLocation());
                         breakBlock(player, relativeBlock, true);
                         XPManager xpManager = new XPManager(plugin);
                         xpManager.addXP(player, "Mining", 1);
@@ -932,7 +928,6 @@ public class UltimateEnchantmentListener implements Listener {
          */
         public static boolean isOreBlock(Block block) {
             if (block == null) {
-                Bukkit.getLogger().info("[DEBUG] Block is null, returning false.");
                 return false;
             }
 
@@ -941,19 +936,12 @@ public class UltimateEnchantmentListener implements Listener {
             // Check if the block is in the predefined set
             boolean inSet = ORES.contains(material);
             if (inSet) {
-                Bukkit.getLogger().info("[DEBUG] Block " + material + " detected as ore from predefined set.");
                 return true;
             }
 
             // Fallback: Check material name
             String materialName = material.name();
             boolean isOre = materialName.contains("ORE") || materialName.equals("ANCIENT_DEBRIS");
-
-            if (isOre) {
-                Bukkit.getLogger().info("[DEBUG] Block " + material + " detected as ore from fallback logic.");
-            } else {
-                Bukkit.getLogger().info("[DEBUG] Block " + material + " is not an ore.");
-            }
 
             return isOre;
         }

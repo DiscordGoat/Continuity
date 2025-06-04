@@ -405,7 +405,7 @@ public class PetManager implements Listener {
         if (activePet != null) {
             double xpGained = event.getAmount();
             activePet.addXP(xpGained);
-            player.sendMessage(ChatColor.AQUA + activePet.getName() + " gained " + xpGained + " XP!");
+            //player.sendMessage(ChatColor.AQUA + activePet.getName() + " gained " + xpGained + " XP!");
         }
     }
 

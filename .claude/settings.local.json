@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(rg:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)",
+      "Bash(find:*)",
+      "Bash(zip:*)",
+      "Bash(tar:*)",
+      "Bash(rm:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(sed:*)",
+      "Bash(mvn compile:*)",
+      "Bash(javac:*)",
+      "Bash(cat:*)",
+      "Bash(mvn package:*)",
+      "Bash(ls:*)"
+    ],
+    "deny": []
+  }
+}

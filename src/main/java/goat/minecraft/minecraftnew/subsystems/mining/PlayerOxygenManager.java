@@ -262,8 +262,6 @@ public class PlayerOxygenManager implements Listener {
         playerOxygenLevels.put(uuid, oxygenLevel);
         oxygenDataConfig.set(uuid.toString(), oxygenLevel);
         saveOxygenData();
-        player.sendMessage(ChatColor.AQUA + "Your oxygen level is now " +
-                ChatColor.WHITE + oxygenLevel + " seconds.");
     }
 
     /**

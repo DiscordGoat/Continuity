@@ -418,6 +418,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT_TWO", 1, 128, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("MERIT_ITEM", 1, 64, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("LEGENDARY_TOOL_REFORGE", 1, 64, 5)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("POWER_CRYSTAL", 1, 512, 5)); // Custom Item
 
         defaultConfig.set("TOOLSMITH.purchases", toolsmithPurchases);
 
@@ -851,6 +852,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getCartographerBastionRemnant();
             case "CARTOGRAPHER_WOODLAND_MANSION":
                 return ItemRegistry.getCartographerWoodlandMansion();
+            case "POWER_CRYSTAL":
+                return ItemRegistry.getPowerCrystal();
             case "FLETCHER_BOW_ENCHANT":
                 return ItemRegistry.getFletcherBowEnchant();
             case "FLETCHER_POWER":

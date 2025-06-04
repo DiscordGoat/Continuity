@@ -67,3 +67,226 @@ buffs:
   potion_interactions: true
   monster_level_scaling: true
   projectile_bonuses: true
+
+# Monster mutation system
+mutations:
+  enabled: true
+  max_monster_level: 300
+  
+  # Mutation chance based on hostility (percentage = hostility tier)
+  hostility_based_chance: true
+  
+  # Individual mutation settings
+  types:
+    speed:
+      enabled: true
+      chance: 1.0
+      effect_level: 2  # Speed III (level 2)
+      applies_to: [ALL]
+      
+    knight:
+      enabled: true
+      chance: 1.0
+      level: 100
+      applies_to: [ZOMBIE, WITHER_SKELETON]
+      equipment:
+        helmet: IRON_HELMET
+        chestplate: IRON_CHESTPLATE
+        leggings: IRON_LEGGINGS
+        boots: IRON_BOOTS
+        weapon: IRON_SWORD
+        
+    armor:
+      enabled: true
+      chance: 1.0
+      tiers:
+        basic: # Leather/Chain/Gold
+          weight: 80
+          materials: [LEATHER, CHAINMAIL, GOLDEN]
+        iron:
+          weight: 15
+          materials: [IRON]
+        diamond:
+          weight: 5
+          materials: [DIAMOND]
+      applies_to: [ALL]
+      
+    weapon:
+      enabled: true
+      chance: 1.0
+      weapons: [IRON_SWORD, IRON_SHOVEL]
+      applies_to: [ALL]
+      
+    enchantment:
+      enabled: true
+      chance: 1.0
+      enchantments:
+        - type: PROTECTION_ENVIRONMENTAL
+          level: 3
+      applies_to: [ALL]
+      
+    enraged:
+      enabled: true
+      chance: 1.0
+      armor_color: "RED"
+      weapon: DIAMOND_SWORD
+      name_prefix: "Enraged"
+      applies_to: [ALL]
+      
+    charged:
+      enabled: true
+      chance: 1.0
+      applies_to: [CREEPER]
+      
+    floating:
+      enabled: true
+      chance: 1.0
+      effect: LEVITATION
+      effect_level: 0
+      name_suffix: "High Flying"
+      applies_to: [BLAZE]
+      
+    fast_swimmer:
+      enabled: true
+      chance: 1.0
+      effect: DOLPHINS_GRACE
+      effect_level: 2
+      weapon: TRIDENT
+      name_prefix: "Olympic Swimmer"
+      applies_to: [DROWNED]
+      
+    giant:
+      enabled: true
+      chance: 1.0
+      size: 4
+      weapon: TRIDENT
+      applies_to: [SLIME, MAGMA_CUBE]
+      
+    sniper:
+      enabled: true
+      chance: 1.0
+      helmet: DIAMOND_HELMET
+      enchantments:
+        - type: PROTECTION_ENVIRONMENTAL
+          level: 3
+      name_prefix: "Sniper"
+      applies_to: [SKELETON]
+      
+    deep_sea_diver:
+      enabled: true
+      chance: 1.0
+      armor_color: "COPPER"
+      helmet: LEATHER_HELMET
+      chestplate: LEATHER_CHESTPLATE
+      leggings: LEATHER_LEGGINGS
+      boots: LEATHER_BOOTS
+      weapon: TRIDENT
+      name_prefix: "Deep Sea Diver"
+      oxygen_bonus: true
+      applies_to: [DROWNED]
+      
+  # Biome-based armor coloring
+  biome_colors:
+    OCEAN: "0x000080"
+    DEEP_OCEAN: "0x000040"
+    FROZEN_OCEAN: "0x7070D0"
+    DEEP_FROZEN_OCEAN: "0x505090"
+    COLD_OCEAN: "0x4040A0"
+    DEEP_COLD_OCEAN: "0x303080"
+    LUKEWARM_OCEAN: "0x0080C0"
+    DEEP_LUKEWARM_OCEAN: "0x006090"
+    WARM_OCEAN: "0x00A0E0"
+    PLAINS: "0x9CBB58"
+    SUNFLOWER_PLAINS: "0xB5D158"
+    DESERT: "0xFAD5A5"
+    DESERT_HILLS: "0xD6B880"
+    DESERT_LAKES: "0xFFA500"
+    MOUNTAINS: "0x606060"
+    WOODED_MOUNTAINS: "0x507050"
+    GRAVELLY_MOUNTAINS: "0x888888"
+    MODIFIED_GRAVELLY_MOUNTAINS: "0x789078"
+    MOUNTAIN_EDGE: "0x72789A"
+    FOREST: "0x056621"
+    FLOWER_FOREST: "0x2D8E49"
+    BIRCH_FOREST: "0x307444"
+    BIRCH_FOREST_HILLS: "0x1F5F32"
+    TALL_BIRCH_FOREST: "0x589C6C"
+    TALL_BIRCH_HILLS: "0x47875A"
+    DARK_FOREST: "0x40511A"
+    DARK_FOREST_HILLS: "0x687942"
+    SWAMP: "0x6A7039"
+    SWAMP_HILLS: "0x6D6956"
+    JUNGLE: "0x537B09"
+    JUNGLE_HILLS: "0x2C4205"
+    MODIFIED_JUNGLE: "0x7BA331"
+    JUNGLE_EDGE: "0x628B17"
+    MODIFIED_JUNGLE_EDGE: "0x8AB33F"
+    BAMBOO_JUNGLE: "0x768E14"
+    BAMBOO_JUNGLE_HILLS: "0x3B470A"
+    TAIGA: "0x0B6659"
+    TAIGA_HILLS: "0x1F5F3A"
+    TAIGA_MOUNTAINS: "0x338E81"
+    SNOWY_TAIGA: "0x31554A"
+    SNOWY_TAIGA_HILLS: "0x597D72"
+    SNOWY_TAIGA_MOUNTAINS: "0x597D72"
+    GIANT_TREE_TAIGA: "0x596651"
+    GIANT_TREE_TAIGA_HILLS: "0x454F3E"
+    GIANT_SPRUCE_TAIGA: "0x818E79"
+    GIANT_SPRUCE_TAIGA_HILLS: "0x6D7766"
+    MUSHROOM_FIELDS: "0xFF00FF"
+    MUSHROOM_FIELD_SHORE: "0xA000A0"
+    BEACH: "0xFADE55"
+    STONE_SHORE: "0xA2A284"
+    SNOWY_BEACH: "0xFAF0C0"
+    RIVER: "0x0000FF"
+    FROZEN_RIVER: "0xA0A0FF"
+    SNOWY_TUNDRA: "0xFFFFFF"
+    SNOWY_MOUNTAINS: "0xE0E0E0"
+    ICE_SPIKES: "0xB4DCDC"
+    SAVANNA: "0xBDB25F"
+    SAVANNA_PLATEAU: "0xA79D64"
+    SHATTERED_SAVANNA: "0xE5DA87"
+    SHATTERED_SAVANNA_PLATEAU: "0xCFC58C"
+    BADLANDS: "0xD94515"
+    ERODED_BADLANDS: "0xFF6A00"
+    MODIFIED_BADLANDS_PLATEAU: "0xCA8C65"
+    BADLANDS_PLATEAU: "0xB09765"
+    WOODED_BADLANDS_PLATEAU: "0x90814D"
+    MODIFIED_WOODED_BADLANDS_PLATEAU: "0xB4A582"
+    THE_VOID: "0x000000"
+    NETHER_WASTES: "0x572526"
+    CRIMSON_FOREST: "0x8B2635"
+    WARPED_FOREST: "0x167E86"
+    SOUL_SAND_VALLEY: "0x4D3A2E"
+    BASALT_DELTAS: "0x403636"
+    THE_END: "0xFFFF00"
+    SMALL_END_ISLANDS: "0xFFFF80"
+    END_MIDLANDS: "0xFFFF40"
+    END_HIGHLANDS: "0xC0C000"
+    END_BARRENS: "0x808000"
+    
+  # Verdant Relic drop rates for mutations
+  verdant_drops:
+    armor_mutations:
+      leather: 0.10  # 10%
+      chainmail: 0.15
+      gold: 0.20
+      iron: 0.50
+      diamond: 1.00  # 100%
+      relic_type: "SHATTERPROOF"
+    speed_mutants:
+      chance: 0.25
+      relic_type: "ENTROPY"
+    enraged:
+      chance: 1.00
+      relic_type: "GRAVITY"
+    sniper:
+      chance: 1.00
+      relic_type: "MARROW"
+    deep_sea_diver:
+      relic_type: "ENTION_PLAST_SEED"
+      oxygen_bonus: true
+    knight:
+      chance: 1.00
+      relic_type: "SINGULARITY"
+      combat_xp: 50
