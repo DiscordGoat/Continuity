@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.trims;
 
 import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -70,20 +71,24 @@ public class CustomTrimEffects implements Listener {
         if (material == null) return;
         if (material.equalsIgnoreCase("Diamond")) {
             event.setDamage(event.getDamage() * 0.85);
+            Bukkit.getLogger().info("[Trims] Diamond reduction triggered for " + player.getName());
         }
         if (material.equalsIgnoreCase("Emerald") && event.getCause() == DamageCause.FALL) {
             event.setCancelled(true);
+            Bukkit.getLogger().info("[Trims] Emerald fall immunity triggered for " + player.getName());
         }
         if (material.equalsIgnoreCase("Gold")) {
             if (random.nextDouble() < 0.10) {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 100, 1));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2400, 0));
+                Bukkit.getLogger().info("[Trims] Gold regeneration triggered for " + player.getName());
             }
         }
         if (material.equalsIgnoreCase("Netherite")) {
             if (event.getCause() == DamageCause.FIRE || event.getCause() == DamageCause.FIRE_TICK
                     || event.getCause() == DamageCause.LAVA || event.getCause() == DamageCause.HOT_FLOOR) {
                 player.setFireTicks(0);
+                Bukkit.getLogger().info("[Trims] Netherite fire protection triggered for " + player.getName());
             }
         }
     }
@@ -95,6 +100,7 @@ public class CustomTrimEffects implements Listener {
         String material = getFullTrimMaterial(player);
         if (material != null && material.equalsIgnoreCase("Redstone")) {
             event.setDamage(event.getDamage() * 1.25);
+            Bukkit.getLogger().info("[Trims] Redstone damage buff triggered for " + player.getName());
         }
     }
 
@@ -107,6 +113,7 @@ public class CustomTrimEffects implements Listener {
         if (material != null && material.equalsIgnoreCase("Quartz")) {
             event.setCancelled(true);
             arrow.setVelocity(arrow.getVelocity().multiply(-1));
+            Bukkit.getLogger().info("[Trims] Quartz arrow bounce triggered for " + player.getName());
         }
     }
 
@@ -124,6 +131,7 @@ public class CustomTrimEffects implements Listener {
                     if (current > 0) {
                         dmg.setDamage(current - 1);
                         item.setItemMeta(meta);
+                        Bukkit.getLogger().info("[Trims] Iron auto-repair triggered for " + player.getName());
                     }
                 }
             }
@@ -138,6 +146,7 @@ public class CustomTrimEffects implements Listener {
         if (material != null && material.equalsIgnoreCase("Amethyst")) {
             if (event.getFoodLevel() < player.getFoodLevel()) {
                 event.setCancelled(true);
+                Bukkit.getLogger().info("[Trims] Amethyst hunger prevention triggered for " + player.getName());
             }
         }
     }
@@ -151,6 +160,7 @@ public class CustomTrimEffects implements Listener {
             if (event.getAmount() < player.getRemainingAir()) {
                 int newAir = Math.min(player.getMaximumAir(), event.getAmount() + 1);
                 event.setAmount(newAir);
+                Bukkit.getLogger().info("[Trims] Copper air restoration triggered for " + player.getName());
             }
         }
     }
@@ -163,6 +173,7 @@ public class CustomTrimEffects implements Listener {
         if (material != null && material.equalsIgnoreCase("Netherite")) {
             event.setCancelled(true);
             player.setFireTicks(0);
+            Bukkit.getLogger().info("[Trims] Netherite fire immunity triggered for " + player.getName());
         }
     }
 }
