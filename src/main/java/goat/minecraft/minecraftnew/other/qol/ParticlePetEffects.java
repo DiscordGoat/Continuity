@@ -48,13 +48,27 @@ public class ParticlePetEffects implements Listener {
         // Play particle explosion around the damaged entity
         if (event.getEntity() instanceof LivingEntity) {
             LivingEntity target = (LivingEntity) event.getEntity();
-            target.getWorld().spawnParticle(
-                    particle,
-                    target.getLocation().add(0, 1, 0), // Slightly above the target
-                    level, // Number of particles is the pet's level
-                    0.5, 0.5, 0.5, // Spread around the target
-                    0.25 // Speed
-            );
+
+            new org.bukkit.scheduler.BukkitRunnable() {
+                int ticks = 0;
+
+                @Override
+                public void run() {
+                    if (ticks >= 5 || !target.isValid()) {
+                        cancel();
+                        return;
+                    }
+
+                    target.getWorld().spawnParticle(
+                            particle,
+                            target.getLocation().add(0, 1, 0),
+                            level,
+                            0.5, 0.5, 0.5,
+                            0.25
+                    );
+                    ticks++;
+                }
+            }.runTaskTimer(plugin, 0L, 1L);
         }
     }
 
