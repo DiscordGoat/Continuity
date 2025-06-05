@@ -38,6 +38,7 @@ import goat.minecraft.minecraftnew.subsystems.fishing.SpawnSeaCreatureCommand;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.music.MusicDiscManager;
+import goat.minecraft.minecraftnew.other.trims.CustomTrimEffects;
 import goat.minecraft.minecraftnew.subsystems.pets.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.Float;
@@ -451,6 +452,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ReforgeDurability(), this);
         getServer().getPluginManager().registerEvents(new ReforgeSwiftBlade(), this);
         getServer().getPluginManager().registerEvents(new WaterLogged(this), this);
+        getServer().getPluginManager().registerEvents(new CustomTrimEffects(), this);
 
         getServer().getPluginManager().registerEvents(new Feed(), this);
         getServer().getPluginManager().registerEvents(new Merit(playerData), this);

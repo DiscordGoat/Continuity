@@ -4,6 +4,7 @@ import java.io.*;
 import java.util.UUID;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.trims.CustomTrimEffects;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -284,6 +285,11 @@ public class XPManager implements CommandExecutor {
     public void addXP(Player player, String skill, double xp) {
         UUID uuid = player.getUniqueId();
         int currentXP = loadXP(uuid, skill);
+
+        String trimMaterial = CustomTrimEffects.getFullTrimMaterial(player);
+        if (trimMaterial != null && trimMaterial.equalsIgnoreCase("Lapis")) {
+            xp *= 1.25;
+        }
 
         // Count how many 'Savant' enchantment items they have for a bonus.
         int savantCount = 0;
