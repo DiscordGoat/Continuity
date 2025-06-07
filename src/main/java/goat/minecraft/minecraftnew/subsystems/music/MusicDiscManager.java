@@ -11,6 +11,9 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.biomeutils.BiomeMapper;
+import goat.minecraft.minecraftnew.subsystems.music.discs.MusicDisc;
+import goat.minecraft.minecraftnew.subsystems.music.discs.blocks.BlocksDisc;
+import goat.minecraft.minecraftnew.subsystems.music.discs.disc11.Disc11;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -46,11 +49,19 @@ import java.util.*;
 public class MusicDiscManager implements Listener {
 
     private final JavaPlugin plugin;
+    private final Map<Material, MusicDisc> discHandlers = new HashMap<>();
 
     // Constructor to pass the main plugin instance
 
     public MusicDiscManager(JavaPlugin plugin) {
         this.plugin = plugin;
+        registerDiscs();
+    }
+
+    private void registerDiscs() {
+        discHandlers.put(Material.MUSIC_DISC_BLOCKS, new BlocksDisc(plugin));
+        discHandlers.put(Material.MUSIC_DISC_11, new Disc11(plugin));
+        // TODO: register remaining discs
     }
     private final Map<UUID, TeleportSession> relicSessions = new HashMap<>();
     private static class TeleportSession {
@@ -347,59 +358,11 @@ public class MusicDiscManager implements Listener {
      * @param discType  The type of the music disc.
      */
     private void identifyAndHandleDisc(Player player, Material discType) {
-        switch (discType) {
-            case MUSIC_DISC_11:
-                handleMusicDisc11(player);
-                break;
-            case MUSIC_DISC_13:
-                handleMusicDisc13(player);
-                break;
-            case MUSIC_DISC_BLOCKS:
-                handleMusicDiscBlocks(player);
-                break;
-            case MUSIC_DISC_CAT:
-                handleMusicDiscCat(player);
-                break;
-            case MUSIC_DISC_CHIRP:
-                handleMusicDiscChirp(player);
-                break;
-            case MUSIC_DISC_FAR:
-                handleMusicDiscFar(player);
-                break;
-            case MUSIC_DISC_MALL:
-                handleMusicDiscMall(player);
-                break;
-            case MUSIC_DISC_MELLOHI:
-                handleMusicDiscMellohi(player);
-                break;
-            case MUSIC_DISC_STAL:
-                handleMusicDiscStal(player);
-                break;
-            case MUSIC_DISC_STRAD:
-                handleMusicDiscStrad(player);
-                break;
-            case MUSIC_DISC_WAIT:
-                handleMusicDiscWait(player);
-                break;
-            case MUSIC_DISC_WARD:
-                handleMusicDiscWard(player);
-                break;
-            case MUSIC_DISC_PIGSTEP:
-                handleMusicDiscPigstep(player);
-                break;
-            case MUSIC_DISC_5:
-                handleMusicDisc5(player);
-                break;
-            case MUSIC_DISC_RELIC:
-                handleMusicDiscRelic(player, player.getLocation());
-                break;
-            case MUSIC_DISC_OTHERSIDE:
-                handleMusicDiscOtherside(player);
-                break;
-            // Add more cases if there are additional discs in newer Minecraft versions
-            default:
-                handleUnknownMusicDisc(player, discType);
-                break;
+        MusicDisc disc = discHandlers.get(discType);
+        if (disc != null) {
+            disc.onUse(player);
+        } else {
+            handleUnknownMusicDisc(player, discType);
         }
     }
 
