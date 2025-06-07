@@ -11,6 +11,9 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.biomeutils.BiomeMapper;
+import goat.minecraft.minecraftnew.subsystems.music.discs.MusicDisc;
+import goat.minecraft.minecraftnew.subsystems.music.discs.blocks.BlocksDisc;
+import goat.minecraft.minecraftnew.subsystems.music.discs.disc11.Disc11;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -46,11 +49,21 @@ import java.util.*;
 public class MusicDiscManager implements Listener {
 
     private final JavaPlugin plugin;
+    private final Map<Material, MusicDisc> discHandlers = new HashMap<>();
 
     // Constructor to pass the main plugin instance
 
     public MusicDiscManager(JavaPlugin plugin) {
         this.plugin = plugin;
+        registerDiscs();
+    }
+
+    private void registerDiscs() {
+        discHandlers.put(Material.MUSIC_DISC_BLOCKS, new BlocksDisc(plugin));
+        discHandlers.put(Material.MUSIC_DISC_11, new Disc11(plugin));
+        discHandlers.put(Material.MUSIC_DISC_FAR, new goat.minecraft.minecraftnew.subsystems.music.discs.far.FarDisc(plugin));
+        discHandlers.put(Material.MUSIC_DISC_MALL, new goat.minecraft.minecraftnew.subsystems.music.discs.mall.MallDisc(plugin));
+        discHandlers.put(Material.MUSIC_DISC_13, new goat.minecraft.minecraftnew.subsystems.music.discs.disc13.Disc13(plugin));
     }
     private final Map<UUID, TeleportSession> relicSessions = new HashMap<>();
     private static class TeleportSession {
@@ -347,59 +360,11 @@ public class MusicDiscManager implements Listener {
      * @param discType  The type of the music disc.
      */
     private void identifyAndHandleDisc(Player player, Material discType) {
-        switch (discType) {
-            case MUSIC_DISC_11:
-                handleMusicDisc11(player);
-                break;
-            case MUSIC_DISC_13:
-                handleMusicDisc13(player);
-                break;
-            case MUSIC_DISC_BLOCKS:
-                handleMusicDiscBlocks(player);
-                break;
-            case MUSIC_DISC_CAT:
-                handleMusicDiscCat(player);
-                break;
-            case MUSIC_DISC_CHIRP:
-                handleMusicDiscChirp(player);
-                break;
-            case MUSIC_DISC_FAR:
-                handleMusicDiscFar(player);
-                break;
-            case MUSIC_DISC_MALL:
-                handleMusicDiscMall(player);
-                break;
-            case MUSIC_DISC_MELLOHI:
-                handleMusicDiscMellohi(player);
-                break;
-            case MUSIC_DISC_STAL:
-                handleMusicDiscStal(player);
-                break;
-            case MUSIC_DISC_STRAD:
-                handleMusicDiscStrad(player);
-                break;
-            case MUSIC_DISC_WAIT:
-                handleMusicDiscWait(player);
-                break;
-            case MUSIC_DISC_WARD:
-                handleMusicDiscWard(player);
-                break;
-            case MUSIC_DISC_PIGSTEP:
-                handleMusicDiscPigstep(player);
-                break;
-            case MUSIC_DISC_5:
-                handleMusicDisc5(player);
-                break;
-            case MUSIC_DISC_RELIC:
-                handleMusicDiscRelic(player, player.getLocation());
-                break;
-            case MUSIC_DISC_OTHERSIDE:
-                handleMusicDiscOtherside(player);
-                break;
-            // Add more cases if there are additional discs in newer Minecraft versions
-            default:
-                handleUnknownMusicDisc(player, discType);
-                break;
+        MusicDisc disc = discHandlers.get(discType);
+        if (disc != null) {
+            disc.onUse(player);
+        } else {
+            handleUnknownMusicDisc(player, discType);
         }
     }
 
@@ -479,291 +444,11 @@ public class MusicDiscManager implements Listener {
             player.sendMessage(ChatColor.GREEN + "The increased hostility has subsided.");
         }, 20 * 60 * 20L);
     }
-    private void handleMusicDiscFar(Player player) {
-        // Play the music disc sound
-        player.playSound(player.getLocation(), Sound.MUSIC_DISC_FAR, 3.0f, 1.0f);
-        Bukkit.broadcastMessage(ChatColor.GOLD + "Random Loot crates event Activated!");
-
-        // Define the duration of the disc in ticks (120 seconds + 54 seconds * 20 ticks per second)
-        int durationTicks = (120 + 54) * 20;
-
-        // Define the interval at which chests spawn
-        int intervalTicks = durationTicks / 16; // Spawn 16 chests during the song
-
-        // Define the list of loot tables
-        List<NamespacedKey> lootTables = Arrays.asList(
-                LootTables.BASTION_TREASURE.getKey(),
-                LootTables.BASTION_OTHER.getKey(),
-                LootTables.BASTION_BRIDGE.getKey(),
-                LootTables.BASTION_HOGLIN_STABLE.getKey(),
-                LootTables.DESERT_PYRAMID.getKey(),
-                LootTables.END_CITY_TREASURE.getKey(),
-                LootTables.IGLOO_CHEST.getKey(),
-                LootTables.JUNGLE_TEMPLE.getKey(),
-                LootTables.JUNGLE_TEMPLE_DISPENSER.getKey(),
-                LootTables.ABANDONED_MINESHAFT.getKey(),
-                LootTables.NETHER_BRIDGE.getKey(),
-                LootTables.PILLAGER_OUTPOST.getKey(),
-                LootTables.RUINED_PORTAL.getKey(),
-                LootTables.SHIPWRECK_MAP.getKey(),
-                LootTables.SHIPWRECK_SUPPLY.getKey(),
-                LootTables.SHIPWRECK_TREASURE.getKey(),
-                LootTables.STRONGHOLD_CORRIDOR.getKey(),
-                LootTables.STRONGHOLD_CROSSING.getKey(),
-                LootTables.STRONGHOLD_LIBRARY.getKey(),
-                LootTables.UNDERWATER_RUIN_BIG.getKey(),
-                LootTables.UNDERWATER_RUIN_SMALL.getKey(),
-                LootTables.VILLAGE_ARMORER.getKey(),
-                LootTables.VILLAGE_BUTCHER.getKey(),
-                LootTables.VILLAGE_CARTOGRAPHER.getKey(),
-                LootTables.VILLAGE_DESERT_HOUSE.getKey(),
-                LootTables.VILLAGE_FISHER.getKey(),
-                LootTables.VILLAGE_FLETCHER.getKey(),
-                LootTables.VILLAGE_MASON.getKey(),
-                LootTables.VILLAGE_PLAINS_HOUSE.getKey(),
-                LootTables.VILLAGE_SAVANNA_HOUSE.getKey(),
-                LootTables.VILLAGE_SHEPHERD.getKey(),
-                LootTables.VILLAGE_SNOWY_HOUSE.getKey(),
-                LootTables.VILLAGE_TAIGA_HOUSE.getKey(),
-                LootTables.VILLAGE_TANNERY.getKey(),
-                LootTables.VILLAGE_TEMPLE.getKey(),
-                LootTables.VILLAGE_TOOLSMITH.getKey(),
-                LootTables.VILLAGE_WEAPONSMITH.getKey(),
-                LootTables.WOODLAND_MANSION.getKey()
-        );
-
-        // Schedule a repeating task to spawn chests
-        new BukkitRunnable() {
-            int chestsSpawned = 0;
-
-            @Override
-            public void run() {
-                if (chestsSpawned >= 16 || !player.isOnline()) {
-                    this.cancel(); // Stop spawning chests if the limit is reached or player is offline
-                    return;
-                }
-
-                // Choose a random loot table
-                NamespacedKey randomLootTable = lootTables.get(new Random().nextInt(lootTables.size()));
-
-                // Create a custom chest item with the loot table as its name
-                ItemStack chestItem = new ItemStack(Material.CHEST);
-                ItemMeta meta = chestItem.getItemMeta();
-                if (meta != null) {
-                    meta.setDisplayName(ChatColor.GOLD + "Loot Chest: " + randomLootTable.getKey());
-                    meta.getPersistentDataContainer().set(
-                            new NamespacedKey(plugin, "loot_table"),
-                            PersistentDataType.STRING,
-                            randomLootTable.toString()
-                    );
-                    chestItem.setItemMeta(meta);
-                }
-
-                // Drop the chest at the player's location
-                Location dropLocation = player.getLocation();
-                player.getWorld().dropItemNaturally(dropLocation, chestItem);
-
-                // Add particles and sound effects at the drop location
-                dropLocation.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, dropLocation, 50, 0.5, 1, 0.5, 0.1);
-                player.getWorld().playSound(dropLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
-
-                chestsSpawned++;
-            }
-        }.runTaskTimer(plugin, 0L, intervalTicks);
-
-        // Handle chest placement to drop loot from the corresponding loot table
-        Bukkit.getPluginManager().registerEvents(new Listener() {
-            @EventHandler
-            public void onPlayerInteract(PlayerInteractEvent event) {
-                if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                    Block block = event.getClickedBlock();
-                    ItemStack item = event.getItem();
-
-                    // Check if the item is a custom loot chest
-                    if (item != null && item.getType() == Material.CHEST) {
-                        ItemMeta meta = item.getItemMeta();
-                        if (meta != null && meta.getPersistentDataContainer().has(
-                                new NamespacedKey(plugin, "loot_table"),
-                                PersistentDataType.STRING
-                        )) {
-                            // Get the loot table from the item's metadata
-                            String lootTableKey = meta.getPersistentDataContainer().get(
-                                    new NamespacedKey(plugin, "loot_table"),
-                                    PersistentDataType.STRING
-                            );
-
-                            // Drop the loot at the chest's placement location
-                            if (block != null && lootTableKey != null) {
-                                NamespacedKey lootTable = NamespacedKey.fromString(lootTableKey);
-                                LootTable table = Bukkit.getLootTable(lootTable);
-
-                                if (table != null) {
-                                    Location location = block.getLocation();
-                                    Collection<ItemStack> loot = table.populateLoot(
-                                            new Random(),
-                                            new LootContext.Builder(location).build()
-                                    );
-
-                                    // Drop each item in the loot table
-                                    loot.forEach(itemStack -> location.getWorld().dropItemNaturally(location, itemStack));
-
-                                    // Add particle and sound effects
-                                    location.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location.add(0, 1, 0), 100, 0.5, 1, 0.5, 0.1);
-                                    location.getWorld().playSound(location, Sound.BLOCK_CHEST_OPEN, 1.0f, 1.0f);
-
-                                    // Remove the chest from the player's inventory
-                                    item.setAmount(item.getAmount() - 1);
-                                }
-                            }
-
-                            event.setCancelled(true); // Prevent block placement
-                        }
-                    }
-                }
-            }
-        }, plugin);
-    }
-
-
-
-
-    private void handleMusicDiscMall(Player player) {
-        // Start a 40-minute rainstorm
-        player.playSound(player.getLocation(), Sound.MUSIC_DISC_MALL, 3.0f, 1.0f);
-        Bukkit.getWorlds().forEach(world -> {
-            world.setStorm(true); // Start rain
-            world.setWeatherDuration(10 * 60 * 20); // 10 minutes in ticks
-            world.setGameRule(GameRule.DO_MOB_SPAWNING, false); // Disable monster spawns
-        });
-
-        // Notify the player and others
-        Bukkit.broadcastMessage(ChatColor.AQUA + "A soothing rainstorm has begun, and monster spawns are disabled for 10 minutes!");
-        player.sendMessage(ChatColor.GREEN + "You feel empowered by the rain!");
-
-        // Grant the player Conduit Power for 40 minutes
-        int durationTicks = 40 * 60 * 20; // 40 minutes in ticks
-        player.addPotionEffect(new PotionEffect(PotionEffectType.CONDUIT_POWER, durationTicks, 0, true, false, false));
-
-        // Schedule a task to reset the gamerule after the rainstorm ends
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            Bukkit.getWorlds().forEach(world -> {
-                world.setGameRule(GameRule.DO_MOB_SPAWNING, true); // Re-enable monster spawns
-            });
-
-            Bukkit.broadcastMessage(ChatColor.RED + "The rainstorm has ended, and monsters are free to spawn again.");
-        }, durationTicks);
-    }
-
     // Empty methods for each music disc variant
 
 
-    private static final List<ItemStack> LOOT_ITEMS = new ArrayList<>();
-
-    static {
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_CAT));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_BLOCKS));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_CHIRP));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_FAR));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_MALL));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_MELLOHI));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_STAL));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_STRAD));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_WARD));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_WAIT));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_PIGSTEP)); // Rare item
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_OTHERSIDE)); // Rare item
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_RELIC)); // Rare item
-    }
-
-    /**
-     * Returns a random ItemStack from the list.
-     *
-     * @return A randomly selected ItemStack.
-     */
-    public static ItemStack getRandomLootItem() {
-        Random random = new Random();
-        return LOOT_ITEMS.get(random.nextInt(LOOT_ITEMS.size()));
-    }
-    private void handleMusicDisc13(Player player) {
-        // Set time to midnight
-        Bukkit.getWorld("world").setTime(18000); // Midnight in Minecraft time (18,000 ticks)
-
-        // Broadcast the activation message to all players
-        Bukkit.broadcastMessage(ChatColor.AQUA + "The BaroTrauma Virus (BT) has been activated for 2 minutes 58 seconds!");
-        Bukkit.broadcastMessage(ChatColor.AQUA + "Beware! BT-infected monsters are slower but carry rare loot. Don't get infected!");
-
-        // Play the MUSIC_DISC_13 sound to the activating player
-        player.playSound(player.getLocation(), Sound.MUSIC_DISC_13, 1000.0f, 1.0f);
-
-        // Create the listener
-        Listener btListener = new Listener() {
-            @EventHandler
-            public void onEntitySpawn(CreatureSpawnEvent event) {
-                if (Math.random() < 0.3) { // 30% chance for the monster to be infected with BT
-                    LivingEntity entity = event.getEntity();
-                    Location location = entity.getLocation();
-
-                    // Check if the monster is spawning on the surface
-                    if (location.getWorld().getHighestBlockYAt(location) <= location.getBlockY()) {
-                        entity.setCustomName(ChatColor.AQUA + "BT-Infected " + entity.getType().name());
-                        entity.setCustomNameVisible(true);
-                        entity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, (2 * 60 + 58) * 20, 0)); // Aqua glowing effect
-                        entity.getWorld().spawnParticle(Particle.WATER_SPLASH, entity.getLocation(), 50, 0.5, 0.5, 0.5, 0.1); // Aqua particles
-
-                        // Apply BT behavior: Slower movement
-                        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (2 * 60 + 58) * 20, 2)); // Slower movement
-                        entity.getPersistentDataContainer().set(new NamespacedKey(MinecraftNew.getInstance(), "bt_monster"), PersistentDataType.BYTE, (byte) 1);
-                    }
-                }
-            }
-
-            @EventHandler
-            public void onEntityDeath(EntityDeathEvent event) {
-                if (event.getEntity().getPersistentDataContainer().has(new NamespacedKey(MinecraftNew.getInstance(), "bt_monster"), PersistentDataType.BYTE)) {
-                    // Drop 20 experience orbs that explode around the entity
-                    Location deathLocation = event.getEntity().getLocation();
-                    World world = deathLocation.getWorld();
-                        ExperienceOrb orb = (ExperienceOrb) deathLocation.getWorld().spawn(deathLocation, ExperienceOrb.class);
-                        orb.setExperience(20);
 
 
-                    // 10% chance to drop a random music disc
-                    if (Math.random() < 0.2) {
-                        event.getDrops().add(getRandomLootItem()); // Replace with a random disc if needed
-                    }
-                }
-            }
-
-            @EventHandler
-            public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-                if (event.getDamager() instanceof LivingEntity && event.getEntity() instanceof Player) {
-                    LivingEntity damager = (LivingEntity) event.getDamager();
-                    Player damagedPlayer = (Player) event.getEntity();
-
-                    // Check if the damager is a BT monster
-                    if (damager.getPersistentDataContainer().has(new NamespacedKey(MinecraftNew.getInstance(), "bt_monster"), PersistentDataType.BYTE)) {
-                        if (Math.random() < 0.5) { // 10% chance to infect the player with BT
-                            Bukkit.broadcastMessage(ChatColor.RED + damagedPlayer.getName() + " has been infected with the BaroTrauma Virus!");
-                            PlayerOxygenManager playerOxygenManager = PlayerOxygenManager.getInstance();
-                            playerOxygenManager.setPlayerOxygenLevel(player, 0);
-                            damagedPlayer.sendMessage(ChatColor.DARK_AQUA + "You lost your oxygen!");
-                        }
-                    }
-                }
-            }
-        };
-
-        // Register the listener
-        Bukkit.getPluginManager().registerEvents(btListener, MinecraftNew.getInstance());
-
-        // Schedule the deactivation task
-        Bukkit.getScheduler().runTaskLater(MinecraftNew.getInstance(), () -> {
-            Bukkit.broadcastMessage(ChatColor.RED + "The BaroTrauma Virus has subsided. Infected monsters are no longer spawning.");
-
-            // Unregister the listener to stop spawning infected monsters
-            HandlerList.unregisterAll(btListener);
-        }, ((2 * 60) + 58) * 20L); // Runs after 2 minutes and 58 seconds
-    }
 
     private void handleMusicDiscRelic(Player player, Location jukeboxLocation) {
         // Create a new TeleportSession for this player
