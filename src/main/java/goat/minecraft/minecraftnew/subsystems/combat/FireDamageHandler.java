@@ -3,6 +3,8 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
@@ -72,6 +74,8 @@ public class FireDamageHandler implements Listener {
             if (PotionManager.isActive("Potion of Solar Fury", player)) {
                 amount *= 2;
                 solarFuryTargets.put(target.getUniqueId(), true);
+                sendActionBar(player, ChatColor.GOLD + "Solar Fury: " + ChatColor.RED + "2x" + ChatColor.GOLD + " Fire Level!");
+
             }
             addFire(target, amount);
         }
@@ -170,4 +174,7 @@ public class FireDamageHandler implements Listener {
                 entity.getType().name().contains("ELDER_GUARDIAN");
     }
 
+    private void sendActionBar(Player player, String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
+    }
 }
