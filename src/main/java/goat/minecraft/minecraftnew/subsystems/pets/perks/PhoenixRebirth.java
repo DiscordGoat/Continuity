@@ -85,7 +85,7 @@ public class PhoenixRebirth implements Listener {
             int ticks = 0;
             @Override
             public void run() {
-                if (!player.isOnline() || ticks >= 60) { // 3 seconds of particles
+                if (!player.isOnline() || ticks >= 5) { // Last only 5 ticks
                     cancel();
                     return;
                 }

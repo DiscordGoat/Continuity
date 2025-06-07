@@ -92,7 +92,7 @@ public class FlameTrail implements Listener {
             int ticks = 0;
             @Override
             public void run() {
-                if (ticks >= 20) { // Run for 1 second
+                if (ticks >= 5) { // Run for only 5 ticks
                     cancel();
                     return;
                 }
