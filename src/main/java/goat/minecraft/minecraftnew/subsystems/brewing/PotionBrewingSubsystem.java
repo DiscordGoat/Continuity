@@ -10,6 +10,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
@@ -364,6 +365,26 @@ public class PotionBrewingSubsystem implements Listener {
         }
     }
 
+    /**
+     * If a brewing stand involved in a session is broken, cancel the session
+     * and drop any stored items.
+     */
+    @EventHandler
+    public void onStandBreak(BlockBreakEvent event) {
+        Block b = event.getBlock();
+        if (b.getType() != Material.BREWING_STAND) return;
+
+        String locKey = toLocKey(b.getLocation());
+        if (!activeSessions.containsKey(locKey)) return;
+
+        event.setDropItems(false);
+        BrewSession session = activeSessions.remove(locKey);
+        if (session != null) {
+            session.destroySession(b.getLocation());
+        }
+        saveAllBrews();
+    }
+
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         // no GUI
@@ -569,6 +590,10 @@ public class PotionBrewingSubsystem implements Listener {
             brewTask = new BukkitRunnable() {
                 @Override
                 public void run() {
+                    if (Bukkit.getOnlinePlayers().isEmpty()) {
+                        return; // pause brewing when no players are online
+                    }
+
                     brewTimeRemaining--;
                     updateDB();
                     Entity ent = Bukkit.getEntity(timerStand);
@@ -796,6 +821,41 @@ public class PotionBrewingSubsystem implements Listener {
             // Instead of dropping items, do NOTHING.
             // We keep them in the DB so we can re-summon next time.
             // If you truly wanted to forcibly finalize them anyway, you'd drop items here.
+        }
+
+        // Clean up all armor stands & tasks and drop stored items
+        public void destroySession(Location dropLoc) {
+            if (brewTask != null && !brewTask.isCancelled()) {
+                brewTask.cancel();
+            }
+            if (particleTask != null && !particleTask.isCancelled()) {
+                particleTask.cancel();
+            }
+            if (soundTask != null && !soundTask.isCancelled()) {
+                soundTask.cancel();
+            }
+
+            removeEntityByUUID(mainArmorStand);
+            removeEntityByUUID(timerStand);
+            for (UUID u : labelStands.values()) {
+                removeEntityByUUID(u);
+            }
+            labelStands.clear();
+            for (UUID u : spinStands.values()) {
+                removeEntityByUUID(u);
+            }
+            spinStands.clear();
+
+            if (dropLoc != null && dropLoc.getWorld() != null) {
+                if (recipePaper != null) {
+                    dropLoc.getWorld().dropItemNaturally(dropLoc, recipePaper);
+                }
+                for (ItemStack item : placedIngredientItems.values()) {
+                    dropLoc.getWorld().dropItemNaturally(dropLoc, item);
+                }
+            }
+            placedIngredientItems.clear();
+            placedIngredients.clear();
         }
 
         private void removeEntityByUUID(UUID uuid) {
