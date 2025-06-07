@@ -1,4 +1,16 @@
 To add a new potion to the game, follow these steps:
+Before adding any Potion to the game, verify these key data values from the user:
+
+1: Potion Name
+2: Potion Duration
+3: Potion Color
+4: Potion Logic (What the potion affects)
+5: Relic Name
+6: Relic Obtainment Logic (how to get the Seed)
+7: Cleric Cost
+
+When asked to add a new potion to the game, Respond with that list of clarifying information to ensure quality output.
+
 1: Create the custom consumption logic found in src/main/java/goat/minecraft/minecraftnew/subsystems/brewing/custompotions.
 You will need information regarding initial duration (if not given, go with 3 minutes). By default, additional potion duration is 10*brewingLevel.
 You will need information regarding the final Potions name (example: "Potion of Fountains"). 
