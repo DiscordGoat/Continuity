@@ -249,6 +249,14 @@ public class PotionBrewingSubsystem implements Listener {
         recipeRegistry.add(
                 new PotionRecipe("Potion of Recurve", recurveIngredients, 5, new ItemStack(Material.POTION), recurveColor, recurveLore)
         );
+
+        // Potion of Solar Fury
+        List<String> solarFuryIngredients = Arrays.asList("Glass Bottle", "Sunflare", "Magma Cream", "Nether Wart");
+        List<String> solarFuryLore = Arrays.asList("Doubles fire level gains to monsters.", "Base Duration of " + baseDuration);
+        Color solarFuryColor = Color.fromRGB(255, 120, 0);
+        recipeRegistry.add(
+                new PotionRecipe("Potion of Solar Fury", solarFuryIngredients, 60*10, new ItemStack(Material.POTION), solarFuryColor, solarFuryLore)
+        );
     }
 
     private PotionRecipe findRecipeByName(String potionName) {

@@ -1,6 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
@@ -64,7 +66,11 @@ public class FireDamageHandler implements Listener {
 
         int level = player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.FIRE_ASPECT);
         if (level > 0) {
-            addFire(target, level * 5);
+            int amount = level * 5;
+            if (PotionManager.isActive("Potion of Solar Fury", player)) {
+                amount *= 2;
+            }
+            addFire(target, amount);
         }
     }
 
@@ -104,7 +110,11 @@ public class FireDamageHandler implements Listener {
                 }
 
                 double damage = level / 2.0;
-                entity.setHealth(Math.max(0.0, entity.getHealth() - damage));
+                double newHealth = Math.max(0.0, entity.getHealth() - damage);
+                entity.setHealth(newHealth);
+                if(newHealth <= 0.0 && entity.getWorld() != null) {
+                    entity.getWorld().dropItemNaturally(entity.getLocation(), ItemRegistry.getVerdantRelicSunflareSeed());
+                }
                 if (entity.getWorld() != null) {
                     entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0f, 1.0f);
                 }
