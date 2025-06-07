@@ -397,6 +397,45 @@ public class ItemRegistry {
         );
     }
 
+    // ------------------------------------------------------------------
+    // Sunflare Relic & Seed
+    // ------------------------------------------------------------------
+
+    /**
+     * Mature Sunflare relic used in brewing the Potion of Solar Fury.
+     */
+    public static ItemStack getSunflare() {
+        return createCustomItem(
+                Material.BLAZE_POWDER,
+                ChatColor.GOLD + "Sunflare",
+                Arrays.asList(
+                        ChatColor.GRAY + "A blazing relic radiating intense heat.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Solar Fury."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /**
+     * Seed form dropped from fiery deaths, plant to grow Sunflare.
+     */
+    public static ItemStack getVerdantRelicSunflareSeed() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic Sunflare",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic seed ignited with solar energy.",
+                        ChatColor.BLUE + "Dropped from monsters slain by Fire Level.",
+                        ChatColor.BLUE + "Right-click on dirt/grass to plant."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
 
     public static ItemStack getRecurvePotionRecipePaper() {
         // This returns a piece of PAPER with a custom name + lore that says "Potion of Recurve Recipe".
@@ -479,6 +518,21 @@ public class ItemRegistry {
                 ChatColor.LIGHT_PURPLE + "Potion of Fountains Recipe (Potion Recipe)",
                 Arrays.asList(
                         ChatColor.GRAY + "Brewing instructions for Sea Creature Chance",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getSolarFuryRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Solar Fury Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Solar Fury",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
                         ChatColor.DARK_PURPLE + "Potion Recipe"
                 ),

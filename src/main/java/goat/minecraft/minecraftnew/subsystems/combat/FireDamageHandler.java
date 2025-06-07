@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
@@ -31,6 +34,7 @@ public class FireDamageHandler implements Listener {
     private final DamageNotificationService notificationService;
     private final Map<UUID, Integer> fireLevels = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitRunnable> tasks = new ConcurrentHashMap<>();
+    private final Map<UUID, Boolean> solarFuryTargets = new ConcurrentHashMap<>();
 
     public FireDamageHandler(JavaPlugin plugin, DamageNotificationService notificationService) {
         this.plugin = plugin;
@@ -64,7 +68,12 @@ public class FireDamageHandler implements Listener {
 
         int level = player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.FIRE_ASPECT);
         if (level > 0) {
-            addFire(target, level * 5);
+            int amount = level * 5;
+            if (PotionManager.isActive("Potion of Solar Fury", player)) {
+                amount *= 2;
+                solarFuryTargets.put(target.getUniqueId(), true);
+            }
+            addFire(target, amount);
         }
     }
 
@@ -104,12 +113,16 @@ public class FireDamageHandler implements Listener {
                 }
 
                 double damage = level / 2.0;
-                entity.setHealth(Math.max(0.0, entity.getHealth() - damage));
+                double newHealth = Math.max(0.0, entity.getHealth() - damage);
+                entity.setHealth(newHealth);
+                if(newHealth <= 0.0 && entity.getWorld() != null) {
+                    entity.getWorld().dropItemNaturally(entity.getLocation(), ItemRegistry.getVerdantRelicSunflareSeed());
+                }
                 if (entity.getWorld() != null) {
                     entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0f, 1.0f);
                 }
-                notificationService.createFireDamageIndicator(entity.getLocation(), damage, level);
-                notificationService.createCustomDamageIndicator(entity.getLocation(), damage);
+                boolean boosted = solarFuryTargets.getOrDefault(id, false);
+                notificationService.createFireDamageIndicator(entity.getLocation(), damage, level, boosted);
                 spawnFireParticles(entity.getLocation(), level);
 
                 fireLevels.put(id, level - 1);
@@ -119,6 +132,7 @@ public class FireDamageHandler implements Listener {
                 BukkitRunnable t = tasks.remove(id);
                 if (t != null) t.cancel();
                 fireLevels.remove(id);
+                solarFuryTargets.remove(id);
             }
         };
 
@@ -155,4 +169,5 @@ public class FireDamageHandler implements Listener {
                 entity.getType().name().contains("WITHER") ||
                 entity.getType().name().contains("ELDER_GUARDIAN");
     }
+
 }
