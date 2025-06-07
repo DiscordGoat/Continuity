@@ -5,9 +5,10 @@ Before adding any Potion to the game, verify these key data values from the user
 2: Potion Duration
 3: Potion Color
 4: Potion Logic (What the potion affects)
-5: Relic Name
-6: Relic Obtainment Logic (how to get the Seed)
-7: Cleric Cost
+5: Potion Recipe Ingredients (The combination of items to begin brewing)
+6: Relic Name
+7: Relic Obtainment Logic (how to get the Seed)
+8: Cleric Cost
 
 When asked to add a new potion to the game, Respond with that list of clarifying information to ensure quality output.
 

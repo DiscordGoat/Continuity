@@ -445,7 +445,7 @@ public class ItemRegistry {
      */
     public static ItemStack getStarlight() {
         return createCustomItem(
-                Material.NETHER_STAR,
+                Material.GHAST_TEAR,
                 ChatColor.GOLD + "Starlight",
                 Arrays.asList(
                         ChatColor.GRAY + "A radiant relic shimmering with cosmic energy.",

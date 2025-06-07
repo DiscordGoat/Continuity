@@ -259,7 +259,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // Potion of Night Vision
-        List<String> nightVisionIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Starlight");
+        List<String> nightVisionIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Starlight", "Fermented Spider Eye");
         List<String> nightVisionLore = Arrays.asList("Grants Night Vision while moving", "Base Duration of " + 60*30);
         Color nightVisionColor = Color.fromRGB(255, 255, 255);
         recipeRegistry.add(
