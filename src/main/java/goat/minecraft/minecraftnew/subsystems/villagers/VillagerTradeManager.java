@@ -327,6 +327,7 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 4)); // Material
+        clericPurchases.add(createTradeMap("NIGHT_VISION", 1, 32, 4)); // Material
 
         clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 3)); // Custom Item
         defaultConfig.set("CLERIC.purchases", clericPurchases);
@@ -674,6 +675,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getFountainsRecipePaper();
             case "SOLAR_FURY":
                 return ItemRegistry.getSolarFuryRecipePaper();
+            case "NIGHT_VISION":
+                return ItemRegistry.getNightVisionRecipePaper();
 
 
             case "LOYAL_DECLARATION":
@@ -822,6 +825,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getClericEnchant();
             case "SUNFLARE":
                 return ItemRegistry.getSunflare();
+            case "STARLIGHT":
+                return ItemRegistry.getStarlight();
             case "PESTICIDE":
                 return ItemRegistry.getPesticide();
             case "CARTOGRAPHER_MINESHAFT":

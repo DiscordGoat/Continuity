@@ -756,6 +756,9 @@ public class VerdantRelicsSubsystem implements Listener {
             else if (relicType.equalsIgnoreCase("Sunflare")) {
                 return ItemRegistry.getSunflare();
             }
+            else if (relicType.equalsIgnoreCase("Starlight")) {
+                return ItemRegistry.getStarlight();
+            }
             // Default fallback yield
             return null;
         }
