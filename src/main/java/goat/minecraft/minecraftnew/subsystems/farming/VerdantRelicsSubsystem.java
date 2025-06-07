@@ -205,12 +205,19 @@ public class VerdantRelicsSubsystem implements Listener {
         String locKey = toLocKey(target.getLocation());
         XPManager xpManager = new XPManager(plugin);
         int farmingLevel = xpManager.getPlayerLevel(p, "Farming");
-        // One in-game day is 20 minutes (1,200 seconds)
-        double durationAtLevel1 = 10 * 1200.0;   // 30 days = 36,000 seconds
-        double durationAtLevel100 = 5 * 1200.0;   // 15 days = 18,000 seconds
-        double diff = durationAtLevel1 - durationAtLevel100;
-        double factor = (farmingLevel - 1) / 99.0; // Linear factor from level 1 to 100
-        int growthDuration = (int)(durationAtLevel1 - diff * factor);
+
+        int growthDuration;
+        if(relicName.equalsIgnoreCase("Sunflare")) {
+            // Sunflare grows quicker than other relics
+            growthDuration = 5 * 1200; // 5 in-game days
+        } else {
+            // One in-game day is 20 minutes (1,200 seconds)
+            double durationAtLevel1 = 10 * 1200.0;   // 30 days = 36,000 seconds
+            double durationAtLevel100 = 5 * 1200.0;   // 15 days = 18,000 seconds
+            double diff = durationAtLevel1 - durationAtLevel100;
+            double factor = (farmingLevel - 1) / 99.0; // Linear factor from level 1 to 100
+            growthDuration = (int)(durationAtLevel1 - diff * factor);
+        }
 
         // Apply Master Botanist perk: halve the growth time
         PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
@@ -743,9 +750,12 @@ public class VerdantRelicsSubsystem implements Listener {
              else if (relicType.equalsIgnoreCase("Treasury")) {
                  return ItemRegistry.getTreasury(); // Ensure this method exists in ItemRegistry
              }
-             else if (relicType.equalsIgnoreCase("Marrow")) {
-                 return ItemRegistry.getMarrow(); // Ensure this method exists in ItemRegistry
-             }
+            else if (relicType.equalsIgnoreCase("Marrow")) {
+                return ItemRegistry.getMarrow(); // Ensure this method exists in ItemRegistry
+            }
+            else if (relicType.equalsIgnoreCase("Sunflare")) {
+                return ItemRegistry.getSunflare();
+            }
             // Default fallback yield
             return null;
         }

@@ -326,6 +326,7 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("SOVEREIGNTY", 1, 16, 3)); // Material
         clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 4)); // Material
+        clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 4)); // Material
 
         clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 3)); // Custom Item
         defaultConfig.set("CLERIC.purchases", clericPurchases);
@@ -342,6 +343,8 @@ public class VillagerTradeManager implements Listener {
         clericSells.add(createTradeMap("STRING", 8, 1, 4)); // Material
         clericSells.add(createTradeMap("GUNPOWDER", 4, 1, 4)); // Material
         clericSells.add(createTradeMap("PHANTOM_MEMBRANE", 4, 1, 4)); // Material
+        // Sell Sunflare relic for brewing Potion of Solar Fury
+        clericSells.add(createTradeMap("SUNFLARE", 1, 16, 4)); // Custom Item
 
         defaultConfig.set("CLERIC.sells", clericSells);
 // Leatherworker Purchases
@@ -670,6 +673,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLiquidLuckRecipePaper();
             case "FOUNTAINS":
                 return ItemRegistry.getFountainsRecipePaper();
+            case "SOLAR_FURY":
+                return ItemRegistry.getSolarFuryRecipePaper();
 
 
             case "LOYAL_DECLARATION":
@@ -816,6 +821,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLeatherworkerArtifact();
             case "CLERIC_ENCHANT":
                 return ItemRegistry.getClericEnchant();
+            case "SUNFLARE":
+                return ItemRegistry.getSunflare();
             case "PESTICIDE":
                 return ItemRegistry.getPesticide();
             case "CARTOGRAPHER_MINESHAFT":
