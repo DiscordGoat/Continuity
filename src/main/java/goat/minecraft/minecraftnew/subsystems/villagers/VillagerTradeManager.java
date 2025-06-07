@@ -342,6 +342,8 @@ public class VillagerTradeManager implements Listener {
         clericSells.add(createTradeMap("STRING", 8, 1, 4)); // Material
         clericSells.add(createTradeMap("GUNPOWDER", 4, 1, 4)); // Material
         clericSells.add(createTradeMap("PHANTOM_MEMBRANE", 4, 1, 4)); // Material
+        // Sell Sunflare relic for brewing Potion of Solar Fury
+        clericSells.add(createTradeMap("SUNFLARE", 1, 16, 4)); // Custom Item
 
         defaultConfig.set("CLERIC.sells", clericSells);
 // Leatherworker Purchases
@@ -816,6 +818,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLeatherworkerArtifact();
             case "CLERIC_ENCHANT":
                 return ItemRegistry.getClericEnchant();
+            case "SUNFLARE":
+                return ItemRegistry.getSunflare();
             case "PESTICIDE":
                 return ItemRegistry.getPesticide();
             case "CARTOGRAPHER_MINESHAFT":
