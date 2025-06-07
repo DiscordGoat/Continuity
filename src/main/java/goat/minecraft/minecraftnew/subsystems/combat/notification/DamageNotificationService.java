@@ -75,6 +75,36 @@ public class DamageNotificationService {
     public void createCustomDamageIndicator(Location location, double damage) {
         showDamageIndicator(location, damage);
     }
+
+    /**
+     * Creates a special fire damage indicator with custom styling.
+     *
+     * @param location  The location to display the indicator
+     * @param damage    Damage dealt by the fire tick
+     * @param fireLevel Current fire stack amount
+     */
+    public void createFireDamageIndicator(Location location, double damage, int fireLevel) {
+        if (!config.isEnabled() || location == null || damage <= 0) {
+            return;
+        }
+
+        try {
+            String damageText = DAMAGE_FORMAT.format(damage);
+            String stackText = DAMAGE_FORMAT.format(fireLevel / 100.0);
+            String displayText = ChatColor.RED + "\uD83D\uDD25 " + damageText + " (" + stackText + ")";
+
+            Location spawnLocation = calculateSpawnLocation(location);
+            ArmorStand indicator = createDamageIndicator(spawnLocation, displayText);
+
+            if (indicator != null) {
+                startIndicatorAnimation(indicator);
+                logger.finest(String.format("Created fire damage indicator: %.1f at %s", damage, location));
+            }
+
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Failed to create fire damage indicator", e);
+        }
+    }
     
     /**
      * Cleans up all active damage indicators.
