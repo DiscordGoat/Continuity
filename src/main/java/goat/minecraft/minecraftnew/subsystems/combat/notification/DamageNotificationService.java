@@ -84,6 +84,18 @@ public class DamageNotificationService {
      * @param fireLevel Current fire stack amount
      */
     public void createFireDamageIndicator(Location location, double damage, int fireLevel) {
+        createFireDamageIndicator(location, damage, fireLevel, false);
+    }
+
+    /**
+     * Creates a special fire damage indicator with custom styling and optional text.
+     *
+     * @param location  The location to display the indicator
+     * @param damage    Damage dealt by the fire tick
+     * @param fireLevel Current fire stack amount
+     * @param doubleBoost Whether the Solar Fury effect is active (show "x2")
+     */
+    public void createFireDamageIndicator(Location location, double damage, int fireLevel, boolean doubleBoost) {
         if (!config.isEnabled() || location == null || damage <= 0) {
             return;
         }
@@ -91,10 +103,15 @@ public class DamageNotificationService {
         try {
             String damageText = DAMAGE_FORMAT.format(damage);
             String stackText = DAMAGE_FORMAT.format(fireLevel / 100.0);
-            String displayText = ChatColor.RED + "\uD83D\uDD25 " + damageText + " (" + stackText + ")";
+            StringBuilder display = new StringBuilder();
+            display.append(ChatColor.RED).append("\uD83D\uDD25 ").append(damageText)
+                   .append(" (").append(stackText).append(")");
+            if (doubleBoost) {
+                display.append(ChatColor.GOLD).append(" x2");
+            }
 
             Location spawnLocation = calculateSpawnLocation(location);
-            ArmorStand indicator = createDamageIndicator(spawnLocation, displayText);
+            ArmorStand indicator = createDamageIndicator(spawnLocation, display.toString());
 
             if (indicator != null) {
                 startIndicatorAnimation(indicator);

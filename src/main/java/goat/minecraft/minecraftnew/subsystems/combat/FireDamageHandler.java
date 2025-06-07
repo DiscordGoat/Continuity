@@ -36,6 +36,7 @@ public class FireDamageHandler implements Listener {
     private final DamageNotificationService notificationService;
     private final Map<UUID, Integer> fireLevels = new ConcurrentHashMap<>();
     private final Map<UUID, BukkitRunnable> tasks = new ConcurrentHashMap<>();
+    private final Map<UUID, Boolean> solarFuryTargets = new ConcurrentHashMap<>();
 
     public FireDamageHandler(JavaPlugin plugin, DamageNotificationService notificationService) {
         this.plugin = plugin;
@@ -72,6 +73,7 @@ public class FireDamageHandler implements Listener {
             int amount = level * 5;
             if (PotionManager.isActive("Potion of Solar Fury", player)) {
                 amount *= 2;
+                solarFuryTargets.put(target.getUniqueId(), true);
                 sendActionBar(player, ChatColor.GOLD + "Solar Fury: " + ChatColor.RED + "2x" + ChatColor.GOLD + " Fire Level!");
 
             }
@@ -123,8 +125,8 @@ public class FireDamageHandler implements Listener {
                 if (entity.getWorld() != null) {
                     entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0f, 1.0f);
                 }
-                notificationService.createFireDamageIndicator(entity.getLocation(), damage, level);
-                notificationService.createCustomDamageIndicator(entity.getLocation(), damage);
+                boolean boosted = solarFuryTargets.getOrDefault(id, false);
+                notificationService.createFireDamageIndicator(entity.getLocation(), damage, level, boosted);
                 spawnFireParticles(entity.getLocation(), level);
 
                 fireLevels.put(id, level - 1);
@@ -134,6 +136,7 @@ public class FireDamageHandler implements Listener {
                 BukkitRunnable t = tasks.remove(id);
                 if (t != null) t.cancel();
                 fireLevels.remove(id);
+                solarFuryTargets.remove(id);
             }
         };
 
