@@ -326,6 +326,7 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("SOVEREIGNTY", 1, 16, 3)); // Material
         clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 4)); // Material
+        clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 4)); // Material
 
         clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 3)); // Custom Item
         defaultConfig.set("CLERIC.purchases", clericPurchases);
@@ -672,6 +673,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLiquidLuckRecipePaper();
             case "FOUNTAINS":
                 return ItemRegistry.getFountainsRecipePaper();
+            case "SOLAR_FURY":
+                return ItemRegistry.getSolarFuryRecipePaper();
 
 
             case "LOYAL_DECLARATION":
