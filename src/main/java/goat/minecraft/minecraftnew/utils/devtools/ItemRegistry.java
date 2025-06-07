@@ -436,6 +436,45 @@ public class ItemRegistry {
         );
     }
 
+    // ------------------------------------------------------------------
+    // Starlight Relic & Seed
+    // ------------------------------------------------------------------
+
+    /**
+     * Mature Starlight relic used in brewing the Potion of Night Vision.
+     */
+    public static ItemStack getStarlight() {
+        return createCustomItem(
+                Material.NETHER_STAR,
+                ChatColor.GOLD + "Starlight",
+                Arrays.asList(
+                        ChatColor.GRAY + "A radiant relic shimmering with cosmic energy.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Night Vision."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /**
+     * Seed form dropped from invisible spiders, plant to grow Starlight.
+     */
+    public static ItemStack getVerdantRelicStarlightSeed() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic Starlight",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic seed infused with celestial light.",
+                        ChatColor.BLUE + "Dropped by invisible spiders.",
+                        ChatColor.BLUE + "Right-click on dirt/grass to plant."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
 
     public static ItemStack getRecurvePotionRecipePaper() {
         // This returns a piece of PAPER with a custom name + lore that says "Potion of Recurve Recipe".
@@ -533,6 +572,21 @@ public class ItemRegistry {
                 ChatColor.LIGHT_PURPLE + "Potion of Solar Fury Recipe (Potion Recipe)",
                 Arrays.asList(
                         ChatColor.GRAY + "Brewing instructions for Solar Fury",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getNightVisionRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Night Vision Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Night Vision",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
                         ChatColor.DARK_PURPLE + "Potion Recipe"
                 ),

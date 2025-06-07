@@ -695,6 +695,18 @@ public class SpawnMonsters implements Listener {
         }
     }
 
+    @EventHandler
+    public void onInvisibleSpiderDeath(EntityDeathEvent event) {
+        if (!(event.getEntity() instanceof Spider spider)) return;
+        if (!spider.isInvisible()) return;
+
+        Player killer = spider.getKiller();
+        if (killer != null) {
+            spider.getWorld().dropItemNaturally(spider.getLocation(), ItemRegistry.getVerdantRelicStarlightSeed());
+            killer.sendMessage(ChatColor.AQUA + "You found a " + ChatColor.GOLD + "Verdant Relic: Starlight!");
+        }
+    }
+
 
     /**
      * When a Deep Sea Diver is hit, play a metal clang sound.
