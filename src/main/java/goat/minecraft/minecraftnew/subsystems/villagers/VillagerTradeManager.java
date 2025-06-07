@@ -488,6 +488,7 @@ public class VillagerTradeManager implements Listener {
         librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANT", 1, 32, 3)); // Custom Item
         librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANTMENT_TWO", 1, 16, 3)); // Custom Item
         librarianPurchases.add(createTradeMap("IRON_GOLEM", 1, 16, 4)); // Custom Item
+        librarianPurchases.add(createTradeMap("FORBIDDEN_BOOK", 1, 32, 2)); // Custom Item
 
 
         defaultConfig.set("LIBRARIAN.purchases", librarianPurchases);
