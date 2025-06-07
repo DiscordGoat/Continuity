@@ -64,6 +64,7 @@ public class MusicDiscManager implements Listener {
         discHandlers.put(Material.MUSIC_DISC_FAR, new goat.minecraft.minecraftnew.subsystems.music.discs.far.FarDisc(plugin));
         discHandlers.put(Material.MUSIC_DISC_MALL, new goat.minecraft.minecraftnew.subsystems.music.discs.mall.MallDisc(plugin));
         discHandlers.put(Material.MUSIC_DISC_13, new goat.minecraft.minecraftnew.subsystems.music.discs.disc13.Disc13(plugin));
+
     }
     private final Map<UUID, TeleportSession> relicSessions = new HashMap<>();
     private static class TeleportSession {
