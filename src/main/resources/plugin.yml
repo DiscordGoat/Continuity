@@ -130,3 +130,6 @@ commands:
     description: Repairs the held item to full durability
     usage: /repair
     permission: continuity.admin
+  zombiepet:
+    description: Spawns a zombie companion that follows and protects you.
+    usage: /zombiepet
