@@ -13,6 +13,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.Sound;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -104,7 +105,10 @@ public class FireDamageHandler implements Listener {
 
                 double damage = level / 2.0;
                 entity.setHealth(Math.max(0.0, entity.getHealth() - damage));
-                notificationService.createCustomDamageIndicator(entity.getLocation(), damage);
+                if (entity.getWorld() != null) {
+                    entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0f, 1.0f);
+                }
+                notificationService.createFireDamageIndicator(entity.getLocation(), damage, level);
                 spawnFireParticles(entity.getLocation(), level);
 
                 fireLevels.put(id, level - 1);
@@ -123,7 +127,7 @@ public class FireDamageHandler implements Listener {
 
     private void spawnFireParticles(Location location, int count) {
         if (location.getWorld() != null) {
-            location.getWorld().spawnParticle(Particle.FLAME, location, count, 0.3, 0.5, 0.3, 0.01);
+            location.getWorld().spawnParticle(Particle.FLAME, location, count, 0.6, 1.0, 0.6, 0.02);
         }
     }
 
