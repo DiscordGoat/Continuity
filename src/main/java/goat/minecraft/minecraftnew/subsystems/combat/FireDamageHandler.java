@@ -73,6 +73,7 @@ public class FireDamageHandler implements Listener {
             if (PotionManager.isActive("Potion of Solar Fury", player)) {
                 amount *= 2;
                 sendActionBar(player, ChatColor.GOLD + "Solar Fury: " + ChatColor.RED + "2x" + ChatColor.GOLD + " Fire Level!");
+
             }
             addFire(target, amount);
         }
