@@ -753,6 +753,15 @@ public class ItemRegistry {
         ), 1, false, true);
     }
 
+    public static ItemStack getWaterAspectEnchant() {
+        return createCustomItem(Material.PRISMARINE_CRYSTALS, ChatColor.YELLOW +
+                "Water Aspect", Arrays.asList(
+                ChatColor.GRAY + "Max level of IV",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Water Aspect to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+
     public static ItemStack getIronGolem() {
         return createCustomItem(Material.IRON_BLOCK, ChatColor.YELLOW +
                 "Iron Golem", Arrays.asList(

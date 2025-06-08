@@ -959,6 +959,10 @@ public class AnvilRepair implements Listener {
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Experience", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Experience") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Water Aspect") && isSword(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Water Aspect", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Water Aspect") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
         }
 
 
