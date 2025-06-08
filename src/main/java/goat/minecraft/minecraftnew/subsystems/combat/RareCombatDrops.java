@@ -39,6 +39,7 @@ public class RareCombatDrops implements Listener {
     ItemStack witchDrop = ItemRegistry.getWitchDrop();
     ItemStack witherSkeletonDrop = ItemRegistry.getWitherSkeletonDrop();
     ItemStack guardianDrop = ItemRegistry.getGuardianDrop();
+    ItemStack waterAspectEnchant = ItemRegistry.getWaterAspectEnchant();
     ItemStack elderGuardianDrop = ItemRegistry.getElderGuardianDrop();
     ItemStack pillagerDrop = ItemRegistry.getPillagerDrop();
     ItemStack vindicatorDrop = ItemRegistry.getVindicatorDrop();
@@ -311,6 +312,9 @@ public class RareCombatDrops implements Listener {
         int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
         if (rollChance(1,4, hostilityLevel)) { // 1-4% chance
             addRareDrop(player, event, guardianDrop);
+        }
+        if (random.nextInt(20) == 0) { // 5% base chance
+            addRareDrop(player, event, waterAspectEnchant);
         }
         if (rollChance(1,1, hostilityLevel)) { // 1-4% chance
             petRegistry.addPetByName(player, "Guardian");

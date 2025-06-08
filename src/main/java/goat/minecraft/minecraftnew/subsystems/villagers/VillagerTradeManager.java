@@ -240,6 +240,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithSells.add(createTradeMap("BLAZE_DROP", 1, 8, 1)); // blazeDrop
         weaponsmithSells.add(createTradeMap("ENDER_DROP", 1, 24, 1)); // enderDrop
         weaponsmithSells.add(createTradeMap("GUARDIAN_DROP", 1, 8, 1)); // guardianDrop
+        weaponsmithSells.add(createTradeMap("WATER_ASPECT_ENCHANT", 1, 8, 1)); // water aspect enchant
         weaponsmithSells.add(createTradeMap("ELDER_GUARDIAN_DROP", 1, 4, 1)); // elderGuardianDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_BRUTE_DROP", 1, 8, 1)); // piglinBruteDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_DROP", 1, 8, 1)); // piglinDrop
@@ -941,6 +942,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getEnderDrop();
             case "GUARDIAN_DROP":
                 return ItemRegistry.getGuardianDrop();
+            case "WATER_ASPECT_ENCHANT":
+                return ItemRegistry.getWaterAspectEnchant();
             case "ELDER_GUARDIAN_DROP":
                 return ItemRegistry.getElderGuardianDrop();
             case "PIGLIN_DROP":
