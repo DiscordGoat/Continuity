@@ -460,8 +460,11 @@ public class MusicDiscManager implements Listener {
     }
 
     public void resetHostilityLevelsOnDisable() {
+        HostilityManager hostilityManager = HostilityManager.getExistingInstance();
+        if (hostilityManager == null) {
+            return; // HostilityManager was never initialized while enabled
+        }
         Bukkit.getOnlinePlayers().forEach(player -> {
-            HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
             int currentTier = hostilityManager.getPlayerDifficultyTier(player);
             if (currentTier > 10) {
                 hostilityManager.setPlayerTier(player, 10);
