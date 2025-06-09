@@ -91,6 +91,21 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Prevents 15% of durability losses.",
                             ChatColor.BLUE + "On Lose Durability: " + ChatColor.GRAY + "15% chance to refund."
                     )),
+            new Perk(ChatColor.DARK_GRAY + "Unbreaking II", 1, Material.OBSIDIAN,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Stacks with Unbreaking for another 15% chance.",
+                            ChatColor.BLUE + "On Lose Durability: " + ChatColor.GRAY + "Additional 15% refund chance."
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Unbreaking III", 1, Material.OBSIDIAN,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Further increases durability refund by 15%.",
+                            ChatColor.BLUE + "On Lose Durability: " + ChatColor.GRAY + "Total 45% chance to refund."
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Excavator", 1, Material.DIAMOND_SHOVEL,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Shovels rarely wear down.",
+                            ChatColor.BLUE + "On Shovel Use: " + ChatColor.GRAY + "90% chance durability is preserved."
+                    )),
             new Perk(ChatColor.DARK_GRAY + "Berserkers Rage", 1, Material.FERMENTED_SPIDER_EYE,
                     Arrays.asList(
                             ChatColor.GRAY + "Enrages you when struck by a competent foe.",

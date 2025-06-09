@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemDamageEvent;
+import java.util.UUID;
 
 import java.util.Random;
 
@@ -20,13 +21,21 @@ public class ObsidianPlating implements Listener {
     @EventHandler
     public void onItemDamage(PlayerItemDamageEvent event) {
         Player player = event.getPlayer();
-        // Check if the player has purchased the ObsidianPlating perk
-        if (playerData.hasPerk(player.getUniqueId(), "Unbreaking")) {
-            // 15% chance to cancel durability loss
-            if (random.nextDouble() < 0.15) {
-                event.setCancelled(true);
-                // Optionally, you can notify the player or trigger a visual effect here.
-            }
+        UUID id = player.getUniqueId();
+
+        double chance = 0.0;
+        if (playerData.hasPerk(id, "Unbreaking")) {
+            chance += 0.15;
+        }
+        if (playerData.hasPerk(id, "Unbreaking II")) {
+            chance += 0.15;
+        }
+        if (playerData.hasPerk(id, "Unbreaking III")) {
+            chance += 0.15;
+        }
+
+        if (chance > 0 && random.nextDouble() < chance) {
+            event.setCancelled(true);
         }
     }
 }
