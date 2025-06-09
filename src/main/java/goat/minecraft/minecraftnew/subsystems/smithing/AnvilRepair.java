@@ -682,7 +682,6 @@ public class AnvilRepair implements Listener {
         }
         // Determine the type of repair material and set the repair amount accordingly
         if (billItem.getType() == Material.IRON_INGOT) {
-            repairAmount = 25 + smithingLevel; // Just use this calculated repairAmount
             xpManager.addXP(player, "Smithing", repairAmount);
         } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
             repairAmount = 100;
