@@ -327,6 +327,7 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("SOVEREIGNTY", 1, 16, 3)); // Material
         clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 4)); // Material
+        clericPurchases.add(createTradeMap("RIPTIDE", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("NIGHT_VISION", 1, 32, 4)); // Material
 
@@ -674,6 +675,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLiquidLuckRecipePaper();
             case "FOUNTAINS":
                 return ItemRegistry.getFountainsRecipePaper();
+            case "RIPTIDE":
+                return ItemRegistry.getRiptideRecipePaper();
             case "SOLAR_FURY":
                 return ItemRegistry.getSolarFuryRecipePaper();
             case "NIGHT_VISION":
@@ -828,6 +831,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getSunflare();
             case "STARLIGHT":
                 return ItemRegistry.getStarlight();
+            case "TIDE":
+                return ItemRegistry.getTide();
             case "PESTICIDE":
                 return ItemRegistry.getPesticide();
             case "CARTOGRAPHER_MINESHAFT":

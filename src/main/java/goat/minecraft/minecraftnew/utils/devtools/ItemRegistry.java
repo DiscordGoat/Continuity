@@ -475,6 +475,45 @@ public class ItemRegistry {
         );
     }
 
+    // ------------------------------------------------------------------
+    // Tide Relic & Seed
+    // ------------------------------------------------------------------
+
+    /**
+     * Mature Tide relic used in brewing the Potion of Riptide.
+     */
+    public static ItemStack getTide() {
+        return createCustomItem(
+                Material.HEART_OF_THE_SEA,
+                ChatColor.GOLD + "Tide",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic pulsing with oceanic power.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Riptide."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /**
+     * Seed form dropped from Poseidon, plant to grow Tide.
+     */
+    public static ItemStack getVerdantRelicTideSeed() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic Tide",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic seed brimming with ocean energy.",
+                        ChatColor.BLUE + "Dropped by Poseidon.",
+                        ChatColor.BLUE + "Right-click on dirt/grass to plant."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
 
     public static ItemStack getRecurvePotionRecipePaper() {
         // This returns a piece of PAPER with a custom name + lore that says "Potion of Recurve Recipe".
@@ -557,6 +596,21 @@ public class ItemRegistry {
                 ChatColor.LIGHT_PURPLE + "Potion of Fountains Recipe (Potion Recipe)",
                 Arrays.asList(
                         ChatColor.GRAY + "Brewing instructions for Sea Creature Chance",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getRiptideRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Riptide Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Riptide",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
                         ChatColor.DARK_PURPLE + "Potion Recipe"
                 ),

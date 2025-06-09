@@ -158,6 +158,7 @@ public class SeaCreatureRegistry implements Listener {
         poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getChanneling(), 1, 1, 6));
         poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getBait(), 1, 1, 1));
         poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getLoyaltyContract(), 1, 1, 5));
+        poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getVerdantRelicTideSeed(), 1, 1, 5));
         SEA_CREATURES.add(new SeaCreature(
                 "Poseidon",
                 Rarity.RARE,
