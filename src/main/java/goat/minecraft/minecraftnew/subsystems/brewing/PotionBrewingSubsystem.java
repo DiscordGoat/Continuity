@@ -259,6 +259,14 @@ public class PotionBrewingSubsystem implements Listener {
                 new PotionRecipe("Potion of Solar Fury", solarFuryIngredients, 60*10, new ItemStack(Material.POTION), solarFuryColor, solarFuryLore)
         );
 
+        // Potion of Riptide
+        List<String> riptideIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Heart of the Sea", "Kelp", "Tide");
+        List<String> riptideLore = Arrays.asList("Boosts riptide velocity", "Base Duration of " + 60*30);
+        Color riptideColor = Color.fromRGB(173, 216, 230);
+        recipeRegistry.add(
+                new PotionRecipe("Potion of Riptide", riptideIngredients, 60*10, new ItemStack(Material.POTION), riptideColor, riptideLore)
+        );
+
         // Potion of Night Vision
         List<String> nightVisionIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Starlight", "Fermented Spider Eye");
         List<String> nightVisionLore = Arrays.asList("Grants Night Vision while moving", "Base Duration of " + 60*30);
