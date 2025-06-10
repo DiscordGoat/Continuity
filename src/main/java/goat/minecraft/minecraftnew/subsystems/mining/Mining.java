@@ -258,6 +258,20 @@ public class Mining implements Listener {
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
                 }
             }
+
+            // Chance to drop Shiny Emerald relic seed
+            Material type = block.getType();
+            if (type == Material.EMERALD_ORE || type == Material.DEEPSLATE_EMERALD_ORE) {
+                if (random.nextInt(100) < 5) { // 5% chance
+                    block.getWorld().dropItemNaturally(block.getLocation(), ItemRegistry.getVerdantRelicShinyEmeraldSeed());
+                }
+            } else if (type == Material.DIAMOND_ORE || type == Material.DEEPSLATE_DIAMOND_ORE ||
+                    type == Material.LAPIS_ORE || type == Material.DEEPSLATE_LAPIS_ORE ||
+                    type == Material.REDSTONE_ORE || type == Material.DEEPSLATE_REDSTONE_ORE) {
+                if (random.nextInt(100) < 1) { // 1% chance
+                    block.getWorld().dropItemNaturally(block.getLocation(), ItemRegistry.getVerdantRelicShinyEmeraldSeed());
+                }
+            }
         }
     }
 

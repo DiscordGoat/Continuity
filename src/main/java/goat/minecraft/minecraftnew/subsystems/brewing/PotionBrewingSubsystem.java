@@ -274,6 +274,14 @@ public class PotionBrewingSubsystem implements Listener {
         recipeRegistry.add(
                 new PotionRecipe("Potion of Night Vision", nightVisionIngredients, 60*10, new ItemStack(Material.POTION), nightVisionColor, nightVisionLore)
         );
+
+        // Potion of Charismatic Bartering
+        List<String> charismaticIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Gold Block", "Shiny Emerald");
+        List<String> charismaticLore = Arrays.asList("Villager trades 20% cheaper", "Base Duration of " + baseDuration);
+        Color charismaticColor = Color.fromRGB(80, 200, 120); // emerald green tone
+        recipeRegistry.add(
+                new PotionRecipe("Potion of Charismatic Bartering", charismaticIngredients, 60*10, new ItemStack(Material.POTION), charismaticColor, charismaticLore)
+        );
     }
 
     private PotionRecipe findRecipeByName(String potionName) {

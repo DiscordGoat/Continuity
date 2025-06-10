@@ -759,6 +759,9 @@ public class VerdantRelicsSubsystem implements Listener {
             else if (relicType.equalsIgnoreCase("Starlight")) {
                 return ItemRegistry.getStarlight();
             }
+            else if (relicType.equalsIgnoreCase("Shiny Emerald")) {
+                return ItemRegistry.getShinyEmerald();
+            }
             else if (relicType.equalsIgnoreCase("Tide")) {
                 return ItemRegistry.getTide();
             }

@@ -11,6 +11,7 @@ import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -330,6 +331,7 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("RIPTIDE", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("NIGHT_VISION", 1, 32, 4)); // Material
+        clericPurchases.add(createTradeMap("CHARISMATIC_BARTERING", 1, 64, 4)); // Material
 
         clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 3)); // Custom Item
         defaultConfig.set("CLERIC.purchases", clericPurchases);
@@ -681,6 +683,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getSolarFuryRecipePaper();
             case "NIGHT_VISION":
                 return ItemRegistry.getNightVisionRecipePaper();
+            case "CHARISMATIC_BARTERING":
+                return ItemRegistry.getCharismaticBarteringRecipePaper();
 
 
             case "LOYAL_DECLARATION":
@@ -833,6 +837,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getStarlight();
             case "TIDE":
                 return ItemRegistry.getTide();
+            case "SHINY_EMERALD":
+                return ItemRegistry.getShinyEmerald();
             case "PESTICIDE":
                 return ItemRegistry.getPesticide();
             case "CARTOGRAPHER_MINESHAFT":
@@ -1018,6 +1024,10 @@ public class VillagerTradeManager implements Listener {
         int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
         double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001));
         finalCost *= (1 - barteringDiscount);
+
+        if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
+            finalCost *= 0.8; // additional 20% discount
+        }
 
         return Math.max(1, (int) Math.floor(finalCost));
     }
@@ -1406,6 +1416,10 @@ public class VillagerTradeManager implements Listener {
         int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
         double barteringDiscount = Math.min(0.1, (barteringLevel * 0.0025)); // up to 25% discount
         finalCost *= (1 - barteringDiscount);
+
+        if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
+            finalCost *= 0.8; // additional 20% discount
+        }
 
         // Ensure at least cost of 1
         int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));
