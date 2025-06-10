@@ -514,6 +514,45 @@ public class ItemRegistry {
         );
     }
 
+    // ------------------------------------------------------------------
+    // Shiny Emerald Relic & Seed
+    // ------------------------------------------------------------------
+
+    /**
+     * Mature Shiny Emerald relic used in brewing the Potion of Charismatic Bartering.
+     */
+    public static ItemStack getShinyEmerald() {
+        return createCustomItem(
+                Material.EMERALD,
+                ChatColor.GOLD + "Shiny Emerald",
+                Arrays.asList(
+                        ChatColor.GRAY + "A gem shimmering with mercantile power.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Charismatic Bartering."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /**
+     * Seed form obtained from mining ores, plant to grow a Shiny Emerald.
+     */
+    public static ItemStack getVerdantRelicShinyEmeraldSeed() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic Shiny Emerald",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic seed radiating with emerald light.",
+                        ChatColor.BLUE + "5% drop from Emerald Ore.",
+                        ChatColor.BLUE + "1% drop from Diamond/Lapis/Redstone Ore."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
 
     public static ItemStack getRecurvePotionRecipePaper() {
         // This returns a piece of PAPER with a custom name + lore that says "Potion of Recurve Recipe".
@@ -641,6 +680,21 @@ public class ItemRegistry {
                 ChatColor.LIGHT_PURPLE + "Potion of Night Vision Recipe (Potion Recipe)",
                 Arrays.asList(
                         ChatColor.GRAY + "Brewing instructions for Night Vision",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getCharismaticBarteringRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Charismatic Bartering Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Charismatic Bartering",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
                         ChatColor.DARK_PURPLE + "Potion Recipe"
                 ),
