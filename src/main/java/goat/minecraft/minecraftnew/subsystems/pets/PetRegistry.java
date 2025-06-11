@@ -294,7 +294,7 @@ public class PetRegistry {
                 PetManager.Rarity.EPIC,
                 100,
                 Particle.VILLAGER_HAPPY,
-                Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.COLLECTOR)
+                Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.LUMBERJACK)
         ));
         registry.put("Raccoon", new PetDefinition(
                 "Raccoon",
