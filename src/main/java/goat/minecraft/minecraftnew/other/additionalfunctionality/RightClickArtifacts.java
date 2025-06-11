@@ -274,96 +274,99 @@ public class RightClickArtifacts implements Listener {
 
                 String displayName = meta.getDisplayName();
                 SeederType seederType = SeederType.fromDisplayName(displayName);
+                if (seederType == null) {
+                    return; // The item is not a recognized seeder
+                }
 
-                // Handle seeder items
-                if (seederType != null) {
-                    // Get the clicked block
-                    Block clickedBlock = e.getClickedBlock();
-                    if (clickedBlock == null) {
-                        return;
-                    }
-
-                    // Check if the clicked block is FARMLAND
-                    if (clickedBlock.getType() != Material.FARMLAND) {
-                        player.sendMessage(ChatColor.RED + "You must right-click on tilled soil to use the " + seederType.name().replace("_", "") + ".");
-                        return;
-                    }
-
-                    // Initialize BFS structures
-                    Queue<Block> queue = new LinkedList<>();
-                    Set<Block> visited = new HashSet<>();
-                    int plantedCount = 0;
-
-                    queue.add(clickedBlock);
-                    visited.add(clickedBlock);
-
-                    while (!queue.isEmpty() && plantedCount < 1000) {
-                        Block current = queue.poll();
-
-                        // Plant the specified seed on the current FARMLAND block
-                        boolean planted = plantSeed(current, seederType.getCropMaterial());
-                        if (planted) {
-                            plantedCount++;
-                        }
-
-                        // Iterate over adjacent blocks (North, South, East, West)
-                        for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
-                            Block adjacent = current.getRelative(face);
-
-                            // Check if the adjacent block is FARMLAND and not yet visited
-                            if (adjacent.getType() == Material.FARMLAND && !visited.contains(adjacent)) {
-                                queue.add(adjacent);
-                                visited.add(adjacent);
-                            }
-                        }
-                    }
-
-                    // Provide feedback to the player
-                    player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_BREAK, 1.0f, 1.0f);
-                    decrementItemAmount(itemInHand, player);
-                    player.sendMessage(ChatColor.GREEN + "Seeds planted on " + plantedCount + " blocks!");
-
-                    // Optional: Display particles at the clicked location
-                    clickedBlock.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
-
-                } else if (displayName.equals(ChatColor.LIGHT_PURPLE + "Jackhammer")) {
-                    Block clickedBlock = e.getClickedBlock();
-                    if (clickedBlock == null) {
-                        return;
-                    }
-
-                    Material targetType = clickedBlock.getType();
-                    Queue<Block> queue = new LinkedList<>();
-                    Set<Block> visited = new HashSet<>();
-
-                    queue.add(clickedBlock);
-                    visited.add(clickedBlock);
-
-                    while (!queue.isEmpty() && visited.size() <= 501) {
-                        Block current = queue.poll();
-                        for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN}) {
-                            Block adjacent = current.getRelative(face);
-                            if (adjacent.getType() == targetType && !visited.contains(adjacent)) {
-                                visited.add(adjacent);
-                                queue.add(adjacent);
-                                if (visited.size() > 501) break;
-                            }
-                        }
-                    }
-
-                    if (visited.size() > 500) {
-                        player.sendMessage(ChatColor.RED + "Vein is too large to jackhammer!");
-                        return;
-                    }
-
-                    for (Block b : visited) {
-                        b.breakNaturally();
-                    }
-                    player.playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);
-                    decrementItemAmount(itemInHand, player);
-                } else {
+                // Get the clicked block
+                Block clickedBlock = e.getClickedBlock();
+                if (clickedBlock == null) {
                     return;
                 }
+
+                // Check if the clicked block is FARMLAND
+                if (clickedBlock.getType() != Material.FARMLAND) {
+                    player.sendMessage(ChatColor.RED + "You must right-click on tilled soil to use the " + seederType.name().replace("_", "") + ".");
+                    return;
+                }
+
+                // Initialize BFS structures
+                Queue<Block> queue = new LinkedList<>();
+                Set<Block> visited = new HashSet<>();
+                int plantedCount = 0;
+
+                queue.add(clickedBlock);
+                visited.add(clickedBlock);
+
+                while (!queue.isEmpty() && plantedCount < 1000) {
+                    Block current = queue.poll();
+
+                    // Plant the specified seed on the current FARMLAND block
+                    boolean planted = plantSeed(current, seederType.getCropMaterial());
+                    if (planted) {
+                        plantedCount++;
+                    }
+
+                    // Iterate over adjacent blocks (North, South, East, West)
+                    for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
+                        Block adjacent = current.getRelative(face);
+
+                        // Check if the adjacent block is FARMLAND and not yet visited
+                        if (adjacent.getType() == Material.FARMLAND && !visited.contains(adjacent)) {
+                            queue.add(adjacent);
+                            visited.add(adjacent);
+                        }
+                    }
+                }
+
+                // Provide feedback to the player
+                player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_BREAK, 1.0f, 1.0f);
+                decrementItemAmount(itemInHand, player);
+                player.sendMessage(ChatColor.GREEN + "Seeds planted on " + plantedCount + " blocks!");
+
+                // Optional: Display particles at the clicked location
+                clickedBlock.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
+
+            }
+            if (itemInHand.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Jackhammer")) {
+                Block clickedBlock = e.getClickedBlock();
+                if (clickedBlock == null) {
+                    return;
+                }
+
+                Material targetType = clickedBlock.getType();
+                Queue<Block> queue = new LinkedList<>();
+                Set<Block> visited = new HashSet<>();
+
+                queue.add(clickedBlock);
+                visited.add(clickedBlock);
+
+
+                while (!queue.isEmpty() && visited.size() <= 501) {
+                    Block current = queue.poll();
+                    for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN}) {
+                        Block adjacent = current.getRelative(face);
+                        if (adjacent.getType() == targetType && !visited.contains(adjacent)) {
+                            visited.add(adjacent);
+                            queue.add(adjacent);
+                            if (visited.size() > 501) break;
+                        }
+                    }
+                }
+
+                if (visited.size() > 10000) {
+                    player.sendMessage(ChatColor.RED + "Vein is too large to jackhammer!");
+                    return;
+                }
+
+                for (Block b : visited) {
+                    b.breakNaturally();
+                }
+                player.playSound(player.getLocation(), Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);
+                decrementItemAmount(itemInHand, player);
+            } else {
+                return;
+            }
         }
         if (e.getAction() == Action.RIGHT_CLICK_AIR) {
             if (!e.getHand().equals(EquipmentSlot.HAND)) {
@@ -930,153 +933,153 @@ public class RightClickArtifacts implements Listener {
 
     // Example helper method to create a disc data map.
     private Map<Material, DiscData> getDiscDataMap() {
-            Map<Material, DiscData> map = new HashMap<>();
+        Map<Material, DiscData> map = new HashMap<>();
 
-            map.put(Material.MUSIC_DISC_11, new DiscData(
-                    ChatColor.DARK_RED + "Music Disc 11",
-                    ChatColor.RED,
-                    List.of(
-                            ChatColor.GRAY + "Boosts monster hostility to Tier 20",
-                            ChatColor.GRAY + "Lasts 20 minutes, making mobs very aggressive"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_11, new DiscData(
+                ChatColor.DARK_RED + "Music Disc 11",
+                ChatColor.RED,
+                List.of(
+                        ChatColor.GRAY + "Boosts monster hostility to Tier 20",
+                        ChatColor.GRAY + "Lasts 20 minutes, making mobs very aggressive"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_13, new DiscData(
-                    ChatColor.AQUA + "Music Disc 13",
-                    ChatColor.AQUA,
-                    List.of(
-                            ChatColor.GRAY + "Activates the BaroTrauma Virus for 3 minutes",
-                            ChatColor.GRAY + "Infected mobs glow and drop extra XP"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_13, new DiscData(
+                ChatColor.AQUA + "Music Disc 13",
+                ChatColor.AQUA,
+                List.of(
+                        ChatColor.GRAY + "Activates the BaroTrauma Virus for 3 minutes",
+                        ChatColor.GRAY + "Infected mobs glow and drop extra XP"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_BLOCKS, new DiscData(
-                    ChatColor.GREEN + "Music Disc Blocks",
-                    ChatColor.GREEN,
-                    List.of(
-                            ChatColor.GRAY + "Activates Recipe Writer feature",
-                            ChatColor.GRAY + "Grants 32 random recipes over time"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_BLOCKS, new DiscData(
+                ChatColor.GREEN + "Music Disc Blocks",
+                ChatColor.GREEN,
+                List.of(
+                        ChatColor.GRAY + "Activates Recipe Writer feature",
+                        ChatColor.GRAY + "Grants 32 random recipes over time"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_CAT, new DiscData(
-                    ChatColor.LIGHT_PURPLE + "Music Disc Cat",
-                    ChatColor.LIGHT_PURPLE,
-                    List.of(
-                            ChatColor.GRAY + "Starts Harvest Frenzy for 3 minutes 5 seconds",
-                            ChatColor.GRAY + "Boosts crop growth and extra resource yield"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_CAT, new DiscData(
+                ChatColor.LIGHT_PURPLE + "Music Disc Cat",
+                ChatColor.LIGHT_PURPLE,
+                List.of(
+                        ChatColor.GRAY + "Starts Harvest Frenzy for 3 minutes 5 seconds",
+                        ChatColor.GRAY + "Boosts crop growth and extra resource yield"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_CHIRP, new DiscData(
-                    ChatColor.YELLOW + "Music Disc Chirp",
-                    ChatColor.YELLOW,
-                    List.of(
-                            ChatColor.GRAY + "Triggers Timber Boost for 3 minutes 5 seconds",
-                            ChatColor.GRAY + "Chance to yield bonus logs and extra Forestry XP, as well as Forest Spirits"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_CHIRP, new DiscData(
+                ChatColor.YELLOW + "Music Disc Chirp",
+                ChatColor.YELLOW,
+                List.of(
+                        ChatColor.GRAY + "Triggers Timber Boost for 3 minutes 5 seconds",
+                        ChatColor.GRAY + "Chance to yield bonus logs and extra Forestry XP, as well as Forest Spirits"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_FAR, new DiscData(
-                    ChatColor.GOLD + "Music Disc Far",
-                    ChatColor.GOLD,
-                    List.of(
-                            ChatColor.GRAY + "Begins a Random Loot Crate event",
-                            ChatColor.GRAY + "Spawns 16 loot chests with themed drops"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_FAR, new DiscData(
+                ChatColor.GOLD + "Music Disc Far",
+                ChatColor.GOLD,
+                List.of(
+                        ChatColor.GRAY + "Begins a Random Loot Crate event",
+                        ChatColor.GRAY + "Spawns 16 loot chests with themed drops"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_MALL, new DiscData(
-                    ChatColor.AQUA + "Music Disc Mall",
-                    ChatColor.AQUA,
-                    List.of(
-                            ChatColor.GRAY + "Starts a 10-minute rainstorm",
-                            ChatColor.GRAY + "Disables mob spawns and grants Conduit Power"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_MALL, new DiscData(
+                ChatColor.AQUA + "Music Disc Mall",
+                ChatColor.AQUA,
+                List.of(
+                        ChatColor.GRAY + "Starts a 10-minute rainstorm",
+                        ChatColor.GRAY + "Disables mob spawns and grants Conduit Power"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_MELLOHI, new DiscData(
-                    ChatColor.DARK_GREEN + "Music Disc Mellohi",
-                    ChatColor.DARK_GREEN,
-                    List.of(
-                            ChatColor.GRAY + "Initiates a Zombie Apocalypse for 96 seconds",
-                            ChatColor.GRAY + "Transforms spawns into zombies with extra drops"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_MELLOHI, new DiscData(
+                ChatColor.DARK_GREEN + "Music Disc Mellohi",
+                ChatColor.DARK_GREEN,
+                List.of(
+                        ChatColor.GRAY + "Initiates a Zombie Apocalypse for 96 seconds",
+                        ChatColor.GRAY + "Transforms spawns into zombies with extra drops"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_STAL, new DiscData(
-                    ChatColor.DARK_PURPLE + "Music Disc Stal",
-                    ChatColor.DARK_PURPLE,
-                    List.of(
-                            ChatColor.GRAY + "Launches the Grand Auction Event",
-                            ChatColor.GRAY + "Displays auction items for purchase with emeralds"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_STAL, new DiscData(
+                ChatColor.DARK_PURPLE + "Music Disc Stal",
+                ChatColor.DARK_PURPLE,
+                List.of(
+                        ChatColor.GRAY + "Launches the Grand Auction Event",
+                        ChatColor.GRAY + "Displays auction items for purchase with emeralds"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_STRAD, new DiscData(
-                    ChatColor.LIGHT_PURPLE + "Music Disc Strad",
-                    ChatColor.LIGHT_PURPLE,
-                    List.of(
-                            ChatColor.GRAY + "Repairs your items gradually over 188 seconds",
-                            ChatColor.GRAY + "Restores durability for inventory and armor"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_STRAD, new DiscData(
+                ChatColor.LIGHT_PURPLE + "Music Disc Strad",
+                ChatColor.LIGHT_PURPLE,
+                List.of(
+                        ChatColor.GRAY + "Repairs your items gradually over 188 seconds",
+                        ChatColor.GRAY + "Restores durability for inventory and armor"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_WAIT, new DiscData(
-                    ChatColor.BLUE + "Music Disc Wait",
-                    ChatColor.BLUE,
-                    List.of(
-                            ChatColor.GRAY + "Activates an Experience Surge event for 231 seconds",
-                            ChatColor.GRAY + "Randomly awards small amounts of XP to skills"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_WAIT, new DiscData(
+                ChatColor.BLUE + "Music Disc Wait",
+                ChatColor.BLUE,
+                List.of(
+                        ChatColor.GRAY + "Activates an Experience Surge event for 231 seconds",
+                        ChatColor.GRAY + "Randomly awards small amounts of XP to skills"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_WARD, new DiscData(
-                    ChatColor.AQUA + "Music Disc Ward",
-                    ChatColor.AQUA,
-                    List.of(
-                            ChatColor.GRAY + "Rains XP near a jukebox for 251 seconds",
-                            ChatColor.GRAY + "Spawns XP orbs with visual effects"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_WARD, new DiscData(
+                ChatColor.AQUA + "Music Disc Ward",
+                ChatColor.AQUA,
+                List.of(
+                        ChatColor.GRAY + "Rains XP near a jukebox for 251 seconds",
+                        ChatColor.GRAY + "Spawns XP orbs with visual effects"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_PIGSTEP, new DiscData(
-                    ChatColor.RED + "Music Disc Pigstep",
-                    ChatColor.RED,
-                    List.of(
-                            ChatColor.GRAY + "Summons an Angry Pigman boss",
-                            ChatColor.GRAY + "Defeat it for gold, enchanted apples, or pet rewards"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_PIGSTEP, new DiscData(
+                ChatColor.RED + "Music Disc Pigstep",
+                ChatColor.RED,
+                List.of(
+                        ChatColor.GRAY + "Summons an Angry Pigman boss",
+                        ChatColor.GRAY + "Defeat it for gold, enchanted apples, or pet rewards"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_5, new DiscData(
-                    ChatColor.GRAY + "Music Disc 5",
-                    ChatColor.GRAY,
-                    List.of(
-                            ChatColor.GRAY + "Resets your oxygen level",
-                            ChatColor.GRAY + "Grants Night Vision for 20 minutes"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_5, new DiscData(
+                ChatColor.GRAY + "Music Disc 5",
+                ChatColor.GRAY,
+                List.of(
+                        ChatColor.GRAY + "Resets your oxygen level",
+                        ChatColor.GRAY + "Grants Night Vision for 20 minutes"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_OTHERSIDE, new DiscData(
-                    ChatColor.GOLD + "Music Disc Otherside",
-                    ChatColor.GOLD,
-                    List.of(
-                            ChatColor.GRAY + "Accelerates time for 195 seconds",
-                            ChatColor.GRAY + "Spawns parrots or fireworks depending on time of day"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_OTHERSIDE, new DiscData(
+                ChatColor.GOLD + "Music Disc Otherside",
+                ChatColor.GOLD,
+                List.of(
+                        ChatColor.GRAY + "Accelerates time for 195 seconds",
+                        ChatColor.GRAY + "Spawns parrots or fireworks depending on time of day"
+                )
+        ));
 
-            map.put(Material.MUSIC_DISC_RELIC, new DiscData(
-                    ChatColor.DARK_AQUA + "Music Disc Relic",
-                    ChatColor.DARK_AQUA,
-                    List.of(
-                            ChatColor.GRAY + "Opens a teleportation session",
-                            ChatColor.GRAY + "Choose a target biome and teleport with optional return"
-                    )
-            ));
+        map.put(Material.MUSIC_DISC_RELIC, new DiscData(
+                ChatColor.DARK_AQUA + "Music Disc Relic",
+                ChatColor.DARK_AQUA,
+                List.of(
+                        ChatColor.GRAY + "Opens a teleportation session",
+                        ChatColor.GRAY + "Choose a target biome and teleport with optional return"
+                )
+        ));
 
-            return map;
+        return map;
     }
 
     // Example helper class for disc data.

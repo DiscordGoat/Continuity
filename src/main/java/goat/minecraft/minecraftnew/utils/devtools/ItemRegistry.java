@@ -2854,7 +2854,7 @@ public class ItemRegistry {
 
     public static ItemStack getJackhammer() {
         return createCustomItem(
-                Material.DIAMOND_PICKAXE,
+                Material.IRON_NUGGET,
                 ChatColor.LIGHT_PURPLE + "Jackhammer",
                 Arrays.asList(
                         ChatColor.GRAY + "A powerful mining device.",
