@@ -173,6 +173,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PotionOfRecurve(), this);
         getServer().getPluginManager().registerEvents(new PotionOfSolarFury(), this);
         getServer().getPluginManager().registerEvents(new PotionOfNightVision(), this);
+        getServer().getPluginManager().registerEvents(new PotionOfRiptide(), this);
+        getServer().getPluginManager().registerEvents(new PotionOfCharismaticBartering(), this);
 
 
 
@@ -192,6 +194,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Trainer(playerData), this);
         getServer().getPluginManager().registerEvents(new Restock(this, playerData), this);
         getServer().getPluginManager().registerEvents(new Unlooting(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new Excavator(playerData), this);
         getServer().getPluginManager().registerEvents(new Rebreather(this, playerData), this);
         getServer().getPluginManager().registerEvents(new Keepinventory(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterSmith(this, playerData), this);
@@ -469,6 +472,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Bloodlust(this), this);
         getServer().getPluginManager().registerEvents(new Rappel(), this);
         getServer().getPluginManager().registerEvents(new Preservation(), this);
+        getServer().getPluginManager().registerEvents(new WaterAspect(), this);
 
         CustomEnchantmentManager.registerEnchantment("Feed", 3, true);
         CustomEnchantmentManager.registerEnchantment("Merit", 5, true);
@@ -488,6 +492,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomEnchantmentManager.registerEnchantment("Experience", 5, true);
         CustomEnchantmentManager.registerEnchantment("Rappel", 1, true);
         CustomEnchantmentManager.registerEnchantment("Preservation", 1, true);
+        CustomEnchantmentManager.registerEnchantment("Water Aspect", 4, true);
 
 
         getServer().getPluginManager().registerEvents(new KnightMob(this), this);

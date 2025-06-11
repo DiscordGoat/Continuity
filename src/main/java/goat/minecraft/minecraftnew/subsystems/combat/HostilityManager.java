@@ -53,6 +53,17 @@ public class HostilityManager implements Listener {
         return instance;
     }
 
+    /**
+     * Returns the current HostilityManager instance without creating a new one.
+     * Used during shutdown to avoid registering events when the plugin is
+     * already disabled.
+     *
+     * @return the existing HostilityManager instance, or null if not initialized
+     */
+    public static synchronized HostilityManager getExistingInstance() {
+        return instance;
+    }
+
     public int getPlayerDifficultyTier(Player player) {
         if(player == null){
             return 1;

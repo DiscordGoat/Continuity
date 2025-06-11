@@ -682,7 +682,6 @@ public class AnvilRepair implements Listener {
         }
         // Determine the type of repair material and set the repair amount accordingly
         if (billItem.getType() == Material.IRON_INGOT) {
-            repairAmount = 25 + smithingLevel; // Just use this calculated repairAmount
             xpManager.addXP(player, "Smithing", repairAmount);
         } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
             repairAmount = 100;
@@ -957,6 +956,10 @@ public class AnvilRepair implements Listener {
 
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Soul Lantern")&& isSword(repairee)){
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Experience", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Experience") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Water Aspect") && isSword(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Water Aspect", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Water Aspect") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }

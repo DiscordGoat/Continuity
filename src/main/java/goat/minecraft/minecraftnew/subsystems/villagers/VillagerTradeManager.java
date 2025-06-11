@@ -11,6 +11,7 @@ import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -240,6 +241,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithSells.add(createTradeMap("BLAZE_DROP", 1, 8, 1)); // blazeDrop
         weaponsmithSells.add(createTradeMap("ENDER_DROP", 1, 24, 1)); // enderDrop
         weaponsmithSells.add(createTradeMap("GUARDIAN_DROP", 1, 8, 1)); // guardianDrop
+        weaponsmithSells.add(createTradeMap("WATER_ASPECT_ENCHANT", 1, 8, 1)); // water aspect enchant
         weaponsmithSells.add(createTradeMap("ELDER_GUARDIAN_DROP", 1, 4, 1)); // elderGuardianDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_BRUTE_DROP", 1, 8, 1)); // piglinBruteDrop
         weaponsmithSells.add(createTradeMap("PIGLIN_DROP", 1, 8, 1)); // piglinDrop
@@ -326,8 +328,10 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("SOVEREIGNTY", 1, 16, 3)); // Material
         clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 4)); // Material
+        clericPurchases.add(createTradeMap("RIPTIDE", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 4)); // Material
         clericPurchases.add(createTradeMap("NIGHT_VISION", 1, 32, 4)); // Material
+        clericPurchases.add(createTradeMap("CHARISMATIC_BARTERING", 1, 64, 4)); // Material
 
         clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 3)); // Custom Item
         defaultConfig.set("CLERIC.purchases", clericPurchases);
@@ -437,6 +441,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithSells.add(createTradeMap("EMERALD_GEMSTONE", 1, 64, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("REDSTONE_GEMSTONE", 1, 32, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("DIAMOND_GEMSTONE", 1, 64, 3)); // Custom Item
+        toolsmithSells.add(createTradeMap("JACKHAMMER", 1, 32, 3)); // Custom Item
 
         defaultConfig.set("TOOLSMITH.sells", toolsmithSells);
 // Armorer Purchases
@@ -673,10 +678,14 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLiquidLuckRecipePaper();
             case "FOUNTAINS":
                 return ItemRegistry.getFountainsRecipePaper();
+            case "RIPTIDE":
+                return ItemRegistry.getRiptideRecipePaper();
             case "SOLAR_FURY":
                 return ItemRegistry.getSolarFuryRecipePaper();
             case "NIGHT_VISION":
                 return ItemRegistry.getNightVisionRecipePaper();
+            case "CHARISMATIC_BARTERING":
+                return ItemRegistry.getCharismaticBarteringRecipePaper();
 
 
             case "LOYAL_DECLARATION":
@@ -813,6 +822,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getRedstoneGemstone();
             case "DIAMOND_GEMSTONE":
                 return ItemRegistry.getDiamondGemstone();
+            case "JACKHAMMER":
+                return ItemRegistry.getJackhammer();
             case "SHEPHERD_ARTIFACT":
                 return ItemRegistry.getShepherdArtifact();
             case "SHEPHERD_ENCHANT":
@@ -827,6 +838,10 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getSunflare();
             case "STARLIGHT":
                 return ItemRegistry.getStarlight();
+            case "TIDE":
+                return ItemRegistry.getTide();
+            case "SHINY_EMERALD":
+                return ItemRegistry.getShinyEmerald();
             case "PESTICIDE":
                 return ItemRegistry.getPesticide();
             case "CARTOGRAPHER_MINESHAFT":
@@ -941,6 +956,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getEnderDrop();
             case "GUARDIAN_DROP":
                 return ItemRegistry.getGuardianDrop();
+            case "WATER_ASPECT_ENCHANT":
+                return ItemRegistry.getWaterAspectEnchant();
             case "ELDER_GUARDIAN_DROP":
                 return ItemRegistry.getElderGuardianDrop();
             case "PIGLIN_DROP":
@@ -1010,6 +1027,10 @@ public class VillagerTradeManager implements Listener {
         int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
         double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001));
         finalCost *= (1 - barteringDiscount);
+
+        if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
+            finalCost *= 0.8; // additional 20% discount
+        }
 
         return Math.max(1, (int) Math.floor(finalCost));
     }
@@ -1398,6 +1419,10 @@ public class VillagerTradeManager implements Listener {
         int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
         double barteringDiscount = Math.min(0.1, (barteringLevel * 0.0025)); // up to 25% discount
         finalCost *= (1 - barteringDiscount);
+
+        if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
+            finalCost *= 0.8; // additional 20% discount
+        }
 
         // Ensure at least cost of 1
         int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));

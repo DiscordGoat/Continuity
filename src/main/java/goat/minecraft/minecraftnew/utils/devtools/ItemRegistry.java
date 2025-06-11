@@ -475,6 +475,84 @@ public class ItemRegistry {
         );
     }
 
+    // ------------------------------------------------------------------
+    // Tide Relic & Seed
+    // ------------------------------------------------------------------
+
+    /**
+     * Mature Tide relic used in brewing the Potion of Riptide.
+     */
+    public static ItemStack getTide() {
+        return createCustomItem(
+                Material.HEART_OF_THE_SEA,
+                ChatColor.GOLD + "Tide",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic pulsing with oceanic power.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Riptide."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /**
+     * Seed form dropped from Poseidon, plant to grow Tide.
+     */
+    public static ItemStack getVerdantRelicTideSeed() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic Tide",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic seed brimming with ocean energy.",
+                        ChatColor.BLUE + "Dropped by Poseidon.",
+                        ChatColor.BLUE + "Right-click on dirt/grass to plant."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    // ------------------------------------------------------------------
+    // Shiny Emerald Relic & Seed
+    // ------------------------------------------------------------------
+
+    /**
+     * Mature Shiny Emerald relic used in brewing the Potion of Charismatic Bartering.
+     */
+    public static ItemStack getShinyEmerald() {
+        return createCustomItem(
+                Material.EMERALD,
+                ChatColor.GOLD + "Shiny Emerald",
+                Arrays.asList(
+                        ChatColor.GRAY + "A gem shimmering with mercantile power.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Charismatic Bartering."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /**
+     * Seed form obtained from mining ores, plant to grow a Shiny Emerald.
+     */
+    public static ItemStack getVerdantRelicShinyEmeraldSeed() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic Shiny Emerald",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic seed radiating with emerald light.",
+                        ChatColor.BLUE + "5% drop from Emerald Ore.",
+                        ChatColor.BLUE + "1% drop from Diamond/Lapis/Redstone Ore."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
 
     public static ItemStack getRecurvePotionRecipePaper() {
         // This returns a piece of PAPER with a custom name + lore that says "Potion of Recurve Recipe".
@@ -566,6 +644,21 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getRiptideRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Riptide Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Riptide",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getSolarFuryRecipePaper() {
         return createCustomItem(
                 Material.PAPER,
@@ -587,6 +680,21 @@ public class ItemRegistry {
                 ChatColor.LIGHT_PURPLE + "Potion of Night Vision Recipe (Potion Recipe)",
                 Arrays.asList(
                         ChatColor.GRAY + "Brewing instructions for Night Vision",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getCharismaticBarteringRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Charismatic Bartering Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Charismatic Bartering",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
                         ChatColor.DARK_PURPLE + "Potion Recipe"
                 ),
@@ -749,6 +857,15 @@ public class ItemRegistry {
         return createCustomItem(Material.COD, ChatColor.YELLOW + "Call of the Void", Arrays.asList(
                 ChatColor.GRAY + "Max level of V",
                 ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Call of the Void to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+
+    public static ItemStack getWaterAspectEnchant() {
+        return createCustomItem(Material.PRISMARINE_CRYSTALS, ChatColor.YELLOW +
+                "Water Aspect", Arrays.asList(
+                ChatColor.GRAY + "Max level of IV",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Water Aspect to items.",
                 ChatColor.DARK_PURPLE + "Smithing Item"
         ), 1, false, true);
     }
@@ -2728,6 +2845,21 @@ public class ItemRegistry {
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Repairs equipment greatly.",
                         ChatColor.GRAY + "Restores 400 durability.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getJackhammer() {
+        return createCustomItem(
+                Material.DIAMOND_PICKAXE,
+                ChatColor.LIGHT_PURPLE + "Jackhammer",
+                Arrays.asList(
+                        ChatColor.GRAY + "A powerful mining device.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Break an entire vein instantly.",
+                        ChatColor.DARK_PURPLE + "Artifact"
                 ),
                 1,
                 false,
