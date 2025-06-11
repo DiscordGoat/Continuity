@@ -390,6 +390,14 @@ public class ForestSpiritManager implements Listener {
             event.getDrops().add(rareDrop);
         }
 
+        // Bonus drop: Jackhammer if the killer's notoriety is low
+        if (killer != null) {
+            int notoriety = Forestry.getInstance().getNotoriety(killer);
+            if (notoriety < 200) {
+                event.getDrops().add(ItemRegistry.getJackhammer());
+            }
+        }
+
         // Death animation: spawn a falling sapling (using DEAD_BUSH as example) that sinks into the ground.
         Location loc = spirit.getLocation();
         World world = loc.getWorld();

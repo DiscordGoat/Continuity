@@ -441,6 +441,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithSells.add(createTradeMap("EMERALD_GEMSTONE", 1, 64, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("REDSTONE_GEMSTONE", 1, 32, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("DIAMOND_GEMSTONE", 1, 64, 3)); // Custom Item
+        toolsmithSells.add(createTradeMap("JACKHAMMER", 1, 32, 3)); // Custom Item
 
         defaultConfig.set("TOOLSMITH.sells", toolsmithSells);
 // Armorer Purchases
@@ -821,6 +822,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getRedstoneGemstone();
             case "DIAMOND_GEMSTONE":
                 return ItemRegistry.getDiamondGemstone();
+            case "JACKHAMMER":
+                return ItemRegistry.getJackhammer();
             case "SHEPHERD_ARTIFACT":
                 return ItemRegistry.getShepherdArtifact();
             case "SHEPHERD_ENCHANT":
