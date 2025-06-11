@@ -2852,6 +2852,21 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getJackhammer() {
+        return createCustomItem(
+                Material.DIAMOND_PICKAXE,
+                ChatColor.LIGHT_PURPLE + "Jackhammer",
+                Arrays.asList(
+                        ChatColor.GRAY + "A powerful mining device.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Break an entire vein instantly.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getAbyssalInk() {
         return createCustomItem(
                 Material.BLACK_DYE,
