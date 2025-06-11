@@ -339,19 +339,19 @@ public class RightClickArtifacts implements Listener {
                     queue.add(clickedBlock);
                     visited.add(clickedBlock);
 
-                    while (!queue.isEmpty() && visited.size() <= 401) {
+                    while (!queue.isEmpty() && visited.size() <= 501) {
                         Block current = queue.poll();
                         for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN}) {
                             Block adjacent = current.getRelative(face);
                             if (adjacent.getType() == targetType && !visited.contains(adjacent)) {
                                 visited.add(adjacent);
                                 queue.add(adjacent);
-                                if (visited.size() > 401) break;
+                                if (visited.size() > 501) break;
                             }
                         }
                     }
 
-                    if (visited.size() > 400) {
+                    if (visited.size() > 500) {
                         player.sendMessage(ChatColor.RED + "Vein is too large to jackhammer!");
                         return;
                     }
