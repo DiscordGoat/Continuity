@@ -55,6 +55,7 @@ import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.devtools.*;
+import goat.minecraft.minecraftnew.resourcepack.ResourcePackHandler;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
@@ -531,6 +532,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
         getServer().getPluginManager().registerEvents(new HordeInstinct(), this);
+        getServer().getPluginManager().registerEvents(new ResourcePackHandler(this), this);
 
 
 
