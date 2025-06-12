@@ -583,7 +583,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             combatSubsystemManager.shutdown();
         }
 
-        PetManager.getInstance(this).savePets();
+        PetManager petManager = PetManager.getInstance(this);
+        petManager.saveAllActivePets();
+        petManager.savePets();
         anvilRepair.saveAllInventories();
         cancelBrewing.saveAllInventories();
         if (doubleEnderchest != null) {
