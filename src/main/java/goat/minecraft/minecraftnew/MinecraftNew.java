@@ -60,6 +60,7 @@ import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.subsystems.realms.Tropic;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -378,6 +379,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         });
         // Load pets
         petManager.loadPets();
+        // Re-summon pets for players already online (e.g., on reload)
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            String lastPet = petManager.getLastActivePetName(online.getUniqueId());
+            if (lastPet != null) {
+                petManager.summonPet(online, lastPet);
+            }
+        }
 
 //        disableFlightForAllPlayers();
 //        Bukkit.getWorlds().forEach(world -> {
@@ -584,6 +592,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
 
         PetManager.getInstance(this).savePets();
+        PetManager.getInstance(this).saveLastActivePets();
         anvilRepair.saveAllInventories();
         cancelBrewing.saveAllInventories();
         if (doubleEnderchest != null) {
