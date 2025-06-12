@@ -452,7 +452,7 @@ public class VillagerTradeManager implements Listener {
         armorerPurchases.add(createTradeMap("GOLD_ORE", 4, 6, 3)); // Material
         armorerPurchases.add(createTradeMap("RARE_ARMOR_REFORGE", 1, 32, 3)); // Custom Item
 
-        armorerPurchases.add(createTradeMap("NETHERITE_UPGRADE_SMITHING_TEMPLATE", 2, 32, 4)); // Material
+        armorerPurchases.add(createTradeMap("NETHERITE_UPGRADE_SMITHING_TEMPLATE", 2, 32, 2)); // Material
         armorerPurchases.add(createTradeMap("EPIC_ARMOR_REFORGE", 1, 64, 4)); // Custom Item
 
         armorerPurchases.add(createTradeMap("RANDOM_ARMOR_TRIM", 1, 64, 4)); // Custom Item
@@ -493,7 +493,7 @@ public class VillagerTradeManager implements Listener {
         librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANT", 1, 32, 3)); // Custom Item
         librarianPurchases.add(createTradeMap("LIBRARIAN_ENCHANTMENT_TWO", 1, 16, 3)); // Custom Item
         librarianPurchases.add(createTradeMap("IRON_GOLEM", 1, 16, 4)); // Custom Item
-        librarianPurchases.add(createTradeMap("FORBIDDEN_BOOK", 1, 32, 2)); // Custom Item
+        librarianPurchases.add(createTradeMap("FORBIDDEN_BOOK", 1, 8, 2)); // Custom Item
 
 
         defaultConfig.set("LIBRARIAN.purchases", librarianPurchases);
@@ -505,7 +505,6 @@ public class VillagerTradeManager implements Listener {
         librarianSells.add(createTradeMap("BOOK", 3, 1, 1)); // Material
         librarianSells.add(createTradeMap("ENCHANTED_BOOK", 1, 8, 1)); // Material
         librarianSells.add(createTradeMap("ENCHANTED_GOLDEN_APPLE", 1, 16, 1)); // Material
-        librarianSells.add(createTradeMap("FORBIDDEN_BOOK", 1, 8, 1)); // Custom Item
 
         defaultConfig.set("LIBRARIAN.sells", librarianSells);
 // Fisherman Purchases
