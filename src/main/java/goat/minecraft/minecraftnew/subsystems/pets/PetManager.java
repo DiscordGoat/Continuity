@@ -582,6 +582,8 @@ public class PetManager implements Listener {
             case COMPOSTER:
                 int requiredMaterialsOrganic = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
                 return ChatColor.GRAY + "Compacts " + requiredMaterialsOrganic + " crops into " + ChatColor.GREEN + "Organic Soil";
+            case LUMBERJACK:
+                return "Drops " + ChatColor.GREEN + "+2 logs " + ChatColor.GRAY + "when chopping trees.";
             case EARTHWORM:
                 return "Grants " + ChatColor.YELLOW + "Haste 8 " + ChatColor.GRAY + "for " + ChatColor.WHITE + "0.5s " + ChatColor.GRAY + "when mining grass/dirt/gravel/sand";
             case ALPHA:
@@ -809,7 +811,7 @@ public class PetManager implements Listener {
         public double getXPForNextLevel() {
             // Base XP required for level 2
             double baseXP = 20;
-            
+
             // Calculate the XP required for the next level
             // Each level requires 2 more XP than the previous level
             return baseXP + (level - 1) * 2;
@@ -864,6 +866,7 @@ public class PetManager implements Listener {
         DIGGING_CLAWS("Digging Claws", ChatColor.GOLD + "Provides moderate mining speed when mining blocks."),
         BONE_PLATING("Bone Plating", ChatColor.GOLD + "Provides moderate damage resistance for Lvl seconds."),
         COLLECTOR("Collector", ChatColor.GOLD + "Automatically collects nearby items upon walking nearby."),
+        LUMBERJACK("Lumberjack", ChatColor.GOLD + "Grants 2 extra logs when chopping trees."),
         FLIGHT("Flight", ChatColor.GOLD + "Grants the ability to fly."),
         SPEED_BOOST("Speed Boost", ChatColor.GOLD + "Increases your walking speed by 100%."),
         SECOND_WIND("Second Wind", ChatColor.GOLD + "Provides [Lvl] seconds of regeneration when taking damage."),
