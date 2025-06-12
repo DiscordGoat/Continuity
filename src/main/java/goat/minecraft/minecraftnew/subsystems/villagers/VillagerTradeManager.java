@@ -1055,16 +1055,16 @@ public class VillagerTradeManager implements Listener {
         // Determine villager level based on days played:
         // day 20 = level 1, day 40 = level 2, day 60 = level 3, day 80 = level 4, day 100 = level 5
         int villagerLevel;
-        if (daysPlayed >= 200) {
+        if (daysPlayed >= 160) {
             villagerLevel = 5;
             villager.setVillagerLevel(5);
-        } else if (daysPlayed >= 150) {
+        } else if (daysPlayed >= 120) {
             villagerLevel = 4;
             villager.setVillagerLevel(4);
-        } else if (daysPlayed >= 100) {
+        } else if (daysPlayed >= 80) {
             villagerLevel = 3;
             villager.setVillagerLevel(3);
-        } else if (daysPlayed >= 50) {
+        } else if (daysPlayed >= 40) {
             villagerLevel = 2;
             villager.setVillagerLevel(2);
         } else {
