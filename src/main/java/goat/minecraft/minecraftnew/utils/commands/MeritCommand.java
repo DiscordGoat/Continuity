@@ -216,6 +216,11 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "5% chance for purchases to be free.",
                             ChatColor.BLUE + "On Purchase: " + ChatColor.GRAY + "5% chance to cost nothing."
                     )),
+            new Perk(ChatColor.DARK_GRAY + "Haggler", 5, Material.EMERALD,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Grants 10% discount on villager trades.",
+                            ChatColor.BLUE + "On Villager Trade: " + ChatColor.GRAY + "Prices reduced by 10%."
+                    )),
             new Perk(ChatColor.DARK_GRAY + "Master Employer", 3, Material.BELL,
                     Arrays.asList(
                             ChatColor.GRAY + "50% chance to halve villager work timers.",
