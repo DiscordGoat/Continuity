@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -538,20 +539,44 @@ public class VerdantRelicsSubsystem implements Listener {
                     spawnWater(loc, plugin);
                     solved = true;
                 }
-                // Shears cure Overgrown: damage the shears by 10 instead of removing them.
+                // Shears cure Overgrown: consume durability and break if needed.
                 else if (comp.contains("overgrown") && hand.getType().equals(Material.SHEARS)) {
                     it.remove();
                     xpManager.addXP(player, "Farming", 100);
                     player.sendMessage(ChatColor.GREEN + "You solved Overgrown!");
-                    // Damage the shears by 10 durability.
-                    if (hand.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable) {
-                        org.bukkit.inventory.meta.Damageable dmgMeta = (org.bukkit.inventory.meta.Damageable) hand.getItemMeta();
-                        dmgMeta.setDamage(dmgMeta.getDamage() + 10);
-                        hand.setItemMeta((org.bukkit.inventory.meta.ItemMeta) dmgMeta);
-                    }
-                    player.playSound(player.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1000.0f, 1.0f);
-                    spawnLeaves(loc, plugin);
 
+                    if (hand.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable) {
+                        org.bukkit.inventory.meta.Damageable dmgMeta =
+                                (org.bukkit.inventory.meta.Damageable) hand.getItemMeta();
+
+                        int cost = 10;
+                        int unbreakingLevel = hand.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.DURABILITY);
+                        if (unbreakingLevel > 5) unbreakingLevel = 5;
+
+                        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
+                        int perkReduction = 0;
+                        if (meritManager.hasPerk(player.getUniqueId(), "Unbreaking")) perkReduction++;
+                        if (meritManager.hasPerk(player.getUniqueId(), "Unbreaking II")) perkReduction++;
+                        if (meritManager.hasPerk(player.getUniqueId(), "Unbreaking III")) perkReduction++;
+
+                        cost -= unbreakingLevel;
+                        cost -= perkReduction;
+                        if (cost < 0) cost = 0;
+
+                        dmgMeta.setDamage(dmgMeta.getDamage() + cost);
+                        hand.setItemMeta((org.bukkit.inventory.meta.ItemMeta) dmgMeta);
+
+                        if (dmgMeta.getDamage() >= hand.getType().getMaxDurability()) {
+                            hand.setAmount(0);
+                            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                        } else {
+                            player.playSound(player.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1000.0f, 1.0f);
+                        }
+                    } else {
+                        player.playSound(player.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1000.0f, 1.0f);
+                    }
+
+                    spawnLeaves(loc, plugin);
                     solved = true;
                 }
                 // Pesticide cures Infested, and Organic Soil cures Malnutrition.
