@@ -542,7 +542,7 @@ public class VerdantRelicsSubsystem implements Listener {
                 // Shears cure Overgrown: consume durability and break if needed.
                 else if (comp.contains("overgrown") && hand.getType().equals(Material.SHEARS)) {
                     it.remove();
-                    xpManager.addXP(player, "Farming", 100);
+                    xpManager.addXP(player, "Farming", 25);
                     player.sendMessage(ChatColor.GREEN + "You solved Overgrown!");
 
                     if (hand.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable) {
@@ -745,7 +745,7 @@ public class VerdantRelicsSubsystem implements Listener {
 
             // Award 1000 Farming XP upon harvest
             if (harvester != null) {
-                xpManager.addXP(harvester, "Farming", 1000);
+                xpManager.addXP(harvester, "Farming", 250);
                 harvester.playSound(harvester.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 10, 10.0f);
             }
 
