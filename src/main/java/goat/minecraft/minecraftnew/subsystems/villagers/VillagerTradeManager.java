@@ -1013,13 +1013,19 @@ public class VillagerTradeManager implements Listener {
 
         double finalCost = basePrice;
 
-        // Apply Haggle perk
+        // Apply pet Haggle perk
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.HAGGLE)) {
             int petLevel = activePet.getLevel();
             double maxDiscount = 0.25; // 25% discount
             int maxLevel = 100;
             double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
             finalCost *= (1 - discountFactor);
+        }
+
+        // Apply merit perk discount
+        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
+        if (meritManager.hasPerk(player.getUniqueId(), "Haggler")) {
+            finalCost *= 0.9; // 10% discount
         }
 
         // Apply Bartering discount
@@ -1400,7 +1406,7 @@ public class VillagerTradeManager implements Listener {
         int emeraldCost = tradeItem.getEmeraldValue();
         int quantity = tradeItem.getQuantity();
 
-        // --- HAGGLE perk logic ---
+        // --- Pet HAGGLE perk logic ---
         PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
         PetManager.Pet activePet = petManager.getActivePet(player);
 
@@ -1412,6 +1418,12 @@ public class VillagerTradeManager implements Listener {
             double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
             finalCost *= (1 - discountFactor);
             finalCost = Math.floor(finalCost);
+        }
+
+        // --- Merit Haggler discount ---
+        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
+        if (meritManager.hasPerk(player.getUniqueId(), "Haggler")) {
+            finalCost *= 0.9; // 10% discount
         }
 
         // --- Bartering discount logic ---
@@ -1428,7 +1440,6 @@ public class VillagerTradeManager implements Listener {
         int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));
 
         // --- Master Trader perk: make purchases free ---
-        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
         boolean freePurchase = false;
         if (meritManager.hasPerk(player.getUniqueId(), "Master Trader") && Math.random() < 0.05) {
             finalCostRounded = 0;
