@@ -271,7 +271,7 @@ public class VillagerTradeManager implements Listener {
         fletcherPurchases.add(createTradeMap("BIRCH_SAPLING", 4, 2, 3));
         fletcherPurchases.add(createTradeMap("ACACIA_SAPLING", 4, 2, 3));
         fletcherPurchases.add(createTradeMap("CHERRY_SAPLING", 4, 2, 3));
-        fletcherPurchases.add(createTradeMap("SHELF", 4, 64, 3));
+        fletcherPurchases.add(createTradeMap("SHELF", 4, 16, 1));
 
         fletcherPurchases.add(createTradeMap("ACACIA_BOW", 1, 128, 4)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_BOW_ENCHANT", 1, 16, 2)); // Custom item
