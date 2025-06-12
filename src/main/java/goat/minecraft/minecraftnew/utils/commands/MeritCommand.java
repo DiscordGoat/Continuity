@@ -260,6 +260,11 @@ public class MeritCommand implements CommandExecutor, Listener {
                     Arrays.asList(
                             ChatColor.GRAY + "Allows a third resurrection charge.",
                             ChatColor.BLUE + "On Purchase: " + ChatColor.GRAY + "Adds another charge (max 3)."
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Tuxedo", 4, Material.BLACK_WOOL,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Displays two extra auction items.",
+                            ChatColor.BLUE + "On Auction: " + ChatColor.GRAY + "2 bonus items with rare chance"
                     ))
             );
 

@@ -219,6 +219,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Resurrection(this, playerData), this);
         getServer().getPluginManager().registerEvents(new ResurrectionCharge2(this, playerData), this);
         getServer().getPluginManager().registerEvents(new ResurrectionCharge3(this, playerData), this);
+        getServer().getPluginManager().registerEvents(new Tuxedo(this, playerData), this);
 
 
 
