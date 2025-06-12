@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.other.trims.CustomTrimEffects;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
@@ -548,6 +549,15 @@ public class XPManager implements CommandExecutor {
         player.sendMessage(borderTop);
         player.sendMessage(body.toString().trim());
         player.sendMessage(borderBottom);
+
+        // Award a merit point for leveling up the Player skill
+        if (skill.equalsIgnoreCase("Player")) {
+            PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
+            UUID id = player.getUniqueId();
+            int newPoints = meritManager.getMeritPoints(id) + 1;
+            meritManager.setMeritPoints(id, newPoints);
+            player.sendMessage(ChatColor.GOLD + "You earned a merit point! (" + newPoints + ")");
+        }
     }
 
     // =================================================

@@ -5,6 +5,7 @@ import com.mojang.authlib.properties.Property;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -27,9 +28,13 @@ public class PetManager implements Listener {
     public PetManager(JavaPlugin plugin) {
         this.plugin = plugin;
         loadPets();
+        loadActivePetData();
     }
 
     private Map<UUID, Horse> summonedHorses = new HashMap<>();
+    private Map<UUID, String> lastActivePets = new HashMap<>();
+    private File activePetsFile;
+    private FileConfiguration activePetsConfig;
 
     // Instead of using IDs, we now store base64 textures directly.
     // You must populate these with actual base64 textures for each pet.
@@ -242,6 +247,8 @@ public class PetManager implements Listener {
             } else {
                 despawnPet(player); // Despawn any currently active pet
                 activePets.put(player.getUniqueId(), pet);
+                lastActivePets.put(player.getUniqueId(), pet.getName());
+                saveActivePetData();
 
                 // Check if this is the Horse pet
                 if ("Horse".equalsIgnoreCase(pet.getName())) {
@@ -412,8 +419,22 @@ public class PetManager implements Listener {
     }
 
     @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        String petName = lastActivePets.get(player.getUniqueId());
+        if (petName != null) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> summonPet(player, petName), 20L);
+        }
+    }
+
+    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        Pet active = activePets.get(player.getUniqueId());
+        if (active != null) {
+            lastActivePets.put(player.getUniqueId(), active.getName());
+        }
+        saveActivePetData();
         PetManager petManager = PetManager.getInstance(plugin);
         PetRegistry petRegistry = new PetRegistry();
         petRegistry.addPetByName(player, "Horse");
@@ -722,6 +743,46 @@ public class PetManager implements Listener {
 
             playerPets.put(playerId, pets);
         }
+    }
+
+    private void loadActivePetData() {
+        activePetsFile = new File(plugin.getDataFolder(), "activePets.yml");
+        if (!activePetsFile.exists()) {
+            try {
+                activePetsFile.getParentFile().mkdirs();
+                activePetsFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        activePetsConfig = YamlConfiguration.loadConfiguration(activePetsFile);
+        for (String key : activePetsConfig.getKeys(false)) {
+            String name = activePetsConfig.getString(key);
+            try {
+                UUID id = UUID.fromString(key);
+                lastActivePets.put(id, name);
+            } catch (IllegalArgumentException ignore) {
+            }
+        }
+    }
+
+    public void saveActivePetData() {
+        if (activePetsConfig == null || activePetsFile == null) return;
+        for (Map.Entry<UUID, String> entry : lastActivePets.entrySet()) {
+            activePetsConfig.set(entry.getKey().toString(), entry.getValue());
+        }
+        try {
+            activePetsConfig.save(activePetsFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void saveAllActivePets() {
+        for (Map.Entry<UUID, Pet> entry : activePets.entrySet()) {
+            lastActivePets.put(entry.getKey(), entry.getValue().getName());
+        }
+        saveActivePetData();
     }
 
     public class Pet {
