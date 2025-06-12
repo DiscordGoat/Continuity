@@ -156,82 +156,82 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Grants arrows when holding a bow with none left.",
                             ChatColor.BLUE + "On Out Of Arrows While Bow Equipped: " + ChatColor.GRAY + "Gives one arrow."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Rebreather", 1, Material.TURTLE_HELMET,
+            new Perk(ChatColor.DARK_GRAY + "Rebreather", 2, Material.TURTLE_HELMET,
                     Arrays.asList(
                             ChatColor.GRAY + "Regenerates breath underwater below Y=50.",
                             ChatColor.BLUE + "When Underwater Below Y=50: " + ChatColor.GRAY + "+1 Oxygen every 3s."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Keepinventory", 1, Material.CHEST,
+            new Perk(ChatColor.DARK_GRAY + "Keepinventory", 3, Material.CHEST,
                     Arrays.asList(
                             ChatColor.GRAY + "Keeps your items on death after login.",
                             ChatColor.BLUE + "On Login: " + ChatColor.GRAY + "Keep inventory enabled for that session."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Smith", 1, Material.ANVIL,
+            new Perk(ChatColor.DARK_GRAY + "Master Smith", 3, Material.ANVIL,
                     Arrays.asList(
                             ChatColor.GRAY + "Adds +50 durability when repairing with iron.",
                             ChatColor.BLUE + "On Anvil Repair With Iron: " + ChatColor.GRAY + "+50 durability."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Botanist", 1, Material.WHEAT_SEEDS,
+            new Perk(ChatColor.DARK_GRAY + "Master Botanist", 3, Material.WHEAT_SEEDS,
                     Arrays.asList(
                             ChatColor.GRAY + "Verdant relics mature 50% faster.",
                             ChatColor.BLUE + "On Verdant Relic Growth: " + ChatColor.GRAY + "Time reduced by 50%."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Brewer", 1, Material.BREWING_STAND,
+            new Perk(ChatColor.DARK_GRAY + "Master Brewer", 3, Material.BREWING_STAND,
                     Arrays.asList(
                             ChatColor.GRAY + "Brews potions 50% faster.",
                             ChatColor.BLUE + "On Brewing: " + ChatColor.GRAY + "Total time reduced by 50%."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Chef", 1, Material.COOKED_BEEF,
+            new Perk(ChatColor.DARK_GRAY + "Master Chef", 3, Material.COOKED_BEEF,
                     Arrays.asList(
                             ChatColor.GRAY + "50% chance to cook double culinary delights.",
                             ChatColor.BLUE + "On Finalize Recipe: " + ChatColor.GRAY + "50% chance for 2 items."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Thief", 1, Material.ENDER_EYE,
+            new Perk(ChatColor.DARK_GRAY + "Master Thief", 3, Material.ENDER_EYE,
                     Arrays.asList(
                             ChatColor.GRAY + "50% chance for rare monster drops to double.",
                             ChatColor.BLUE + "On Monster Kill: " + ChatColor.GRAY + "50% chance drop occurs twice."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Duelist", 1, Material.IRON_SWORD,
+            new Perk(ChatColor.DARK_GRAY + "Master Duelist", 3, Material.IRON_SWORD,
                     Arrays.asList(
                             ChatColor.GRAY + "20% chance to crit for +50% damage.",
                             ChatColor.BLUE + "On Melee Attack: " + ChatColor.GRAY + "20% chance to crit for +50% damage."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Angler", 1, Material.FISHING_ROD,
+            new Perk(ChatColor.DARK_GRAY + "Master Angler", 3, Material.FISHING_ROD,
                     Arrays.asList(
                             ChatColor.GRAY + "+5% sea creature chance.",
                             ChatColor.BLUE + "On Fishing: " + ChatColor.GRAY + "+5% sea creature chance."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Diplomat", 1, Material.WRITABLE_BOOK,
+            new Perk(ChatColor.DARK_GRAY + "Master Diplomat", 3, Material.WRITABLE_BOOK,
                     Arrays.asList(
                             ChatColor.GRAY + "Reduces notoriety gains by 60%.",
                             ChatColor.BLUE + "On Notoriety Gain: " + ChatColor.GRAY + "Reduce gain by 60%."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Diffuser", 1, Material.CREEPER_HEAD,
+            new Perk(ChatColor.DARK_GRAY + "Master Diffuser", 3, Material.CREEPER_HEAD,
                     Arrays.asList(
                             ChatColor.GRAY + "50% chance for creepers to drop a disc.",
                             ChatColor.BLUE + "On Creeper Death: " + ChatColor.GRAY + "50% chance for random music disc."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Trader", 1, Material.EMERALD,
+            new Perk(ChatColor.DARK_GRAY + "Master Trader", 3, Material.EMERALD,
                     Arrays.asList(
                             ChatColor.GRAY + "5% chance for purchases to be free.",
                             ChatColor.BLUE + "On Purchase: " + ChatColor.GRAY + "5% chance to cost nothing."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Employer", 1, Material.BELL,
+            new Perk(ChatColor.DARK_GRAY + "Master Employer", 3, Material.BELL,
                     Arrays.asList(
                             ChatColor.GRAY + "50% chance to halve villager work timers.",
                             ChatColor.BLUE + "On Workcycle: " + ChatColor.GRAY + "50% chance next timer reduced 50%."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Loyalty II", 1, Material.NAME_TAG,
+            new Perk(ChatColor.DARK_GRAY + "Loyalty II", 3, Material.NAME_TAG,
                     Arrays.asList(
                             ChatColor.GRAY + "Loyal cooldown reduced to 1 second.",
                             ChatColor.BLUE + "On Use Loyal: " + ChatColor.GRAY + "Cooldown becomes 1 second."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Strong Digestion", 1, Material.GOLDEN_APPLE,
+            new Perk(ChatColor.DARK_GRAY + "Strong Digestion", 3, Material.GOLDEN_APPLE,
                     Arrays.asList(
                             ChatColor.GRAY + "Doubles potion duration.",
                             ChatColor.BLUE + "On Drink Potion: " + ChatColor.GRAY + "Duration increased by 100%."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Icarus", 1, Material.ELYTRA,
+            new Perk(ChatColor.DARK_GRAY + "Icarus", 2, Material.ELYTRA,
                     Arrays.asList(
                             ChatColor.GRAY + "Doubles flight pet distance.",
                             ChatColor.BLUE + "On Flight Pet Use: " + ChatColor.GRAY + "Flying limit doubled."
