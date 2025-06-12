@@ -9,8 +9,10 @@ import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.biomeutils.BiomeMapper;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -1092,16 +1094,29 @@ public class MusicDiscManager implements Listener {
         auctionItems.add(new AuctionItem(mithrilChunk, 16));
         auctionItems.add(new AuctionItem(perfectDiamond, 64));
 
-        // Randomly select 5 unique items from the auctionItems list
+        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
+        boolean hasTuxedo = meritManager.hasPerk(player.getUniqueId(), "Tuxedo");
+
+        // Randomly select 5 or 7 unique items from the auctionItems list
         List<AuctionItem> selectedItems = new ArrayList<>();
         List<AuctionItem> itemsCopy = new ArrayList<>(auctionItems);
 
         Random random = new Random();
-        int itemsToSelect = Math.min(5, itemsCopy.size()); // Ensure we don't try to select more items than are available
+        int itemsToSelect = Math.min(hasTuxedo ? 7 : 5, itemsCopy.size());
+        long eventDurationTicks = itemsToSelect * 30L * 20L;
 
         for (int i = 0; i < itemsToSelect; i++) {
             int randomIndex = random.nextInt(itemsCopy.size());
             AuctionItem selectedItem = itemsCopy.remove(randomIndex);
+
+            if (hasTuxedo && i >= itemsToSelect - 2) {
+                if (random.nextDouble() < 0.3) {
+                    ItemStack rare = ItemRegistry.getRandomTreasure();
+                    int reduced = Math.max(1, (int) Math.floor(selectedItem.getEmeraldCost() * 0.5));
+                    selectedItem = new AuctionItem(rare, reduced);
+                }
+            }
+
             selectedItems.add(selectedItem);
         }
 
@@ -1193,7 +1208,7 @@ public class MusicDiscManager implements Listener {
                 }
             }
             player.sendMessage(ChatColor.DARK_PURPLE + "The Grand Auction Event has ended!");
-        }, 150 * 20L); // 150 seconds
+        }, eventDurationTicks); // end after all items shown
 
         // Add particle effects around the jukebox
         new BukkitRunnable() {
@@ -1201,7 +1216,7 @@ public class MusicDiscManager implements Listener {
 
             @Override
             public void run() {
-                if (ticksRun >= 150 * 20L) {
+                if (ticksRun >= eventDurationTicks) {
                     this.cancel();
                 } else {
                     // Generate particle effects around the jukebox
@@ -1265,7 +1280,7 @@ public class MusicDiscManager implements Listener {
         // Unregister the interaction listener after the event ends
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             HandlerList.unregisterAll(interactionListener);
-        }, 150 * 20L); // 150 seconds
+        }, eventDurationTicks); // unregister after event
     }
 
 
@@ -1330,25 +1345,48 @@ public class MusicDiscManager implements Listener {
         }
     }
 
+    /**
+     * Counts how many emeralds are in the player's inventory.
+     */
+    private int countEmeraldsInInventory(Player player) {
+        int count = 0;
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item != null && item.getType() == Material.EMERALD) {
+                count += item.getAmount();
+            }
+        }
+        return count;
+    }
 
-    // Method to process the purchase
+
+    // Method to process the purchase using backpack support (no discounts)
     public boolean processPurchase(Player player, int cost, ItemStack item) {
         Inventory inventory = player.getInventory();
-        Material emeraldMaterial = Material.EMERALD;
 
-        // Validate enough emeralds are available
-        if (!hasEnoughItems(inventory, emeraldMaterial, cost)) {
-            player.sendMessage(ChatColor.RED + "You don't have enough emeralds.");
-            return false;
+        // Check if enough emeralds exist in inventory
+        if (hasEnoughItems(inventory, Material.EMERALD, cost)) {
+            removeItems(inventory, Material.EMERALD, cost);
+        } else {
+            int invEmeraldCount = countEmeraldsInInventory(player);
+            int shortfall = cost - invEmeraldCount;
+
+            CustomBundleGUI customBundleGUI = CustomBundleGUI.getInstance();
+            boolean success = customBundleGUI.removeEmeraldsFromBackpack(player, shortfall);
+            if (!success) {
+                player.sendMessage(ChatColor.RED + "You don't have enough emeralds (in inventory or backpack).");
+                return false;
+            }
+
+            removeItems(inventory, Material.EMERALD, invEmeraldCount);
         }
 
-        // Remove emeralds and give the item
-        removeItems(inventory, emeraldMaterial, cost);
         ItemStack itemToGive = item.clone();
-        itemToGive.setAmount(1); // Ensure only one item is given
-        inventory.addItem(itemToGive);
+        itemToGive.setAmount(1);
+        Map<Integer, ItemStack> leftovers = inventory.addItem(itemToGive);
+        for (ItemStack leftover : leftovers.values()) {
+            player.getWorld().dropItemNaturally(player.getLocation(), leftover);
+        }
 
-        // Feedback and sound
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
         return true;
     }
