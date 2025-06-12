@@ -275,8 +275,17 @@ public class FishingEvent implements Listener {
         // Calculate the direction vector from sea creature to player
         Vector direction = player.getLocation().subtract(bobberLocation).toVector().normalize();
 
-        // Modify the vertical component to yank the sea creature upwards
-        direction.setY(0.2); // Adjust vertical force as needed
+        // Base vertical force
+        double verticalBoost = 0.2;
+
+        // If the player is significantly above the water, give the creature extra lift
+        double heightDifference = player.getLocation().getY() - bobberLocation.getY();
+        if (heightDifference >= 4) {
+            verticalBoost += heightDifference * 0.1; // scale boost with difference
+        }
+
+        // Apply vertical boost
+        direction.setY(verticalBoost);
 
         // Multiply the vector to control overall speed towards the player
         direction.multiply(2); // Adjust speed multiplier as needed
