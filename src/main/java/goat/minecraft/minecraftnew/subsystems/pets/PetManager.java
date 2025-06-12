@@ -30,6 +30,8 @@ public class PetManager implements Listener {
     }
 
     private Map<UUID, Horse> summonedHorses = new HashMap<>();
+    // Tracks the last summoned pet for each player
+    private final Map<UUID, String> lastActivePet = new HashMap<>();
 
     // Instead of using IDs, we now store base64 textures directly.
     // You must populate these with actual base64 textures for each pet.
@@ -250,6 +252,9 @@ public class PetManager implements Listener {
                     spawnPetParticle(player, pet);
                 }
 
+                // Remember last summoned pet name
+                lastActivePet.put(player.getUniqueId(), pet.getName());
+
             }
         }
     }
@@ -299,6 +304,24 @@ public class PetManager implements Listener {
         }
     }
 
+    /**
+     * Writes the player's last summoned pet name to pets.yml
+     */
+    private void cacheLastActivePet(Player player) {
+        String last = lastActivePet.get(player.getUniqueId());
+        if (last == null) {
+            return;
+        }
+        File file = new File(plugin.getDataFolder(), "pets.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        config.set(player.getUniqueId().toString() + ".lastActive", last);
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void despawnPet(Player player) {
         Pet pet = activePets.remove(player.getUniqueId());
         if (pet != null) {
@@ -332,6 +355,10 @@ public class PetManager implements Listener {
 
     public JavaPlugin getPlugin() {
         return this.plugin;
+    }
+
+    public String getLastActivePetName(UUID playerId) {
+        return lastActivePet.get(playerId);
     }
 
     /**
@@ -412,11 +439,19 @@ public class PetManager implements Listener {
     }
 
     @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        String lastPet = lastActivePet.get(player.getUniqueId());
+        if (lastPet != null) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> summonPet(player, lastPet), 20L);
+        }
+    }
+
+    @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        PetManager petManager = PetManager.getInstance(plugin);
-        PetRegistry petRegistry = new PetRegistry();
-        petRegistry.addPetByName(player, "Horse");
+        // Cache the last summoned pet name for this player
+        cacheLastActivePet(player);
         despawnPet(player);
     }
 
@@ -674,6 +709,26 @@ public class PetManager implements Listener {
                 List<String> perkNames = pet.getPerks().stream().map(Enum::name).collect(Collectors.toList());
                 config.set(path + ".perks", perkNames);
             }
+            // Save last active pet if known
+            if (lastActivePet.containsKey(playerId)) {
+                config.set(playerId.toString() + ".lastActive", lastActivePet.get(playerId));
+            }
+        }
+        try {
+            config.save(file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Saves all cached last active pets to disk.
+     */
+    public void saveLastActivePets() {
+        File file = new File(plugin.getDataFolder(), "pets.yml");
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        for (Map.Entry<UUID, String> entry : lastActivePet.entrySet()) {
+            config.set(entry.getKey().toString() + ".lastActive", entry.getValue());
         }
         try {
             config.save(file);
@@ -695,6 +750,13 @@ public class PetManager implements Listener {
             ConfigurationSection playerSection = config.getConfigurationSection(playerIdString);
 
             for (String petName : playerSection.getKeys(false)) {
+                if ("lastActive".equals(petName)) {
+                    String last = config.getString(playerIdString + ".lastActive");
+                    if (last != null) {
+                        lastActivePet.put(playerId, last);
+                    }
+                    continue;
+                }
                 String path = playerIdString + "." + petName;
                 String rarityString = config.getString(path + ".rarity");
                 int level = config.getInt(path + ".level");
