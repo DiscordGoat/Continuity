@@ -228,9 +228,6 @@ public class VillagerTradeManager implements Listener {
         defaultConfig.set("WEAPONSMITH.purchases", weaponsmithPurchases);
 
         List<Map<String, Object>> weaponsmithSells = new ArrayList<>();
-        weaponsmithSells.add(createTradeMap("IRON_INGOT", 3, 1, 1));
-        weaponsmithSells.add(createTradeMap("GOLD_INGOT", 2, 1, 1));
-        weaponsmithSells.add(createTradeMap("DIAMOND", 1, 4, 1));
         weaponsmithSells.add(createTradeMap("ZOMBIE_HEAD", 1, 8, 1));
         weaponsmithSells.add(createTradeMap("SKELETON_SKULL", 1, 8, 1));
         weaponsmithSells.add(createTradeMap("CREEPER_HEAD", 1, 8, 1));
