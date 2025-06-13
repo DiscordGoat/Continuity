@@ -1103,7 +1103,12 @@ public class MusicDiscManager implements Listener {
 
         Random random = new Random();
         int itemsToSelect = Math.min(hasTuxedo ? 7 : 5, itemsCopy.size());
-        long eventDurationTicks = itemsToSelect * 30L * 20L;
+
+        // All auction events last the same overall duration. When the player has
+        // the Tuxedo perk we shorten the delay between items so the extra items
+        // still finish within the default time window.
+        long eventDurationTicks = 5 * 30L * 20L; // 5 items at 30s each
+        long delayTicks = eventDurationTicks / itemsToSelect;
 
         for (int i = 0; i < itemsToSelect; i++) {
             int randomIndex = random.nextInt(itemsCopy.size());
@@ -1195,7 +1200,7 @@ public class MusicDiscManager implements Listener {
                         1.0f, // Volume
                         1.0f  // Pitch
                 );
-            }, i * 30 * 20L); // Delay in ticks (i * 30 seconds * 20 ticks per second)
+            }, i * delayTicks); // Delay based on number of items
         }
 
         // Schedule a task to remove the last item after the song ends
