@@ -1134,11 +1134,8 @@ public class MusicDiscManager implements Listener {
             AuctionItem selectedItem = itemsCopy.remove(randomIndex);
 
             if (hasTuxedo && i >= itemsToSelect - 2) {
-                if (random.nextDouble() < 0.3) {
-                    ItemStack rare = ItemRegistry.getRandomTreasure();
-                    int reduced = Math.max(1, (int) Math.floor(selectedItem.getEmeraldCost() * 0.5));
-                    selectedItem = new AuctionItem(rare, reduced);
-                }
+                int reduced = Math.max(1, (int) Math.floor(selectedItem.getEmeraldCost() * 0.5));
+                selectedItem = new AuctionItem(selectedItem.getItemStack(), reduced);
             }
 
             selectedItems.add(selectedItem);
@@ -1177,8 +1174,11 @@ public class MusicDiscManager implements Listener {
                 String itemName = auctionItem.getItemStack().getItemMeta().hasDisplayName()
                         ? auctionItem.getItemStack().getItemMeta().getDisplayName()
                         : auctionItem.getItemStack().getType().name();
-                armorStand.setCustomName(ChatColor.GREEN + itemName + ChatColor.YELLOW +
-                        " - " + auctionItem.getEmeraldCost() + " Emeralds");
+                String costText = " - " + auctionItem.getEmeraldCost() + " Emeralds";
+                if (hasTuxedo && index >= selectedItems.size() - 2) {
+                    costText += ChatColor.GRAY + " (50% OFF!)";
+                }
+                armorStand.setCustomName(ChatColor.GREEN + itemName + ChatColor.YELLOW + costText);
                 armorStand.setHelmet(auctionItem.getItemStack());
                 armorStand.setInvulnerable(true);
                 // armorStand.setMarker(true); // Commented out to enable interaction
