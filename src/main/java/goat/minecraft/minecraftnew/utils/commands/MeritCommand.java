@@ -27,6 +27,26 @@ public class MeritCommand implements CommandExecutor, Listener {
     private final JavaPlugin plugin;
     private final PlayerMeritManager playerData;
 
+    private enum Category {
+        COMBAT("Combat", Material.IRON_SWORD),
+        SMITHING("Smithing", Material.ANVIL),
+        FARMING("Farming", Material.WHEAT),
+        BREWING("Brewing", Material.BREWING_STAND),
+        VILLAGER("Villager", Material.EMERALD),
+        UTILITY("Utility", Material.REDSTONE);
+
+        private final String display;
+        private final Material icon;
+
+        Category(String display, Material icon) {
+            this.display = display;
+            this.icon = icon;
+        }
+
+        public String getDisplay() { return display; }
+        public Material getIcon() { return icon; }
+    }
+
     /**
      * Simple container for perk data: supports & color codes in name,
      * a cost, a custom Material icon, and a description as a list of lore lines.
@@ -268,6 +288,55 @@ public class MeritCommand implements CommandExecutor, Listener {
                     ))
             );
 
+    private static final java.util.Map<Category, java.util.List<Perk>> categoryMap = new java.util.EnumMap<>(Category.class);
+    static {
+        for(Category c : Category.values()) {
+            categoryMap.put(c, new java.util.ArrayList<>());
+        }
+        int i = 0;
+        // manually assign perks to categories
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // EnderMind
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Workbench
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Shulkl Box
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Motion Sensor
+        categoryMap.get(Category.SMITHING).add(perks.get(i++)); // Unbreaking
+        categoryMap.get(Category.SMITHING).add(perks.get(i++)); // Unbreaking II
+        categoryMap.get(Category.SMITHING).add(perks.get(i++)); // Unbreaking III
+        categoryMap.get(Category.SMITHING).add(perks.get(i++)); // Excavator
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Berserkers Rage
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Tactical Retreat
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Vampiric Strike
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Lord of Thunder
+        categoryMap.get(Category.FARMING).add(perks.get(i++)); // Deep Hook
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Instant Transmission
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Deep Breath
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Trainer
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // QuickSwap
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Restock
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Rebreather
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Keepinventory
+        categoryMap.get(Category.SMITHING).add(perks.get(i++)); // Master Smith
+        categoryMap.get(Category.FARMING).add(perks.get(i++)); // Master Botanist
+        categoryMap.get(Category.BREWING).add(perks.get(i++)); // Master Brewer
+        categoryMap.get(Category.BREWING).add(perks.get(i++)); // Master Chef
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Master Thief
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Master Duelist
+        categoryMap.get(Category.FARMING).add(perks.get(i++)); // Master Angler
+        categoryMap.get(Category.VILLAGER).add(perks.get(i++)); // Master Diplomat
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Master Diffuser
+        categoryMap.get(Category.VILLAGER).add(perks.get(i++)); // Master Trader
+        categoryMap.get(Category.VILLAGER).add(perks.get(i++)); // Haggler
+        categoryMap.get(Category.VILLAGER).add(perks.get(i++)); // Master Employer
+        categoryMap.get(Category.VILLAGER).add(perks.get(i++)); // Loyalty II
+        categoryMap.get(Category.BREWING).add(perks.get(i++)); // Strong Digestion
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Icarus
+        categoryMap.get(Category.UTILITY).add(perks.get(i++)); // AutoStrad
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Resurrection
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Resurrection Charge 2
+        categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Resurrection Charge 3
+        categoryMap.get(Category.VILLAGER).add(perks.get(i++)); // Tuxedo
+    }
+
 
     public MeritCommand(JavaPlugin plugin, PlayerMeritManager playerData) {
         this.plugin = plugin;
@@ -281,7 +350,7 @@ public class MeritCommand implements CommandExecutor, Listener {
             return true;
         }
         Player player = (Player) sender;
-        openMeritGUI(player);
+        openMeritGUI(player, Category.COMBAT);
         return true;
     }
 
@@ -289,9 +358,13 @@ public class MeritCommand implements CommandExecutor, Listener {
      * Create and open the 54-slot "Merit" GUI for the player.
      */
     private void openMeritGUI(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Merits Menu");
+        openMeritGUI(player, Category.COMBAT);
+    }
 
-        // === FIRST ROW (indices 0..8) ===
+    private void openMeritGUI(Player player, Category category) {
+        Inventory inv = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Merits: " + category.getDisplay());
+
+        // === TOP BORDER AND LEFT-SIDE TABS ===
         ItemStack blackGlass = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta blackGlassMeta = blackGlass.getItemMeta();
         blackGlassMeta.setDisplayName(ChatColor.BLACK + "");
@@ -299,18 +372,32 @@ public class MeritCommand implements CommandExecutor, Listener {
         for (int i = 0; i < 9; i++) {
             inv.setItem(i, blackGlass.clone());
         }
+        for (int i = 0; i < 6; i++) {
+            inv.setItem(i * 9, blackGlass.clone());
+        }
 
-        // Diamond in center (slot 4) shows available merit points
+        int row = 0;
+        for (Category c : Category.values()) {
+            if (row >= 6) break; // safety check
+            ItemStack t = new ItemStack(c.getIcon());
+            ItemMeta m = t.getItemMeta();
+            m.setDisplayName(ChatColor.GOLD + c.getDisplay());
+            t.setItemMeta(m);
+            inv.setItem(row * 9, t);
+            row++;
+        }
+
+        // Diamond in top-right shows available merit points
         int currentMeritPoints = playerData.getMeritPoints(player.getUniqueId());
         ItemStack diamond = new ItemStack(Material.DIAMOND);
         ItemMeta diamondMeta = diamond.getItemMeta();
         diamondMeta.setDisplayName(ChatColor.AQUA + "Available Merit Points: " + currentMeritPoints);
         diamond.setItemMeta(diamondMeta);
-        inv.setItem(4, diamond);
+        inv.setItem(8, diamond);
 
-        // === REMAINING 45 SLOTS (indices 9..53) ===
-        int slotIndex = 9;
-        for (Perk perk : perks) {
+        // === REMAINING SLOTS (excluding tab columns) ===
+        int slotIndex = 10;
+        for (Perk perk : categoryMap.get(category)) {
             ItemStack perkItem = new ItemStack(perk.getIcon());
             ItemMeta perkMeta = perkItem.getItemMeta();
 
@@ -333,6 +420,9 @@ public class MeritCommand implements CommandExecutor, Listener {
             perkItem.setItemMeta(perkMeta);
             inv.setItem(slotIndex, perkItem);
             slotIndex++;
+            if (slotIndex % 9 == 0) {
+                slotIndex++;
+            }
         }
 
         player.openInventory(inv);
@@ -348,8 +438,17 @@ public class MeritCommand implements CommandExecutor, Listener {
         Player player = (Player) event.getWhoClicked();
 
         // Check if this is our custom inventory
-        if (event.getView().getTitle().equals(ChatColor.DARK_GREEN + "Merits Menu")) {
+        if (event.getView().getTitle().startsWith(ChatColor.DARK_GREEN + "Merits")) {
             event.setCancelled(true);
+
+            String title = ChatColor.stripColor(event.getView().getTitle());
+            Category current = Category.COMBAT;
+            for (Category c : Category.values()) {
+                if (title.endsWith(c.getDisplay())) {
+                    current = c;
+                    break;
+                }
+            }
 
             ItemStack clickedItem = event.getCurrentItem();
             if (clickedItem == null || clickedItem.getType() == Material.AIR)
@@ -365,6 +464,14 @@ public class MeritCommand implements CommandExecutor, Listener {
             ItemMeta meta = clickedItem.getItemMeta();
             if (meta == null)
                 return;
+
+            String name = ChatColor.stripColor(meta.getDisplayName());
+            for (Category c : Category.values()) {
+                if (name.equals(c.getDisplay())) {
+                    openMeritGUI(player, c);
+                    return;
+                }
+            }
 
             // Extract cost from lore
             int cost = 0;
@@ -404,7 +511,7 @@ public class MeritCommand implements CommandExecutor, Listener {
                     + " for " + cost + " merit points!");
 
             // Refresh the GUI to update the available points and add the enchant glow to the purchased perk
-            openMeritGUI(player);
+            openMeritGUI(player, current);
         }
     }
 }
