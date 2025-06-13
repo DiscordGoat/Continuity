@@ -365,69 +365,74 @@ public class MeritCommand implements CommandExecutor, Listener {
     private void openMeritGUI(Player player, Category category) {
         Inventory inv = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Merits: " + category.getDisplay());
 
-        // === FIRST ROW AND LEFT COLUMN FOR TABS ===
+        // === prepare a black‐pane template ===
         ItemStack blackGlass = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
-        ItemMeta blackGlassMeta = blackGlass.getItemMeta();
-        blackGlassMeta.setDisplayName(ChatColor.BLACK + "");
-        blackGlass.setItemMeta(blackGlassMeta);
+        ItemMeta blackMeta = blackGlass.getItemMeta();
+        blackMeta.setDisplayName(ChatColor.BLACK + "");
+        blackGlass.setItemMeta(blackMeta);
+
+        // === fill top row (0–8) with black panes ===
         for (int i = 0; i < 9; i++) {
             inv.setItem(i, blackGlass.clone());
         }
-        for (int i = 0; i < 5; i++) {
-            inv.setItem(9 + i * 9, blackGlass.clone());
+
+        // === fill left column (slots 9,18,27,36,45) with black panes ===
+        for (int row = 0; row < 5; row++) {
+            inv.setItem(9 + row * 9, blackGlass.clone());
         }
 
+        // === place category tabs only in the top row ===
         int tab = 0;
         for (Category c : Category.values()) {
-            ItemStack t = new ItemStack(c.getIcon());
-            ItemMeta m = t.getItemMeta();
-            m.setDisplayName(ChatColor.GOLD + c.getDisplay());
-            t.setItemMeta(m);
-            if (tab < 9) inv.setItem(tab, t);
-            if (tab < 5) inv.setItem(9 + tab * 9, t);
+            if (tab >= 9) break;
+            ItemStack icon = new ItemStack(c.getIcon());
+            ItemMeta im = icon.getItemMeta();
+            im.setDisplayName(ChatColor.GOLD + c.getDisplay());
+            icon.setItemMeta(im);
+            inv.setItem(tab, icon);
             tab++;
         }
 
-        // Diamond in top-right shows available merit points
-        int currentMeritPoints = playerData.getMeritPoints(player.getUniqueId());
+        // === diamond in slot 8 to show available points ===
+        int pts = playerData.getMeritPoints(player.getUniqueId());
         ItemStack diamond = new ItemStack(Material.DIAMOND);
-        ItemMeta diamondMeta = diamond.getItemMeta();
-        diamondMeta.setDisplayName(ChatColor.AQUA + "Available Merit Points: " + currentMeritPoints);
-        diamond.setItemMeta(diamondMeta);
+        ItemMeta dmeta = diamond.getItemMeta();
+        dmeta.setDisplayName(ChatColor.AQUA + "Available Merit Points: " + pts);
+        diamond.setItemMeta(dmeta);
         inv.setItem(8, diamond);
 
-        // === REMAINING SLOTS (excluding tab columns) ===
-        int slotIndex = 10;
+        // === populate perks starting just below the top row ===
+        int slotIndex = 9;  // first slot of second row
         for (Perk perk : categoryMap.get(category)) {
+            // skip the left‐column pane
+            if (slotIndex % 9 == 0) slotIndex++;
+            if (slotIndex >= 54) break;
+
             ItemStack perkItem = new ItemStack(perk.getIcon());
-            ItemMeta perkMeta = perkItem.getItemMeta();
+            ItemMeta pm = perkItem.getItemMeta();
+            String name = ChatColor.translateAlternateColorCodes('&', perk.getName());
+            pm.setDisplayName(name);
 
-            // Translate & codes in the perk name for fancy titles
-            String displayName = ChatColor.translateAlternateColorCodes('&', perk.getName());
-            perkMeta.setDisplayName(displayName);
-
-            // Set lore with cost and description from our List
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.YELLOW + "Cost: " + perk.getCost());
             lore.addAll(perk.getDescription());
-            perkMeta.setLore(lore);
+            pm.setLore(lore);
 
-            // If the player has already purchased this perk, add an enchant glow
-            String strippedName = ChatColor.stripColor(displayName);
-            if (playerData.hasPerk(player.getUniqueId(), strippedName)) {
-                perkMeta.addEnchant(Enchantment.DURABILITY, 1, true);
-                perkMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            // add glow if already purchased
+            String stripped = ChatColor.stripColor(name);
+            if (playerData.hasPerk(player.getUniqueId(), stripped)) {
+                pm.addEnchant(Enchantment.DURABILITY, 1, true);
+                pm.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            perkItem.setItemMeta(perkMeta);
+
+            perkItem.setItemMeta(pm);
             inv.setItem(slotIndex, perkItem);
             slotIndex++;
-            if (slotIndex % 9 == 0) {
-                slotIndex++;
-            }
         }
 
         player.openInventory(inv);
     }
+
 
     /**
      * Handles clicks within the Merit GUI.

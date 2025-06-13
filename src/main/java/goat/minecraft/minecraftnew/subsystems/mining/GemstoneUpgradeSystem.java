@@ -23,7 +23,7 @@ public class GemstoneUpgradeSystem implements Listener {
         COAL_YIELD("Coal Yield", "Additional coal drops when mining coal ore", Material.COAL_ORE, 5, 2),
         REDSTONE_YIELD("Redstone Yield", "Additional redstone drops when mining redstone ore", Material.REDSTONE_ORE, 5, 3),
         LAPIS_YIELD("Lapis Yield", "Additional lapis drops when mining lapis ore", Material.LAPIS_ORE, 5, 4),
-        DIAMOND_YIELD("Diamond Yield", "Additional diamond drops when mining diamond ore", Material.DIAMOND_ORE, 5, 5),
+        DIAMOND_YIELD("Diamond Yield", "Additional diamond drops when mining diamond ore", Material.DIAMOND_ORE, 2, 5),
         
         // Row 2: Metalwork (slots 11-16) 
         METALWORK_IRON("Metalwork Iron", "Additional iron drops when mining iron ore", Material.IRON_ORE, 5, 11),

@@ -1056,18 +1056,12 @@ public class MusicDiscManager implements Listener {
         ItemStack singularity = ItemRegistry.getSingularity();
         ItemStack hireVillager = ItemRegistry.getHireVillager();
         ItemStack leviathanHeart = ItemRegistry.getLeviathanHeart();
-        ItemStack abyssalInk = ItemRegistry.getAbyssalInk();
         ItemStack abyssalShell = ItemRegistry.getAbyssalShell();
-        ItemStack abyssalVenom = ItemRegistry.getAbyssalVenom();
-        ItemStack trident = ItemRegistry.getTrident();
         ItemStack forbiddenBook = ItemRegistry.getForbiddenBook();
         ItemStack mithrilChunk = ItemRegistry.getMithrilChunk();
         ItemStack perfectDiamond = ItemRegistry.getPerfectDiamond();
 
-        auctionItems.add(new AuctionItem(new ItemStack(Material.DIAMOND), 12));
-        auctionItems.add(new AuctionItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE), 64));
-        auctionItems.add(new AuctionItem(trident, 16));
-        auctionItems.add(new AuctionItem(enderDrop, 64));
+        auctionItems.add(new AuctionItem(enderDrop, 32));
         auctionItems.add(new AuctionItem(undeadDrop, 32));
         auctionItems.add(new AuctionItem(skeletonDrop, 32));
         auctionItems.add(new AuctionItem(creeperDrop, 64));
@@ -1087,12 +1081,37 @@ public class MusicDiscManager implements Listener {
         auctionItems.add(new AuctionItem(singularity, 16));
         auctionItems.add(new AuctionItem(hireVillager, 64));
         auctionItems.add(new AuctionItem(leviathanHeart, 64));
-        auctionItems.add(new AuctionItem(abyssalInk, 64));
-        auctionItems.add(new AuctionItem(abyssalVenom, 64));
         auctionItems.add(new AuctionItem(abyssalShell, 64));
-        auctionItems.add(new AuctionItem(forbiddenBook, 16));
-        auctionItems.add(new AuctionItem(mithrilChunk, 16));
-        auctionItems.add(new AuctionItem(perfectDiamond, 64));
+        auctionItems.add(new AuctionItem(forbiddenBook, 4));
+        auctionItems.add(new AuctionItem(mithrilChunk, 4));
+
+        auctionItems.add(new AuctionItem(ItemRegistry.getExperienceArtifact(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getLeatherworkerArtifact(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getRandomArmorTrim(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getWeaponsmithEnchant(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getToolsmithEfficiency(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getToolsmithUnbreaking(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getWeaponsmithSharpness(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getFletcherPower(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getWeaponsmithSweepingEdge(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getWeaponsmithLooting(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getWeaponsmithFireAspect(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getWeaponsmithSmite(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getWeaponsmithBaneofAnthropods(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getFishermanLure(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getInfernalLure(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getDarkOakBowFrameUpgrade(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getLegendarySwordReforge(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getLegendaryToolReforge(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getLegendaryArmorReforge(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getDiamondGemstone(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getEmeraldGemstone(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getHireBartender(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getEngineeringDegree(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getPreservation(), 4));
+
+
+
 
         PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
         boolean hasTuxedo = meritManager.hasPerk(player.getUniqueId(), "Tuxedo");
