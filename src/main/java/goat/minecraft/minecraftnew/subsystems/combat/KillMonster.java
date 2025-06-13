@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.Pathfinder;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.subsystems.combat.utils.EntityLevelExtractor;
 import me.gamercoder215.mobchip.EntityBrain;
 import me.gamercoder215.mobchip.ai.EntityAI;
 import me.gamercoder215.mobchip.bukkit.BukkitBrain;
@@ -18,6 +19,7 @@ import java.util.Random;
 public class KillMonster implements Listener {
     private final MinecraftNew plugin = MinecraftNew.getInstance();
     public XPManager xpManager = new XPManager(plugin);
+    private final EntityLevelExtractor levelExtractor = new EntityLevelExtractor();
 
     // Blood Moon Mechanics
     private boolean isBloodMoon = false;
@@ -65,7 +67,7 @@ public class KillMonster implements Listener {
             }
     
             // Get the monster's level (ensure it's at least 1)
-            int monsterLevel = extractIntegerFromEntityName(entity);
+            int monsterLevel = levelExtractor.extractLevelFromName(entity);
             monsterLevel = Math.max(monsterLevel, 1);
     
             // Calculate base XP gain
@@ -98,18 +100,7 @@ public class KillMonster implements Listener {
 
 
     public int extractIntegerFromEntityName(Entity entity) {
-        String name = entity.getName();
-        String cleanedName = name.replaceAll("(?i)§[0-9a-f]", "");
-        String numberString = cleanedName.replaceAll("[^0-9]", "");
-        if (numberString.isEmpty()) {
-            return 0;
-        }
-        try {
-            return Integer.parseInt(numberString);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-            return 0;
-        }
+        return levelExtractor.extractLevelFromName(entity);
     }
 
 
