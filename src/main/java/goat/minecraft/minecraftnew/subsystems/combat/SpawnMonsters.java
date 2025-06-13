@@ -750,7 +750,7 @@ public class SpawnMonsters implements Listener {
         // Skip renaming if it's a Knight
         String baseName;
         if (mob.getCustomName() != null && !mob.getCustomName().isEmpty()) {
-            baseName = ChatColor.stripColor(mob.getCustomName());
+            baseName = stripLevelPrefix(ChatColor.stripColor(mob.getCustomName()));
         } else {
             baseName = formatMobType(mob.getType().toString());
         }
@@ -780,6 +780,15 @@ public class SpawnMonsters implements Listener {
     private String formatMobType(String mobType) {
         String formattedType = mobType.replace('_', ' ').toLowerCase();
         return formattedType.substring(0, 1).toUpperCase() + formattedType.substring(1);
+    }
+
+    /**
+     * Removes an existing level prefix from a mob name.
+     * Handles patterns like "[Lv: 10] Zombie" and is case-insensitive.
+     */
+    private String stripLevelPrefix(String name) {
+        if (name == null) return "";
+        return name.replaceFirst("(?i)^\\s*\\[?\\s*(?:level|lv\\.?|lvl)\\s*:?\\s*\\d+\\s*\\]?\\s*", "");
     }
 
     private int getRandomLevelVariation() {
