@@ -32,7 +32,6 @@ public class MeritCommand implements CommandExecutor, Listener {
         SMITHING("Smithing", Material.ANVIL),
         FARMING("Farming", Material.WHEAT),
         BREWING("Brewing", Material.BREWING_STAND),
-        FISHING("Fishing", Material.FISHING_ROD),
         VILLAGER("Villager", Material.EMERALD),
         UTILITY("Utility", Material.REDSTONE);
 
@@ -308,7 +307,7 @@ public class MeritCommand implements CommandExecutor, Listener {
         categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Tactical Retreat
         categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Vampiric Strike
         categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Lord of Thunder
-        categoryMap.get(Category.FISHING).add(perks.get(i++)); // Deep Hook
+        categoryMap.get(Category.FARMING).add(perks.get(i++)); // Deep Hook
         categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Instant Transmission
         categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Deep Breath
         categoryMap.get(Category.UTILITY).add(perks.get(i++)); // Trainer
@@ -322,7 +321,7 @@ public class MeritCommand implements CommandExecutor, Listener {
         categoryMap.get(Category.BREWING).add(perks.get(i++)); // Master Chef
         categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Master Thief
         categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Master Duelist
-        categoryMap.get(Category.FISHING).add(perks.get(i++)); // Master Angler
+        categoryMap.get(Category.FARMING).add(perks.get(i++)); // Master Angler
         categoryMap.get(Category.VILLAGER).add(perks.get(i++)); // Master Diplomat
         categoryMap.get(Category.COMBAT).add(perks.get(i++)); // Master Diffuser
         categoryMap.get(Category.VILLAGER).add(perks.get(i++)); // Master Trader
@@ -365,7 +364,7 @@ public class MeritCommand implements CommandExecutor, Listener {
     private void openMeritGUI(Player player, Category category) {
         Inventory inv = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Merits: " + category.getDisplay());
 
-        // === FIRST ROW AND LEFT COLUMN FOR TABS ===
+        // === TOP BORDER AND LEFT-SIDE TABS ===
         ItemStack blackGlass = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta blackGlassMeta = blackGlass.getItemMeta();
         blackGlassMeta.setDisplayName(ChatColor.BLACK + "");
@@ -373,19 +372,19 @@ public class MeritCommand implements CommandExecutor, Listener {
         for (int i = 0; i < 9; i++) {
             inv.setItem(i, blackGlass.clone());
         }
-        for (int i = 0; i < 5; i++) {
-            inv.setItem(9 + i * 9, blackGlass.clone());
+        for (int i = 0; i < 6; i++) {
+            inv.setItem(i * 9, blackGlass.clone());
         }
 
-        int tab = 0;
+        int row = 0;
         for (Category c : Category.values()) {
+            if (row >= 6) break; // safety check
             ItemStack t = new ItemStack(c.getIcon());
             ItemMeta m = t.getItemMeta();
             m.setDisplayName(ChatColor.GOLD + c.getDisplay());
             t.setItemMeta(m);
-            if (tab < 9) inv.setItem(tab, t);
-            if (tab < 5) inv.setItem(9 + tab * 9, t);
-            tab++;
+            inv.setItem(row * 9, t);
+            row++;
         }
 
         // Diamond in top-right shows available merit points
