@@ -1112,122 +1112,113 @@ public class UltimateEnchantmentListener implements Listener {
             player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, new net.md_5.bungee.api.chat.TextComponent(message));
         }
     }
+    private final Map<UUID, LeviathanSwordTask> leviathanTasks = new HashMap<>();
 
     private class LeviathanSwordTask extends BukkitRunnable {
         private final Player player;
-        private final ArmorStand armorStand;
+        private final ArmorStand stand;
         private final ItemStack sword;
         private Vector velocity;
         private boolean returning = false;
         private boolean embedded = false;
-        private LivingEntity stuckEntity = null;
+        private LivingEntity stuckIn;
         private int tick = 0;
-        private int damageTick = 0;
 
-        public LeviathanSwordTask(Player player, ArmorStand armorStand, ItemStack sword) {
+        LeviathanSwordTask(Player player, ArmorStand stand, ItemStack sword) {
             this.player = player;
-            this.armorStand = armorStand;
+            this.stand = stand;
             this.sword = sword;
-            this.velocity = player.getLocation().getDirection().normalize().multiply(1.2);
+            this.velocity = player.getLocation().getDirection().normalize();
         }
 
         @Override
         public void run() {
-            if (!player.isOnline() || !armorStand.isValid()) {
-                forceReturnToPlayer();
+            if(!player.isOnline() || !stand.isValid()) {
+                cleanup();
                 return;
             }
+            tick++;
 
-            if (returning) {
-                handleReturn();
-                return;
-            }
-
-            if (stuckEntity != null) {
-                armorStand.teleport(stuckEntity.getLocation().add(0, stuckEntity.getHeight() / 2, 0));
-                damageTick++;
-                if (damageTick >= 20) {
-                    damageTick = 0;
-                    XPManager xp = new XPManager(plugin);
-                    int combat = xp.getPlayerLevel(player, "Combat");
-                    stuckEntity.damage(combat, player);
-                    if (stuckEntity.isDead()) {
-                        stuckEntity = null;
-                        embedded = true;
+            if(!returning) {
+                if(embedded) {
+                    if(stuckIn != null) {
+                        stand.teleport(stuckIn.getLocation().add(0,1,0));
+                        if(!stuckIn.isDead() && tick % 20 == 0) {
+                            XPManager xp = new XPManager(plugin);
+                            int level = xp.getPlayerLevel(player, "Combat");
+                            stuckIn.damage(level, player);
+                        }
+                        if(stuckIn.isDead()) {
+                            stuckIn = null;
+                        }
                     }
-                }
-                return;
-            }
-
-            if (embedded) {
-                return;
-            }
-
-            Location next = armorStand.getLocation().add(velocity);
-            armorStand.teleport(next);
-
-            Block block = next.getBlock();
-            if (block.getType() != Material.AIR && block.getType().isSolid()) {
-                embedded = true;
-                velocity = new Vector();
-                return;
-            }
-
-            for (Entity e : armorStand.getNearbyEntities(0.5,0.5,0.5)) {
-                if (e instanceof LivingEntity && e != player) {
-                    stuckEntity = (LivingEntity) e;
                     return;
                 }
-            }
-        }
 
-        private void handleReturn() {
-            Location current = armorStand.getLocation();
-            Vector toPlayer = player.getLocation().add(0,1,0).toVector().subtract(current.toVector());
-            double distance = toPlayer.length();
-            if (distance < 1.5) {
-                returnSwordToPlayer();
-                return;
-            }
-            toPlayer.normalize();
-            Location next = current.add(toPlayer.multiply(1.5));
-            armorStand.teleport(next);
+                Location next = stand.getLocation().add(velocity);
+                Block block = next.getBlock();
+                if(block.getType() != Material.AIR && block.getType().isSolid()) {
+                    embedded = true;
+                    stand.teleport(block.getLocation().add(0.5, 0.0, 0.5));
+                    stand.getWorld().playSound(stand.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
+                    return;
+                }
+                for(Entity e : stand.getNearbyEntities(0.5,0.5,0.5)) {
+                    if(e instanceof LivingEntity && e != player) {
+                        stuckIn = (LivingEntity)e;
+                        embedded = true;
+                        stand.teleport(stuckIn.getLocation().add(0,1,0));
+                        stand.getWorld().playSound(stand.getLocation(), Sound.ENTITY_IRON_GOLEM_ATTACK,1f,1.2f);
+                        return;
+                    }
+                }
+                stand.teleport(next);
+            } else {
+                Location current = stand.getLocation();
+                Vector toPlayer = player.getLocation().add(0,1,0).toVector().subtract(current.toVector());
+                if(toPlayer.length() < 1.5) {
+                    returnToPlayer();
+                    return;
+                }
+                toPlayer.normalize().multiply(1.5);
+                stand.teleport(current.add(toPlayer));
 
-            XPManager xp = new XPManager(plugin);
-            int combat = xp.getPlayerLevel(player, "Combat");
-            for (Entity e : armorStand.getNearbyEntities(1,1,1)) {
-                if (e instanceof LivingEntity && e != player) {
-                    ((LivingEntity)e).damage(combat, player);
-                    Vector kb = e.getLocation().toVector().subtract(next.toVector()).normalize().multiply(0.5);
-                    e.setVelocity(kb);
+                for(Entity e : stand.getNearbyEntities(1,1,1)) {
+                    if(e instanceof Monster) {
+                        XPManager xp = new XPManager(plugin);
+                        int level = xp.getPlayerLevel(player, "Combat");
+                        ((LivingEntity)e).damage(level, player);
+                        Vector knock = e.getLocation().toVector().subtract(current.toVector()).normalize().multiply(0.5);
+                        e.setVelocity(knock);
+                        velocity = velocity.add(knock.multiply(0.2));
+                    }
                 }
             }
         }
 
-        public void startReturn() {
-            if (!returning) {
-                returning = true;
-                embedded = false;
-                stuckEntity = null;
-                player.getWorld().playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1f, 1f);
-            }
+        void startReturn() {
+            returning = true;
+            embedded = false;
+            stuckIn = null;
         }
 
-        private void forceReturnToPlayer() {
-            if (armorStand.isValid()) {
-                armorStand.remove();
+        private void returnToPlayer() {
+            stand.getWorld().playSound(stand.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1f, 1f);
+            stand.remove();
+
+            ItemStack first = player.getInventory().getItem(0);
+            if(first != null && !first.isSimilar(sword)) {
+                player.getWorld().dropItemNaturally(player.getLocation(), first.clone());
             }
             player.getInventory().setItem(0, sword);
-            leviathanSwordTasks.remove(player.getUniqueId());
+            leviathanTasks.remove(player.getUniqueId());
             cancel();
         }
 
-        private void returnSwordToPlayer() {
-            if (armorStand.isValid()) {
-                armorStand.remove();
-            }
-            player.getInventory().setItem(0, sword);
-            leviathanSwordTasks.remove(player.getUniqueId());
+        private void cleanup() {
+            if(stand.isValid()) stand.remove();
+            player.getInventory().addItem(sword);
+            leviathanTasks.remove(player.getUniqueId());
             cancel();
         }
     }
