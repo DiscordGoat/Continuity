@@ -504,54 +504,8 @@ public class UltimateEnchantmentListener implements Listener {
 
         if (!activeEnchantments.containsKey(playerUUID)) return;
         Map<String, Integer> playerEnchants = activeEnchantments.get(playerUUID);
-        if (!playerEnchants.containsKey("Ultimate: Inferno")) return;
-
-        int charges = playerEnchants.get("Ultimate: Inferno");
-        if (charges <= 0) {
-            playerEnchants.remove("Ultimate: Inferno");
-            if (playerEnchants.isEmpty()) {
-                activeEnchantments.remove(playerUUID);
-            }
-            return;
-        }
-
-        LivingEntity target = (LivingEntity) event.getEntity();
-        applyInfernoEffect(player, target, playerEnchants.get("Ultimate: Inferno"));
-        playerEnchants.put("Ultimate: Inferno", charges - 1);
-        if (playerEnchants.get("Ultimate: Inferno") <= 0) {
-            playerEnchants.remove("Ultimate: Inferno");
-            player.sendMessage(ChatColor.RED + "Ultimate: Inferno effect has ended.");
-            if (playerEnchants.isEmpty()) {
-                activeEnchantments.remove(playerUUID);
-            }
-        }
     }
 
-    private void applyInfernoEffect(Player player, LivingEntity target, int level) {
-        int totalDurationTicks = 40 * level;
-        double damagePerTick = 5.0 * level;
-
-        new BukkitRunnable() {
-            int elapsedTicks = 0;
-            @Override
-            public void run() {
-                if (target.isDead()) {
-                    this.cancel();
-                    return;
-                }
-                target.damage(damagePerTick, player);
-                //player.sendMessage(ChatColor.GOLD + "Inferno Blade burns " + target.getName() + " for " + damagePerTick + " damage!");
-                target.getWorld().spawnParticle(Particle.FLAME, target.getLocation().add(0, 1, 0), 20, 0.5, 0.5, 0.5, 0.02);
-                target.getWorld().spawnParticle(Particle.LAVA, target.getLocation().add(0, 1, 0), 10, 0.3, 0.3, 0.3, 0.01);
-                target.getWorld().spawnParticle(Particle.SMOKE_NORMAL, target.getLocation().add(0, 1, 0), 10, 0.3, 0.3, 0.3, 0.01);
-                elapsedTicks++;
-                if (elapsedTicks >= totalDurationTicks) {
-                    player.sendMessage(ChatColor.RED + "Inferno Blade's burn effect has worn off on " + target.getName() + ".");
-                    this.cancel();
-                }
-            }
-        }.runTaskTimer(plugin, 0L, 1L);
-    }
 
     // The rest of your ultimate enchant code for arrows, parry, snowstorm, etc. remain as-is...
     // Note that we removed the "hammer" and "treecapitator" cases from onPlayerRightClick below:
@@ -709,13 +663,6 @@ public class UltimateEnchantmentListener implements Listener {
                     cooldownMs = 120_000L;
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, 10);
                     break;
-                case "inferno":
-                    activateInfernoBlade(player, ueData.getLevel());
-                    player.sendMessage(ChatColor.GREEN + "Your Inferno Blade has been activated! Your next 3 attacks will set enemies ablaze!");
-                    cooldownMs = 30_000L;
-                    setPlayerCooldown(player.getUniqueId(), ueData.getName(), cooldownMs);
-                    saveCooldowns();
-                    break;
                 case "snowstorm":
                     activateSnowstorm(player, 1);
                     cooldownMs = 35_000L;
@@ -751,11 +698,6 @@ public class UltimateEnchantmentListener implements Listener {
         player.sendMessage(ChatColor.AQUA + "Snowstorm activated! Nearby monsters are frozen!");
     }
 
-    private void activateInfernoBlade(Player player, int level) {
-        UUID playerUUID = player.getUniqueId();
-        activeEnchantments.putIfAbsent(playerUUID, new HashMap<>());
-        activeEnchantments.get(playerUUID).put("Ultimate: Inferno", 3); // 3 charges
-    }
 
     // Homing arrows etc. remain unchanged
     public void fireHomingArrows(Player player) {

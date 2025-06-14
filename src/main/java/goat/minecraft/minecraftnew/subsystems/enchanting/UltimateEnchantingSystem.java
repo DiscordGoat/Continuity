@@ -76,7 +76,6 @@ public class UltimateEnchantingSystem implements Listener {
         registerEnchantmentForType("Ultimate: Homing Arrows", 1, false, Material.BOW, Material.CROSSBOW);
 
         // 2) Melee
-        registerEnchantmentForType("Ultimate: Inferno", 1, false, MELEE.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Rage Mode", 1, false, MELEE.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Warp", 1, false, MELEE.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Snowstorm", 1, false, MELEE.toArray(new Material[0]));
@@ -408,10 +407,6 @@ public class UltimateEnchantingSystem implements Listener {
         }
 
         // Process ultimate enchantments and award bonus XP after applying them.
-        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Inferno")){
-            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Inferno", 1);
-            xpManager.addXP(player, "Smithing", 500);
-        }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Rage Mode")){
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Rage Mode", 1);
             xpManager.addXP(player, "Smithing", 500);
