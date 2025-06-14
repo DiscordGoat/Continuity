@@ -45,7 +45,6 @@ public class UltimateEnchantmentListener implements Listener {
 
     // Removed activateTreecapitator(...) and activateHammer(...)
     private static Map<UUID, LoyalSwordData> loyalSwordDataMap = new HashMap<>();
-    private final Map<UUID, LeviathanSwordTask> leviathanTasks = new HashMap<>();
     private static Map<UUID, LeviathanSwordTask> leviathanSwordTasks = new HashMap<>();
 
     private static class LoyalSwordData {
@@ -690,22 +689,11 @@ public class UltimateEnchantmentListener implements Listener {
     private void activateLeviathanSword(Player player, ItemStack sword) {
         player.getInventory().remove(sword);
         Location spawnLoc = player.getLocation().add(0, 0.5, 0);
-        ArmorStand stand = player.getWorld().spawn(spawnLoc, ArmorStand.class, s -> {
-            s.setGravity(false);
-            s.setVisible(false);
-            s.setItemInHand(sword.clone());
-        });
-        player.playSound(player.getLocation(), Sound.ENTITY_GOAT_LONG_JUMP, 1.0f, 0.5f);
-        LeviathanSwordTask task = new LeviathanSwordTask(player, stand, sword);
-        leviathanTasks.put(player.getUniqueId(), task);
-
-        Location spawnLoc = player.getLocation().add(0, 0.5, 0);
         ArmorStand armorStand = player.getWorld().spawn(spawnLoc, ArmorStand.class, stand -> {
             stand.setGravity(false);
             stand.setVisible(false);
             stand.setItemInHand(sword.clone());
         });
-
         player.playSound(player.getLocation(), Sound.ENTITY_DROWNED_SHOOT, 1.0f, 0.8f);
         Vector direction = player.getLocation().getDirection().normalize();
         armorStand.setVelocity(direction.multiply(1.2));
@@ -770,8 +758,8 @@ public class UltimateEnchantmentListener implements Listener {
                     break;
                 case "leviathan":
                     // Recall the Leviathan sword if one is active and player is empty handed
-                    if(player.getInventory().getItemInMainHand().getType() == Material.AIR && leviathanTasks.containsKey(player.getUniqueId())){
-                        leviathanTasks.get(player.getUniqueId()).startReturn();
+                    if(player.getInventory().getItemInMainHand().getType() == Material.AIR && leviathanSwordTasks.containsKey(player.getUniqueId())){
+                        leviathanSwordTasks.get(player.getUniqueId()).startReturn();
                     }
                     cooldownMs = 1L;
                     break;
@@ -1336,6 +1324,7 @@ public class UltimateEnchantmentListener implements Listener {
                 if (e instanceof LivingEntity && e != player) {
                     stuckEntity = (LivingEntity) e;
                     Location embedLoc = stuckEntity.getLocation().add(0, stuckEntity.getHeight()/2, 0);
+                    embedLoc.setDirection(player.getLocation().toVector().subtract(stuckEntity.getLocation().toVector()));
                     embedLoc.setDirection(stuckEntity.getLocation().toVector().subtract(player.getLocation().toVector()));
                     armorStand.teleport(embedLoc);
                     armorStand.getWorld().playSound(embedLoc, Sound.ENTITY_IRON_GOLEM_ATTACK,1f,1.2f);
