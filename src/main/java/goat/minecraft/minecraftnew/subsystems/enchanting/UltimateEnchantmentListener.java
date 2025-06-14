@@ -595,7 +595,11 @@ public class UltimateEnchantmentListener implements Listener {
                         LivingEntity le=(LivingEntity)e;
                         XPManager xp = new XPManager(plugin);
                         int combat = xp.getPlayerLevel(player, "Combat");
+                        // Deal damage and immediately reset the entity's no damage
+                        // ticks so multiple hits can register without waiting for
+                        // the usual invulnerability window.
                         le.damage(combat/2.0, player);
+                        le.setNoDamageTicks(0);
                         // Play a sound when the shred strikes an enemy
                         player.getWorld().playSound(le.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
                         if(sword.getType().getMaxDurability()>0 && sword.getDurability()>0){
