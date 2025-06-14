@@ -398,6 +398,11 @@ public class XPManager implements CommandExecutor {
             }
             level++;
         }
+        // Safety check in case XP somehow exceeds our configured thresholds
+        // so levels never go beyond 100.
+        if (level > 100) {
+            level = 100;
+        }
         return level;
     }
 
