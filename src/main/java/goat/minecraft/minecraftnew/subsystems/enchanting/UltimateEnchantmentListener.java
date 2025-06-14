@@ -45,11 +45,121 @@ public class UltimateEnchantmentListener implements Listener {
 
     // Removed activateTreecapitator(...) and activateHammer(...)
     private static Map<UUID, LoyalSwordData> loyalSwordDataMap = new HashMap<>();
+    private final Map<UUID, LeviathanSwordTask> leviathanTasks = new HashMap<>();
     private static Map<UUID, LeviathanSwordTask> leviathanSwordTasks = new HashMap<>();
 
     private static class LoyalSwordData {
         double damageMultiplier = 1.0; // 1.0 = 100%
         long lastUsage = System.currentTimeMillis();
+    }
+
+    private class LeviathanSwordTask extends BukkitRunnable {
+        private final Player player;
+        private final ArmorStand stand;
+        private final ItemStack sword;
+        private Vector velocity;
+        private boolean returning = false;
+        private boolean embedded = false;
+        private LivingEntity stuckIn;
+        private int tick = 0;
+
+        LeviathanSwordTask(Player player, ArmorStand stand, ItemStack sword) {
+            this.player = player;
+            this.stand = stand;
+            this.sword = sword;
+            this.velocity = player.getLocation().getDirection().normalize();
+        }
+
+        @Override
+        public void run() {
+            if(!player.isOnline() || !stand.isValid()) {
+                cleanup();
+                return;
+            }
+            tick++;
+
+            if(!returning) {
+                if(embedded) {
+                    if(stuckIn != null) {
+                        stand.teleport(stuckIn.getLocation().add(0,1,0));
+                        if(!stuckIn.isDead() && tick % 20 == 0) {
+                            XPManager xp = new XPManager(plugin);
+                            int level = xp.getPlayerLevel(player, "Combat");
+                            stuckIn.damage(level, player);
+                        }
+                        if(stuckIn.isDead()) {
+                            stuckIn = null;
+                        }
+                    }
+                    return;
+                }
+
+                Location next = stand.getLocation().add(velocity);
+                Block block = next.getBlock();
+                if(block.getType() != Material.AIR && block.getType().isSolid()) {
+                    embedded = true;
+                    stand.teleport(block.getLocation().add(0.5, 0.0, 0.5));
+                    stand.getWorld().playSound(stand.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
+                    return;
+                }
+                for(Entity e : stand.getNearbyEntities(0.5,0.5,0.5)) {
+                    if(e instanceof LivingEntity && e != player) {
+                        stuckIn = (LivingEntity)e;
+                        embedded = true;
+                        stand.teleport(stuckIn.getLocation().add(0,1,0));
+                        stand.getWorld().playSound(stand.getLocation(), Sound.ENTITY_IRON_GOLEM_ATTACK,1f,1.2f);
+                        return;
+                    }
+                }
+                stand.teleport(next);
+            } else {
+                Location current = stand.getLocation();
+                Vector toPlayer = player.getLocation().add(0,1,0).toVector().subtract(current.toVector());
+                if(toPlayer.length() < 1.5) {
+                    returnToPlayer();
+                    return;
+                }
+                toPlayer.normalize().multiply(1.5);
+                stand.teleport(current.add(toPlayer));
+
+                for(Entity e : stand.getNearbyEntities(1,1,1)) {
+                    if(e instanceof Monster) {
+                        XPManager xp = new XPManager(plugin);
+                        int level = xp.getPlayerLevel(player, "Combat");
+                        ((LivingEntity)e).damage(level, player);
+                        Vector knock = e.getLocation().toVector().subtract(current.toVector()).normalize().multiply(0.5);
+                        e.setVelocity(knock);
+                        velocity = velocity.add(knock.multiply(0.2));
+                    }
+                }
+            }
+        }
+
+        void startReturn() {
+            returning = true;
+            embedded = false;
+            stuckIn = null;
+        }
+
+        private void returnToPlayer() {
+            stand.getWorld().playSound(stand.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1f, 1f);
+            stand.remove();
+
+            ItemStack first = player.getInventory().getItem(0);
+            if(first != null && !first.isSimilar(sword)) {
+                player.getWorld().dropItemNaturally(player.getLocation(), first.clone());
+            }
+            player.getInventory().setItem(0, sword);
+            leviathanTasks.remove(player.getUniqueId());
+            cancel();
+        }
+
+        private void cleanup() {
+            if(stand.isValid()) stand.remove();
+            player.getInventory().addItem(sword);
+            leviathanTasks.remove(player.getUniqueId());
+            cancel();
+        }
     }
     public UltimateEnchantmentListener(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -565,6 +675,15 @@ public class UltimateEnchantmentListener implements Listener {
 
     private void activateLeviathanSword(Player player, ItemStack sword) {
         player.getInventory().remove(sword);
+        Location spawnLoc = player.getLocation().add(0, 0.5, 0);
+        ArmorStand stand = player.getWorld().spawn(spawnLoc, ArmorStand.class, s -> {
+            s.setGravity(false);
+            s.setVisible(false);
+            s.setItemInHand(sword.clone());
+        });
+        player.playSound(player.getLocation(), Sound.ENTITY_GOAT_LONG_JUMP, 1.0f, 0.5f);
+        LeviathanSwordTask task = new LeviathanSwordTask(player, stand, sword);
+        leviathanTasks.put(player.getUniqueId(), task);
 
         Location spawnLoc = player.getLocation().add(0, 0.5, 0);
         ArmorStand armorStand = player.getWorld().spawn(spawnLoc, ArmorStand.class, stand -> {
@@ -634,6 +753,13 @@ public class UltimateEnchantmentListener implements Listener {
                 case "headshot":
                     fireDamageArrow(player);
                     cooldownMs = 15_000L;
+                    break;
+                case "leviathan":
+                    // Recall the Leviathan sword if one is active and player is empty handed
+                    if(player.getInventory().getItemInMainHand().getType() == Material.AIR && leviathanTasks.containsKey(player.getUniqueId())){
+                        leviathanTasks.get(player.getUniqueId()).startReturn();
+                    }
+                    cooldownMs = 1L;
                     break;
 
                 default:
