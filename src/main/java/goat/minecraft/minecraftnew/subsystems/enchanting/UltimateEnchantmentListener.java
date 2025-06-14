@@ -566,7 +566,8 @@ public class UltimateEnchantmentListener implements Listener {
 
     private void activateShred(Player player, ItemStack sword){
         if(sword.getType().getMaxDurability() > 0){
-            short dmg = (short)(sword.getDurability() + 10);
+            // Shred only costs 5 durability on activation
+            short dmg = (short)(sword.getDurability() + 5);
             if(dmg > sword.getType().getMaxDurability()) dmg = sword.getType().getMaxDurability();
             sword.setDurability(dmg);
         }
@@ -581,16 +582,22 @@ public class UltimateEnchantmentListener implements Listener {
         Vector dir = player.getLocation().getDirection().normalize();
         new BukkitRunnable(){
             int tick=0;
+            double spin=0;
             @Override
             public void run(){
                 if(!stand.isValid()){ cancel(); return; }
                 stand.teleport(stand.getLocation().add(dir));
+                // Spin the sword end over end while flying
+                spin += Math.toRadians(20);
+                stand.setRightArmPose(new EulerAngle(spin, 0, 0));
                 for(Entity e : stand.getNearbyEntities(0.5,0.5,0.5)){
                     if(e instanceof LivingEntity && e!=player){
                         LivingEntity le=(LivingEntity)e;
                         XPManager xp = new XPManager(plugin);
                         int combat = xp.getPlayerLevel(player, "Combat");
                         le.damage(combat/2.0, player);
+                        // Play a sound when the shred strikes an enemy
+                        player.getWorld().playSound(le.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
                         if(sword.getType().getMaxDurability()>0 && sword.getDurability()>0){
                             sword.setDurability((short)(sword.getDurability()-1));
                         }
