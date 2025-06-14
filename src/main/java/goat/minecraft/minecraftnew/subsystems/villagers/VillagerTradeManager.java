@@ -319,16 +319,16 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> clericPurchases = new ArrayList<>();
         clericPurchases.add(createTradeMap("GLASS_BOTTLE", 1, 2, 1)); // Material
         clericPurchases.add(createTradeMap("NETHER_WART", 1, 64, 1)); // Material
-        clericPurchases.add(createTradeMap("RECURVE", 1, 16, 3)); // Material
-        clericPurchases.add(createTradeMap("STRENGTH", 1, 16, 3)); // Material
-        clericPurchases.add(createTradeMap("SWIFT_STEP", 1, 16, 3)); // Material
-        clericPurchases.add(createTradeMap("SOVEREIGNTY", 1, 16, 3)); // Material
-        clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 4)); // Material
-        clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 4)); // Material
-        clericPurchases.add(createTradeMap("RIPTIDE", 1, 32, 4)); // Material
-        clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 4)); // Material
-        clericPurchases.add(createTradeMap("NIGHT_VISION", 1, 32, 4)); // Material
-        clericPurchases.add(createTradeMap("CHARISMATIC_BARTERING", 1, 64, 4)); // Material
+        clericPurchases.add(createTradeMap("RECURVE", 1, 16, 2)); // Material
+        clericPurchases.add(createTradeMap("STRENGTH", 1, 16, 2)); // Material
+        clericPurchases.add(createTradeMap("SWIFT_STEP", 1, 16, 2)); // Material
+        clericPurchases.add(createTradeMap("SOVEREIGNTY", 1, 16, 2)); // Material
+        clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 2)); // Material
+        clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 2)); // Material
+        clericPurchases.add(createTradeMap("RIPTIDE", 1, 32, 2)); // Material
+        clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 2)); // Material
+        clericPurchases.add(createTradeMap("NIGHT_VISION", 1, 32, 2)); // Material
+        clericPurchases.add(createTradeMap("CHARISMATIC_BARTERING", 1, 64, 2)); // Material
 
         clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 3)); // Custom Item
         defaultConfig.set("CLERIC.purchases", clericPurchases);

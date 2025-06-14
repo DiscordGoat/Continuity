@@ -46,6 +46,7 @@ public class UltimateEnchantmentListener implements Listener {
     // Removed activateTreecapitator(...) and activateHammer(...)
     private static Map<UUID, LoyalSwordData> loyalSwordDataMap = new HashMap<>();
     private final Map<UUID, LeviathanSwordTask> leviathanTasks = new HashMap<>();
+    private static Map<UUID, LeviathanSwordTask> leviathanSwordTasks = new HashMap<>();
 
     private static class LoyalSwordData {
         double damageMultiplier = 1.0; // 1.0 = 100%
@@ -614,54 +615,8 @@ public class UltimateEnchantmentListener implements Listener {
 
         if (!activeEnchantments.containsKey(playerUUID)) return;
         Map<String, Integer> playerEnchants = activeEnchantments.get(playerUUID);
-        if (!playerEnchants.containsKey("Ultimate: Inferno")) return;
-
-        int charges = playerEnchants.get("Ultimate: Inferno");
-        if (charges <= 0) {
-            playerEnchants.remove("Ultimate: Inferno");
-            if (playerEnchants.isEmpty()) {
-                activeEnchantments.remove(playerUUID);
-            }
-            return;
-        }
-
-        LivingEntity target = (LivingEntity) event.getEntity();
-        applyInfernoEffect(player, target, playerEnchants.get("Ultimate: Inferno"));
-        playerEnchants.put("Ultimate: Inferno", charges - 1);
-        if (playerEnchants.get("Ultimate: Inferno") <= 0) {
-            playerEnchants.remove("Ultimate: Inferno");
-            player.sendMessage(ChatColor.RED + "Ultimate: Inferno effect has ended.");
-            if (playerEnchants.isEmpty()) {
-                activeEnchantments.remove(playerUUID);
-            }
-        }
     }
 
-    private void applyInfernoEffect(Player player, LivingEntity target, int level) {
-        int totalDurationTicks = 40 * level;
-        double damagePerTick = 5.0 * level;
-
-        new BukkitRunnable() {
-            int elapsedTicks = 0;
-            @Override
-            public void run() {
-                if (target.isDead()) {
-                    this.cancel();
-                    return;
-                }
-                target.damage(damagePerTick, player);
-                //player.sendMessage(ChatColor.GOLD + "Inferno Blade burns " + target.getName() + " for " + damagePerTick + " damage!");
-                target.getWorld().spawnParticle(Particle.FLAME, target.getLocation().add(0, 1, 0), 20, 0.5, 0.5, 0.5, 0.02);
-                target.getWorld().spawnParticle(Particle.LAVA, target.getLocation().add(0, 1, 0), 10, 0.3, 0.3, 0.3, 0.01);
-                target.getWorld().spawnParticle(Particle.SMOKE_NORMAL, target.getLocation().add(0, 1, 0), 10, 0.3, 0.3, 0.3, 0.01);
-                elapsedTicks++;
-                if (elapsedTicks >= totalDurationTicks) {
-                    player.sendMessage(ChatColor.RED + "Inferno Blade's burn effect has worn off on " + target.getName() + ".");
-                    this.cancel();
-                }
-            }
-        }.runTaskTimer(plugin, 0L, 1L);
-    }
 
     // The rest of your ultimate enchant code for arrows, parry, snowstorm, etc. remain as-is...
     // Note that we removed the "hammer" and "treecapitator" cases from onPlayerRightClick below:
@@ -729,6 +684,20 @@ public class UltimateEnchantmentListener implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_GOAT_LONG_JUMP, 1.0f, 0.5f);
         LeviathanSwordTask task = new LeviathanSwordTask(player, stand, sword);
         leviathanTasks.put(player.getUniqueId(), task);
+
+        Location spawnLoc = player.getLocation().add(0, 0.5, 0);
+        ArmorStand armorStand = player.getWorld().spawn(spawnLoc, ArmorStand.class, stand -> {
+            stand.setGravity(false);
+            stand.setVisible(false);
+            stand.setItemInHand(sword.clone());
+        });
+
+        player.playSound(player.getLocation(), Sound.ENTITY_DROWNED_SHOOT, 1.0f, 0.8f);
+        Vector direction = player.getLocation().getDirection().normalize();
+        armorStand.setVelocity(direction.multiply(1.2));
+
+        LeviathanSwordTask task = new LeviathanSwordTask(player, armorStand, sword);
+        leviathanSwordTasks.put(player.getUniqueId(), task);
         task.runTaskTimer(plugin, 0L, 1L);
     }
 
@@ -736,7 +705,15 @@ public class UltimateEnchantmentListener implements Listener {
     public void onPlayerRightClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null) return;
+        if (item == null || item.getType() == Material.AIR) {
+            if (event.getAction() == Action.LEFT_CLICK_AIR && player.getInventory().getHeldItemSlot() == 0) {
+                LeviathanSwordTask task = leviathanSwordTasks.get(player.getUniqueId());
+                if (task != null) {
+                    task.startReturn();
+                }
+            }
+            return;
+        }
         if (player.isSneaking()) {
             return;
         }
@@ -844,13 +821,6 @@ public class UltimateEnchantmentListener implements Listener {
                     cooldownMs = 120_000L;
                     player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, 10);
                     break;
-                case "inferno":
-                    activateInfernoBlade(player, ueData.getLevel());
-                    player.sendMessage(ChatColor.GREEN + "Your Inferno Blade has been activated! Your next 3 attacks will set enemies ablaze!");
-                    cooldownMs = 30_000L;
-                    setPlayerCooldown(player.getUniqueId(), ueData.getName(), cooldownMs);
-                    saveCooldowns();
-                    break;
                 case "snowstorm":
                     activateSnowstorm(player, 1);
                     cooldownMs = 35_000L;
@@ -886,11 +856,6 @@ public class UltimateEnchantmentListener implements Listener {
         player.sendMessage(ChatColor.AQUA + "Snowstorm activated! Nearby monsters are frozen!");
     }
 
-    private void activateInfernoBlade(Player player, int level) {
-        UUID playerUUID = player.getUniqueId();
-        activeEnchantments.putIfAbsent(playerUUID, new HashMap<>());
-        activeEnchantments.get(playerUUID).put("Ultimate: Inferno", 3); // 3 charges
-    }
 
     // Homing arrows etc. remain unchanged
     public void fireHomingArrows(Player player) {
@@ -1271,6 +1236,125 @@ public class UltimateEnchantmentListener implements Listener {
 
         private void sendActionBar(Player player, String message) {
             player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, new net.md_5.bungee.api.chat.TextComponent(message));
+        }
+    }
+
+    private class LeviathanSwordTask extends BukkitRunnable {
+        private final Player player;
+        private final ArmorStand armorStand;
+        private final ItemStack sword;
+        private Vector velocity;
+        private boolean returning = false;
+        private boolean embedded = false;
+        private LivingEntity stuckEntity = null;
+        private int tick = 0;
+        private int damageTick = 0;
+
+        public LeviathanSwordTask(Player player, ArmorStand armorStand, ItemStack sword) {
+            this.player = player;
+            this.armorStand = armorStand;
+            this.sword = sword;
+            this.velocity = player.getLocation().getDirection().normalize().multiply(1.2);
+        }
+
+        @Override
+        public void run() {
+            if (!player.isOnline() || !armorStand.isValid()) {
+                forceReturnToPlayer();
+                return;
+            }
+
+            if (returning) {
+                handleReturn();
+                return;
+            }
+
+            if (stuckEntity != null) {
+                armorStand.teleport(stuckEntity.getLocation().add(0, stuckEntity.getHeight() / 2, 0));
+                damageTick++;
+                if (damageTick >= 20) {
+                    damageTick = 0;
+                    XPManager xp = new XPManager(plugin);
+                    int combat = xp.getPlayerLevel(player, "Combat");
+                    stuckEntity.damage(combat, player);
+                    if (stuckEntity.isDead()) {
+                        stuckEntity = null;
+                        embedded = true;
+                    }
+                }
+                return;
+            }
+
+            if (embedded) {
+                return;
+            }
+
+            Location next = armorStand.getLocation().add(velocity);
+            armorStand.teleport(next);
+
+            Block block = next.getBlock();
+            if (block.getType() != Material.AIR && block.getType().isSolid()) {
+                embedded = true;
+                velocity = new Vector();
+                return;
+            }
+
+            for (Entity e : armorStand.getNearbyEntities(0.5,0.5,0.5)) {
+                if (e instanceof LivingEntity && e != player) {
+                    stuckEntity = (LivingEntity) e;
+                    return;
+                }
+            }
+        }
+
+        private void handleReturn() {
+            Location current = armorStand.getLocation();
+            Vector toPlayer = player.getLocation().add(0,1,0).toVector().subtract(current.toVector());
+            double distance = toPlayer.length();
+            if (distance < 1.5) {
+                returnSwordToPlayer();
+                return;
+            }
+            toPlayer.normalize();
+            Location next = current.add(toPlayer.multiply(1.5));
+            armorStand.teleport(next);
+
+            XPManager xp = new XPManager(plugin);
+            int combat = xp.getPlayerLevel(player, "Combat");
+            for (Entity e : armorStand.getNearbyEntities(1,1,1)) {
+                if (e instanceof LivingEntity && e != player) {
+                    ((LivingEntity)e).damage(combat, player);
+                    Vector kb = e.getLocation().toVector().subtract(next.toVector()).normalize().multiply(0.5);
+                    e.setVelocity(kb);
+                }
+            }
+        }
+
+        public void startReturn() {
+            if (!returning) {
+                returning = true;
+                embedded = false;
+                stuckEntity = null;
+                player.getWorld().playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1f, 1f);
+            }
+        }
+
+        private void forceReturnToPlayer() {
+            if (armorStand.isValid()) {
+                armorStand.remove();
+            }
+            player.getInventory().setItem(0, sword);
+            leviathanSwordTasks.remove(player.getUniqueId());
+            cancel();
+        }
+
+        private void returnSwordToPlayer() {
+            if (armorStand.isValid()) {
+                armorStand.remove();
+            }
+            player.getInventory().setItem(0, sword);
+            leviathanSwordTasks.remove(player.getUniqueId());
+            cancel();
         }
     }
 
