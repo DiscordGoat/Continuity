@@ -1100,6 +1100,7 @@ public class UltimateEnchantmentListener implements Listener {
             player.getWorld().spawnParticle(Particle.PORTAL, player.getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
             
             cancel();
+
         }
 
         // Normal return when the sword reaches the player
