@@ -84,6 +84,7 @@ public class UltimateEnchantingSystem implements Listener {
         registerEnchantmentForType("Ultimate: Leap", 1, false, MELEE.toArray(new Material[0]));
         // New Enchantment for thrown sword
         registerEnchantmentForType("Ultimate: Loyal", 1, false, MELEE.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Leviathan", 1, false, MELEE.toArray(new Material[0]));
 
         // 3) Tools
         registerEnchantmentForType("Ultimate: Hammer", 1, false, TOOLS.toArray(new Material[0]));
@@ -434,6 +435,10 @@ public class UltimateEnchantingSystem implements Listener {
         // New check for Loyal enchantment
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Loyal")){
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Loyal", 1);
+            xpManager.addXP(player, "Smithing", 500);
+        }
+        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Leviathan")){
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Leviathan", 1);
             xpManager.addXP(player, "Smithing", 500);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Excavate")){
