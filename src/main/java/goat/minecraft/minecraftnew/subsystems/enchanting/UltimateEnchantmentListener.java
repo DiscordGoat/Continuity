@@ -45,6 +45,7 @@ public class UltimateEnchantmentListener implements Listener {
 
     // Removed activateTreecapitator(...) and activateHammer(...)
     private static Map<UUID, LoyalSwordData> loyalSwordDataMap = new HashMap<>();
+    private static Map<UUID, LeviathanSwordTask> leviathanSwordTasks = new HashMap<>();
 
     private static class LoyalSwordData {
         double damageMultiplier = 1.0; // 1.0 = 100%
@@ -608,11 +609,38 @@ public class UltimateEnchantmentListener implements Listener {
         new LoyalSwordTask(player, armorStand, sword).runTaskTimer(plugin, 0L, 1L);
     }
 
+    private void activateLeviathanSword(Player player, ItemStack sword) {
+        player.getInventory().remove(sword);
+
+        Location spawnLoc = player.getLocation().add(0, 0.5, 0);
+        ArmorStand armorStand = player.getWorld().spawn(spawnLoc, ArmorStand.class, stand -> {
+            stand.setGravity(false);
+            stand.setVisible(false);
+            stand.setItemInHand(sword.clone());
+        });
+
+        player.playSound(player.getLocation(), Sound.ENTITY_DROWNED_SHOOT, 1.0f, 0.8f);
+        Vector direction = player.getLocation().getDirection().normalize();
+        armorStand.setVelocity(direction.multiply(1.2));
+
+        LeviathanSwordTask task = new LeviathanSwordTask(player, armorStand, sword);
+        leviathanSwordTasks.put(player.getUniqueId(), task);
+        task.runTaskTimer(plugin, 0L, 1L);
+    }
+
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null) return;
+        if (item == null || item.getType() == Material.AIR) {
+            if (event.getAction() == Action.LEFT_CLICK_AIR && player.getInventory().getHeldItemSlot() == 0) {
+                LeviathanSwordTask task = leviathanSwordTasks.get(player.getUniqueId());
+                if (task != null) {
+                    task.startReturn();
+                }
+            }
+            return;
+        }
         if (player.isSneaking()) {
             return;
         }
@@ -678,6 +706,10 @@ public class UltimateEnchantmentListener implements Listener {
                     if (loyaltyManager.hasPerk(player.getUniqueId(), "Loyalty II")) {
                         cooldownMs = 1_000L;
                     }
+                    break;
+                case "leviathan":
+                    activateLeviathanSword(player, item);
+                    cooldownMs = 5000L;
                     break;
                 // Hammer/Treecapitator removed. No cooldown for them.
                 case "excavate":
@@ -1136,6 +1168,125 @@ public class UltimateEnchantmentListener implements Listener {
 
         private void sendActionBar(Player player, String message) {
             player.spigot().sendMessage(net.md_5.bungee.api.ChatMessageType.ACTION_BAR, new net.md_5.bungee.api.chat.TextComponent(message));
+        }
+    }
+
+    private class LeviathanSwordTask extends BukkitRunnable {
+        private final Player player;
+        private final ArmorStand armorStand;
+        private final ItemStack sword;
+        private Vector velocity;
+        private boolean returning = false;
+        private boolean embedded = false;
+        private LivingEntity stuckEntity = null;
+        private int tick = 0;
+        private int damageTick = 0;
+
+        public LeviathanSwordTask(Player player, ArmorStand armorStand, ItemStack sword) {
+            this.player = player;
+            this.armorStand = armorStand;
+            this.sword = sword;
+            this.velocity = player.getLocation().getDirection().normalize().multiply(1.2);
+        }
+
+        @Override
+        public void run() {
+            if (!player.isOnline() || !armorStand.isValid()) {
+                forceReturnToPlayer();
+                return;
+            }
+
+            if (returning) {
+                handleReturn();
+                return;
+            }
+
+            if (stuckEntity != null) {
+                armorStand.teleport(stuckEntity.getLocation().add(0, stuckEntity.getHeight() / 2, 0));
+                damageTick++;
+                if (damageTick >= 20) {
+                    damageTick = 0;
+                    XPManager xp = new XPManager(plugin);
+                    int combat = xp.getPlayerLevel(player, "Combat");
+                    stuckEntity.damage(combat, player);
+                    if (stuckEntity.isDead()) {
+                        stuckEntity = null;
+                        embedded = true;
+                    }
+                }
+                return;
+            }
+
+            if (embedded) {
+                return;
+            }
+
+            Location next = armorStand.getLocation().add(velocity);
+            armorStand.teleport(next);
+
+            Block block = next.getBlock();
+            if (block.getType() != Material.AIR && block.getType().isSolid()) {
+                embedded = true;
+                velocity = new Vector();
+                return;
+            }
+
+            for (Entity e : armorStand.getNearbyEntities(0.5,0.5,0.5)) {
+                if (e instanceof LivingEntity && e != player) {
+                    stuckEntity = (LivingEntity) e;
+                    return;
+                }
+            }
+        }
+
+        private void handleReturn() {
+            Location current = armorStand.getLocation();
+            Vector toPlayer = player.getLocation().add(0,1,0).toVector().subtract(current.toVector());
+            double distance = toPlayer.length();
+            if (distance < 1.5) {
+                returnSwordToPlayer();
+                return;
+            }
+            toPlayer.normalize();
+            Location next = current.add(toPlayer.multiply(1.5));
+            armorStand.teleport(next);
+
+            XPManager xp = new XPManager(plugin);
+            int combat = xp.getPlayerLevel(player, "Combat");
+            for (Entity e : armorStand.getNearbyEntities(1,1,1)) {
+                if (e instanceof LivingEntity && e != player) {
+                    ((LivingEntity)e).damage(combat, player);
+                    Vector kb = e.getLocation().toVector().subtract(next.toVector()).normalize().multiply(0.5);
+                    e.setVelocity(kb);
+                }
+            }
+        }
+
+        public void startReturn() {
+            if (!returning) {
+                returning = true;
+                embedded = false;
+                stuckEntity = null;
+                player.getWorld().playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1f, 1f);
+            }
+        }
+
+        private void forceReturnToPlayer() {
+            if (armorStand.isValid()) {
+                armorStand.remove();
+            }
+            player.getInventory().setItem(0, sword);
+            leviathanSwordTasks.remove(player.getUniqueId());
+            cancel();
+        }
+
+        private void returnSwordToPlayer() {
+            if (armorStand.isValid()) {
+                armorStand.remove();
+            }
+            player.getInventory().setItem(0, sword);
+            leviathanSwordTasks.remove(player.getUniqueId());
+            cancel();
         }
     }
 
