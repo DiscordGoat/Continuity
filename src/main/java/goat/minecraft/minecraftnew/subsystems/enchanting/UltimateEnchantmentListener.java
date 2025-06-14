@@ -701,6 +701,46 @@ public class UltimateEnchantmentListener implements Listener {
         task.runTaskTimer(plugin, 0L, 1L);
     }
 
+    private void activateShred(Player player, ItemStack sword){
+        if(sword.getType().getMaxDurability() > 0){
+            short dmg = (short)(sword.getDurability() + 10);
+            if(dmg > sword.getType().getMaxDurability()) dmg = sword.getType().getMaxDurability();
+            sword.setDurability(dmg);
+        }
+
+        Location spawnLoc = player.getLocation().add(0, 0.5, 0);
+        ArmorStand stand = player.getWorld().spawn(spawnLoc, ArmorStand.class, s -> {
+            s.setGravity(false);
+            s.setVisible(false);
+            s.setMarker(true);
+            s.setItemInHand(sword.clone());
+        });
+        Vector dir = player.getLocation().getDirection().normalize();
+        new BukkitRunnable(){
+            int tick=0;
+            @Override
+            public void run(){
+                if(!stand.isValid()){ cancel(); return; }
+                stand.teleport(stand.getLocation().add(dir));
+                for(Entity e : stand.getNearbyEntities(0.5,0.5,0.5)){
+                    if(e instanceof LivingEntity && e!=player){
+                        LivingEntity le=(LivingEntity)e;
+                        XPManager xp = new XPManager(plugin);
+                        int combat = xp.getPlayerLevel(player, "Combat");
+                        le.damage(combat/2.0, player);
+                        if(sword.getType().getMaxDurability()>0 && sword.getDurability()>0){
+                            sword.setDurability((short)(sword.getDurability()-1));
+                        }
+                    }
+                }
+                if(++tick>=20){
+                    stand.remove();
+                    cancel();
+                }
+            }
+        }.runTaskTimer(plugin,0L,1L);
+    }
+
     @EventHandler
     public void onPlayerRightClick(PlayerInteractEvent event) {
         Player player = event.getPlayer();
@@ -790,6 +830,10 @@ public class UltimateEnchantmentListener implements Listener {
                 case "leviathan":
                     activateLeviathanSword(player, item);
                     cooldownMs = 5000L;
+                    break;
+                case "shred":
+                    activateShred(player, item);
+                    cooldownMs = 100L;
                     break;
                 // Hammer/Treecapitator removed. No cooldown for them.
                 case "excavate":

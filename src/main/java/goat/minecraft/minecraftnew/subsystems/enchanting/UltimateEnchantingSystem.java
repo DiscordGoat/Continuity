@@ -82,6 +82,8 @@ public class UltimateEnchantingSystem implements Listener {
         registerEnchantmentForType("Ultimate: Parry", 1, false, MELEE.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Disc Seeker", 1, false, MELEE.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Leap", 1, false, MELEE.toArray(new Material[0]));
+        // Simple ghost sword enchantment
+        registerEnchantmentForType("Ultimate: Shred", 1, false, MELEE.toArray(new Material[0]));
         // New Enchantment for thrown sword
         registerEnchantmentForType("Ultimate: Loyal", 1, false, MELEE.toArray(new Material[0]));
         // Leviathan enchantment - advanced thrown sword
@@ -431,6 +433,10 @@ public class UltimateEnchantingSystem implements Listener {
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Leap")){
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Leap", 1);
+            xpManager.addXP(player, "Smithing", 500);
+        }
+        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Shred")){
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Shred", 1);
             xpManager.addXP(player, "Smithing", 500);
         }
         // New check for Loyal enchantment
