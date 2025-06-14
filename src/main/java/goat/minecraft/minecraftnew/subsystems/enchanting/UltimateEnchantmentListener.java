@@ -58,6 +58,7 @@ public class UltimateEnchantmentListener implements Listener {
         private final ArmorStand stand;
         private final ItemStack sword;
         private Vector velocity;
+        private Vector returnVelocity = new Vector();
         private boolean returning = false;
         private boolean embedded = false;
         private LivingEntity stuckIn;
@@ -98,7 +99,9 @@ public class UltimateEnchantmentListener implements Listener {
                 Block block = next.getBlock();
                 if(block.getType() != Material.AIR && block.getType().isSolid()) {
                     embedded = true;
-                    stand.teleport(block.getLocation().add(0.5, 0.0, 0.5));
+                    Location embedLoc = block.getLocation().add(0.5, 0.5, 0.5);
+                    embedLoc.setDirection(velocity.clone().multiply(-1));
+                    stand.teleport(embedLoc);
                     stand.getWorld().playSound(stand.getLocation(), Sound.BLOCK_ANVIL_LAND, 1f, 1f);
                     return;
                 }
@@ -106,7 +109,9 @@ public class UltimateEnchantmentListener implements Listener {
                     if(e instanceof LivingEntity && e != player) {
                         stuckIn = (LivingEntity)e;
                         embedded = true;
-                        stand.teleport(stuckIn.getLocation().add(0,1,0));
+                        Location embedLoc = stuckIn.getLocation().add(0, stuckIn.getHeight()/2, 0);
+                        embedLoc.setDirection(stuckIn.getLocation().toVector().subtract(player.getLocation().toVector()));
+                        stand.teleport(embedLoc);
                         stand.getWorld().playSound(stand.getLocation(), Sound.ENTITY_IRON_GOLEM_ATTACK,1f,1.2f);
                         return;
                     }
@@ -114,22 +119,30 @@ public class UltimateEnchantmentListener implements Listener {
                 stand.teleport(next);
             } else {
                 Location current = stand.getLocation();
-                Vector toPlayer = player.getLocation().add(0,1,0).toVector().subtract(current.toVector());
-                if(toPlayer.length() < 1.5) {
+                if(current.distance(player.getLocation().add(0,1,0)) < 1.5) {
                     returnToPlayer();
                     return;
                 }
-                toPlayer.normalize().multiply(1.5);
-                stand.teleport(current.add(toPlayer));
 
-                for(Entity e : stand.getNearbyEntities(1,1,1)) {
-                    if(e instanceof Monster) {
+                Vector toPlayer = player.getLocation().add(0,1,0).toVector().subtract(current.toVector()).normalize();
+                returnVelocity = returnVelocity.multiply(0.8).add(toPlayer.multiply(0.2));
+                Location next = current.add(returnVelocity);
+
+                Block b = next.getBlock();
+                if(b.getType() != Material.AIR && b.getType().isSolid()) {
+                    returnVelocity = returnVelocity.multiply(-0.6);
+                    stand.getWorld().playSound(next, Sound.BLOCK_ANVIL_LAND, 0.7f, 1.2f);
+                } else {
+                    stand.teleport(next);
+                }
+
+                for(Entity e : stand.getNearbyEntities(0.5,0.5,0.5)) {
+                    if(e instanceof LivingEntity && e != player) {
                         XPManager xp = new XPManager(plugin);
                         int level = xp.getPlayerLevel(player, "Combat");
                         ((LivingEntity)e).damage(level, player);
-                        Vector knock = e.getLocation().toVector().subtract(current.toVector()).normalize().multiply(0.5);
-                        e.setVelocity(knock);
-                        velocity = velocity.add(knock.multiply(0.2));
+                        Vector away = e.getLocation().toVector().subtract(next.toVector()).normalize();
+                        returnVelocity = returnVelocity.subtract(away.multiply(0.6));
                     }
                 }
             }
@@ -139,6 +152,7 @@ public class UltimateEnchantmentListener implements Listener {
             returning = true;
             embedded = false;
             stuckIn = null;
+            returnVelocity = player.getLocation().add(0,1,0).toVector().subtract(stand.getLocation().toVector()).normalize().multiply(1.5);
         }
 
         private void returnToPlayer() {
@@ -1245,6 +1259,7 @@ public class UltimateEnchantmentListener implements Listener {
         private final ArmorStand stand;
         private final ItemStack sword;
         private Vector velocity;
+        private Vector returnVelocity = new Vector();
         private boolean returning = false;
         private boolean embedded = false;
         private LivingEntity stuckIn;
@@ -1298,6 +1313,77 @@ public class UltimateEnchantmentListener implements Listener {
                         return;
                     }
                 }
+                return;
+            }
+
+            if (embedded) {
+                return;
+            }
+
+            Location next = armorStand.getLocation().add(velocity);
+            Block block = next.getBlock();
+            if (block.getType() != Material.AIR && block.getType().isSolid()) {
+                embedded = true;
+                Location embedLoc = block.getLocation().add(0.5,0.5,0.5);
+                embedLoc.setDirection(velocity.clone().multiply(-1));
+                armorStand.teleport(embedLoc);
+                velocity = new Vector();
+                armorStand.getWorld().playSound(embedLoc, Sound.BLOCK_ANVIL_LAND, 1f, 1f);
+                return;
+            }
+
+            for (Entity e : armorStand.getNearbyEntities(0.5,0.5,0.5)) {
+                if (e instanceof LivingEntity && e != player) {
+                    stuckEntity = (LivingEntity) e;
+                    Location embedLoc = stuckEntity.getLocation().add(0, stuckEntity.getHeight()/2, 0);
+                    embedLoc.setDirection(stuckEntity.getLocation().toVector().subtract(player.getLocation().toVector()));
+                    armorStand.teleport(embedLoc);
+                    armorStand.getWorld().playSound(embedLoc, Sound.ENTITY_IRON_GOLEM_ATTACK,1f,1.2f);
+                    return;
+                }
+            }
+
+            armorStand.teleport(next);
+        }
+
+        private void handleReturn() {
+            Location current = armorStand.getLocation();
+            if(current.distance(player.getLocation().add(0,1,0)) < 1.5) {
+                returnSwordToPlayer();
+                return;
+            }
+
+            Vector toPlayer = player.getLocation().add(0,1,0).toVector().subtract(current.toVector()).normalize();
+            returnVelocity = returnVelocity.multiply(0.8).add(toPlayer.multiply(0.2));
+            Location next = current.add(returnVelocity);
+
+            Block b = next.getBlock();
+            if(b.getType() != Material.AIR && b.getType().isSolid()) {
+                returnVelocity = returnVelocity.multiply(-0.6);
+                armorStand.getWorld().playSound(next, Sound.BLOCK_ANVIL_LAND, 0.7f, 1.2f);
+            } else {
+                armorStand.teleport(next);
+            }
+
+            XPManager xp = new XPManager(plugin);
+            int combat = xp.getPlayerLevel(player, "Combat");
+            for (Entity e : armorStand.getNearbyEntities(0.5,0.5,0.5)) {
+                if (e instanceof LivingEntity && e != player) {
+                    ((LivingEntity)e).damage(combat, player);
+                    Vector away = e.getLocation().toVector().subtract(next.toVector()).normalize();
+                    returnVelocity = returnVelocity.subtract(away.multiply(0.6));
+                }
+            }
+        }
+
+        public void startReturn() {
+            if (!returning) {
+                returning = true;
+                embedded = false;
+                stuckEntity = null;
+                returnVelocity = player.getLocation().add(0,1,0).toVector().subtract(armorStand.getLocation().toVector()).normalize().multiply(1.5);
+                player.getWorld().playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1f, 1f);
+            }
                 stand.teleport(next);
             } else {
                 Location current = stand.getLocation();
