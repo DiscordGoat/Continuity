@@ -120,7 +120,7 @@ public class PearlOfTheDeepSystem implements Listener {
         int empty = len - filled;
         StringBuilder sb = new StringBuilder();
         sb.append(ChatColor.DARK_GRAY).append("[");
-        sb.append(ChatColor.GREEN);
+        sb.append(ChatColor.BLUE);
         for (int i=0;i<filled;i++) sb.append("|");
         sb.append(ChatColor.GRAY);
         for (int i=0;i<empty;i++) sb.append("|");
