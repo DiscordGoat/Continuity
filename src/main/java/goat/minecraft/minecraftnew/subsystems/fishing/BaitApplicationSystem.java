@@ -152,8 +152,10 @@ public class BaitApplicationSystem implements Listener {
 
     private String createBar(int current, int cap) {
         int base = 20;
-        int extra = (cap - 100) / 100;
-        int len = base + extra * 5;
+        // Scale bar length gradually for caps above 100%
+        // Matches logic used in the Effigy and Gemstone GUIs
+        int extra = (cap - 100) / 20;
+        int len = base + extra;
         int filled = (int) ((double) current / cap * len);
         int empty = len - filled;
         StringBuilder sb = new StringBuilder();
