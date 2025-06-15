@@ -3425,16 +3425,15 @@ public class ItemRegistry {
                 Material.OAK_WOOD,
                 ChatColor.YELLOW + "Oak Effigy",
                 Arrays.asList(
-                        ChatColor.GRAY + "A carving of lands ravaged by a horror.",
+                        ChatColor.GRAY + "Before the forests fell, a shape crawled.",
+                        ChatColor.GRAY + "Untouchable. Unkillable. Unseen by light.",
                         ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+1 Spirit Energy",
                         "",
                         ChatColor.YELLOW + "Click onto a diamond or netherite axe",
                         ChatColor.YELLOW + "to imbue it with Spirit Energy.",
                         ChatColor.GREEN + "Effigy"
                 ),
-                1,
-                false,
-                false
+                1, false, false
         );
     }
 
@@ -3443,92 +3442,88 @@ public class ItemRegistry {
                 Material.BIRCH_WOOD,
                 ChatColor.YELLOW + "Birch Effigy",
                 Arrays.asList(
-                        ChatColor.GRAY + "A carving of lands ravaged by a horror.",
+                        ChatColor.GRAY + "It crawled, not walked —",
+                        ChatColor.GRAY + "and clawed at roots it could not name.",
                         ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+1 Spirit Energy",
                         "",
                         ChatColor.YELLOW + "Click onto a diamond or netherite axe",
                         ChatColor.YELLOW + "to imbue it with Spirit Energy.",
                         ChatColor.GREEN + "Effigy"
                 ),
-                1,
-                false,
-                false
+                1, false, false
         );
     }
 
-    // UNCOMMON EFFIGY (+3 Spirit Energy)
+
     public static ItemStack getSpruceEffigy() {
         return createCustomItem(
                 Material.SPRUCE_WOOD,
                 ChatColor.AQUA + "Spruce Effigy",
                 Arrays.asList(
-                        ChatColor.GRAY + "Legends whisper of the beast's rise.",
+                        ChatColor.GRAY + "Forests died screaming. Caskets shattered.",
+                        ChatColor.GRAY + "The dead stirred, but not to rise.",
                         ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+3 Spirit Energy",
                         "",
                         ChatColor.YELLOW + "Click onto a diamond or netherite axe",
                         ChatColor.YELLOW + "to imbue it with Spirit Energy.",
                         ChatColor.GREEN + "Effigy"
                 ),
-                1,
-                false,
-                false
+                1, false, false
         );
     }
 
-    // RARE EFFIGY (+7 Spirit Energy)
+
     public static ItemStack getAcaciaEffigy() {
         return createCustomItem(
                 Material.ACACIA_WOOD,
                 ChatColor.LIGHT_PURPLE + "Acacia Effigy",
                 Arrays.asList(
-                        ChatColor.GRAY + "Spirits plotted to banish the horror.",
+                        ChatColor.GRAY + "Spirits wept, then rose in fury.",
+                        ChatColor.GRAY + "Bound by oath, they formed the Pact of Vigil.",
                         ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+7 Spirit Energy",
                         "",
                         ChatColor.YELLOW + "Click onto a diamond or netherite axe",
                         ChatColor.YELLOW + "to imbue it with Spirit Energy.",
                         ChatColor.GREEN + "Effigy"
                 ),
-                1,
-                false,
-                false
+                1, false, false
         );
     }
 
-    // EPIC EFFIGY (+10 Spirit Energy)
+
     public static ItemStack getDarkOakEffigy() {
         return createCustomItem(
                 Material.DARK_OAK_WOOD,
                 ChatColor.DARK_PURPLE + "Dark Oak Effigy",
                 Arrays.asList(
-                        ChatColor.GRAY + "Forests drowned as waters overflowed.",
+                        ChatColor.GRAY + "In a winter without end, the Pact struck.",
+                        ChatColor.GRAY + "It was not slain, only cast away.",
                         ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+10 Spirit Energy",
                         "",
                         ChatColor.YELLOW + "Click onto a diamond or netherite axe",
                         ChatColor.YELLOW + "to imbue it with Spirit Energy.",
                         ChatColor.GREEN + "Effigy"
                 ),
-                1,
-                false,
-                false
+                1, false, false
         );
     }
 
-    // LEGENDARY EFFIGIES (+20 Spirit Energy)
+
     public static ItemStack getCrimsonEffigy() {
         return createCustomItem(
                 Material.CRIMSON_HYPHAE,
                 ChatColor.GOLD + "Crimson Effigy",
                 Arrays.asList(
-                        ChatColor.GRAY + "The Insanity was exiled; its name carved in fear.",
+                        ChatColor.GRAY + "So the Insanity was sealed away,",
+                        ChatColor.GRAY + "its name carved only into legend: " + ChatColor.DARK_RED + "Grievance.",
+                        ChatColor.GRAY + "Still, the Pact holds vigil, awaiting its return.",
                         ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+20 Spirit Energy",
                         "",
                         ChatColor.YELLOW + "Click onto a diamond or netherite axe",
                         ChatColor.YELLOW + "to imbue it with Spirit Energy.",
                         ChatColor.GREEN + "Effigy"
                 ),
-                1,
-                false,
-                false
+                1, false, false
         );
     }
 
@@ -3537,18 +3532,19 @@ public class ItemRegistry {
                 Material.WARPED_HYPHAE,
                 ChatColor.GOLD + "Warped Effigy",
                 Arrays.asList(
-                        ChatColor.GRAY + "The Insanity was exiled; its name carved in fear.",
+                        ChatColor.GRAY + "So the Insanity was sealed away,",
+                        ChatColor.GRAY + "its name carved only into legend: " + ChatColor.DARK_RED + "Grievance.",
+                        ChatColor.GRAY + "Still, the Pact holds vigil, awaiting its return.",
                         ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+20 Spirit Energy",
                         "",
                         ChatColor.YELLOW + "Click onto a diamond or netherite axe",
                         ChatColor.YELLOW + "to imbue it with Spirit Energy.",
                         ChatColor.GREEN + "Effigy"
                 ),
-                1,
-                false,
-                false
+                1, false, false
         );
     }
+
 
     public static ItemStack getEntBark() {
         return createCustomItem(

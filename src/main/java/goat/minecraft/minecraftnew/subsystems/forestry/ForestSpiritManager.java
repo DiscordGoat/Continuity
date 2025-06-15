@@ -25,10 +25,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class ForestSpiritManager implements Listener {
 
@@ -419,7 +416,7 @@ public class ForestSpiritManager implements Listener {
         // Bonus drop: Jackhammer if the killer's notoriety is low
         if (killer != null) {
             int notoriety = Forestry.getInstance().getNotoriety(killer);
-            if (notoriety < 200) {
+            if (notoriety < 100) {
                 event.getDrops().add(ItemRegistry.getJackhammer());
             }
         }

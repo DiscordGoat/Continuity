@@ -456,7 +456,7 @@ public class UltimateEnchantmentListener implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         Player killer = event.getEntity().getKiller();
         if (killer != null) {
-            addShredCharges(killer, 4);
+            addShredCharges(killer, 3);
         }
 
         if (event.getEntity() instanceof Creeper) {
