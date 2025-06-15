@@ -83,8 +83,10 @@ public class FishingEvent implements Listener {
 
         ItemStack rod = player.getInventory().getItemInMainHand();
         int diamondLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.DIAMOND_HOOK);
-        if (diamondLevel > 0 && caught instanceof LivingEntity) {
-            ((LivingEntity) caught).setHealth(0);
+        if (diamondLevel > 0 && caught instanceof LivingEntity living) {
+            // Kill the sea creature while crediting the player as the killer so
+            // that normal loot logic still runs in the death event handler.
+            living.damage(living.getHealth() * 2, player);
         } else {
             caught.remove();
         }
