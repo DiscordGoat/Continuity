@@ -46,7 +46,7 @@ public class UltimateEnchantmentListener implements Listener {
     // Removed activateTreecapitator(...) and activateHammer(...)
     private static Map<UUID, LoyalSwordData> loyalSwordDataMap = new HashMap<>();
     // Track available shred swords per player
-    private static final int MAX_SHRED_SWORDS = 30;
+    private static final int MAX_SHRED_SWORDS = 60;
     private final Map<UUID, Integer> shredCharges = new HashMap<>();
 
     // Warp charge tracking
@@ -456,7 +456,7 @@ public class UltimateEnchantmentListener implements Listener {
     public void onEntityDeath(EntityDeathEvent event) {
         Player killer = event.getEntity().getKiller();
         if (killer != null) {
-            addShredCharges(killer, 2);
+            addShredCharges(killer, 4);
         }
 
         if (event.getEntity() instanceof Creeper) {
