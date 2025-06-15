@@ -244,7 +244,15 @@ public class AnglerUpgradeSystem implements Listener {
 
     UpgradeType clicked = null;
     for (UpgradeType u : UpgradeType.values()) if (u.getSlot() == e.getSlot()) clicked = u;
-    if (clicked == null) return;
+    if (clicked == null) {
+      // Refresh the energy display when clicking non-upgrade slots
+      e.getInventory()
+          .setItem(
+              49,
+              createPowerDisplay(
+                  getTotalEnergy(rod), getPowerCap(rod), calcAvailable(rod)));
+      return;
+    }
     int avail = calcAvailable(rod);
     int cost = getUpgradeCost(clicked);
     int lvl = getUpgradeLevel(rod, clicked);
