@@ -89,7 +89,6 @@ public class EffigyUpgradeSystem implements Listener {
         // Fill with glass background
         for (int i = 0; i < 54; i++) gui.setItem(i, createFiller());
 
-        int cost = 8;
         int available = calculateAvailableEnergy(axe);
 
         // Yield upgrades row
@@ -98,14 +97,14 @@ public class EffigyUpgradeSystem implements Listener {
                 UpgradeType.BIRCH_YIELD, UpgradeType.JUNGLE_YIELD,
                 UpgradeType.ACACIA_YIELD, UpgradeType.DARK_OAK_YIELD,
                 UpgradeType.CRIMSON_YIELD, UpgradeType.WARPED_YIELD}) {
-            gui.setItem(t.getSlot(), createUpgradeItem(t, axe, cost, available));
+            gui.setItem(t.getSlot(), createUpgradeItem(t, axe, getUpgradeCost(t), available));
         }
 
         // Utility upgrades
         gui.setItem(18, createHeader(Material.NETHER_STAR, ChatColor.LIGHT_PURPLE + "✦ Utilities"));
         for (UpgradeType t : Arrays.asList(UpgradeType.EFFIGY_YIELD, UpgradeType.FORESTRY_XP,
                 UpgradeType.FAKE_NEWS, UpgradeType.FEED, UpgradeType.PAYOUT)) {
-            gui.setItem(t.getSlot(), createUpgradeItem(t, axe, cost, available));
+            gui.setItem(t.getSlot(), createUpgradeItem(t, axe, getUpgradeCost(t), available));
         }
 
         // Misc upgrades
@@ -113,7 +112,7 @@ public class EffigyUpgradeSystem implements Listener {
         for (UpgradeType t : Arrays.asList(UpgradeType.ORCHARD, UpgradeType.GOLDEN_APPLE,
                 UpgradeType.TRESPASSER, UpgradeType.HEADHUNTER,
                 UpgradeType.SPECTRAL_ARMOR, UpgradeType.ANCIENT_CONFUSION)) {
-            gui.setItem(t.getSlot(), createUpgradeItem(t, axe, cost, available));
+            gui.setItem(t.getSlot(), createUpgradeItem(t, axe, getUpgradeCost(t), available));
         }
 
         gui.setItem(49, createEnergyDisplay(totalEnergy, getEnergyCap(axe), available));
@@ -214,7 +213,7 @@ public class EffigyUpgradeSystem implements Listener {
 
     private void handlePurchase(Player player, ItemStack axe, UpgradeType type) {
         int available = calculateAvailableEnergy(axe);
-        int cost = 8;
+        int cost = getUpgradeCost(type);
         int level = getUpgradeLevel(axe, type);
         if (level >= type.getMaxLevel()) {
             player.sendMessage(ChatColor.RED + "Upgrade at max level");
@@ -257,9 +256,25 @@ public class EffigyUpgradeSystem implements Listener {
     private int calculateAvailableEnergy(ItemStack axe) {
         int spent = 0;
         for (UpgradeType t : UpgradeType.values()) {
-            spent += getUpgradeLevel(axe, t) * 8;
+            spent += getUpgradeLevel(axe, t) * getUpgradeCost(t);
         }
         return getTotalEnergy(axe) - spent;
+    }
+
+    private int getUpgradeCost(UpgradeType type) {
+        switch (type) {
+            case OAK_YIELD:
+            case SPRUCE_YIELD:
+            case BIRCH_YIELD:
+            case JUNGLE_YIELD:
+            case ACACIA_YIELD:
+            case DARK_OAK_YIELD:
+            case CRIMSON_YIELD:
+            case WARPED_YIELD:
+                return 4;
+            default:
+                return 8;
+        }
     }
 
     private int getUpgradeLevel(ItemStack axe, UpgradeType type) {
@@ -373,11 +388,11 @@ public class EffigyUpgradeSystem implements Listener {
     private String getSymbol(UpgradeType t) {
         switch (t) {
             case OAK_YIELD: return "🌳";
-            case SPRUCE_YIELD: return "🌲";
-            case BIRCH_YIELD: return "🌳";
+            case SPRUCE_YIELD: return "🎄";
+            case BIRCH_YIELD: return "🌲";
             case JUNGLE_YIELD: return "🌴";
-            case ACACIA_YIELD: return "🌳";
-            case DARK_OAK_YIELD: return "🌳";
+            case ACACIA_YIELD: return "🌵";
+            case DARK_OAK_YIELD: return "🪓";
             case CRIMSON_YIELD: return "🍂";
             case WARPED_YIELD: return "🪵";
             case EFFIGY_YIELD: return "✦";
