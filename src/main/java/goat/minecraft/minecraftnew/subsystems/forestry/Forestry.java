@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
@@ -35,6 +36,7 @@ public class Forestry implements Listener {
     private final MinecraftNew plugin;
     private final XPManager xpManager;
     private final Random random = new Random();
+    private static EffigyUpgradeSystem upgradeSystemInstance;
 
     // Notoriety map tracks each player's current forestry notoriety.
     private Map<UUID, Integer> notorietyMap = new HashMap<>();
@@ -375,5 +377,19 @@ public class Forestry implements Listener {
                 }
             }.runTaskLater(plugin, 1L);
         }
+    }
+
+    /**
+     * Sets the EffigyUpgradeSystem instance (called from MinecraftNew.onEnable)
+     */
+    public static void setUpgradeSystemInstance(EffigyUpgradeSystem upgradeSystem) {
+        upgradeSystemInstance = upgradeSystem;
+    }
+
+    /**
+     * Gets the EffigyUpgradeSystem instance
+     */
+    private EffigyUpgradeSystem getUpgradeSystem() {
+        return upgradeSystemInstance;
     }
 }
