@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -123,6 +124,15 @@ public class SeaCreatureDeathEvent implements Listener {
                         event.getDrops().add(drop);
                     }
                 }
+                // guaranteed bait drop
+                ItemStack bait = ItemRegistry.getBait();
+                int amount = 1;
+                PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
+                if (merit.hasPerk(killer.getUniqueId(), "Double Bait") && random.nextDouble() < 0.5) {
+                    amount = 2;
+                }
+                bait.setAmount(amount);
+                event.getDrops().add(bait);
                 killer.playSound(killer.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 10.f);
             }
         }

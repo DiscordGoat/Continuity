@@ -1567,6 +1567,66 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getShrimpBait() {
+        return createCustomItem(
+                Material.SALMON,
+                ChatColor.YELLOW + "Shrimp Bait",
+                Arrays.asList(
+                        ChatColor.GRAY + "A tasty treat prized by anglers.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+3 Angler Energy",
+                        ChatColor.GREEN + "Bait"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getLeechBait() {
+        return createCustomItem(
+                Material.SPIDER_EYE,
+                ChatColor.YELLOW + "Leech Bait",
+                Arrays.asList(
+                        ChatColor.GRAY + "Hard to find and favored by big fish.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+7 Angler Energy",
+                        ChatColor.GREEN + "Bait"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getFrogBait() {
+        return createCustomItem(
+                Material.SLIME_BALL,
+                ChatColor.YELLOW + "Frog Bait",
+                Arrays.asList(
+                        ChatColor.GRAY + "Rare bait coveted by expert anglers.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+10 Angler Energy",
+                        ChatColor.GREEN + "Bait"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getCaviarBait() {
+        return createCustomItem(
+                Material.EGG,
+                ChatColor.YELLOW + "Caviar Bait",
+                Arrays.asList(
+                        ChatColor.GRAY + "Exquisite and exceedingly expensive.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+20 Angler Energy",
+                        ChatColor.GREEN + "Bait"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getLuck() {
         return createCustomItem(
                 Material.GOLD_NUGGET,
@@ -3410,6 +3470,25 @@ public class ItemRegistry {
                         ChatColor.YELLOW + "Maximum: " + ChatColor.WHITE + "500% Total Cap",
                         "",
                         ChatColor.DARK_PURPLE + "Drag onto diamond tools to apply"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getPearlOfTheDeep() {
+        return createCustomItem(
+                Material.ENDER_PEARL,
+                ChatColor.AQUA + "Pearl of the Deep",
+                Arrays.asList(
+                        ChatColor.GRAY + "A mystical pearl that expands the",
+                        ChatColor.GRAY + "angler energy capacity of fishing rods",
+                        "",
+                        ChatColor.YELLOW + "Effect: " + ChatColor.WHITE + "+100% Power Cap",
+                        ChatColor.YELLOW + "Maximum: " + ChatColor.WHITE + "500% Total Cap",
+                        "",
+                        ChatColor.DARK_PURPLE + "Drag onto fishing rods to apply"
                 ),
                 1,
                 false,

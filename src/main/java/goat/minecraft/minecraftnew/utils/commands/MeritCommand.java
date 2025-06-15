@@ -202,6 +202,21 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "+5% sea creature chance.",
                             ChatColor.BLUE + "On Fishing: " + ChatColor.GRAY + "+5% sea creature chance."
                     )),
+            new Perk(ChatColor.DARK_GRAY + "Double Bait", 3, Material.COD,
+                    Arrays.asList(
+                            ChatColor.GRAY + "50% chance to reel double bait.",
+                            ChatColor.BLUE + "On Bait Drop: " + ChatColor.GRAY + "50% chance to double."
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Double Effigies", 3, Material.TOTEM_OF_UNDYING,
+                    Arrays.asList(
+                            ChatColor.GRAY + "50% chance for effigy drops to double.",
+                            ChatColor.BLUE + "On Effigy Drop: " + ChatColor.GRAY + "50% chance drop occurs twice."
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Double Gemstones", 3, Material.EMERALD,
+                    Arrays.asList(
+                            ChatColor.GRAY + "50% chance for gemstone drops to double.",
+                            ChatColor.BLUE + "On Gemstone Drop: " + ChatColor.GRAY + "50% chance drop occurs twice."
+                    )),
             new Perk(ChatColor.DARK_GRAY + "Master Diplomat", 3, Material.WRITABLE_BOOK,
                     Arrays.asList(
                             ChatColor.GRAY + "Reduces notoriety gains by 60%.",
