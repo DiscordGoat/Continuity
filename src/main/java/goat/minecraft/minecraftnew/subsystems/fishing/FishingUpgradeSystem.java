@@ -300,11 +300,25 @@ public class FishingUpgradeSystem implements Listener {
                 sb.append(getColoredSymbol(e.getKey(), e.getValue()));
                 first = false;
             }
-            if (lineIndex < 0) lineIndex = lore.size();
+            if (lineIndex < 0) lineIndex = findUpgradeInsertIndex(lore);
             lore.add(lineIndex, sb.toString());
         }
         meta.setLore(lore);
         rod.setItemMeta(meta);
+    }
+
+    /**
+     * Determines the insertion index for the upgrade line so that it appears
+     * directly under the Power Cap entry if present.
+     */
+    private int findUpgradeInsertIndex(List<String> lore) {
+        for (int i = 0; i < lore.size(); i++) {
+            String stripped = ChatColor.stripColor(lore.get(i));
+            if (stripped.startsWith("Power Cap:")) {
+                return i + 1;
+            }
+        }
+        return lore.size();
     }
 
     private void clearAllUpgrades(ItemStack rod) {
