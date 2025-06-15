@@ -337,20 +337,17 @@ public class GemstoneUpgradeSystem implements Listener {
      * Updates the symbolic upgrade lore by either adding or updating the consolidated upgrade line
      */
     private void updateSymbolicUpgradeLore(List<String> lore, UpgradeType upgrade, int level) {
-        // Find existing upgrade lines (there may be multiple if many upgrades)
+        // Find if we already have a "Gemstone Upgrades:" line
         int upgradeLineIndex = -1;
-        List<String> existingLines = new ArrayList<>();
-        for (int i = 0; i < lore.size(); ) {
+        for (int i = 0; i < lore.size(); i++) {
             if (ChatColor.stripColor(lore.get(i)).startsWith("Gemstone Upgrades:")) {
-                if (upgradeLineIndex == -1) upgradeLineIndex = i;
-                existingLines.add(lore.remove(i));
-            } else {
-                i++;
+                upgradeLineIndex = i;
+                break;
             }
         }
         
-        // Collect all current upgrades from removed lines
-        Map<UpgradeType, Integer> allUpgrades = getAllUpgradesFromLore(existingLines);
+        // Collect all current upgrades from lore directly
+        Map<UpgradeType, Integer> allUpgrades = getAllUpgradesFromLore(lore);
         
         // Update the level for the upgrade we're setting
         if (level > 0) {
@@ -359,51 +356,55 @@ public class GemstoneUpgradeSystem implements Listener {
             allUpgrades.remove(upgrade);
         }
         
-        // Build consolidated upgrade lines with max 3 icons each
+        // Build the consolidated upgrade line
         if (!allUpgrades.isEmpty()) {
-            List<String> newLines = new ArrayList<>();
-            StringBuilder sb = new StringBuilder(ChatColor.GRAY + "Gemstone Upgrades: ");
-            int count = 0;
+            StringBuilder upgradeLine = new StringBuilder();
+            upgradeLine.append(ChatColor.GRAY).append("Gemstone Upgrades: ");
+            
             boolean first = true;
             for (Map.Entry<UpgradeType, Integer> entry : allUpgrades.entrySet()) {
-                if (!first) sb.append(" ");
-                sb.append(getUpgradeSymbol(entry.getKey(), entry.getValue()));
+                if (!first) upgradeLine.append(" ");
+                upgradeLine.append(getUpgradeSymbol(entry.getKey(), entry.getValue()));
                 first = false;
-                count++;
-                if (count == 3) {
-                    newLines.add(sb.toString());
-                    sb = new StringBuilder(ChatColor.GRAY + "Gemstone Upgrades: ");
-                    count = 0;
-                    first = true;
-                }
             }
-            if (count > 0) newLines.add(sb.toString());
-
-            int insertIndex = (upgradeLineIndex >= 0) ? upgradeLineIndex : findInsertionPoint(lore);
-            lore.addAll(insertIndex, newLines);
+            
+            String finalLine = upgradeLine.toString();
+            
+            if (upgradeLineIndex >= 0) {
+                // Update existing line
+                lore.set(upgradeLineIndex, finalLine);
+            } else {
+                // Add new line after gemstone power section
+                int insertIndex = findInsertionPoint(lore);
+                lore.add(insertIndex, finalLine);
+            }
+        } else if (upgradeLineIndex >= 0) {
+            // Remove the line if no upgrades exist
+            lore.remove(upgradeLineIndex);
         }
-    }
     }
     
     /**
      * Extracts all upgrade levels from existing lore (used during updates)
      */
     private Map<UpgradeType, Integer> getAllUpgradesFromLore(List<String> lore) {
-        Map<UpgradeType, Integer> upgrades = new LinkedHashMap<>();
-
-        // Parse all lines beginning with "Gemstone Upgrades:"
+        Map<UpgradeType, Integer> upgrades = new HashMap<>();
+        
+        // Parse from "Gemstone Upgrades:" symbolic line only
         for (String line : lore) {
             String stripped = ChatColor.stripColor(line);
             if (stripped.startsWith("Gemstone Upgrades:")) {
+                // Parse all upgrades from this symbolic line
                 for (UpgradeType upgradeType : UpgradeType.values()) {
                     int level = parseUpgradeLevelFromSymbolic(line, upgradeType);
                     if (level > 0) {
                         upgrades.put(upgradeType, level);
                     }
                 }
+                break; // Only one symbolic line should exist
             }
         }
-
+        
         return upgrades;
     }
     

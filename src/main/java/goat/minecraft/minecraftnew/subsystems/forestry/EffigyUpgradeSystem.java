@@ -281,15 +281,13 @@ public class EffigyUpgradeSystem implements Listener {
 
     public static int getUpgradeLevel(ItemStack axe, UpgradeType type) {
         if (!axe.hasItemMeta() || !axe.getItemMeta().hasLore()) return 0;
-        int level = 0;
         for (String line : axe.getItemMeta().getLore()) {
             String stripped = ChatColor.stripColor(line);
             if (stripped.startsWith("Effigy Upgrades:")) {
-                int lvl = parseLevel(line, type);
-                if (lvl > 0) level = lvl;
+                return parseLevel(line, type);
             }
         }
-        return level;
+        return 0;
     }
 
     private static int parseLevel(String line, UpgradeType type) {
@@ -311,45 +309,30 @@ public class EffigyUpgradeSystem implements Listener {
         ItemMeta meta = axe.getItemMeta();
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
         int lineIndex = -1;
-        List<String> existingLines = new ArrayList<>();
-        for (int i = 0; i < lore.size(); ) {
+        for (int i = 0; i < lore.size(); i++) {
             if (ChatColor.stripColor(lore.get(i)).startsWith("Effigy Upgrades:")) {
-                if (lineIndex == -1) lineIndex = i;
-                existingLines.add(lore.remove(i));
-            } else {
-                i++;
-            }
+                lineIndex = i; break; }
         }
-
         Map<UpgradeType, Integer> levels = new LinkedHashMap<>();
-        for (String line : existingLines) {
+        if (lineIndex >= 0) {
             for (UpgradeType t : UpgradeType.values()) {
-                int lvl = parseLevel(line, t);
+                int lvl = parseLevel(lore.get(lineIndex), t);
                 if (lvl > 0) levels.put(t, lvl);
             }
+            lore.remove(lineIndex);
         }
         if (level > 0) levels.put(type, level); else levels.remove(type);
         if (!levels.isEmpty()) {
-            List<String> newLines = new ArrayList<>();
-            StringBuilder sb = new StringBuilder(ChatColor.GRAY + "Effigy Upgrades: ");
+            StringBuilder sb = new StringBuilder();
+            sb.append(ChatColor.GRAY).append("Effigy Upgrades: ");
             boolean first = true;
-            int count = 0;
             for (Map.Entry<UpgradeType, Integer> e : levels.entrySet()) {
                 if (!first) sb.append(" ");
                 sb.append(getColoredSymbol(e.getKey(), e.getValue()));
                 first = false;
-                count++;
-                if (count == 3) {
-                    newLines.add(sb.toString());
-                    sb = new StringBuilder(ChatColor.GRAY + "Effigy Upgrades: ");
-                    count = 0;
-                    first = true;
-                }
             }
-            if (count > 0) newLines.add(sb.toString());
-
-            int insertIndex = (lineIndex >= 0) ? lineIndex : findUpgradeInsertIndex(lore);
-            lore.addAll(insertIndex, newLines);
+            if (lineIndex < 0) lineIndex = findUpgradeInsertIndex(lore);
+            lore.add(lineIndex, sb.toString());
         }
         meta.setLore(lore);
         axe.setItemMeta(meta);
