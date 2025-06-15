@@ -321,12 +321,29 @@ public class FishingUpgradeSystem implements Listener {
         ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.AQUA + "Angler Energy");
+
         String bar = createBar(total, cap, available);
+        int spent = total - available;
+
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Total: " + ChatColor.YELLOW + total + "%" + ChatColor.GRAY +
-                " / " + ChatColor.YELLOW + cap + "%");
-        lore.add(ChatColor.GRAY + "Available: " + ChatColor.GREEN + available + "%");
+        lore.add(ChatColor.GRAY + "Total: " + ChatColor.YELLOW + total + "%" +
+                ChatColor.GRAY + " / " + ChatColor.YELLOW + cap + "%");
+        lore.add(ChatColor.GRAY + "Available: " + ChatColor.GREEN + available + "% " +
+                ChatColor.GRAY + "Spent: " + ChatColor.RED + spent + "%");
+        lore.add("");
         lore.add(bar);
+        lore.add("");
+
+        if (cap > 100) {
+            lore.add(ChatColor.AQUA + "Enhanced Power Cap: " + ChatColor.YELLOW + cap + "%");
+            lore.add(ChatColor.GRAY + "Apply " + ChatColor.LIGHT_PURPLE + "Pearls of the Deep" +
+                    ChatColor.GRAY + " to increase cap");
+        } else {
+            lore.add(ChatColor.GRAY + "Apply " + ChatColor.LIGHT_PURPLE + "Pearls of the Deep" +
+                    ChatColor.GRAY + " to increase cap beyond 100%");
+        }
+        lore.add(ChatColor.GRAY + "Apply bait to increase current energy");
+
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
