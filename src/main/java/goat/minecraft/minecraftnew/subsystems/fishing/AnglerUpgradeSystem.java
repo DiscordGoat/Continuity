@@ -51,6 +51,7 @@ public class AnglerUpgradeSystem implements Listener {
         int lvl=getUpgradeLevel(rod,up);
         boolean max=lvl>=up.getMax();
         boolean can=avail>=cost;
+
         String name=max?ChatColor.GOLD+up.getName()+" (MAX)":can?ChatColor.GREEN+up.getName()+" ("+lvl+"/"+up.getMax()+")":ChatColor.RED+up.getName()+" ("+lvl+"/"+up.getMax()+")";
         m.setDisplayName(name);
         List<String> lore=new ArrayList<>();
