@@ -114,8 +114,9 @@ public class PearlOfTheDeepSystem implements Listener {
 
     private String createBar(int current, int cap) {
         int base = 20;
-        int extra = (cap - 100) / 100;
-        int len = base + extra * 5;
+        // Use the same scaling approach as other upgrade GUIs
+        int extra = (cap - 100) / 20;
+        int len = base + extra;
         int filled = (int) ((double) current / cap * len);
         int empty = len - filled;
         StringBuilder sb = new StringBuilder();
