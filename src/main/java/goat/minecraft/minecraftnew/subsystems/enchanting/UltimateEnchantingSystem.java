@@ -476,7 +476,7 @@ public class UltimateEnchantingSystem implements Listener {
                     BaitApplicationSystem.getRodAnglerEnergyStatic(handItem) > 0) {
                 goat.minecraft.minecraftnew.subsystems.fishing.AnglerUpgradeSystem upgradeSystem =
                         new goat.minecraft.minecraftnew.subsystems.fishing.AnglerUpgradeSystem(MinecraftNew.getInstance());
-                upgradeSystem.openUpgradeGUIFromExternal(player, handItem);
+                upgradeSystem.openUpgradeGUI(player, handItem);
                 return;
             }
         }
