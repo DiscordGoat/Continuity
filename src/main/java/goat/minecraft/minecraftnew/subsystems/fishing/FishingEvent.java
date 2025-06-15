@@ -23,6 +23,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -79,8 +81,15 @@ public class FishingEvent implements Listener {
         player.sendMessage(ChatColor.GREEN + "Bonus Fishing XP: " + boostedXP);
         player.playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_RETRIEVE, 1.0f, 1.0f);
 
-        // Remove the caught entity
-        caught.remove();
+        ItemStack rod = player.getInventory().getItemInMainHand();
+        int diamondLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.DIAMOND_HOOK);
+        if (diamondLevel > 0 && caught instanceof LivingEntity) {
+            ((LivingEntity) caught).setHealth(0);
+        } else {
+            caught.remove();
+        }
+
+        applyReelInUpgrades(player, true, rod);
 
         // Grant Luck effect
         grantLuck(player, "Fishing");
@@ -89,7 +98,7 @@ public class FishingEvent implements Listener {
         Player player = e.getPlayer();
         int fishingLevel = xpManager.getPlayerLevel(player, "Fishing"); // Get player's fishing level
         double seaCreatureChance = 0;
-
+        
         // Add fishing level bonus
         seaCreatureChance += fishingLevel / 2.0;
 
@@ -114,6 +123,10 @@ public class FishingEvent implements Listener {
         if (playerMeritManager.hasPerk(player.getUniqueId(), "Master Angler")) {
             seaCreatureChance += 5;
         }
+
+        ItemStack rod = player.getInventory().getItemInMainHand();
+        int sonarLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.SONAR);
+        seaCreatureChance += sonarLevel;
         // Check active pet perks
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
@@ -142,11 +155,12 @@ public class FishingEvent implements Listener {
 
         // Determine if a sea creature should replace this catch
         if (random.nextDouble() <= seaCreatureChance) {
-            spawnAndLaunchSeaCreature(player, e.getHook().getLocation());
+            spawnAndLaunchSeaCreature(player, e.getHook().getLocation(), rod);
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                     //String.format("%.2f", damageMultiplier)
                     new TextComponent(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%")
             );
+            applyReelInUpgrades(player, true, rod);
         } else {
             // Proceed with regular fish catch
             awardRegularFish(player, fishingLevel);
@@ -164,6 +178,7 @@ public class FishingEvent implements Listener {
                     //String.format("%.2f", damageMultiplier)
                     new TextComponent(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%")
             );
+            applyReelInUpgrades(player, false, rod);
         }
 
         // Implement the enhanced treasure system
@@ -215,7 +230,7 @@ public class FishingEvent implements Listener {
      * @param player         The player towards whom the sea creature will be launched.
      * @param bobberLocation The location of the fishing bobber.
      */
-    private void spawnAndLaunchSeaCreature(Player player, Location bobberLocation) {
+    private void spawnAndLaunchSeaCreature(Player player, Location bobberLocation, ItemStack rod) {
         PetManager petManager = PetManager.getInstance(plugin);
         Optional<SeaCreature> optionalSeaCreature = SeaCreatureRegistry.getRandomSeaCreature();
         if (!optionalSeaCreature.isPresent()) return;
@@ -268,11 +283,13 @@ public class FishingEvent implements Listener {
 
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         int baseLevel = seaCreature.getLevel();
+        int biggerLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.BIGGER_FISH);
+        int adjustedLevel = (int)Math.max(1, Math.round(baseLevel * (1.0 - biggerLevel * 0.10)));
         plugin.getLogger().info("Base Level of Sea Creature: " + baseLevel);
 
-        spawnMonsters.applyMobAttributes(livingEntity, baseLevel);
+        spawnMonsters.applyMobAttributes(livingEntity, adjustedLevel);
 
-        spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + baseLevel + "] " + seaCreature.getColoredDisplayName());
+        spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + adjustedLevel + "] " + seaCreature.getColoredDisplayName());
         spawnedEntity.setCustomNameVisible(true);
         // Attach metadata with the sea creature's name
         spawnedEntity.setMetadata("SEA_CREATURE", new FixedMetadataValue(MinecraftNew.getInstance(), seaCreature.getDisplayName()));
@@ -311,6 +328,43 @@ public class FishingEvent implements Listener {
         bobberLocation.getWorld().playSound(bobberLocation, Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
 
         ((LivingEntity) spawnedEntity).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, false));
+
+        int krakenLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.KRAKEN);
+        if (krakenLevel > 0 && random.nextDouble() < 0.05 * krakenLevel) {
+            spawnSpecificSeaCreature(player, bobberLocation, seaCreature, adjustedLevel, rod);
+        }
+    }
+
+    private void spawnSpecificSeaCreature(Player player, Location bobberLocation, SeaCreature seaCreature, int level, ItemStack rod) {
+        Entity spawned = player.getWorld().spawnEntity(bobberLocation, seaCreature.getEntityType());
+        LivingEntity living = (LivingEntity) spawned;
+        PetManager petManager = PetManager.getInstance(plugin);
+
+        ItemStack helmet = petManager.getSkullForPet(seaCreature.getSkullName());
+        ItemStack chest = createDyedLeatherArmor(Material.LEATHER_CHESTPLATE, seaCreature.getArmorColor());
+        ItemStack legs = createDyedLeatherArmor(Material.LEATHER_LEGGINGS, seaCreature.getArmorColor());
+        ItemStack boots = createDyedLeatherArmor(Material.LEATHER_BOOTS, seaCreature.getArmorColor());
+
+        living.getEquipment().setHelmet(helmet);
+        living.getEquipment().setChestplate(chest);
+        living.getEquipment().setLeggings(legs);
+        living.getEquipment().setBoots(boots);
+        living.getEquipment().setHelmetDropChance(0);
+        living.getEquipment().setChestplateDropChance(0);
+        living.getEquipment().setLeggingsDropChance(0);
+        living.getEquipment().setBootsDropChance(0);
+
+        SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
+        spawnMonsters.applyMobAttributes(living, level);
+        spawned.setCustomName(ChatColor.AQUA + "[Lvl " + level + "] " + seaCreature.getColoredDisplayName());
+        spawned.setCustomNameVisible(true);
+        spawned.setMetadata("SEA_CREATURE", new FixedMetadataValue(MinecraftNew.getInstance(), seaCreature.getDisplayName()));
+
+        Vector dir = player.getLocation().subtract(bobberLocation).toVector().normalize();
+        dir.setY(0.2);
+        dir.multiply(2);
+        spawned.setVelocity(dir);
+        ((LivingEntity) spawned).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, false));
     }
 
 
@@ -376,15 +430,17 @@ public class FishingEvent implements Listener {
      * @param skill  The skill name (e.g., "Fishing").
      */
     private void grantLuck(Player player, String skill) {
-        int level = xpManager.getPlayerLevel(player, skill); // Get player's fishing level
-        int chance = random.nextInt(100) + 1;
+        int level = xpManager.getPlayerLevel(player, skill);
+        ItemStack rod = player.getInventory().getItemInMainHand();
+        int charmed = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.CHARMED);
+        int rabbitsFoot = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.RABBITS_FOOT);
+        int goodDay = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.GOOD_DAY);
 
-        // Check if random roll is successful based on player's level
-        if (chance >= 90) {
-            int luckDuration = level * 5 * 20; // Duration in ticks (20 ticks = 1 second)
-
-            // Add Luck potion effect for a short duration
-            player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, luckDuration, 0)); // Level 1 Luck effect
+        double luckChance = 0.10 + charmed * 0.15;
+        if (random.nextDouble() <= luckChance) {
+            int luckDuration = level * 5 + goodDay * 15;
+            luckDuration *= 20;
+            player.addPotionEffect(new PotionEffect(PotionEffectType.LUCK, luckDuration, rabbitsFoot));
             player.sendMessage(ChatColor.GREEN + "You feel lucky!");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1.0f, 1.0f);
         }
@@ -405,6 +461,9 @@ public class FishingEvent implements Listener {
     private void rollForTreasure(Player player) {
         PetManager petManager = PetManager.getInstance(plugin);
         double treasureChance = 0.05; // Base chance of 5%
+        ItemStack rod = player.getInventory().getItemInMainHand();
+        int upgradeLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.TREASURE_HUNTER);
+        treasureChance += upgradeLevel / 100.0;
         int petLevel = 1;
         if(petManager.getActivePet(player) != null) {
             petLevel = petManager.getActivePet(player).getLevel();
@@ -540,6 +599,100 @@ public class FishingEvent implements Listener {
         };
         Material saplingType = rareSaplings[random.nextInt(rareSaplings.length)];
         return new ItemStack(saplingType, random.nextInt(3) + 1);
+    }
+
+    private void applyReelInUpgrades(Player player, boolean seaCreature, ItemStack rod) {
+        if (rod == null || rod.getType() != Material.FISHING_ROD) return;
+
+        if (!seaCreature) {
+            int nemo = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.FINDING_NEMO);
+            if (nemo > 0 && random.nextDouble() < nemo * 0.15) {
+                player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.TROPICAL_FISH));
+            }
+        }
+
+        int passion = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.PASSION);
+        if (passion > 0 && random.nextDouble() < 0.15) {
+            double max = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+            player.setHealth(max);
+        }
+
+        int feed = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.FEED);
+        if (feed > 0 && random.nextDouble() < 0.15) {
+            player.setFoodLevel(20);
+            player.setSaturation(20f);
+        }
+
+        int rainDance = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.RAIN_DANCE);
+        if (rainDance > 0 && player.getWorld().hasStorm()) {
+            for (int i = 0; i < rainDance; i++) {
+                if (random.nextDouble() < 0.15) {
+                    World w = player.getWorld();
+                    w.setWeatherDuration(w.getWeatherDuration() + 100);
+                    w.setThunderDuration(w.getThunderDuration() + 100);
+                }
+            }
+        }
+
+        handlePayout(player, rod);
+    }
+
+    private void handlePayout(Player player, ItemStack rod) {
+        int level = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.PAYOUT);
+        if (level <= 0 || random.nextDouble() >= 0.5) return;
+        Inventory inv = player.getInventory();
+        int emeralds = 0;
+        emeralds += removeFishGroups(inv, Material.COD, Material.SALMON, 4);
+        emeralds += removeItems(inv, Material.PUFFERFISH, level);
+        emeralds += removeItems(inv, Material.TROPICAL_FISH, level);
+        if (emeralds > 0) {
+            inv.addItem(new ItemStack(Material.EMERALD, emeralds));
+            player.sendMessage(ChatColor.GREEN + "Sold fish for " + emeralds + " emeralds!");
+        }
+    }
+
+    private int countMaterial(Inventory inv, Material mat) {
+        int count = 0;
+        for (ItemStack item : inv.getContents()) {
+            if (item != null && item.getType() == mat) {
+                count += item.getAmount();
+            }
+        }
+        return count;
+    }
+
+    private int removeFishGroups(Inventory inv, Material m1, Material m2, int group) {
+        int total = countMaterial(inv, m1) + countMaterial(inv, m2);
+        int groups = total / group;
+        if (groups <= 0) return 0;
+        int need = groups * group;
+        int removed = removeItems(inv, m1, Math.min(need, countMaterial(inv, m1)));
+        need -= removed;
+        if (need > 0) {
+            removeItems(inv, m2, need);
+        }
+        return groups;
+    }
+
+    private int removeItems(Inventory inventory, Material material, int amount) {
+        int remaining = amount;
+        int removed = 0;
+        for (ItemStack item : inventory.getContents()) {
+            if (item != null && item.getType() == material) {
+                int itemAmount = item.getAmount();
+                if (itemAmount <= remaining) {
+                    inventory.removeItem(item);
+                    remaining -= itemAmount;
+                    removed += itemAmount;
+                } else {
+                    item.setAmount(itemAmount - remaining);
+                    removed += remaining;
+                    remaining = 0;
+                    break;
+                }
+            }
+        }
+        return removed;
     }
 
     /**
