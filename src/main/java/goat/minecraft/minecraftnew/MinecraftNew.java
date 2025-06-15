@@ -298,7 +298,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         // Initialize the culinary subsystem
         culinarySubsystem = CulinarySubsystem.getInstance(this);
         new CulinaryCauldron(this);
-        new ParticlePetEffects(this);
 
         getLogger().info("MyPlugin has been enabled!");
 
