@@ -29,7 +29,7 @@ public class FishingUpgradeSystem implements Listener {
         // Row 1: Catch Upgrades
         FINDING_NEMO("Finding Nemo", "+15% chance to gain +1 tropical fish per non-sea creature reel in", Material.TROPICAL_FISH, 3, 2),
         TREASURE_HUNTER("Treasure Hunter", "+1% treasure chance per level", Material.CHEST, 5, 3),
-        SONAR("Sonar", "+1% sea creature chance per level", Material.NAUTILUS_SHELL, 5, 4),
+        SONAR("Sonar", "+1% sea creature chance per level", Material.NAUTILUS_SHELL, 6, 4),
         KRAKEN("Kraken", "5% chance to reel in 2 sea creatures", Material.INK_SAC, 3, 5),
         BIGGER_FISH("Bigger Fish", "-10% sea creature level", Material.PUFFERFISH, 5, 6),
         DIAMOND_HOOK("Diamond Hook", "Instantly kill sea creatures on reel", Material.DIAMOND, 1, 7),
@@ -109,7 +109,7 @@ public class FishingUpgradeSystem implements Listener {
         gui.setItem(UpgradeType.PASSION.getSlot(), createUpgradeItem(UpgradeType.PASSION, rod, getUpgradeCost(UpgradeType.PASSION), available));
         gui.setItem(UpgradeType.FEED.getSlot(), createUpgradeItem(UpgradeType.FEED, rod, getUpgradeCost(UpgradeType.FEED), available));
 
-        gui.setItem(49, createExtendedPowerDisplay(totalEnergy, getEnergyCap(rod), available));
+        gui.setItem(49, createExtendedPowerDisplay(totalEnergy, getPowerCap(rod), available));
 
         ItemStack respec = new ItemStack(Material.BARRIER);
         ItemMeta rMeta = respec.getItemMeta();
@@ -411,33 +411,37 @@ public class FishingUpgradeSystem implements Listener {
     }
 
     private String createBar(int total, int cap, int available) {
-        // Use the same bar scaling logic as the gemstone upgrade GUI
-        int base = 20;
-        int extraSegments = (cap - 100) / 100; // each +100% adds 5 bars
-        int len = base + extraSegments * 5;
-
-        int filled = (int)((double) total / cap * len);
+        // Scale bar length similarly to the effigy and gemstone GUIs
+        int extraSegments = (cap - 100) / 20;
+        int len = 20 + extraSegments;
+        int filled = (int)((double)total / cap * len);
         int spent = (int)((double)(total - available) / cap * len);
-
-        StringBuilder bar = new StringBuilder(ChatColor.DARK_GRAY + "[");
-        for (int i = 0; i < spent; i++) bar.append(ChatColor.RED + "|");
-        for (int i = spent; i < filled; i++) bar.append(ChatColor.GREEN + "|");
-        for (int i = filled; i < len; i++) bar.append(ChatColor.GRAY + "|");
-        bar.append(ChatColor.DARK_GRAY + "]");
-        return bar.toString();
+        StringBuilder b = new StringBuilder(ChatColor.DARK_GRAY + "[");
+        for (int i = 0; i < spent; i++) b.append(ChatColor.RED + "|");
+        for (int i = spent; i < filled; i++) b.append(ChatColor.GREEN + "|");
+        for (int i = filled; i < len; i++) b.append(ChatColor.GRAY + "|");
+        b.append(ChatColor.DARK_GRAY + "]");
+        return b.toString();
     }
 
-    private int getEnergyCap(ItemStack rod) {
-        if (!rod.hasItemMeta() || !rod.getItemMeta().hasLore()) return 100;
-        for (String line : rod.getItemMeta().getLore()) {
-            String s = ChatColor.stripColor(line);
-            if (s.startsWith("Power Cap: ")) {
-                try { return Integer.parseInt(s.substring(10).replace("%", "")); }
-                catch (NumberFormatException ignored) {}
+    private int getPowerCap(ItemStack tool) {
+        if (!tool.hasItemMeta() || !tool.getItemMeta().hasLore()) return 100;
+
+        List<String> lore = tool.getItemMeta().getLore();
+        for (String line : lore) {
+            String stripped = ChatColor.stripColor(line);
+            if (stripped.startsWith("Power Cap: ")) {
+                String capStr = stripped.substring("Power Cap: ".length()).replace("%", "");
+                try {
+                    return Integer.parseInt(capStr);
+                } catch (NumberFormatException e) {
+                    return 100;
+                }
             }
         }
         return 100;
     }
+
 
     private int getUpgradeCost(UpgradeType type) {
         if (type == UpgradeType.DIAMOND_HOOK) {

@@ -102,7 +102,7 @@ public class FishingEvent implements Listener {
         double seaCreatureChance = 0;
         
         // Add fishing level bonus
-        seaCreatureChance += fishingLevel / 2.0;
+        seaCreatureChance += fishingLevel / 3.0;
 
         // Add "Call of the Void" enchantment bonus
         int callOfTheVoidLevel = CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void");

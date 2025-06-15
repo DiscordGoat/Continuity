@@ -518,6 +518,7 @@ public class VillagerTradeManager implements Listener {
         fishermanPurchases.add(createTradeMap("SHALLOW_SHELL", 1, 8, 2)); // Custom Item
         fishermanPurchases.add(createTradeMap("SHELL", 1, 12, 3)); // Custom Item
         fishermanPurchases.add(createTradeMap("FISHERMAN_REFORGE", 1, 64, 3)); // Custom Item
+        fishermanPurchases.add(createTradeMap("PEARL_OF_THE_DEEP", 1, 512, 3)); // Custom Item
         fishermanPurchases.add(createTradeMap("CAMPFIRE", 2, 12, 3)); // Material
         fishermanPurchases.add(createTradeMap("DEEP_SHELL", 1, 24, 4)); // Custom Item
         fishermanPurchases.add(createTradeMap("FISHERMAN_LURE", 1, 64, 4)); // Custom Item
@@ -550,7 +551,6 @@ public class VillagerTradeManager implements Listener {
         fishermanSells.add(createTradeMap("ANAKLUSMOS", 1, 12, 2)); // Material
         fishermanSells.add(createTradeMap("SWIM_TRUNKS", 1, 12, 2)); // Material
         fishermanSells.add(createTradeMap("HOWL", 1, 32, 2)); // Material
-        fishermanSells.add(createTradeMap("PEARL_OF_THE_DEEP", 1, 64, 4)); // Custom Item
 
         defaultConfig.set("FISHERMAN.sells", fishermanSells);
 // Butcher Purchases
