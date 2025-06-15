@@ -104,6 +104,7 @@ public class ForestSpiritManager implements Listener {
     }
 
     // Return spirit level for a given tier.
+
     private int getSpiritLevelForTier(int tier) {
         switch (tier) {
             case 1: return 20;
@@ -126,6 +127,7 @@ public class ForestSpiritManager implements Listener {
     public void spawnSpirit(String spiritName, Location loc, Block block, Player player) {
         int tier = getSpiritTier(player);
         int level = getSpiritLevelForTier(tier);
+
         ItemStack axe = player.getInventory().getItemInMainHand();
         int confusion = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ANCIENT_CONFUSION);
         if (confusion > 0) {
@@ -151,6 +153,7 @@ public class ForestSpiritManager implements Listener {
         spirit.setAI(false);
 
         // Schedule delayed level assignment after 41 ticks.
+        int finalLevel = level;
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -158,8 +161,8 @@ public class ForestSpiritManager implements Listener {
                     cancel();
                     return;
                 }
-                spawnMonsters.applyMobAttributes(spirit, level);
-                spirit.setCustomName(ChatColor.RED + "[Lvl " + level + "] " + spiritName);
+                spawnMonsters.applyMobAttributes(spirit, finalLevel);
+                spirit.setCustomName(ChatColor.RED + "[Lvl " + finalLevel + "] " + spiritName);
                 spirit.setHealth(spirit.getMaxHealth());
                 // Re-enable AI and vulnerability.
                 spirit.setAI(true);
@@ -366,10 +369,7 @@ public class ForestSpiritManager implements Listener {
             int confusion = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ANCIENT_CONFUSION);
 
             if (headhunter > 0) {
-                event.setDamage(event.getDamage() * (1 + headhunter * 0.10));
-            }
-            if (confusion > 0 && entity instanceof Skeleton) {
-                ((Skeleton) entity).addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60, confusion - 1));
+                event.setDamage(event.getDamage() * (2 + headhunter * 0.10));
             }
 
             World world = entity.getWorld();

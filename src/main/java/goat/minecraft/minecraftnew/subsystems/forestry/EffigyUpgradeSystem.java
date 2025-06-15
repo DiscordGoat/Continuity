@@ -263,6 +263,8 @@ public class EffigyUpgradeSystem implements Listener {
 
     private int getUpgradeCost(UpgradeType type) {
         switch (type) {
+            case ANCIENT_CONFUSION:
+            case FEED:
             case OAK_YIELD:
             case SPRUCE_YIELD:
             case BIRCH_YIELD:

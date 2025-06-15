@@ -346,12 +346,12 @@ public class Forestry implements Listener {
             grantHaste(player, "Forestry");
 
             // Rare drops.
-            if (random.nextInt(1600) + 1 == 1) {
+            if (random.nextInt(2600) + 1 == 1) {
                 Objects.requireNonNull(player.getLocation().getWorld())
                         .dropItem(player.getLocation(), ItemRegistry.getSecretsOfInfinity());
                 player.sendMessage(ChatColor.YELLOW + "You received Secrets of Infinity!");
             }
-            if (random.nextInt(1600) + 1 == 1) {
+            if (random.nextInt(2600) + 1 == 1) {
                 Objects.requireNonNull(player.getLocation().getWorld())
                         .dropItem(player.getLocation(), ItemRegistry.getSilkWorm());
                 player.sendMessage(ChatColor.YELLOW + "You received Silk Worm!");
@@ -414,7 +414,7 @@ public class Forestry implements Listener {
      * @param forestryLevel The player's forestry level.
      */
     public void processPerfectAppleChance(Player player, Block block, int forestryLevel, int orchardLevel) {
-        double chance = forestryLevel * 0.01 + orchardLevel * 5.0;
+        double chance = forestryLevel * 0.01 + orchardLevel * 1.0;
         if (random.nextDouble() * 100 < chance) {
             final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
             new BukkitRunnable() {
@@ -512,7 +512,7 @@ public class Forestry implements Listener {
         }
 
         if (level > 0) {
-            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMat, level));
+            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMat, level - 1));
         }
     }
 }
