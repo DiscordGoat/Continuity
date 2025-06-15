@@ -20,6 +20,9 @@ import java.util.*;
  * Mirrors the gemstone/effigy upgrade GUIs.
  */
 public class FishingUpgradeSystem implements Listener {
+    private static final int FIRST_LINE_LIMIT = 3;
+    private static final int OTHER_LINE_LIMIT = 5;
+
     private final MinecraftNew plugin;
 
     /**
@@ -250,10 +253,19 @@ public class FishingUpgradeSystem implements Listener {
 
     public static int getUpgradeLevel(ItemStack rod, UpgradeType type) {
         if (!rod.hasItemMeta() || !rod.getItemMeta().hasLore()) return 0;
-        for (String line : rod.getItemMeta().getLore()) {
+        List<String> lore = rod.getItemMeta().getLore();
+        boolean reading = false;
+        for (String line : lore) {
             String stripped = ChatColor.stripColor(line);
             if (stripped.startsWith("Fishing Upgrades:")) {
-                return parseLevel(line, type);
+                reading = true;
+            }
+            if (reading) {
+                int lvl = parseLevel(line, type);
+                if (lvl > 0) return lvl;
+                if (!stripped.startsWith("Fishing Upgrades:") && stripped.contains(":")) {
+                    break;
+                }
             }
         }
         return 0;
@@ -284,24 +296,25 @@ public class FishingUpgradeSystem implements Listener {
         }
         Map<UpgradeType, Integer> levels = new LinkedHashMap<>();
         if (lineIndex >= 0) {
-            for (UpgradeType t : UpgradeType.values()) {
-                int lvl = parseLevel(lore.get(lineIndex), t);
-                if (lvl > 0) levels.put(t, lvl);
+            int i = lineIndex;
+            while (i < lore.size()) {
+                String stripped = ChatColor.stripColor(lore.get(i));
+                for (UpgradeType t : UpgradeType.values()) {
+                    int lvl = parseLevel(lore.get(i), t);
+                    if (lvl > 0) levels.put(t, lvl);
+                }
+                i++;
+                if (i > lineIndex && stripped.contains(":")) break;
             }
-            lore.remove(lineIndex);
+            for (int j = lineIndex; j < i; j++) {
+                lore.remove(lineIndex);
+            }
         }
         if (level > 0) levels.put(type, level); else levels.remove(type);
         if (!levels.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(ChatColor.GRAY).append("Fishing Upgrades: ");
-            boolean first = true;
-            for (Map.Entry<UpgradeType, Integer> e : levels.entrySet()) {
-                if (!first) sb.append(" ");
-                sb.append(getColoredSymbol(e.getKey(), e.getValue()));
-                first = false;
-            }
+            List<String> lines = buildUpgradeLines(levels);
             if (lineIndex < 0) lineIndex = findUpgradeInsertIndex(lore);
-            lore.add(lineIndex, sb.toString());
+            lore.addAll(lineIndex, lines);
         }
         meta.setLore(lore);
         rod.setItemMeta(meta);
@@ -321,12 +334,47 @@ public class FishingUpgradeSystem implements Listener {
         return lore.size();
     }
 
+    private List<String> buildUpgradeLines(Map<UpgradeType, Integer> upgrades) {
+        List<String> icons = new ArrayList<>();
+        for (Map.Entry<UpgradeType, Integer> e : upgrades.entrySet()) {
+            icons.add(getColoredSymbol(e.getKey(), e.getValue()));
+        }
+
+        List<String> lines = new ArrayList<>();
+        int idx = 0;
+        while (idx < icons.size()) {
+            int limit = lines.isEmpty() ? FIRST_LINE_LIMIT : OTHER_LINE_LIMIT;
+            StringBuilder sb = new StringBuilder();
+            if (lines.isEmpty()) {
+                sb.append(ChatColor.GRAY).append("Fishing Upgrades: ");
+            } else {
+                sb.append(ChatColor.GRAY);
+            }
+            for (int j = 0; j < limit && idx < icons.size(); j++, idx++) {
+                if (j > 0) sb.append(" ");
+                sb.append(icons.get(idx));
+            }
+            lines.add(sb.toString());
+        }
+        return lines;
+    }
+
     private void clearAllUpgrades(ItemStack rod) {
         if (!rod.hasItemMeta()) return;
         ItemMeta meta = rod.getItemMeta();
         List<String> lore = meta.getLore();
         if (lore == null) return;
-        lore.removeIf(l -> ChatColor.stripColor(l).startsWith("Fishing Upgrades:"));
+        for (int i = 0; i < lore.size();) {
+            String stripped = ChatColor.stripColor(lore.get(i));
+            if (stripped.startsWith("Fishing Upgrades:")) {
+                lore.remove(i);
+                while (i < lore.size() && !ChatColor.stripColor(lore.get(i)).contains(":")) {
+                    lore.remove(i);
+                }
+            } else {
+                i++;
+            }
+        }
         meta.setLore(lore);
         rod.setItemMeta(meta);
     }
