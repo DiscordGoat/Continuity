@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
@@ -312,7 +313,9 @@ public class UltimateEnchantmentListener implements Listener {
             XPManager xpManager = new XPManager(plugin);
             ForestryPetManager forestryPetManager = MinecraftNew.getInstance().getForestryManager();
             forestryPetManager.incrementForestryCount(player);
-            forestry.processPerfectAppleChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"));
+            ItemStack axe = player.getInventory().getItemInMainHand();
+            int orchard = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ORCHARD);
+            forestry.processPerfectAppleChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"), orchard);
             forestry.processDoubleDropChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"));
 
             if (visitedLogs.size() % 4 == 0) {

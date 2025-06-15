@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -125,6 +126,11 @@ public class ForestSpiritManager implements Listener {
     public void spawnSpirit(String spiritName, Location loc, Block block, Player player) {
         int tier = getSpiritTier(player);
         int level = getSpiritLevelForTier(tier);
+        ItemStack axe = player.getInventory().getItemInMainHand();
+        int confusion = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ANCIENT_CONFUSION);
+        if (confusion > 0) {
+            level = Math.max(1, level - confusion * 10);
+        }
 
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         World world = loc.getWorld();
@@ -347,14 +353,37 @@ public class ForestSpiritManager implements Listener {
         }.runTaskTimer(plugin, 0L, interval);
     }
 
-    // Event handler: when a forest spirit is hit by an entity, play a bamboo noise.
+    // Event handler: handle combat interactions with forest spirits.
     @EventHandler
     public void onForestSpiritHit(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
-        if (entity.hasMetadata("forestSpirit")) {
+        Entity damager = event.getDamager();
+
+        if (entity.hasMetadata("forestSpirit") && damager instanceof Player) {
+            Player player = (Player) damager;
+            ItemStack axe = player.getInventory().getItemInMainHand();
+            int headhunter = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.HEADHUNTER);
+            int confusion = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ANCIENT_CONFUSION);
+
+            if (headhunter > 0) {
+                event.setDamage(event.getDamage() * (1 + headhunter * 0.10));
+            }
+            if (confusion > 0 && entity instanceof Skeleton) {
+                ((Skeleton) entity).addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 60, confusion - 1));
+            }
+
             World world = entity.getWorld();
             Location loc = entity.getLocation();
             world.playSound(loc, Sound.BLOCK_BAMBOO_HIT, 100.0f, 1.0f);
+        }
+
+        if (damager.hasMetadata("forestSpirit") && entity instanceof Player) {
+            Player player = (Player) entity;
+            ItemStack axe = player.getInventory().getItemInMainHand();
+            int spectral = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.SPECTRAL_ARMOR);
+            if (spectral > 0) {
+                event.setDamage(event.getDamage() * (1 - spectral * 0.10));
+            }
         }
     }
 
