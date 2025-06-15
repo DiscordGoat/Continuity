@@ -35,6 +35,7 @@ public class EffigyUpgradeSystem implements Listener {
         DARK_OAK_YIELD("Dark Oak Yield", "Bonus drops from dark oak logs", Material.DARK_OAK_LOG, 5, 7),
         CRIMSON_YIELD("Crimson Yield", "Bonus drops from crimson stems", Material.CRIMSON_STEM, 5, 8),
         WARPED_YIELD("Warped Yield", "Bonus drops from warped stems", Material.WARPED_STEM, 5, 11),
+        WARPED_YIELD("Warped Yield", "Bonus drops from warped stems", Material.WARPED_STEM, 5, 9),
 
         EFFIGY_YIELD("Effigy Yield", "+0.5% spirit chance per level", Material.TOTEM_OF_UNDYING, 6, 20),
         FORESTRY_XP("Forestry XP Boost", "More forestry XP", Material.EXPERIENCE_BOTTLE, 3, 21),
@@ -197,6 +198,11 @@ public class EffigyUpgradeSystem implements Listener {
         // Handle respec button
         if (event.getSlot() == 53 && event.isShiftClick() && event.isRightClick()) {
             handleRespec(player, axe);
+        // Handle clicks
+        if (event.getSlot() == 49 && event.isShiftClick() && event.isRightClick()) {
+            clearAllUpgrades(axe);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 1);
+            player.closeInventory();
             return;
         }
 
@@ -311,6 +317,7 @@ public class EffigyUpgradeSystem implements Listener {
                 first = false;
             }
             if (lineIndex < 0) lineIndex = findInsertionPoint(lore);
+            if (lineIndex < 0) lineIndex = lore.size();
             lore.add(lineIndex, sb.toString());
         }
         meta.setLore(lore);
