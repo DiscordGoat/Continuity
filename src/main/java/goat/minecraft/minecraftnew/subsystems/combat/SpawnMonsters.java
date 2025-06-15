@@ -646,6 +646,10 @@ public class SpawnMonsters implements Listener {
             return;
         }
         Monster monster = (Monster) event.getEntity();
+        // Skip sea creatures and forest spirits to prevent unintended drops
+        if(monster.hasMetadata("SEA_CREATURE") || monster.hasMetadata("forestSpirit")){
+            return;
+        }
         if (monster.hasPotionEffect(PotionEffectType.SPEED)) {
             Player killer = monster.getKiller();
             if (killer != null) {
