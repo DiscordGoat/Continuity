@@ -1567,6 +1567,24 @@ public class ItemRegistry {
         );
     }
 
+    /**
+     * Basic bait used as an ingredient for higher tiers.
+     */
+    public static ItemStack getCommonBait() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.YELLOW + "Common Bait",
+                Arrays.asList(
+                        ChatColor.GRAY + "Simple feed that attracts small fish.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+1 Angler Energy",
+                        ChatColor.GREEN + "Bait"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getShrimpBait() {
         return createCustomItem(
                 Material.SALMON,

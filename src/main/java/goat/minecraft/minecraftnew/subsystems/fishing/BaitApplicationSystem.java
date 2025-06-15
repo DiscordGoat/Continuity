@@ -20,6 +20,7 @@ public class BaitApplicationSystem implements Listener {
     private static final Map<String, Integer> BAIT_POWER_VALUES = new HashMap<>();
     static {
         BAIT_POWER_VALUES.put("Fish Bait", 1);
+        BAIT_POWER_VALUES.put("Common Bait", 1);
         BAIT_POWER_VALUES.put("Shrimp Bait", 3);
         BAIT_POWER_VALUES.put("Leech Bait", 7);
         BAIT_POWER_VALUES.put("Frog Bait", 10);
