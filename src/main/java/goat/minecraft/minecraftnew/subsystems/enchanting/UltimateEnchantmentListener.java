@@ -448,10 +448,13 @@ public class UltimateEnchantmentListener implements Listener {
     }
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
+        Player killer = event.getEntity().getKiller();
+        if (killer != null) {
+            addShredCharges(killer, 2);
+        }
+
         if (event.getEntity() instanceof Creeper) {
             Creeper creeper = (Creeper) event.getEntity();
-            Player killer = creeper.getKiller();
-
             if (killer != null) {
                 UUID playerUUID = killer.getUniqueId();
                 if (discSeekerActive.containsKey(playerUUID) && discSeekerActive.get(playerUUID)) {
@@ -878,17 +881,21 @@ public class UltimateEnchantmentListener implements Listener {
             return false;
         }
         shredCharges.put(id, charges - 1);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                int current = shredCharges.getOrDefault(id, 0);
-                if (current < MAX_SHRED_SWORDS) {
-                    shredCharges.put(id, current + 1);
-                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.3f, 2f);
-                }
-            }
-        }.runTaskLater(plugin, 20L * 30);
         return true;
+    }
+
+    private void addShredCharges(Player player, int amount) {
+        UUID id = player.getUniqueId();
+        int current = shredCharges.getOrDefault(id, MAX_SHRED_SWORDS);
+        if (current >= MAX_SHRED_SWORDS) {
+            player.sendMessage(ChatColor.GREEN + "Your Shredders are at maximum capacity!");
+            return;
+        }
+        int newTotal = Math.min(MAX_SHRED_SWORDS, current + amount);
+        shredCharges.put(id, newTotal);
+        if (newTotal == MAX_SHRED_SWORDS) {
+            player.sendMessage(ChatColor.GREEN + "Your Shredders are at maximum capacity!");
+        }
     }
     private void loadCooldowns() {
         FileConfiguration config = plugin.getConfig();
