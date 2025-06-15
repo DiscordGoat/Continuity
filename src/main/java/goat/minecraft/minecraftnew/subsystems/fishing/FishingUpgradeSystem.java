@@ -350,17 +350,20 @@ public class FishingUpgradeSystem implements Listener {
     }
 
     private String createBar(int total, int cap, int available) {
-        // Scale bar length similarly to the effigy and gemstone GUIs
-        int extraSegments = (cap - 100) / 20;
-        int len = 20 + extraSegments;
-        int filled = (int)((double)total / cap * len);
+        // Use the same bar scaling logic as the gemstone upgrade GUI
+        int base = 20;
+        int extraSegments = (cap - 100) / 100; // each +100% adds 5 bars
+        int len = base + extraSegments * 5;
+
+        int filled = (int)((double) total / cap * len);
         int spent = (int)((double)(total - available) / cap * len);
-        StringBuilder b = new StringBuilder(ChatColor.DARK_GRAY + "[");
-        for (int i = 0; i < spent; i++) b.append(ChatColor.RED + "|");
-        for (int i = spent; i < filled; i++) b.append(ChatColor.GREEN + "|");
-        for (int i = filled; i < len; i++) b.append(ChatColor.GRAY + "|");
-        b.append(ChatColor.DARK_GRAY + "]");
-        return b.toString();
+
+        StringBuilder bar = new StringBuilder(ChatColor.DARK_GRAY + "[");
+        for (int i = 0; i < spent; i++) bar.append(ChatColor.RED + "|");
+        for (int i = spent; i < filled; i++) bar.append(ChatColor.GREEN + "|");
+        for (int i = filled; i < len; i++) bar.append(ChatColor.GRAY + "|");
+        bar.append(ChatColor.DARK_GRAY + "]");
+        return bar.toString();
     }
 
     private int getEnergyCap(ItemStack rod) {
