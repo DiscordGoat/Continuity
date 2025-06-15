@@ -1666,6 +1666,7 @@ public class ItemRegistry {
                 ChatColor.YELLOW + "Lure Expertise",
                 Arrays.asList(
                         ChatColor.GRAY + "A Fishermans expertise",
+
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines an Enchantment beyond normal max levels.",
                         ChatColor.DARK_PURPLE + "Mastery Enchant"
                 ),
