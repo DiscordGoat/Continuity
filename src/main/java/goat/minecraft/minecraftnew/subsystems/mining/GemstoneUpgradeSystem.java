@@ -16,6 +16,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.*;
 
 public class GemstoneUpgradeSystem implements Listener {
+    private static final int FIRST_LINE_LIMIT = 3;
+    private static final int OTHER_LINE_LIMIT = 5;
+
     private final MinecraftNew plugin;
     
     public enum UpgradeType {
@@ -275,17 +278,23 @@ public class GemstoneUpgradeSystem implements Listener {
     
     private int getUpgradeLevel(ItemStack item, UpgradeType upgrade) {
         if (!item.hasItemMeta() || !item.getItemMeta().hasLore()) return 0;
-        
+
         List<String> lore = item.getItemMeta().getLore();
-        
-        // Parse from "Gemstone Upgrades:" symbolic line
+        boolean reading = false;
         for (String line : lore) {
             String stripped = ChatColor.stripColor(line);
             if (stripped.startsWith("Gemstone Upgrades:")) {
-                return parseUpgradeLevelFromSymbolic(line, upgrade);
+                reading = true;
+            }
+            if (reading) {
+                int lvl = parseUpgradeLevelFromSymbolic(line, upgrade);
+                if (lvl > 0) return lvl;
+                if (!stripped.startsWith("Gemstone Upgrades:") && stripped.contains(":")) {
+                    break;
+                }
             }
         }
-        
+
         return 0;
     }
     
@@ -337,7 +346,7 @@ public class GemstoneUpgradeSystem implements Listener {
      * Updates the symbolic upgrade lore by either adding or updating the consolidated upgrade line
      */
     private void updateSymbolicUpgradeLore(List<String> lore, UpgradeType upgrade, int level) {
-        // Find if we already have a "Gemstone Upgrades:" line
+        // Find existing upgrade line(s)
         int upgradeLineIndex = -1;
         for (int i = 0; i < lore.size(); i++) {
             if (ChatColor.stripColor(lore.get(i)).startsWith("Gemstone Upgrades:")) {
@@ -356,31 +365,25 @@ public class GemstoneUpgradeSystem implements Listener {
             allUpgrades.remove(upgrade);
         }
         
-        // Build the consolidated upgrade line
+        // Build the consolidated upgrade lines
         if (!allUpgrades.isEmpty()) {
-            StringBuilder upgradeLine = new StringBuilder();
-            upgradeLine.append(ChatColor.GRAY).append("Gemstone Upgrades: ");
-            
-            boolean first = true;
-            for (Map.Entry<UpgradeType, Integer> entry : allUpgrades.entrySet()) {
-                if (!first) upgradeLine.append(" ");
-                upgradeLine.append(getUpgradeSymbol(entry.getKey(), entry.getValue()));
-                first = false;
-            }
-            
-            String finalLine = upgradeLine.toString();
-            
+            List<String> lines = buildUpgradeLines(allUpgrades);
+
             if (upgradeLineIndex >= 0) {
-                // Update existing line
-                lore.set(upgradeLineIndex, finalLine);
+                lore.remove(upgradeLineIndex);
+                while (upgradeLineIndex < lore.size() && !ChatColor.stripColor(lore.get(upgradeLineIndex)).contains(":")) {
+                    lore.remove(upgradeLineIndex);
+                }
             } else {
-                // Add new line after gemstone power section
-                int insertIndex = findInsertionPoint(lore);
-                lore.add(insertIndex, finalLine);
+                upgradeLineIndex = findInsertionPoint(lore);
             }
+
+            lore.addAll(upgradeLineIndex, lines);
         } else if (upgradeLineIndex >= 0) {
-            // Remove the line if no upgrades exist
             lore.remove(upgradeLineIndex);
+            while (upgradeLineIndex < lore.size() && !ChatColor.stripColor(lore.get(upgradeLineIndex)).contains(":")) {
+                lore.remove(upgradeLineIndex);
+            }
         }
     }
     
@@ -390,22 +393,51 @@ public class GemstoneUpgradeSystem implements Listener {
     private Map<UpgradeType, Integer> getAllUpgradesFromLore(List<String> lore) {
         Map<UpgradeType, Integer> upgrades = new HashMap<>();
         
-        // Parse from "Gemstone Upgrades:" symbolic line only
+        boolean reading = false;
         for (String line : lore) {
             String stripped = ChatColor.stripColor(line);
             if (stripped.startsWith("Gemstone Upgrades:")) {
-                // Parse all upgrades from this symbolic line
+                reading = true;
+            }
+            if (reading) {
                 for (UpgradeType upgradeType : UpgradeType.values()) {
                     int level = parseUpgradeLevelFromSymbolic(line, upgradeType);
                     if (level > 0) {
                         upgrades.put(upgradeType, level);
                     }
                 }
-                break; // Only one symbolic line should exist
+                if (!stripped.startsWith("Gemstone Upgrades:") && stripped.contains(":")) {
+                    break;
+                }
             }
         }
-        
+
         return upgrades;
+    }
+
+    private List<String> buildUpgradeLines(Map<UpgradeType, Integer> upgrades) {
+        List<String> icons = new ArrayList<>();
+        for (Map.Entry<UpgradeType, Integer> e : upgrades.entrySet()) {
+            icons.add(getUpgradeSymbol(e.getKey(), e.getValue()));
+        }
+
+        List<String> lines = new ArrayList<>();
+        int idx = 0;
+        while (idx < icons.size()) {
+            int limit = lines.isEmpty() ? FIRST_LINE_LIMIT : OTHER_LINE_LIMIT;
+            StringBuilder sb = new StringBuilder();
+            if (lines.isEmpty()) {
+                sb.append(ChatColor.GRAY).append("Gemstone Upgrades: ");
+            } else {
+                sb.append(ChatColor.GRAY);
+            }
+            for (int j = 0; j < limit && idx < icons.size(); j++, idx++) {
+                if (j > 0) sb.append(" ");
+                sb.append(icons.get(idx));
+            }
+            lines.add(sb.toString());
+        }
+        return lines;
     }
     
     /**
@@ -489,11 +521,18 @@ public class GemstoneUpgradeSystem implements Listener {
         ItemMeta meta = tool.getItemMeta();
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
         
-        // Remove both symbolic upgrade line and any old UPGRADE_ lines
-        lore.removeIf(line -> {
-            String stripped = ChatColor.stripColor(line);
-            return stripped.startsWith("Gemstone Upgrades:") || stripped.startsWith("UPGRADE_");
-        });
+        // Remove symbolic upgrade lines and any old UPGRADE_ lines
+        for (int i = 0; i < lore.size(); ) {
+            String stripped = ChatColor.stripColor(lore.get(i));
+            if (stripped.startsWith("Gemstone Upgrades:") || stripped.startsWith("UPGRADE_")) {
+                lore.remove(i);
+                while (i < lore.size() && !ChatColor.stripColor(lore.get(i)).contains(":")) {
+                    lore.remove(i);
+                }
+            } else {
+                i++;
+            }
+        }
         
         meta.setLore(lore);
         tool.setItemMeta(meta);
