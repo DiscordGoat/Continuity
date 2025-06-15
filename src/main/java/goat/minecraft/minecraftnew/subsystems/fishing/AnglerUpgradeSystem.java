@@ -32,7 +32,7 @@ public class AnglerUpgradeSystem implements Listener {
         FEED("Feed", "15% chance to feed on reel-in", Material.COOKED_COD, 3, 21),
         KRAKEN("Kraken", "5% chance to reel in 2 sea creatures", Material.PRISMARINE_SHARD, 3, 22),
         BIGGER_FISH("Bigger Fish", "-10% sea creature level", Material.COD, 4, 23),
-        DIAMOND_HOOK("Diamond Hook", "Instantly kill sea creatures on reel", Material.DIAMOND, 3, 29);
+        DIAMOND_HOOK("Diamond Hook", "Instantly kill sea creatures on reel", Material.DIAMOND, 1, 29);
 
         private final String name; private final String desc; private final Material icon; private final int max; private final int slot;
         UpgradeType(String n, String d, Material i, int m, int s){this.name=n;this.desc=d;this.icon=i;this.max=m;this.slot=s;}
@@ -52,9 +52,8 @@ public class AnglerUpgradeSystem implements Listener {
         for(int i=0;i<54;i++) gui.setItem(i,createPane());
 
         int avail = calcAvailable(rod);
-        int cost =8;
 
-        setupLayout(gui, rod, cost, avail);
+        setupLayout(gui, rod, avail);
 
         gui.setItem(49,createPowerDisplay(total,getPowerCap(rod),avail));
         gui.setItem(53, createRespecButton(total, avail));
@@ -62,41 +61,42 @@ public class AnglerUpgradeSystem implements Listener {
         player.openInventory(gui);
     }
 
-    private void setupLayout(Inventory gui, ItemStack rod, int cost, int avail) {
-        // Row 1: Rewards
-        gui.setItem(0, createHeader(Material.TROPICAL_FISH, ChatColor.DARK_AQUA + "\uD83C\uDFA3 Rewards"));
+    private void setupLayout(Inventory gui, ItemStack rod, int avail) {
+        // Row 1: Catch Yields
+        gui.setItem(0, createHeader(Material.TROPICAL_FISH, ChatColor.DARK_AQUA + "\uD83C\uDFA3 Catch Yields"));
         gui.setItem(1, createColoredPane(Material.LIGHT_BLUE_STAINED_GLASS_PANE, ""));
-        gui.setItem(UpgradeType.FINDING_NEMO.getSlot(), createUpgradeItem(UpgradeType.FINDING_NEMO, rod, cost, avail));
-        gui.setItem(UpgradeType.TREASURE_HUNTER.getSlot(), createUpgradeItem(UpgradeType.TREASURE_HUNTER, rod, cost, avail));
-        gui.setItem(UpgradeType.SONAR.getSlot(), createUpgradeItem(UpgradeType.SONAR, rod, cost, avail));
-        gui.setItem(UpgradeType.CHARMED.getSlot(), createUpgradeItem(UpgradeType.CHARMED, rod, cost, avail));
+        gui.setItem(UpgradeType.FINDING_NEMO.getSlot(), createUpgradeItem(UpgradeType.FINDING_NEMO, rod, avail));
+        gui.setItem(UpgradeType.TREASURE_HUNTER.getSlot(), createUpgradeItem(UpgradeType.TREASURE_HUNTER, rod, avail));
+        gui.setItem(UpgradeType.SONAR.getSlot(), createUpgradeItem(UpgradeType.SONAR, rod, avail));
+        gui.setItem(UpgradeType.CHARMED.getSlot(), createUpgradeItem(UpgradeType.CHARMED, rod, avail));
 
-        // Row 2: Blessings
-        gui.setItem(9, createHeader(Material.RABBIT_FOOT, ChatColor.GREEN + "\uD83C\uDF40 Blessings"));
-        gui.setItem(10, createColoredPane(Material.GREEN_STAINED_GLASS_PANE, ""));
-        gui.setItem(UpgradeType.RABBITS_FOOT.getSlot(), createUpgradeItem(UpgradeType.RABBITS_FOOT, rod, cost, avail));
-        gui.setItem(UpgradeType.GOOD_DAY.getSlot(), createUpgradeItem(UpgradeType.GOOD_DAY, rod, cost, avail));
-        gui.setItem(UpgradeType.RAIN_DANCE.getSlot(), createUpgradeItem(UpgradeType.RAIN_DANCE, rod, cost, avail));
-        gui.setItem(UpgradeType.PAYOUT.getSlot(), createUpgradeItem(UpgradeType.PAYOUT, rod, cost, avail));
+        // Row 2: Utilities
+        gui.setItem(9, createHeader(Material.NETHER_STAR, ChatColor.LIGHT_PURPLE + "✦ Utilities"));
+        gui.setItem(10, createColoredPane(Material.PURPLE_STAINED_GLASS_PANE, ""));
+        gui.setItem(UpgradeType.RABBITS_FOOT.getSlot(), createUpgradeItem(UpgradeType.RABBITS_FOOT, rod, avail));
+        gui.setItem(UpgradeType.GOOD_DAY.getSlot(), createUpgradeItem(UpgradeType.GOOD_DAY, rod, avail));
+        gui.setItem(UpgradeType.RAIN_DANCE.getSlot(), createUpgradeItem(UpgradeType.RAIN_DANCE, rod, avail));
+        gui.setItem(UpgradeType.PAYOUT.getSlot(), createUpgradeItem(UpgradeType.PAYOUT, rod, avail));
 
         // Row 3: Survival
         gui.setItem(18, createHeader(Material.GOLDEN_APPLE, ChatColor.GOLD + "\u2694 Survival"));
         gui.setItem(19, createColoredPane(Material.YELLOW_STAINED_GLASS_PANE, ""));
-        gui.setItem(UpgradeType.PASSION.getSlot(), createUpgradeItem(UpgradeType.PASSION, rod, cost, avail));
-        gui.setItem(UpgradeType.FEED.getSlot(), createUpgradeItem(UpgradeType.FEED, rod, cost, avail));
-        gui.setItem(UpgradeType.KRAKEN.getSlot(), createUpgradeItem(UpgradeType.KRAKEN, rod, cost, avail));
-        gui.setItem(UpgradeType.BIGGER_FISH.getSlot(), createUpgradeItem(UpgradeType.BIGGER_FISH, rod, cost, avail));
+        gui.setItem(UpgradeType.PASSION.getSlot(), createUpgradeItem(UpgradeType.PASSION, rod, avail));
+        gui.setItem(UpgradeType.FEED.getSlot(), createUpgradeItem(UpgradeType.FEED, rod, avail));
+        gui.setItem(UpgradeType.KRAKEN.getSlot(), createUpgradeItem(UpgradeType.KRAKEN, rod, avail));
+        gui.setItem(UpgradeType.BIGGER_FISH.getSlot(), createUpgradeItem(UpgradeType.BIGGER_FISH, rod, avail));
 
         // Row 4: Special
         gui.setItem(27, createHeader(Material.DIAMOND, ChatColor.AQUA + "\u2728 Special"));
         gui.setItem(28, createColoredPane(Material.LIGHT_BLUE_STAINED_GLASS_PANE, ""));
-        gui.setItem(UpgradeType.DIAMOND_HOOK.getSlot(), createUpgradeItem(UpgradeType.DIAMOND_HOOK, rod, cost, avail));
+        gui.setItem(UpgradeType.DIAMOND_HOOK.getSlot(), createUpgradeItem(UpgradeType.DIAMOND_HOOK, rod, avail));
     }
 
-    private ItemStack createUpgradeItem(UpgradeType up, ItemStack rod, int cost, int avail){
+    private ItemStack createUpgradeItem(UpgradeType up, ItemStack rod, int avail){
         ItemStack item=new ItemStack(up.getIcon());
         ItemMeta m=item.getItemMeta();
         int lvl=getUpgradeLevel(rod,up);
+        int cost=getUpgradeCost(up);
         boolean max=lvl>=up.getMax();
         boolean can=avail>=cost;
 
@@ -169,7 +169,9 @@ public class AnglerUpgradeSystem implements Listener {
         UpgradeType clicked=null;
         for(UpgradeType u:UpgradeType.values()) if(u.getSlot()==e.getSlot()) clicked=u;
         if(clicked==null) return;
-        int avail=calcAvailable(rod); int cost=8; int lvl=getUpgradeLevel(rod,clicked);
+        int avail=calcAvailable(rod);
+        int cost=getUpgradeCost(clicked);
+        int lvl=getUpgradeLevel(rod,clicked);
         if(lvl>=clicked.getMax()){player.sendMessage(ChatColor.RED+"Upgrade maxed!");return;}
         if(avail<cost){player.sendMessage(ChatColor.RED+"Not enough angler energy!");return;}
         setUpgradeLevel(rod,clicked,lvl+1);
@@ -180,7 +182,7 @@ public class AnglerUpgradeSystem implements Listener {
     }
 
     private int getTotalEnergy(ItemStack rod){return BaitApplicationSystem.getRodAnglerEnergyStatic(rod);}
-    private int calcAvailable(ItemStack rod){int total=getTotalEnergy(rod);int spent=0;for(UpgradeType u:UpgradeType.values()){spent+=getUpgradeLevel(rod,u)*8;}return total-spent;}
+    private int calcAvailable(ItemStack rod){int total=getTotalEnergy(rod);int spent=0;for(UpgradeType u:UpgradeType.values()){spent+=getUpgradeLevel(rod,u)*getUpgradeCost(u);}return total-spent;}
     private int getPowerCap(ItemStack rod){if(!rod.hasItemMeta()||!rod.getItemMeta().hasLore()) return 100;for(String line:rod.getItemMeta().getLore()){String s=ChatColor.stripColor(line);if(s.startsWith("Power Cap: ")){String c=s.substring(10).replace("%","");try{return Integer.parseInt(c);}catch(Exception ignored){return 100;}}}return 100;}
 
     private int getUpgradeLevel(ItemStack rod, UpgradeType up){if(!rod.hasItemMeta()||!rod.getItemMeta().hasLore()) return 0;for(String line:rod.getItemMeta().getLore()){String st=ChatColor.stripColor(line);if(st.startsWith("Fishing Upgrades:")){return parseFromLine(line,up);} }return 0;}
@@ -194,6 +196,10 @@ public class AnglerUpgradeSystem implements Listener {
     private Map<UpgradeType,Integer> getAll(List<String> lore){Map<UpgradeType,Integer> m=new LinkedHashMap<>();for(String line:lore){String stripped=ChatColor.stripColor(line);if(stripped.startsWith("Fishing Upgrades:")){for(UpgradeType u:UpgradeType.values()){int lv=parseFromLine(line,u);if(lv>0)m.put(u,lv);}break;}}return m;}
 
     private int findInsert(List<String> lore){return lore.size();}
+
+    private int getUpgradeCost(UpgradeType up){
+        return up == UpgradeType.DIAMOND_HOOK ? 50 : 8;
+    }
 
     private String getSymbol(UpgradeType up,int level){String s=getPlainSymbol(up);ChatColor c=getColor(level);return c+s+getNumeral(level);} private String getPlainSymbol(UpgradeType up){return switch(up){
         case FINDING_NEMO -> "🐠";
@@ -213,7 +219,7 @@ public class AnglerUpgradeSystem implements Listener {
     private ChatColor getColor(int level){return switch(level){case 1->ChatColor.WHITE;case 2->ChatColor.GREEN;case 3->ChatColor.BLUE;case 4->ChatColor.LIGHT_PURPLE;case 5->ChatColor.GOLD;case 6->ChatColor.DARK_RED;default->ChatColor.GRAY;};}
     private String getNumeral(int level){return switch(level){case 1->"ᴵ";case 2->"ᴵᴵ";case 3->"ᴵᴵᴵ";case 4->"ᴵⱽ";case 5->"ⱽ";case 6->"ⱽᴵ";default->"";};}
 
-    private ItemStack createPowerDisplay(int total,int cap,int avail){ItemStack it=new ItemStack(Material.PRISMARINE_CRYSTALS);ItemMeta m=it.getItemMeta();m.setDisplayName(ChatColor.AQUA+"Angler Energy Status");List<String> lore=new ArrayList<>();lore.add(ChatColor.GRAY+"Total: "+ChatColor.WHITE+total+"%"+ChatColor.GRAY+" / "+ChatColor.YELLOW+cap+"%");lore.add(ChatColor.GRAY+"Available: "+ChatColor.GREEN+avail+"%"+ChatColor.GRAY+" Spent: "+ChatColor.RED+(total-avail)+"%");lore.add("");lore.add(createBar(total,cap,avail));lore.add("");lore.add(ChatColor.GRAY+"Apply bait to increase energy");lore.add(ChatColor.GRAY+"Use Pearls to raise cap");m.setLore(lore);it.setItemMeta(m);return it;}
+    private ItemStack createPowerDisplay(int total,int cap,int avail){ItemStack it=new ItemStack(Material.SEA_LANTERN);ItemMeta m=it.getItemMeta();m.setDisplayName(ChatColor.AQUA+"Angler Energy Status");List<String> lore=new ArrayList<>();lore.add(ChatColor.GRAY+"Total: "+ChatColor.WHITE+total+"%"+ChatColor.GRAY+" / "+ChatColor.YELLOW+cap+"%");lore.add(ChatColor.GRAY+"Available: "+ChatColor.GREEN+avail+"%"+ChatColor.GRAY+" Spent: "+ChatColor.RED+(total-avail)+"%");lore.add("");lore.add(createBar(total,cap,avail));lore.add("");lore.add(ChatColor.GRAY+"Apply bait to increase energy");lore.add(ChatColor.GRAY+"Use Pearls to raise cap");m.setLore(lore);it.setItemMeta(m);return it;}
 
     private String createBar(int total,int cap,int avail){int len=20+(cap-100)/100*5;int filled=(int)((double)total/cap*len);int spent=(int)((double)(total-avail)/cap*len);StringBuilder sb=new StringBuilder();sb.append(ChatColor.DARK_GRAY+"[");for(int i=0;i<spent;i++) sb.append(ChatColor.RED+"|");for(int i=spent;i<filled;i++) sb.append(ChatColor.GREEN+"|");for(int i=filled;i<len;i++) sb.append(ChatColor.GRAY+"|");sb.append(ChatColor.DARK_GRAY+"]");return sb.toString();}
 
