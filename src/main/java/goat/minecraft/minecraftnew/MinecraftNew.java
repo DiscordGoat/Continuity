@@ -402,6 +402,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("xp").setExecutor(xpManager);
         this.getCommand("loadsubsystems").setExecutor(new LoadSubsystemsCommand(this));
         this.getCommand("skills").setExecutor(new SkillsCommand(xpManager));
+        new SetSkillLevelCommand(this, xpManager);
 
         getCommand("getpet").setExecutor(new PetCommand(petManager));
         getServer().getPluginManager().registerEvents(new FishingEvent(), MinecraftNew.getInstance());
