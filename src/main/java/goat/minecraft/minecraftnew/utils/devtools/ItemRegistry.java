@@ -3416,6 +3416,157 @@ public class ItemRegistry {
                 true
         );
     }
+
+    // ===== FORESTRY ITEMS =====
+
+    // COMMON EFFIGIES (+1 Spirit Energy)
+    public static ItemStack getOakEffigy() {
+        return createCustomItem(
+                Material.OAK_WOOD,
+                ChatColor.YELLOW + "Oak Effigy",
+                Arrays.asList(
+                        ChatColor.GRAY + "A carving of lands ravaged by a horror.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+1 Spirit Energy",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond or netherite axe",
+                        ChatColor.YELLOW + "to imbue it with Spirit Energy.",
+                        ChatColor.GREEN + "Effigy"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getBirchEffigy() {
+        return createCustomItem(
+                Material.BIRCH_WOOD,
+                ChatColor.YELLOW + "Birch Effigy",
+                Arrays.asList(
+                        ChatColor.GRAY + "A carving of lands ravaged by a horror.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+1 Spirit Energy",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond or netherite axe",
+                        ChatColor.YELLOW + "to imbue it with Spirit Energy.",
+                        ChatColor.GREEN + "Effigy"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    // UNCOMMON EFFIGY (+3 Spirit Energy)
+    public static ItemStack getSpruceEffigy() {
+        return createCustomItem(
+                Material.SPRUCE_WOOD,
+                ChatColor.AQUA + "Spruce Effigy",
+                Arrays.asList(
+                        ChatColor.GRAY + "Legends whisper of the beast's rise.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+3 Spirit Energy",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond or netherite axe",
+                        ChatColor.YELLOW + "to imbue it with Spirit Energy.",
+                        ChatColor.GREEN + "Effigy"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    // RARE EFFIGY (+7 Spirit Energy)
+    public static ItemStack getAcaciaEffigy() {
+        return createCustomItem(
+                Material.ACACIA_WOOD,
+                ChatColor.LIGHT_PURPLE + "Acacia Effigy",
+                Arrays.asList(
+                        ChatColor.GRAY + "Spirits plotted to banish the horror.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+7 Spirit Energy",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond or netherite axe",
+                        ChatColor.YELLOW + "to imbue it with Spirit Energy.",
+                        ChatColor.GREEN + "Effigy"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    // EPIC EFFIGY (+10 Spirit Energy)
+    public static ItemStack getDarkOakEffigy() {
+        return createCustomItem(
+                Material.DARK_OAK_WOOD,
+                ChatColor.DARK_PURPLE + "Dark Oak Effigy",
+                Arrays.asList(
+                        ChatColor.GRAY + "Forests drowned as waters overflowed.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+10 Spirit Energy",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond or netherite axe",
+                        ChatColor.YELLOW + "to imbue it with Spirit Energy.",
+                        ChatColor.GREEN + "Effigy"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    // LEGENDARY EFFIGIES (+20 Spirit Energy)
+    public static ItemStack getCrimsonEffigy() {
+        return createCustomItem(
+                Material.CRIMSON_HYPHAE,
+                ChatColor.GOLD + "Crimson Effigy",
+                Arrays.asList(
+                        ChatColor.GRAY + "The Insanity was exiled; its name carved in fear.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+20 Spirit Energy",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond or netherite axe",
+                        ChatColor.YELLOW + "to imbue it with Spirit Energy.",
+                        ChatColor.GREEN + "Effigy"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getWarpedEffigy() {
+        return createCustomItem(
+                Material.WARPED_HYPHAE,
+                ChatColor.GOLD + "Warped Effigy",
+                Arrays.asList(
+                        ChatColor.GRAY + "The Insanity was exiled; its name carved in fear.",
+                        ChatColor.BLUE + "Energy: " + ChatColor.WHITE + "+20 Spirit Energy",
+                        "",
+                        ChatColor.YELLOW + "Click onto a diamond or netherite axe",
+                        ChatColor.YELLOW + "to imbue it with Spirit Energy.",
+                        ChatColor.GREEN + "Effigy"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getEntBark() {
+        return createCustomItem(
+                Material.STRIPPED_OAK_WOOD,
+                ChatColor.LIGHT_PURPLE + "Ent Bark",
+                Arrays.asList(
+                        ChatColor.GRAY + "A mystical bark that expands Spirit Energy capacity.",
+                        "",
+                        ChatColor.YELLOW + "Effect: " + ChatColor.WHITE + "+100% Spirit Cap",
+                        ChatColor.YELLOW + "Maximum: " + ChatColor.WHITE + "500% Total Cap",
+                        "",
+                        ChatColor.DARK_PURPLE + "Drag onto diamond or netherite axes to apply"
+                ),
+                1,
+                false,
+                true
+        );
+    }
     
     // ===== GEMSTONE UTILITY METHODS =====
     
