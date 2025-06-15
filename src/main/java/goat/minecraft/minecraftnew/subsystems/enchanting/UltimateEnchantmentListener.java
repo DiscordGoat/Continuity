@@ -45,6 +45,9 @@ public class UltimateEnchantmentListener implements Listener {
 
     // Removed activateTreecapitator(...) and activateHammer(...)
     private static Map<UUID, LoyalSwordData> loyalSwordDataMap = new HashMap<>();
+    // Track available shred swords per player
+    private static final int MAX_SHRED_SWORDS = 30;
+    private final Map<UUID, Integer> shredCharges = new HashMap<>();
     // Removed Leviathan ultimate enchantment
 
     private static class LoyalSwordData {
@@ -564,7 +567,10 @@ public class UltimateEnchantmentListener implements Listener {
     }
 
 
-    private void activateShred(Player player, ItemStack sword){
+    private boolean activateShred(Player player, ItemStack sword){
+        if(!consumeShredCharge(player)) {
+            return false;
+        }
         if(sword.getType().getMaxDurability() > 0){
             // Shred only costs 5 durability on activation
             short dmg = (short)(sword.getDurability() + 2);
@@ -580,6 +586,7 @@ public class UltimateEnchantmentListener implements Listener {
             s.setItemInHand(sword.clone());
         });
         Vector dir = player.getLocation().getDirection().normalize();
+        Set<UUID> hit = new HashSet<>();
         new BukkitRunnable(){
             int tick=0;
             double spin=0;
@@ -593,6 +600,7 @@ public class UltimateEnchantmentListener implements Listener {
                 for(Entity e : stand.getNearbyEntities(0.5,0.5,0.5)){
                     if(e instanceof LivingEntity && e!=player){
                         LivingEntity le=(LivingEntity)e;
+                        if(hit.contains(le.getUniqueId())) continue;
                         XPManager xp = new XPManager(plugin);
                         int combat = xp.getPlayerLevel(player, "Combat");
                         // Deal damage and immediately reset the entity's no damage
@@ -605,6 +613,7 @@ public class UltimateEnchantmentListener implements Listener {
                         if(sword.getType().getMaxDurability()>0 && sword.getDurability()>0){
                             sword.setDurability((short)(sword.getDurability()-1));
                         }
+                        hit.add(le.getUniqueId());
                     }
                 }
                 if(++tick>=20){
@@ -613,6 +622,7 @@ public class UltimateEnchantmentListener implements Listener {
                 }
             }
         }.runTaskTimer(plugin,0L,1L);
+        return true;
     }
 
     @EventHandler
@@ -689,8 +699,11 @@ public class UltimateEnchantmentListener implements Listener {
                     }
                     break;
                 case "shred":
-                    activateShred(player, item);
-                    cooldownMs = 100L;
+                    if (activateShred(player, item)) {
+                        cooldownMs = 100L;
+                    } else {
+                        cooldownMs = 1L;
+                    }
                     break;
                 // Hammer/Treecapitator removed. No cooldown for them.
                 case "excavate":
@@ -852,6 +865,30 @@ public class UltimateEnchantmentListener implements Listener {
         ultimateCooldowns.putIfAbsent(playerUUID, new HashMap<>());
         long nextUseTime = System.currentTimeMillis() + cooldownMs;
         ultimateCooldowns.get(playerUUID).put(ultimateName.toLowerCase(), nextUseTime);
+    }
+
+    private int getShredCharges(UUID player) {
+        return shredCharges.getOrDefault(player, MAX_SHRED_SWORDS);
+    }
+
+    private boolean consumeShredCharge(Player player) {
+        UUID id = player.getUniqueId();
+        int charges = shredCharges.getOrDefault(id, MAX_SHRED_SWORDS);
+        if (charges <= 0) {
+            return false;
+        }
+        shredCharges.put(id, charges - 1);
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                int current = shredCharges.getOrDefault(id, 0);
+                if (current < MAX_SHRED_SWORDS) {
+                    shredCharges.put(id, current + 1);
+                    player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 0.3f, 2f);
+                }
+            }
+        }.runTaskLater(plugin, 20L * 30);
+        return true;
     }
     private void loadCooldowns() {
         FileConfiguration config = plugin.getConfig();
