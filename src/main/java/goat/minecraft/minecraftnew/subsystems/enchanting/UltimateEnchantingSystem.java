@@ -3,6 +3,8 @@ package goat.minecraft.minecraftnew.subsystems.enchanting;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem;
+import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -163,6 +165,11 @@ public class UltimateEnchantingSystem implements Listener {
             inv.setItem(53, createGemstoneUpgradeButton(heldItem)); // Top-right corner
         }
 
+        // Add Effigy Upgrade button for spirit-energy axes
+        if (isEffigyAxe(heldItem.getType())) {
+            inv.setItem(52, createEffigyUpgradeButton(heldItem));
+        }
+
         // ----------------------------
         // Add the Upgrade Segment (slots 47–51)
         // ----------------------------
@@ -272,6 +279,29 @@ public class UltimateEnchantingSystem implements Listener {
     }
 
     /**
+     * Creates an effigy upgrade button for Spirit Energy axes.
+     */
+    private ItemStack createEffigyUpgradeButton(ItemStack axe) {
+        ItemStack button = new ItemStack(Material.SOUL_TORCH);
+        ItemMeta meta = button.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.AQUA + "Effigy Upgrades");
+            List<String> lore = new ArrayList<>();
+            int energy = EffigyApplicationSystem.getAxeSpiritEnergy(axe);
+            if (energy > 0) {
+                lore.add(ChatColor.GRAY + "Spirit Energy: " + ChatColor.WHITE + energy + "%");
+                lore.add(ChatColor.YELLOW + "Click to open upgrade tree!");
+            } else {
+                lore.add(ChatColor.RED + "No Spirit Energy detected.");
+                lore.add(ChatColor.GRAY + "Apply effigies to this axe first.");
+            }
+            meta.setLore(lore);
+            button.setItemMeta(meta);
+        }
+        return button;
+    }
+
+    /**
      * Checks if the item is a diamond tool.
      */
     private boolean isDiamondTool(Material material) {
@@ -279,6 +309,13 @@ public class UltimateEnchantingSystem implements Listener {
          material == Material.NETHERITE_PICKAXE ||
                material == Material.DIAMOND_SHOVEL || material == Material.DIAMOND_HOE ||
                material == Material.DIAMOND_SWORD;
+    }
+
+    /**
+     * Returns true if the material is a diamond or netherite axe.
+     */
+    private boolean isEffigyAxe(Material material) {
+        return material == Material.DIAMOND_AXE || material == Material.NETHERITE_AXE;
     }
 
     /**
@@ -391,9 +428,19 @@ public class UltimateEnchantingSystem implements Listener {
         if (event.getSlot() == 53 && clickedItem.getType() == Material.EMERALD) {
             if (isDiamondTool(handItem.getType())) {
                 // Get the gemstone upgrade system and open the upgrade GUI
-                goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem upgradeSystem = 
-                    new goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem(MinecraftNew.getInstance());
+                goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem upgradeSystem =
+                        new goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem(MinecraftNew.getInstance());
                 upgradeSystem.openUpgradeGUIFromExternal(player, handItem);
+                return;
+            }
+        }
+
+        // Handle Effigy Upgrade Button Click (slot 52)
+        if (event.getSlot() == 52 && clickedItem.getType() == Material.SOUL_TORCH) {
+            if (isEffigyAxe(handItem.getType()) && EffigyApplicationSystem.getAxeSpiritEnergy(handItem) > 0) {
+                EffigyUpgradeSystem effigyUpgradeSystem =
+                        new EffigyUpgradeSystem(MinecraftNew.getInstance());
+                effigyUpgradeSystem.openUpgradeGUI(player, handItem);
                 return;
             }
         }
