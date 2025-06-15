@@ -331,11 +331,25 @@ public class EffigyUpgradeSystem implements Listener {
                 sb.append(getColoredSymbol(e.getKey(), e.getValue()));
                 first = false;
             }
-            if (lineIndex < 0) lineIndex = lore.size();
+            if (lineIndex < 0) lineIndex = findUpgradeInsertIndex(lore);
             lore.add(lineIndex, sb.toString());
         }
         meta.setLore(lore);
         axe.setItemMeta(meta);
+    }
+
+    /**
+     * Finds the index immediately after the Spirit Cap line to insert upgrades.
+     * If no cap line exists, appends to the end.
+     */
+    private int findUpgradeInsertIndex(List<String> lore) {
+        for (int i = 0; i < lore.size(); i++) {
+            String stripped = ChatColor.stripColor(lore.get(i));
+            if (stripped.startsWith("Spirit Cap:")) {
+                return i + 1;
+            }
+        }
+        return lore.size();
     }
 
     private void clearAllUpgrades(ItemStack axe) {
