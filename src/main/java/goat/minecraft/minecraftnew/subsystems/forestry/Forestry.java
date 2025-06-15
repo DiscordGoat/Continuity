@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -36,6 +37,8 @@ public class Forestry implements Listener {
     private final XPManager xpManager;
     private final Random random = new Random();
 
+    private static EffigyUpgradeSystem upgradeSystemInstance;
+
     // Notoriety map tracks each player's current forestry notoriety.
     private Map<UUID, Integer> notorietyMap = new HashMap<>();
 
@@ -60,6 +63,14 @@ public class Forestry implements Listener {
         this.plugin = plugin;
         this.xpManager = new XPManager(plugin);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    public static void setUpgradeSystemInstance(EffigyUpgradeSystem upgradeSystem) {
+        upgradeSystemInstance = upgradeSystem;
+    }
+
+    public static EffigyUpgradeSystem getUpgradeSystemInstance() {
+        return upgradeSystemInstance;
     }
 
     /**
@@ -253,6 +264,14 @@ public class Forestry implements Listener {
         return notorietyMap.getOrDefault(player.getUniqueId(), 0);
     }
 
+    public void decrementNotoriety(Player player, int amount) {
+        UUID uuid = player.getUniqueId();
+        int current = notorietyMap.getOrDefault(uuid, 0);
+        int newVal = Math.max(current - amount, 0);
+        notorietyMap.put(uuid, newVal);
+        saveNotoriety(player);
+    }
+
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Block block = event.getBlock();
@@ -287,10 +306,61 @@ public class Forestry implements Listener {
             // Increment notoriety.
             incrementNotoriety(player);
 
+            ItemStack axe = player.getInventory().getItemInMainHand();
+            boolean eligibleAxe = axe != null && (axe.getType() == Material.DIAMOND_AXE || axe.getType() == Material.NETHERITE_AXE);
+
             // Calculate spirit chance.
             double spiritChance = 0.0;
             int playerForestryLevel = xpManager.getPlayerLevel(player, "Forestry");
             spiritChance += playerForestryLevel * 0.0005; // 0.05% per level, up to 5% base spirit chance.
+
+            int effigyYield = 0;
+            int xpBoost = 0;
+            int fakeNews = 0;
+            int feedLevel = 0;
+            int payoutLevel = 0;
+            int orchard = 0;
+            int golden = 0;
+            int trespasser = 0;
+            if (eligibleAxe && upgradeSystemInstance != null) {
+                effigyYield = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
+                xpBoost = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.FORESTRY_XP);
+                fakeNews = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.FAKE_NEWS);
+                feedLevel = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.FEED);
+                payoutLevel = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.PAYOUT);
+                orchard = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ORCHARD);
+                golden = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.GOLDEN_APPLE);
+                trespasser = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.TRESPASSER);
+
+                // Yield upgrades per wood type
+                if (blockType == Material.OAK_LOG || blockType == Material.STRIPPED_OAK_LOG) {
+                    int lvl = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.OAK_YIELD);
+                    if (lvl > 0) block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(blockType, lvl));
+                } else if (blockType == Material.SPRUCE_LOG || blockType == Material.STRIPPED_SPRUCE_LOG) {
+                    int lvl = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.SPRUCE_YIELD);
+                    if (lvl > 0) block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(blockType, lvl));
+                } else if (blockType == Material.BIRCH_LOG || blockType == Material.STRIPPED_BIRCH_LOG) {
+                    int lvl = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.BIRCH_YIELD);
+                    if (lvl > 0) block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(blockType, lvl));
+                } else if (blockType == Material.JUNGLE_LOG || blockType == Material.STRIPPED_JUNGLE_LOG) {
+                    int lvl = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.JUNGLE_YIELD);
+                    if (lvl > 0) block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(blockType, lvl));
+                } else if (blockType == Material.ACACIA_LOG || blockType == Material.STRIPPED_ACACIA_LOG) {
+                    int lvl = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ACACIA_YIELD);
+                    if (lvl > 0) block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(blockType, lvl));
+                } else if (blockType == Material.DARK_OAK_LOG || blockType == Material.STRIPPED_DARK_OAK_LOG) {
+                    int lvl = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.DARK_OAK_YIELD);
+                    if (lvl > 0) block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(blockType, lvl));
+                } else if (blockType == Material.CRIMSON_STEM || blockType == Material.STRIPPED_CRIMSON_STEM) {
+                    int lvl = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.CRIMSON_YIELD);
+                    if (lvl > 0) block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(blockType, lvl));
+                } else if (blockType == Material.WARPED_STEM || blockType == Material.STRIPPED_WARPED_STEM) {
+                    int lvl = upgradeSystemInstance.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.WARPED_YIELD);
+                    if (lvl > 0) block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(blockType, lvl));
+                }
+            }
+
+            spiritChance += effigyYield * 0.005;
 
             // Increment forestry count.
             forestryPetManager.incrementForestryCount(player);
@@ -321,11 +391,36 @@ public class Forestry implements Listener {
             // Award XP based on log type.
             int xpAmount = NETHER_LOG_MATERIALS.contains(blockType) ? 10 : 5;
             xpManager.addXP(player, "Forestry", xpAmount);
+            if (xpBoost > 0) {
+                xpManager.addXP(player, "Forestry", xpBoost * 5);
+            }
+
+            if (fakeNews > 0) {
+                decrementNotoriety(player, fakeNews);
+            }
+
+            for (int i = 0; i < trespasser * 3; i++) {
+                incrementNotoriety(player);
+            }
+
+            if (feedLevel > 0 && random.nextDouble() * 100 < feedLevel * 5.0) {
+                player.setFoodLevel(20);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 0, false));
+                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BURP, 1.0f, 1.0f);
+            }
+
+            if (payoutLevel > 0 && random.nextDouble() * 100 < payoutLevel * 2.0) {
+                if (removeLogStack(player)) {
+                    ItemStack emeralds = new ItemStack(Material.EMERALD, 8);
+                    player.getInventory().addItem(emeralds);
+                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.5f);
+                }
+            }
 
             // Process double drop chance.
             processDoubleDropChance(player, block, forestryLevel);
-            // Process perfect apple drop chance.
-            processPerfectAppleChance(player, block, forestryLevel);
+            processPerfectAppleChance(player, block, forestryLevel, orchard);
+            processGoldenAppleChance(player, block, golden);
 
             // (Additional spirit spawning logic could be added here.)
             ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(plugin);
@@ -361,8 +456,8 @@ public class Forestry implements Listener {
      * @param block The log block that was broken.
      * @param forestryLevel The player's forestry level.
      */
-    public void processPerfectAppleChance(Player player, Block block, int forestryLevel) {
-        double chance = forestryLevel * 0.01;
+    public void processPerfectAppleChance(Player player, Block block, int forestryLevel, int orchardLevel) {
+        double chance = forestryLevel * 0.01 + orchardLevel * 5.0;
         if (random.nextDouble() * 100 < chance) {
             final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
             new BukkitRunnable() {
@@ -375,5 +470,36 @@ public class Forestry implements Listener {
                 }
             }.runTaskLater(plugin, 1L);
         }
+    }
+
+    public void processGoldenAppleChance(Player player, Block block, int level) {
+        double chance = level * 0.5;
+        if (level > 0 && random.nextDouble() * 100 < chance) {
+            final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    ItemStack ga = new ItemStack(Material.ENCHANTED_GOLDEN_APPLE);
+                    dropLocation.getWorld().dropItemNaturally(dropLocation, ga);
+                    dropLocation.getWorld().playSound(dropLocation, Sound.ENTITY_PLAYER_LEVELUP, 0.5f, 1.5f);
+                }
+            }.runTaskLater(plugin, 1L);
+        }
+    }
+
+    private boolean removeLogStack(Player player) {
+        ItemStack[] contents = player.getInventory().getContents();
+        for (int i = 0; i < contents.length; i++) {
+            ItemStack item = contents[i];
+            if (item != null && LOG_MATERIALS.contains(item.getType()) && item.getAmount() >= 64) {
+                if (item.getAmount() == 64) {
+                    player.getInventory().setItem(i, null);
+                } else {
+                    item.setAmount(item.getAmount() - 64);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 }
