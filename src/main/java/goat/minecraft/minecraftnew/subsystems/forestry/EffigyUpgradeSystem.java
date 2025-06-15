@@ -412,7 +412,8 @@ public class EffigyUpgradeSystem implements Listener {
 
     private String getColoredSymbol(UpgradeType t, int level) {
         ChatColor color = ChatColor.WHITE;
-        if (level >= 5) color = ChatColor.GOLD;
+        if (level >= 6) color = ChatColor.DARK_RED;
+        else if (level >= 5) color = ChatColor.GOLD;
         else if (level >= 4) color = ChatColor.LIGHT_PURPLE;
         else if (level >= 3) color = ChatColor.AQUA;
         else if (level >= 2) color = ChatColor.GREEN;
