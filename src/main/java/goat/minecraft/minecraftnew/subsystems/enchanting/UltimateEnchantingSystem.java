@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
+import goat.minecraft.minecraftnew.subsystems.fishing.BaitApplicationSystem;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -170,6 +171,12 @@ public class UltimateEnchantingSystem implements Listener {
             inv.setItem(52, createEffigyUpgradeButton(heldItem));
         }
 
+        // Add Angler Upgrade button for fishing rods with energy
+        if (heldItem.getType() == Material.FISHING_ROD &&
+                BaitApplicationSystem.getRodAnglerEnergyStatic(heldItem) > 0) {
+            inv.setItem(51, createAnglerUpgradeButton(heldItem));
+        }
+
         // ----------------------------
         // Add the Upgrade Segment (slots 47–51)
         // ----------------------------
@@ -272,6 +279,24 @@ public class UltimateEnchantingSystem implements Listener {
                 lore.add(ChatColor.GRAY + "Apply gemstones to this tool first.");
             }
             
+            meta.setLore(lore);
+            button.setItemMeta(meta);
+        }
+        return button;
+    }
+
+    /**
+     * Creates an angler upgrade button for fishing rods.
+     */
+    private ItemStack createAnglerUpgradeButton(ItemStack rod) {
+        ItemStack button = new ItemStack(Material.PRISMARINE_CRYSTALS);
+        ItemMeta meta = button.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.AQUA + "Angler Upgrades");
+            List<String> lore = new ArrayList<>();
+            int energy = BaitApplicationSystem.getRodAnglerEnergyStatic(rod);
+            lore.add(ChatColor.GRAY + "Angler Energy: " + ChatColor.WHITE + energy + "%");
+            lore.add(ChatColor.YELLOW + "Click to open upgrade tree!");
             meta.setLore(lore);
             button.setItemMeta(meta);
         }
@@ -441,6 +466,17 @@ public class UltimateEnchantingSystem implements Listener {
                 EffigyUpgradeSystem effigyUpgradeSystem =
                         new EffigyUpgradeSystem(MinecraftNew.getInstance());
                 effigyUpgradeSystem.openUpgradeGUI(player, handItem);
+                return;
+            }
+        }
+
+        // Handle Angler Upgrade Button Click (slot 51)
+        if (event.getSlot() == 51 && clickedItem.getType() == Material.PRISMARINE_CRYSTALS) {
+            if (handItem.getType() == Material.FISHING_ROD &&
+                    BaitApplicationSystem.getRodAnglerEnergyStatic(handItem) > 0) {
+                goat.minecraft.minecraftnew.subsystems.fishing.AnglerUpgradeSystem upgradeSystem =
+                        new goat.minecraft.minecraftnew.subsystems.fishing.AnglerUpgradeSystem(MinecraftNew.getInstance());
+                upgradeSystem.openUpgradeGUI(player, handItem);
                 return;
             }
         }
