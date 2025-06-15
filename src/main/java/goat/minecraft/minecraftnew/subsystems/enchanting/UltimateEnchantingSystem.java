@@ -174,7 +174,7 @@ public class UltimateEnchantingSystem implements Listener {
         // Add Angler Upgrade button for fishing rods with energy
         if (heldItem.getType() == Material.FISHING_ROD &&
                 BaitApplicationSystem.getRodAnglerEnergyStatic(heldItem) > 0) {
-            inv.setItem(51, createAnglerUpgradeButton(heldItem));
+            inv.setItem(53, createAnglerUpgradeButton(heldItem));
         }
 
         // ----------------------------
@@ -470,13 +470,13 @@ public class UltimateEnchantingSystem implements Listener {
             }
         }
 
-        // Handle Angler Upgrade Button Click (slot 51)
-        if (event.getSlot() == 51 && clickedItem.getType() == Material.PRISMARINE_CRYSTALS) {
+        // Handle Angler Upgrade Button Click (slot 53)
+        if (event.getSlot() == 53 && clickedItem.getType() == Material.PRISMARINE_CRYSTALS) {
             if (handItem.getType() == Material.FISHING_ROD &&
                     BaitApplicationSystem.getRodAnglerEnergyStatic(handItem) > 0) {
                 goat.minecraft.minecraftnew.subsystems.fishing.AnglerUpgradeSystem upgradeSystem =
                         new goat.minecraft.minecraftnew.subsystems.fishing.AnglerUpgradeSystem(MinecraftNew.getInstance());
-                upgradeSystem.openUpgradeGUI(player, handItem);
+                upgradeSystem.openUpgradeGUIFromExternal(player, handItem);
                 return;
             }
         }
