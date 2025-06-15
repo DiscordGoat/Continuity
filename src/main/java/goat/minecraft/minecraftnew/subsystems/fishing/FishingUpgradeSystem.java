@@ -333,7 +333,9 @@ public class FishingUpgradeSystem implements Listener {
     }
 
     private String createBar(int total, int cap, int available) {
-        int len = 20 + (cap - 100) / 20;
+        // Match the scaling used by the gemstone upgrade system
+        int extraSegments = (cap - 100) / 100; // +5 bars for each 100% above the base
+        int len = 20 + extraSegments * 5;
         int filled = (int)((double)total / cap * len);
         int spent = (int)((double)(total - available) / cap * len);
         StringBuilder b = new StringBuilder(ChatColor.DARK_GRAY + "[");
