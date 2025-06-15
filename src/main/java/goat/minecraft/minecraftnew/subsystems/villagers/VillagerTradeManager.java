@@ -550,6 +550,7 @@ public class VillagerTradeManager implements Listener {
         fishermanSells.add(createTradeMap("ANAKLUSMOS", 1, 12, 2)); // Material
         fishermanSells.add(createTradeMap("SWIM_TRUNKS", 1, 12, 2)); // Material
         fishermanSells.add(createTradeMap("HOWL", 1, 32, 2)); // Material
+        fishermanSells.add(createTradeMap("PEARL_OF_THE_DEEP", 1, 64, 4)); // Custom Item
 
         defaultConfig.set("FISHERMAN.sells", fishermanSells);
 // Butcher Purchases
@@ -736,6 +737,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getAbyssalInk();
             case "ABYSSAL_VENOM":
                 return ItemRegistry.getAbyssalVenom();
+            case "PEARL_OF_THE_DEEP":
+                return ItemRegistry.getPearlOfTheDeep();
             case "FISHER_ENCHANT":
                 return ItemRegistry.getFisherEnchant();
             case "FISHING_ENCHANT":

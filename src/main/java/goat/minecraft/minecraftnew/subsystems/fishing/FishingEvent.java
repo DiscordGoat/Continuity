@@ -150,6 +150,16 @@ public class FishingEvent implements Listener {
         } else {
             // Proceed with regular fish catch
             awardRegularFish(player, fishingLevel);
+            if (random.nextDouble() <= 0.04) {
+                ItemStack bait = ItemRegistry.getBait();
+                int amount = 1;
+                if (playerMeritManager.hasPerk(player.getUniqueId(), "Double Bait") && random.nextDouble() < 0.5) {
+                    amount = 2;
+                }
+                bait.setAmount(amount);
+                player.getInventory().addItem(bait);
+                player.sendMessage(ChatColor.AQUA + "You fished up some bait!");
+            }
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
                     //String.format("%.2f", damageMultiplier)
                     new TextComponent(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%")

@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -439,7 +440,14 @@ public class ForestSpiritManager implements Listener {
                 );
                 effigy = list.get(new Random().nextInt(list.size()));
             }
-            event.getDrops().add(effigy);
+            int amount = 1;
+            PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
+            if (merit.hasPerk(killer.getUniqueId(), "Double Effigies") && new Random().nextDouble() < 0.5) {
+                amount = 2;
+            }
+            for (int i = 0; i < amount; i++) {
+                event.getDrops().add(effigy.clone());
+            }
         }
 
         // Bonus drop: Jackhammer if the killer's notoriety is low
