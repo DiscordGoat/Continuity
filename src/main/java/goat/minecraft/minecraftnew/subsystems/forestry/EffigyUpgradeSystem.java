@@ -34,7 +34,7 @@ public class EffigyUpgradeSystem implements Listener {
         ACACIA_YIELD("Acacia Yield", "Bonus drops from acacia logs", Material.ACACIA_LOG, 5, 6),
         DARK_OAK_YIELD("Dark Oak Yield", "Bonus drops from dark oak logs", Material.DARK_OAK_LOG, 5, 7),
         CRIMSON_YIELD("Crimson Yield", "Bonus drops from crimson stems", Material.CRIMSON_STEM, 5, 8),
-        WARPED_YIELD("Warped Yield", "Bonus drops from warped stems", Material.WARPED_STEM, 5, 9),
+        WARPED_YIELD("Warped Yield", "Bonus drops from warped stems", Material.WARPED_STEM, 5, 11),
 
         EFFIGY_YIELD("Effigy Yield", "+0.5% spirit chance per level", Material.TOTEM_OF_UNDYING, 6, 20),
         FORESTRY_XP("Forestry XP Boost", "More forestry XP", Material.EXPERIENCE_BOTTLE, 3, 21),
@@ -118,6 +118,28 @@ public class EffigyUpgradeSystem implements Listener {
 
         gui.setItem(49, createEnergyDisplay(totalEnergy, getEnergyCap(axe), available));
 
+        // Add respec button similar to Gemstone upgrade GUI
+        ItemStack respecItem = new ItemStack(Material.BARRIER);
+        ItemMeta respecMeta = respecItem.getItemMeta();
+        respecMeta.setDisplayName(ChatColor.RED + "⚠ Reset Upgrades");
+
+        int spentEnergy = totalEnergy - available;
+        List<String> respecLore = new ArrayList<>();
+        respecLore.add(ChatColor.GRAY + "Damages tool by " + ChatColor.RED + "20% durability");
+        respecLore.add(ChatColor.GRAY + "Returns all allocated energy");
+        respecLore.add("");
+
+        if (spentEnergy > 0) {
+            respecLore.add(ChatColor.GRAY + "Will refund: " + ChatColor.GREEN + spentEnergy + "% energy");
+            respecLore.add(ChatColor.YELLOW + "Shift+Right-click to confirm");
+        } else {
+            respecLore.add(ChatColor.DARK_GRAY + "No upgrades to reset");
+        }
+
+        respecMeta.setLore(respecLore);
+        respecItem.setItemMeta(respecMeta);
+        gui.setItem(53, respecItem);
+
         player.openInventory(gui);
     }
 
@@ -170,11 +192,15 @@ public class EffigyUpgradeSystem implements Listener {
         ItemStack axe = player.getInventory().getItemInMainHand();
         if (axe == null || !(axe.getType().name().endsWith("AXE"))) return;
 
-        // Handle clicks
+        // Handle respec via dedicated button
+        if (event.getSlot() == 53 && event.isShiftClick() && event.isRightClick()) {
+            handleRespec(player, axe);
+            return;
+        }
+
+        // Legacy respec via energy display
         if (event.getSlot() == 49 && event.isShiftClick() && event.isRightClick()) {
-            clearAllUpgrades(axe);
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 1);
-            player.closeInventory();
+            handleRespec(player, axe);
             return;
         }
 
@@ -202,6 +228,26 @@ public class EffigyUpgradeSystem implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
         player.closeInventory();
         openUpgradeGUI(player, axe);
+    }
+
+    private void handleRespec(Player player, ItemStack axe) {
+        int currentDurability = axe.getDurability();
+        int maxDurability = axe.getType().getMaxDurability();
+        int damageToAdd = (int) Math.ceil(maxDurability * 0.2); // 20% durability damage
+
+        if (currentDurability + damageToAdd >= maxDurability) {
+            player.sendMessage(ChatColor.RED + "Tool would break from respec damage! Repair it first.");
+            return;
+        }
+
+        clearAllUpgrades(axe);
+        axe.setDurability((short) (currentDurability + damageToAdd));
+
+        player.sendMessage(ChatColor.YELLOW + "Tool respecced! All upgrades reset.");
+        player.sendMessage(ChatColor.RED + "Tool took " + damageToAdd + " durability damage.");
+        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
+
+        player.closeInventory();
     }
 
     private int getTotalEnergy(ItemStack axe) {
