@@ -948,14 +948,10 @@ public class UltimateEnchantmentListener implements Listener {
         UUID id = player.getUniqueId();
         int current = shredCharges.getOrDefault(id, MAX_SHRED_SWORDS);
         if (current >= MAX_SHRED_SWORDS) {
-            player.sendMessage(ChatColor.GREEN + "Your Shredders are at maximum capacity!");
             return;
         }
         int newTotal = Math.min(MAX_SHRED_SWORDS, current + amount);
         shredCharges.put(id, newTotal);
-        if (newTotal == MAX_SHRED_SWORDS) {
-            player.sendMessage(ChatColor.GREEN + "Your Shredders are at maximum capacity!");
-        }
     }
     private void loadCooldowns() {
         FileConfiguration config = plugin.getConfig();
