@@ -109,7 +109,7 @@ public class FishingUpgradeSystem implements Listener {
         gui.setItem(UpgradeType.PASSION.getSlot(), createUpgradeItem(UpgradeType.PASSION, rod, getUpgradeCost(UpgradeType.PASSION), available));
         gui.setItem(UpgradeType.FEED.getSlot(), createUpgradeItem(UpgradeType.FEED, rod, getUpgradeCost(UpgradeType.FEED), available));
 
-        gui.setItem(49, createEnergyDisplay(totalEnergy, getEnergyCap(rod), available));
+        gui.setItem(49, createExtendedPowerDisplay(totalEnergy, getEnergyCap(rod), available));
 
         ItemStack respec = new ItemStack(Material.BARRIER);
         ItemMeta rMeta = respec.getItemMeta();
@@ -349,18 +349,68 @@ public class FishingUpgradeSystem implements Listener {
         return item;
     }
 
+    /**
+     * Creates an extended energy display supporting caps beyond 100%.
+     * Mirrors the implementation used in the gemstone upgrade system.
+     */
+    private ItemStack createExtendedPowerDisplay(int total, int cap, int available) {
+        ItemStack item = new ItemStack(Material.PRISMARINE_CRYSTALS);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(ChatColor.AQUA + "Angler Energy");
+
+        int baseBarLength = 20;
+        int extraSegments = (cap - 100) / 100; // each +100% adds 5 bars
+        int totalBarLength = baseBarLength + extraSegments * 5;
+
+        int filled = (int) ((double) total / cap * totalBarLength);
+        int spent = (int) ((double) (total - available) / cap * totalBarLength);
+
+        StringBuilder bar = new StringBuilder();
+        bar.append(ChatColor.DARK_GRAY + "[");
+        for (int i = 0; i < spent; i++) bar.append(ChatColor.RED + "|");
+        for (int i = spent; i < filled; i++) bar.append(ChatColor.GREEN + "|");
+        for (int i = filled; i < totalBarLength; i++) bar.append(ChatColor.GRAY + "|");
+        bar.append(ChatColor.DARK_GRAY + "]");
+
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Total Energy: " + ChatColor.WHITE + total + "%" +
+                ChatColor.GRAY + " / " + ChatColor.YELLOW + cap + "%");
+        lore.add(ChatColor.GRAY + "Available: " + ChatColor.GREEN + available + "% " +
+                ChatColor.GRAY + "Spent: " + ChatColor.RED + (total - available) + "%");
+        lore.add("");
+        lore.add(bar.toString());
+        lore.add("");
+
+        if (cap > 100) {
+            lore.add(ChatColor.AQUA + "Enhanced Power Cap: " + ChatColor.YELLOW + cap + "%");
+            lore.add(ChatColor.GRAY + "Apply " + ChatColor.LIGHT_PURPLE + "Pearls of the Deep" +
+                    ChatColor.GRAY + " to increase cap");
+        } else {
+            lore.add(ChatColor.GRAY + "Apply " + ChatColor.LIGHT_PURPLE + "Pearls of the Deep" +
+                    ChatColor.GRAY + " to increase cap beyond 100%");
+        }
+        lore.add(ChatColor.GRAY + "Apply bait to increase current energy");
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+        return item;
+    }
+
     private String createBar(int total, int cap, int available) {
-        // Scale bar length similarly to the effigy and gemstone GUIs
-        int extraSegments = (cap - 100) / 20;
-        int len = 20 + extraSegments;
-        int filled = (int)((double)total / cap * len);
+        // Use the same bar scaling logic as the gemstone upgrade GUI
+        int base = 20;
+        int extraSegments = (cap - 100) / 100; // each +100% adds 5 bars
+        int len = base + extraSegments * 5;
+
+        int filled = (int)((double) total / cap * len);
         int spent = (int)((double)(total - available) / cap * len);
-        StringBuilder b = new StringBuilder(ChatColor.DARK_GRAY + "[");
-        for (int i = 0; i < spent; i++) b.append(ChatColor.RED + "|");
-        for (int i = spent; i < filled; i++) b.append(ChatColor.GREEN + "|");
-        for (int i = filled; i < len; i++) b.append(ChatColor.GRAY + "|");
-        b.append(ChatColor.DARK_GRAY + "]");
-        return b.toString();
+
+        StringBuilder bar = new StringBuilder(ChatColor.DARK_GRAY + "[");
+        for (int i = 0; i < spent; i++) bar.append(ChatColor.RED + "|");
+        for (int i = spent; i < filled; i++) bar.append(ChatColor.GREEN + "|");
+        for (int i = filled; i < len; i++) bar.append(ChatColor.GRAY + "|");
+        bar.append(ChatColor.DARK_GRAY + "]");
+        return bar.toString();
     }
 
     private int getEnergyCap(ItemStack rod) {
