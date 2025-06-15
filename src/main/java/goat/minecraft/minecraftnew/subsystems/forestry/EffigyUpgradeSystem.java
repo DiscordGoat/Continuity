@@ -34,7 +34,6 @@ public class EffigyUpgradeSystem implements Listener {
         ACACIA_YIELD("Acacia Yield", "Bonus drops from acacia logs", Material.ACACIA_LOG, 5, 6),
         DARK_OAK_YIELD("Dark Oak Yield", "Bonus drops from dark oak logs", Material.DARK_OAK_LOG, 5, 7),
         CRIMSON_YIELD("Crimson Yield", "Bonus drops from crimson stems", Material.CRIMSON_STEM, 5, 8),
-        WARPED_YIELD("Warped Yield", "Bonus drops from warped stems", Material.WARPED_STEM, 5, 11),
         WARPED_YIELD("Warped Yield", "Bonus drops from warped stems", Material.WARPED_STEM, 5, 9),
 
         EFFIGY_YIELD("Effigy Yield", "+0.5% spirit chance per level", Material.TOTEM_OF_UNDYING, 6, 20),
@@ -119,9 +118,6 @@ public class EffigyUpgradeSystem implements Listener {
 
         gui.setItem(49, createEnergyDisplay(totalEnergy, getEnergyCap(axe), available));
 
-        // Add respec button similar to gemstone upgrades
-        gui.setItem(53, createRespecItem(totalEnergy - available));
-
         player.openInventory(gui);
     }
 
@@ -139,27 +135,6 @@ public class EffigyUpgradeSystem implements Listener {
         meta.setDisplayName(ChatColor.BLACK + "");
         filler.setItemMeta(meta);
         return filler;
-    }
-
-    private ItemStack createRespecItem(int spent) {
-        ItemStack item = new ItemStack(Material.BARRIER);
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.RED + "⚠ Reset Upgrades");
-
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Damages tool by " + ChatColor.RED + "20% durability");
-        lore.add(ChatColor.GRAY + "Returns all allocated energy");
-        lore.add("");
-        if (spent > 0) {
-            lore.add(ChatColor.GRAY + "Will refund: " + ChatColor.GREEN + spent + "% energy");
-            lore.add(ChatColor.YELLOW + "Shift+Right-click to confirm");
-        } else {
-            lore.add(ChatColor.DARK_GRAY + "No upgrades to reset");
-        }
-
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        return item;
     }
 
     private ItemStack createUpgradeItem(UpgradeType up, ItemStack axe, int cost, int available) {
@@ -195,9 +170,6 @@ public class EffigyUpgradeSystem implements Listener {
         ItemStack axe = player.getInventory().getItemInMainHand();
         if (axe == null || !(axe.getType().name().endsWith("AXE"))) return;
 
-        // Handle respec button
-        if (event.getSlot() == 53 && event.isShiftClick() && event.isRightClick()) {
-            handleRespec(player, axe);
         // Handle clicks
         if (event.getSlot() == 49 && event.isShiftClick() && event.isRightClick()) {
             clearAllUpgrades(axe);
@@ -230,26 +202,6 @@ public class EffigyUpgradeSystem implements Listener {
         player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
         player.closeInventory();
         openUpgradeGUI(player, axe);
-    }
-
-    private void handleRespec(Player player, ItemStack axe) {
-        int currentDurability = axe.getDurability();
-        int maxDurability = axe.getType().getMaxDurability();
-        int damage = (int) Math.ceil(maxDurability * 0.2);
-
-        if (currentDurability + damage >= maxDurability) {
-            player.sendMessage(ChatColor.RED + "Tool would break from respec damage! Repair it first.");
-            return;
-        }
-
-        clearAllUpgrades(axe);
-        axe.setDurability((short) (currentDurability + damage));
-
-        player.sendMessage(ChatColor.YELLOW + "Tool respecced! All upgrades reset.");
-        player.sendMessage(ChatColor.RED + "Tool took " + damage + " durability damage.");
-        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 1);
-
-        player.closeInventory();
     }
 
     private int getTotalEnergy(ItemStack axe) {
@@ -316,7 +268,6 @@ public class EffigyUpgradeSystem implements Listener {
                 sb.append(getColoredSymbol(e.getKey(), e.getValue()));
                 first = false;
             }
-            if (lineIndex < 0) lineIndex = findInsertionPoint(lore);
             if (lineIndex < 0) lineIndex = lore.size();
             lore.add(lineIndex, sb.toString());
         }
@@ -371,16 +322,6 @@ public class EffigyUpgradeSystem implements Listener {
             }
         }
         return 100;
-    }
-
-    private int findInsertionPoint(List<String> lore) {
-        for (int i = 0; i < lore.size(); i++) {
-            String line = lore.get(i);
-            if (line.contains("[") && line.contains("|") && line.contains("]")) {
-                return Math.min(i + 2, lore.size());
-            }
-        }
-        return lore.size();
     }
 
     private String getSymbol(UpgradeType t) {
