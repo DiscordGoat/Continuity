@@ -20,9 +20,19 @@ public class AnglerUpgradeSystem implements Listener {
     private final MinecraftNew plugin;
 
     public enum UpgradeType {
-        FISH_YIELD("Fish Yield", "Chance to catch extra fish", Material.COD, 5, 11),
-        TREASURE("Treasure Luck", "Increased treasure chance", Material.CHEST, 5, 13),
-        SEA_CREATURE("Sea Creature Lure", "Increased sea creature chance", Material.TRIDENT, 5, 15);
+        FINDING_NEMO("Finding Nemo", "+15% chance to gain +1 tropical fish per non-sea creature reel in", Material.TROPICAL_FISH, 3, 10),
+        TREASURE_HUNTER("Treasure Hunter", "+1% treasure chance per level", Material.CHEST, 5, 12),
+        SONAR("Sonar", "+1% sea creature chance per level", Material.NAUTILUS_SHELL, 6, 14),
+        CHARMED("Charmed", "+15% chance to gain luck", Material.EMERALD, 3, 16),
+        RABBITS_FOOT("Rabbit's Foot", "+1 potency of luck", Material.RABBIT_FOOT, 3, 18),
+        GOOD_DAY("Good Day", "+15 seconds of luck", Material.SUNFLOWER, 3, 20),
+        RAIN_DANCE("Rain Dance", "If raining, 15% chance reel-ins add 10 seconds of rain", Material.WATER_BUCKET, 4, 22),
+        PAYOUT("Payout", "Reel-ins sell common fish for emeralds", Material.EMERALD, 1, 24),
+        PASSION("Passion", "15% chance health is set to max on reel-in", Material.GOLDEN_APPLE, 4, 26),
+        FEED("Feed", "15% chance to feed on reel-in", Material.COOKED_COD, 3, 28),
+        KRAKEN("Kraken", "5% chance to reel in 2 sea creatures", Material.PRISMARINE_SHARD, 3, 30),
+        BIGGER_FISH("Bigger Fish", "-10% sea creature level", Material.COD, 4, 32),
+        DIAMOND_HOOK("Diamond Hook", "Instantly kill sea creatures on reel", Material.DIAMOND, 3, 34);
 
         private final String name; private final String desc; private final Material icon; private final int max; private final int slot;
         UpgradeType(String n, String d, Material i, int m, int s){this.name=n;this.desc=d;this.icon=i;this.max=m;this.slot=s;}
@@ -34,14 +44,14 @@ public class AnglerUpgradeSystem implements Listener {
     public void openUpgradeGUI(Player player, ItemStack rod){
         int total = getTotalEnergy(rod);
         if(total==0){player.sendMessage(ChatColor.RED+"This rod has no angler energy!");return;}
-        Inventory gui = Bukkit.createInventory(new AnglerUpgradeHolder(),27,ChatColor.AQUA+"Fishing Upgrades");
-        for(int i=0;i<27;i++) gui.setItem(i,createPane());
+        Inventory gui = Bukkit.createInventory(new AnglerUpgradeHolder(),54,ChatColor.AQUA+"Fishing Upgrades");
+        for(int i=0;i<54;i++) gui.setItem(i,createPane());
         int avail = calcAvailable(rod);
         int cost =8;
-        gui.setItem(10,createUpgradeItem(UpgradeType.FISH_YIELD,rod,cost,avail));
-        gui.setItem(12,createUpgradeItem(UpgradeType.TREASURE,rod,cost,avail));
-        gui.setItem(14,createUpgradeItem(UpgradeType.SEA_CREATURE,rod,cost,avail));
-        gui.setItem(26,createPowerDisplay(total,getPowerCap(rod),avail));
+        for(UpgradeType u:UpgradeType.values()){
+            gui.setItem(u.getSlot(),createUpgradeItem(u,rod,cost,avail));
+        }
+        gui.setItem(49,createPowerDisplay(total,getPowerCap(rod),avail));
         player.openInventory(gui);
     }
 
@@ -103,9 +113,23 @@ public class AnglerUpgradeSystem implements Listener {
 
     private int findInsert(List<String> lore){return lore.size();}
 
-    private String getSymbol(UpgradeType up,int level){String s=getPlainSymbol(up);ChatColor c=getColor(level);return c+s+getNumeral(level);} private String getPlainSymbol(UpgradeType up){return switch(up){case FISH_YIELD->"🐟";case TREASURE->"💰";case SEA_CREATURE->"🐠";};}
-    private ChatColor getColor(int level){return switch(level){case 1->ChatColor.WHITE;case 2->ChatColor.GREEN;case 3->ChatColor.BLUE;case 4->ChatColor.LIGHT_PURPLE;case 5->ChatColor.GOLD;default->ChatColor.GRAY;};}
-    private String getNumeral(int level){return switch(level){case 1->"ᴵ";case 2->"ᴵᴵ";case 3->"ᴵᴵᴵ";case 4->"ᴵⱽ";case 5->"ⱽ";default->"";};}
+    private String getSymbol(UpgradeType up,int level){String s=getPlainSymbol(up);ChatColor c=getColor(level);return c+s+getNumeral(level);} private String getPlainSymbol(UpgradeType up){return switch(up){
+        case FINDING_NEMO -> "🐠";
+        case TREASURE_HUNTER -> "💰";
+        case SONAR -> "📡";
+        case CHARMED -> "✨";
+        case RABBITS_FOOT -> "🐇";
+        case GOOD_DAY -> "☀";
+        case RAIN_DANCE -> "🌧";
+        case PAYOUT -> "💵";
+        case PASSION -> "❤";
+        case FEED -> "🍗";
+        case KRAKEN -> "🐙";
+        case BIGGER_FISH -> "🐋";
+        case DIAMOND_HOOK -> "💎";
+    };}
+    private ChatColor getColor(int level){return switch(level){case 1->ChatColor.WHITE;case 2->ChatColor.GREEN;case 3->ChatColor.BLUE;case 4->ChatColor.LIGHT_PURPLE;case 5->ChatColor.GOLD;case 6->ChatColor.DARK_RED;default->ChatColor.GRAY;};}
+    private String getNumeral(int level){return switch(level){case 1->"ᴵ";case 2->"ᴵᴵ";case 3->"ᴵᴵᴵ";case 4->"ᴵⱽ";case 5->"ⱽ";case 6->"ⱽᴵ";default->"";};}
 
     private ItemStack createPowerDisplay(int total,int cap,int avail){ItemStack it=new ItemStack(Material.PRISMARINE_CRYSTALS);ItemMeta m=it.getItemMeta();m.setDisplayName(ChatColor.AQUA+"Angler Energy Status");List<String> lore=new ArrayList<>();lore.add(ChatColor.GRAY+"Total: "+ChatColor.WHITE+total+"%"+ChatColor.GRAY+" / "+ChatColor.YELLOW+cap+"%");lore.add(ChatColor.GRAY+"Available: "+ChatColor.GREEN+avail+"%"+ChatColor.GRAY+" Spent: "+ChatColor.RED+(total-avail)+"%");lore.add("");lore.add(createBar(total,cap,avail));lore.add("");lore.add(ChatColor.GRAY+"Apply bait to increase energy");lore.add(ChatColor.GRAY+"Use Pearls to raise cap");m.setLore(lore);it.setItemMeta(m);return it;}
 
