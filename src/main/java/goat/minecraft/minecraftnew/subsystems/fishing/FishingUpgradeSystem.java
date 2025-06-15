@@ -322,11 +322,11 @@ public class FishingUpgradeSystem implements Listener {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.AQUA + "Angler Energy");
 
-        String bar = createBar(total, cap, available);
         int spent = total - available;
+        String bar = createBar(total, cap, available);
 
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Total: " + ChatColor.YELLOW + total + "%" +
+        lore.add(ChatColor.GRAY + "Total Energy: " + ChatColor.WHITE + total + "%" +
                 ChatColor.GRAY + " / " + ChatColor.YELLOW + cap + "%");
         lore.add(ChatColor.GRAY + "Available: " + ChatColor.GREEN + available + "% " +
                 ChatColor.GRAY + "Spent: " + ChatColor.RED + spent + "%");
@@ -357,7 +357,7 @@ public class FishingUpgradeSystem implements Listener {
         int spent = (int)((double)(total - available) / cap * len);
         StringBuilder b = new StringBuilder(ChatColor.DARK_GRAY + "[");
         for (int i = 0; i < spent; i++) b.append(ChatColor.RED + "|");
-        for (int i = spent; i < filled; i++) b.append(ChatColor.BLUE + "|");
+        for (int i = spent; i < filled; i++) b.append(ChatColor.GREEN + "|");
         for (int i = filled; i < len; i++) b.append(ChatColor.GRAY + "|");
         b.append(ChatColor.DARK_GRAY + "]");
         return b.toString();
