@@ -20,19 +20,19 @@ public class AnglerUpgradeSystem implements Listener {
     private final MinecraftNew plugin;
 
     public enum UpgradeType {
-        FINDING_NEMO("Finding Nemo", "+15% chance to gain +1 tropical fish per non-sea creature reel in", Material.TROPICAL_FISH, 3, 10),
-        TREASURE_HUNTER("Treasure Hunter", "+1% treasure chance per level", Material.CHEST, 5, 12),
-        SONAR("Sonar", "+1% sea creature chance per level", Material.NAUTILUS_SHELL, 6, 14),
-        CHARMED("Charmed", "+15% chance to gain luck", Material.EMERALD, 3, 16),
-        RABBITS_FOOT("Rabbit's Foot", "+1 potency of luck", Material.RABBIT_FOOT, 3, 18),
-        GOOD_DAY("Good Day", "+15 seconds of luck", Material.SUNFLOWER, 3, 20),
-        RAIN_DANCE("Rain Dance", "If raining, 15% chance reel-ins add 10 seconds of rain", Material.WATER_BUCKET, 4, 22),
-        PAYOUT("Payout", "Reel-ins sell common fish for emeralds", Material.EMERALD, 1, 24),
-        PASSION("Passion", "15% chance health is set to max on reel-in", Material.GOLDEN_APPLE, 4, 26),
-        FEED("Feed", "15% chance to feed on reel-in", Material.COOKED_COD, 3, 28),
-        KRAKEN("Kraken", "5% chance to reel in 2 sea creatures", Material.PRISMARINE_SHARD, 3, 30),
-        BIGGER_FISH("Bigger Fish", "-10% sea creature level", Material.COD, 4, 32),
-        DIAMOND_HOOK("Diamond Hook", "Instantly kill sea creatures on reel", Material.DIAMOND, 3, 34);
+        FINDING_NEMO("Finding Nemo", "+15% chance to gain +1 tropical fish per non-sea creature reel in", Material.TROPICAL_FISH, 3, 2),
+        TREASURE_HUNTER("Treasure Hunter", "+1% treasure chance per level", Material.CHEST, 5, 3),
+        SONAR("Sonar", "+1% sea creature chance per level", Material.NAUTILUS_SHELL, 6, 4),
+        CHARMED("Charmed", "+15% chance to gain luck", Material.EMERALD, 3, 5),
+        RABBITS_FOOT("Rabbit's Foot", "+1 potency of luck", Material.RABBIT_FOOT, 3, 11),
+        GOOD_DAY("Good Day", "+15 seconds of luck", Material.SUNFLOWER, 3, 12),
+        RAIN_DANCE("Rain Dance", "If raining, 15% chance reel-ins add 10 seconds of rain", Material.WATER_BUCKET, 4, 13),
+        PAYOUT("Payout", "Reel-ins sell common fish for emeralds", Material.EMERALD, 1, 14),
+        PASSION("Passion", "15% chance health is set to max on reel-in", Material.GOLDEN_APPLE, 4, 20),
+        FEED("Feed", "15% chance to feed on reel-in", Material.COOKED_COD, 3, 21),
+        KRAKEN("Kraken", "5% chance to reel in 2 sea creatures", Material.PRISMARINE_SHARD, 3, 22),
+        BIGGER_FISH("Bigger Fish", "-10% sea creature level", Material.COD, 4, 23),
+        DIAMOND_HOOK("Diamond Hook", "Instantly kill sea creatures on reel", Material.DIAMOND, 3, 29);
 
         private final String name; private final String desc; private final Material icon; private final int max; private final int slot;
         UpgradeType(String n, String d, Material i, int m, int s){this.name=n;this.desc=d;this.icon=i;this.max=m;this.slot=s;}
@@ -43,16 +43,54 @@ public class AnglerUpgradeSystem implements Listener {
 
     public void openUpgradeGUI(Player player, ItemStack rod){
         int total = getTotalEnergy(rod);
-        if(total==0){player.sendMessage(ChatColor.RED+"This rod has no angler energy!");return;}
-        Inventory gui = Bukkit.createInventory(new AnglerUpgradeHolder(),54,ChatColor.AQUA+"Fishing Upgrades");
+        if(total==0){
+            player.sendMessage(ChatColor.RED+"This rod has no angler energy!");
+            return;
+        }
+
+        Inventory gui = Bukkit.createInventory(new AnglerUpgradeHolder(),54,ChatColor.AQUA+"\u2693 Fishing Upgrades");
         for(int i=0;i<54;i++) gui.setItem(i,createPane());
+
         int avail = calcAvailable(rod);
         int cost =8;
-        for(UpgradeType u:UpgradeType.values()){
-            gui.setItem(u.getSlot(),createUpgradeItem(u,rod,cost,avail));
-        }
+
+        setupLayout(gui, rod, cost, avail);
+
         gui.setItem(49,createPowerDisplay(total,getPowerCap(rod),avail));
+        gui.setItem(53, createRespecButton(total, avail));
+
         player.openInventory(gui);
+    }
+
+    private void setupLayout(Inventory gui, ItemStack rod, int cost, int avail) {
+        // Row 1: Rewards
+        gui.setItem(0, createHeader(Material.TROPICAL_FISH, ChatColor.DARK_AQUA + "\uD83C\uDFA3 Rewards"));
+        gui.setItem(1, createColoredPane(Material.LIGHT_BLUE_STAINED_GLASS_PANE, ""));
+        gui.setItem(UpgradeType.FINDING_NEMO.getSlot(), createUpgradeItem(UpgradeType.FINDING_NEMO, rod, cost, avail));
+        gui.setItem(UpgradeType.TREASURE_HUNTER.getSlot(), createUpgradeItem(UpgradeType.TREASURE_HUNTER, rod, cost, avail));
+        gui.setItem(UpgradeType.SONAR.getSlot(), createUpgradeItem(UpgradeType.SONAR, rod, cost, avail));
+        gui.setItem(UpgradeType.CHARMED.getSlot(), createUpgradeItem(UpgradeType.CHARMED, rod, cost, avail));
+
+        // Row 2: Blessings
+        gui.setItem(9, createHeader(Material.RABBIT_FOOT, ChatColor.GREEN + "\uD83C\uDF40 Blessings"));
+        gui.setItem(10, createColoredPane(Material.GREEN_STAINED_GLASS_PANE, ""));
+        gui.setItem(UpgradeType.RABBITS_FOOT.getSlot(), createUpgradeItem(UpgradeType.RABBITS_FOOT, rod, cost, avail));
+        gui.setItem(UpgradeType.GOOD_DAY.getSlot(), createUpgradeItem(UpgradeType.GOOD_DAY, rod, cost, avail));
+        gui.setItem(UpgradeType.RAIN_DANCE.getSlot(), createUpgradeItem(UpgradeType.RAIN_DANCE, rod, cost, avail));
+        gui.setItem(UpgradeType.PAYOUT.getSlot(), createUpgradeItem(UpgradeType.PAYOUT, rod, cost, avail));
+
+        // Row 3: Survival
+        gui.setItem(18, createHeader(Material.GOLDEN_APPLE, ChatColor.GOLD + "\u2694 Survival"));
+        gui.setItem(19, createColoredPane(Material.YELLOW_STAINED_GLASS_PANE, ""));
+        gui.setItem(UpgradeType.PASSION.getSlot(), createUpgradeItem(UpgradeType.PASSION, rod, cost, avail));
+        gui.setItem(UpgradeType.FEED.getSlot(), createUpgradeItem(UpgradeType.FEED, rod, cost, avail));
+        gui.setItem(UpgradeType.KRAKEN.getSlot(), createUpgradeItem(UpgradeType.KRAKEN, rod, cost, avail));
+        gui.setItem(UpgradeType.BIGGER_FISH.getSlot(), createUpgradeItem(UpgradeType.BIGGER_FISH, rod, cost, avail));
+
+        // Row 4: Special
+        gui.setItem(27, createHeader(Material.DIAMOND, ChatColor.AQUA + "\u2728 Special"));
+        gui.setItem(28, createColoredPane(Material.LIGHT_BLUE_STAINED_GLASS_PANE, ""));
+        gui.setItem(UpgradeType.DIAMOND_HOOK.getSlot(), createUpgradeItem(UpgradeType.DIAMOND_HOOK, rod, cost, avail));
     }
 
     private ItemStack createUpgradeItem(UpgradeType up, ItemStack rod, int cost, int avail){
@@ -76,6 +114,43 @@ public class AnglerUpgradeSystem implements Listener {
         return item;
     }
 
+    private ItemStack createHeader(Material mat, String name) {
+        ItemStack item = new ItemStack(mat);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private ItemStack createColoredPane(Material mat, String name) {
+        ItemStack pane = new ItemStack(mat);
+        ItemMeta meta = pane.getItemMeta();
+        meta.setDisplayName(ChatColor.BLACK + name);
+        pane.setItemMeta(meta);
+        return pane;
+    }
+
+    private ItemStack createRespecButton(int total, int avail) {
+        ItemStack respec = new ItemStack(Material.BARRIER);
+        ItemMeta meta = respec.getItemMeta();
+        meta.setDisplayName(ChatColor.RED + "\u26A0 Reset Upgrades");
+
+        int spent = total - avail;
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Damages tool by " + ChatColor.RED + "20% durability");
+        lore.add(ChatColor.GRAY + "Returns all allocated energy");
+        lore.add("");
+        if(spent>0){
+            lore.add(ChatColor.GRAY + "Will refund: " + ChatColor.GREEN + spent + "% energy");
+            lore.add(ChatColor.YELLOW + "Shift+Right-click to confirm");
+        } else {
+            lore.add(ChatColor.DARK_GRAY + "No upgrades to reset");
+        }
+        meta.setLore(lore);
+        respec.setItemMeta(meta);
+        return respec;
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e){
         if(!(e.getInventory().getHolder() instanceof AnglerUpgradeHolder)) return;
@@ -84,6 +159,13 @@ public class AnglerUpgradeSystem implements Listener {
         Player player=(Player)e.getWhoClicked();
         ItemStack rod=player.getInventory().getItemInMainHand();
         if(rod==null||rod.getType()!=Material.FISHING_ROD) {player.sendMessage(ChatColor.RED+"Hold a fishing rod!");return;}
+
+        // Handle respec
+        if(e.getSlot()==53 && e.isShiftClick() && e.isRightClick()) {
+            handleRespec(player, rod);
+            return;
+        }
+
         UpgradeType clicked=null;
         for(UpgradeType u:UpgradeType.values()) if(u.getSlot()==e.getSlot()) clicked=u;
         if(clicked==null) return;
@@ -136,6 +218,36 @@ public class AnglerUpgradeSystem implements Listener {
     private String createBar(int total,int cap,int avail){int len=20+(cap-100)/100*5;int filled=(int)((double)total/cap*len);int spent=(int)((double)(total-avail)/cap*len);StringBuilder sb=new StringBuilder();sb.append(ChatColor.DARK_GRAY+"[");for(int i=0;i<spent;i++) sb.append(ChatColor.RED+"|");for(int i=spent;i<filled;i++) sb.append(ChatColor.GREEN+"|");for(int i=filled;i<len;i++) sb.append(ChatColor.GRAY+"|");sb.append(ChatColor.DARK_GRAY+"]");return sb.toString();}
 
     private ItemStack createPane(){ItemStack it=new ItemStack(Material.GRAY_STAINED_GLASS_PANE);ItemMeta m=it.getItemMeta();m.setDisplayName(ChatColor.BLACK+"");it.setItemMeta(m);return it;}
+
+    private void handleRespec(Player player, ItemStack rod) {
+        int current = rod.getDurability();
+        int max = rod.getType().getMaxDurability();
+        int damage = (int)Math.ceil(max * 0.2);
+
+        if(current + damage >= max){
+            player.sendMessage(ChatColor.RED + "Tool would break from respec damage! Repair it first.");
+            return;
+        }
+
+        clearAllUpgrades(rod);
+        rod.setDurability((short)(current + damage));
+
+        player.sendMessage(ChatColor.YELLOW + "Tool respecced! All upgrades reset.");
+        player.sendMessage(ChatColor.RED + "Tool took " + damage + " durability damage.");
+        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE,1f,1f);
+
+        player.closeInventory();
+    }
+
+    private void clearAllUpgrades(ItemStack rod){
+        if(!rod.hasItemMeta()) return;
+        ItemMeta meta = rod.getItemMeta();
+        List<String> lore = meta.getLore();
+        if(lore == null) return;
+        lore.removeIf(l->ChatColor.stripColor(l).startsWith("Fishing Upgrades:"));
+        meta.setLore(lore);
+        rod.setItemMeta(meta);
+    }
 
     private static class AnglerUpgradeHolder implements InventoryHolder {public Inventory getInventory(){return null;}}
 }
