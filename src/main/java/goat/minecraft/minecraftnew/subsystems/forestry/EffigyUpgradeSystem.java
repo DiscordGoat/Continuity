@@ -277,7 +277,7 @@ public class EffigyUpgradeSystem implements Listener {
         }
     }
 
-    private int getUpgradeLevel(ItemStack axe, UpgradeType type) {
+    public static int getUpgradeLevel(ItemStack axe, UpgradeType type) {
         if (!axe.hasItemMeta() || !axe.getItemMeta().hasLore()) return 0;
         for (String line : axe.getItemMeta().getLore()) {
             String stripped = ChatColor.stripColor(line);
@@ -288,7 +288,7 @@ public class EffigyUpgradeSystem implements Listener {
         return 0;
     }
 
-    private int parseLevel(String line, UpgradeType type) {
+    private static int parseLevel(String line, UpgradeType type) {
         String symbol = getSymbol(type);
         String stripped = ChatColor.stripColor(line);
         int idx = stripped.indexOf(symbol);
@@ -385,7 +385,7 @@ public class EffigyUpgradeSystem implements Listener {
         return 100;
     }
 
-    private String getSymbol(UpgradeType t) {
+    private static String getSymbol(UpgradeType t) {
         switch (t) {
             case OAK_YIELD: return "🌳";
             case SPRUCE_YIELD: return "🎄";
