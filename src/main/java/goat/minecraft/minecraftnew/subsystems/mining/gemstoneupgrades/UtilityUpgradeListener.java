@@ -93,6 +93,7 @@ public class UtilityUpgradeListener implements Listener {
                 // Grant regeneration I for 10 seconds
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 0, false));
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BURP, 1.0f, 1.0f);
+                player.sendMessage(ChatColor.GREEN + "Feed activated! You feel refreshed.");
             }
         }
     }
@@ -107,7 +108,9 @@ public class UtilityUpgradeListener implements Listener {
                     ItemStack emeralds = new ItemStack(Material.EMERALD, 8);
                     player.getInventory().addItem(emeralds);
                     player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.5f);
+                    player.sendMessage(ChatColor.GOLD + "Payout! You earned 8 emeralds.");
                 } else {
+                    player.sendMessage(ChatColor.RED + "You need a stack of deepslate to trigger Payout.");
                 }
             }
         }
