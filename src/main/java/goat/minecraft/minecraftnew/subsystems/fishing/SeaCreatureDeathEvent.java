@@ -125,15 +125,31 @@ public class SeaCreatureDeathEvent implements Listener {
                         event.getDrops().add(drop);
                     }
                 }
-                // guaranteed bait drop
-                ItemStack bait = ItemRegistry.getBait();
-                int amount = 1;
+                // Drop bait based on creature rarity
+                ItemStack rarityBait = switch (seaCreature.getRarity()) {
+                    case COMMON -> ItemRegistry.getCommonBait();
+                    case UNCOMMON -> ItemRegistry.getShrimpBait();
+                    case RARE -> ItemRegistry.getLeechBait();
+                    case EPIC -> ItemRegistry.getFrogBait();
+                    case LEGENDARY -> ItemRegistry.getCaviarBait();
+                    default -> ItemRegistry.getBait();
+                };
+
                 PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
+                int amount = 1;
                 if (merit.hasPerk(killer.getUniqueId(), "Double Bait") && random.nextDouble() < 0.5) {
                     amount = 2;
                 }
-                bait.setAmount(amount);
-                event.getDrops().add(bait);
+                rarityBait.setAmount(amount);
+                event.getDrops().add(rarityBait);
+
+                // Generic bait now drops at 50% chance
+                if (random.nextDouble() < 0.5) {
+                    ItemStack bait = ItemRegistry.getBait();
+                    bait.setAmount(amount);
+                    event.getDrops().add(bait);
+                }
+
                 killer.playSound(killer.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 10.f);
             }
         }
