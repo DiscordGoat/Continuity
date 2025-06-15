@@ -27,12 +27,12 @@ public class FishingUpgradeSystem implements Listener {
      */
     public enum UpgradeType {
         // Row 1: Catch Upgrades
-        FINDING_NEMO("Finding Nemo", "+15% chance to gain +1 tropical fish per non-sea creature reel in", Material.TROPICAL_FISH, 5, 2),
+        FINDING_NEMO("Finding Nemo", "+15% chance to gain +1 tropical fish per non-sea creature reel in", Material.TROPICAL_FISH, 3, 2),
         TREASURE_HUNTER("Treasure Hunter", "+1% treasure chance per level", Material.CHEST, 5, 3),
         SONAR("Sonar", "+1% sea creature chance per level", Material.NAUTILUS_SHELL, 5, 4),
         KRAKEN("Kraken", "5% chance to reel in 2 sea creatures", Material.INK_SAC, 3, 5),
-        BIGGER_FISH("Bigger Fish", "-10% sea creature level", Material.PUFFERFISH, 4, 6),
-        DIAMOND_HOOK("Diamond Hook", "Instantly kill sea creatures on reel", Material.DIAMOND, 2, 7),
+        BIGGER_FISH("Bigger Fish", "-10% sea creature level", Material.PUFFERFISH, 5, 6),
+        DIAMOND_HOOK("Diamond Hook", "Instantly kill sea creatures on reel", Material.DIAMOND, 1, 7),
 
         // Row 2: Luck Upgrades
         CHARMED("Charmed", "+15% chance to gain luck", Material.ENCHANTED_BOOK, 3, 11),
@@ -40,7 +40,7 @@ public class FishingUpgradeSystem implements Listener {
         GOOD_DAY("Good Day", "+15 seconds of luck", Material.CLOCK, 3, 13),
 
         // Row 3: Misc Upgrades
-        RAIN_DANCE("Rain Dance", "If raining, 15% chance reel-ins add 10 seconds of rain", Material.WATER_BUCKET, 20, 20),
+        RAIN_DANCE("Rain Dance", "If raining, 15% chance reel-ins add 10 seconds of rain", Material.WATER_BUCKET, 5, 20),
         PAYOUT("Payout", "Reel-ins sell common fish for emeralds", Material.EMERALD, 4, 21),
         PASSION("Passion", "15% chance health is set to max on reel-in", Material.GOLDEN_APPLE, 3, 22),
         FEED("Feed", "15% chance to feed on reel-in", Material.COOKED_SALMON, 3, 23);
@@ -87,27 +87,27 @@ public class FishingUpgradeSystem implements Listener {
         // Row 1 header
         gui.setItem(0, createHeader(Material.FISHING_ROD, ChatColor.GREEN + "🎣 Catch"));
         gui.setItem(1, createColoredPane(Material.GREEN_STAINED_GLASS_PANE, ""));
-        gui.setItem(UpgradeType.FINDING_NEMO.getSlot(), createUpgradeItem(UpgradeType.FINDING_NEMO, rod, 8, available));
-        gui.setItem(UpgradeType.TREASURE_HUNTER.getSlot(), createUpgradeItem(UpgradeType.TREASURE_HUNTER, rod, 8, available));
-        gui.setItem(UpgradeType.SONAR.getSlot(), createUpgradeItem(UpgradeType.SONAR, rod, 8, available));
-        gui.setItem(UpgradeType.KRAKEN.getSlot(), createUpgradeItem(UpgradeType.KRAKEN, rod, 8, available));
-        gui.setItem(UpgradeType.BIGGER_FISH.getSlot(), createUpgradeItem(UpgradeType.BIGGER_FISH, rod, 8, available));
-        gui.setItem(UpgradeType.DIAMOND_HOOK.getSlot(), createUpgradeItem(UpgradeType.DIAMOND_HOOK, rod, 8, available));
+        gui.setItem(UpgradeType.FINDING_NEMO.getSlot(), createUpgradeItem(UpgradeType.FINDING_NEMO, rod, getUpgradeCost(UpgradeType.FINDING_NEMO), available));
+        gui.setItem(UpgradeType.TREASURE_HUNTER.getSlot(), createUpgradeItem(UpgradeType.TREASURE_HUNTER, rod, getUpgradeCost(UpgradeType.TREASURE_HUNTER), available));
+        gui.setItem(UpgradeType.SONAR.getSlot(), createUpgradeItem(UpgradeType.SONAR, rod, getUpgradeCost(UpgradeType.SONAR), available));
+        gui.setItem(UpgradeType.KRAKEN.getSlot(), createUpgradeItem(UpgradeType.KRAKEN, rod, getUpgradeCost(UpgradeType.KRAKEN), available));
+        gui.setItem(UpgradeType.BIGGER_FISH.getSlot(), createUpgradeItem(UpgradeType.BIGGER_FISH, rod, getUpgradeCost(UpgradeType.BIGGER_FISH), available));
+        gui.setItem(UpgradeType.DIAMOND_HOOK.getSlot(), createUpgradeItem(UpgradeType.DIAMOND_HOOK, rod, getUpgradeCost(UpgradeType.DIAMOND_HOOK), available));
 
         // Row 2 header
         gui.setItem(9, createHeader(Material.RABBIT_FOOT, ChatColor.LIGHT_PURPLE + "✦ Luck"));
         gui.setItem(10, createColoredPane(Material.PURPLE_STAINED_GLASS_PANE, ""));
-        gui.setItem(UpgradeType.CHARMED.getSlot(), createUpgradeItem(UpgradeType.CHARMED, rod, 8, available));
-        gui.setItem(UpgradeType.RABBITS_FOOT.getSlot(), createUpgradeItem(UpgradeType.RABBITS_FOOT, rod, 8, available));
-        gui.setItem(UpgradeType.GOOD_DAY.getSlot(), createUpgradeItem(UpgradeType.GOOD_DAY, rod, 8, available));
+        gui.setItem(UpgradeType.CHARMED.getSlot(), createUpgradeItem(UpgradeType.CHARMED, rod, getUpgradeCost(UpgradeType.CHARMED), available));
+        gui.setItem(UpgradeType.RABBITS_FOOT.getSlot(), createUpgradeItem(UpgradeType.RABBITS_FOOT, rod, getUpgradeCost(UpgradeType.RABBITS_FOOT), available));
+        gui.setItem(UpgradeType.GOOD_DAY.getSlot(), createUpgradeItem(UpgradeType.GOOD_DAY, rod, getUpgradeCost(UpgradeType.GOOD_DAY), available));
 
         // Row 3 header
         gui.setItem(18, createHeader(Material.WATER_BUCKET, ChatColor.GOLD + "✨ Misc"));
         gui.setItem(19, createColoredPane(Material.YELLOW_STAINED_GLASS_PANE, ""));
-        gui.setItem(UpgradeType.RAIN_DANCE.getSlot(), createUpgradeItem(UpgradeType.RAIN_DANCE, rod, 8, available));
-        gui.setItem(UpgradeType.PAYOUT.getSlot(), createUpgradeItem(UpgradeType.PAYOUT, rod, 8, available));
-        gui.setItem(UpgradeType.PASSION.getSlot(), createUpgradeItem(UpgradeType.PASSION, rod, 8, available));
-        gui.setItem(UpgradeType.FEED.getSlot(), createUpgradeItem(UpgradeType.FEED, rod, 8, available));
+        gui.setItem(UpgradeType.RAIN_DANCE.getSlot(), createUpgradeItem(UpgradeType.RAIN_DANCE, rod, getUpgradeCost(UpgradeType.RAIN_DANCE), available));
+        gui.setItem(UpgradeType.PAYOUT.getSlot(), createUpgradeItem(UpgradeType.PAYOUT, rod, getUpgradeCost(UpgradeType.PAYOUT), available));
+        gui.setItem(UpgradeType.PASSION.getSlot(), createUpgradeItem(UpgradeType.PASSION, rod, getUpgradeCost(UpgradeType.PASSION), available));
+        gui.setItem(UpgradeType.FEED.getSlot(), createUpgradeItem(UpgradeType.FEED, rod, getUpgradeCost(UpgradeType.FEED), available));
 
         gui.setItem(49, createEnergyDisplay(totalEnergy, getEnergyCap(rod), available));
 
@@ -204,7 +204,7 @@ public class FishingUpgradeSystem implements Listener {
 
     private void handlePurchase(Player player, ItemStack rod, UpgradeType type) {
         int available = calculateAvailableEnergy(rod);
-        int cost = 8;
+        int cost = getUpgradeCost(type);
         int level = getUpgradeLevel(rod, type);
         if (level >= type.getMaxLevel()) {
             player.sendMessage(ChatColor.RED + "Upgrade at max level");
@@ -243,7 +243,7 @@ public class FishingUpgradeSystem implements Listener {
     private int calculateAvailableEnergy(ItemStack rod) {
         int spent = 0;
         for (UpgradeType t : UpgradeType.values()) {
-            spent += getUpgradeLevel(rod, t) * 8;
+            spent += getUpgradeLevel(rod, t) * getUpgradeCost(t);
         }
         return getTotalEnergy(rod) - spent;
     }
@@ -354,6 +354,13 @@ public class FishingUpgradeSystem implements Listener {
             }
         }
         return 100;
+    }
+
+    private int getUpgradeCost(UpgradeType type) {
+        if (type == UpgradeType.DIAMOND_HOOK) {
+            return 50;
+        }
+        return 8;
     }
 
     private static String getSymbol(UpgradeType t) {
