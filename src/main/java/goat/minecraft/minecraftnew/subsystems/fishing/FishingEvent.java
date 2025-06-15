@@ -334,6 +334,7 @@ public class FishingEvent implements Listener {
         int krakenLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.KRAKEN);
         if (krakenLevel > 0 && random.nextDouble() < 0.05 * krakenLevel) {
             spawnSpecificSeaCreature(player, bobberLocation, seaCreature, adjustedLevel, rod);
+            player.sendMessage(ChatColor.DARK_PURPLE + "Kraken awakens! Another sea creature appears.");
         }
     }
 
@@ -610,6 +611,7 @@ public class FishingEvent implements Listener {
             int nemo = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.FINDING_NEMO);
             if (nemo > 0 && random.nextDouble() < nemo * 0.15) {
                 player.getWorld().dropItemNaturally(player.getLocation(), new ItemStack(Material.TROPICAL_FISH));
+                player.sendMessage(ChatColor.AQUA + "Finding Nemo activates! Extra tropical fish found.");
             }
         }
 
@@ -617,22 +619,29 @@ public class FishingEvent implements Listener {
         if (passion > 0 && random.nextDouble() < 0.15) {
             double max = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
             player.setHealth(max);
+            player.sendMessage(ChatColor.RED + "Passion surges through you and restores your health!");
         }
 
         int feed = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.FEED);
         if (feed > 0 && random.nextDouble() < 0.15) {
             player.setFoodLevel(20);
             player.setSaturation(20f);
+            player.sendMessage(ChatColor.GOLD + "Feed satisfies your hunger!");
         }
 
         int rainDance = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.RAIN_DANCE);
         if (rainDance > 0 && player.getWorld().hasStorm()) {
+            boolean triggered = false;
             for (int i = 0; i < rainDance; i++) {
                 if (random.nextDouble() < 0.15) {
                     World w = player.getWorld();
                     w.setWeatherDuration(w.getWeatherDuration() + 100);
                     w.setThunderDuration(w.getThunderDuration() + 100);
+                    triggered = true;
                 }
+            }
+            if (triggered) {
+                player.sendMessage(ChatColor.BLUE + "Raindance extends the storm!");
             }
         }
 
