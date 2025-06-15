@@ -155,7 +155,7 @@ public class MeritCommand implements CommandExecutor, Listener {
             new Perk(ChatColor.DARK_GRAY + "Instant Transmission", 7, Material.ENDER_EYE,
                     Arrays.asList(
                             ChatColor.GRAY + "Breaks the rules of teleportation.",
-                            ChatColor.BLUE + "On Use Ultimate: Warp: " + ChatColor.GRAY + "Removes cooldown."
+                            ChatColor.BLUE + "On Use Ultimate: Warp: " + ChatColor.GRAY + "Increases charges to 30."
                     )),
             new Perk(ChatColor.DARK_GRAY + "Deep Breath", 1, Material.GLASS_BOTTLE,
                     Arrays.asList(

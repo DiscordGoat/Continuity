@@ -48,6 +48,12 @@ public class UltimateEnchantmentListener implements Listener {
     // Track available shred swords per player
     private static final int MAX_SHRED_SWORDS = 30;
     private final Map<UUID, Integer> shredCharges = new HashMap<>();
+
+    // Warp charge tracking
+    private static final long WARP_CHARGE_COOLDOWN = 60_000L; // 60 seconds
+    private static final int DEFAULT_WARP_CHARGES = 10;
+    private static final int INSTANT_TRANSMISSION_CHARGES = 30;
+    private final Map<UUID, List<Long>> warpCharges = new HashMap<>();
     // Removed Leviathan ultimate enchantment
 
     private static class LoyalSwordData {
@@ -646,39 +652,40 @@ public class UltimateEnchantmentListener implements Listener {
 
         // Example: left-click logic, etc. (Hammer/Treecap removed)
         if (event.getAction() == Action.LEFT_CLICK_AIR) {
-            if (isOnCooldown(player.getUniqueId(), ueData.getName())) {
-                long timeLeft = getCooldownTimeLeft(player.getUniqueId(), ueData.getName());
-                return;
-            }
+            if ("warp".equals(enchantName)) {
+                if (!consumeWarpCharge(player)) {
+                    player.sendMessage(ChatColor.RED + "Warp is recharging!");
+                    return;
+                }
+                Vector direction = player.getLocation().getDirection().normalize();
+                Vector offset = direction.multiply(8);
+                player.teleport(player.getLocation().add(offset));
+                player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0f);
+                cooldownMs = 0L;
+            } else {
+                if (isOnCooldown(player.getUniqueId(), ueData.getName())) {
+                    long timeLeft = getCooldownTimeLeft(player.getUniqueId(), ueData.getName());
+                    return;
+                }
 
-            switch (enchantName) {
-                case "warp":
-                    PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
-                    Vector direction = player.getLocation().getDirection().normalize();
-                    Vector offset = direction.multiply(8);
-                    player.teleport(player.getLocation().add(offset));
-                    player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0f);
-                    cooldownMs = 1_000L;
-                    if(playerMeritManager.hasPerk(player.getUniqueId(), "Instant Transmission")){
-                        cooldownMs = 1;
-                    }
-                    break;
-                case "homing arrows":
-                    fireHomingArrows(player);
-                    cooldownMs = 15_000L;
-                    break;
-                case "leg shot":
-                    fireLeapingArrowWithSlowness(player);
-                    cooldownMs = 5_000L;
-                    break;
-                case "headshot":
-                    fireDamageArrow(player);
-                    cooldownMs = 15_000L;
-                    break;
+                switch (enchantName) {
+                    case "homing arrows":
+                        fireHomingArrows(player);
+                        cooldownMs = 15_000L;
+                        break;
+                    case "leg shot":
+                        fireLeapingArrowWithSlowness(player);
+                        cooldownMs = 5_000L;
+                        break;
+                    case "headshot":
+                        fireDamageArrow(player);
+                        cooldownMs = 15_000L;
+                        break;
 
-                default:
-                    cooldownMs = 1L;
-                    break;
+                    default:
+                        cooldownMs = 1L;
+                        break;
+                }
             }
         }
 
@@ -750,9 +757,11 @@ public class UltimateEnchantmentListener implements Listener {
             }
         }
 
-        // Put the player on cooldown for everything else except hammer/treecap
-        setPlayerCooldown(player.getUniqueId(), ueData.getName(), cooldownMs);
-        saveCooldowns();
+        // Put the player on cooldown for everything else except hammer/treecap and warp
+        if (!"warp".equals(enchantName)) {
+            setPlayerCooldown(player.getUniqueId(), ueData.getName(), cooldownMs);
+            saveCooldowns();
+        }
     }
 
     private void activateSnowstorm(Player player, int level) {
@@ -882,6 +891,54 @@ public class UltimateEnchantmentListener implements Listener {
         }
         shredCharges.put(id, charges - 1);
         return true;
+    }
+
+    // ---- Warp charge helpers ----
+    private int getMaxWarpCharges(Player player) {
+        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
+        if (meritManager.hasPerk(player.getUniqueId(), "Instant Transmission")) {
+            return INSTANT_TRANSMISSION_CHARGES;
+        }
+        return DEFAULT_WARP_CHARGES;
+    }
+
+    private List<Long> getWarpChargeList(Player player) {
+        UUID id = player.getUniqueId();
+        int max = getMaxWarpCharges(player);
+        List<Long> list = warpCharges.computeIfAbsent(id, k -> new ArrayList<>());
+        if (list.size() < max) {
+            while (list.size() < max) {
+                list.add(0L);
+            }
+        } else if (list.size() > max) {
+            list = new ArrayList<>(list.subList(list.size() - max, list.size()));
+            warpCharges.put(id, list);
+        }
+        return list;
+    }
+
+    private int getAvailableWarpCharges(Player player) {
+        List<Long> list = getWarpChargeList(player);
+        long now = System.currentTimeMillis();
+        int count = 0;
+        for (long t : list) {
+            if (t <= now) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private boolean consumeWarpCharge(Player player) {
+        List<Long> list = getWarpChargeList(player);
+        long now = System.currentTimeMillis();
+        for (int i = list.size() - 1; i >= 0; i--) {
+            if (list.get(i) <= now) {
+                list.set(i, now + WARP_CHARGE_COOLDOWN);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void addShredCharges(Player player, int amount) {
