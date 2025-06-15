@@ -277,7 +277,7 @@ public class EffigyUpgradeSystem implements Listener {
         }
     }
 
-    private int getUpgradeLevel(ItemStack axe, UpgradeType type) {
+    public int getUpgradeLevel(ItemStack axe, UpgradeType type) {
         if (!axe.hasItemMeta() || !axe.getItemMeta().hasLore()) return 0;
         for (String line : axe.getItemMeta().getLore()) {
             String stripped = ChatColor.stripColor(line);

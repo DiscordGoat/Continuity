@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -125,6 +126,12 @@ public class ForestSpiritManager implements Listener {
     public void spawnSpirit(String spiritName, Location loc, Block block, Player player) {
         int tier = getSpiritTier(player);
         int level = getSpiritLevelForTier(tier);
+        EffigyUpgradeSystem up = Forestry.getUpgradeSystemInstance();
+        ItemStack axe = player.getInventory().getItemInMainHand();
+        if (up != null && axe != null) {
+            int confusion = up.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ANCIENT_CONFUSION);
+            level = Math.max(1, level - confusion * 10);
+        }
 
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         World world = loc.getWorld();
@@ -351,10 +358,34 @@ public class ForestSpiritManager implements Listener {
     @EventHandler
     public void onForestSpiritHit(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
+        Entity damager = event.getDamager();
         if (entity.hasMetadata("forestSpirit")) {
             World world = entity.getWorld();
             Location loc = entity.getLocation();
             world.playSound(loc, Sound.BLOCK_BAMBOO_HIT, 100.0f, 1.0f);
+            if (damager instanceof Player) {
+                Player p = (Player) damager;
+                EffigyUpgradeSystem up = Forestry.getUpgradeSystemInstance();
+                ItemStack axe = p.getInventory().getItemInMainHand();
+                if (up != null && axe != null) {
+                    int hh = up.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.HEADHUNTER);
+                    if (hh > 0) {
+                        event.setDamage(event.getDamage() * (1 + 0.1 * hh));
+                    }
+                }
+            }
+        }
+
+        if (damager.hasMetadata("forestSpirit") && entity instanceof Player) {
+            Player p = (Player) entity;
+            EffigyUpgradeSystem up = Forestry.getUpgradeSystemInstance();
+            ItemStack axe = p.getInventory().getItemInMainHand();
+            if (up != null && axe != null) {
+                int sa = up.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.SPECTRAL_ARMOR);
+                if (sa > 0) {
+                    event.setDamage(event.getDamage() * (1 - 0.05 * sa));
+                }
+            }
         }
     }
 
