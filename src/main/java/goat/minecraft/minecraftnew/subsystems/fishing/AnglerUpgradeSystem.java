@@ -27,9 +27,19 @@ public class AnglerUpgradeSystem implements Listener {
      * Types of upgrades available for fishing rods.
      */
     public enum UpgradeType {
-        FISH_YIELD("Fish Yield", "Chance to catch extra fish", Material.COD, 5, 11),
-        TREASURE("Treasure Luck", "Increased treasure chance", Material.CHEST, 5, 13),
-        SEA_CREATURE("Sea Creature Lure", "Increased sea creature chance", Material.TRIDENT, 5, 15);
+        FINDING_NEMO("Finding Nemo", "Chance to gain extra tropical fish", Material.TROPICAL_FISH, 3, 10),
+        TREASURE_HUNTER("Treasure Hunter", "Increased treasure chance", Material.CHEST, 5, 11),
+        SONAR("Sonar", "Increased sea creature chance", Material.TRIDENT, 6, 12),
+        CHARMED("Charmed", "Chance to gain Luck", Material.EMERALD, 3, 13),
+        RABBITS_FOOT("Rabbit's Foot", "Increases Luck potency", Material.RABBIT_FOOT, 3, 14),
+        GOOD_DAY("Good Day", "Extends Luck duration", Material.CLOCK, 3, 15),
+        RAIN_DANCE("Rain Dance", "Chance to extend rain", Material.WATER_BUCKET, 4, 16),
+        PAYOUT("Payout", "Automatically sells common fish", Material.EMERALD, 1, 17),
+        PASSION("Passion", "Chance to fully heal", Material.TOTEM_OF_UNDYING, 4, 18),
+        FEED("Feed", "Chance to restore hunger", Material.COOKED_BEEF, 3, 19),
+        KRAKEN("Kraken", "Chance to reel in two sea creatures", Material.PRISMARINE_SHARD, 3, 20),
+        BIGGER_FISH("Bigger Fish", "Reduces sea creature level", Material.FISHING_ROD, 4, 21),
+        DIAMOND_HOOK("Diamond Hook", "Instantly kill sea creatures", Material.TRIPWIRE_HOOK, 3, 22);
 
         private final String name;
         private final String description;
@@ -77,9 +87,9 @@ public class AnglerUpgradeSystem implements Listener {
 
         for (int i = 0; i < 27; i++) gui.setItem(i, createPane());
 
-        gui.setItem(10, createUpgradeItem(UpgradeType.FISH_YIELD, rod, cost, available));
-        gui.setItem(12, createUpgradeItem(UpgradeType.TREASURE, rod, cost, available));
-        gui.setItem(14, createUpgradeItem(UpgradeType.SEA_CREATURE, rod, cost, available));
+        for (UpgradeType u : UpgradeType.values()) {
+            gui.setItem(u.getSlot(), createUpgradeItem(u, rod, cost, available));
+        }
         gui.setItem(26, createPowerDisplay(total, getPowerCap(rod), available));
 
         player.openInventory(gui);
@@ -280,21 +290,29 @@ public class AnglerUpgradeSystem implements Listener {
 
     private String getPlainSymbol(UpgradeType up) {
         return switch (up) {
-            case FISH_YIELD -> "🐟";
-            case TREASURE -> "💰";
-            case SEA_CREATURE -> "🐠";
+            case FINDING_NEMO -> "🐠";
+            case TREASURE_HUNTER -> "💰";
+            case SONAR -> "📡";
+            case CHARMED -> "✨";
+            case RABBITS_FOOT -> "🐇";
+            case GOOD_DAY -> "⏰";
+            case RAIN_DANCE -> "🌧";
+            case PAYOUT -> "💵";
+            case PASSION -> "❤";
+            case FEED -> "🍗";
+            case KRAKEN -> "🐙";
+            case BIGGER_FISH -> "🦈";
+            case DIAMOND_HOOK -> "💎";
         };
     }
 
     private ChatColor getColor(int level) {
-        return switch (level) {
-            case 1 -> ChatColor.WHITE;
-            case 2 -> ChatColor.GREEN;
-            case 3 -> ChatColor.BLUE;
-            case 4 -> ChatColor.LIGHT_PURPLE;
-            case 5 -> ChatColor.GOLD;
-            default -> ChatColor.GRAY;
-        };
+        if (level >= 6) return ChatColor.DARK_RED;
+        if (level >= 5) return ChatColor.GOLD;
+        if (level >= 4) return ChatColor.LIGHT_PURPLE;
+        if (level >= 3) return ChatColor.AQUA;
+        if (level >= 2) return ChatColor.GREEN;
+        return ChatColor.WHITE;
     }
 
     private String getNumeral(int level) {
@@ -304,6 +322,7 @@ public class AnglerUpgradeSystem implements Listener {
             case 3 -> "ᴵᴵᴵ";
             case 4 -> "ᴵⱽ";
             case 5 -> "ⱽ";
+            case 6 -> "ⱽᴵ";
             default -> "";
         };
     }
