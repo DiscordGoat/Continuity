@@ -390,6 +390,32 @@ public class ForestSpiritManager implements Listener {
             event.getDrops().add(rareDrop);
         }
 
+        // Drop an effigy based on player's notoriety
+        if (killer != null) {
+            int notoriety = Forestry.getInstance().getNotoriety(killer);
+            ItemStack effigy;
+            if (notoriety < 300) {
+                // Choose common/uncommon/rare
+                List<ItemStack> list = List.of(
+                        ItemRegistry.getOakEffigy(),
+                        ItemRegistry.getBirchEffigy(),
+                        ItemRegistry.getSpruceEffigy(),
+                        ItemRegistry.getAcaciaEffigy()
+                );
+                effigy = list.get(new Random().nextInt(list.size()));
+            } else {
+                // Choose rare/epic/legendary
+                List<ItemStack> list = List.of(
+                        ItemRegistry.getAcaciaEffigy(),
+                        ItemRegistry.getDarkOakEffigy(),
+                        ItemRegistry.getCrimsonEffigy(),
+                        ItemRegistry.getWarpedEffigy()
+                );
+                effigy = list.get(new Random().nextInt(list.size()));
+            }
+            event.getDrops().add(effigy);
+        }
+
         // Bonus drop: Jackhammer if the killer's notoriety is low
         if (killer != null) {
             int notoriety = Forestry.getInstance().getNotoriety(killer);

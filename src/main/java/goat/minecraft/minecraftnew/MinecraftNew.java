@@ -409,11 +409,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new KillMonster(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new Mining(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.GemstoneApplicationSystem(this), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem(this), this);
         // Initialize and register GemstoneUpgradeSystem, then set reference in Mining class
         goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem gemstoneUpgradeSystem = new goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem(this);
         getServer().getPluginManager().registerEvents(gemstoneUpgradeSystem, this);
         goat.minecraft.minecraftnew.subsystems.mining.Mining.setUpgradeSystemInstance(gemstoneUpgradeSystem);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.PowerCrystalSystem(this), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.forestry.EntBarkSystem(this), this);
 
         // Register all gemstone upgrade listeners
         goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.YieldUpgradeListener yieldUpgradeListener = new goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.YieldUpgradeListener(this);
