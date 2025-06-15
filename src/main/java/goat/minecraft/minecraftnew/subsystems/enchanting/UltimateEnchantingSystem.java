@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.fishing.BaitApplicationSystem;
+import goat.minecraft.minecraftnew.subsystems.fishing.FishingUpgradeSystem;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -161,9 +162,10 @@ public class UltimateEnchantingSystem implements Listener {
             inv.setItem(iconSlots[i], createCustomIcon(enchantName));
         }
 
-        // Add Gemstone Upgrade button for diamond tools only
-        if (isDiamondTool(heldItem.getType())) {
-            inv.setItem(53, createGemstoneUpgradeButton(heldItem)); // Top-right corner
+        if (isFishingRod(heldItem.getType())) {
+            inv.setItem(53, createAnglerUpgradeButton(heldItem));
+        } else if (isDiamondTool(heldItem.getType())) {
+            inv.setItem(53, createGemstoneUpgradeButton(heldItem));
         }
 
         // Add Effigy Upgrade button for spirit-energy axes
@@ -305,6 +307,29 @@ public class UltimateEnchantingSystem implements Listener {
     }
 
     /**
+     * Creates an angler upgrade button for fishing rods.
+     */
+    private ItemStack createAnglerUpgradeButton(ItemStack rod) {
+        ItemStack button = new ItemStack(Material.PRISMARINE_CRYSTALS);
+        ItemMeta meta = button.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.AQUA + "Angler Upgrades");
+            List<String> lore = new ArrayList<>();
+            int energy = BaitApplicationSystem.getRodAnglerEnergyStatic(rod);
+            if (energy > 0) {
+                lore.add(ChatColor.GRAY + "Angler Energy: " + ChatColor.WHITE + energy + "%");
+                lore.add(ChatColor.YELLOW + "Click to open upgrade tree!");
+            } else {
+                lore.add(ChatColor.RED + "No Angler Energy detected.");
+                lore.add(ChatColor.GRAY + "Apply bait to this rod first.");
+            }
+            meta.setLore(lore);
+            button.setItemMeta(meta);
+        }
+        return button;
+    }
+
+    /**
      * Checks if the item is a diamond tool.
      */
     private boolean isDiamondTool(Material material) {
@@ -319,6 +344,13 @@ public class UltimateEnchantingSystem implements Listener {
      */
     private boolean isEffigyAxe(Material material) {
         return material == Material.DIAMOND_AXE || material == Material.NETHERITE_AXE;
+    }
+
+    /**
+     * Returns true if the material is a fishing rod.
+     */
+    private boolean isFishingRod(Material material) {
+        return material == Material.FISHING_ROD;
     }
 
     /**
@@ -427,10 +459,15 @@ public class UltimateEnchantingSystem implements Listener {
             return;
         }
 
-        // Handle Gemstone Upgrade Button Click (slot 53)
-        if (event.getSlot() == 53 && clickedItem.getType() == Material.EMERALD) {
-            if (isDiamondTool(handItem.getType())) {
-                // Get the gemstone upgrade system and open the upgrade GUI
+        // Handle Upgrade Button Click (slot 53)
+        if (event.getSlot() == 53) {
+            if (clickedItem.getType() == Material.PRISMARINE_CRYSTALS && isFishingRod(handItem.getType())) {
+                FishingUpgradeSystem fishingUpgradeSystem =
+                        new FishingUpgradeSystem(MinecraftNew.getInstance());
+                fishingUpgradeSystem.openUpgradeGUI(player, handItem);
+                return;
+            }
+            if (clickedItem.getType() == Material.EMERALD && isDiamondTool(handItem.getType())) {
                 goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem upgradeSystem =
                         new goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem(MinecraftNew.getInstance());
                 upgradeSystem.openUpgradeGUIFromExternal(player, handItem);

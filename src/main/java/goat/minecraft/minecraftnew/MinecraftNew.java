@@ -413,6 +413,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.fishing.BaitApplicationSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.fishing.PearlOfTheDeepSystem(this), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.fishing.FishingUpgradeSystem(this), this);
         // Initialize and register GemstoneUpgradeSystem, then set reference in Mining class
         goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem gemstoneUpgradeSystem = new goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem(this);
         getServer().getPluginManager().registerEvents(gemstoneUpgradeSystem, this);
