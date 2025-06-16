@@ -62,7 +62,7 @@ public class ShulkerBox implements Listener {
         // ========== SHULKER BOX LOGIC ==========
         if (ALL_SHULKERS.contains(clickedItem.getType())) {
             PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
-            if(playerMeritManager.hasPerk(player.getUniqueId(), "Shulkl Box")) {
+            if (playerMeritManager.hasPerk(player.getUniqueId(), "Shulkl Box")) {
                 e.setCancelled(true);
 
                 // Get ShulkerBox block state
@@ -79,3 +79,5 @@ public class ShulkerBox implements Listener {
                 player.openInventory(shulkerInventory);
             }
         }
+    }
+}

@@ -262,6 +262,7 @@ public class VillagerTradeManager implements Listener {
         fletcherPurchases.add(createTradeMap("FEATHER", 1, 2, 2));
 
         fletcherPurchases.add(createTradeMap("SPRUCE_BOW", 1, 64, 3));
+        fletcherPurchases.add(createTradeMap("ENT_BARK", 1, 512, 3));
         fletcherPurchases.add(createTradeMap("OAK_SAPLING", 4, 2, 3));
         fletcherPurchases.add(createTradeMap("JUNGLE_SAPLING", 4, 2, 3));
         fletcherPurchases.add(createTradeMap("DARK_OAK_SAPLING", 4, 2, 3));
@@ -886,6 +887,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getFletcherBowEnchant();
             case "FLETCHER_POWER":
                 return ItemRegistry.getFletcherPower();
+            case "ENT_BARK":
+                return ItemRegistry.getEntBark();
             case "FLETCHER_CROSSBOW_ENCHANT":
                 return ItemRegistry.getFletcherCrossbowEnchant();
             case "SECRETS_OF_INFINITY":

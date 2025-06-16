@@ -3739,7 +3739,7 @@ public class ItemRegistry {
     // LEGENDARY (+20 Soul Power)
     public static ItemStack getShade() {
         return createCustomItem(
-                Material.WITHER_SKELETON_SKULL,
+                Material.SOUL_LANTERN,
                 ChatColor.GOLD + "Shade",
                 Arrays.asList(
                         ChatColor.BLUE + "Power: " + ChatColor.GOLD + "+20 Soul Power",

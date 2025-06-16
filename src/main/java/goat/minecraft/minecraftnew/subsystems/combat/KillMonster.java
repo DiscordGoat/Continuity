@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 import goat.minecraft.minecraftnew.MinecraftNew;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.Pathfinder;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.combat.utils.EntityLevelExtractor;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
