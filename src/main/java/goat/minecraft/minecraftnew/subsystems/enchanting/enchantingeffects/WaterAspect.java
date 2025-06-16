@@ -31,7 +31,8 @@ public class WaterAspect implements Listener {
         double multiplier = 0.0;
         EntityType type = target.getType();
         if (type == EntityType.GUARDIAN || type == EntityType.ELDER_GUARDIAN
-                || type == EntityType.ENDERMAN || type == EntityType.ENDERMITE) {
+                || type == EntityType.ENDERMAN || type == EntityType.ENDERMITE
+                || type == EntityType.MAGMA_CUBE || type == EntityType.BLAZE) {
             multiplier = 0.10 * level;
         } else if (target.hasMetadata("SEA_CREATURE")) {
             multiplier = 0.05 * level;
