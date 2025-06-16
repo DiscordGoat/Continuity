@@ -155,8 +155,9 @@ public class SeaCreatureDeathEvent implements Listener {
                 rarityBait.setAmount(amount);
                 event.getDrops().add(rarityBait);
 
-                // Generic bait now drops at 50% chance
-                if (random.nextDouble() < 0.5) {
+                // Only sharks provide Fish Bait
+                if (seaCreature.getDisplayName().equalsIgnoreCase("Shark") ||
+                        seaCreature.getDisplayName().equalsIgnoreCase("Great White Shark")) {
                     ItemStack bait = ItemRegistry.getBait();
                     bait.setAmount(amount);
                     event.getDrops().add(bait);
