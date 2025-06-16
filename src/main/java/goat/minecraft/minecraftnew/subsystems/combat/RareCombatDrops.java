@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -12,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
 import java.util.Random;
 
 public class RareCombatDrops implements Listener {
@@ -60,7 +62,22 @@ public class RareCombatDrops implements Listener {
         if (playerMeritManager.hasPerk(player.getUniqueId(), "Master Thief") && random.nextBoolean()) {
             drop.setAmount(2);
         }
+        if (isSoulItem(drop) && playerMeritManager.hasPerk(player.getUniqueId(), "Reaper")) {
+            drop.setAmount(drop.getAmount() * 2);
+        }
         event.getDrops().add(drop);
+    }
+
+    private boolean isSoulItem(ItemStack item) {
+        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) return false;
+        List<String> lore = item.getItemMeta().getLore();
+        if (lore == null) return false;
+        for (String line : lore) {
+            if (ChatColor.stripColor(line).equals("Soul Item")) {
+                return true;
+            }
+        }
+        return false;
     }
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {

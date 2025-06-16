@@ -1536,6 +1536,10 @@ public class VillagerTradeManager implements Listener {
     private void processSell(Player player, Villager villager, TradeItem tradeItem) {
         XPManager xpManager = new XPManager(plugin);
         int emeraldReward = tradeItem.getEmeraldValue();
+        PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
+        if (merit.hasPerk(player.getUniqueId(), "Deal")) {
+            emeraldReward += (int) Math.floor(emeraldReward * 0.25);
+        }
         int quantity = tradeItem.getQuantity();
         ItemStack tradeItemStack = tradeItem.getItem();
 
