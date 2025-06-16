@@ -434,7 +434,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithSells.add(createTradeMap("CHARCOAL", 3, 2, 1)); // Material
         toolsmithSells.add(createTradeMap("IRON_INGOT", 3, 1, 1)); // Material
         toolsmithSells.add(createTradeMap("GOLD_INGOT", 3, 2, 1)); // Material
-        toolsmithSells.add(createTradeMap("DIAMOND", 1, 4, 1)); // Material
+        toolsmithSells.add(createTradeMap("DIAMOND", 1, 2, 1)); // Material
         toolsmithSells.add(createTradeMap("LAPIS_GEMSTONE", 1, 32, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("EMERALD_GEMSTONE", 1, 64, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("REDSTONE_GEMSTONE", 1, 32, 3)); // Custom Item
@@ -480,7 +480,7 @@ public class VillagerTradeManager implements Listener {
 
         armorerSells.add(createTradeMap("IRON_INGOT", 3, 1, 1)); // Material
         armorerSells.add(createTradeMap("GOLD_INGOT", 3, 2, 1)); // Material
-        armorerSells.add(createTradeMap("DIAMOND", 1, 4, 1)); // Material
+        armorerSells.add(createTradeMap("DIAMOND", 1, 2, 1)); // Material
         armorerSells.add(createTradeMap("AQUA_AFFINITY", 1, 16, 2)); // Custom Item
         armorerSells.add(createTradeMap("SWIFT_SNEAK", 1, 16, 2)); // Custom Item
 
