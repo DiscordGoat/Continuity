@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.fishing.BaitApplicationSystem;
 import goat.minecraft.minecraftnew.subsystems.fishing.FishingUpgradeSystem;
+import goat.minecraft.minecraftnew.subsystems.combat.SoulApplicationSystem;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -162,15 +163,14 @@ public class UltimateEnchantingSystem implements Listener {
             inv.setItem(iconSlots[i], createCustomIcon(enchantName));
         }
 
-        if (isFishingRod(heldItem.getType())) {
+        if (isEffigyAxe(heldItem.getType())) {
+            inv.setItem(53, createEffigyUpgradeButton(heldItem));
+        } else if (isSoulWeapon(heldItem.getType())) {
+            inv.setItem(53, createSoulUpgradeButton(heldItem));
+        } else if (isFishingRod(heldItem.getType())) {
             inv.setItem(53, createAnglerUpgradeButton(heldItem));
         } else if (isDiamondTool(heldItem.getType())) {
             inv.setItem(53, createGemstoneUpgradeButton(heldItem));
-        }
-
-        // Add Effigy Upgrade button for spirit-energy axes
-        if (isEffigyAxe(heldItem.getType())) {
-            inv.setItem(52, createEffigyUpgradeButton(heldItem));
         }
 
 
@@ -330,6 +330,29 @@ public class UltimateEnchantingSystem implements Listener {
     }
 
     /**
+     * Creates a soul upgrade button for weapons with Soul Power.
+     */
+    private ItemStack createSoulUpgradeButton(ItemStack weapon) {
+        ItemStack button = new ItemStack(weapon.getType() == Material.BOW ? Material.BOW : Material.DIAMOND_SWORD);
+        ItemMeta meta = button.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.DARK_AQUA + "Soul Upgrades");
+            List<String> lore = new ArrayList<>();
+            int power = SoulApplicationSystem.getWeaponSoulPower(weapon);
+            if (power > 0) {
+                lore.add(ChatColor.GRAY + "Soul Power: " + ChatColor.WHITE + power + "%");
+                lore.add(ChatColor.YELLOW + "Click to open upgrade tree!");
+            } else {
+                lore.add(ChatColor.RED + "No Soul Power detected.");
+                lore.add(ChatColor.GRAY + "Apply soul items first.");
+            }
+            meta.setLore(lore);
+            button.setItemMeta(meta);
+        }
+        return button;
+    }
+
+    /**
      * Checks if the item is a diamond tool.
      */
     private boolean isDiamondTool(Material material) {
@@ -351,6 +374,13 @@ public class UltimateEnchantingSystem implements Listener {
      */
     private boolean isFishingRod(Material material) {
         return material == Material.FISHING_ROD;
+    }
+
+    /**
+     * Returns true if the material is a sword or bow for soul power.
+     */
+    private boolean isSoulWeapon(Material material) {
+        return material.toString().endsWith("_SWORD") || material == Material.BOW;
     }
 
     /**
@@ -461,6 +491,18 @@ public class UltimateEnchantingSystem implements Listener {
 
         // Handle Upgrade Button Click (slot 53)
         if (event.getSlot() == 53) {
+            if (clickedItem.getType() == Material.SOUL_TORCH && isEffigyAxe(handItem.getType())) {
+                if (EffigyApplicationSystem.getAxeSpiritEnergy(handItem) > 0) {
+                    EffigyUpgradeSystem effigyUpgradeSystem =
+                            new EffigyUpgradeSystem(MinecraftNew.getInstance());
+                    effigyUpgradeSystem.openUpgradeGUI(player, handItem);
+                }
+                return;
+            }
+            if ((clickedItem.getType() == Material.BOW || clickedItem.getType() == Material.DIAMOND_SWORD) && isSoulWeapon(handItem.getType())) {
+                // Soul upgrade tree not implemented yet
+                return;
+            }
             if (clickedItem.getType() == Material.PRISMARINE_CRYSTALS && isFishingRod(handItem.getType())) {
                 FishingUpgradeSystem fishingUpgradeSystem =
                         new FishingUpgradeSystem(MinecraftNew.getInstance());
@@ -471,16 +513,6 @@ public class UltimateEnchantingSystem implements Listener {
                 goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem upgradeSystem =
                         new goat.minecraft.minecraftnew.subsystems.mining.GemstoneUpgradeSystem(MinecraftNew.getInstance());
                 upgradeSystem.openUpgradeGUIFromExternal(player, handItem);
-                return;
-            }
-        }
-
-        // Handle Effigy Upgrade Button Click (slot 52)
-        if (event.getSlot() == 52 && clickedItem.getType() == Material.SOUL_TORCH) {
-            if (isEffigyAxe(handItem.getType()) && EffigyApplicationSystem.getAxeSpiritEnergy(handItem) > 0) {
-                EffigyUpgradeSystem effigyUpgradeSystem =
-                        new EffigyUpgradeSystem(MinecraftNew.getInstance());
-                effigyUpgradeSystem.openUpgradeGUI(player, handItem);
                 return;
             }
         }

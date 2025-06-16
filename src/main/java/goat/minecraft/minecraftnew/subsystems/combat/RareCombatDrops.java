@@ -74,6 +74,10 @@ public class RareCombatDrops implements Listener {
             assert player != null;
             int hostilityLevel = hostilityManager.getPlayerDifficultyTier(player);
             PetRegistry petRegistry = new PetRegistry();
+
+            if (rollChance(1, 25, hostilityLevel)) {
+                addRareDrop(player, event, ItemRegistry.getRandomSoulItem());
+            }
             switch (type) {
                 case WITHER_SKELETON:
                     if (rollChance(1, 100, hostilityLevel)) { // 4% chance
