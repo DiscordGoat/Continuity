@@ -78,6 +78,7 @@ public class UltimateEnchantingSystem implements Listener {
     public void registerCustomEnchants() {
         // 1) Bows
         registerEnchantmentForType("Ultimate: Headshot", 1, false, Material.BOW, Material.CROSSBOW);
+        registerEnchantmentForType("Ultimate: Rebound", 5, false, Material.BOW, Material.CROSSBOW);
 
         // 2) Melee
         registerEnchantmentForType("Ultimate: Warp", 1, false, MELEE.toArray(new Material[0]));
@@ -546,6 +547,10 @@ public class UltimateEnchantingSystem implements Listener {
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Headshot")){
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Headshot", 1);
+            xpManager.addXP(player, "Smithing", 500);
+        }
+        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Rebound")){
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Rebound", 1);
             xpManager.addXP(player, "Smithing", 500);
         }
 

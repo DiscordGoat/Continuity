@@ -17,6 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,6 +28,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.Location;
+import org.bukkit.entity.Monster;
 
 import java.util.*;
 
@@ -641,6 +645,59 @@ public class UltimateEnchantmentListener implements Listener {
         Arrow arrow = player.launchProjectile(Arrow.class);
         arrow.setDamage(20);
         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 10.f, 1.0f);
+    }
+
+    @EventHandler
+    public void onShootBow(EntityShootBowEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        if (!(event.getProjectile() instanceof Arrow arrow)) return;
+        ItemStack bow = event.getBow();
+        if (bow == null) return;
+        CustomEnchantmentManager.UltimateEnchantmentData data = CustomEnchantmentManager.getUltimateEnchantment(bow);
+        if (data != null && data.getName().equalsIgnoreCase("Rebound")) {
+            arrow.setMetadata("reboundLevel", new FixedMetadataValue(plugin, data.getLevel()));
+        }
+    }
+
+    @EventHandler
+    public void onArrowDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Arrow arrow)) return;
+        if (!(arrow.getShooter() instanceof Player shooter)) return;
+        if (!arrow.hasMetadata("reboundLevel")) return;
+        if (!(event.getEntity() instanceof LivingEntity hit)) return;
+
+        int level = arrow.getMetadata("reboundLevel").get(0).asInt();
+        double damage = event.getDamage() * 0.5;
+
+        if (level > 1) {
+            spawnReboundArrow(shooter, hit.getEyeLocation(), damage, level - 1);
+        } else if (level == 1) {
+            spawnReboundArrow(shooter, hit.getEyeLocation(), damage, 0);
+        }
+    }
+
+    private void spawnReboundArrow(Player shooter, Location from, double damage, int remaining) {
+        double radius = 20.0;
+        Monster nearest = null;
+        double best = Double.MAX_VALUE;
+        for (Entity e : from.getWorld().getNearbyEntities(from, radius, radius, radius)) {
+            if (e instanceof Monster monster && e.getUniqueId() != shooter.getUniqueId() && e.isValid()) {
+                double d = e.getLocation().distanceSquared(from);
+                if (d < best) {
+                    best = d;
+                    nearest = monster;
+                }
+            }
+        }
+        if (nearest == null) return;
+
+        Vector direction = nearest.getEyeLocation().toVector().subtract(from.toVector()).normalize();
+        Arrow newArrow = from.getWorld().spawnArrow(from.add(direction.multiply(0.1)), direction, 2.0f, 0f);
+        newArrow.setShooter(shooter);
+        newArrow.setDamage(damage);
+        if (remaining > 0) {
+            newArrow.setMetadata("reboundLevel", new FixedMetadataValue(plugin, remaining));
+        }
     }
 
     // Cooldown / config saving logic (unchanged)
