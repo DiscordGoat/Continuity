@@ -416,6 +416,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.BlueLanternSystem(this), this);
         // Register Soul upgrade system for weapons with Soul Power
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem(this), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SwordUpgradeListener(this), this);
 
         // Effigy upgrade system for forestry axes
         goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem effigyUpgradeSystem = new goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem(this);

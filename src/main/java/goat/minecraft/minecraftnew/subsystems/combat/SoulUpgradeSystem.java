@@ -443,4 +443,58 @@ public class SoulUpgradeSystem implements Listener {
         @Override
         public Inventory getInventory() { return null; }
     }
+
+    // ----- STATIC ACCESSORS -----
+    /**
+     * Retrieves the level of the given sword upgrade on the item.
+     * Allows other systems to query upgrade levels without instantiating this class.
+     */
+    public static int getUpgradeLevel(ItemStack weapon, SwordUpgrade upgrade) {
+        if (weapon == null || upgrade == null) return 0;
+        if (!weapon.hasItemMeta() || !weapon.getItemMeta().hasLore()) return 0;
+        String symbol = getSymbolStatic(upgrade.name());
+        for (String line : weapon.getItemMeta().getLore()) {
+            String stripped = ChatColor.stripColor(line);
+            if (stripped.startsWith("Soul Upgrades:")) {
+                return parseLevelStatic(line, symbol);
+            }
+        }
+        return 0;
+    }
+
+    private static int parseLevelStatic(String line, String symbol) {
+        String stripped = ChatColor.stripColor(line);
+        int idx = stripped.indexOf(symbol);
+        if (idx == -1) return 0;
+        String after = stripped.substring(idx + symbol.length());
+        if (after.startsWith("ⱽᴵ")) return 6;
+        if (after.startsWith("ⱽ")) return 5;
+        if (after.startsWith("ᴵⱽ")) return 4;
+        if (after.startsWith("ᴵᴵᴵ")) return 3;
+        if (after.startsWith("ᴵᴵ")) return 2;
+        if (after.startsWith("ᴵ")) return 1;
+        return 0;
+    }
+
+    private static String getSymbolStatic(String key) {
+        return switch (key) {
+            case "DIAMOND_ESSENCE" -> "♦";
+            case "LIFESTEAL_REGEN" -> "❤";
+            case "LIFESTEAL_POTENCY" -> "✚";
+            case "LIFESTEAL_DURATION" -> "⌛";
+            case "LOYAL_AUGMENT" -> "⚔";
+            case "SHRED_AUGMENT" -> "✂";
+            case "WARP_AUGMENT" -> "✦";
+            case "FURY" -> "⚡";
+            case "BETRAYAL" -> "♬";
+            case "LETHALITY" -> "✖";
+            case "FEED" -> "☕";
+            case "STARLESS_NIGHT" -> "☾";
+            case "CHALLENGE" -> "⚑";
+            case "BLOOD_MOON" -> "☽";
+            case "APOCALYPSE" -> "☢";
+            case "BALLAD_OF_THE_CATS" -> "♪";
+            default -> "⬡";
+        };
+    }
 }

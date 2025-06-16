@@ -618,7 +618,8 @@ public class UltimateEnchantmentListener implements Listener {
                 case "loyal":
                     // Activate the loyal enchantment effect.
                     activateLoyalSword(player, item);
-                    cooldownMs = 5000L;
+                    int loyalLvl = SoulUpgradeSystem.getUpgradeLevel(item, SoulUpgradeSystem.SwordUpgrade.LOYAL_AUGMENT);
+                    cooldownMs = Math.max(1000L, 5000L - (loyalLvl * 1000L));
                     break;
                 case "shred":
                     if (activateShred(player, item)) {
@@ -732,13 +733,23 @@ public class UltimateEnchantmentListener implements Listener {
         ultimateCooldowns.get(playerUUID).put(ultimateName.toLowerCase(), nextUseTime);
     }
 
-    private int getShredCharges(UUID player) {
-        return shredCharges.getOrDefault(player, MAX_SHRED_SWORDS);
+    private int getMaxShredCharges(Player player) {
+        if (player == null) return MAX_SHRED_SWORDS;
+        ItemStack sword = player.getInventory().getItemInMainHand();
+        int lvl = SoulUpgradeSystem.getUpgradeLevel(sword, SoulUpgradeSystem.SwordUpgrade.SHRED_AUGMENT);
+        return MAX_SHRED_SWORDS + lvl * 3;
+    }
+
+    private int getShredCharges(UUID playerId) {
+        Player p = Bukkit.getPlayer(playerId);
+        int max = getMaxShredCharges(p);
+        return Math.min(max, shredCharges.getOrDefault(playerId, max));
     }
 
     private boolean consumeShredCharge(Player player) {
         UUID id = player.getUniqueId();
-        int charges = shredCharges.getOrDefault(id, MAX_SHRED_SWORDS);
+        int max = getMaxShredCharges(player);
+        int charges = shredCharges.getOrDefault(id, max);
         if (charges <= 0) {
             return false;
         }
@@ -748,7 +759,9 @@ public class UltimateEnchantmentListener implements Listener {
 
     // ---- Warp charge helpers ----
     private int getMaxWarpCharges(Player player) {
-        return DEFAULT_WARP_CHARGES;
+        ItemStack sword = player.getInventory().getItemInMainHand();
+        int lvl = SoulUpgradeSystem.getUpgradeLevel(sword, SoulUpgradeSystem.SwordUpgrade.WARP_AUGMENT);
+        return DEFAULT_WARP_CHARGES + lvl * 5;
     }
 
     private List<Long> getWarpChargeList(Player player) {
@@ -792,11 +805,12 @@ public class UltimateEnchantmentListener implements Listener {
 
     private void addShredCharges(Player player, int amount) {
         UUID id = player.getUniqueId();
-        int current = shredCharges.getOrDefault(id, MAX_SHRED_SWORDS);
-        if (current >= MAX_SHRED_SWORDS) {
+        int max = getMaxShredCharges(player);
+        int current = shredCharges.getOrDefault(id, max);
+        if (current >= max) {
             return;
         }
-        int newTotal = Math.min(MAX_SHRED_SWORDS, current + amount);
+        int newTotal = Math.min(max, current + amount);
         shredCharges.put(id, newTotal);
     }
     private void loadCooldowns() {
