@@ -41,7 +41,6 @@ public class UltimateEnchantmentListener implements Listener {
     // Maps: playerUUID -> Map<ultimateEnchantName, nextUsableTimestampInMillis>
     private final Map<UUID, Map<String, Long>> ultimateCooldowns = new HashMap<>();
     private final Map<UUID, Map<String, Integer>> activeEnchantments = new HashMap<>();
-    private final Map<UUID, Boolean> discSeekerActive = new HashMap<>();
     // Removed hammerActive and treecapitatorActive
 
     // Removed activateTreecapitator(...) and activateHammer(...)
@@ -428,92 +427,9 @@ public class UltimateEnchantmentListener implements Listener {
         }
     }
 
-    // -------------------------------------------------------------------
-    // Disc Seeker, Inferno Blade, etc. remain unchanged below...
-    // -------------------------------------------------------------------
-    public void activateDiscSeeker(Player player) {
-        UUID playerUUID = player.getUniqueId();
-        discSeekerActive.put(playerUUID, true);
-        player.sendMessage(ChatColor.GREEN + "Disc Seeker activated! The next Creeper you kill will drop a random music disc.");
-    }
-    private ItemStack getRandomMusicDisc() {
-        Material[] musicDiscs = {
-                Material.MUSIC_DISC_13,
-                Material.MUSIC_DISC_CAT,
-                Material.MUSIC_DISC_BLOCKS,
-                Material.MUSIC_DISC_CHIRP,
-                Material.MUSIC_DISC_FAR,
-                Material.MUSIC_DISC_MALL,
-                Material.MUSIC_DISC_MELLOHI,
-                Material.MUSIC_DISC_STAL,
-                Material.MUSIC_DISC_STRAD,
-                Material.MUSIC_DISC_WARD,
-                Material.MUSIC_DISC_11,
-                Material.MUSIC_DISC_WAIT
-        };
-
-        Random random = new Random();
-        return new ItemStack(musicDiscs[random.nextInt(musicDiscs.length)]);
-    }
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent event) {
-        Player killer = event.getEntity().getKiller();
-        if (killer != null) {
-            addShredCharges(killer, 3);
-        }
-
-        if (event.getEntity() instanceof Creeper) {
-            Creeper creeper = (Creeper) event.getEntity();
-            if (killer != null) {
-                UUID playerUUID = killer.getUniqueId();
-                if (discSeekerActive.containsKey(playerUUID) && discSeekerActive.get(playerUUID)) {
-                    ItemStack randomMusicDisc = getRandomMusicDisc();
-                    creeper.getWorld().dropItemNaturally(creeper.getLocation(), randomMusicDisc);
-                    discSeekerActive.remove(playerUUID);
-                    killer.sendMessage(ChatColor.GOLD + "You got a music disc from the Creeper!");
-                }
-            }
-        }
-    }
-
-    private final Map<UUID, Boolean> defenseActive = new HashMap<>();
-    public void activateDefenseMechanism(Player player) {
-        UUID playerUUID = player.getUniqueId();
-        defenseActive.put(playerUUID, true);
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                defenseActive.remove(playerUUID);
-            }
-        }.runTaskLater(plugin, 10L);
-    }
 
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        // Defense parry logic, Inferno Blade, etc. remain as-is
-        if (event.getEntity() instanceof Player &&
-                (event.getDamager() instanceof Monster || event.getDamager() instanceof Projectile)) {
-            Player player = (Player) event.getEntity();
-            UUID playerUUID = player.getUniqueId();
-
-            if (defenseActive.containsKey(playerUUID) && defenseActive.get(playerUUID)) {
-                event.setCancelled(true);
-                defenseActive.remove(playerUUID);
-
-                if (event.getDamager() instanceof Monster) {
-                    Monster attacker = (Monster) event.getDamager();
-                    attacker.setHealth(attacker.getHealth() / 2);
-                    Vector knockbackDirection = attacker.getLocation().toVector().subtract(player.getLocation().toVector()).normalize();
-                    knockbackDirection.multiply(0.5);
-                    knockbackDirection.setY(0.3);
-                    attacker.setVelocity(knockbackDirection);
-                    attacker.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 1));
-                }
-                player.sendMessage(ChatColor.GREEN + "You parried!");
-            }
-        }
-
-        // Check if the damager is a player
         if (!(event.getDamager() instanceof Player)) return;
         Player player = (Player) event.getDamager();
         UUID playerUUID = player.getUniqueId();
@@ -672,19 +588,10 @@ public class UltimateEnchantmentListener implements Listener {
                 }
 
                 switch (enchantName) {
-                    case "homing arrows":
-                        fireHomingArrows(player);
-                        cooldownMs = 15_000L;
-                        break;
-                    case "leg shot":
-                        fireLeapingArrowWithSlowness(player);
-                        cooldownMs = 5_000L;
-                        break;
                     case "headshot":
                         fireDamageArrow(player);
                         cooldownMs = 15_000L;
                         break;
-
                     default:
                         cooldownMs = 1L;
                         break;
@@ -719,41 +626,6 @@ public class UltimateEnchantmentListener implements Listener {
                     }
                     break;
                 // Hammer/Treecapitator removed. No cooldown for them.
-                case "excavate":
-                    player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.0f);
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20 * 40, 4));
-                    cooldownMs = 120_000L;
-                    break;
-                case "leap":
-                    player.playSound(player.getLocation(), Sound.ENTITY_GOAT_LONG_JUMP, 1.0f, 1.0f);
-                    launchPlayerForward(player);
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 20 * 4, 255));
-                    cooldownMs = 5_000L;
-                    break;
-                case "parry":
-                    player.playSound(player.getLocation(), Sound.BLOCK_POWDER_SNOW_STEP, 1.0f, 1.0f);
-                    activateDefenseMechanism(player);
-                    cooldownMs = 1_000L;
-                    break;
-                case "rage mode":
-                    player.sendMessage(ChatColor.GREEN + "You become enraged!");
-                    player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1.0f, 1.0f);
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 600, 1)); // 30s
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 600, 1));
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 600, 1));
-                    cooldownMs = 120_000L;
-                    break;
-                case "disc seeker":
-                    activateDiscSeeker(player);
-                    cooldownMs = 120_000L;
-                    player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, 10);
-                    break;
-                case "snowstorm":
-                    activateSnowstorm(player, 1);
-                    cooldownMs = 35_000L;
-                    setPlayerCooldown(player.getUniqueId(), ueData.getName(), cooldownMs);
-                    saveCooldowns();
-                    break;
                 default:
                     cooldownMs = 1L;
                     break;
@@ -767,97 +639,14 @@ public class UltimateEnchantmentListener implements Listener {
         }
     }
 
-    private void activateSnowstorm(Player player, int level) {
-        int radius = 16 + level;
-        for (Entity entity : player.getNearbyEntities(radius, radius, radius)) {
-            if (entity instanceof LivingEntity && entity instanceof Monster && !(entity instanceof Boss)) {
-                LivingEntity monster = (LivingEntity) entity;
-                monster.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 200, 100));
-                monster.setHealth(monster.getHealth() / 2);
-                monster.setFreezeTicks(2000);
-                monster.getWorld().spawnParticle(Particle.SNOWBALL, monster.getLocation().add(0, 1, 0),
-                        50, 0.5, 0.5, 0.5, 0.1);
-            }
-        }
-        player.getWorld().spawnParticle(Particle.SNOWBALL, player.getLocation(),
-                100, 0, 1, 0, 0.1);
-        player.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1.0f, 0.5f);
-        player.sendMessage(ChatColor.AQUA + "Snowstorm activated! Nearby monsters are frozen!");
-    }
+
 
 
     // Homing arrows etc. remain unchanged
-    public void fireHomingArrows(Player player) {
-        double spreadAngle = 5.0;
-        new BukkitRunnable() {
-            int arrowCount = 0;
-            @Override
-            public void run() {
-                if (arrowCount >= 5) {
-                    this.cancel();
-                    return;
-                }
-                double angleOffset = (arrowCount - 2) * spreadAngle;
-                Vector direction = player.getLocation().getDirection().clone();
-                Vector rotatedDirection = rotateVectorAroundYAxis(direction, angleOffset);
-                Arrow arrow = player.launchProjectile(Arrow.class);
-                arrow.setVelocity(rotatedDirection.multiply(1.5));
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        if (arrow.isDead() || arrow.isOnGround()) {
-                            this.cancel();
-                            return;
-                        }
-                        List<Entity> nearbyEntities = arrow.getNearbyEntities(20, 20, 20);
-                        LivingEntity target = null;
-                        double closestDistance = Double.MAX_VALUE;
-                        for (Entity e : nearbyEntities) {
-                            if (e instanceof LivingEntity && e != player) {
-                                double distance = e.getLocation().distance(arrow.getLocation());
-                                if (distance < closestDistance) {
-                                    closestDistance = distance;
-                                    target = (LivingEntity) e;
-                                }
-                            }
-                        }
-                        if (target != null) {
-                            Vector targetVec = target.getLocation().toVector().add(new Vector(0, 1, 0));
-                            Vector dir = targetVec.subtract(arrow.getLocation().toVector()).normalize();
-                            arrow.setVelocity(dir.multiply(3));
-                        }
-                    }
-                }.runTaskLater(plugin, 4);
-                arrowCount++;
-            }
-        }.runTaskTimer(plugin, 0L, 10L);
-    }
-    private Vector rotateVectorAroundYAxis(Vector vector, double angle) {
-        double radians = Math.toRadians(angle);
-        double x = vector.getX() * Math.cos(radians) - vector.getZ() * Math.sin(radians);
-        double z = vector.getX() * Math.sin(radians) + vector.getZ() * Math.cos(radians);
-        return new Vector(x, vector.getY(), z);
-    }
-    private void fireLeapingArrowWithSlowness(Player player) {
-        Arrow arrow = player.launchProjectile(Arrow.class);
-        Vector direction = player.getLocation().getDirection().normalize();
-        arrow.setVelocity(direction.multiply(2));
-        PotionEffect slownessEffect = new PotionEffect(PotionEffectType.SLOW, 20 * 60 * 30, 99);
-        arrow.addCustomEffect(slownessEffect, true);
-        PotionEffect jumpBoostEffect = new PotionEffect(PotionEffectType.JUMP, 20 * 60 * 30, 254);
-        arrow.addCustomEffect(jumpBoostEffect, true);
-        player.sendMessage(ChatColor.GREEN + "You fired a legshot!");
-    }
     private void fireDamageArrow(Player player) {
         Arrow arrow = player.launchProjectile(Arrow.class);
         arrow.setDamage(20);
         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 10.f, 1.0f);
-    }
-    public void launchPlayerForward(Player player) {
-        Vector direction = player.getLocation().getDirection().normalize();
-        Vector launchVector = direction.multiply(3);
-        player.setVelocity(launchVector);
-        player.sendMessage(ChatColor.GREEN + "You have been launched forward!");
     }
 
     // Cooldown / config saving logic (unchanged)

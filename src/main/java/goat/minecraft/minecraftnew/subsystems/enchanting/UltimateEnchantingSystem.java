@@ -76,17 +76,10 @@ public class UltimateEnchantingSystem implements Listener {
      */
     public void registerCustomEnchants() {
         // 1) Bows
-        registerEnchantmentForType("Ultimate: Leg Shot", 1, false, Material.BOW, Material.CROSSBOW);
         registerEnchantmentForType("Ultimate: Headshot", 1, false, Material.BOW, Material.CROSSBOW);
-        registerEnchantmentForType("Ultimate: Homing Arrows", 1, false, Material.BOW, Material.CROSSBOW);
 
         // 2) Melee
-        registerEnchantmentForType("Ultimate: Rage Mode", 1, false, MELEE.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Warp", 1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Snowstorm", 1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Parry", 1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Disc Seeker", 1, false, MELEE.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Leap", 1, false, MELEE.toArray(new Material[0]));
         // Simple ghost sword enchantment
         registerEnchantmentForType("Ultimate: Shred", 1, false, MELEE.toArray(new Material[0]));
         // New Enchantment for thrown sword
@@ -95,7 +88,6 @@ public class UltimateEnchantingSystem implements Listener {
         // 3) Tools
         registerEnchantmentForType("Ultimate: Hammer", 1, false, TOOLS.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Treecapitator", 1, false, TOOLS.toArray(new Material[0]));
-        registerEnchantmentForType("Ultimate: Excavate", 1, false, TOOLS.toArray(new Material[0]));
     }
 
     /**
@@ -529,28 +521,8 @@ public class UltimateEnchantingSystem implements Listener {
         }
 
         // Process ultimate enchantments and award bonus XP after applying them.
-        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Rage Mode")){
-            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Rage Mode", 1);
-            xpManager.addXP(player, "Smithing", 500);
-        }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Warp")){
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Warp", 1);
-            xpManager.addXP(player, "Smithing", 500);
-        }
-        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Snowstorm")){
-            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Snowstorm", 1);
-            xpManager.addXP(player, "Smithing", 500);
-        }
-        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Parry")){
-            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Parry", 1);
-            xpManager.addXP(player, "Smithing", 500);
-        }
-        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Disc Seeker")){
-            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Disc Seeker", 1);
-            xpManager.addXP(player, "Smithing", 500);
-        }
-        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Leap")){
-            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Leap", 1);
             xpManager.addXP(player, "Smithing", 500);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Shred")){
@@ -562,24 +534,12 @@ public class UltimateEnchantingSystem implements Listener {
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Loyal", 1);
             xpManager.addXP(player, "Smithing", 500);
         }
-        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Excavate")){
-            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Excavate", 1);
-            xpManager.addXP(player, "Smithing", 500);
-        }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Treecapitator")){
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Treecapitator", 1);
             xpManager.addXP(player, "Smithing", 500);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Hammer")){
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Hammer", 1);
-            xpManager.addXP(player, "Smithing", 500);
-        }
-        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Homing Arrows")){
-            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Homing Arrows", 1);
-            xpManager.addXP(player, "Smithing", 500);
-        }
-        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Leg Shot")){
-            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Leg Shot", 1);
             xpManager.addXP(player, "Smithing", 500);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Headshot")){
