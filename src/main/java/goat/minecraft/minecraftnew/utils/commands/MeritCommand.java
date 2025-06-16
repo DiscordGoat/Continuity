@@ -172,6 +172,21 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Grants 10% discount on villager trades.",
                             ChatColor.BLUE + "On Villager Trade: " + ChatColor.GRAY + "Prices reduced by 10%."
                     )),
+            new Perk(ChatColor.DARK_GRAY + "Deal", 2, Material.EMERALD_BLOCK,
+                    Arrays.asList(
+                            ChatColor.GRAY + "+25% emeralds when selling items.",
+                            ChatColor.BLUE + "On Sell: " + ChatColor.GRAY + "+25% emerald reward."
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Reaper", 3, Material.WITHER_SKELETON_SKULL,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Doubles soul item drops from monsters.",
+                            ChatColor.BLUE + "On Monster Kill: " + ChatColor.GRAY + "Soul drops x2."
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Librarian", 3, Material.BOOKSHELF,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Doubles Forbidden Book drops.",
+                            ChatColor.BLUE + "On Monster Kill: " + ChatColor.GRAY + "Forbidden Books x2."
+                    )),
             new Perk(ChatColor.DARK_GRAY + "Master Employer", 3, Material.BELL,
                     Arrays.asList(
                             ChatColor.GRAY + "50% chance to halve villager work timers.",

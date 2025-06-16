@@ -405,7 +405,14 @@ public class ForestSpiritManager implements Listener {
             event.setDroppedExp(tier * 50);
             xpManager.addXP(killer, "Forestry", 10 * tier);
             if (random.nextInt(100) < 16) {
-                event.getDrops().add(ItemRegistry.getForbiddenBook());
+                int amount = 1;
+                PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
+                if (merit.hasPerk(killer.getUniqueId(), "Librarian")) {
+                    amount = 2;
+                }
+                for (int i = 0; i < amount; i++) {
+                    event.getDrops().add(ItemRegistry.getForbiddenBook());
+                }
             }
         }
 

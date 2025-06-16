@@ -93,7 +93,14 @@ public class KillMonster implements Listener {
                 Monster monsterEntity = (Monster) entity;
                 if (!monsterEntity.hasMetadata("SEA_CREATURE") && !monsterEntity.hasMetadata("forestSpirit")) {
                     if (random.nextInt(100) < 4) {
-                        e.getDrops().add(ItemRegistry.getForbiddenBook());
+                        int amount = 1;
+                        PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
+                        if (merit.hasPerk(playerKiller.getUniqueId(), "Librarian")) {
+                            amount = 2;
+                        }
+                        for (int i = 0; i < amount; i++) {
+                            e.getDrops().add(ItemRegistry.getForbiddenBook());
+                        }
                     }
                 }
                 if (random.nextInt(100) < 20) {
