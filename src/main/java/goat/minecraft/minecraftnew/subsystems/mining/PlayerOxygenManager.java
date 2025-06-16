@@ -2,7 +2,6 @@ package goat.minecraft.minecraftnew.subsystems.mining;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager; // Remove this if no longer needed anywhere else
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -210,12 +209,10 @@ public class PlayerOxygenManager implements Listener {
      * For now, if Mining level is unavailable, a default is used.
      */
     public int calculateInitialOxygen(Player player) {
-        PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
         XPManager xpManager = new XPManager(plugin);
         int miningLevel = xpManager.getPlayerLevel(player, "Mining");
         int ventilationBonus = getTotalVentilationEnchantmentLevel(player) * 25;
-        int deepbreath = playerMeritManager.hasPerk(player.getUniqueId(), "Deep Breath") ? 100 : 0;
-        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (miningLevel * 4) + ventilationBonus + deepbreath;
+        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (miningLevel * 4) + ventilationBonus;
         return initialOxygen;
     }
 

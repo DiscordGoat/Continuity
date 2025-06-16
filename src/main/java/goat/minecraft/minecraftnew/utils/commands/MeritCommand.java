@@ -67,16 +67,6 @@ public class MeritCommand implements CommandExecutor, Listener {
      * Edit the text, chat colors, materials, and descriptions as needed.
      */
     private static final List<Perk> perks = Arrays.asList(
-            new Perk(ChatColor.DARK_GRAY + "EnderMind", 1, Material.ENDER_PEARL,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Nullifies Ender Pearl Damage by 100%",
-                            ChatColor.BLUE + "On Pearl Land: " + ChatColor.GRAY + "+20 Hunger, +20 Saturation."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Workbench", 3, Material.CRAFTING_TABLE,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Enables Backpack Crafting Table usage.",
-                            ChatColor.BLUE + "On Right Click Crafting Table In Backpack: " + ChatColor.GRAY + "Opens Crafting Table."
-                    )),
             new Perk(ChatColor.DARK_GRAY + "Shulkl Box", 7, Material.SHULKER_SHELL,
                     Arrays.asList(
                             ChatColor.GRAY + "Enables Backpack Shulker Box usage.",
@@ -92,55 +82,10 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Prevents 15% of durability losses.",
                             ChatColor.BLUE + "On Lose Durability: " + ChatColor.GRAY + "15% chance to refund."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Unbreaking II", 1, Material.OBSIDIAN,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Stacks with Unbreaking for another 15% chance.",
-                            ChatColor.BLUE + "On Lose Durability: " + ChatColor.GRAY + "Additional 15% refund chance."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Unbreaking III", 1, Material.OBSIDIAN,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Further increases durability refund by 15%.",
-                            ChatColor.BLUE + "On Lose Durability: " + ChatColor.GRAY + "Total 45% chance to refund."
-                    )),
             new Perk(ChatColor.DARK_GRAY + "Excavator", 1, Material.DIAMOND_SHOVEL,
                     Arrays.asList(
                             ChatColor.GRAY + "Shovels rarely wear down.",
                             ChatColor.BLUE + "On Shovel Use: " + ChatColor.GRAY + "90% chance durability is preserved."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Berserkers Rage", 1, Material.FERMENTED_SPIDER_EYE,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Enrages you when struck by a competent foe.",
-                            ChatColor.BLUE + "On Take High Damage (30%) In One Hit: " + ChatColor.GRAY + "Strength 5 for 20 seconds."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Tactical Retreat", 1, Material.FEATHER,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Speeds your step you when struck by a competent foe.",
-                            ChatColor.BLUE + "On Take High Damage (30%) In One Hit: " + ChatColor.GRAY + "Speed 2 and Invisibility for 20 seconds."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Vampiric Strike", 1, Material.GHAST_TEAR,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Heals you and kills your foe.",
-                            ChatColor.BLUE + "On Deal Damage Rarely (5%): " + ChatColor.GRAY + "Fully Heals you and kills your foe."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Lord of Thunder", 1, Material.LIGHTNING_ROD,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Smites your foe.",
-                            ChatColor.BLUE + "On Deal Damage Rarely (5%): " + ChatColor.GRAY + "Strike your foe with lightning."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Deep Hook", 2, Material.FISHING_ROD,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Taunts Sea Creatures.",
-                            ChatColor.BLUE + "Reel In Fish: " + ChatColor.GRAY + "+5 Sea Creature Chance."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Instant Transmission", 7, Material.ENDER_EYE,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Breaks the rules of teleportation.",
-                            ChatColor.BLUE + "On Use Ultimate: Warp: " + ChatColor.GRAY + "Increases charges to 30."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Deep Breath", 1, Material.GLASS_BOTTLE,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Obviously grants more oxygen you idiot.",
-                            ChatColor.BLUE + "On Regenerate Oxygen: " + ChatColor.GRAY + "+100 Oxygen."
                     )),
             new Perk(ChatColor.DARK_GRAY + "Trainer", 3, Material.LEAD,
                     Arrays.asList(
@@ -217,16 +162,6 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "50% chance for gemstone drops to double.",
                             ChatColor.BLUE + "On Gemstone Drop: " + ChatColor.GRAY + "50% chance drop occurs twice."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Diplomat", 3, Material.WRITABLE_BOOK,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Reduces notoriety gains by 60%.",
-                            ChatColor.BLUE + "On Notoriety Gain: " + ChatColor.GRAY + "Reduce gain by 60%."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Diffuser", 3, Material.CREEPER_HEAD,
-                    Arrays.asList(
-                            ChatColor.GRAY + "50% chance for creepers to drop a disc.",
-                            ChatColor.BLUE + "On Creeper Death: " + ChatColor.GRAY + "50% chance for random music disc."
-                    )),
             new Perk(ChatColor.DARK_GRAY + "Master Trader", 3, Material.EMERALD,
                     Arrays.asList(
                             ChatColor.GRAY + "5% chance for purchases to be free.",
@@ -241,11 +176,6 @@ public class MeritCommand implements CommandExecutor, Listener {
                     Arrays.asList(
                             ChatColor.GRAY + "50% chance to halve villager work timers.",
                             ChatColor.BLUE + "On Workcycle: " + ChatColor.GRAY + "50% chance next timer reduced 50%."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Loyalty II", 3, Material.NAME_TAG,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Loyal cooldown reduced to 1 second.",
-                            ChatColor.BLUE + "On Use Loyal: " + ChatColor.GRAY + "Cooldown becomes 1 second."
                     )),
             new Perk(ChatColor.DARK_GRAY + "Strong Digestion", 3, Material.GOLDEN_APPLE,
                     Arrays.asList(

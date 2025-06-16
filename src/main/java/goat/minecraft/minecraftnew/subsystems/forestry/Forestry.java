@@ -3,7 +3,6 @@ package goat.minecraft.minecraftnew.subsystems.forestry;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import org.bukkit.ChatColor;
@@ -102,10 +101,6 @@ public class Forestry implements Listener {
      * @param player The player whose notoriety is incremented.
      */
     public void incrementNotoriety(Player player) {
-        PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
-        if (playerMeritManager.hasPerk(player.getUniqueId(), "Master Diplomat") && random.nextDouble() < 0.60) {
-            return; // 60% chance to ignore notoriety gain
-        }
         UUID uuid = player.getUniqueId();
         int currentNotoriety = notorietyMap.getOrDefault(uuid, 0);
         int currentTier = getNotorietyTier(currentNotoriety);
