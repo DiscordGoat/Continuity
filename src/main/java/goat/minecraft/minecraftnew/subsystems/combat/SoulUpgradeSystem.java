@@ -30,10 +30,14 @@ public class SoulUpgradeSystem implements Listener {
 
     public enum SwordUpgrade {
         DIAMOND_ESSENCE("Diamond Essence", "+10% creeper damage per level", Material.DIAMOND, 5, 2),
-        LIFESTEAL("Lifesteal", "+5% chance to heal 50% missing damage per level", Material.GHAST_TEAR, 3, 3),
-        LOYAL_AUGMENT("Loyal Augment", "+5% weapon damage per level", Material.NETHER_STAR, 5, 4),
-        SHRED_AUGMENT("Shred Augment", "+5 shredder capacity per level", Material.IRON_SWORD, 5, 5),
-        WARP_AUGMENT("Warp Augment", "+3 warp charges per level", Material.ENDER_PEARL, 6, 6);
+        LIFESTEAL_REGEN("Regeneration", "+5% chance to gain regeneration per level", Material.GHAST_TEAR, 3, 3),
+        LIFESTEAL_POTENCY("Potency", "+1 regen potency per level", Material.BLAZE_POWDER, 2, 4),
+        LIFESTEAL_DURATION("Duration", "+5 seconds of regeneration per level", Material.CLOCK, 3, 5),
+        LOYAL_AUGMENT("Loyal Augment", "-50% base damage, -1s cooldown per level", Material.NETHER_STAR, 4, 6),
+        SHRED_AUGMENT("Shred Augment", "+3 stacks of shredders per level", Material.IRON_SWORD, 6, 7),
+        WARP_AUGMENT("Warp Augment", "+3 warp charges per level", Material.ENDER_PEARL, 6, 8),
+        FURY("Fury", "Strike lightning when below 50% HP (30s CD)", Material.LIGHTNING_ROD, 1, 11),
+        BETRAYAL("Betrayal", "+4% creeper disc chance per level", Material.MUSIC_DISC_11, 4, 12);
 
         private final String name;
         private final String desc;
@@ -82,40 +86,76 @@ public class SoulUpgradeSystem implements Listener {
     // ----- GUI OPENING -----
 
     public void openUpgradeGUI(Player player, ItemStack weapon) {
+        if (weapon.getType() == Material.BOW) {
+            openBowUpgradeGUI(player, weapon);
+        } else {
+            openSwordUpgradeGUI(player, weapon);
+        }
+    }
+
+    private void openSwordUpgradeGUI(Player player, ItemStack weapon) {
         int power = getTotalPower(weapon);
         if (power == 0) {
             player.sendMessage(ChatColor.RED + "This weapon has no Soul Power!");
             return;
         }
 
-        boolean bow = weapon.getType() == Material.BOW;
         Inventory gui = Bukkit.createInventory(new SoulUpgradeHolder(), 54,
-                ChatColor.DARK_AQUA + "✦ Soul Upgrades");
+                ChatColor.DARK_AQUA + "✦ Sword Upgrades");
 
         for (int i = 0; i < 54; i++) gui.setItem(i, createFiller());
 
-        int available = calculateAvailablePower(weapon, bow);
+        int available = calculateAvailablePower(weapon, false);
 
-        // Row 1 - sword upgrades
         gui.setItem(0, createHeader(Material.DIAMOND_SWORD, ChatColor.RED + "⚔ Sword"));
         gui.setItem(1, createColoredPane(Material.RED_STAINED_GLASS_PANE, ""));
-        if (!bow) {
-            for (SwordUpgrade up : SwordUpgrade.values()) {
-                gui.setItem(up.getSlot(), createUpgradeItem(weapon, up, available));
-            }
-        }
-
-        // Row 2 - bow upgrades
-        gui.setItem(9, createHeader(Material.BOW, ChatColor.GOLD + "➹ Bow"));
-        gui.setItem(10, createColoredPane(Material.YELLOW_STAINED_GLASS_PANE, ""));
-        if (bow) {
-            for (BowUpgrade up : BowUpgrade.values()) {
-                gui.setItem(up.getSlot(), createUpgradeItem(weapon, up, available));
-            }
+        for (SwordUpgrade up : SwordUpgrade.values()) {
+            gui.setItem(up.getSlot(), createUpgradeItem(weapon, up, available));
         }
 
         gui.setItem(49, createExtendedPowerDisplay(power, getPowerCap(weapon), available));
+        ItemStack respec = new ItemStack(Material.BARRIER);
+        ItemMeta rMeta = respec.getItemMeta();
+        rMeta.setDisplayName(ChatColor.RED + "⚠ Reset Upgrades");
+        List<String> lore = new ArrayList<>();
+        int spent = power - available;
+        lore.add(ChatColor.GRAY + "Damages tool by " + ChatColor.RED + "20% durability");
+        lore.add(ChatColor.GRAY + "Returns all allocated power");
+        lore.add("");
+        if (spent > 0) {
+            lore.add(ChatColor.GRAY + "Will refund: " + ChatColor.GREEN + spent + "% power");
+            lore.add(ChatColor.YELLOW + "Shift+Right-click to confirm");
+        } else {
+            lore.add(ChatColor.DARK_GRAY + "No upgrades to reset");
+        }
+        rMeta.setLore(lore);
+        respec.setItemMeta(rMeta);
+        gui.setItem(53, respec);
 
+        player.openInventory(gui);
+    }
+
+    private void openBowUpgradeGUI(Player player, ItemStack weapon) {
+        int power = getTotalPower(weapon);
+        if (power == 0) {
+            player.sendMessage(ChatColor.RED + "This weapon has no Soul Power!");
+            return;
+        }
+
+        Inventory gui = Bukkit.createInventory(new SoulUpgradeHolder(), 54,
+                ChatColor.DARK_AQUA + "✦ Bow Upgrades");
+
+        for (int i = 0; i < 54; i++) gui.setItem(i, createFiller());
+
+        int available = calculateAvailablePower(weapon, true);
+
+        gui.setItem(0, createHeader(Material.BOW, ChatColor.GOLD + "➹ Bow"));
+        gui.setItem(1, createColoredPane(Material.YELLOW_STAINED_GLASS_PANE, ""));
+        for (BowUpgrade up : BowUpgrade.values()) {
+            gui.setItem(up.getSlot(), createUpgradeItem(weapon, up, available));
+        }
+
+        gui.setItem(49, createExtendedPowerDisplay(power, getPowerCap(weapon), available));
         ItemStack respec = new ItemStack(Material.BARRIER);
         ItemMeta rMeta = respec.getItemMeta();
         rMeta.setDisplayName(ChatColor.RED + "⚠ Reset Upgrades");
@@ -393,10 +433,15 @@ public class SoulUpgradeSystem implements Listener {
     private String getSymbol(String key) {
         switch (key) {
             case "DIAMOND_ESSENCE": return "♦";
+            case "LIFESTEAL_REGEN": return "❤";
+            case "LIFESTEAL_POTENCY": return "✚";
+            case "LIFESTEAL_DURATION": return "⌛";
             case "LIFESTEAL": return "❤";
             case "LOYAL_AUGMENT": return "⚔";
             case "SHRED_AUGMENT": return "✂";
             case "WARP_AUGMENT": return "✦";
+            case "FURY": return "⚡";
+            case "BETRAYAL": return "♬";
             case "HEADSHOT": return "➹";
             default: return "⬡";
         }
