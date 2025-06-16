@@ -30,14 +30,21 @@ public class SoulUpgradeSystem implements Listener {
 
     public enum SwordUpgrade {
         DIAMOND_ESSENCE("Diamond Essence", "+10% creeper damage per level", Material.DIAMOND, 5, 2),
+        LETHALITY("Lethality", "+2% damage per level", Material.NETHERITE_SWORD, 5, 5),
         LIFESTEAL_REGEN("Regeneration", "+5% chance to gain regeneration per level", Material.GHAST_TEAR, 3, 11),
         LIFESTEAL_POTENCY("Potency", "+1 regen potency per level", Material.BLAZE_POWDER, 2, 12),
         LIFESTEAL_DURATION("Duration", "+5 seconds of regeneration per level", Material.CLOCK, 3, 13),
+        FEED("Feed", "15% chance to gain +1 hunger and +2 saturation when hitting a monster", Material.COOKED_BEEF, 1, 14),
         LOYAL_AUGMENT("Loyal Augment", "-1s cooldown per level", Material.NETHER_STAR, 4, 20),
         SHRED_AUGMENT("Shred Augment", "+3 stacks of shredders per level", Material.IRON_SWORD, 6, 21),
         WARP_AUGMENT("Warp Augment", "+5 warp charges per level", Material.ENDER_PEARL, 6, 22),
         FURY("Fury", "Strike lightning when below 50% HP (30s CD)", Material.LIGHTNING_ROD, 1, 3),
-        BETRAYAL("Betrayal", "+4% creeper disc chance per level", Material.MUSIC_DISC_11, 4, 4);
+        BETRAYAL("Betrayal", "+4% creeper disc chance per level", Material.MUSIC_DISC_11, 4, 4),
+        STARLESS_NIGHT("Starless Night", "+3 seconds of night when killing a monster", Material.BLACK_DYE, 1, 29),
+        CHALLENGE("Challenge", "Chance for monsters to spawn twice: +25% chance per level", Material.PAPER, 4, 30),
+        BLOOD_MOON("Blood Moon", "Chance for monsters to spawn an additional time: +20% chance per level", Material.RED_BED, 5, 31),
+        APOCALYPSE("Apocalypse", "Increase Mutation Chance by 15% per level", Material.WITHER_SKELETON_SKULL, 3, 32),
+        BALLAD_OF_THE_CATS("Ballad of the Cats", "increases monster level by 20 per level", Material.MUSIC_DISC_CAT, 5, 33);
 
         private final String name;
         private final String desc;
@@ -87,6 +94,7 @@ public class SoulUpgradeSystem implements Listener {
         gui.setItem(SwordUpgrade.DIAMOND_ESSENCE.getSlot(), createUpgradeItem(weapon, SwordUpgrade.DIAMOND_ESSENCE, available));
         gui.setItem(SwordUpgrade.FURY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.FURY, available));
         gui.setItem(SwordUpgrade.BETRAYAL.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BETRAYAL, available));
+        gui.setItem(SwordUpgrade.LETHALITY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LETHALITY, available));
 
         // ----- Regeneration Row -----
         gui.setItem(9, createHeader(Material.GHAST_TEAR, ChatColor.LIGHT_PURPLE + "❤ Regeneration"));
@@ -94,6 +102,7 @@ public class SoulUpgradeSystem implements Listener {
         gui.setItem(SwordUpgrade.LIFESTEAL_REGEN.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LIFESTEAL_REGEN, available));
         gui.setItem(SwordUpgrade.LIFESTEAL_POTENCY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LIFESTEAL_POTENCY, available));
         gui.setItem(SwordUpgrade.LIFESTEAL_DURATION.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LIFESTEAL_DURATION, available));
+        gui.setItem(SwordUpgrade.FEED.getSlot(), createUpgradeItem(weapon, SwordUpgrade.FEED, available));
 
         // ----- Augment Row -----
         gui.setItem(18, createHeader(Material.NETHER_STAR, ChatColor.AQUA + "✦ Augments"));
@@ -101,6 +110,15 @@ public class SoulUpgradeSystem implements Listener {
         gui.setItem(SwordUpgrade.LOYAL_AUGMENT.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LOYAL_AUGMENT, available));
         gui.setItem(SwordUpgrade.SHRED_AUGMENT.getSlot(), createUpgradeItem(weapon, SwordUpgrade.SHRED_AUGMENT, available));
         gui.setItem(SwordUpgrade.WARP_AUGMENT.getSlot(), createUpgradeItem(weapon, SwordUpgrade.WARP_AUGMENT, available));
+
+        // ----- Nightmares Row -----
+        gui.setItem(27, createHeader(Material.SPIDER_EYE, ChatColor.DARK_PURPLE + "☾ Nightmares"));
+        gui.setItem(28, createColoredPane(Material.PURPLE_STAINED_GLASS_PANE, ""));
+        gui.setItem(SwordUpgrade.STARLESS_NIGHT.getSlot(), createUpgradeItem(weapon, SwordUpgrade.STARLESS_NIGHT, available));
+        gui.setItem(SwordUpgrade.CHALLENGE.getSlot(), createUpgradeItem(weapon, SwordUpgrade.CHALLENGE, available));
+        gui.setItem(SwordUpgrade.BLOOD_MOON.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BLOOD_MOON, available));
+        gui.setItem(SwordUpgrade.APOCALYPSE.getSlot(), createUpgradeItem(weapon, SwordUpgrade.APOCALYPSE, available));
+        gui.setItem(SwordUpgrade.BALLAD_OF_THE_CATS.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BALLAD_OF_THE_CATS, available));
 
         gui.setItem(49, createExtendedPowerDisplay(power, getPowerCap(weapon), available));
         ItemStack respec = new ItemStack(Material.BARRIER);
@@ -351,6 +369,13 @@ public class SoulUpgradeSystem implements Listener {
             case "WARP_AUGMENT": return "✦";
             case "FURY": return "⚡";
             case "BETRAYAL": return "♬";
+            case "LETHALITY": return "✖";
+            case "FEED": return "☕";
+            case "STARLESS_NIGHT": return "☾";
+            case "CHALLENGE": return "⚑";
+            case "BLOOD_MOON": return "☽";
+            case "APOCALYPSE": return "☢";
+            case "BALLAD_OF_THE_CATS": return "♪";
             default: return "⬡";
         }
     }
