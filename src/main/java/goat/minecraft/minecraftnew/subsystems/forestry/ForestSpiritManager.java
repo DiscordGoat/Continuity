@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -403,6 +404,9 @@ public class ForestSpiritManager implements Listener {
         if (killer != null) {
             event.setDroppedExp(tier * 50);
             xpManager.addXP(killer, "Forestry", 10 * tier);
+            if (random.nextInt(100) < 16) {
+                event.getDrops().add(ItemRegistry.getForbiddenBook());
+            }
         }
 
         // Clear normal drops.

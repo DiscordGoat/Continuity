@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.Pathfinder;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.combat.utils.EntityLevelExtractor;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import me.gamercoder215.mobchip.EntityBrain;
 import me.gamercoder215.mobchip.ai.EntityAI;
 import me.gamercoder215.mobchip.bukkit.BukkitBrain;
@@ -85,10 +86,16 @@ public class KillMonster implements Listener {
     
             // Add XP to the player
             xpManager.addXP(playerKiller, "Combat", xpGain);
-    
+
             // 20% chance for loot to drop normally, else clear drops
             Random random = new Random();
             if (entity instanceof Monster) {
+                Monster monsterEntity = (Monster) entity;
+                if (!monsterEntity.hasMetadata("SEA_CREATURE") && !monsterEntity.hasMetadata("forestSpirit")) {
+                    if (random.nextInt(100) < 4) {
+                        e.getDrops().add(ItemRegistry.getForbiddenBook());
+                    }
+                }
                 if (random.nextInt(100) < 20) {
                     return; // Allow normal drops
                 } else {
