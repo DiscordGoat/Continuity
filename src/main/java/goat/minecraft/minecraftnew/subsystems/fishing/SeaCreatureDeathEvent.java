@@ -93,6 +93,11 @@ public class SeaCreatureDeathEvent implements Listener {
 
         fishingPetManager.incrementSeaCreatureKills(player);
 
+        // 16% chance to drop a Forbidden Book
+        if (random.nextInt(100) < 16) {
+            event.getDrops().add(ItemRegistry.getForbiddenBook());
+        }
+
         Bukkit.getLogger().info("Player " + killer.getName() + " gained " + boostedXP + " Fishing XP.");
 
         if(seaCreature.getSkullName().equals("Pirate")){
