@@ -27,12 +27,6 @@ public class ObsidianPlating implements Listener {
         if (playerData.hasPerk(id, "Unbreaking")) {
             chance += 0.15;
         }
-        if (playerData.hasPerk(id, "Unbreaking II")) {
-            chance += 0.15;
-        }
-        if (playerData.hasPerk(id, "Unbreaking III")) {
-            chance += 0.15;
-        }
 
         if (chance > 0 && random.nextDouble() < chance) {
             event.setCancelled(true);

@@ -556,8 +556,6 @@ public class VerdantRelicsSubsystem implements Listener {
                         PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
                         int perkReduction = 0;
                         if (meritManager.hasPerk(player.getUniqueId(), "Unbreaking")) perkReduction++;
-                        if (meritManager.hasPerk(player.getUniqueId(), "Unbreaking II")) perkReduction++;
-                        if (meritManager.hasPerk(player.getUniqueId(), "Unbreaking III")) perkReduction++;
 
                         cost -= unbreakingLevel;
                         cost -= perkReduction;

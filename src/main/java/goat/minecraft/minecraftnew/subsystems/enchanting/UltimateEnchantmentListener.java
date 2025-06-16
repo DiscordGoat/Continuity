@@ -5,7 +5,6 @@ import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -53,7 +52,6 @@ public class UltimateEnchantmentListener implements Listener {
     // Warp charge tracking
     private static final long WARP_CHARGE_COOLDOWN = 60_000L; // 60 seconds
     private static final int DEFAULT_WARP_CHARGES = 10;
-    private static final int INSTANT_TRANSMISSION_CHARGES = 30;
     private final Map<UUID, List<Long>> warpCharges = new HashMap<>();
     // Removed Leviathan ultimate enchantment
 
@@ -706,10 +704,6 @@ public class UltimateEnchantmentListener implements Listener {
                     // Activate the loyal enchantment effect.
                     activateLoyalSword(player, item);
                     cooldownMs = 5000L;
-                    PlayerMeritManager loyaltyManager = PlayerMeritManager.getInstance(plugin);
-                    if (loyaltyManager.hasPerk(player.getUniqueId(), "Loyalty II")) {
-                        cooldownMs = 1_000L;
-                    }
                     break;
                 case "shred":
                     if (activateShred(player, item)) {
@@ -898,10 +892,6 @@ public class UltimateEnchantmentListener implements Listener {
 
     // ---- Warp charge helpers ----
     private int getMaxWarpCharges(Player player) {
-        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
-        if (meritManager.hasPerk(player.getUniqueId(), "Instant Transmission")) {
-            return INSTANT_TRANSMISSION_CHARGES;
-        }
         return DEFAULT_WARP_CHARGES;
     }
 

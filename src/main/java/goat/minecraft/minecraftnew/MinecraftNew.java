@@ -185,12 +185,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new MeritCommand(this, playerData), this);
 
         //add merit perks
-        getServer().getPluginManager().registerEvents(new EnderMind(playerData), this);
         getServer().getPluginManager().registerEvents(new ObsidianPlating(playerData), this);
-        getServer().getPluginManager().registerEvents(new BerserkersRage(this, playerData), this);
-        getServer().getPluginManager().registerEvents(new TacticalRetreat(this, playerData), this);
-        getServer().getPluginManager().registerEvents(new VampiricStrike(this, playerData), this);
-        getServer().getPluginManager().registerEvents(new LordOfThunder(this, playerData), this);
         getServer().getPluginManager().registerEvents(new QuickSwap(this, playerData), this);
         getServer().getPluginManager().registerEvents(new Trainer(playerData), this);
         getServer().getPluginManager().registerEvents(new Restock(this, playerData), this);
@@ -205,12 +200,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new MasterThief(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterDuelist(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterAngler(this, playerData), this);
-        getServer().getPluginManager().registerEvents(new MasterDiplomat(this, playerData), this);
-        getServer().getPluginManager().registerEvents(new MasterDiffuser(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterTrader(this, playerData), this);
         getServer().getPluginManager().registerEvents(new Haggler(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterEmployer(this, playerData), this);
-        getServer().getPluginManager().registerEvents(new LoyaltyII(this, playerData), this);
         doubleEnderchest = new DoubleEnderchest(this, playerData);
         getServer().getPluginManager().registerEvents(doubleEnderchest, this);
         getServer().getPluginManager().registerEvents(new StrongDigestion(this, playerData), this);
