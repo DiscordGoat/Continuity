@@ -327,7 +327,7 @@ public class UltimateEnchantingSystem implements Listener {
      * Creates a soul upgrade button for weapons with Soul Power.
      */
     private ItemStack createSoulUpgradeButton(ItemStack weapon) {
-        ItemStack button = new ItemStack(weapon.getType() == Material.BOW ? Material.BOW : Material.DIAMOND_SWORD);
+        ItemStack button = new ItemStack(Material.DIAMOND_SWORD);
         ItemMeta meta = button.getItemMeta();
         if (meta != null) {
             meta.setDisplayName(ChatColor.DARK_AQUA + "Soul Upgrades");
@@ -371,10 +371,10 @@ public class UltimateEnchantingSystem implements Listener {
     }
 
     /**
-     * Returns true if the material is a sword or bow for soul power.
+     * Returns true if the material is a sword for soul power.
      */
     private boolean isSoulWeapon(Material material) {
-        return material.toString().endsWith("_SWORD") || material == Material.BOW;
+        return material.toString().endsWith("_SWORD");
     }
 
     /**
@@ -493,7 +493,7 @@ public class UltimateEnchantingSystem implements Listener {
                 }
                 return;
             }
-            if ((clickedItem.getType() == Material.BOW || clickedItem.getType() == Material.DIAMOND_SWORD) && isSoulWeapon(handItem.getType())) {
+            if (clickedItem.getType() == Material.DIAMOND_SWORD && isSoulWeapon(handItem.getType())) {
                 SoulUpgradeSystem upgradeSystem = new SoulUpgradeSystem(MinecraftNew.getInstance());
                 upgradeSystem.openUpgradeGUI(player, handItem);
                 return;
