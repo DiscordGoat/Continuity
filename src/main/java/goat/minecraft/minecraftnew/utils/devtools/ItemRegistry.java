@@ -3672,7 +3672,7 @@ public class ItemRegistry {
                 Arrays.asList(
                         ChatColor.BLUE + "Power: " + ChatColor.WHITE + "+1 Soul Power",
                         "",
-                        ChatColor.YELLOW + "Click onto a sword or bow",
+                        ChatColor.YELLOW + "Click onto a sword",
                         ChatColor.YELLOW + "to infuse its Soul Power.",
                         ChatColor.GREEN + "Soul Item"
                 ),
@@ -3690,7 +3690,7 @@ public class ItemRegistry {
                 Arrays.asList(
                         ChatColor.BLUE + "Power: " + ChatColor.AQUA + "+3 Soul Power",
                         "",
-                        ChatColor.YELLOW + "Click onto a sword or bow",
+                        ChatColor.YELLOW + "Click onto a sword",
                         ChatColor.YELLOW + "to infuse its Soul Power.",
                         ChatColor.GREEN + "Soul Item"
                 ),
@@ -3708,7 +3708,7 @@ public class ItemRegistry {
                 Arrays.asList(
                         ChatColor.BLUE + "Power: " + ChatColor.YELLOW + "+7 Soul Power",
                         "",
-                        ChatColor.YELLOW + "Click onto a sword or bow",
+                        ChatColor.YELLOW + "Click onto a sword",
                         ChatColor.YELLOW + "to infuse its Soul Power.",
                         ChatColor.GREEN + "Soul Item"
                 ),
@@ -3726,7 +3726,7 @@ public class ItemRegistry {
                 Arrays.asList(
                         ChatColor.BLUE + "Power: " + ChatColor.LIGHT_PURPLE + "+10 Soul Power",
                         "",
-                        ChatColor.YELLOW + "Click onto a sword or bow",
+                        ChatColor.YELLOW + "Click onto a sword",
                         ChatColor.YELLOW + "to infuse its Soul Power.",
                         ChatColor.GREEN + "Soul Item"
                 ),
@@ -3744,7 +3744,7 @@ public class ItemRegistry {
                 Arrays.asList(
                         ChatColor.BLUE + "Power: " + ChatColor.GOLD + "+20 Soul Power",
                         "",
-                        ChatColor.YELLOW + "Click onto a sword or bow",
+                        ChatColor.YELLOW + "Click onto a sword",
                         ChatColor.YELLOW + "to infuse its Soul Power.",
                         ChatColor.GREEN + "Soul Item"
                 ),
@@ -3766,7 +3766,7 @@ public class ItemRegistry {
                         ChatColor.YELLOW + "Effect: " + ChatColor.WHITE + "+100% Soul Cap",
                         ChatColor.YELLOW + "Maximum: " + ChatColor.WHITE + "500% Total Cap",
                         "",
-                        ChatColor.DARK_PURPLE + "Drag onto swords or bows to apply"
+                        ChatColor.DARK_PURPLE + "Drag onto swords to apply"
                 ),
                 1,
                 false,

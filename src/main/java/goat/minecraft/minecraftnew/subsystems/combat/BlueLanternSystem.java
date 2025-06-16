@@ -44,7 +44,7 @@ public class BlueLanternSystem implements Listener {
     private boolean isSoulWeapon(ItemStack item) {
         if (item == null) return false;
         Material type = item.getType();
-        return type.name().endsWith("_SWORD") || type == Material.BOW;
+        return type.name().endsWith("_SWORD");
     }
 
     private void applyLantern(Player player, ItemStack lantern, ItemStack weapon) {

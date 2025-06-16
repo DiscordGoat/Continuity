@@ -40,8 +40,8 @@ public class SoulApplicationSystem implements Listener {
 
         if (!isSoulItem(cursor)) return;
         if (!isSoulWeapon(clicked)) {
-            if (clicked.getType().name().contains("SWORD") || clicked.getType() == Material.BOW) {
-                player.sendMessage(ChatColor.RED + "Only swords or bows can harness Soul Power!");
+            if (clicked.getType().name().contains("SWORD")) {
+                player.sendMessage(ChatColor.RED + "Only swords can harness Soul Power!");
                 event.setCancelled(true);
             }
             return;
@@ -78,7 +78,7 @@ public class SoulApplicationSystem implements Listener {
     private boolean isSoulWeapon(ItemStack item) {
         if (item == null) return false;
         Material m = item.getType();
-        return m.name().endsWith("_SWORD") || m == Material.BOW;
+        return m.name().endsWith("_SWORD");
     }
 
     private boolean applySoulItem(ItemStack soul, ItemStack weapon, Player player) {

@@ -17,7 +17,7 @@ import java.util.*;
 
 /**
  * Simple upgrade GUI for weapons with Soul Power.
- * Supports sword and bow variants with a few upgrades each.
+ * Supports sword variant with a few upgrades.
  */
 public class SoulUpgradeSystem implements Listener {
     private final MinecraftNew plugin;
@@ -59,38 +59,12 @@ public class SoulUpgradeSystem implements Listener {
         public int getSlot() { return slot; }
     }
 
-    public enum BowUpgrade {
-        LIFESTEAL("Lifesteal", "+5% chance to heal 50% missing health per level", Material.GHAST_TEAR, 5, 11),
-        HEADSHOT("Headshot Augment", "+10 damage per level", Material.ARROW, 5, 12);
-
-        private final String name;
-        private final String desc;
-        private final Material icon;
-        private final int maxLevel;
-        private final int slot;
-
-        BowUpgrade(String n, String d, Material m, int max, int slot) {
-            this.name = n;
-            this.desc = d;
-            this.icon = m;
-            this.maxLevel = max;
-            this.slot = slot;
-        }
-        public String getName() { return name; }
-        public String getDesc() { return desc; }
-        public Material getIcon() { return icon; }
-        public int getMaxLevel() { return maxLevel; }
-        public int getSlot() { return slot; }
-    }
+    // Bow upgrades removed
 
     // ----- GUI OPENING -----
 
     public void openUpgradeGUI(Player player, ItemStack weapon) {
-        if (weapon.getType() == Material.BOW) {
-            openBowUpgradeGUI(player, weapon);
-        } else {
-            openSwordUpgradeGUI(player, weapon);
-        }
+        openSwordUpgradeGUI(player, weapon);
     }
 
     private void openSwordUpgradeGUI(Player player, ItemStack weapon) {
@@ -105,7 +79,7 @@ public class SoulUpgradeSystem implements Listener {
 
         for (int i = 0; i < 54; i++) gui.setItem(i, createFiller());
 
-        int available = calculateAvailablePower(weapon, false);
+        int available = calculateAvailablePower(weapon);
 
         gui.setItem(0, createHeader(Material.DIAMOND_SWORD, ChatColor.RED + "⚔ Sword"));
         gui.setItem(1, createColoredPane(Material.RED_STAINED_GLASS_PANE, ""));
@@ -135,47 +109,6 @@ public class SoulUpgradeSystem implements Listener {
         player.openInventory(gui);
     }
 
-    private void openBowUpgradeGUI(Player player, ItemStack weapon) {
-        int power = getTotalPower(weapon);
-        if (power == 0) {
-            player.sendMessage(ChatColor.RED + "This weapon has no Soul Power!");
-            return;
-        }
-
-        Inventory gui = Bukkit.createInventory(new SoulUpgradeHolder(), 54,
-                ChatColor.DARK_AQUA + "✦ Bow Upgrades");
-
-        for (int i = 0; i < 54; i++) gui.setItem(i, createFiller());
-
-        int available = calculateAvailablePower(weapon, true);
-
-        gui.setItem(0, createHeader(Material.BOW, ChatColor.GOLD + "➹ Bow"));
-        gui.setItem(1, createColoredPane(Material.YELLOW_STAINED_GLASS_PANE, ""));
-        for (BowUpgrade up : BowUpgrade.values()) {
-            gui.setItem(up.getSlot(), createUpgradeItem(weapon, up, available));
-        }
-
-        gui.setItem(49, createExtendedPowerDisplay(power, getPowerCap(weapon), available));
-        ItemStack respec = new ItemStack(Material.BARRIER);
-        ItemMeta rMeta = respec.getItemMeta();
-        rMeta.setDisplayName(ChatColor.RED + "⚠ Reset Upgrades");
-        List<String> lore = new ArrayList<>();
-        int spent = power - available;
-        lore.add(ChatColor.GRAY + "Damages tool by " + ChatColor.RED + "20% durability");
-        lore.add(ChatColor.GRAY + "Returns all allocated power");
-        lore.add("");
-        if (spent > 0) {
-            lore.add(ChatColor.GRAY + "Will refund: " + ChatColor.GREEN + spent + "% power");
-            lore.add(ChatColor.YELLOW + "Shift+Right-click to confirm");
-        } else {
-            lore.add(ChatColor.DARK_GRAY + "No upgrades to reset");
-        }
-        rMeta.setLore(lore);
-        respec.setItemMeta(rMeta);
-        gui.setItem(53, respec);
-
-        player.openInventory(gui);
-    }
 
     private ItemStack createFiller() {
         ItemStack fill = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
@@ -223,26 +156,6 @@ public class SoulUpgradeSystem implements Listener {
         return item;
     }
 
-    private ItemStack createUpgradeItem(ItemStack weapon, BowUpgrade up, int available) {
-        int level = getUpgradeLevel(weapon, up.name());
-        boolean max = level >= up.getMaxLevel();
-        boolean afford = available >= 10;
-        ItemStack item = new ItemStack(up.getIcon());
-        ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName((max ? ChatColor.GOLD : (afford ? ChatColor.GREEN : ChatColor.RED)) + up.getName());
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + up.getDesc());
-        lore.add(ChatColor.GRAY + "Level: " + ChatColor.WHITE + level + "/" + up.getMaxLevel());
-        if (!max) {
-            lore.add(ChatColor.GRAY + "Cost: 10% power");
-            lore.add(afford ? ChatColor.GREEN + "Click to upgrade" : ChatColor.RED + "Not enough power");
-        } else {
-            lore.add(ChatColor.GOLD + "Max level reached");
-        }
-        meta.setLore(lore);
-        item.setItemMeta(meta);
-        return item;
-    }
 
     // ----- EVENT HANDLING -----
 
@@ -255,26 +168,15 @@ public class SoulUpgradeSystem implements Listener {
         ItemStack weapon = player.getInventory().getItemInMainHand();
         if (weapon == null) return;
 
-        boolean bow = weapon.getType() == Material.BOW;
-
         int slot = event.getSlot();
         if (slot == 53 && event.isShiftClick() && event.isRightClick()) {
             handleRespec(player, weapon);
             return;
         }
-        if (bow) {
-            for (BowUpgrade up : BowUpgrade.values()) {
-                if (up.getSlot() == slot) {
-                    purchase(player, weapon, up.name(), up.getMaxLevel());
-                    return;
-                }
-            }
-        } else {
-            for (SwordUpgrade up : SwordUpgrade.values()) {
-                if (up.getSlot() == slot) {
-                    purchase(player, weapon, up.name(), up.getMaxLevel());
-                    return;
-                }
+        for (SwordUpgrade up : SwordUpgrade.values()) {
+            if (up.getSlot() == slot) {
+                purchase(player, weapon, up.name(), up.getMaxLevel());
+                return;
             }
         }
     }
@@ -285,7 +187,7 @@ public class SoulUpgradeSystem implements Listener {
             player.sendMessage(ChatColor.RED + "Upgrade at max level");
             return;
         }
-        int available = calculateAvailablePower(weapon, weapon.getType() == Material.BOW);
+        int available = calculateAvailablePower(weapon);
         if (available < 10) {
             player.sendMessage(ChatColor.RED + "Not enough Soul Power");
             return;
@@ -314,16 +216,10 @@ public class SoulUpgradeSystem implements Listener {
         return 100;
     }
 
-    private int calculateAvailablePower(ItemStack weapon, boolean bow) {
+    private int calculateAvailablePower(ItemStack weapon) {
         int spent = 0;
-        if (bow) {
-            for (BowUpgrade up : BowUpgrade.values()) {
-                spent += getUpgradeLevel(weapon, up.name()) * 10;
-            }
-        } else {
-            for (SwordUpgrade up : SwordUpgrade.values()) {
-                spent += getUpgradeLevel(weapon, up.name()) * 10;
-            }
+        for (SwordUpgrade up : SwordUpgrade.values()) {
+            spent += getUpgradeLevel(weapon, up.name()) * 10;
         }
         return getTotalPower(weapon) - spent;
     }
@@ -400,7 +296,6 @@ public class SoulUpgradeSystem implements Listener {
     private Set<String> getAllKeys() {
         Set<String> keys = new LinkedHashSet<>();
         for (SwordUpgrade s : SwordUpgrade.values()) keys.add(s.name());
-        for (BowUpgrade b : BowUpgrade.values()) keys.add(b.name());
         return keys;
     }
 
@@ -436,13 +331,11 @@ public class SoulUpgradeSystem implements Listener {
             case "LIFESTEAL_REGEN": return "❤";
             case "LIFESTEAL_POTENCY": return "✚";
             case "LIFESTEAL_DURATION": return "⌛";
-            case "LIFESTEAL": return "❤";
             case "LOYAL_AUGMENT": return "⚔";
             case "SHRED_AUGMENT": return "✂";
             case "WARP_AUGMENT": return "✦";
             case "FURY": return "⚡";
             case "BETRAYAL": return "♬";
-            case "HEADSHOT": return "➹";
             default: return "⬡";
         }
     }
