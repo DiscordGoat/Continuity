@@ -594,6 +594,10 @@ public class UltimateEnchantmentListener implements Listener {
                         fireDamageArrow(player);
                         cooldownMs = 15_000L;
                         break;
+                    case "rebound":
+                        fireReboundArrow(player, ueData.getLevel());
+                        cooldownMs = 1_000L;
+                        break;
                     default:
                         cooldownMs = 1L;
                         break;
@@ -645,6 +649,12 @@ public class UltimateEnchantmentListener implements Listener {
         Arrow arrow = player.launchProjectile(Arrow.class);
         arrow.setDamage(20);
         player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 10.f, 1.0f);
+    }
+
+    private void fireReboundArrow(Player player, int level) {
+        Arrow arrow = player.launchProjectile(Arrow.class);
+        arrow.setMetadata("reboundLevel", new FixedMetadataValue(plugin, level));
+        player.playSound(player.getLocation(), Sound.ENTITY_ARROW_SHOOT, 1.0f, 1.0f);
     }
 
     @EventHandler
