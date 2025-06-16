@@ -8,6 +8,7 @@ import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.fishing.BaitApplicationSystem;
 import goat.minecraft.minecraftnew.subsystems.fishing.FishingUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.combat.SoulApplicationSystem;
+import goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -500,7 +501,8 @@ public class UltimateEnchantingSystem implements Listener {
                 return;
             }
             if ((clickedItem.getType() == Material.BOW || clickedItem.getType() == Material.DIAMOND_SWORD) && isSoulWeapon(handItem.getType())) {
-                // Soul upgrade tree not implemented yet
+                SoulUpgradeSystem upgradeSystem = new SoulUpgradeSystem(MinecraftNew.getInstance());
+                upgradeSystem.openUpgradeGUI(player, handItem);
                 return;
             }
             if (clickedItem.getType() == Material.PRISMARINE_CRYSTALS && isFishingRod(handItem.getType())) {
