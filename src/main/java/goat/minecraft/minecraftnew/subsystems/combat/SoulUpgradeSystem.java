@@ -29,11 +29,11 @@ public class SoulUpgradeSystem implements Listener {
     // ----- ENUMERATIONS -----
 
     public enum SwordUpgrade {
-        DIAMOND_ESSENCE("Diamond Essence", "+10% creeper damage per level", Material.DIAMOND, 5, 10),
-        LIFESTEAL("Lifesteal", "+5% chance to heal 50% missing damage per level", Material.GHAST_TEAR, 3, 11),
-        LOYAL_AUGMENT("Loyal Augment", "+5% weapon damage per level", Material.NETHER_STAR, 5, 12),
-        SHRED_AUGMENT("Shred Augment", "+5 shredder capacity per level", Material.IRON_SWORD, 5, 13),
-        WARP_AUGMENT("Warp Augment", "+3 warp charges per level", Material.ENDER_PEARL, 6, 14);
+        DIAMOND_ESSENCE("Diamond Essence", "+10% creeper damage per level", Material.DIAMOND, 5, 2),
+        LIFESTEAL("Lifesteal", "+5% chance to heal 50% missing damage per level", Material.GHAST_TEAR, 3, 3),
+        LOYAL_AUGMENT("Loyal Augment", "+5% weapon damage per level", Material.NETHER_STAR, 5, 4),
+        SHRED_AUGMENT("Shred Augment", "+5 shredder capacity per level", Material.IRON_SWORD, 5, 5),
+        WARP_AUGMENT("Warp Augment", "+3 warp charges per level", Material.ENDER_PEARL, 6, 6);
 
         private final String name;
         private final String desc;
@@ -56,8 +56,8 @@ public class SoulUpgradeSystem implements Listener {
     }
 
     public enum BowUpgrade {
-        LIFESTEAL("Lifesteal", "+5% chance to heal 50% missing health per level", Material.GHAST_TEAR, 5, 10),
-        HEADSHOT("Headshot Augment", "+10 damage per level", Material.ARROW, 5, 11);
+        LIFESTEAL("Lifesteal", "+5% chance to heal 50% missing health per level", Material.GHAST_TEAR, 5, 11),
+        HEADSHOT("Headshot Augment", "+10 damage per level", Material.ARROW, 5, 12);
 
         private final String name;
         private final String desc;
@@ -89,24 +89,51 @@ public class SoulUpgradeSystem implements Listener {
         }
 
         boolean bow = weapon.getType() == Material.BOW;
-        Inventory gui = Bukkit.createInventory(new SoulUpgradeHolder(), 27,
+        Inventory gui = Bukkit.createInventory(new SoulUpgradeHolder(), 54,
                 ChatColor.DARK_AQUA + "✦ Soul Upgrades");
 
-        for (int i = 0; i < 27; i++) gui.setItem(i, createFiller());
+        for (int i = 0; i < 54; i++) gui.setItem(i, createFiller());
 
         int available = calculateAvailablePower(weapon, bow);
 
-        if (bow) {
-            for (BowUpgrade up : BowUpgrade.values()) {
-                gui.setItem(up.getSlot(), createUpgradeItem(weapon, up, available));
-            }
-        } else {
+        // Row 1 - sword upgrades
+        gui.setItem(0, createHeader(Material.DIAMOND_SWORD, ChatColor.RED + "⚔ Sword"));
+        gui.setItem(1, createColoredPane(Material.RED_STAINED_GLASS_PANE, ""));
+        if (!bow) {
             for (SwordUpgrade up : SwordUpgrade.values()) {
                 gui.setItem(up.getSlot(), createUpgradeItem(weapon, up, available));
             }
         }
 
-        gui.setItem(22, createExtendedPowerDisplay(power, getPowerCap(weapon), available));
+        // Row 2 - bow upgrades
+        gui.setItem(9, createHeader(Material.BOW, ChatColor.GOLD + "➹ Bow"));
+        gui.setItem(10, createColoredPane(Material.YELLOW_STAINED_GLASS_PANE, ""));
+        if (bow) {
+            for (BowUpgrade up : BowUpgrade.values()) {
+                gui.setItem(up.getSlot(), createUpgradeItem(weapon, up, available));
+            }
+        }
+
+        gui.setItem(49, createExtendedPowerDisplay(power, getPowerCap(weapon), available));
+
+        ItemStack respec = new ItemStack(Material.BARRIER);
+        ItemMeta rMeta = respec.getItemMeta();
+        rMeta.setDisplayName(ChatColor.RED + "⚠ Reset Upgrades");
+        List<String> lore = new ArrayList<>();
+        int spent = power - available;
+        lore.add(ChatColor.GRAY + "Damages tool by " + ChatColor.RED + "20% durability");
+        lore.add(ChatColor.GRAY + "Returns all allocated power");
+        lore.add("");
+        if (spent > 0) {
+            lore.add(ChatColor.GRAY + "Will refund: " + ChatColor.GREEN + spent + "% power");
+            lore.add(ChatColor.YELLOW + "Shift+Right-click to confirm");
+        } else {
+            lore.add(ChatColor.DARK_GRAY + "No upgrades to reset");
+        }
+        rMeta.setLore(lore);
+        respec.setItemMeta(rMeta);
+        gui.setItem(53, respec);
+
         player.openInventory(gui);
     }
 
@@ -116,6 +143,22 @@ public class SoulUpgradeSystem implements Listener {
         meta.setDisplayName(ChatColor.BLACK + "");
         fill.setItemMeta(meta);
         return fill;
+    }
+
+    private ItemStack createHeader(Material m, String name) {
+        ItemStack item = new ItemStack(m);
+        ItemMeta meta = item.getItemMeta();
+        meta.setDisplayName(name);
+        item.setItemMeta(meta);
+        return item;
+    }
+
+    private ItemStack createColoredPane(Material material, String name) {
+        ItemStack pane = new ItemStack(material);
+        ItemMeta meta = pane.getItemMeta();
+        meta.setDisplayName(ChatColor.BLACK + name);
+        pane.setItemMeta(meta);
+        return pane;
     }
 
     // Overloaded for sword and bow upgrades
@@ -175,6 +218,10 @@ public class SoulUpgradeSystem implements Listener {
         boolean bow = weapon.getType() == Material.BOW;
 
         int slot = event.getSlot();
+        if (slot == 53 && event.isShiftClick() && event.isRightClick()) {
+            handleRespec(player, weapon);
+            return;
+        }
         if (bow) {
             for (BowUpgrade up : BowUpgrade.values()) {
                 if (up.getSlot() == slot) {
@@ -315,6 +362,31 @@ public class SoulUpgradeSystem implements Listener {
         for (SwordUpgrade s : SwordUpgrade.values()) keys.add(s.name());
         for (BowUpgrade b : BowUpgrade.values()) keys.add(b.name());
         return keys;
+    }
+
+    private void clearAllUpgrades(ItemStack weapon) {
+        if (!weapon.hasItemMeta()) return;
+        ItemMeta meta = weapon.getItemMeta();
+        List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
+        lore.removeIf(l -> ChatColor.stripColor(l).startsWith("Soul Upgrades:"));
+        meta.setLore(lore);
+        weapon.setItemMeta(meta);
+    }
+
+    private void handleRespec(Player player, ItemStack weapon) {
+        int currentDurability = weapon.getDurability();
+        int maxDurability = weapon.getType().getMaxDurability();
+        int damageToAdd = (int) Math.ceil(maxDurability * 0.2);
+        if (currentDurability + damageToAdd >= maxDurability) {
+            player.sendMessage(ChatColor.RED + "Tool would break from respec damage! Repair it first.");
+            return;
+        }
+        clearAllUpgrades(weapon);
+        weapon.setDurability((short) (currentDurability + damageToAdd));
+        player.sendMessage(ChatColor.YELLOW + "Tool respecced! All upgrades reset.");
+        player.sendMessage(ChatColor.RED + "Tool took " + damageToAdd + " durability damage.");
+        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
+        player.closeInventory();
     }
 
     // ----- SYMBOLS & COLORS -----
