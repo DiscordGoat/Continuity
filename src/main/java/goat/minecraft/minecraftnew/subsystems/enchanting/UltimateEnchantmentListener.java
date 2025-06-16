@@ -687,6 +687,19 @@ public class UltimateEnchantmentListener implements Listener {
         }
     }
 
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        Player killer = event.getEntity().getKiller();
+        if (killer == null) return;
+
+        ItemStack weapon = killer.getInventory().getItemInMainHand();
+        CustomEnchantmentManager.UltimateEnchantmentData data =
+                CustomEnchantmentManager.getUltimateEnchantment(weapon);
+        if (data == null || !data.getName().equalsIgnoreCase("Shred")) return;
+
+        addShredCharges(killer, 3);
+    }
+
     private void spawnReboundArrow(Player shooter, Location from, double damage, int remaining) {
         double radius = 20.0;
         Monster nearest = null;
