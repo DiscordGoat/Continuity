@@ -29,15 +29,15 @@ public class SoulUpgradeSystem implements Listener {
     // ----- ENUMERATIONS -----
 
     public enum SwordUpgrade {
-        DIAMOND_ESSENCE("Diamond Essence", "+10% creeper damage per level", Material.DIAMOND, 5, 2),
-        LIFESTEAL_REGEN("Regeneration", "+5% chance to gain regeneration per level", Material.GHAST_TEAR, 3, 11),
-        LIFESTEAL_POTENCY("Potency", "+1 regen potency per level", Material.BLAZE_POWDER, 2, 12),
-        LIFESTEAL_DURATION("Duration", "+5 seconds of regeneration per level", Material.CLOCK, 3, 13),
-        LOYAL_AUGMENT("Loyal Augment", "-1s cooldown per level", Material.NETHER_STAR, 4, 20),
-        SHRED_AUGMENT("Shred Augment", "+3 stacks of shredders per level", Material.IRON_SWORD, 6, 21),
-        WARP_AUGMENT("Warp Augment", "+5 warp charges per level", Material.ENDER_PEARL, 6, 22),
-        FURY("Fury", "Strike lightning when below 50% HP (30s CD)", Material.LIGHTNING_ROD, 1, 3),
-        BETRAYAL("Betrayal", "+4% creeper disc chance per level", Material.MUSIC_DISC_11, 4, 4);
+        DIAMOND_ESSENCE("Diamond Essence", "+10% creeper damage per level", Material.DIAMOND, 5, 20),
+        LIFESTEAL_REGEN("Regeneration", "+5% chance to gain regeneration per level", Material.GHAST_TEAR, 3, 2),
+        LIFESTEAL_POTENCY("Potency", "+1 regen potency per level", Material.BLAZE_POWDER, 2, 3),
+        LIFESTEAL_DURATION("Duration", "+5 seconds of regeneration per level", Material.CLOCK, 3, 4),
+        LOYAL_AUGMENT("Loyal Augment", "-50% base damage, -1s cooldown per level", Material.NETHER_STAR, 4, 11),
+        SHRED_AUGMENT("Shred Augment", "+3 stacks of shredders per level", Material.IRON_SWORD, 6, 12),
+        WARP_AUGMENT("Warp Augment", "+3 warp charges per level", Material.ENDER_PEARL, 6, 13),
+        FURY("Fury", "Strike lightning when below 50% HP (30s CD)", Material.LIGHTNING_ROD, 1, 21),
+        BETRAYAL("Betrayal", "+4% creeper disc chance per level", Material.MUSIC_DISC_11, 4, 22);
 
         private final String name;
         private final String desc;
@@ -81,26 +81,26 @@ public class SoulUpgradeSystem implements Listener {
 
         int available = calculateAvailablePower(weapon);
 
-        // ----- Hit Effects Row -----
-        gui.setItem(0, createHeader(Material.DIAMOND_SWORD, ChatColor.GOLD + "⚔ Hit Effects"));
-        gui.setItem(1, createColoredPane(Material.ORANGE_STAINED_GLASS_PANE, ""));
-        gui.setItem(SwordUpgrade.DIAMOND_ESSENCE.getSlot(), createUpgradeItem(weapon, SwordUpgrade.DIAMOND_ESSENCE, available));
-        gui.setItem(SwordUpgrade.FURY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.FURY, available));
-        gui.setItem(SwordUpgrade.BETRAYAL.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BETRAYAL, available));
-
         // ----- Regeneration Row -----
-        gui.setItem(9, createHeader(Material.GHAST_TEAR, ChatColor.LIGHT_PURPLE + "❤ Regeneration"));
-        gui.setItem(10, createColoredPane(Material.PINK_STAINED_GLASS_PANE, ""));
+        gui.setItem(0, createHeader(Material.GHAST_TEAR, ChatColor.LIGHT_PURPLE + "❤ Regeneration"));
+        gui.setItem(1, createColoredPane(Material.PINK_STAINED_GLASS_PANE, ""));
         gui.setItem(SwordUpgrade.LIFESTEAL_REGEN.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LIFESTEAL_REGEN, available));
         gui.setItem(SwordUpgrade.LIFESTEAL_POTENCY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LIFESTEAL_POTENCY, available));
         gui.setItem(SwordUpgrade.LIFESTEAL_DURATION.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LIFESTEAL_DURATION, available));
 
         // ----- Augment Row -----
-        gui.setItem(18, createHeader(Material.NETHER_STAR, ChatColor.AQUA + "✦ Augments"));
-        gui.setItem(19, createColoredPane(Material.CYAN_STAINED_GLASS_PANE, ""));
+        gui.setItem(9, createHeader(Material.NETHER_STAR, ChatColor.AQUA + "✦ Augments"));
+        gui.setItem(10, createColoredPane(Material.CYAN_STAINED_GLASS_PANE, ""));
         gui.setItem(SwordUpgrade.LOYAL_AUGMENT.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LOYAL_AUGMENT, available));
         gui.setItem(SwordUpgrade.SHRED_AUGMENT.getSlot(), createUpgradeItem(weapon, SwordUpgrade.SHRED_AUGMENT, available));
         gui.setItem(SwordUpgrade.WARP_AUGMENT.getSlot(), createUpgradeItem(weapon, SwordUpgrade.WARP_AUGMENT, available));
+
+        // ----- Hit Effects Row -----
+        gui.setItem(18, createHeader(Material.DIAMOND_SWORD, ChatColor.GOLD + "⚔ Hit Effects"));
+        gui.setItem(19, createColoredPane(Material.ORANGE_STAINED_GLASS_PANE, ""));
+        gui.setItem(SwordUpgrade.DIAMOND_ESSENCE.getSlot(), createUpgradeItem(weapon, SwordUpgrade.DIAMOND_ESSENCE, available));
+        gui.setItem(SwordUpgrade.FURY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.FURY, available));
+        gui.setItem(SwordUpgrade.BETRAYAL.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BETRAYAL, available));
 
         gui.setItem(49, createExtendedPowerDisplay(power, getPowerCap(weapon), available));
         ItemStack respec = new ItemStack(Material.BARRIER);
