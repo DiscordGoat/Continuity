@@ -1030,6 +1030,48 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getBlueSatchelTrinket() {
+        return createCustomItem(
+                Material.BLUE_WOOL,
+                ChatColor.YELLOW + "Blue Satchel",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Open",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getBlackSatchelTrinket() {
+        return createCustomItem(
+                Material.BLACK_WOOL,
+                ChatColor.YELLOW + "Black Satchel",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Open",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getGreenSatchelTrinket() {
+        return createCustomItem(
+                Material.GREEN_WOOL,
+                ChatColor.YELLOW + "Green Satchel",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Open",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getClericEnchant() {
         return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(

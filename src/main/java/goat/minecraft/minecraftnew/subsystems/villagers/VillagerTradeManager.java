@@ -367,6 +367,12 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> leatherworkerSells = new ArrayList<>();
         leatherworkerSells.add(createTradeMap("SADDLE", 1, 12, 1)); // Material
         leatherworkerSells.add(createTradeMap("LEATHER_BOOTS", 1, 1, 1)); // Material
+        leatherworkerSells.add(createTradeMap("WORKBENCH_TRINKET", 1, 90, 1));
+        leatherworkerSells.add(createTradeMap("DIVIDER_TRINKET", 1, 90, 1));
+        leatherworkerSells.add(createTradeMap("BANK_ACCOUNT_TRINKET", 1, 90, 1));
+        leatherworkerSells.add(createTradeMap("BLUE_SATCHEL", 1, 90, 1));
+        leatherworkerSells.add(createTradeMap("BLACK_SATCHEL", 1, 90, 1));
+        leatherworkerSells.add(createTradeMap("GREEN_SATCHEL", 1, 90, 1));
         defaultConfig.set("LEATHERWORKER.sells", leatherworkerSells);
 // Shepherd Purchases
         List<Map<String, Object>> shepherdPurchases = new ArrayList<>();
@@ -835,6 +841,18 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLeatherworkerEnchant();
             case "LEATHERWORKER_ARTIFACT":
                 return ItemRegistry.getLeatherworkerArtifact();
+            case "WORKBENCH_TRINKET":
+                return ItemRegistry.getWorkbenchTrinket();
+            case "DIVIDER_TRINKET":
+                return ItemRegistry.getDividerTrinket();
+            case "BANK_ACCOUNT_TRINKET":
+                return ItemRegistry.getBankAccountTrinket();
+            case "BLUE_SATCHEL":
+                return ItemRegistry.getBlueSatchelTrinket();
+            case "BLACK_SATCHEL":
+                return ItemRegistry.getBlackSatchelTrinket();
+            case "GREEN_SATCHEL":
+                return ItemRegistry.getGreenSatchelTrinket();
             case "CLERIC_ENCHANT":
                 return ItemRegistry.getClericEnchant();
             case "SUNFLARE":
