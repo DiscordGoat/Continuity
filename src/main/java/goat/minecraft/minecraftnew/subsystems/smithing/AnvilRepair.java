@@ -98,6 +98,21 @@ public class AnvilRepair implements Listener {
     }
 
     /**
+     * Opens the Anvil Repair GUI for the given player without requiring an anvil block.
+     * This is used by certain trinkets to access the interface remotely.
+     *
+     * @param player The player for whom to open the GUI.
+     */
+    public void openAnvilGui(Player player) {
+        Inventory anvilInventory = anvilInventories.get(player.getUniqueId());
+        if (anvilInventory == null) {
+            anvilInventory = loadInventory(player.getUniqueId());
+            anvilInventories.put(player.getUniqueId(), anvilInventory);
+        }
+        player.openInventory(anvilInventory);
+    }
+
+    /**
      * Creates a custom anvil inventory with predefined GUI elements.
      *
      * @return The custom anvil inventory.

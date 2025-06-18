@@ -105,6 +105,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         return shelfManager;
     }
 
+    public AnvilRepair getAnvilRepair() {
+        return anvilRepair;
+    }
+
     @Override
     public void onEnable() {
         instance = this;
