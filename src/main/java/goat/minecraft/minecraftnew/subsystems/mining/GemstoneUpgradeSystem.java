@@ -23,7 +23,7 @@ public class GemstoneUpgradeSystem implements Listener {
         COAL_YIELD("Coal Yield", "Additional coal drops when mining coal ore", Material.COAL_ORE, 5, 2),
         REDSTONE_YIELD("Redstone Yield", "Additional redstone drops when mining redstone ore", Material.REDSTONE_ORE, 5, 3),
         LAPIS_YIELD("Lapis Yield", "Additional lapis drops when mining lapis ore", Material.LAPIS_ORE, 5, 4),
-        DIAMOND_YIELD("Diamond Yield", "Additional diamond drops when mining diamond ore", Material.DIAMOND_ORE, 2, 5),
+        DIAMOND_YIELD("Diamond Yield", "Additional diamond drops when mining diamond ore", Material.DIAMOND_ORE, 3, 5),
         
         // Row 2: Metalwork (slots 11-16) 
         METALWORK_IRON("Metalwork Iron", "Additional iron drops when mining iron ore", Material.IRON_ORE, 5, 11),
@@ -82,7 +82,7 @@ public class GemstoneUpgradeSystem implements Listener {
         int totalPower = getTotalPower(tool);
         int powerCap = getPowerCap(tool);
         int availablePower = calculateAvailablePower(tool);
-        int upgradeCost = 8; // 8% cost per upgrade level
+        // Costs vary per upgrade type
         
         // Fill GUI with background
         for (int i = 0; i < 54; i++) {
@@ -90,7 +90,7 @@ public class GemstoneUpgradeSystem implements Listener {
         }
         
         // Add horizontal layout with categories on left
-        setupHorizontalLayout(gui, tool, upgradeCost, availablePower);
+        setupHorizontalLayout(gui, tool, availablePower);
         
         // Add power display at bottom center
         ItemStack powerDisplay = createExtendedPowerDisplay(totalPower, powerCap, availablePower);
@@ -206,7 +206,7 @@ public class GemstoneUpgradeSystem implements Listener {
         
         // Handle upgrade purchase
         int availablePower = calculateAvailablePower(tool);
-        int upgradeCost = 8; // 8% per upgrade level
+        int upgradeCost = getUpgradeCost(clickedUpgrade);
         int currentLevel = getUpgradeLevel(tool, clickedUpgrade);
         
         if (currentLevel >= clickedUpgrade.getMaxLevel()) {
@@ -264,13 +264,22 @@ public class GemstoneUpgradeSystem implements Listener {
     private int calculateAvailablePower(ItemStack tool) {
         int totalPower = getTotalPower(tool);
         int spentPower = 0;
-        
+
         for (UpgradeType upgrade : UpgradeType.values()) {
             int level = getUpgradeLevel(tool, upgrade);
-            spentPower += level * 8; // 8% per level
+            spentPower += level * getUpgradeCost(upgrade);
         }
-        
+
         return totalPower - spentPower;
+    }
+
+    private int getUpgradeCost(UpgradeType upgrade) {
+        switch (upgrade) {
+            case DIAMOND_YIELD:
+                return 16;
+            default:
+                return 8;
+        }
     }
     
     private int getUpgradeLevel(ItemStack item, UpgradeType upgrade) {
@@ -531,7 +540,7 @@ public class GemstoneUpgradeSystem implements Listener {
     /**
      * Sets up the new horizontal layout with categories on the left
      */
-    private void setupHorizontalLayout(Inventory gui, ItemStack tool, int upgradeCost, int availablePower) {
+    private void setupHorizontalLayout(Inventory gui, ItemStack tool, int availablePower) {
         // Row 1: Ore Yields
         // Category icon at slot 0
         ItemStack oreHeader = new ItemStack(Material.DIAMOND_ORE);
@@ -545,10 +554,10 @@ public class GemstoneUpgradeSystem implements Listener {
         gui.setItem(1, createColoredPane(Material.GREEN_STAINED_GLASS_PANE, ""));
         
         // Ore yield upgrades in slots 2-5
-        gui.setItem(2, createUpgradeItem(UpgradeType.COAL_YIELD, tool, upgradeCost, availablePower));
-        gui.setItem(3, createUpgradeItem(UpgradeType.REDSTONE_YIELD, tool, upgradeCost, availablePower));
-        gui.setItem(4, createUpgradeItem(UpgradeType.LAPIS_YIELD, tool, upgradeCost, availablePower));
-        gui.setItem(5, createUpgradeItem(UpgradeType.DIAMOND_YIELD, tool, upgradeCost, availablePower));
+        gui.setItem(2, createUpgradeItem(UpgradeType.COAL_YIELD, tool, getUpgradeCost(UpgradeType.COAL_YIELD), availablePower));
+        gui.setItem(3, createUpgradeItem(UpgradeType.REDSTONE_YIELD, tool, getUpgradeCost(UpgradeType.REDSTONE_YIELD), availablePower));
+        gui.setItem(4, createUpgradeItem(UpgradeType.LAPIS_YIELD, tool, getUpgradeCost(UpgradeType.LAPIS_YIELD), availablePower));
+        gui.setItem(5, createUpgradeItem(UpgradeType.DIAMOND_YIELD, tool, getUpgradeCost(UpgradeType.DIAMOND_YIELD), availablePower));
         
         // Row 2: Metalwork
         // Category icon at slot 9
@@ -563,8 +572,8 @@ public class GemstoneUpgradeSystem implements Listener {
         gui.setItem(10, createColoredPane(Material.YELLOW_STAINED_GLASS_PANE, ""));
         
         // Metalwork upgrades in slots 11-12
-        gui.setItem(11, createUpgradeItem(UpgradeType.METALWORK_IRON, tool, upgradeCost, availablePower));
-        gui.setItem(12, createUpgradeItem(UpgradeType.METALWORK_GOLD, tool, upgradeCost, availablePower));
+        gui.setItem(11, createUpgradeItem(UpgradeType.METALWORK_IRON, tool, getUpgradeCost(UpgradeType.METALWORK_IRON), availablePower));
+        gui.setItem(12, createUpgradeItem(UpgradeType.METALWORK_GOLD, tool, getUpgradeCost(UpgradeType.METALWORK_GOLD), availablePower));
         
         // Row 3: Utilities
         // Category icon at slot 18
@@ -579,11 +588,11 @@ public class GemstoneUpgradeSystem implements Listener {
         gui.setItem(19, createColoredPane(Material.PURPLE_STAINED_GLASS_PANE, ""));
         
         // Utility upgrades in slots 20-24
-        gui.setItem(20, createUpgradeItem(UpgradeType.GEMSTONE_YIELD, tool, upgradeCost, availablePower));
-        gui.setItem(21, createUpgradeItem(UpgradeType.MINING_XP_BOOST, tool, upgradeCost, availablePower));
-        gui.setItem(22, createUpgradeItem(UpgradeType.OXYGEN, tool, upgradeCost, availablePower));
-        gui.setItem(23, createUpgradeItem(UpgradeType.FEED, tool, upgradeCost, availablePower));
-        gui.setItem(24, createUpgradeItem(UpgradeType.PAYOUT, tool, upgradeCost, availablePower));
+        gui.setItem(20, createUpgradeItem(UpgradeType.GEMSTONE_YIELD, tool, getUpgradeCost(UpgradeType.GEMSTONE_YIELD), availablePower));
+        gui.setItem(21, createUpgradeItem(UpgradeType.MINING_XP_BOOST, tool, getUpgradeCost(UpgradeType.MINING_XP_BOOST), availablePower));
+        gui.setItem(22, createUpgradeItem(UpgradeType.OXYGEN, tool, getUpgradeCost(UpgradeType.OXYGEN), availablePower));
+        gui.setItem(23, createUpgradeItem(UpgradeType.FEED, tool, getUpgradeCost(UpgradeType.FEED), availablePower));
+        gui.setItem(24, createUpgradeItem(UpgradeType.PAYOUT, tool, getUpgradeCost(UpgradeType.PAYOUT), availablePower));
         
         // Row 4: Gold Fever
         // Category icon at slot 27
@@ -598,10 +607,10 @@ public class GemstoneUpgradeSystem implements Listener {
         gui.setItem(28, createColoredPane(Material.ORANGE_STAINED_GLASS_PANE, ""));
         
         // Gold Fever upgrades in slots 29-32
-        gui.setItem(29, createUpgradeItem(UpgradeType.GOLD_FEVER_CHANCE, tool, upgradeCost, availablePower));
-        gui.setItem(30, createUpgradeItem(UpgradeType.GOLD_FEVER_DURATION, tool, upgradeCost, availablePower));
-        gui.setItem(31, createUpgradeItem(UpgradeType.GOLD_FEVER_POTENCY, tool, upgradeCost, availablePower));
-        gui.setItem(32, createUpgradeItem(UpgradeType.GOLD_FEVER_RANGE, tool, upgradeCost, availablePower));
+        gui.setItem(29, createUpgradeItem(UpgradeType.GOLD_FEVER_CHANCE, tool, getUpgradeCost(UpgradeType.GOLD_FEVER_CHANCE), availablePower));
+        gui.setItem(30, createUpgradeItem(UpgradeType.GOLD_FEVER_DURATION, tool, getUpgradeCost(UpgradeType.GOLD_FEVER_DURATION), availablePower));
+        gui.setItem(31, createUpgradeItem(UpgradeType.GOLD_FEVER_POTENCY, tool, getUpgradeCost(UpgradeType.GOLD_FEVER_POTENCY), availablePower));
+        gui.setItem(32, createUpgradeItem(UpgradeType.GOLD_FEVER_RANGE, tool, getUpgradeCost(UpgradeType.GOLD_FEVER_RANGE), availablePower));
     }
     
     /**
