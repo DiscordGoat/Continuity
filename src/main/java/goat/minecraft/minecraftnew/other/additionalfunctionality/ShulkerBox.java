@@ -36,6 +36,10 @@ public class ShulkerBox implements Listener {
         ItemStack clicked = e.getCurrentItem();
         if (clicked == null || !ALL_SHULKERS.contains(clicked.getType())) return;
 
+        // Only allow shulker boxes inside the Backpack inventory
+        if (!e.getView().getTitle().equals("Backpack")) return;
+        if (e.getClickedInventory() == null || e.getClickedInventory() != e.getView().getTopInventory()) return;
+
         Player p = (Player)e.getWhoClicked();
         // perk check
         PlayerMeritManager mgr = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
