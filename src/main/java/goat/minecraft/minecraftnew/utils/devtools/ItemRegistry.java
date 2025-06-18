@@ -1072,6 +1072,20 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getAnvilTrinket() {
+        return createCustomItem(
+                Material.ANVIL,
+                ChatColor.YELLOW + "Anvil Trinket",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Open Anvil",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getClericEnchant() {
         return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(

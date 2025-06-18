@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.trinkets;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
+import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,6 +44,12 @@ public class TrinketManager implements Listener {
             case "Workbench Trinket" -> {
                 if (event.getClick().isLeftClick()) {
                     player.openWorkbench(null, true);
+                    event.setCancelled(true);
+                }
+            }
+            case "Anvil Trinket" -> {
+                if (event.getClick().isLeftClick()) {
+                    MinecraftNew.getInstance().getAnvilRepair().openAnvilGui(player);
                     event.setCancelled(true);
                 }
             }
