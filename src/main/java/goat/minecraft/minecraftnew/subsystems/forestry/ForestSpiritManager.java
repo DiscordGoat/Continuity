@@ -457,8 +457,11 @@ public class ForestSpiritManager implements Listener {
                 amount = 2;
             }
             for (int i = 0; i < amount; i++) {
-                event.getDrops().add(effigy.clone());
+                if (random.nextBoolean()) {
+                    event.getDrops().add(effigy.clone());
+                }
             }
+
         }
 
         // Bonus drop: Jackhammer if the killer's notoriety is low

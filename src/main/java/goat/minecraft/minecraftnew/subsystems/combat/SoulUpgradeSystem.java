@@ -41,9 +41,9 @@ public class SoulUpgradeSystem implements Listener {
         FURY("Fury", "Strike lightning when below 50% HP (30s CD)", Material.LIGHTNING_ROD, 1, 3),
         BETRAYAL("Betrayal", "+4% creeper disc chance per level", Material.MUSIC_DISC_11, 4, 4),
         STARLESS_NIGHT("Starless Night", "+3 seconds of night when killing a monster", Material.BLACK_DYE, 1, 29),
-        CHALLENGE("Challenge", "Chance for monsters to spawn twice: +25% chance per level", Material.PAPER, 4, 30),
-        BLOOD_MOON("Blood Moon", "Chance for monsters to spawn an additional time: +20% chance per level", Material.RED_BED, 5, 31),
-        APOCALYPSE("Apocalypse", "Increase Mutation Chance by 15% per level", Material.WITHER_SKELETON_SKULL, 3, 32),
+        CHALLENGE("Challenge", "Chance for monsters to spawn twice: +5% chance per level", Material.PAPER, 4, 30),
+        BLOOD_MOON("Blood Moon", "Chance for monsters to spawn an additional time: +5% chance per level", Material.RED_BED, 5, 31),
+        APOCALYPSE("Apocalypse", "Enables Death Mutation: 5% per level", Material.WITHER_SKELETON_SKULL, 3, 32),
         BALLAD_OF_THE_CATS("Ballad of the Cats", "increases monster level by 20 per level", Material.MUSIC_DISC_CAT, 5, 33);
 
         private final String name;

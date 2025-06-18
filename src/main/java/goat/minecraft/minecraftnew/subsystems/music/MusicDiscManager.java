@@ -1104,11 +1104,34 @@ public class MusicDiscManager implements Listener {
         auctionItems.add(new AuctionItem(ItemRegistry.getLegendarySwordReforge(), 64));
         auctionItems.add(new AuctionItem(ItemRegistry.getLegendaryToolReforge(), 64));
         auctionItems.add(new AuctionItem(ItemRegistry.getLegendaryArmorReforge(), 64));
-        auctionItems.add(new AuctionItem(ItemRegistry.getDiamondGemstone(), 64));
-        auctionItems.add(new AuctionItem(ItemRegistry.getEmeraldGemstone(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getDiamond(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getEmerald(), 64));
         auctionItems.add(new AuctionItem(ItemRegistry.getHireBartender(), 64));
         auctionItems.add(new AuctionItem(ItemRegistry.getEngineeringDegree(), 64));
         auctionItems.add(new AuctionItem(ItemRegistry.getPreservation(), 4));
+        auctionItems.add(new AuctionItem(ItemRegistry.getCrimsonEffigy(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getWarpedEffigy(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getCaviarBait(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getShade(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getArmorsmithReforge(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getArmorsmithReforgeTwo(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getArmorSmithProtection(), 32));
+        auctionItems.add(new AuctionItem(ItemRegistry.getArmorSmithFeatherFalling(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getToolsmithUnbreaking(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getToolsmithEnchant(), 16));
+        auctionItems.add(new AuctionItem(ItemRegistry.getToolsmithEnchantTwo(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getSingularity(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getButcherEnchant(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getShepherdEnchant(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getClericEnchant(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getFisherEnchant(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getFishermanReforge(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getFishermanLuckoftheSea(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getPowerCrystal(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getPearlOfTheDeep(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getEntBark(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getBlueLantern(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getEngineeringDegree(), 8));
 
 
 

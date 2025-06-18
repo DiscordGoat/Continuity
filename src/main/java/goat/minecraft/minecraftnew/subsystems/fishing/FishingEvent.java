@@ -102,7 +102,7 @@ public class FishingEvent implements Listener {
         double seaCreatureChance = 0;
         
         // Add fishing level bonus
-        seaCreatureChance += fishingLevel / 3.0;
+        seaCreatureChance += fishingLevel / 4.0;
 
         // Add "Call of the Void" enchantment bonus
         int callOfTheVoidLevel = CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void");
@@ -163,20 +163,7 @@ public class FishingEvent implements Listener {
         } else {
             // Proceed with regular fish catch
             awardRegularFish(player, fishingLevel);
-            if (random.nextDouble() <= 0.04) {
-                ItemStack bait = ItemRegistry.getBait();
-                int amount = 1;
-                if (playerMeritManager.hasPerk(player.getUniqueId(), "Double Bait") && random.nextDouble() < 0.5) {
-                    amount = 2;
-                }
-                bait.setAmount(amount);
-                player.getInventory().addItem(bait);
-                player.sendMessage(ChatColor.AQUA + "You fished up some bait!");
-            }
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                    //String.format("%.2f", damageMultiplier)
-                    new TextComponent(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%")
-            );
+            player.sendMessage(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%");
             applyReelInUpgrades(player, false, rod);
         }
 
@@ -630,10 +617,10 @@ public class FishingEvent implements Listener {
         if (rainDance > 0 && player.getWorld().hasStorm()) {
             boolean triggered = false;
             for (int i = 0; i < rainDance; i++) {
-                if (random.nextDouble() < 0.15) {
+                if (random.nextDouble() < 0.05) {
                     World w = player.getWorld();
-                    w.setWeatherDuration(w.getWeatherDuration() + 100);
-                    w.setThunderDuration(w.getThunderDuration() + 100);
+                    w.setWeatherDuration(w.getWeatherDuration() + 200);
+                    w.setThunderDuration(w.getThunderDuration() + 200);
                     triggered = true;
                 }
             }
@@ -651,8 +638,8 @@ public class FishingEvent implements Listener {
         Inventory inv = player.getInventory();
         int emeralds = 0;
         emeralds += removeFishGroups(inv, Material.COD, Material.SALMON, 4);
-        emeralds += removeItems(inv, Material.PUFFERFISH, level);
-        emeralds += removeItems(inv, Material.TROPICAL_FISH, level);
+        emeralds += removeUnenchanted(inv, Material.PUFFERFISH, level);
+        emeralds += removeUnenchanted(inv, Material.TROPICAL_FISH, level);
         if (emeralds > 0) {
             inv.addItem(new ItemStack(Material.EMERALD, emeralds));
             player.sendMessage(ChatColor.GREEN + "Sold fish for " + emeralds + " emeralds!");
@@ -669,37 +656,68 @@ public class FishingEvent implements Listener {
         return count;
     }
 
+    /**
+     * Removes as many full “groups” of unenchanted m1/m2 as possible,
+     * and returns the number of groups removed.
+     */
     private int removeFishGroups(Inventory inv, Material m1, Material m2, int group) {
-        int total = countMaterial(inv, m1) + countMaterial(inv, m2);
+        int total = countUnenchanted(inv, m1) + countUnenchanted(inv, m2);
         int groups = total / group;
         if (groups <= 0) return 0;
+
         int need = groups * group;
-        int removed = removeItems(inv, m1, Math.min(need, countMaterial(inv, m1)));
+        // first remove from m1
+        int removed = removeUnenchanted(inv, m1, Math.min(need, countUnenchanted(inv, m1)));
         need -= removed;
+        // then from m2 if still needed
         if (need > 0) {
-            removeItems(inv, m2, need);
+            removeUnenchanted(inv, m2, need);
         }
         return groups;
     }
 
-    private int removeItems(Inventory inventory, Material material, int amount) {
+    /** Count only those stacks of the given material that have NO enchantments. */
+    private int countUnenchanted(Inventory inv, Material material) {
+        int count = 0;
+        for (ItemStack item : inv.getContents()) {
+            if (item != null
+                    && item.getType() == material
+                    && item.getEnchantments().isEmpty()) {
+                count += item.getAmount();
+            }
+        }
+        return count;
+    }
+
+    /**
+     * Remove up to `amount` items of the given material,
+     * but skip any enchanted stacks.
+     * Returns how many were actually removed.
+     */
+    private int removeUnenchanted(Inventory inventory, Material material, int amount) {
         int remaining = amount;
         int removed = 0;
+
         for (ItemStack item : inventory.getContents()) {
-            if (item != null && item.getType() == material) {
-                int itemAmount = item.getAmount();
-                if (itemAmount <= remaining) {
+            if (remaining <= 0) break;
+            if (item == null) continue;
+
+            // skip enchanted fish
+            if (item.getType() == material && item.getEnchantments().isEmpty()) {
+                int stackSize = item.getAmount();
+
+                if (stackSize <= remaining) {
                     inventory.removeItem(item);
-                    remaining -= itemAmount;
-                    removed += itemAmount;
+                    removed += stackSize;
+                    remaining -= stackSize;
                 } else {
-                    item.setAmount(itemAmount - remaining);
+                    item.setAmount(stackSize - remaining);
                     removed += remaining;
                     remaining = 0;
-                    break;
                 }
             }
         }
+
         return removed;
     }
 

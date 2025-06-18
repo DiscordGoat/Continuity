@@ -40,7 +40,7 @@ public class FishingUpgradeSystem implements Listener {
         GOOD_DAY("Good Day", "+15 seconds of luck", Material.CLOCK, 3, 13),
 
         // Row 3: Misc Upgrades
-        RAIN_DANCE("Rain Dance", "If raining, 15% chance reel-ins add 10 seconds of rain", Material.WATER_BUCKET, 5, 20),
+        RAIN_DANCE("Rain Dance", "If raining, 5% chance reel-ins add 10 seconds of rain", Material.WATER_BUCKET, 5, 20),
         PAYOUT("Payout", "Reel-ins sell common fish for emeralds", Material.EMERALD, 4, 21),
         PASSION("Passion", "15% chance health is set to max on reel-in", Material.GOLDEN_APPLE, 3, 22),
         FEED("Feed", "15% chance to feed on reel-in", Material.COOKED_SALMON, 3, 23);

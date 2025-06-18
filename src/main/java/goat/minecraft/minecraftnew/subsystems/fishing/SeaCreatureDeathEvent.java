@@ -153,7 +153,12 @@ public class SeaCreatureDeathEvent implements Listener {
                     amount = 2;
                 }
                 rarityBait.setAmount(amount);
-                event.getDrops().add(rarityBait);
+                if(random.nextBoolean()) {
+                    if (random.nextBoolean()) {
+                        event.getDrops().add(rarityBait);
+                    }
+                }
+
 
                 // Only sharks provide Fish Bait
                 if (seaCreature.getDisplayName().equalsIgnoreCase("Shark") ||

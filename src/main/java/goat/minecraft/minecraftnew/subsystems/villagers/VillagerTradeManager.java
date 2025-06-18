@@ -286,7 +286,7 @@ public class VillagerTradeManager implements Listener {
         fletcherSells.add(createTradeMap("FEATHER", 8, 1, 1));
         fletcherSells.add(createTradeMap("ARROW", 16, 1, 1));
         fletcherSells.add(createTradeMap("COMPACT_WOOD", 1, 2, 3));
-        fletcherSells.add(createTradeMap("SECRETS_OF_INFINITY", 1, 128, 4)); // Custom item
+        fletcherSells.add(createTradeMap("SECRETS_OF_INFINITY", 1, 128, 1)); // Custom item
         defaultConfig.set("FLETCHER.sells", fletcherSells);
 // Cartographer Purchases
         List<Map<String, Object>> cartographerPurchases = new ArrayList<>();
@@ -502,7 +502,7 @@ public class VillagerTradeManager implements Listener {
 
 // Librarian Sells
         List<Map<String, Object>> librarianSells = new ArrayList<>();
-        librarianSells.add(createTradeMap("NAME_TAG", 1, 8, 3)); // Material
+        librarianSells.add(createTradeMap("NAME_TAG", 1, 8, 2)); // Material
         librarianSells.add(createTradeMap("PAPER", 3, 1, 1)); // Material
         librarianSells.add(createTradeMap("BOOK", 3, 1, 1)); // Material
         librarianSells.add(createTradeMap("ENCHANTED_BOOK", 1, 8, 1)); // Material

@@ -300,10 +300,23 @@ public class SpawnMonsters implements Listener {
         Entity entity = e.getEntity();
         HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
         int playerHostility = hostilityManager.getPlayerDifficultyTier(getNearestPlayer(entity, 1000));
-
         //creeper rarity
+        Random random = new Random();
+
+
+
+        int apocalypse = SoulUpgradeSystem.getUpgradeLevel(getNearestPlayer(entity, 1000).getItemInUse(), SoulUpgradeSystem.SwordUpgrade.APOCALYPSE);
+        if (apocalypse > 0 && entity instanceof Monster && random.nextDouble() < apocalypse * 0.05) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    applyMobAttributes((LivingEntity) entity, 300);
+                }
+            }.runTaskLater(MinecraftNew.getInstance(), 41L);
+
+        }
+
         if (entity instanceof Creeper) {
-            Random random = new Random();
             int randomValue = random.nextInt(100) + 1;
             if (randomValue <= 90) { // Remove 90% of creepers.
                 entity.remove();
@@ -726,6 +739,13 @@ public class SpawnMonsters implements Listener {
     }
     public void applyMobAttributes(LivingEntity mob, int level) {
         level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL));
+        int cats = SoulUpgradeSystem.getUpgradeLevel(getNearestPlayer(mob, 1000).getItemInUse(), SoulUpgradeSystem.SwordUpgrade.BALLAD_OF_THE_CATS);
+        if (cats > 0 && mob instanceof Monster) {
+            LivingEntity newMob = (LivingEntity) mob.getWorld().spawnEntity(mob.getLocation(), mob.getType());
+            SpawnMonsters.getInstance(xpManager).applyMobAttributes(newMob, cats * 20);
+            level = level + (cats * 20);
+        }
+
         AttributeInstance healthAttribute = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if (healthAttribute != null) {
             for (AttributeModifier modifier : new ArrayList<>(healthAttribute.getModifiers())) {

@@ -137,7 +137,7 @@ public class CompactStoneSystem implements Listener {
         int placed = 0;
         for (int i = 0; i < 64; i++) {
             Material type = current.getType();
-            if (type == Material.AIR || type == Material.CAVE_AIR || type == Material.WATER || type == Material.LAVA) {
+            if (type == Material.AIR || type == Material.WATER || type == Material.LAVA) {
                 current.setType(mat);
                 current = current.getRelative(direction);
                 placed++;

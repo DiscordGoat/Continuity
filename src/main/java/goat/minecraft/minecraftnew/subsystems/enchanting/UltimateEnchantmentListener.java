@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.enchanting;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;

@@ -439,7 +439,7 @@ public class Mining implements Listener {
      */
     private void handleGemstoneDrop(Player player, ItemStack tool, Block block) {
         // Base 8% chance
-        double baseChance = 8.0;
+        double baseChance = 2.0;
         double bonusChance = 0.0;
         
         // Check for Gemstone Yield upgrade (only on diamond tools with upgrade system)

@@ -27,6 +27,7 @@ public class Greed implements Listener {
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
         Entity deadEntity = event.getEntity();
+        if(deadEntity.getLastDamageCause() != null) return;
         if (deadEntity.getLastDamageCause().getEntity() instanceof Player) {
             Player killer = (Player) deadEntity.getLastDamageCause().getEntity();
 
