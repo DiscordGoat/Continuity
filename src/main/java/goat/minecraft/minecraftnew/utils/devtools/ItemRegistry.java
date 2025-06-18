@@ -1072,6 +1072,20 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getMagnetTrinket() {
+        return createCustomItem(
+                Material.IRON_NUGGET,
+                ChatColor.YELLOW + "Magnet",
+                List.of(
+                        ChatColor.GRAY + "Attracts nearby XP orbs",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Automatic"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getClericEnchant() {
         return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(

@@ -45,6 +45,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.perks.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.Float;
 import goat.minecraft.minecraftnew.subsystems.smithing.talismans.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
+import goat.minecraft.minecraftnew.other.trinkets.MagnetTrinket;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
@@ -287,6 +288,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
         autoComposter = new AutoComposter(this);
+        new MagnetTrinket(this);
         VillagerWorkCycleManager.getInstance(this);
 
         if (!getDataFolder().exists()) {

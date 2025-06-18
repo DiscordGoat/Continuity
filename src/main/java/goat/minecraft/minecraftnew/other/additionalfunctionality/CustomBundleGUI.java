@@ -498,6 +498,30 @@ public class CustomBundleGUI implements Listener {
         }
     }
 
+    /**
+     * Checks if the player's backpack contains an item with the given display name.
+     */
+    public boolean hasItemWithDisplayName(Player player, String name) {
+        String playerUUID = player.getUniqueId().toString();
+        if (!storageConfig.contains(playerUUID)) {
+            return false;
+        }
+
+        for (int slot = 0; slot < 54; slot++) {
+            String path = playerUUID + "." + slot;
+            if (!storageConfig.contains(path)) continue;
+
+            ItemStack stack = storageConfig.getItemStack(path);
+            if (stack == null) continue;
+            ItemMeta meta = stack.getItemMeta();
+            if (meta == null || !meta.hasDisplayName()) continue;
+            if (ChatColor.stripColor(meta.getDisplayName()).equals(name)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     private void saveBundleInventory(Player player, Inventory inventory) {
         String playerUUID = player.getUniqueId().toString();

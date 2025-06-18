@@ -373,6 +373,7 @@ public class VillagerTradeManager implements Listener {
         leatherworkerSells.add(createTradeMap("BLUE_SATCHEL", 1, 90, 1));
         leatherworkerSells.add(createTradeMap("BLACK_SATCHEL", 1, 90, 1));
         leatherworkerSells.add(createTradeMap("GREEN_SATCHEL", 1, 90, 1));
+        leatherworkerSells.add(createTradeMap("MAGNET_TRINKET", 1, 90, 1));
         defaultConfig.set("LEATHERWORKER.sells", leatherworkerSells);
 // Shepherd Purchases
         List<Map<String, Object>> shepherdPurchases = new ArrayList<>();
@@ -853,6 +854,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getBlackSatchelTrinket();
             case "GREEN_SATCHEL":
                 return ItemRegistry.getGreenSatchelTrinket();
+            case "MAGNET_TRINKET":
+                return ItemRegistry.getMagnetTrinket();
             case "CLERIC_ENCHANT":
                 return ItemRegistry.getClericEnchant();
             case "SUNFLARE":
