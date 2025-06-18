@@ -986,6 +986,50 @@ public class ItemRegistry {
         ), 1, false, true);
     }
 
+    // === Trinkets ===
+    public static ItemStack getWorkbenchTrinket() {
+        return createCustomItem(
+                Material.CRAFTING_TABLE,
+                ChatColor.YELLOW + "Workbench Trinket",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Open Crafting",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getDividerTrinket() {
+        return createCustomItem(
+                Material.GRAY_STAINED_GLASS_PANE,
+                ChatColor.YELLOW + "Divider Trinket",
+                List.of(
+                        ChatColor.GRAY + "Use to separate backpack slots",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up"
+                ),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getBankAccountTrinket() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.YELLOW + "Bank Account",
+                List.of(
+                        ChatColor.GRAY + "Stores emeralds safely",
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Deposit all",
+                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Withdraw all"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getClericEnchant() {
         return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(
