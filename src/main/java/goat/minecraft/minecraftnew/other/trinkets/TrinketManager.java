@@ -102,5 +102,6 @@ public class TrinketManager implements Listener {
             }
         }
         player.updateInventory();
+        CustomBundleGUI.getInstance().refreshBankLoreInStorage(player, balance);
     }
 }
