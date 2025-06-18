@@ -13,6 +13,7 @@ import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
+import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -1478,6 +1479,9 @@ public class VillagerTradeManager implements Listener {
         }
 
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
+
+        // Refresh bank account lore so the displayed balance is up-to-date
+        TrinketManager.getInstance().refreshBankLore(player);
 
         // --- Add villager experience ---
         int expGain = 1;

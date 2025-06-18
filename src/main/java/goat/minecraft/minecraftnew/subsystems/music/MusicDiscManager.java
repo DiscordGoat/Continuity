@@ -14,6 +14,7 @@ import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.biomeutils.BiomeMapper;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
+import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -1429,6 +1430,9 @@ public class MusicDiscManager implements Listener {
         }
 
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
+
+        // Ensure the bank account item immediately reflects the updated balance
+        TrinketManager.getInstance().refreshBankLore(player);
         return true;
     }
 
