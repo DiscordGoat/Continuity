@@ -58,7 +58,7 @@ public class TrinketManager implements Listener {
                     refreshBankLore(player);
                     player.sendMessage(ChatColor.GREEN + "Deposited " + deposited + " emeralds.");
                     event.setCancelled(true);
-                } else if (event.getClick() == ClickType.RIGHT && event.isShiftClick()) {
+                } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
                     int amount = BankAccountManager.getInstance().withdrawAll(player);
                     dropEmeralds(player, amount);
                     updateBankLore(item, 0);
