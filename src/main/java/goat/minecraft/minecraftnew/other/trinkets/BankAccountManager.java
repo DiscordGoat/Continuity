@@ -102,7 +102,9 @@ public class BankAccountManager {
     private int countEmeraldsInInventory(Player player) {
         int count = 0;
         for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && item.getType() == Material.EMERALD) {
+            if (item != null &&
+                    item.getType() == Material.EMERALD &&
+                    item.getEnchantments().isEmpty()) {
                 count += item.getAmount();
             }
         }
@@ -113,7 +115,11 @@ public class BankAccountManager {
         int remaining = amount;
         Inventory inv = player.getInventory();
         for (ItemStack item : inv.getContents()) {
-            if (item == null || item.getType() != Material.EMERALD) continue;
+            if (item == null ||
+                    item.getType() != Material.EMERALD ||
+                    !item.getEnchantments().isEmpty()) {
+                continue;
+            }
             int amt = item.getAmount();
             if (amt <= remaining) {
                 inv.removeItem(item);
@@ -128,36 +134,26 @@ public class BankAccountManager {
 
     public boolean removeEmeralds(Player player, int amount) {
         Inventory inv = player.getInventory();
-        if (hasEnough(inv, Material.EMERALD, amount)) {
+
+        int invCount = countEmeraldsInInventory(player);
+        if (invCount >= amount) {
             removeFromInventory(player, amount);
             return true;
         }
-        int invCount = countEmeraldsInInventory(player);
+
         int shortfall = amount - invCount;
-        CustomBundleGUI gui = CustomBundleGUI.getInstance();
-        boolean success = gui.removeEmeraldsFromBackpack(player, shortfall);
-        if (success) {
-            removeFromInventory(player, invCount);
-            return true;
-        }
         int bal = getBalance(player.getUniqueId());
         if (bal >= shortfall) {
             setBalance(player.getUniqueId(), bal - shortfall);
             TrinketManager.getInstance().refreshBankLore(player);
-            removeFromInventory(player, invCount);
+            if (invCount > 0) {
+                removeFromInventory(player, invCount);
+            }
             return true;
         }
+
         return false;
     }
 
-    private boolean hasEnough(Inventory inv, Material mat, int amount) {
-        int count = 0;
-        for (ItemStack item : inv.getContents()) {
-            if (item != null && item.getType() == mat) {
-                count += item.getAmount();
-                if (count >= amount) return true;
-            }
-        }
-        return false;
-    }
+    // Removed unused hasEnough helper method
 }
