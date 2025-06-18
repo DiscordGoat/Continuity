@@ -132,13 +132,14 @@ public class CompactStoneSystem implements Listener {
         Material mat = Material.matchMaterial(materialName);
         if (mat == null) return;
         BlockFace face = event.getBlockAgainst().getFace(event.getBlockPlaced());
-        Block current = event.getBlockAgainst().getRelative(face);
+        BlockFace direction = face.getOppositeFace();
+        Block current = event.getBlockAgainst().getRelative(direction);
         int placed = 0;
         for (int i = 0; i < 64; i++) {
             Material type = current.getType();
             if (type == Material.AIR || type == Material.CAVE_AIR || type == Material.WATER || type == Material.LAVA) {
                 current.setType(mat);
-                current = current.getRelative(face);
+                current = current.getRelative(direction);
                 placed++;
             } else {
                 break;
