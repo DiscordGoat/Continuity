@@ -457,6 +457,47 @@ public class CustomBundleGUI implements Listener {
         return total;
     }
 
+    /**
+     * Updates the stored Bank Account trinket's lore so that it reflects the
+     * current balance even when the backpack GUI is closed.
+     */
+    public void refreshBankLoreInStorage(Player player, int balance) {
+        String playerUUID = player.getUniqueId().toString();
+        if (!storageConfig.contains(playerUUID)) {
+            return;
+        }
+
+        boolean changed = false;
+        for (int slot = 0; slot < 54; slot++) {
+            String path = playerUUID + "." + slot;
+            if (!storageConfig.contains(path)) continue;
+
+            ItemStack stack = storageConfig.getItemStack(path);
+            if (stack == null) continue;
+            ItemMeta meta = stack.getItemMeta();
+            if (meta == null || !meta.hasDisplayName()) continue;
+            if (ChatColor.stripColor(meta.getDisplayName()).equals("Bank Account")) {
+                List<String> lore = new ArrayList<>();
+                lore.add(ChatColor.GRAY + "Stores emeralds safely");
+                lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Deposit all");
+                lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Withdraw all");
+                lore.add(ChatColor.GRAY + "Balance: " + ChatColor.GREEN + balance + ChatColor.GRAY + " emeralds");
+                meta.setLore(lore);
+                stack.setItemMeta(meta);
+                storageConfig.set(path, stack);
+                changed = true;
+            }
+        }
+
+        if (changed) {
+            try {
+                storageConfig.save(storageFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private void saveBundleInventory(Player player, Inventory inventory) {
         String playerUUID = player.getUniqueId().toString();
