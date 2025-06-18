@@ -37,6 +37,7 @@ import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
 import goat.minecraft.minecraftnew.subsystems.fishing.SpawnSeaCreatureCommand;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
+import goat.minecraft.minecraftnew.subsystems.mining.FortuneRemover;
 import goat.minecraft.minecraftnew.subsystems.music.MusicDiscManager;
 import goat.minecraft.minecraftnew.other.trims.CustomTrimEffects;
 import goat.minecraft.minecraftnew.subsystems.pets.*;
@@ -491,6 +492,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Rappel(), this);
         getServer().getPluginManager().registerEvents(new Preservation(), this);
         getServer().getPluginManager().registerEvents(new WaterAspect(), this);
+        getServer().getPluginManager().registerEvents(new FortuneRemover(), this);
 
         CustomEnchantmentManager.registerEnchantment("Feed", 3, true);
         CustomEnchantmentManager.registerEnchantment("Merit", 5, true);
