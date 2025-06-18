@@ -199,6 +199,9 @@ public class Mining implements Listener {
                 return; // Silk Touch disables XP and gemstone drops
             }
 
+            boolean isDiamondOre = block.getType() == Material.DIAMOND_ORE ||
+                    block.getType() == Material.DEEPSLATE_DIAMOND_ORE;
+
 
 
             // Award XP for mining ores
@@ -217,6 +220,11 @@ public class Mining implements Listener {
 
             xpManager.addXP(player, "Mining", xpAwarded);
 
+            // Handle diamond ore drops manually to ignore Fortune
+            if (isDiamondOre) {
+                e.setDropItems(false);
+                block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.DIAMOND, 1));
+            }
 
             // Apply haste effect based on Mining level
             int miningLevel = xpManager.getPlayerLevel(player, "Mining");
@@ -227,14 +235,21 @@ public class Mining implements Listener {
 
             double roll = random.nextInt(100) + 1;
 
-            if (roll <= tripleDropChance) {
-                // Triple drop chance
-                dropAdditionalItems(block, player, 2); // Drop 2 additional stacks
-                player.playSound(player.getLocation(), Sound.BLOCK_NETHERRACK_BREAK, 10, 5);
-            } else if (roll <= doubleDropChance) {
-                // Double drop chance
-                dropAdditionalItems(block, player, 1); // Drop 1 additional stack
-                player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_BRICKS_BREAK, 10, 5);
+            if (isDiamondOre) {
+                if (roll <= tripleDropChance) {
+                    block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.DIAMOND, 2));
+                    player.playSound(player.getLocation(), Sound.BLOCK_NETHERRACK_BREAK, 10, 5);
+                }
+            } else {
+                if (roll <= tripleDropChance) {
+                    // Triple drop chance
+                    dropAdditionalItems(block, player, 2); // Drop 2 additional stacks
+                    player.playSound(player.getLocation(), Sound.BLOCK_NETHERRACK_BREAK, 10, 5);
+                } else if (roll <= doubleDropChance) {
+                    // Double drop chance
+                    dropAdditionalItems(block, player, 1); // Drop 1 additional stack
+                    player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_BRICKS_BREAK, 10, 5);
+                }
             }
 
             // Apply haste effect based on Mining level
@@ -409,7 +424,7 @@ public class Mining implements Listener {
                 return 100;
             case DIAMOND_ORE:
             case DEEPSLATE_DIAMOND_ORE:
-                return 160;
+                return 20;
             case NETHER_QUARTZ_ORE:
                 return 6;
             case NETHER_GOLD_ORE:
