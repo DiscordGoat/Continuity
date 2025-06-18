@@ -69,8 +69,8 @@ public class MeritCommand implements CommandExecutor, Listener {
     private static final List<Perk> perks = Arrays.asList(
             new Perk(ChatColor.DARK_GRAY + "Shulkl Box", 7, Material.SHULKER_SHELL,
                     Arrays.asList(
-                            ChatColor.GRAY + "Enables Backpack Shulker Box usage.",
-                            ChatColor.BLUE + "On Right Click Shulker Box In Backpack: " + ChatColor.GRAY + "Opens it."
+                            ChatColor.GRAY + "Allows opening Shulker Boxes only inside backpacks.",
+                            ChatColor.BLUE + "Right Click Shulker Box in Backpack: " + ChatColor.GRAY + "Opens it."
                     )),
             new Perk(ChatColor.DARK_GRAY + "Motion Sensor", 1, Material.OAK_DOOR,
                     Arrays.asList(
