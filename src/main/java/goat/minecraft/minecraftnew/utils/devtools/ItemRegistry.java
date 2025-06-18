@@ -1017,7 +1017,7 @@ public class ItemRegistry {
 
     public static ItemStack getBankAccountTrinket() {
         return createCustomItem(
-                Material.PAPER,
+                Material.GOLD_BLOCK,
                 ChatColor.YELLOW + "Bank Account",
                 List.of(
                         ChatColor.GRAY + "Stores emeralds safely",
