@@ -3838,7 +3838,7 @@ public class ItemRegistry {
         return new ItemStack[]{
             // Common
             getQuartz(), getHematite(), getObsidian(), getAgate(),
-            // Uncommon  
+            // Uncommon
             getTurquoise(), getAmethyst(), getCitrine(), getGarnet(),
             // Rare
             getTopaz(), getPeridot(), getAquamarine(), getTanzanite(),
@@ -3847,5 +3847,40 @@ public class ItemRegistry {
             // Legendary
             getEmerald(), getDiamond()
         };
+    }
+
+    // ===== Trinkets =====
+
+    public static ItemStack getWorkbenchTrinket() {
+        return createCustomItem(
+                Material.CRAFTING_TABLE,
+                ChatColor.YELLOW + "Workbench",
+                List.of(ChatColor.GRAY + "Left Click: open crafting", ChatColor.GRAY + "Right Click: pick up"),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getDividerTrinket() {
+        return createCustomItem(
+                Material.GRAY_STAINED_GLASS_PANE,
+                ChatColor.YELLOW + "Divider",
+                List.of(ChatColor.GRAY + "Layout helper"),
+                1,
+                false,
+                false
+        );
+    }
+
+    public static ItemStack getBankAccountTrinket() {
+        return createCustomItem(
+                Material.EMERALD,
+                ChatColor.YELLOW + "Bank Account",
+                List.of(ChatColor.GRAY + "Stores your emeralds"),
+                1,
+                false,
+                true
+        );
     }
 }

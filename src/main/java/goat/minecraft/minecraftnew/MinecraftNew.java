@@ -245,6 +245,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
 
         CustomBundleGUI.init(this);
+        BankAccountManager.init(this);
+        getServer().getPluginManager().registerEvents(new TrinketListener(), this);
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 
         forestryPetManager = new ForestryPetManager(this);

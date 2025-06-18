@@ -413,6 +413,43 @@ public class CustomBundleGUI implements Listener {
         return 0;
     }
 
+    /**
+     * Removes all emeralds and emerald blocks from a player's backpack.
+     *
+     * @param player The player whose backpack should be cleared of emeralds.
+     * @return The total number of emeralds removed (emerald blocks count as 9).
+     */
+    public int removeAllEmeraldItems(Player player) {
+        String playerUUID = player.getUniqueId().toString();
+        if (!storageConfig.contains(playerUUID)) {
+            return 0;
+        }
+
+        int total = 0;
+        for (int slot = 0; slot < 54; slot++) {
+            String path = playerUUID + "." + slot;
+            if (!storageConfig.contains(path)) continue;
+
+            ItemStack stack = storageConfig.getItemStack(path);
+            if (stack == null) continue;
+
+            if (stack.getType() == Material.EMERALD) {
+                total += stack.getAmount();
+                storageConfig.set(path, null);
+            } else if (stack.getType() == Material.EMERALD_BLOCK) {
+                total += stack.getAmount() * 9;
+                storageConfig.set(path, null);
+            }
+        }
+
+        try {
+            storageConfig.save(storageFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return total;
+    }
+
     private static class SlotData {
         int slotIndex;
         int amount;

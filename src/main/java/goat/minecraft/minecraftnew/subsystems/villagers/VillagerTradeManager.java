@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BankAccountManager;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.PlayerTabListUpdater;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
@@ -1468,15 +1469,14 @@ public class VillagerTradeManager implements Listener {
 
                 int shortfall = finalCostRounded - invEmeraldCount;
 
-                // Attempt removing shortfall from the backpack
-                CustomBundleGUI customBundleGUI = CustomBundleGUI.getInstance();
-                boolean success = customBundleGUI.removeEmeraldsFromBackpack(player, shortfall);
-                if(success){
+                // Attempt removing shortfall from the player's bank account
+                BankAccountManager bank = BankAccountManager.getInstance();
+                boolean success = bank.removeEmeralds(player.getUniqueId(), shortfall);
+                if (success) {
                     removeItems(player.getInventory(), Material.EMERALD, invEmeraldCount);
                 }
                 if (!success) {
-                    // The player can't afford the cost from inventory + backpack
-                    player.sendMessage(ChatColor.RED + "You don't have enough emeralds (in inventory or backpack).");
+                    player.sendMessage(ChatColor.RED + "You don't have enough emeralds.");
                     return;
                 }
             }
