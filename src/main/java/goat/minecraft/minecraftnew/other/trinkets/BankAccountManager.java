@@ -143,6 +143,7 @@ public class BankAccountManager {
         int bal = getBalance(player.getUniqueId());
         if (bal >= shortfall) {
             setBalance(player.getUniqueId(), bal - shortfall);
+            TrinketManager.getInstance().refreshBankLore(player);
             removeFromInventory(player, invCount);
             return true;
         }

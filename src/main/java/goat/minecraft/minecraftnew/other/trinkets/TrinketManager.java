@@ -55,12 +55,14 @@ public class TrinketManager implements Listener {
                 if (event.getClick() == ClickType.LEFT) {
                     int deposited = BankAccountManager.getInstance().depositAll(player);
                     updateBankLore(item, BankAccountManager.getInstance().getBalance(player.getUniqueId()));
+                    refreshBankLore(player);
                     player.sendMessage(ChatColor.GREEN + "Deposited " + deposited + " emeralds.");
                     event.setCancelled(true);
                 } else if (event.getClick() == ClickType.RIGHT && event.isShiftClick()) {
                     int amount = BankAccountManager.getInstance().withdrawAll(player);
                     dropEmeralds(player, amount);
                     updateBankLore(item, 0);
+                    refreshBankLore(player);
                     event.setCancelled(true);
                 }
             }
@@ -81,8 +83,23 @@ public class TrinketManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Balance: " + balance + " emeralds");
+        lore.add(ChatColor.GRAY + "Stores emeralds safely");
+        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Deposit all");
+        lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Withdraw all");
+        lore.add(ChatColor.GRAY + "Balance: " + ChatColor.GREEN + balance + ChatColor.GRAY + " emeralds");
         meta.setLore(lore);
         item.setItemMeta(meta);
+    }
+
+    public void refreshBankLore(Player player) {
+        int balance = BankAccountManager.getInstance().getBalance(player.getUniqueId());
+        for (ItemStack stack : player.getInventory().getContents()) {
+            if (stack == null) continue;
+            ItemMeta meta = stack.getItemMeta();
+            if (meta == null || !meta.hasDisplayName()) continue;
+            if (ChatColor.stripColor(meta.getDisplayName()).equals("Bank Account")) {
+                updateBankLore(stack, balance);
+            }
+        }
     }
 }
