@@ -101,5 +101,6 @@ public class TrinketManager implements Listener {
                 updateBankLore(stack, balance);
             }
         }
+        player.updateInventory();
     }
 }
