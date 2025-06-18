@@ -13,6 +13,7 @@ import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.biomeutils.BiomeMapper;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
+import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -1414,19 +1415,12 @@ public class MusicDiscManager implements Listener {
         if (hasEnoughItems(inventory, Material.EMERALD, cost)) {
             removeItems(inventory, Material.EMERALD, cost);
         } else {
-            int invEmeraldCount = countEmeraldsInInventory(player);
-            int shortfall = cost - invEmeraldCount;
-
-            CustomBundleGUI customBundleGUI = CustomBundleGUI.getInstance();
-            boolean success = customBundleGUI.removeEmeraldsFromBackpack(player, shortfall);
+            boolean success = BankAccountManager.getInstance().removeEmeralds(player, cost);
             if (!success) {
-                player.sendMessage(ChatColor.RED + "You don't have enough emeralds (in inventory or backpack).");
+                player.sendMessage(ChatColor.RED + "You don't have enough emeralds.");
                 return false;
             }
-
-            removeItems(inventory, Material.EMERALD, invEmeraldCount);
         }
-
         ItemStack itemToGive = item.clone();
         itemToGive.setAmount(1);
         Map<Integer, ItemStack> leftovers = inventory.addItem(itemToGive);

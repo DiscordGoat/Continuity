@@ -12,6 +12,7 @@ import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
 import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -1455,30 +1456,10 @@ public class VillagerTradeManager implements Listener {
         }
 
         if (finalCostRounded > 0) {
-            // 1) Check if player's main inventory has enough emeralds
-            if (hasEnoughItems(player.getInventory(), new ItemStack(Material.EMERALD), finalCostRounded)) {
-                // Remove emeralds from main inventory
-                removeItems(player.getInventory(), Material.EMERALD, finalCostRounded);
-
-            } else {
-                // Not enough in main inventory
-                int invEmeraldCount = countEmeraldsInInventory(player);
-                // Remove whatever emeralds they do have
-
-
-                int shortfall = finalCostRounded - invEmeraldCount;
-
-                // Attempt removing shortfall from the backpack
-                CustomBundleGUI customBundleGUI = CustomBundleGUI.getInstance();
-                boolean success = customBundleGUI.removeEmeraldsFromBackpack(player, shortfall);
-                if(success){
-                    removeItems(player.getInventory(), Material.EMERALD, invEmeraldCount);
-                }
-                if (!success) {
-                    // The player can't afford the cost from inventory + backpack
-                    player.sendMessage(ChatColor.RED + "You don't have enough emeralds (in inventory or backpack).");
-                    return;
-                }
+            boolean success = BankAccountManager.getInstance().removeEmeralds(player, finalCostRounded);
+            if (!success) {
+                player.sendMessage(ChatColor.RED + "You don't have enough emeralds.");
+                return;
             }
         }
 

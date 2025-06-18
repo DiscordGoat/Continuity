@@ -57,6 +57,8 @@ import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.devtools.*;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
+import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
+import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.subsystems.realms.Tropic;
@@ -245,6 +247,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
 
         CustomBundleGUI.init(this);
+        BankAccountManager.init(this);
+        TrinketManager.init(this);
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 
         forestryPetManager = new ForestryPetManager(this);
