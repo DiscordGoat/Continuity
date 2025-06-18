@@ -66,6 +66,24 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 }
             }
+            case "Blue Satchel" -> {
+                if (event.getClick().isLeftClick()) {
+                    SatchelManager.getInstance().openSatchel(player, "Blue");
+                    event.setCancelled(true);
+                }
+            }
+            case "Black Satchel" -> {
+                if (event.getClick().isLeftClick()) {
+                    SatchelManager.getInstance().openSatchel(player, "Black");
+                    event.setCancelled(true);
+                }
+            }
+            case "Green Satchel" -> {
+                if (event.getClick().isLeftClick()) {
+                    SatchelManager.getInstance().openSatchel(player, "Green");
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 
