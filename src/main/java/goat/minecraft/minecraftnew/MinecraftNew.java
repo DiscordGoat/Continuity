@@ -3,6 +3,13 @@ package goat.minecraft.minecraftnew;
 import goat.minecraft.minecraftnew.cut_content.CancelBrewing;
 import goat.minecraft.minecraftnew.cut_content.Collections;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconManager;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconCharmGUI;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconPassivesGUI;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconCatalystsGUI;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconUpgradesGUI;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconPassiveEffects;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.SetBeaconPowerCommand;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender.BartenderVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineeringProfessionListener;
@@ -91,6 +98,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private ForestryPetManager forestryPetManager;
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
+    private BeaconPassiveEffects beaconPassiveEffects;
 
 
 
@@ -229,6 +237,14 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         new Sleep(this);
         getServer().getPluginManager().registerEvents(new ShulkerBox(), this);
+        getServer().getPluginManager().registerEvents(new BeaconManager(this), this);
+        getServer().getPluginManager().registerEvents(new BeaconCharmGUI(this, null), this);
+        getServer().getPluginManager().registerEvents(new BeaconPassivesGUI(this, null), this);
+        getServer().getPluginManager().registerEvents(new BeaconCatalystsGUI(this, null), this);
+        getServer().getPluginManager().registerEvents(new BeaconUpgradesGUI(this, null), this);
+        beaconPassiveEffects = new BeaconPassiveEffects(this);
+        getServer().getPluginManager().registerEvents(beaconPassiveEffects, this);
+
 
 
         getCommand("end").setExecutor(new EndCommand());
@@ -237,6 +253,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("resetend").setExecutor(new ResetEndCommand());
         getCommand("generatecontinuityisland").setExecutor(new GenerateContinuityIslandCommand());
         getCommand("continuitytp").setExecutor(new ContinuityTpCommand());
+        getCommand("setbeaconpower").setExecutor(new SetBeaconPowerCommand());
 
 
         xpManager = new XPManager(this);
@@ -611,6 +628,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         if (combatSubsystemManager != null) {
             combatSubsystemManager.shutdown();
+        }
+
+        if (beaconPassiveEffects != null) {
+            beaconPassiveEffects.removeAllPassiveEffects();
         }
 
         PetManager.getInstance(this).savePets();

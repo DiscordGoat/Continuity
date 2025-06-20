@@ -15,7 +15,8 @@
       "Bash(javac:*)",
       "Bash(cat:*)",
       "Bash(mvn package:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(java:*)"
     ],
     "deny": []
   }

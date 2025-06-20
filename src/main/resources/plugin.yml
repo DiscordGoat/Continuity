@@ -114,6 +114,10 @@ commands:
     description: Reloads the combat subsystem configuration
     usage: /combatreload
     permission: continuity.admin
+  setbeaconpower:
+    description: Sets the power of a Beacon Charm in your hand
+    usage: /setbeaconpower <power>
+    permission: continuity.admin
   generatecontinuityisland:
     description: Installs the Continuity Island world from resources
     usage: /generatecontinuityisland
