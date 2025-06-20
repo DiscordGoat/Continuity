@@ -109,7 +109,7 @@ public class FishingEvent implements Listener {
         seaCreatureChance += callOfTheVoidLevel;
 
         if(PotionManager.isActive("Potion of Fountains", player)){
-            seaCreatureChance += 20;
+            seaCreatureChance += 10;
         }
 
         // Check for reforged items for sea creatures

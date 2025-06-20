@@ -139,12 +139,11 @@ public class SeaCreatureDeathEvent implements Listener {
                 }
                 // Drop bait based on creature rarity
                 ItemStack rarityBait = switch (seaCreature.getRarity()) {
-                    case COMMON -> ItemRegistry.getCommonBait();
                     case UNCOMMON -> ItemRegistry.getShrimpBait();
                     case RARE -> ItemRegistry.getLeechBait();
                     case EPIC -> ItemRegistry.getFrogBait();
                     case LEGENDARY -> ItemRegistry.getCaviarBait();
-                    default -> ItemRegistry.getBait();
+                    default -> ItemRegistry.getCommonBait();
                 };
 
                 PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
@@ -158,16 +157,6 @@ public class SeaCreatureDeathEvent implements Listener {
                         event.getDrops().add(rarityBait);
                     }
                 }
-
-
-                // Only sharks provide Fish Bait
-                if (seaCreature.getDisplayName().equalsIgnoreCase("Shark") ||
-                        seaCreature.getDisplayName().equalsIgnoreCase("Great White Shark")) {
-                    ItemStack bait = ItemRegistry.getBait();
-                    bait.setAmount(amount);
-                    event.getDrops().add(bait);
-                }
-
                 killer.playSound(killer.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 10.f);
             }
         }

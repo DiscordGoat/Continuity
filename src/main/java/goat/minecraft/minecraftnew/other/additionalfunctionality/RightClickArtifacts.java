@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.farming.SeederType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
@@ -28,6 +29,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.bukkit.plugin.Plugin;
 
@@ -551,6 +553,13 @@ public class RightClickArtifacts implements Listener {
             }
             if(displayName.equals(ChatColor.YELLOW + "Backpack")){
                 CustomBundleGUI.getInstance().openBundleGUI(player);
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        // <-- your code here
+                        TrinketManager.getInstance().refreshBankLore(player);
+                    }
+                }.runTaskLater(MinecraftNew.getInstance(), 10L);
                 player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 10, 10);
 
             }

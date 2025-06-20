@@ -36,7 +36,7 @@ public class EffigyUpgradeSystem implements Listener {
         CRIMSON_YIELD("Crimson Yield", "Bonus drops from crimson stems", Material.CRIMSON_STEM, 5, 8),
         WARPED_YIELD("Warped Yield", "Bonus drops from warped stems", Material.WARPED_STEM, 5, 11),
 
-        EFFIGY_YIELD("Effigy Yield", "+0.5% spirit chance per level", Material.TOTEM_OF_UNDYING, 6, 20),
+        EFFIGY_YIELD("Taunt", "+0.5% spirit chance per level", Material.TOTEM_OF_UNDYING, 6, 20),
         FORESTRY_XP("Forestry XP Boost", "More forestry XP", Material.EXPERIENCE_BOTTLE, 3, 21),
         FAKE_NEWS("Fake News", "Chance to reduce notoriety", Material.PAPER, 5, 22),
         FEED("Feed", "Chance to restore hunger when chopping", Material.BREAD, 3, 23),

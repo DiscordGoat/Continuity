@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.villagers;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.PlayerTabListUpdater;
+import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
@@ -356,7 +357,15 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> leatherworkerPurchases = new ArrayList<>();
         leatherworkerPurchases.add(createTradeMap("LEATHER", 1, 3, 1)); // Material
         leatherworkerPurchases.add(createTradeMap("ITEM_FRAME", 1, 3, 1)); // Material
+        leatherworkerPurchases.add(createTradeMap("DIVIDER_TRINKET", 1, 90, 2));
+        leatherworkerPurchases.add(createTradeMap("WORKBENCH_TRINKET", 1, 90, 2));
+        leatherworkerPurchases.add(createTradeMap("BANK_ACCOUNT_TRINKET", 1, 90, 3));
+        leatherworkerPurchases.add(createTradeMap("BLUE_SATCHEL", 1, 90, 3));
+        leatherworkerPurchases.add(createTradeMap("BLACK_SATCHEL", 1, 90, 3));
+        leatherworkerPurchases.add(createTradeMap("GREEN_SATCHEL", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("SHULKER_SHELL", 1, 64, 3)); // Material
+        leatherworkerPurchases.add(createTradeMap("ANVIL_TRINKET", 1, 90, 4));
+
 
         leatherworkerPurchases.add(createTradeMap("BUNDLE", 1, 64, 3)); // Material
         leatherworkerPurchases.add(createTradeMap("LEATHERWORKER_ENCHANT", 1, 32, 5)); // Custom Item
@@ -367,13 +376,7 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> leatherworkerSells = new ArrayList<>();
         leatherworkerSells.add(createTradeMap("SADDLE", 1, 12, 1)); // Material
         leatherworkerSells.add(createTradeMap("LEATHER_BOOTS", 1, 1, 1)); // Material
-        leatherworkerSells.add(createTradeMap("WORKBENCH_TRINKET", 1, 90, 1));
-        leatherworkerSells.add(createTradeMap("DIVIDER_TRINKET", 1, 90, 1));
-        leatherworkerSells.add(createTradeMap("BANK_ACCOUNT_TRINKET", 1, 90, 1));
-        leatherworkerSells.add(createTradeMap("BLUE_SATCHEL", 1, 90, 1));
-        leatherworkerSells.add(createTradeMap("BLACK_SATCHEL", 1, 90, 1));
-        leatherworkerSells.add(createTradeMap("GREEN_SATCHEL", 1, 90, 1));
-        leatherworkerSells.add(createTradeMap("ANVIL_TRINKET", 1, 90, 4));
+
         defaultConfig.set("LEATHERWORKER.sells", leatherworkerSells);
 // Shepherd Purchases
         List<Map<String, Object>> shepherdPurchases = new ArrayList<>();
@@ -1479,6 +1482,7 @@ public class VillagerTradeManager implements Listener {
 
         if (finalCostRounded > 0) {
             boolean success = BankAccountManager.getInstance().removeEmeralds(player, finalCostRounded);
+            TrinketManager.getInstance().refreshBankLore(player);
             if (!success) {
                 player.sendMessage(ChatColor.RED + "You don't have enough emeralds.");
                 return;

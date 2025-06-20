@@ -53,7 +53,7 @@ public class CombatBuffs implements Listener {
                     level = Math.min(level, 100);
 
                     // Calculate damage multiplier based on level
-                    double damageMultiplier = 1 + (level * 0.04);
+                    double damageMultiplier = 1 + (level * 0.02);
 
                     // Apply the damage multiplier to the original damage
                     double originalDamage = event.getDamage();

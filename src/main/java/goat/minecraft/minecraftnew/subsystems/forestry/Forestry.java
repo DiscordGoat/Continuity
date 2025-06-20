@@ -320,8 +320,7 @@ public class Forestry implements Listener {
 
             // Calculate spirit chance.
             double spiritChance = 0.0;
-            int playerForestryLevel = xpManager.getPlayerLevel(player, "Forestry");
-            spiritChance += playerForestryLevel * 0.0005; // 0.05% per level, up to 5% base spirit chance.
+            spiritChance += 0.2;
 
             int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
             spiritChance += effigyYield * 0.005; // +0.5% per level
