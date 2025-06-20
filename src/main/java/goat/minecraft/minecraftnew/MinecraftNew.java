@@ -67,8 +67,6 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import goat.minecraft.minecraftnew.subsystems.beacon.BeaconCharmGUI;
-import goat.minecraft.minecraftnew.utils.commands.BeaconCharmCommand;
 
 import java.util.Objects;
 
@@ -97,7 +95,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
     private PotionBrewingSubsystem potionBrewingSubsystem;
-    private BeaconCharmGUI beaconCharmGUI;
     private VerdantRelicsSubsystem verdantRelicsSubsystem;
     private CombatSubsystemManager combatSubsystemManager;
 
@@ -150,8 +147,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         PlayerOxygenManager oxygenManager = new PlayerOxygenManager(this);
         this.getCommand("setplayeroxygen").setExecutor(new SetPlayerOxygenCommand());
 
-        beaconCharmGUI = new BeaconCharmGUI(this);
-        new BeaconCharmCommand(this, beaconCharmGUI);
 
 
         new SetDurabilityCommand(this);
