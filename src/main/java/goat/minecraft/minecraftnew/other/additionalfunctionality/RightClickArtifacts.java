@@ -238,7 +238,6 @@ public class RightClickArtifacts implements Listener {
             Material.MUSIC_DISC_FAR,
             Material.MUSIC_DISC_MALL,
             Material.MUSIC_DISC_MELLOHI,
-            Material.MUSIC_DISC_PIGSTEP,
             Material.MUSIC_DISC_STAL,
             Material.MUSIC_DISC_STRAD,
             Material.MUSIC_DISC_WAIT,
@@ -1052,14 +1051,6 @@ public class RightClickArtifacts implements Listener {
                 )
         ));
 
-        map.put(Material.MUSIC_DISC_PIGSTEP, new DiscData(
-                ChatColor.RED + "Music Disc Pigstep",
-                ChatColor.RED,
-                List.of(
-                        ChatColor.GRAY + "Summons an Angry Pigman boss",
-                        ChatColor.GRAY + "Defeat it for gold, enchanted apples, or pet rewards"
-                )
-        ));
 
         map.put(Material.MUSIC_DISC_5, new DiscData(
                 ChatColor.GRAY + "Music Disc 5",

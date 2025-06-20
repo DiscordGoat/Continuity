@@ -125,14 +125,6 @@ public class DiscsCommand implements CommandExecutor, Listener {
                         "Spawns XP orbs with accompanying visual effects"
                 )
         ));
-        discDataMap.put(Material.MUSIC_DISC_PIGSTEP, new DiscData(
-                ChatColor.RED + "Music Disc Pigstep",
-                ChatColor.RED,
-                Arrays.asList(
-                        "Summons an Angry Pigman boss",
-                        "Defeat it for gold, enchanted apples, or pet rewards"
-                )
-        ));
         discDataMap.put(Material.MUSIC_DISC_5, new DiscData(
                 ChatColor.GRAY + "Music Disc 5",
                 ChatColor.GRAY,
