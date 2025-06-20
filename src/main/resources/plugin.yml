@@ -134,3 +134,7 @@ commands:
     description: Sets a player's skill level
     usage: /setskilllevel <player> <skill> <level>
     permission: continuity.admin
+  beaconcharm:
+    description: Opens the Beacon Catalyst GUI
+    usage: /beaconcharm [tier]
+    permission: continuity.use
