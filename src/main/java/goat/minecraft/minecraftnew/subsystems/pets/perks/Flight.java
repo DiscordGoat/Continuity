@@ -47,7 +47,7 @@ public class Flight implements Listener {
         // Get the player's active pet
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // Reset daily flight stats if needed
+        // Reset flight stats if the 3-day period has passed
         resetFlightStatsIfNewDay(player);
 
         // Calculate the maximum flight distance based on player's level
@@ -135,8 +135,10 @@ public class Flight implements Listener {
     private void resetFlightStatsIfNewDay(Player player) {
         UUID playerId = player.getUniqueId();
         long currentDay = player.getWorld().getFullTime() / 24000; // Minecraft days
+        long lastResetDay = lastFlightReset.getOrDefault(playerId, 0L);
 
-        if (lastFlightReset.getOrDefault(playerId, 0L) < currentDay) {
+        // Reset every 3 Minecraft days instead of daily
+        if (currentDay - lastResetDay >= 3) {
             dailyFlightTracker.put(playerId, 0.0);
             lastFlightReset.put(playerId, currentDay);
         }
@@ -150,7 +152,7 @@ public class Flight implements Listener {
         if (player.getAllowFlight()) {
             player.setAllowFlight(false);
             player.setFlying(false);
-            player.sendMessage(ChatColor.RED + "You have reached your daily flight limit!");
+            player.sendMessage(ChatColor.RED + "You have reached your flight limit!");
         }
 
         // Cancel the flight task if active
