@@ -204,27 +204,21 @@ public class VerdantRelicsSubsystem implements Listener {
         p.sendMessage(ChatColor.GREEN + "You planted a " + relicName + " relic seed!");
 
         String locKey = toLocKey(target.getLocation());
-        XPManager xpManager = new XPManager(plugin);
-        int farmingLevel = xpManager.getPlayerLevel(p, "Farming");
 
         int growthDuration;
-        if(relicName.equalsIgnoreCase("Sunflare")) {
+        if (relicName.equalsIgnoreCase("Sunflare")) {
             // Sunflare grows quicker than other relics
-            growthDuration = 5 * 1200; // 5 in-game days
+            growthDuration = 5 * 1200 * 3; // 15 in-game days
         } else {
-            // One in-game day is 20 minutes (1,200 seconds)
-            double durationAtLevel1 = 10 * 1200.0;   // 30 days = 36,000 seconds
-            double durationAtLevel100 = 5 * 1200.0;   // 15 days = 18,000 seconds
-            double diff = durationAtLevel1 - durationAtLevel100;
-            double factor = (farmingLevel - 1) / 99.0; // Linear factor from level 1 to 100
-            growthDuration = (int)(durationAtLevel1 - diff * factor);
+            // Base duration for relics
+            growthDuration = 10 * 1200 * 3; // 30 in-game days
         }
 
-        // Apply Master Botanist perk: halve the growth time
+        // Apply Master Botanist perk: reduce growth time by 20%
         PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
         if (meritManager.hasPerk(p.getUniqueId(), "Master Botanist")) {
-            growthDuration = growthDuration / 2;
-            Bukkit.getLogger().info("Reduced Verdant Relic Growth Time by 50%. Before: " + growthDuration*2 + " after: " +growthDuration);
+            growthDuration = (int) (growthDuration * 0.8);
+            Bukkit.getLogger().info("Reduced Verdant Relic Growth Time by 20%. New duration: " + growthDuration);
         }
 
         RelicSession session = new RelicSession(locKey, relicName, growthDuration, growthDuration);
