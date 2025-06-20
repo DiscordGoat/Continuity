@@ -520,7 +520,6 @@ public class FishingEvent implements Listener {
                 new LootItem(new ItemStack(Material.MUSIC_DISC_WARD), 2),
                 new LootItem(new ItemStack(Material.MUSIC_DISC_11), 2),
                 new LootItem(new ItemStack(Material.MUSIC_DISC_WAIT), 2),
-                new LootItem(new ItemStack(Material.MUSIC_DISC_PIGSTEP), 2),
                 new LootItem(new ItemStack(Material.MUSIC_DISC_OTHERSIDE), 2),
                 new LootItem(new ItemStack(Material.MUSIC_DISC_RELIC), 2),
                 new LootItem(new ItemStack(Material.MUSIC_DISC_5), 2),

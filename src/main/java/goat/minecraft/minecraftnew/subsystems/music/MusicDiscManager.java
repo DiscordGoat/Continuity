@@ -388,9 +388,6 @@ public class MusicDiscManager implements Listener {
             case MUSIC_DISC_WARD:
                 handleMusicDiscWard(player);
                 break;
-            case MUSIC_DISC_PIGSTEP:
-                handleMusicDiscPigstep(player);
-                break;
             case MUSIC_DISC_5:
                 handleMusicDisc5(player);
                 break;
@@ -677,7 +674,6 @@ public class MusicDiscManager implements Listener {
         LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_STRAD));
         LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_WARD));
         LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_WAIT));
-        LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_PIGSTEP)); // Rare item
         LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_OTHERSIDE)); // Rare item
         LOOT_ITEMS.add(new ItemStack(Material.MUSIC_DISC_RELIC)); // Rare item
     }
@@ -1728,125 +1724,6 @@ public class MusicDiscManager implements Listener {
         }.runTaskTimer(plugin, 0L, intervalTicks);
     }
 
-    private void handleMusicDiscPigstep(Player player) {
-        // Play the disc sound
-
-
-        // Get the custom Nether world (assumes a world named "custom_nether" exists)
-        World customNether = Bukkit.getWorld("custom_nether");
-        if (customNether == null) {
-            player.sendMessage(ChatColor.RED + "Custom Nether not found!");
-            return;
-        }
-
-        // Define the location of the large, circular bastion-esque platform in the center of a lava ocean.
-        // (Adjust these coordinates as necessary for your custom nether.)
-        Location platformCenter = new Location(customNether, 0, 103, 0);
-
-        // Teleport the player to the custom nether platform.
-        player.teleport(platformCenter);
-
-        // Spawn the boss in the center of the platform.
-        // Boss level should be 300. (Leave the custom boss attribute code blank for now.)
-        Entity boss = customNether.spawnEntity(platformCenter, EntityType.PIGLIN_BRUTE);
-        boss.setCustomNameVisible(true);
-
-        SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(new XPManager(MinecraftNew.getInstance()));
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            spawnMonsters.applyMobAttributes((LivingEntity) boss, 300);
-            player.playSound(player.getLocation(), Sound.MUSIC_DISC_PIGSTEP, 300.0f, 1.0f);
-        }, 41L);
-        boss.setCustomName(ChatColor.RED + "[Lvl 300] Boss"); // Placeholder name
-        ((LivingEntity) boss).addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, Integer.MAX_VALUE, 2));
-        // Register a listener to handle if the player dies during the event.
-        PlayerDeathListener deathListener = new PlayerDeathListener(player);
-        Bukkit.getPluginManager().registerEvents(deathListener, plugin);
-
-        // Register a listener to handle when the boss dies.
-        BossDeathListener bossDeathListener = new BossDeathListener(player, boss);
-        Bukkit.getPluginManager().registerEvents(bossDeathListener, plugin);
-
-        // Schedule the end of the Pigstep event (e.g. 300 seconds later)
-        int eventDurationTicks = 300 * 20; // 300 seconds (5 minutes)
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            // End of event: Teleport the player back to their spawn
-            Location spawn = player.getBedSpawnLocation();
-            if (spawn == null) {
-                spawn = player.getWorld().getSpawnLocation();
-            }
-            player.teleport(spawn);
-            player.sendMessage(ChatColor.RED + "The Pigstep event has ended. You have been returned to your spawn.");
-
-            // Unregister our temporary listeners
-            HandlerList.unregisterAll(deathListener);
-            HandlerList.unregisterAll(bossDeathListener);
-
-            // If the boss is still alive, remove it.
-            if (!boss.isDead()) {
-                boss.remove();
-            }
-        }, eventDurationTicks);
-    }
-
-    // Listener to handle player death during the event.
-    private class PlayerDeathListener implements Listener {
-        private final Player eventPlayer;
-
-        public PlayerDeathListener(Player player) {
-            this.eventPlayer = player;
-        }
-
-        @EventHandler
-        public void onPlayerDeath(org.bukkit.event.entity.PlayerDeathEvent event) {
-            if (event.getEntity().equals(eventPlayer)) {
-                // Clear default drops so the player keeps their items.
-                event.getDrops().clear();
-                // Teleport the player back to their spawn shortly after death.
-                Location spawn = eventPlayer.getBedSpawnLocation();
-                if (spawn == null) {
-                    spawn = eventPlayer.getWorld().getSpawnLocation();
-                }
-                Location finalSpawn = spawn;
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    eventPlayer.teleport(finalSpawn);
-                    eventPlayer.sendMessage(ChatColor.RED + "You died during the Pigstep event. Your items have been preserved and you have been returned to your spawn.");
-                }, 1L);
-            }
-        }
-    }
-
-    // Listener to handle the boss death.
-    private class BossDeathListener implements Listener {
-        private final Player eventPlayer;
-        private final Entity bossEntity;
-
-        public BossDeathListener(Player player, Entity boss) {
-            this.eventPlayer = player;
-            this.bossEntity = boss;
-        }
-
-        @EventHandler
-        public void onBossDeath(org.bukkit.event.entity.EntityDeathEvent event) {
-            if (event.getEntity().equals(bossEntity)) {
-                // When the boss dies, teleport the player back to spawn and spawn rewards on their feet.
-                Location spawn = eventPlayer.getBedSpawnLocation();
-                if (spawn == null) {
-                    spawn = eventPlayer.getWorld().getSpawnLocation();
-                }
-
-
-
-                eventPlayer.teleport(spawn);
-                eventPlayer.sendMessage(ChatColor.GOLD + "You defeated the boss! Rewards have been dropped at your feet, and you have been returned to your spawn.");
-                //TODO rewards
-                // Unregister this listener.
-                PetManager petManager = PetManager.getInstance(plugin);
-                PetRegistry petRegistry = new PetRegistry();
-                petRegistry.addPetByName(eventPlayer, "Piglin Brute");
-                HandlerList.unregisterAll(this);
-            }
-        }
-    }
 
 
     private void handleMusicDisc5(Player player) {

@@ -3242,7 +3242,6 @@ public class ItemRegistry {
                 new ItemStack(Material.MUSIC_DISC_WARD),
                 new ItemStack(Material.MUSIC_DISC_11),
                 new ItemStack(Material.MUSIC_DISC_WAIT),
-                new ItemStack(Material.MUSIC_DISC_PIGSTEP),
                 new ItemStack(Material.MUSIC_DISC_OTHERSIDE),
                 new ItemStack(Material.MUSIC_DISC_RELIC),
                 new ItemStack(Material.MUSIC_DISC_5)

@@ -457,7 +457,6 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 Material.MUSIC_DISC_WARD,
                 Material.MUSIC_DISC_11,
                 Material.MUSIC_DISC_WAIT,
-                Material.MUSIC_DISC_PIGSTEP,
                 Material.MUSIC_DISC_OTHERSIDE,
                 Material.MUSIC_DISC_RELIC,
                 Material.MUSIC_DISC_5
