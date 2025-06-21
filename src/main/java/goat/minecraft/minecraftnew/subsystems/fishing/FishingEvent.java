@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
@@ -111,7 +114,28 @@ public class FishingEvent implements Listener {
         if(PotionManager.isActive("Potion of Fountains", player)){
             seaCreatureChance += 10;
         }
+        CatalystManager catalystManager = CatalystManager.getInstance();
+        if (catalystManager == null) {
+            return;
+        }
 
+        // Check if player is near an Insanity catalyst
+        if (!catalystManager.isNearCatalyst(player.getLocation(), CatalystType.DEPTH)) {
+            return;
+        }
+
+        // Find the nearest Insanity catalyst to get its tier
+        Catalyst nearestDepthCatalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.DEPTH);
+        if (nearestDepthCatalyst == null) {
+            return;
+        }
+
+        int catalystTier = catalystManager.getCatalystTier(nearestDepthCatalyst);
+        final double BASE_SEA_CREATURE_CHANCE_INCREASE = 0.05; // 5% base increase
+        final double PER_TIER_SEA_CREATURE_INCREASE = 0.01;    // 1% per tier
+        // Calculate spirit chance bonus: 5% + (tier * 1%)
+        double seaCreatureBonus = BASE_SEA_CREATURE_CHANCE_INCREASE + (catalystTier * PER_TIER_SEA_CREATURE_INCREASE);
+        seaCreatureChance += seaCreatureBonus;
         // Check for reforged items for sea creatures
         if (isReforgedForSeaCreatures(player.getInventory().getItemInMainHand())) {
             seaCreatureChance += 5; // +4% if the item is reforged

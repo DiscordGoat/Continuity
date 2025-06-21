@@ -1,15 +1,8 @@
 package goat.minecraft.minecraftnew;
-
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.*;
 import goat.minecraft.minecraftnew.cut_content.CancelBrewing;
 import goat.minecraft.minecraftnew.cut_content.Collections;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconManager;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconCharmGUI;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconPassivesGUI;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconCatalystsGUI;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconUpgradesGUI;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.BeaconPassiveEffects;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.SetBeaconPowerCommand;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender.BartenderVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineeringProfessionListener;
@@ -244,6 +237,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new BeaconUpgradesGUI(this, null), this);
         beaconPassiveEffects = new BeaconPassiveEffects(this);
         getServer().getPluginManager().registerEvents(beaconPassiveEffects, this);
+        // Initialize catalyst manager for beacon charm catalysts
+        CatalystManager.initialize(this);
 
 
 
@@ -254,6 +249,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("generatecontinuityisland").setExecutor(new GenerateContinuityIslandCommand());
         getCommand("continuitytp").setExecutor(new ContinuityTpCommand());
         getCommand("setbeaconpower").setExecutor(new SetBeaconPowerCommand());
+        getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
 
 
         xpManager = new XPManager(this);
@@ -322,7 +318,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getLogger().info("MyPlugin has been enabled!");
 
         //meatCookingManager = new MeatCookingManager(this);
-
 
 
         Bukkit.getPluginManager().registerEvents(new HireVillager(), this);
@@ -632,6 +627,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         if (beaconPassiveEffects != null) {
             beaconPassiveEffects.removeAllPassiveEffects();
+        }
+        if (CatalystManager.getInstance() != null) {
+            CatalystManager.getInstance().shutdown();
         }
 
         PetManager.getInstance(this).savePets();

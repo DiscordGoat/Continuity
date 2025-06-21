@@ -138,3 +138,7 @@ commands:
     description: Sets a player's skill level
     usage: /setskilllevel <player> <skill> <level>
     permission: continuity.admin
+  getnearestcatalysttype:
+    description: Gets the nearest catalyst type in range of the player
+    usage: /getnearestcatalysttype
+    permission: continuity.admin

@@ -2,6 +2,9 @@ package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import com.mojang.authlib.GameProfile;
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -382,6 +385,28 @@ public class ForestSpiritManager implements Listener {
         if (damager.hasMetadata("forestSpirit") && entity instanceof Player) {
             Player player = (Player) entity;
             ItemStack axe = player.getInventory().getItemInMainHand();
+            CatalystManager catalystManager = CatalystManager.getInstance();
+            if (catalystManager == null) {
+                return;
+            }
+
+            // Check if player is near an Insanity catalyst
+            if (!catalystManager.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {
+                return;
+            }
+
+            // Find the nearest Insanity catalyst to get its tier
+            Catalyst nearestInsanityCatalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.INSANITY);
+            if (nearestInsanityCatalyst == null) {
+                return;
+            }
+
+            int catalystTier = catalystManager.getCatalystTier(nearestInsanityCatalyst);
+            final double BASE_DAMAGE_REDUCTION = 0.5; // 5% base increase
+            final double PER_TIER_BONUS = 0.05;    // 1% per tier
+            // Calculate spirit chance bonus: 5% + (tier * 1%)
+            double damageReduction = BASE_DAMAGE_REDUCTION + (catalystTier * PER_TIER_BONUS);
+            event.setDamage(event.getDamage() * (1 - damageReduction));
             int spectral = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.SPECTRAL_ARMOR);
             if (spectral > 0) {
                 event.setDamage(event.getDamage() * (1 - spectral * 0.10));

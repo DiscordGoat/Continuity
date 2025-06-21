@@ -1,5 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.ChatColor;
@@ -61,6 +63,14 @@ public class Flight implements Listener {
         // Display flight progress
         displayFlightProgress(player, flownDistanceKm, remainingDistance);
 
+        // Check if player is near a Flight Catalyst - this takes priority over everything
+        CatalystManager catalystManager = CatalystManager.getInstance();
+        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.FLIGHT)) {
+            // Flight Catalyst takes priority - enable flight regardless of pet limitations
+            enableFlightFromCatalyst(player);
+            return;
+        }
+
         // Check if the player has exceeded the flight limit
         if (remainingDistance <= 0) {
             disableFlight(player);
@@ -88,6 +98,21 @@ public class Flight implements Listener {
             distance *= 2;
         }
         return distance;
+    }
+
+    private void enableFlightFromCatalyst(Player player) {
+        if (!player.getAllowFlight()) {
+            player.setAllowFlight(true);
+            player.sendMessage(ChatColor.LIGHT_PURPLE + "✈ Flight enabled by Catalyst of Flight!");
+        }
+        
+        // Don't start flight draining task for catalyst flight - it's unlimited
+        // Cancel any existing pet flight task since catalyst takes priority
+        UUID playerId = player.getUniqueId();
+        if (flightTasks.containsKey(playerId)) {
+            flightTasks.get(playerId).cancel();
+            flightTasks.remove(playerId);
+        }
     }
 
     private void enableFlight(Player player) {
@@ -148,6 +173,13 @@ public class Flight implements Listener {
 
     private void disableFlight(Player player) {
         UUID playerId = player.getUniqueId();
+
+        // Check if player is near a Flight Catalyst before disabling flight
+        CatalystManager catalystManager = CatalystManager.getInstance();
+        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.FLIGHT)) {
+            // Don't disable flight if a Flight Catalyst is active
+            return;
+        }
 
         if (player.getAllowFlight()) {
             player.setAllowFlight(false);
