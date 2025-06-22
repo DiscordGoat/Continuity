@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.cut_content;
 
 import org.bukkit.*;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.*;
@@ -123,8 +124,7 @@ public class ResourceGeneratorSubsystem implements Listener {
             saveGenerators();
 
             // Drop the generator item instead of the block
-            ItemStack generatorItem = createGenerator(generator.getResourceType(), generator.getAmount(), generator.getCooldown());
-            loc.getWorld().dropItemNaturally(loc, generatorItem);
+            loc.getWorld().dropItemNaturally(loc, ItemRegistry.getGeneratorItem());
 
             // Play break effects
             loc.getWorld().playSound(loc, Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);

@@ -2525,6 +2525,20 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getGeneratorItem() {
+        return createCustomItem(
+                Material.SKULK_SHRIEKER,
+                ChatColor.YELLOW + "Generator",
+                Arrays.asList(
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Place",
+                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Pick up"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
 
     public static ItemStack getEngineeringDegree() {
         return createCustomItem(
