@@ -134,7 +134,11 @@ public class OreFabricatorGUI implements Listener {
                 gems[i - 9] = event.getInventory().getItem(i);
             }
 
-            subsystem.beginFabrication(player, genLoc, ore, gems);
+            if (subsystem.hasSession(genLoc)) {
+                subsystem.addPowerAndResume(player, genLoc, gems);
+            } else {
+                subsystem.beginFabrication(player, genLoc, ore, gems);
+            }
             player.closeInventory();
             selectedOre.remove(player.getUniqueId());
             openGenerators.remove(player.getUniqueId());
