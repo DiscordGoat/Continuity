@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.beacon;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -58,8 +59,17 @@ public class SetBeaconPowerCommand implements CommandExecutor {
             return true;
         }
 
+        // Determine the old tier before setting power
+        int oldTier = BeaconManager.getBeaconTier(heldItem);
+
         // Set the beacon power
         setBeaconPower(heldItem, power);
+
+        // Check if the tier increased and play a toast sound
+        int newTier = BeaconManager.getBeaconTier(heldItem);
+        if (newTier > oldTier) {
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+        }
 
         // Send success message
         int tier = BeaconManager.getBeaconTier(heldItem);

@@ -145,8 +145,9 @@ public class BeaconManager implements Listener {
             return false;
         }
         
-        // Get current beacon power
+        // Get current beacon power and tier
         int currentPower = getCurrentBeaconPower(beacon);
+        int oldTier = getBeaconTierFromPower(currentPower);
         int powerToAdd = powerPerBlock * material.getAmount();
         int newPower = Math.min(currentPower + powerToAdd, 10000);
         
@@ -157,6 +158,12 @@ public class BeaconManager implements Listener {
         
         // Update the beacon's lore with new power
         updateBeaconPower(beacon, newPower);
+
+        // Play a toast sound if we reached a new tier
+        int newTier = getBeaconTierFromPower(newPower);
+        if (newTier > oldTier) {
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+        }
         
         return true;
     }
