@@ -397,6 +397,9 @@ public class MusicDiscManager implements Listener {
             case MUSIC_DISC_OTHERSIDE:
                 handleMusicDiscOtherside(player);
                 break;
+            case MUSIC_DISC_PIGSTEP:
+                handleMusicDiscPigstep(player);
+                break;
             // Add more cases if there are additional discs in newer Minecraft versions
             default:
                 handleUnknownMusicDisc(player, discType);
@@ -1735,6 +1738,155 @@ public class MusicDiscManager implements Listener {
         // Apply night vision for 20 minutes (20 ticks/second * 60 seconds/minute * 20 minutes)
         player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 20 * 60 * 20, 0, true, false, false));
         // Notify the player
+    }
+
+    private void handleMusicDiscPigstep(Player player) {
+        Inventory gui = Bukkit.createInventory(null, 9, ChatColor.GOLD + "Lottery Wheel");
+        player.openInventory(gui);
+        player.playSound(player.getLocation(), Sound.MUSIC_DISC_PIGSTEP, 1.0f, 1.0f);
+
+        List<LotteryReward> rewards = buildLotteryRewards();
+
+        new BukkitRunnable() {
+            int ticks = 0;
+            final Random r = new Random();
+
+            @Override
+            public void run() {
+                if (!player.isOnline()) { cancel(); return; }
+
+                for (int i = 0; i < 9; i++) {
+                    LotteryReward rw = rewards.get(r.nextInt(rewards.size()));
+                    gui.setItem(i, rw.icon);
+                }
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+
+                ticks += 2;
+                if (ticks >= 60) {
+                    cancel();
+                    LotteryReward reward = rewards.get(r.nextInt(rewards.size()));
+                    gui.clear();
+                    gui.setItem(4, reward.icon);
+                    reward.give(player);
+                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f);
+                    Bukkit.getScheduler().runTaskLater(plugin, player::closeInventory, 40L);
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 2L);
+    }
+
+    private static class LotteryReward {
+        final ItemStack icon;
+        final java.util.function.Consumer<Player> action;
+
+        LotteryReward(ItemStack icon, java.util.function.Consumer<Player> action) {
+            this.icon = icon;
+            this.action = action;
+        }
+
+        void give(Player p) { action.accept(p); }
+    }
+
+    private List<LotteryReward> buildLotteryRewards() {
+        List<LotteryReward> list = new ArrayList<>();
+        Random random = new Random();
+        XPManager xpManager = new XPManager(plugin);
+        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
+        PlayerOxygenManager oxygenManager = PlayerOxygenManager.getInstance();
+        PetManager petManager = PetManager.getInstance(plugin);
+        PetRegistry petRegistry = new PetRegistry();
+
+        list.add(new LotteryReward(new ItemStack(Material.EXPERIENCE_BOTTLE), p -> {
+            String[] skills = {"Combat","Fishing","Forestry","Mining","Farming","Bartering","Smithing","Culinary"};
+            String skill = skills[random.nextInt(skills.length)];
+            int xp = 500 + random.nextInt(501);
+            xpManager.addXP(p, skill, xp);
+            p.sendMessage(ChatColor.GREEN + "You gained " + xp + " " + skill + " XP!");
+        }));
+
+        list.add(new LotteryReward(new ItemStack(Material.EMERALD), p -> {
+            int amt = 64 + random.nextInt(192);
+            p.getInventory().addItem(new ItemStack(Material.EMERALD, amt));
+            p.sendMessage(ChatColor.GREEN + "You received " + amt + " emeralds!");
+        }));
+
+        list.add(new LotteryReward(new ItemStack(Material.LEAD), p -> {
+            PetManager.Pet active = petManager.getActivePet(p);
+            if (active != null) {
+                int lvls = random.nextInt(100) + 1;
+                active.setLevel(Math.min(active.getLevel() + lvls, active.getMaxLevel()));
+                p.sendMessage(ChatColor.GREEN + active.getName() + " gained " + lvls + " levels!");
+            }
+        }));
+
+        list.add(new LotteryReward(ItemRegistry.getNetherStardust(), p -> p.getInventory().addItem(ItemRegistry.getNetherStardust())));
+
+        list.add(new LotteryReward(new ItemStack(Material.DIAMOND_BLOCK, 64), p -> p.getInventory().addItem(new ItemStack(Material.DIAMOND_BLOCK, 64))));
+        list.add(new LotteryReward(new ItemStack(Material.LAPIS_LAZULI, 64 * 4), p -> p.getInventory().addItem(new ItemStack(Material.LAPIS_LAZULI, 64 * 4))));
+        list.add(new LotteryReward(new ItemStack(Material.REDSTONE, 64 * 4), p -> p.getInventory().addItem(new ItemStack(Material.REDSTONE, 64 * 4))));
+        list.add(new LotteryReward(new ItemStack(Material.COAL_BLOCK, 64 * 16), p -> p.getInventory().addItem(new ItemStack(Material.COAL_BLOCK, 64 * 16))));
+        list.add(new LotteryReward(new ItemStack(Material.IRON_BLOCK, 64 * 8), p -> p.getInventory().addItem(new ItemStack(Material.IRON_BLOCK, 64 * 8))));
+
+        list.add(new LotteryReward(ItemRegistry.getEmerald(), p -> {
+            for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getEmerald().clone());
+        }));
+
+        list.add(new LotteryReward(ItemRegistry.getCrimsonEffigy(), p -> {
+            for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getCrimsonEffigy().clone());
+        }));
+
+        list.add(new LotteryReward(ItemRegistry.getShade(), p -> {
+            for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getShade().clone());
+        }));
+
+        list.add(new LotteryReward(ItemRegistry.getCaviarBait(), p -> {
+            for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getCaviarBait().clone());
+        }));
+
+        list.add(new LotteryReward(new ItemStack(Material.ANVIL), p -> repairAllItems(p)));
+
+        list.add(new LotteryReward(ItemRegistry.getUnbreakingVI(), p -> p.getInventory().addItem(ItemRegistry.getUnbreakingVI())));
+        list.add(new LotteryReward(ItemRegistry.getSharpnessVIII(), p -> p.getInventory().addItem(ItemRegistry.getSharpnessVIII())));
+        list.add(new LotteryReward(ItemRegistry.getSmiteVIII(), p -> p.getInventory().addItem(ItemRegistry.getSmiteVIII())));
+        list.add(new LotteryReward(ItemRegistry.getBaneOfArthropodsVIII(), p -> p.getInventory().addItem(ItemRegistry.getBaneOfArthropodsVIII())));
+
+        list.add(new LotteryReward(new ItemStack(Material.GOLDEN_SWORD), p -> petRegistry.addPetByName(p, "Piglin Brute")));
+
+        list.add(new LotteryReward(new ItemStack(Material.COOKED_BEEF, 64), p -> {
+            List<ItemStack> foods = CulinarySubsystem.getInstance(plugin).getAllRecipeItems();
+            ItemStack food = foods.get(random.nextInt(foods.size())).clone();
+            food.setAmount(64);
+            p.getInventory().addItem(food);
+        }));
+
+        list.add(new LotteryReward(new ItemStack(Material.NETHER_STAR), p -> {
+            int current = meritManager.getMeritPoints(p.getUniqueId());
+            meritManager.setMeritPoints(p.getUniqueId(), current + 100);
+            p.sendMessage(ChatColor.GREEN + "You gained 100 merit points!");
+        }));
+
+        list.add(new LotteryReward(new ItemStack(Material.DRAGON_BREATH), p -> {
+            int newOxy = oxygenManager.getPlayerOxygen(p) + 10000;
+            oxygenManager.setPlayerOxygenLevel(p, newOxy);
+            p.sendMessage(ChatColor.AQUA + "You gained 10,000 oxygen!");
+        }));
+
+        return list;
+    }
+
+    private void repairAllItems(Player player) {
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item == null) continue;
+            if (item.getType().getMaxDurability() <= 0) continue;
+            ItemMeta meta = item.getItemMeta();
+            if (meta instanceof Damageable d) {
+                if (d.hasDamage()) {
+                    d.setDamage(0);
+                    item.setItemMeta((ItemMeta)d);
+                }
+            }
+        }
+        player.sendMessage(ChatColor.GREEN + "All items repaired!");
     }
     public void handleMusicDiscOtherside(Player player) {
         Random random = new Random();

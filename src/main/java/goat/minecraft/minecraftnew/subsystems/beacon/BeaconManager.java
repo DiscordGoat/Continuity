@@ -112,8 +112,11 @@ public class BeaconManager implements Listener {
             
             // Success message
             String materialName = formatMaterialName(cursor.getType());
-            int powerGained = MATERIAL_POWER_VALUES.get(cursor.getType()) * cursor.getAmount();
-            player.sendMessage(ChatColor.GOLD + "Applied " + ChatColor.YELLOW + cursor.getAmount() + "x " + materialName + 
+            int powerGained = MATERIAL_POWER_VALUES.getOrDefault(cursor.getType(), isNetherStardust(cursor) ? 1000 : 0) * cursor.getAmount();
+            if (isNetherStardust(cursor)) {
+                materialName = "Nether Stardust";
+            }
+            player.sendMessage(ChatColor.GOLD + "Applied " + ChatColor.YELLOW + cursor.getAmount() + "x " + materialName +
                              ChatColor.GOLD + " (+" + powerGained + " Beacon Power) to your beacon!");
         }
     }
@@ -125,7 +128,14 @@ public class BeaconManager implements Listener {
 
     private boolean isMaterialBlock(ItemStack item) {
         if (item == null) return false;
-        return MATERIAL_POWER_VALUES.containsKey(item.getType());
+        return MATERIAL_POWER_VALUES.containsKey(item.getType()) || isNetherStardust(item);
+    }
+
+    private boolean isNetherStardust(ItemStack item) {
+        if (item == null || item.getType() != Material.NETHER_STAR) return false;
+        if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return false;
+        String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+        return name.equalsIgnoreCase("Nether Stardust");
     }
 
     private boolean isCustomBeacon(ItemStack item) {
@@ -138,7 +148,13 @@ public class BeaconManager implements Listener {
 
     private boolean applyMaterialToBeacon(ItemStack material, ItemStack beacon, Player player) {
         Material materialType = material.getType();
-        Integer powerPerBlock = MATERIAL_POWER_VALUES.get(materialType);
+        Integer powerPerBlock;
+
+        if (isNetherStardust(material)) {
+            powerPerBlock = 1000;
+        } else {
+            powerPerBlock = MATERIAL_POWER_VALUES.get(materialType);
+        }
         
         if (powerPerBlock == null) {
             player.sendMessage(ChatColor.RED + "Unknown material type!");

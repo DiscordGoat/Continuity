@@ -3982,7 +3982,7 @@ public class ItemRegistry {
         return new ItemStack[]{
             // Common
             getQuartz(), getHematite(), getObsidian(), getAgate(),
-            // Uncommon  
+            // Uncommon
             getTurquoise(), getAmethyst(), getCitrine(), getGarnet(),
             // Rare
             getTopaz(), getPeridot(), getAquamarine(), getTanzanite(),
@@ -3991,5 +3991,85 @@ public class ItemRegistry {
             // Legendary
             getEmerald(), getDiamond()
         };
+    }
+
+    /** Creates the Nether Stardust item used to empower beacons. */
+    public static ItemStack getNetherStardust() {
+        return createCustomItem(
+                Material.NETHER_STAR,
+                ChatColor.LIGHT_PURPLE + "Nether Stardust",
+                Arrays.asList(
+                        ChatColor.GRAY + "A rare residue of Piglin festivities.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Click onto a Beacon Charm to add 1,000 Beacon Power.",
+                        ChatColor.DARK_PURPLE + "Special Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Smithing item unlocking Unbreaking VI. */
+    public static ItemStack getUnbreakingVI() {
+        return createCustomItem(
+                Material.NETHERITE_INGOT,
+                ChatColor.GOLD + "Unbreaking VI",
+                Arrays.asList(
+                        ChatColor.GRAY + "A masterwork manual on durability.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to equipment to unlock Unbreaking VI.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Smithing item unlocking Sharpness VIII. */
+    public static ItemStack getSharpnessVIII() {
+        return createCustomItem(
+                Material.NETHERITE_SWORD,
+                ChatColor.GOLD + "Sharpness VIII",
+                Arrays.asList(
+                        ChatColor.GRAY + "A masterwork manual on lethality.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to equipment to unlock Sharpness VIII.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Smithing item unlocking Smite VIII. */
+    public static ItemStack getSmiteVIII() {
+        return createCustomItem(
+                Material.BONE,
+                ChatColor.GOLD + "Smite VIII",
+                Arrays.asList(
+                        ChatColor.GRAY + "A masterwork manual on undead slaying.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to equipment to unlock Smite VIII.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Smithing item unlocking Bane of Arthropods VIII. */
+    public static ItemStack getBaneOfArthropodsVIII() {
+        return createCustomItem(
+                Material.FERMENTED_SPIDER_EYE,
+                ChatColor.GOLD + "Bane of Arthropods VIII",
+                Arrays.asList(
+                        ChatColor.GRAY + "A masterwork manual on insect eradication.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply to equipment to unlock Bane of Arthropods VIII.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
     }
 }
