@@ -19,7 +19,7 @@ public class FrozenTerrainUtils {
     private final SimplexNoiseGenerator warpNoise;
     private final SimplexNoiseGenerator baseNoise;
 
-    public TerrainUtils() {
+    public FrozenTerrainUtils() {
         this.boundaryNoise = new SimplexNoiseGenerator(new Random().nextLong());
         this.floorNoise = new SimplexNoiseGenerator(new Random().nextLong());
         this.ravineNoise = new SimplexNoiseGenerator(new Random().nextLong());

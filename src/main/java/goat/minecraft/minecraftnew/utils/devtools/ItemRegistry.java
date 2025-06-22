@@ -2527,7 +2527,7 @@ public class ItemRegistry {
 
     public static ItemStack getGeneratorItem() {
         return createCustomItem(
-                Material.SKULK_SHRIEKER,
+                Material.SCULK_SHRIEKER,
                 ChatColor.YELLOW + "Generator",
                 Arrays.asList(
                         ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Place",
