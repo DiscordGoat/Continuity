@@ -63,6 +63,7 @@ import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.subsystems.realms.Tropic;
+import goat.minecraft.minecraftnew.subsystems.realms.Frozen;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
@@ -132,6 +133,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("tropic").setExecutor(tropicCommand);
         getCommand("tropic").setTabCompleter(tropicCommand);
         getCommand("decomission").setExecutor(tropicCommand);
+
+        Frozen frozenCommand = new Frozen(this);
+        getCommand("frozen").setExecutor(frozenCommand);
+        getCommand("frozen").setTabCompleter(frozenCommand);
+        getCommand("defrost").setExecutor(frozenCommand);
 
 
 
