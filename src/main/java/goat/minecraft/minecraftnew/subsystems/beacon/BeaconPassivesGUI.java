@@ -4,14 +4,22 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,9 +32,41 @@ public class BeaconPassivesGUI implements Listener {
     private final JavaPlugin plugin;
     private final ItemStack beacon;
     private final String guiTitle;
-    
+
     // Store passive selections per player
     private static final Map<UUID, Map<String, Boolean>> playerPassives = new HashMap<>();
+
+    // Persistence
+    private static File passivesFile;
+    private static FileConfiguration passivesConfig;
+
+    public static void init(JavaPlugin plugin) {
+        passivesFile = new File(plugin.getDataFolder(), "beacon_passives.yml");
+        if (!passivesFile.exists()) {
+            try {
+                plugin.getDataFolder().mkdirs();
+                passivesFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        passivesConfig = YamlConfiguration.loadConfiguration(passivesFile);
+
+        for (String key : passivesConfig.getKeys(false)) {
+            try {
+                UUID uuid = UUID.fromString(key);
+                ConfigurationSection section = passivesConfig.getConfigurationSection(key);
+                if (section != null) {
+                    Map<String, Boolean> map = new HashMap<>();
+                    for (String passive : section.getKeys(false)) {
+                        map.put(passive, section.getBoolean(passive, false));
+                    }
+                    playerPassives.put(uuid, map);
+                }
+            } catch (IllegalArgumentException ignored) {
+            }
+        }
+    }
 
     public BeaconPassivesGUI(JavaPlugin plugin, ItemStack beacon) {
         this.plugin = plugin;
@@ -184,6 +224,19 @@ public class BeaconPassivesGUI implements Listener {
         }
     }
 
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        if (!playerPassives.containsKey(uuid)) {
+            loadPlayerPassives(uuid);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        savePlayerPassives(event.getPlayer().getUniqueId());
+    }
+
     private void togglePassive(Player player, String passiveName) {
         Map<String, Boolean> passives = getPlayerPassives(player);
         boolean currentState = passives.getOrDefault(passiveName, false);
@@ -200,10 +253,52 @@ public class BeaconPassivesGUI implements Listener {
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.2f);
             player.sendMessage(ChatColor.GREEN + "Enabled " + passiveName + " passive!");
         }
+        savePlayerPassives(player.getUniqueId());
     }
 
     private Map<String, Boolean> getPlayerPassives(Player player) {
         return playerPassives.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
+    }
+
+    private static void savePlayerPassives(UUID uuid) {
+        if (passivesConfig == null) return;
+        Map<String, Boolean> passives = playerPassives.get(uuid);
+        if (passives == null) return;
+        for (Map.Entry<String, Boolean> entry : passives.entrySet()) {
+            passivesConfig.set(uuid.toString() + "." + entry.getKey(), entry.getValue());
+        }
+        try {
+            passivesConfig.save(passivesFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void loadPlayerPassives(UUID uuid) {
+        if (passivesConfig == null) return;
+        ConfigurationSection section = passivesConfig.getConfigurationSection(uuid.toString());
+        if (section != null) {
+            Map<String, Boolean> map = new HashMap<>();
+            for (String key : section.getKeys(false)) {
+                map.put(key, section.getBoolean(key, false));
+            }
+            playerPassives.put(uuid, map);
+        }
+    }
+
+    public static void saveAllPassives() {
+        if (passivesConfig == null) return;
+        for (UUID uuid : playerPassives.keySet()) {
+            Map<String, Boolean> passives = playerPassives.get(uuid);
+            for (Map.Entry<String, Boolean> entry : passives.entrySet()) {
+                passivesConfig.set(uuid.toString() + "." + entry.getKey(), entry.getValue());
+            }
+        }
+        try {
+            passivesConfig.save(passivesFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
