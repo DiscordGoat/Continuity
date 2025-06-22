@@ -23,8 +23,14 @@ commands:
   tropic:
     description: Create or reload the single-island ocean world.
     usage: /<command>
+  frozen:
+    description: Create or reload the frozen island world.
+    usage: /<command>
   decomission:
     description: Unload & delete the tropic world.
+    usage: /<command>
+  defrost:
+    description: Unload & delete the frozen world.
     usage: /<command>
   setplayeroxygen:
     description: Admin command to set the durability of a player's held item
