@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -18,10 +19,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class OreFabricatorGUI implements Listener {
     private final JavaPlugin plugin;
     private final XPManager xpManager;
+    private final GeneratorSubsystem subsystem;
     private final String guiTitle = ChatColor.DARK_RED + "Ore Fabricator";
 
     // Map ore materials to required mining levels
@@ -37,13 +40,20 @@ public class OreFabricatorGUI implements Listener {
         ORE_LEVELS.put(Material.EMERALD_ORE, 100);
     }
 
-    public OreFabricatorGUI(JavaPlugin plugin) {
+    // Track which generator block each player is interacting with
+    private final Map<UUID, Location> openGenerators = new HashMap<>();
+    // Track currently selected ore for each player
+    private final Map<UUID, Material> selectedOre = new HashMap<>();
+
+    public OreFabricatorGUI(JavaPlugin plugin, GeneratorSubsystem subsystem) {
         this.plugin = plugin;
+        this.subsystem = subsystem;
         this.xpManager = new XPManager(MinecraftNew.getInstance());
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    public void open(Player player) {
+    public void open(Player player, Location generatorLoc) {
+        openGenerators.put(player.getUniqueId(), generatorLoc);
         Inventory gui = Bukkit.createInventory(null, 27, guiTitle);
 
         int miningLevel = xpManager.getPlayerLevel(player, "Mining");
@@ -95,10 +105,39 @@ public class OreFabricatorGUI implements Listener {
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) return;
         if (!event.getView().getTitle().equals(guiTitle)) return;
-        // Prevent taking preset items (ore buttons & begin button)
+        Player player = (Player) event.getWhoClicked();
         int slot = event.getRawSlot();
-        if (slot < 9 || slot == 26) {
+
+        // Ore selection buttons
+        if (slot < 9) {
             event.setCancelled(true);
+            ItemStack clicked = event.getCurrentItem();
+            if (clicked != null && ORE_LEVELS.containsKey(clicked.getType())) {
+                selectedOre.put(player.getUniqueId(), clicked.getType());
+                player.sendMessage(ChatColor.GREEN + "Selected " + formatName(clicked.getType()));
+            }
+            return;
+        }
+
+        // Begin Fabrication button
+        if (slot == 26) {
+            event.setCancelled(true);
+            Material ore = selectedOre.get(player.getUniqueId());
+            Location genLoc = openGenerators.get(player.getUniqueId());
+            if (ore == null || genLoc == null) {
+                player.sendMessage(ChatColor.RED + "Select an ore first.");
+                return;
+            }
+
+            ItemStack[] gems = new ItemStack[9];
+            for (int i = 9; i < 18; i++) {
+                gems[i - 9] = event.getInventory().getItem(i);
+            }
+
+            subsystem.beginFabrication(player, genLoc, ore, gems);
+            player.closeInventory();
+            selectedOre.remove(player.getUniqueId());
+            openGenerators.remove(player.getUniqueId());
         }
     }
 }
