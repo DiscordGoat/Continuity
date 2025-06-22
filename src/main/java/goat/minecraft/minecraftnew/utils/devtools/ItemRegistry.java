@@ -1,17 +1,22 @@
 package goat.minecraft.minecraftnew.utils.devtools;
 
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.Random;
 
 public class ItemRegistry {
@@ -3612,6 +3617,32 @@ public class ItemRegistry {
                 false,
                 true
         );
+    }
+
+    /**
+     * Creates a Redstone Gem with the specified power. Each gem is given a
+     * unique identifier so that individual gems do not stack together. The
+     * initial power value is stored in the item's persistent data container for
+     * later retrieval.
+     *
+     * @param power The power level of the gem.
+     * @return A customized ItemStack representing the Redstone Gem.
+     */
+    public static ItemStack getRedstoneGem(int power) {
+        ItemStack gem = new ItemStack(Material.REDSTONE, 1);
+        ItemMeta meta = gem.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.RED + "Redstone Gem: " + power + " Power");
+
+            PersistentDataContainer container = meta.getPersistentDataContainer();
+            NamespacedKey idKey = new NamespacedKey(MinecraftNew.getInstance(), "gem_id");
+            NamespacedKey powerKey = new NamespacedKey(MinecraftNew.getInstance(), "power");
+            container.set(idKey, PersistentDataType.STRING, UUID.randomUUID().toString());
+            container.set(powerKey, PersistentDataType.INTEGER, power);
+
+            gem.setItemMeta(meta);
+        }
+        return gem;
     }
 
     // ===== FORESTRY ITEMS =====
