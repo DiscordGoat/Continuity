@@ -148,3 +148,7 @@ commands:
     description: Gets the nearest catalyst type in range of the player
     usage: /getnearestcatalysttype
     permission: continuity.admin
+  warp:
+    description: Teleports the player to the specified world
+    usage: /warp <worldname>
+    permission: continuity.admin
