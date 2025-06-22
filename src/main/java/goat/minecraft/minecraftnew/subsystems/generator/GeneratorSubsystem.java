@@ -170,6 +170,22 @@ public class GeneratorSubsystem implements Listener {
 
         event.setCancelled(true);
         Player player = event.getPlayer();
+        String key = toLocKey(baseLoc);
+        GeneratorTaskSession session = activeSessions.get(key);
+        if (session != null) {
+            if (session.state == GeneratorState.PAUSED) {
+                boolean hasPower = Arrays.stream(session.powerSlots).anyMatch(ps -> ps.power > 0);
+                if (hasPower) {
+                    Material mat = Material.valueOf(session.oreType);
+                    int cost = ORE_POWER_COST.getOrDefault(mat, 1);
+                    startFabricationTask(player, session, cost, mat);
+                    return;
+                }
+            }
+            fabricatorGUI.open(player, baseLoc);
+            return;
+        }
+
         fabricatorGUI.open(player, baseLoc);
     }
 
@@ -243,11 +259,15 @@ public class GeneratorSubsystem implements Listener {
         GeneratorTaskSession session = new GeneratorTaskSession(loc, oreType.name(), totalTime);
         session.powerSlots = slots;
         session.spawnArmorStands();
-        session.state = GeneratorState.RUNNING;
         activeSessions.put(session.locationKey, session);
         saveSession(session);
 
-        final Block oreBlock = loc.getBlock().getRelative(BlockFace.UP);
+        startFabricationTask(player, session, costPerSecond, oreType);
+    }
+    private void startFabricationTask(Player player, GeneratorTaskSession session, int costPerSecond, Material oreType) {
+        session.state = GeneratorState.RUNNING;
+
+        final Block oreBlock = toLocation(session.locationKey).getBlock().getRelative(BlockFace.UP);
         final Material oreMaterial = oreType;
         final Material solidMaterial = toSolidBlock(oreMaterial);
         final Color oreColor = getOreColor(oreMaterial);
@@ -282,9 +302,24 @@ public class GeneratorSubsystem implements Listener {
                     }
                 }
 
-                if (consume > 0) {
+                for (int i = session.powerSlots.length - 1; i >= 0; i--) {
+                    PowerSlot ps = session.powerSlots[i];
+                    if (ps.gemId != null && ps.power <= 0) {
+                        for (int j = i; j < session.powerSlots.length - 1; j++) {
+                            session.powerSlots[j] = session.powerSlots[j + 1];
+                        }
+                        session.powerSlots[session.powerSlots.length - 1] = new PowerSlot();
+                    }
+                }
+
+                boolean hasPower = false;
+                for (PowerSlot ps : session.powerSlots) {
+                    if (ps.power > 0) { hasPower = true; break; }
+                }
+
+                if (consume > 0 || !hasPower) {
                     session.state = GeneratorState.PAUSED;
-                    player.sendMessage(ChatColor.RED + "Generator out of power!");
+                    session.displayError();
                     saveSession(session);
                     cancel();
                     return;
@@ -320,6 +355,45 @@ public class GeneratorSubsystem implements Listener {
                 saveSession(session);
             }
         }.runTaskTimer(plugin, 0L, 20L);
+    }
+
+    boolean hasSession(Location loc) {
+        return activeSessions.containsKey(toLocKey(loc));
+    }
+
+    GeneratorTaskSession getSession(Location loc) {
+        return activeSessions.get(toLocKey(loc));
+    }
+
+    void addPowerAndResume(Player player, Location loc, ItemStack[] gems) {
+        String key = toLocKey(loc);
+        GeneratorTaskSession session = activeSessions.get(key);
+        if (session == null) {
+            player.sendMessage(ChatColor.RED + "No session to resume.");
+            return;
+        }
+        NamespacedKey idKey = new NamespacedKey(plugin, "gem_id");
+        NamespacedKey powerKey = new NamespacedKey(plugin, "power");
+        for (ItemStack gem : gems) {
+            if (gem == null || !gem.hasItemMeta()) continue;
+            ItemMeta meta = gem.getItemMeta();
+            PersistentDataContainer c = meta.getPersistentDataContainer();
+            if (c.has(idKey, PersistentDataType.STRING) && c.has(powerKey, PersistentDataType.INTEGER)) {
+                for (int i = 0; i < session.powerSlots.length; i++) {
+                    if (session.powerSlots[i].gemId == null) {
+                        session.powerSlots[i].gemId = c.get(idKey, PersistentDataType.STRING);
+                        session.powerSlots[i].power = c.get(powerKey, PersistentDataType.INTEGER);
+                        break;
+                    }
+                }
+            }
+        }
+        saveSession(session);
+        if (session.state == GeneratorState.PAUSED) {
+            Material mat = Material.valueOf(session.oreType);
+            int cost = ORE_POWER_COST.getOrDefault(mat, 1);
+            startFabricationTask(player, session, cost, mat);
+        }
     }
 
 
@@ -403,6 +477,17 @@ public class GeneratorSubsystem implements Listener {
     private String toLocKey(Location loc) {
         return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
     }
+    private Location toLocation(String key) {
+        String[] p = key.split(":" );
+        if (p.length != 4) return null;
+        World w = Bukkit.getWorld(p[0]);
+        if (w == null) return null;
+        int x = Integer.parseInt(p[1]);
+        int y = Integer.parseInt(p[2]);
+        int z = Integer.parseInt(p[3]);
+        return new Location(w, x, y, z);
+    }
+
 
     private Material toSolidBlock(Material ore) {
         return switch (ore) {
@@ -524,6 +609,9 @@ public class GeneratorSubsystem implements Listener {
                 stand.setCustomName(ChatColor.GREEN + text);
                 stand.setCustomNameVisible(true);
             }
+        }
+        void displayError() {
+            updateStandText(topStandUUID, ChatColor.RED + "Error:");
         }
 
         private void configureStand(ArmorStand stand) {
