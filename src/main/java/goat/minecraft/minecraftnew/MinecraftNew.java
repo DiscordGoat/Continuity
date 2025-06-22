@@ -45,6 +45,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.perks.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.Float;
 import goat.minecraft.minecraftnew.subsystems.smithing.talismans.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
+import goat.minecraft.minecraftnew.subsystems.generator.GeneratorSubsystem;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
@@ -93,6 +94,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
     private BeaconPassiveEffects beaconPassiveEffects;
+    private GeneratorSubsystem generatorSubsystem;
 
 
 
@@ -312,6 +314,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
         autoComposter = new AutoComposter(this);
+        generatorSubsystem = new GeneratorSubsystem(this);
         VillagerWorkCycleManager.getInstance(this);
 
         if (!getDataFolder().exists()) {
@@ -639,6 +642,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         BeaconPassivesGUI.saveAllPassives();
         if (CatalystManager.getInstance() != null) {
             CatalystManager.getInstance().shutdown();
+        }
+
+        if (generatorSubsystem != null) {
+            generatorSubsystem.onDisable();
         }
 
         PetManager.getInstance(this).savePets();
