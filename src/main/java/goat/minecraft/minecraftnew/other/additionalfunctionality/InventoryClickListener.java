@@ -13,8 +13,8 @@ public class InventoryClickListener implements Listener {
         InventoryView view = event.getView();
         String title = ChatColor.stripColor(view.getTitle());
 
-        // Check if the clicked inventory is the Skills GUI
-        if (title.equals("Your Skills")) {
+        // Cancel interaction with certain custom GUIs
+        if (title.equals("Your Skills") || title.equals("Lottery Wheel")) {
             event.setCancelled(true); // Prevent any interaction
         }
     }
