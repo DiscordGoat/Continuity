@@ -268,6 +268,111 @@ public class GeneratorSubsystem implements Listener {
         return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
     }
 
+    /**
+     * Represents a single ore fabrication task running on a generator block.
+     * Stores progress data, armor stand displays and power slot information.
+     */
+    private class GeneratorTaskSession {
+        String locationKey;
+        String oreType;
+        int totalTime;
+        int timeRemaining;
+
+        UUID bottomStandUUID;
+        UUID middleStandUUID;
+        UUID topStandUUID;
+
+        String progressBarText = "";
+
+        GeneratorState state = GeneratorState.PAUSED;
+
+        PowerSlot[] powerSlots = new PowerSlot[9];
+
+        GeneratorTaskSession(Location loc, String oreType, int totalTime) {
+            this.locationKey = toLocKey(loc);
+            this.oreType = oreType;
+            this.totalTime = totalTime;
+            this.timeRemaining = totalTime;
+            for (int i = 0; i < powerSlots.length; i++) {
+                powerSlots[i] = new PowerSlot();
+            }
+        }
+
+        /** Spawns three stacked armor stands used to display progress text. */
+        void spawnArmorStands() {
+            String[] parts = locationKey.split(":");
+            if (parts.length != 4) return;
+
+            World world = Bukkit.getWorld(parts[0]);
+            if (world == null) return;
+
+            int x = Integer.parseInt(parts[1]);
+            int y = Integer.parseInt(parts[2]);
+            int z = Integer.parseInt(parts[3]);
+
+            Location base = new Location(world, x + 0.5, y, z + 0.5);
+
+            ArmorStand bottom = world.spawn(base, ArmorStand.class);
+            configureStand(bottom);
+            ArmorStand middle = world.spawn(base.clone().add(0, 1.0, 0), ArmorStand.class);
+            configureStand(middle);
+            ArmorStand top = world.spawn(base.clone().add(0, 2.0, 0), ArmorStand.class);
+            configureStand(top);
+
+            bottomStandUUID = bottom.getUniqueId();
+            middleStandUUID = middle.getUniqueId();
+            topStandUUID = top.getUniqueId();
+        }
+
+        /** Update the text on the progress display stands. */
+        void updateProgressDisplay(int percent) {
+            this.progressBarText = createProgressBar(percent) + ChatColor.YELLOW + " " + percent + "%";
+            updateStandText(topStandUUID, progressBarText);
+        }
+
+        private void updateStandText(UUID uuid, String text) {
+            if (uuid == null) return;
+            Entity e = Bukkit.getEntity(uuid);
+            if (e instanceof ArmorStand stand) {
+                stand.setCustomName(ChatColor.GREEN + text);
+                stand.setCustomNameVisible(true);
+            }
+        }
+
+        private void configureStand(ArmorStand stand) {
+            stand.setInvisible(true);
+            stand.setMarker(true);
+            stand.setInvulnerable(true);
+            stand.setGravity(false);
+            stand.setCustomNameVisible(true);
+        }
+
+        private String createProgressBar(int percent) {
+            int totalBars = 20;
+            int filled = percent * totalBars / 100;
+            int empty = totalBars - filled;
+            StringBuilder bar = new StringBuilder();
+            bar.append(ChatColor.DARK_GRAY).append("[");
+            bar.append(ChatColor.GREEN);
+            for (int i = 0; i < filled; i++) bar.append("|");
+            bar.append(ChatColor.GRAY);
+            for (int i = 0; i < empty; i++) bar.append("|");
+            bar.append(ChatColor.DARK_GRAY).append("]");
+            return bar.toString();
+        }
+    }
+
+    private class PowerSlot {
+        String gemId;
+        int power;
+    }
+
+    private enum GeneratorState {
+        PAUSED,
+        RUNNING,
+        COMPLETED
+    }
+
     private class Generator {
         private final Location location;
         private final Material resourceType;
