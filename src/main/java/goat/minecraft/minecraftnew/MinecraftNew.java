@@ -256,6 +256,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("resetend").setExecutor(new ResetEndCommand());
         getCommand("generatecontinuityisland").setExecutor(new GenerateContinuityIslandCommand());
         getCommand("continuitytp").setExecutor(new ContinuityTpCommand());
+        getCommand("warp").setExecutor(new WarpCommand());
         getCommand("setbeaconpower").setExecutor(new SetBeaconPowerCommand());
         getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
 
