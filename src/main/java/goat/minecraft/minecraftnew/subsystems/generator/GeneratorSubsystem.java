@@ -19,6 +19,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import goat.minecraft.minecraftnew.subsystems.generator.OreFabricatorGUI;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -28,6 +30,7 @@ public class GeneratorSubsystem implements Listener {
     private final JavaPlugin plugin;
     private final Map<Location, Generator> generators = new HashMap<>();
     private final Set<String> placedGenerators = new HashSet<>();
+    private final OreFabricatorGUI fabricatorGUI;
     private final File generatorBlockFile;
     private YamlConfiguration generatorBlockConfig;
     private final File dataFile;
@@ -47,6 +50,7 @@ public class GeneratorSubsystem implements Listener {
         loadPlacedGenerators();
         loadGenerators();
         startGenerators();
+        this.fabricatorGUI = new OreFabricatorGUI(plugin);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -121,6 +125,27 @@ public class GeneratorSubsystem implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onGeneratorUse(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+
+        Block block = event.getClickedBlock();
+        if (block == null) return;
+
+        Material type = block.getType();
+        if (type != Material.SCULK_SHRIEKER && type != Material.BEDROCK) return;
+
+        Location baseLoc = (type == Material.SCULK_SHRIEKER)
+                ? block.getLocation()
+                : block.getRelative(BlockFace.DOWN).getLocation();
+
+        if (!placedGenerators.contains(toLocKey(baseLoc))) return;
+
+        event.setCancelled(true);
+        Player player = event.getPlayer();
+        fabricatorGUI.open(player);
     }
 
     @EventHandler
