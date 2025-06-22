@@ -18,6 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import goat.minecraft.minecraftnew.subsystems.generator.OreFabricatorGUI;
 
@@ -31,6 +32,30 @@ public class GeneratorSubsystem implements Listener {
     private final Map<Location, Generator> generators = new HashMap<>();
     private final Set<String> placedGenerators = new HashSet<>();
     private final OreFabricatorGUI fabricatorGUI;
+    private final Map<String, GeneratorTaskSession> activeSessions = new HashMap<>();
+
+    private static final Map<Material, Integer> ORE_POWER_COST = new HashMap<>();
+    private static final Map<Material, Integer> ORE_TIME = new HashMap<>();
+
+    static {
+        ORE_POWER_COST.put(Material.COPPER_ORE, 1);
+        ORE_POWER_COST.put(Material.COAL_ORE, 2);
+        ORE_POWER_COST.put(Material.IRON_ORE, 3);
+        ORE_POWER_COST.put(Material.GOLD_ORE, 4);
+        ORE_POWER_COST.put(Material.REDSTONE_ORE, 5);
+        ORE_POWER_COST.put(Material.LAPIS_ORE, 6);
+        ORE_POWER_COST.put(Material.DIAMOND_ORE, 8);
+        ORE_POWER_COST.put(Material.EMERALD_ORE, 10);
+
+        ORE_TIME.put(Material.COPPER_ORE, 20);
+        ORE_TIME.put(Material.COAL_ORE, 25);
+        ORE_TIME.put(Material.IRON_ORE, 30);
+        ORE_TIME.put(Material.GOLD_ORE, 35);
+        ORE_TIME.put(Material.REDSTONE_ORE, 40);
+        ORE_TIME.put(Material.LAPIS_ORE, 40);
+        ORE_TIME.put(Material.DIAMOND_ORE, 50);
+        ORE_TIME.put(Material.EMERALD_ORE, 50);
+    }
     private final File generatorBlockFile;
     private YamlConfiguration generatorBlockConfig;
     private final File dataFile;
@@ -50,7 +75,7 @@ public class GeneratorSubsystem implements Listener {
         loadPlacedGenerators();
         loadGenerators();
         startGenerators();
-        this.fabricatorGUI = new OreFabricatorGUI(plugin);
+        this.fabricatorGUI = new OreFabricatorGUI(plugin, this);
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -145,7 +170,7 @@ public class GeneratorSubsystem implements Listener {
 
         event.setCancelled(true);
         Player player = event.getPlayer();
-        fabricatorGUI.open(player);
+        fabricatorGUI.open(player, baseLoc);
     }
 
     @EventHandler
@@ -184,6 +209,80 @@ public class GeneratorSubsystem implements Listener {
             loc.getWorld().playSound(loc, Sound.BLOCK_STONE_BREAK, 1.0f, 1.0f);
             loc.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc.clone().add(0.5, 0.5, 0.5), 10, Material.SMOOTH_STONE.createBlockData());
         }
+    }
+
+    /**
+     * Begin fabricating the selected ore using provided gems for power.
+     */
+    void beginFabrication(Player player, Location loc, Material oreType, ItemStack[] gems) {
+        int costPerSecond = ORE_POWER_COST.getOrDefault(oreType, 1);
+        int totalTime = ORE_TIME.getOrDefault(oreType, 20);
+
+        int totalPower = 0;
+        PowerSlot[] slots = new PowerSlot[gems.length];
+        NamespacedKey idKey = new NamespacedKey(plugin, "gem_id");
+        NamespacedKey powerKey = new NamespacedKey(plugin, "power");
+        for (int i = 0; i < gems.length; i++) {
+            ItemStack gem = gems[i];
+            slots[i] = new PowerSlot();
+            if (gem == null || !gem.hasItemMeta()) continue;
+            ItemMeta meta = gem.getItemMeta();
+            PersistentDataContainer c = meta.getPersistentDataContainer();
+            if (c.has(idKey, PersistentDataType.STRING) && c.has(powerKey, PersistentDataType.INTEGER)) {
+                slots[i].gemId = c.get(idKey, PersistentDataType.STRING);
+                slots[i].power = c.get(powerKey, PersistentDataType.INTEGER);
+                totalPower += slots[i].power;
+            }
+        }
+
+        if (totalPower < costPerSecond) {
+            player.sendMessage(ChatColor.RED + "Not enough gem power!");
+            return;
+        }
+
+        GeneratorTaskSession session = new GeneratorTaskSession(loc, oreType.name(), totalTime);
+        session.powerSlots = slots;
+        session.spawnArmorStands();
+        session.state = GeneratorState.RUNNING;
+        activeSessions.put(session.locationKey, session);
+        saveSession(session);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (session.state != GeneratorState.RUNNING) { cancel(); return; }
+                if (session.timeRemaining <= 0) {
+                    session.state = GeneratorState.COMPLETED;
+                    session.updateProgressDisplay(100);
+                    saveSession(session);
+                    cancel();
+                    return;
+                }
+
+                int consume = costPerSecond;
+                for (PowerSlot ps : session.powerSlots) {
+                    if (consume <= 0) break;
+                    if (ps != null && ps.power > 0) {
+                        int used = Math.min(ps.power, consume);
+                        ps.power -= used;
+                        consume -= used;
+                    }
+                }
+
+                if (consume > 0) {
+                    session.state = GeneratorState.PAUSED;
+                    player.sendMessage(ChatColor.RED + "Generator out of power!");
+                    saveSession(session);
+                    cancel();
+                    return;
+                }
+
+                session.timeRemaining--;
+                int percent = 100 * (session.totalTime - session.timeRemaining) / session.totalTime;
+                session.updateProgressDisplay(percent);
+                saveSession(session);
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
     }
 
 
@@ -266,6 +365,29 @@ public class GeneratorSubsystem implements Listener {
 
     private String toLocKey(Location loc) {
         return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
+    }
+
+    private void saveSession(GeneratorTaskSession session) {
+        ConfigurationSection root = dataConfig.getConfigurationSection("sessions");
+        if (root == null) root = dataConfig.createSection("sessions");
+        ConfigurationSection sec = root.createSection(session.locationKey);
+        sec.set("oreType", session.oreType);
+        sec.set("timeRemaining", session.timeRemaining);
+        List<Map<String, Object>> gems = new ArrayList<>();
+        for (PowerSlot ps : session.powerSlots) {
+            if (ps.gemId != null) {
+                Map<String, Object> m = new HashMap<>();
+                m.put("id", ps.gemId);
+                m.put("power", ps.power);
+                gems.add(m);
+            }
+        }
+        sec.set("gems", gems);
+        try {
+            dataConfig.save(dataFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
