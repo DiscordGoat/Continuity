@@ -247,6 +247,12 @@ public class GeneratorSubsystem implements Listener {
         activeSessions.put(session.locationKey, session);
         saveSession(session);
 
+        final Block oreBlock = loc.getBlock().getRelative(BlockFace.UP);
+        final Material oreMaterial = oreType;
+        final Material solidMaterial = toSolidBlock(oreMaterial);
+        final Color oreColor = getOreColor(oreMaterial);
+        final boolean[] flicker = new boolean[] {false};
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -254,6 +260,13 @@ public class GeneratorSubsystem implements Listener {
                 if (session.timeRemaining <= 0) {
                     session.state = GeneratorState.COMPLETED;
                     session.updateProgressDisplay(100);
+                    oreBlock.setType(solidMaterial);
+                    oreBlock.getWorld().spawnParticle(Particle.REDSTONE,
+                            oreBlock.getLocation().add(0.5, 1.0, 0.5), 20, 0, 0, 0,
+                            new Particle.DustOptions(oreColor, 1.0f));
+                    for (Player p : oreBlock.getWorld().getPlayers()) {
+                        p.stopSound(Sound.BLOCK_FIRE_AMBIENT, SoundCategory.BLOCKS);
+                    }
                     saveSession(session);
                     cancel();
                     return;
@@ -279,6 +292,30 @@ public class GeneratorSubsystem implements Listener {
 
                 session.timeRemaining--;
                 int percent = 100 * (session.totalTime - session.timeRemaining) / session.totalTime;
+
+                Location particleLoc = oreBlock.getLocation().add(0.5, 1.0, 0.5);
+                World world = oreBlock.getWorld();
+                if (percent < 20) {
+                    oreBlock.setType(Material.BEDROCK);
+                    world.spawnParticle(Particle.SMOKE_LARGE, particleLoc, 5, 0, 0, 0, 0.01);
+                } else if (percent < 40) {
+                    oreBlock.setType(Material.BEDROCK);
+                    world.spawnParticle(Particle.ITEM_CRACK, particleLoc, 5, 0, 0, 0, 0.01, new ItemStack(oreMaterial));
+                } else if (percent < 60) {
+                    if (oreBlock.getType() != oreMaterial) {
+                        oreBlock.setType(oreMaterial);
+                    }
+                    world.spawnParticle(Particle.REDSTONE, particleLoc, 10, 0, 0, 0, 0.01,
+                            new Particle.DustOptions(oreColor, 1.0f));
+                } else if (percent < 80) {
+                    oreBlock.setType(flicker[0] ? oreMaterial : solidMaterial);
+                    world.spawnParticle(Particle.SMOKE_LARGE, particleLoc, 5, 0, 0, 0, 0.01);
+                    flicker[0] = !flicker[0];
+                } else if (percent < 100) {
+                    oreBlock.setType(solidMaterial);
+                    world.spawnParticle(Particle.SMOKE_LARGE, particleLoc, 5, 0, 0, 0, 0.01);
+                }
+
                 session.updateProgressDisplay(percent);
                 saveSession(session);
             }
@@ -365,6 +402,34 @@ public class GeneratorSubsystem implements Listener {
 
     private String toLocKey(Location loc) {
         return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
+    }
+
+    private Material toSolidBlock(Material ore) {
+        return switch (ore) {
+            case COPPER_ORE -> Material.COPPER_BLOCK;
+            case COAL_ORE -> Material.COAL_BLOCK;
+            case IRON_ORE -> Material.IRON_BLOCK;
+            case GOLD_ORE -> Material.GOLD_BLOCK;
+            case REDSTONE_ORE -> Material.REDSTONE_BLOCK;
+            case LAPIS_ORE -> Material.LAPIS_BLOCK;
+            case DIAMOND_ORE -> Material.DIAMOND_BLOCK;
+            case EMERALD_ORE -> Material.EMERALD_BLOCK;
+            default -> ore;
+        };
+    }
+
+    private Color getOreColor(Material ore) {
+        return switch (ore) {
+            case COPPER_ORE -> Color.fromRGB(184, 115, 51);
+            case COAL_ORE -> Color.fromRGB(54, 54, 54);
+            case IRON_ORE -> Color.fromRGB(216, 216, 216);
+            case GOLD_ORE -> Color.fromRGB(255, 215, 0);
+            case REDSTONE_ORE -> Color.fromRGB(255, 0, 0);
+            case LAPIS_ORE -> Color.fromRGB(0, 0, 255);
+            case DIAMOND_ORE -> Color.fromRGB(0, 255, 255);
+            case EMERALD_ORE -> Color.fromRGB(0, 255, 0);
+            default -> Color.WHITE;
+        };
     }
 
     private void saveSession(GeneratorTaskSession session) {
