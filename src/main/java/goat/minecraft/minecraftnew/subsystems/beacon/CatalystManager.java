@@ -55,6 +55,14 @@ public class CatalystManager implements Listener {
         ItemStack item = event.getItem();
         
         if (item == null || !isBeaconCharm(item)) return;
+
+        // Prevent using the beacon charm while it's on cooldown
+        if (player.hasCooldown(org.bukkit.Material.BEACON)) {
+            int remaining = player.getCooldown(org.bukkit.Material.BEACON) / 20;
+            player.sendMessage(ChatColor.RED + "Your beacon charm is recharging for "
+                    + remaining + " more seconds!");
+            return;
+        }
         
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             event.setCancelled(true);
@@ -92,9 +100,12 @@ public class CatalystManager implements Listener {
             int range = BeaconManager.getBeaconRange(item);
             summonCatalyst(playerLoc, catalystType, player.getUniqueId(), duration, range, tier);
             
-            player.sendMessage(ChatColor.GREEN + "Summoned " + catalystType.getDisplayName() + 
+            player.sendMessage(ChatColor.GREEN + "Summoned " + catalystType.getDisplayName() +
                              ChatColor.GREEN + " for " + duration + " seconds!");
             player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 1.2f);
+
+            // Apply a 2 minute cooldown to beacon charms
+            player.setCooldown(org.bukkit.Material.BEACON, 20 * 120);
         }
     }
     
