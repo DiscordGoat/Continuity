@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.generator;
 import org.bukkit.*;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.*;
 import org.bukkit.entity.*;
@@ -10,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -25,6 +27,9 @@ public class GeneratorSubsystem implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<Location, Generator> generators = new HashMap<>();
+    private final Set<String> placedGenerators = new HashSet<>();
+    private final File generatorBlockFile;
+    private YamlConfiguration generatorBlockConfig;
     private final File dataFile;
     private FileConfiguration dataConfig;
 
@@ -33,6 +38,13 @@ public class GeneratorSubsystem implements Listener {
         this.dataFile = new File(plugin.getDataFolder(), "generators.yml");
         this.dataConfig = YamlConfiguration.loadConfiguration(dataFile);
 
+        this.generatorBlockFile = new File(plugin.getDataFolder(), "generator_blocks.yml");
+        if (!generatorBlockFile.exists()) {
+            try { generatorBlockFile.createNewFile(); } catch (IOException ignored) {}
+        }
+        this.generatorBlockConfig = YamlConfiguration.loadConfiguration(generatorBlockFile);
+
+        loadPlacedGenerators();
         loadGenerators();
         startGenerators();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
@@ -40,6 +52,7 @@ public class GeneratorSubsystem implements Listener {
 
     public void onDisable() {
         saveGenerators();
+        savePlacedGenerators();
         stopGenerators();
     }
 
@@ -108,6 +121,22 @@ public class GeneratorSubsystem implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event) {
+        ItemStack inHand = event.getItemInHand();
+        String genName = ItemRegistry.getGeneratorItem().getItemMeta().getDisplayName();
+        if (inHand == null || !inHand.hasItemMeta() || !inHand.getItemMeta().hasDisplayName()) return;
+        if (!inHand.getItemMeta().getDisplayName().equals(genName)) return;
+
+        Block placed = event.getBlockPlaced();
+        placed.setType(Material.SCULK_SHRIEKER);
+        placed.getRelative(BlockFace.UP).setType(Material.BEDROCK);
+
+        String key = toLocKey(placed.getLocation());
+        placedGenerators.add(key);
+        savePlacedGenerators();
     }
 
     @EventHandler
@@ -185,6 +214,33 @@ public class GeneratorSubsystem implements Listener {
 
     private void stopGenerators() {
         generators.values().forEach(Generator::stop);
+    }
+
+    private void loadPlacedGenerators() {
+        generatorBlockConfig = YamlConfiguration.loadConfiguration(generatorBlockFile);
+        for (String key : generatorBlockConfig.getKeys(false)) {
+            if (generatorBlockConfig.getBoolean(key)) {
+                placedGenerators.add(key);
+            }
+        }
+    }
+
+    private void savePlacedGenerators() {
+        for (String key : generatorBlockConfig.getKeys(false)) {
+            generatorBlockConfig.set(key, null);
+        }
+        for (String key : placedGenerators) {
+            generatorBlockConfig.set(key, true);
+        }
+        try {
+            generatorBlockConfig.save(generatorBlockFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String toLocKey(Location loc) {
+        return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
     }
 
     private class Generator {
