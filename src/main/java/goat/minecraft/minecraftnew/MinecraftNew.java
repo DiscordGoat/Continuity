@@ -232,11 +232,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ShulkerBox(), this);
         getServer().getPluginManager().registerEvents(new BeaconManager(this), this);
         getServer().getPluginManager().registerEvents(new BeaconCharmGUI(this, null), this);
+        BeaconPassivesGUI.init(this);
         getServer().getPluginManager().registerEvents(new BeaconPassivesGUI(this, null), this);
         getServer().getPluginManager().registerEvents(new BeaconCatalystsGUI(this, null), this);
         getServer().getPluginManager().registerEvents(new BeaconUpgradesGUI(this, null), this);
         beaconPassiveEffects = new BeaconPassiveEffects(this);
         getServer().getPluginManager().registerEvents(beaconPassiveEffects, this);
+        beaconPassiveEffects.reapplyAllPassiveEffects();
         // Initialize catalyst manager for beacon charm catalysts
         CatalystManager.initialize(this);
 
@@ -628,6 +630,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (beaconPassiveEffects != null) {
             beaconPassiveEffects.removeAllPassiveEffects();
         }
+        BeaconPassivesGUI.saveAllPassives();
         if (CatalystManager.getInstance() != null) {
             CatalystManager.getInstance().shutdown();
         }
