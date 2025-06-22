@@ -1,13 +1,12 @@
 package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.Catalyst;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystType;
+import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

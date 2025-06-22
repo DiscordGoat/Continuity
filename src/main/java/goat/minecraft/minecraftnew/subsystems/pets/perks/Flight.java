@@ -1,12 +1,11 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystType;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
-import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

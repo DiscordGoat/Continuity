@@ -1,9 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.Catalyst;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.CatalystType;
+import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;

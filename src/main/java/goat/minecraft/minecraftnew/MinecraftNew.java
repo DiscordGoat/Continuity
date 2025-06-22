@@ -1,5 +1,5 @@
 package goat.minecraft.minecraftnew;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.beacon.*;
+import goat.minecraft.minecraftnew.subsystems.beacon.*;
 import goat.minecraft.minecraftnew.cut_content.CancelBrewing;
 import goat.minecraft.minecraftnew.cut_content.Collections;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
