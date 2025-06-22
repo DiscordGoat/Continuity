@@ -1796,7 +1796,12 @@ public class MusicDiscManager implements Listener {
         PetManager petManager = PetManager.getInstance(plugin);
         PetRegistry petRegistry = new PetRegistry();
 
-        list.add(new LotteryReward(new ItemStack(Material.EXPERIENCE_BOTTLE), p -> {
+        ItemStack xpIcon = ItemRegistry.createCustomItem(
+                Material.EXPERIENCE_BOTTLE,
+                ChatColor.AQUA + "Skill XP",
+                Arrays.asList(ChatColor.GRAY + "Gain 500-1000 XP in a random skill."),
+                1, false, false);
+        list.add(new LotteryReward(xpIcon, p -> {
             String[] skills = {"Combat","Fishing","Forestry","Mining","Farming","Bartering","Smithing","Culinary"};
             String skill = skills[random.nextInt(skills.length)];
             int xp = 500 + random.nextInt(501);
@@ -1804,13 +1809,23 @@ public class MusicDiscManager implements Listener {
             p.sendMessage(ChatColor.GREEN + "You gained " + xp + " " + skill + " XP!");
         }));
 
-        list.add(new LotteryReward(new ItemStack(Material.EMERALD), p -> {
+        ItemStack emeraldIcon = ItemRegistry.createCustomItem(
+                Material.EMERALD,
+                ChatColor.GREEN + "Emerald Stash",
+                Arrays.asList(ChatColor.GRAY + "Receive 64-256 emeralds."),
+                1, false, false);
+        list.add(new LotteryReward(emeraldIcon, p -> {
             int amt = 64 + random.nextInt(192);
             p.getInventory().addItem(new ItemStack(Material.EMERALD, amt));
             p.sendMessage(ChatColor.GREEN + "You received " + amt + " emeralds!");
         }));
 
-        list.add(new LotteryReward(new ItemStack(Material.LEAD), p -> {
+        ItemStack petIcon = ItemRegistry.createCustomItem(
+                Material.LEAD,
+                ChatColor.YELLOW + "Pet Training",
+                Arrays.asList(ChatColor.GRAY + "Add up to 100 levels to your active pet."),
+                1, false, false);
+        list.add(new LotteryReward(petIcon, p -> {
             PetManager.Pet active = petManager.getActivePet(p);
             if (active != null) {
                 int lvls = random.nextInt(100) + 1;
@@ -1819,13 +1834,48 @@ public class MusicDiscManager implements Listener {
             }
         }));
 
-        list.add(new LotteryReward(ItemRegistry.getNetherStardust(), p -> p.getInventory().addItem(ItemRegistry.getNetherStardust())));
+        list.add(new LotteryReward(ItemRegistry.getNetherStardust(), p ->
+                p.getInventory().addItem(ItemRegistry.getNetherStardust())));
 
-        list.add(new LotteryReward(new ItemStack(Material.DIAMOND_BLOCK, 64), p -> p.getInventory().addItem(new ItemStack(Material.DIAMOND_BLOCK, 64))));
-        list.add(new LotteryReward(new ItemStack(Material.LAPIS_LAZULI, 64 * 4), p -> p.getInventory().addItem(new ItemStack(Material.LAPIS_LAZULI, 64 * 4))));
-        list.add(new LotteryReward(new ItemStack(Material.REDSTONE, 64 * 4), p -> p.getInventory().addItem(new ItemStack(Material.REDSTONE, 64 * 4))));
-        list.add(new LotteryReward(new ItemStack(Material.COAL_BLOCK, 64 * 16), p -> p.getInventory().addItem(new ItemStack(Material.COAL_BLOCK, 64 * 16))));
-        list.add(new LotteryReward(new ItemStack(Material.IRON_BLOCK, 64 * 8), p -> p.getInventory().addItem(new ItemStack(Material.IRON_BLOCK, 64 * 8))));
+        ItemStack diamondIcon = ItemRegistry.createCustomItem(
+                Material.DIAMOND_BLOCK,
+                ChatColor.AQUA + "Diamond Blocks",
+                Arrays.asList(ChatColor.GRAY + "Claim a stack of diamond blocks."),
+                64, false, false);
+        list.add(new LotteryReward(diamondIcon, p ->
+                p.getInventory().addItem(new ItemStack(Material.DIAMOND_BLOCK, 64))));
+
+        ItemStack lapisIcon = ItemRegistry.createCustomItem(
+                Material.LAPIS_LAZULI,
+                ChatColor.BLUE + "Lapis Lazuli",
+                Arrays.asList(ChatColor.GRAY + "Gain four stacks of lapis lazuli."),
+                64 * 4, false, false);
+        list.add(new LotteryReward(lapisIcon, p ->
+                p.getInventory().addItem(new ItemStack(Material.LAPIS_LAZULI, 64 * 4))));
+
+        ItemStack redstoneIcon = ItemRegistry.createCustomItem(
+                Material.REDSTONE,
+                ChatColor.RED + "Redstone",
+                Arrays.asList(ChatColor.GRAY + "Gain four stacks of redstone."),
+                64 * 4, false, false);
+        list.add(new LotteryReward(redstoneIcon, p ->
+                p.getInventory().addItem(new ItemStack(Material.REDSTONE, 64 * 4))));
+
+        ItemStack coalIcon = ItemRegistry.createCustomItem(
+                Material.COAL_BLOCK,
+                ChatColor.DARK_GRAY + "Coal Blocks",
+                Arrays.asList(ChatColor.GRAY + "Receive sixteen stacks of coal blocks."),
+                64 * 16, false, false);
+        list.add(new LotteryReward(coalIcon, p ->
+                p.getInventory().addItem(new ItemStack(Material.COAL_BLOCK, 64 * 16))));
+
+        ItemStack ironIcon = ItemRegistry.createCustomItem(
+                Material.IRON_BLOCK,
+                ChatColor.WHITE + "Iron Blocks",
+                Arrays.asList(ChatColor.GRAY + "Receive eight stacks of iron blocks."),
+                64 * 8, false, false);
+        list.add(new LotteryReward(ironIcon, p ->
+                p.getInventory().addItem(new ItemStack(Material.IRON_BLOCK, 64 * 8))));
 
         list.add(new LotteryReward(ItemRegistry.getEmerald(), p -> {
             for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getEmerald().clone());
@@ -1843,29 +1893,54 @@ public class MusicDiscManager implements Listener {
             for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getCaviarBait().clone());
         }));
 
-        list.add(new LotteryReward(new ItemStack(Material.ANVIL), p -> repairAllItems(p)));
+        ItemStack anvilIcon = ItemRegistry.createCustomItem(
+                Material.ANVIL,
+                ChatColor.GRAY + "Repair Gear",
+                Arrays.asList(ChatColor.GRAY + "Fully repairs all items you're carrying."),
+                1, false, false);
+        list.add(new LotteryReward(anvilIcon, p -> repairAllItems(p)));
 
         list.add(new LotteryReward(ItemRegistry.getUnbreakingVI(), p -> p.getInventory().addItem(ItemRegistry.getUnbreakingVI())));
         list.add(new LotteryReward(ItemRegistry.getSharpnessVIII(), p -> p.getInventory().addItem(ItemRegistry.getSharpnessVIII())));
         list.add(new LotteryReward(ItemRegistry.getSmiteVIII(), p -> p.getInventory().addItem(ItemRegistry.getSmiteVIII())));
         list.add(new LotteryReward(ItemRegistry.getBaneOfArthropodsVIII(), p -> p.getInventory().addItem(ItemRegistry.getBaneOfArthropodsVIII())));
 
-        list.add(new LotteryReward(new ItemStack(Material.GOLDEN_SWORD), p -> petRegistry.addPetByName(p, "Piglin Brute")));
+        ItemStack petSword = ItemRegistry.createCustomItem(
+                Material.GOLDEN_SWORD,
+                ChatColor.GOLD + "Piglin Brute Pet",
+                Arrays.asList(ChatColor.GRAY + "Summons the Piglin Brute companion."),
+                1, false, false);
+        list.add(new LotteryReward(petSword, p -> petRegistry.addPetByName(p, "Piglin Brute")));
 
-        list.add(new LotteryReward(new ItemStack(Material.COOKED_BEEF, 64), p -> {
+        ItemStack feastIcon = ItemRegistry.createCustomItem(
+                Material.COOKED_BEEF,
+                ChatColor.RED + "Chef's Feast",
+                Arrays.asList(ChatColor.GRAY + "Receive 64 servings of a random dish."),
+                64, false, false);
+        list.add(new LotteryReward(feastIcon, p -> {
             List<ItemStack> foods = CulinarySubsystem.getInstance(plugin).getAllRecipeItems();
             ItemStack food = foods.get(random.nextInt(foods.size())).clone();
             food.setAmount(64);
             p.getInventory().addItem(food);
         }));
 
-        list.add(new LotteryReward(new ItemStack(Material.NETHER_STAR), p -> {
+        ItemStack meritIcon = ItemRegistry.createCustomItem(
+                Material.NETHER_STAR,
+                ChatColor.LIGHT_PURPLE + "Merit Bonus",
+                Arrays.asList(ChatColor.GRAY + "Adds 100 merit points."),
+                1, false, false);
+        list.add(new LotteryReward(meritIcon, p -> {
             int current = meritManager.getMeritPoints(p.getUniqueId());
             meritManager.setMeritPoints(p.getUniqueId(), current + 100);
             p.sendMessage(ChatColor.GREEN + "You gained 100 merit points!");
         }));
 
-        list.add(new LotteryReward(new ItemStack(Material.DRAGON_BREATH), p -> {
+        ItemStack oxygenIcon = ItemRegistry.createCustomItem(
+                Material.DRAGON_BREATH,
+                ChatColor.AQUA + "Oxygen Boost",
+                Arrays.asList(ChatColor.GRAY + "Gain 10,000 oxygen."),
+                1, false, false);
+        list.add(new LotteryReward(oxygenIcon, p -> {
             int newOxy = oxygenManager.getPlayerOxygen(p) + 10000;
             oxygenManager.setPlayerOxygenLevel(p, newOxy);
             p.sendMessage(ChatColor.AQUA + "You gained 10,000 oxygen!");
