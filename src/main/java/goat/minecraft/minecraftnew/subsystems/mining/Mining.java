@@ -421,7 +421,7 @@ public class Mining implements Listener {
                 return 16;
             case EMERALD_ORE:
             case DEEPSLATE_EMERALD_ORE:
-                return 100;
+                return 20;
             case DIAMOND_ORE:
             case DEEPSLATE_DIAMOND_ORE:
                 return 20;
@@ -454,14 +454,14 @@ public class Mining implements Listener {
      */
     private void handleGemstoneDrop(Player player, ItemStack tool, Block block) {
         // Base 8% chance
-        double baseChance = 2.0;
+        double baseChance = 0.5;
         double bonusChance = 0.0;
         
         // Check for Gemstone Yield upgrade (only on diamond tools with upgrade system)
         if (isDiamondTool(tool.getType()) && upgradeSystemInstance != null) {
             int gemstoneYieldLevel = upgradeSystemInstance.getUpgradeLevel(player, tool, GemstoneUpgradeSystem.UpgradeType.GEMSTONE_YIELD);
             // Each level adds 2% chance (max level 6 = +12%, total 20%)
-            bonusChance = gemstoneYieldLevel * 2.0;
+            bonusChance = gemstoneYieldLevel * 1.0;
         }
         
         double totalChance = baseChance + bonusChance;
