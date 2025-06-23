@@ -21,6 +21,7 @@ public class BeaconPassiveEffects implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<UUID, Boolean> mendingApplied = new HashMap<>();
+    private final Map<UUID, Double> mendingBaseHealth = new HashMap<>();
     private final Map<UUID, Boolean> swiftApplied = new HashMap<>();
 
     public BeaconPassiveEffects(JavaPlugin plugin) {
@@ -64,6 +65,7 @@ public class BeaconPassiveEffects implements Listener {
             AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             if (maxHealth != null) {
                 double currentMax = maxHealth.getBaseValue();
+                mendingBaseHealth.put(playerId, currentMax);
                 double newMax = currentMax + 20.0; // +20 health
                 maxHealth.setBaseValue(newMax);
                 player.setHealth(Math.min(player.getHealth() + 20.0, newMax));
@@ -78,13 +80,13 @@ public class BeaconPassiveEffects implements Listener {
             // Remove the 20 health bonus
             AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             if (maxHealth != null) {
+                double originalMax = mendingBaseHealth.getOrDefault(playerId, maxHealth.getBaseValue() - 20.0);
                 double currentHealth = player.getHealth();
-                double currentMax = maxHealth.getBaseValue();
-                double newMax = currentMax - 20.0; // Remove 20 health
-                maxHealth.setBaseValue(newMax);
-                player.setHealth(Math.min(currentHealth, newMax));
+                maxHealth.setBaseValue(originalMax);
+                player.setHealth(Math.min(currentHealth, originalMax));
             }
             mendingApplied.put(playerId, false);
+            mendingBaseHealth.remove(playerId);
         }
     }
 
@@ -173,6 +175,7 @@ public class BeaconPassiveEffects implements Listener {
         }
         // Clear tracking maps
         mendingApplied.clear();
+        mendingBaseHealth.clear();
         swiftApplied.clear();
     }
 
