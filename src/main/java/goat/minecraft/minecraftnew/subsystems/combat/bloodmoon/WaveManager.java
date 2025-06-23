@@ -8,6 +8,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.WaveBehaviorManager;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -29,6 +31,7 @@ public class WaveManager {
     public void startSimulation(Player player, WaveDifficulty difficulty) {
         player.getWorld().setTime(18000L);
         logger.info("[Bloodmoon] Starting " + difficulty.name().toLowerCase() + " simulation for " + player.getName());
+        new WaveBehaviorManager(plugin).runTaskTimer(plugin, 0L, 20L);
         new BukkitRunnable() {
             int count = 0;
             @Override
@@ -67,10 +70,14 @@ public class WaveManager {
         logger.fine("[Bloodmoon] Spawning group of " + amount + " mobs at (" + base.getBlockX() + "," + base.getBlockY() + "," + base.getBlockZ() + ") pathfind=" + pathfind);
         for (int i=0;i<amount;i++) {
             EntityType type = pickMonsterType();
-            Monster mob = (Monster) player.getWorld().spawnEntity(base, type);
-            if (pathfind) mob.setTarget(player);
+            Location spawn = base.clone().add(random.nextDouble()*6 - 3, 1, random.nextDouble()*6 - 3);
+            Monster mob = (Monster) player.getWorld().spawnEntity(spawn, type);
+            if (pathfind) {
+                mob.setTarget(player);
+                WaveBehaviorManager.register(mob, player, false);
+            }
         }
-        spawnCaptain(player, base, pathfind);
+        spawnCaptain(player, base.clone().add(0,1,0), pathfind);
     }
 
     private EntityType pickMonsterType() {
@@ -95,7 +102,10 @@ public class WaveManager {
         captain.getEquipment().setChestplateDropChance(0f);
         captain.getEquipment().setLeggingsDropChance(0f);
         captain.getEquipment().setBootsDropChance(0f);
-        if (pathfind) captain.setTarget(player);
+        if (pathfind) {
+            captain.setTarget(player);
+            WaveBehaviorManager.register(captain, player, true);
+        }
         logger.fine("[Bloodmoon] Captain spawned at (" + base.getBlockX() + "," + base.getBlockY() + "," + base.getBlockZ() + ") for " + player.getName());
     }
 
