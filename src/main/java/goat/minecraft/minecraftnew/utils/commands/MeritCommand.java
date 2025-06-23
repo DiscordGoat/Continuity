@@ -226,6 +226,11 @@ public class MeritCommand implements CommandExecutor, Listener {
                     Arrays.asList(
                             ChatColor.GRAY + "Displays two extra auction items.",
                             ChatColor.BLUE + "On Auction: " + ChatColor.GRAY + "2 bonus items with rare chance"
+                    )),
+            new Perk(ChatColor.DARK_GRAY + "Decay Mastery", 3, Material.WITHER_ROSE,
+                    Arrays.asList(
+                            ChatColor.GRAY + "Doubles Deterioration stacks.",
+                            ChatColor.BLUE + "On Hit: " + ChatColor.GRAY + "Decay stacks doubled."
                     ))
             );
 

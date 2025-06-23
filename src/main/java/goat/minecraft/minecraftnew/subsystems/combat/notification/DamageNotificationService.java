@@ -122,6 +122,31 @@ public class DamageNotificationService {
             logger.log(Level.WARNING, "Failed to create fire damage indicator", e);
         }
     }
+
+    /**
+     * Creates a deterioration damage indicator with a short burst animation.
+     */
+    public void createDecayDamageIndicator(Location location, double damage) {
+        if (!config.isEnabled() || location == null || damage <= 0) {
+            return;
+        }
+
+        try {
+            String damageText = DAMAGE_FORMAT.format(damage);
+            String display = ChatColor.BLACK + "✦ " + damageText;
+
+            Location spawnLocation = calculateSpawnLocation(location);
+            ArmorStand indicator = createDamageIndicator(spawnLocation, display);
+
+            if (indicator != null) {
+                startDecayIndicatorAnimation(indicator);
+                logger.finest(String.format("Created decay damage indicator: %.1f at %s", damage, location));
+            }
+
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Failed to create decay damage indicator", e);
+        }
+    }
     
     /**
      * Cleans up all active damage indicators.
@@ -218,6 +243,11 @@ public class DamageNotificationService {
         BukkitTask animationTask = new DamageIndicatorAnimation(indicator).runTaskTimer(plugin, 0L, 1L);
         activeIndicators.put(indicator, animationTask);
     }
+
+    private void startDecayIndicatorAnimation(ArmorStand indicator) {
+        BukkitTask animationTask = new DecayDamageAnimation(indicator).runTaskTimer(plugin, 0L, 1L);
+        activeIndicators.put(indicator, animationTask);
+    }
     
     /**
      * Animation runnable for damage indicators.
@@ -281,6 +311,49 @@ public class DamageNotificationService {
                 
             } catch (Exception e) {
                 logger.log(Level.WARNING, "Error cleaning up damage indicator animation", e);
+            }
+        }
+    }
+
+    private class DecayDamageAnimation extends BukkitRunnable {
+        private final ArmorStand indicator;
+        private int ticks = 0;
+        private final double dx;
+        private final double dy;
+        private final double dz;
+
+        public DecayDamageAnimation(ArmorStand indicator) {
+            this.indicator = indicator;
+            this.dx = (random.nextDouble() - 0.5) * 0.5;
+            this.dy = random.nextDouble() * 0.5 + 0.1;
+            this.dz = (random.nextDouble() - 0.5) * 0.5;
+        }
+
+        @Override
+        public void run() {
+            if (indicator == null || indicator.isDead() || !indicator.isValid()) {
+                cleanup();
+                return;
+            }
+            if (ticks >= 5) {
+                cleanup();
+                return;
+            }
+            Location loc = indicator.getLocation();
+            loc.add(dx, dy, dz);
+            indicator.teleport(loc);
+            ticks++;
+        }
+
+        private void cleanup() {
+            try {
+                activeIndicators.remove(indicator);
+                if (indicator != null && indicator.isValid()) {
+                    indicator.remove();
+                }
+                this.cancel();
+            } catch (Exception e) {
+                logger.log(Level.WARNING, "Error cleaning up decay indicator animation", e);
             }
         }
     }

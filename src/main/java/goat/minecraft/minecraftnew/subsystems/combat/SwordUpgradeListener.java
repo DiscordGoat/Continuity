@@ -2,6 +2,8 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.subsystems.combat.DeteriorationDamageHandler;
+import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -40,6 +42,15 @@ public class SwordUpgradeListener implements Listener {
         int lethality = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.LETHALITY);
         if (lethality > 0) {
             event.setDamage(event.getDamage() * (1 + lethality * 0.02));
+        }
+        int decayLvl = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.ASPECT_OF_DECAY);
+        if (decayLvl > 0) {
+            int stacks = decayLvl * 5;
+            PlayerMeritManager merit = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
+            if (merit.hasPerk(player.getUniqueId(), "Decay Mastery")) {
+                stacks *= 2;
+            }
+            DeteriorationDamageHandler.getInstance().addDeterioration(target, stacks);
         }
         if (target instanceof Creeper) {
             int diamond = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.DIAMOND_ESSENCE);

@@ -35,6 +35,7 @@ public class SoulUpgradeSystem implements Listener {
         LIFESTEAL_POTENCY("Potency", "+1 regen potency per level", Material.BLAZE_POWDER, 2, 12),
         LIFESTEAL_DURATION("Duration", "+5 seconds of regeneration per level", Material.CLOCK, 3, 13),
         FEED("Feed", "15% chance to gain +1 hunger and +2 saturation when hitting a monster", Material.COOKED_BEEF, 1, 14),
+        ASPECT_OF_DECAY("Aspect of Decay", "+5 Deterioration stacks per level", Material.WITHER_ROSE, 4, 6),
         LOYAL_AUGMENT("Loyal Augment", "-1s cooldown per level", Material.NETHER_STAR, 4, 20),
         SHRED_AUGMENT("Shred Augment", "+3 stacks of shredders per level", Material.IRON_SWORD, 6, 21),
         WARP_AUGMENT("Warp Augment", "+5 warp charges per level", Material.ENDER_PEARL, 6, 22),
@@ -95,6 +96,7 @@ public class SoulUpgradeSystem implements Listener {
         gui.setItem(SwordUpgrade.FURY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.FURY, available));
         gui.setItem(SwordUpgrade.BETRAYAL.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BETRAYAL, available));
         gui.setItem(SwordUpgrade.LETHALITY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LETHALITY, available));
+        gui.setItem(SwordUpgrade.ASPECT_OF_DECAY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.ASPECT_OF_DECAY, available));
 
         // ----- Regeneration Row -----
         gui.setItem(9, createHeader(Material.GHAST_TEAR, ChatColor.LIGHT_PURPLE + "❤ Regeneration"));
@@ -371,6 +373,7 @@ public class SoulUpgradeSystem implements Listener {
             case "BETRAYAL": return "♬";
             case "LETHALITY": return "✖";
             case "FEED": return "☕";
+            case "ASPECT_OF_DECAY": return "☣";
             case "STARLESS_NIGHT": return "☾";
             case "CHALLENGE": return "⚑";
             case "BLOOD_MOON": return "☽";
@@ -489,6 +492,7 @@ public class SoulUpgradeSystem implements Listener {
             case "BETRAYAL" -> "♬";
             case "LETHALITY" -> "✖";
             case "FEED" -> "☕";
+            case "ASPECT_OF_DECAY" -> "☣";
             case "STARLESS_NIGHT" -> "☾";
             case "CHALLENGE" -> "⚑";
             case "BLOOD_MOON" -> "☽";
