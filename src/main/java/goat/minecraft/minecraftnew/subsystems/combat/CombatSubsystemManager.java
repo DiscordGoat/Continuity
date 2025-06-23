@@ -14,6 +14,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.PlayerFeedbackService;
 import goat.minecraft.minecraftnew.subsystems.combat.FireDamageHandler;
+import goat.minecraft.minecraftnew.subsystems.combat.DeteriorationDamageHandler;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -44,6 +45,7 @@ public class CombatSubsystemManager implements CommandExecutor {
     private HostilityService hostilityService;
 
     private FireDamageHandler fireDamageHandler;
+    private DeteriorationDamageHandler decayDamageHandler;
     
     // Controllers and handlers
     private CombatEventHandler eventHandler;
@@ -264,6 +266,7 @@ public class CombatSubsystemManager implements CommandExecutor {
         );
 
         fireDamageHandler = new FireDamageHandler(plugin, notificationService);
+        decayDamageHandler = DeteriorationDamageHandler.getInstance(plugin, notificationService);
         
         logger.fine("Combat controllers and handlers initialized");
     }
@@ -275,6 +278,7 @@ public class CombatSubsystemManager implements CommandExecutor {
         Bukkit.getPluginManager().registerEvents(eventHandler, plugin);
         Bukkit.getPluginManager().registerEvents(hostilityGUIController, plugin);
         Bukkit.getPluginManager().registerEvents(fireDamageHandler, plugin);
+        Bukkit.getPluginManager().registerEvents(decayDamageHandler, plugin);
 
         logger.fine("Combat event listeners registered");
     }

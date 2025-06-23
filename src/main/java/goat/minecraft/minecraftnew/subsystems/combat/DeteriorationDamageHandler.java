@@ -1,0 +1,90 @@
+package goat.minecraft.minecraftnew.subsystems.combat;
+
+import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+
+/**
+ * Handles the Deterioration stacking damage over time.
+ */
+public class DeteriorationDamageHandler implements Listener {
+
+    private static DeteriorationDamageHandler instance;
+
+    private final JavaPlugin plugin;
+    private final DamageNotificationService notificationService;
+    private final Map<UUID, Integer> stacks = new ConcurrentHashMap<>();
+    private final Map<UUID, BukkitRunnable> tasks = new ConcurrentHashMap<>();
+
+    private DeteriorationDamageHandler(JavaPlugin plugin, DamageNotificationService service) {
+        this.plugin = plugin;
+        this.notificationService = service;
+    }
+
+    public static DeteriorationDamageHandler getInstance(JavaPlugin plugin, DamageNotificationService service) {
+        if (instance == null) {
+            instance = new DeteriorationDamageHandler(plugin, service);
+        }
+        return instance;
+    }
+
+    public static DeteriorationDamageHandler getInstance() {
+        return instance;
+    }
+
+    /**
+     * Adds deterioration stacks to a monster.
+     */
+    public void addDeterioration(LivingEntity entity, int amount) {
+        if (!(entity instanceof Monster)) return;
+        UUID id = entity.getUniqueId();
+        int newLevel = stacks.getOrDefault(id, 0) + amount;
+        stacks.put(id, newLevel);
+        startTask(entity);
+    }
+
+    private void startTask(LivingEntity entity) {
+        UUID id = entity.getUniqueId();
+        if (tasks.containsKey(id)) return;
+
+        BukkitRunnable task = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!entity.isValid() || entity.isDead()) {
+                    cleanup();
+                    return;
+                }
+
+                int level = stacks.getOrDefault(id, 0);
+                if (level <= 0) {
+                    cleanup();
+                    return;
+                }
+
+                double damage = level;
+                double newHealth = Math.max(0.0, entity.getHealth() - damage);
+                entity.setHealth(newHealth);
+                notificationService.createDecayDamageIndicator(entity.getLocation(), damage);
+                stacks.put(id, level - 1);
+            }
+
+            private void cleanup() {
+                BukkitRunnable t = tasks.remove(id);
+                if (t != null) t.cancel();
+                stacks.remove(id);
+            }
+        };
+
+        tasks.put(id, task);
+        task.runTaskTimer(plugin, 0L, 1L);
+    }
+}

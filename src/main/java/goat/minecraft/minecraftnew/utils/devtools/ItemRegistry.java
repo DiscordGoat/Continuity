@@ -1657,6 +1657,21 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getCursedClock() {
+        return createCustomItem(
+                Material.CLOCK,
+                ChatColor.YELLOW + "Cursed Clock",
+                Arrays.asList(
+                        ChatColor.GRAY + "A clock that ticks with decay.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Applies the Accelerate enchantment.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getBait() {
         return createCustomItem(
                 Material.OAK_BUTTON,

@@ -223,6 +223,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_LOOTING", 1, 64, 4)); // ItemRegistry.getWeaponsmithLooting()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_KNOCKBACK", 1, 64, 4)); // ItemRegistry.getWeaponsmithKnockback()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_FIRE_ASPECT", 1, 64, 4)); // ItemRegistry.getWeaponsmithFireAspect()
+        weaponsmithPurchases.add(createTradeMap("CURSED_CLOCK", 1, 64, 4)); // ItemRegistry.getCursedClock()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SMITE", 1, 64, 4)); // ItemRegistry.getWeaponsmithSmite()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_BANE_OF_ARTHROPODS", 1, 64, 4)); // ItemRegistry.getWeaponsmithBaneofAnthropods()
 
@@ -964,6 +965,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getWeaponsmithKnockback();
             case "WEAPONSMITH_FIRE_ASPECT":
                 return ItemRegistry.getWeaponsmithFireAspect();
+            case "CURSED_CLOCK":
+                return ItemRegistry.getCursedClock();
             case "WEAPONSMITH_SMITE":
                 return ItemRegistry.getWeaponsmithSmite();
             case "WEAPONSMITH_BANE_OF_ARTHROPODS":
