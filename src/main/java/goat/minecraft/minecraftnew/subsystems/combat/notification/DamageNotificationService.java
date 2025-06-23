@@ -335,7 +335,7 @@ public class DamageNotificationService {
                 cleanup();
                 return;
             }
-            if (ticks >= 5) {
+            if (ticks >= 20) {
                 cleanup();
                 return;
             }
