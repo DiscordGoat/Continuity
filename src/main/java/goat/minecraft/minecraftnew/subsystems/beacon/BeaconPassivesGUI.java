@@ -264,6 +264,10 @@ public class BeaconPassivesGUI implements Listener {
         if (passivesConfig == null) return;
         Map<String, Boolean> passives = playerPassives.get(uuid);
         if (passives == null) return;
+
+        // Clear existing entries to prevent multiple passives being stored
+        passivesConfig.set(uuid.toString(), null);
+
         for (Map.Entry<String, Boolean> entry : passives.entrySet()) {
             passivesConfig.set(uuid.toString() + "." + entry.getKey(), entry.getValue());
         }
@@ -282,6 +286,17 @@ public class BeaconPassivesGUI implements Listener {
             for (String key : section.getKeys(false)) {
                 map.put(key, section.getBoolean(key, false));
             }
+            // Ensure only one passive is active
+            String active = null;
+            for (Map.Entry<String, Boolean> entry : map.entrySet()) {
+                if (entry.getValue()) {
+                    if (active == null) {
+                        active = entry.getKey();
+                    } else {
+                        entry.setValue(false);
+                    }
+                }
+            }
             playerPassives.put(uuid, map);
         }
     }
@@ -290,6 +305,8 @@ public class BeaconPassivesGUI implements Listener {
         if (passivesConfig == null) return;
         for (UUID uuid : playerPassives.keySet()) {
             Map<String, Boolean> passives = playerPassives.get(uuid);
+            // Remove old entries
+            passivesConfig.set(uuid.toString(), null);
             for (Map.Entry<String, Boolean> entry : passives.entrySet()) {
                 passivesConfig.set(uuid.toString() + "." + entry.getKey(), entry.getValue());
             }

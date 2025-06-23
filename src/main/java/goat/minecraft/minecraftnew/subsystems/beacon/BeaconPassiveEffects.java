@@ -60,11 +60,11 @@ public class BeaconPassiveEffects implements Listener {
     private void applyMendingEffect(Player player) {
         UUID playerId = player.getUniqueId();
         if (!mendingApplied.getOrDefault(playerId, false)) {
-            // Increase max health by 1 row of hearts (10 health points)
+            // Increase max health by 20 (10 hearts)
             AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             if (maxHealth != null) {
                 double currentMax = maxHealth.getBaseValue();
-                double newMax = currentMax + 20.0; // Add 10 health (1 row of hearts)
+                double newMax = currentMax + 20.0; // +20 health
                 maxHealth.setBaseValue(newMax);
                 player.setHealth(Math.min(player.getHealth() + 20.0, newMax));
             }
@@ -75,12 +75,12 @@ public class BeaconPassiveEffects implements Listener {
     private void removeMendingEffect(Player player) {
         UUID playerId = player.getUniqueId();
         if (mendingApplied.getOrDefault(playerId, false)) {
-            // Remove the 10 health bonus
+            // Remove the 20 health bonus
             AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             if (maxHealth != null) {
                 double currentHealth = player.getHealth();
                 double currentMax = maxHealth.getBaseValue();
-                double newMax = currentMax - 20.0; // Remove 10 health
+                double newMax = currentMax - 20.0; // Remove 20 health
                 maxHealth.setBaseValue(newMax);
                 player.setHealth(Math.min(currentHealth, newMax));
             }
