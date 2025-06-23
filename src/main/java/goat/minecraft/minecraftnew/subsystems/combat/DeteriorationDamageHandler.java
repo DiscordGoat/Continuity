@@ -74,6 +74,7 @@ public class DeteriorationDamageHandler implements Listener {
 
                 double damage = level * DAMAGE_PER_STACK;
                 entity.damage(damage);
+                entity.setNoDamageTicks(0);
                 notificationService.createDecayDamageIndicator(entity.getLocation(), damage);
                 stacks.put(id, level - 1);
             }
