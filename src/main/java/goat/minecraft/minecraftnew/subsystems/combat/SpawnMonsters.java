@@ -668,11 +668,9 @@ public class SpawnMonsters implements Listener {
             if (killer != null) {
                 xpManager.addXP(killer, "Combat", 100);
                 event.setDroppedExp(100);
-                if(random.nextBoolean()) {
-                    if(random.nextBoolean()) {
-                        killer.sendMessage(ChatColor.AQUA + "You found a " + ChatColor.GOLD + "Verdant Relic: Entropy!");
-                        Objects.requireNonNull(monster.getLocation().getWorld()).dropItem(monster.getLocation(), ItemRegistry.getVerdantRelicEntropySeed());
-                    }
+                if(random.nextDouble() < 0.125) {
+                    killer.sendMessage(ChatColor.AQUA + "You found a " + ChatColor.GOLD + "Verdant Relic: Entropy!");
+                    Objects.requireNonNull(monster.getLocation().getWorld()).dropItem(monster.getLocation(), ItemRegistry.getVerdantRelicEntropySeed());
                 }
             }
         }
