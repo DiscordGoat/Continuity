@@ -11,6 +11,8 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.RangedDam
 import goat.minecraft.minecraftnew.subsystems.combat.commands.CombatReloadCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIController;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
+import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.BloodmoonSpawnListener;
+import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.SimulateCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.PlayerFeedbackService;
 import goat.minecraft.minecraftnew.subsystems.combat.FireDamageHandler;
@@ -279,6 +281,8 @@ public class CombatSubsystemManager implements CommandExecutor {
         Bukkit.getPluginManager().registerEvents(hostilityGUIController, plugin);
         Bukkit.getPluginManager().registerEvents(fireDamageHandler, plugin);
         Bukkit.getPluginManager().registerEvents(decayDamageHandler, plugin);
+        // Register blood moon spawn overrides
+        Bukkit.getPluginManager().registerEvents(new BloodmoonSpawnListener(), plugin);
 
         logger.fine("Combat event listeners registered");
     }
@@ -288,10 +292,14 @@ public class CombatSubsystemManager implements CommandExecutor {
      */
     private void registerCommands() {
         plugin.getCommand("hostility").setExecutor(this);
-        
+
         // Register reload command if it exists in plugin.yml
         if (plugin.getCommand("combatreload") != null) {
             plugin.getCommand("combatreload").setExecutor(new CombatReloadCommand(this));
+        }
+
+        if (plugin.getCommand("simulate") != null) {
+            plugin.getCommand("simulate").setExecutor(new SimulateCommand(plugin));
         }
         
         logger.fine("Combat commands registered");
