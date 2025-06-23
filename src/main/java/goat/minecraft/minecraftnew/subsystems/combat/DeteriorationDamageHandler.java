@@ -1,7 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
@@ -17,6 +16,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * Handles the Deterioration stacking damage over time.
  */
 public class DeteriorationDamageHandler implements Listener {
+
+    /** Damage applied per deterioration stack each tick. */
+    private static final double DAMAGE_PER_STACK = 0.5;
 
     private static DeteriorationDamageHandler instance;
 
@@ -70,9 +72,8 @@ public class DeteriorationDamageHandler implements Listener {
                     return;
                 }
 
-                double damage = level;
-                double newHealth = Math.max(0.0, entity.getHealth() - damage);
-                entity.setHealth(newHealth);
+                double damage = level * DAMAGE_PER_STACK;
+                entity.damage(damage);
                 notificationService.createDecayDamageIndicator(entity.getLocation(), damage);
                 stacks.put(id, level - 1);
             }
