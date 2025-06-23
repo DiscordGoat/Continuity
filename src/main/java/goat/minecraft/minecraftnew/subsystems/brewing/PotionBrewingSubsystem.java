@@ -249,7 +249,7 @@ public class PotionBrewingSubsystem implements Listener {
         List<String> recurveLore = Arrays.asList("Increases arrow damage by 25%", "Base Duration of " + baseDuration);
         Color recurveColor = Color.fromRGB(0, 0, 0); // A sleek violet-tinted archery vibe
         recipeRegistry.add(
-                new PotionRecipe("Potion of Recurve", recurveIngredients, 5, new ItemStack(Material.POTION), recurveColor, recurveLore)
+                new PotionRecipe("Potion of Recurve", recurveIngredients, 60*10, new ItemStack(Material.POTION), recurveColor, recurveLore)
         );
 
         // Potion of Solar Fury
