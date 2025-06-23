@@ -114,8 +114,6 @@ commands:
   setpetlevel:
     description: Set a pet to level 100.
     usage: /setpetlevel <petName>
-  forcebloodmoon:
-    description: Forces a Blood Moon to rise.
   combatreload:
     description: Reloads the combat subsystem configuration
     usage: /combatreload
@@ -153,12 +151,10 @@ commands:
     usage: /warp <worldname>
     permission: continuity.admin
   simulate:
-    description: Spawns assault waves for testing
+    description: Start a Blood Moon assault
     usage: /simulate
     permission: continuity.admin
   skip:
-    description: Skip the wave rest period
+    description: Skip the assault rest period
     usage: /skip
-    description: Spawns waves of monsters for testing
-    usage: /simulate <skirmish|clash|assault|onslaught|carnage>
-    permission: continuity.admin
+    default: true
