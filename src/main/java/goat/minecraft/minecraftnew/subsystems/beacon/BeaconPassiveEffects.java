@@ -64,9 +64,9 @@ public class BeaconPassiveEffects implements Listener {
             AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
             if (maxHealth != null) {
                 double currentMax = maxHealth.getBaseValue();
-                double newMax = currentMax + 10.0; // Add 10 health (1 row of hearts)
+                double newMax = currentMax + 20.0; // Add 10 health (1 row of hearts)
                 maxHealth.setBaseValue(newMax);
-                player.setHealth(Math.min(player.getHealth() + 10.0, newMax));
+                player.setHealth(Math.min(player.getHealth() + 20.0, newMax));
             }
             mendingApplied.put(playerId, true);
         }
@@ -80,7 +80,7 @@ public class BeaconPassiveEffects implements Listener {
             if (maxHealth != null) {
                 double currentHealth = player.getHealth();
                 double currentMax = maxHealth.getBaseValue();
-                double newMax = currentMax - 10.0; // Remove 10 health
+                double newMax = currentMax - 20.0; // Remove 10 health
                 maxHealth.setBaseValue(newMax);
                 player.setHealth(Math.min(currentHealth, newMax));
             }

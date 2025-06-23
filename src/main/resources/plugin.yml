@@ -159,3 +159,6 @@ commands:
   skip:
     description: Skip the wave rest period
     usage: /skip
+    description: Spawns waves of monsters for testing
+    usage: /simulate <skirmish|clash|assault|onslaught|carnage>
+    permission: continuity.admin

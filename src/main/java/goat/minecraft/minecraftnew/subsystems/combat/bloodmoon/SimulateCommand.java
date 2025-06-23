@@ -14,6 +14,10 @@ public class SimulateCommand implements CommandExecutor {
 
     public SimulateCommand(JavaPlugin plugin) {
         this.plugin = plugin;
+    private final WaveManager waveManager;
+
+    public SimulateCommand(JavaPlugin plugin) {
+        this.waveManager = new WaveManager(plugin);
     }
 
     @Override
@@ -24,6 +28,19 @@ public class SimulateCommand implements CommandExecutor {
         }
         AssaultWaveManager.getInstance(plugin).start(player);
         player.sendMessage(ChatColor.GREEN + "Starting assault simulation");
+        if (args.length < 1) {
+            player.sendMessage(ChatColor.RED + "Usage: /simulate <skirmish|clash|assault|onslaught|carnage>");
+            return true;
+        }
+        WaveDifficulty diff;
+        try {
+            diff = WaveDifficulty.valueOf(args[0].toUpperCase());
+        } catch (IllegalArgumentException e) {
+            player.sendMessage(ChatColor.RED + "Unknown difficulty type.");
+            return true;
+        }
+        waveManager.startSimulation(player, diff);
+        player.sendMessage(ChatColor.GREEN + "Starting simulation: " + diff.name().toLowerCase());
         return true;
     }
 }
