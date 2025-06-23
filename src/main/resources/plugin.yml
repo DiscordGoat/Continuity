@@ -152,3 +152,10 @@ commands:
     description: Teleports the player to the specified world
     usage: /warp <worldname>
     permission: continuity.admin
+  simulate:
+    description: Spawns assault waves for testing
+    usage: /simulate
+    permission: continuity.admin
+  skip:
+    description: Skip the wave rest period
+    usage: /skip
