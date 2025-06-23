@@ -5,14 +5,9 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.PhantomPreSpawnEvent;
+
 
 public class BloodmoonSpawnListener implements Listener {
-
-    @EventHandler
-    public void onPhantomSpawn(PhantomPreSpawnEvent event) {
-        event.setCancelled(true);
-    }
 
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {

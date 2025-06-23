@@ -49,7 +49,7 @@ public class AutoStrad implements Listener {
      * Repairs all damageable items in the player's inventory by up to
      * 100 durability.
      */
-    private void repairInventory(Player player) {
+    public void repairInventory(Player player) {
         for (ItemStack item : player.getInventory().getContents()) {
             if (item == null || item.getType().getMaxDurability() <= 0) {
                 continue;

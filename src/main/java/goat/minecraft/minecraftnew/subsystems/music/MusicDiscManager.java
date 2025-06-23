@@ -32,6 +32,7 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.loot.LootContext;
@@ -1804,7 +1805,7 @@ public class MusicDiscManager implements Listener {
         list.add(new LotteryReward(xpIcon, p -> {
             String[] skills = {"Combat","Fishing","Forestry","Mining","Farming","Bartering","Smithing","Culinary"};
             String skill = skills[random.nextInt(skills.length)];
-            int xp = 500 + random.nextInt(501);
+            int xp = 5000 + random.nextInt(10000);
             xpManager.addXP(p, skill, xp);
             p.sendMessage(ChatColor.GREEN + "You gained " + xp + " " + skill + " XP!");
         }));
@@ -1898,7 +1899,7 @@ public class MusicDiscManager implements Listener {
                 ChatColor.GRAY + "Repair Gear",
                 Arrays.asList(ChatColor.GRAY + "Fully repairs all items you're carrying."),
                 1, false, false);
-        list.add(new LotteryReward(anvilIcon, p -> repairAllItems(p)));
+        list.add(new LotteryReward(anvilIcon, p -> repairInventory(p)));
 
         list.add(new LotteryReward(ItemRegistry.getUnbreakingVI(), p -> p.getInventory().addItem(ItemRegistry.getUnbreakingVI())));
         list.add(new LotteryReward(ItemRegistry.getSharpnessVIII(), p -> p.getInventory().addItem(ItemRegistry.getSharpnessVIII())));
@@ -1949,19 +1950,24 @@ public class MusicDiscManager implements Listener {
         return list;
     }
 
-    private void repairAllItems(Player player) {
+    public void repairInventory(Player player) {
         for (ItemStack item : player.getInventory().getContents()) {
-            if (item == null) continue;
-            if (item.getType().getMaxDurability() <= 0) continue;
+            if (item == null || item.getType().getMaxDurability() <= 0) {
+                continue;
+            }
+
             ItemMeta meta = item.getItemMeta();
-            if (meta instanceof Damageable d) {
-                if (d.hasDamage()) {
-                    d.setDamage(0);
-                    item.setItemMeta((ItemMeta)d);
+            if (meta instanceof Damageable damageable) {
+                if (damageable.hasDamage()) {
+                    int newDamage = damageable.getDamage() - 100;
+                    if (newDamage < 0) {
+                        newDamage = 0;
+                    }
+                    damageable.setDamage(newDamage);
+                    item.setItemMeta((ItemMeta) damageable);
                 }
             }
         }
-        player.sendMessage(ChatColor.GREEN + "All items repaired!");
     }
     public void handleMusicDiscOtherside(Player player) {
         Random random = new Random();
