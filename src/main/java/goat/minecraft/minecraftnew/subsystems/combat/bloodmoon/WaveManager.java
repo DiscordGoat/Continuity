@@ -8,6 +8,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.WaveBehaviorManager;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.logging.Logger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -18,6 +24,11 @@ public class WaveManager {
 
     private final JavaPlugin plugin;
     private final Random random = new Random();
+    private final Logger logger;
+
+    public WaveManager(JavaPlugin plugin) {
+        this.plugin = plugin;
+        this.logger = plugin.getLogger();
 
     public WaveManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -25,12 +36,15 @@ public class WaveManager {
 
     public void startSimulation(Player player, WaveDifficulty difficulty) {
         player.getWorld().setTime(18000L);
+        logger.info("[Bloodmoon] Starting " + difficulty.name().toLowerCase() + " simulation for " + player.getName());
+        new WaveBehaviorManager(plugin).runTaskTimer(plugin, 0L, 20L);
         new BukkitRunnable() {
             int count = 0;
             @Override
             public void run() {
                 if (!player.isOnline()) { cancel(); return; }
                 if (difficulty == WaveDifficulty.CARNAGE && count >= 15) { cancel(); return; }
+                logger.info("[Bloodmoon] Launching " + difficulty.name().toLowerCase() + " wave #" + (count + 1) + " for " + player.getName());
                 launchWave(player, difficulty);
                 count++;
             }
@@ -59,6 +73,17 @@ public class WaveManager {
         Location base = findOptimalMonsterNode(player, range);
         if (base == null) return;
         int amount = random.nextInt(max - min + 1) + min;
+        logger.fine("[Bloodmoon] Spawning group of " + amount + " mobs at (" + base.getBlockX() + "," + base.getBlockY() + "," + base.getBlockZ() + ") pathfind=" + pathfind);
+        for (int i=0;i<amount;i++) {
+            EntityType type = pickMonsterType();
+            Location spawn = base.clone().add(random.nextDouble()*6 - 3, 1, random.nextDouble()*6 - 3);
+            Monster mob = (Monster) player.getWorld().spawnEntity(spawn, type);
+            if (pathfind) {
+                mob.setTarget(player);
+                WaveBehaviorManager.register(mob, player, false);
+            }
+        }
+        spawnCaptain(player, base.clone().add(0,1,0), pathfind);
         for (int i=0;i<amount;i++) {
             EntityType type = pickMonsterType();
             Monster mob = (Monster) player.getWorld().spawnEntity(base, type);
@@ -89,6 +114,11 @@ public class WaveManager {
         captain.getEquipment().setChestplateDropChance(0f);
         captain.getEquipment().setLeggingsDropChance(0f);
         captain.getEquipment().setBootsDropChance(0f);
+        if (pathfind) {
+            captain.setTarget(player);
+            WaveBehaviorManager.register(captain, player, true);
+        }
+        logger.fine("[Bloodmoon] Captain spawned at (" + base.getBlockX() + "," + base.getBlockY() + "," + base.getBlockZ() + ") for " + player.getName());
         if (pathfind) captain.setTarget(player);
     }
 

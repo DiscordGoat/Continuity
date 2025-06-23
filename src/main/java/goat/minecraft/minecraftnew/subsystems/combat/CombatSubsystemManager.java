@@ -13,6 +13,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIContr
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
 import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.BloodmoonSpawnListener;
 import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.SimulateCommand;
+import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.WaveBehaviorListener;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.PlayerFeedbackService;
 import goat.minecraft.minecraftnew.subsystems.combat.FireDamageHandler;
@@ -283,6 +284,7 @@ public class CombatSubsystemManager implements CommandExecutor {
         Bukkit.getPluginManager().registerEvents(decayDamageHandler, plugin);
         // Register blood moon spawn overrides
         Bukkit.getPluginManager().registerEvents(new BloodmoonSpawnListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new WaveBehaviorListener(), plugin);
 
         logger.fine("Combat event listeners registered");
     }
