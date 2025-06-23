@@ -14,6 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.logging.Logger;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 public class WaveManager {
     private static final Range FAR_RANGE = new Range(60,80);
@@ -26,6 +29,9 @@ public class WaveManager {
     public WaveManager(JavaPlugin plugin) {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
+
+    public WaveManager(JavaPlugin plugin) {
+        this.plugin = plugin;
     }
 
     public void startSimulation(Player player, WaveDifficulty difficulty) {
@@ -78,6 +84,12 @@ public class WaveManager {
             }
         }
         spawnCaptain(player, base.clone().add(0,1,0), pathfind);
+        for (int i=0;i<amount;i++) {
+            EntityType type = pickMonsterType();
+            Monster mob = (Monster) player.getWorld().spawnEntity(base, type);
+            if (pathfind) mob.setTarget(player);
+        }
+        spawnCaptain(player, base, pathfind);
     }
 
     private EntityType pickMonsterType() {
@@ -107,6 +119,7 @@ public class WaveManager {
             WaveBehaviorManager.register(captain, player, true);
         }
         logger.fine("[Bloodmoon] Captain spawned at (" + base.getBlockX() + "," + base.getBlockY() + "," + base.getBlockZ() + ") for " + player.getName());
+        if (pathfind) captain.setTarget(player);
     }
 
     private ItemStack enchanted(Material mat) {

@@ -14,6 +14,9 @@ public class BloodmoonSpawnListener implements Listener {
         event.setCancelled(true);
     }
 
+
+public class BloodmoonSpawnListener implements Listener {
+
     @EventHandler
     public void onCreatureSpawn(CreatureSpawnEvent event) {
         if (event.getSpawnReason() != CreatureSpawnEvent.SpawnReason.NATURAL) return;
