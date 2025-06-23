@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.combat.bloodmoon;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -9,6 +10,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class SimulateCommand implements CommandExecutor {
 
+    private final JavaPlugin plugin;
+
+    public SimulateCommand(JavaPlugin plugin) {
+        this.plugin = plugin;
     private final WaveManager waveManager;
 
     public SimulateCommand(JavaPlugin plugin) {
@@ -21,6 +26,8 @@ public class SimulateCommand implements CommandExecutor {
             sender.sendMessage("This command can only be used by players.");
             return true;
         }
+        AssaultWaveManager.getInstance(plugin).start(player);
+        player.sendMessage(ChatColor.GREEN + "Starting assault simulation");
         if (args.length < 1) {
             player.sendMessage(ChatColor.RED + "Usage: /simulate <skirmish|clash|assault|onslaught|carnage>");
             return true;

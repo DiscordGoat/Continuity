@@ -13,6 +13,8 @@ import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIContr
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
 import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.BloodmoonSpawnListener;
 import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.SimulateCommand;
+import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.SkipCommand;
+import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.AssaultWaveListener;
 import goat.minecraft.minecraftnew.subsystems.combat.bloodmoon.WaveBehaviorListener;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.PlayerFeedbackService;
@@ -284,6 +286,7 @@ public class CombatSubsystemManager implements CommandExecutor {
         Bukkit.getPluginManager().registerEvents(decayDamageHandler, plugin);
         // Register blood moon spawn overrides
         Bukkit.getPluginManager().registerEvents(new BloodmoonSpawnListener(), plugin);
+        Bukkit.getPluginManager().registerEvents(new AssaultWaveListener(), plugin);
         Bukkit.getPluginManager().registerEvents(new WaveBehaviorListener(), plugin);
 
         logger.fine("Combat event listeners registered");
@@ -303,6 +306,11 @@ public class CombatSubsystemManager implements CommandExecutor {
         if (plugin.getCommand("simulate") != null) {
             plugin.getCommand("simulate").setExecutor(new SimulateCommand(plugin));
         }
+
+        if (plugin.getCommand("skip") != null) {
+            plugin.getCommand("skip").setExecutor(new SkipCommand(plugin));
+        }
+
         
         logger.fine("Combat commands registered");
     }

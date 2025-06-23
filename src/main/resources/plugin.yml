@@ -153,6 +153,12 @@ commands:
     usage: /warp <worldname>
     permission: continuity.admin
   simulate:
+    description: Spawns assault waves for testing
+    usage: /simulate
+    permission: continuity.admin
+  skip:
+    description: Skip the wave rest period
+    usage: /skip
     description: Spawns waves of monsters for testing
     usage: /simulate <skirmish|clash|assault|onslaught|carnage>
     permission: continuity.admin
