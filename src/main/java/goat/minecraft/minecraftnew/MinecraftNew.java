@@ -61,6 +61,7 @@ import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
 import goat.minecraft.minecraftnew.other.trinkets.SatchelManager;
 import goat.minecraft.minecraftnew.other.trinkets.SeedPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.PotionPouchManager;
+import goat.minecraft.minecraftnew.other.trinkets.CulinaryPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 
@@ -281,6 +282,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         SatchelManager.init(this);
         SeedPouchManager.init(this);
         PotionPouchManager.init(this);
+        CulinaryPouchManager.init(this);
         LavaBucketManager.init(this);
         TrinketManager.init(this);
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
