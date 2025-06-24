@@ -7,6 +7,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -48,65 +51,81 @@ public class CatalystManager implements Listener {
     public JavaPlugin getPlugin() {
         return plugin;
     }
-    
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent event) {
-        Player player = event.getPlayer();
-        ItemStack item = event.getItem();
-        
-        if (item == null || !isBeaconCharm(item)) return;
 
-        // Prevent using the beacon charm while it's on cooldown
+    /**
+     * Handles using a beacon charm to summon its selected catalyst.
+     */
+    private void handleBeaconUse(Player player, ItemStack item) {
         if (player.hasCooldown(org.bukkit.Material.BEACON)) {
             int remaining = player.getCooldown(org.bukkit.Material.BEACON) / 20;
             player.sendMessage(ChatColor.RED + "Your beacon charm is recharging for "
                     + remaining + " more seconds!");
             return;
         }
-        
+
+        String selectedCatalyst = getSelectedCatalyst(item);
+        if (selectedCatalyst == null) {
+            player.sendMessage(ChatColor.RED + "No catalyst selected! Use your beacon charm to select one first.");
+            return;
+        }
+
+        if (!hasBeaconPower(item)) {
+            player.sendMessage(ChatColor.RED + "Your beacon charm has no power! Add material blocks to charge it.");
+            return;
+        }
+
+        CatalystType catalystType = CatalystType.fromDisplayName(selectedCatalyst);
+        if (catalystType == null) {
+            player.sendMessage(ChatColor.RED + "Invalid catalyst type: " + selectedCatalyst);
+            return;
+        }
+
+        Location playerLoc = player.getLocation();
+        String locationKey = getLocationKey(playerLoc);
+        if (activeCatalysts.containsKey(locationKey)) {
+            player.sendMessage(ChatColor.RED + "A catalyst is already active at this location!");
+            return;
+        }
+
+        removeCatalystsByPlayer(player.getUniqueId());
+
+        int tier = BeaconManager.getBeaconTier(item);
+        int duration = BeaconManager.getBeaconDuration(item);
+        int range = BeaconManager.getBeaconRange(item);
+        summonCatalyst(playerLoc, catalystType, player.getUniqueId(), duration, range, tier);
+
+        player.sendMessage(ChatColor.GREEN + "Summoned " + catalystType.getDisplayName() +
+                         ChatColor.GREEN + " for " + duration + " seconds!");
+        player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 1.2f);
+        player.setCooldown(org.bukkit.Material.BEACON, 20 * 120);
+    }
+    
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        ItemStack item = event.getItem();
+
+        if (item == null || !isBeaconCharm(item)) return;
+
         if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             event.setCancelled(true);
-            
-            String selectedCatalyst = getSelectedCatalyst(item);
-            if (selectedCatalyst == null) {
-                player.sendMessage(ChatColor.RED + "No catalyst selected! Use your beacon charm to select one first.");
-                return;
-            }
-            
-            if (!hasBeaconPower(item)) {
-                player.sendMessage(ChatColor.RED + "Your beacon charm has no power! Add material blocks to charge it.");
-                return;
-            }
-            
-            CatalystType catalystType = CatalystType.fromDisplayName(selectedCatalyst);
-            if (catalystType == null) {
-                player.sendMessage(ChatColor.RED + "Invalid catalyst type: " + selectedCatalyst);
-                return;
-            }
-            
-            Location playerLoc = player.getLocation();
-            String locationKey = getLocationKey(playerLoc);
-            
-            if (activeCatalysts.containsKey(locationKey)) {
-                player.sendMessage(ChatColor.RED + "A catalyst is already active at this location!");
-                return;
-            }
-            
-            // Remove any existing catalyst placed by this player to prevent spam
-            removeCatalystsByPlayer(player.getUniqueId());
-            
-            int tier = BeaconManager.getBeaconTier(item);
-            int duration = BeaconManager.getBeaconDuration(item);
-            int range = BeaconManager.getBeaconRange(item);
-            summonCatalyst(playerLoc, catalystType, player.getUniqueId(), duration, range, tier);
-            
-            player.sendMessage(ChatColor.GREEN + "Summoned " + catalystType.getDisplayName() +
-                             ChatColor.GREEN + " for " + duration + " seconds!");
-            player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 1.2f);
-
-            // Apply a 2 minute cooldown to beacon charms
-            player.setCooldown(org.bukkit.Material.BEACON, 20 * 120);
+            handleBeaconUse(player, item);
         }
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) return;
+        if (!event.getClick().isRightClick()) return;
+        if (event.getClickedInventory() == null || event.getClickedInventory().getType() != InventoryType.PLAYER)
+            return;
+
+        ItemStack item = event.getCurrentItem();
+        if (item == null || !isBeaconCharm(item)) return;
+
+        event.setCancelled(true);
+        Player player = (Player) event.getWhoClicked();
+        handleBeaconUse(player, item);
     }
     
     public void summonCatalyst(Location location, CatalystType type, UUID placerUUID, int durationSeconds, int range, int tier) {
