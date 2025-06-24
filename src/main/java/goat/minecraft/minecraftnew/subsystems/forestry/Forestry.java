@@ -410,13 +410,28 @@ public class Forestry implements Listener {
      * @param forestryLevel The player's forestry level.
      */
     public void processDoubleDropChance(Player player, Block block, int forestryLevel) {
-        if (random.nextInt(100) < forestryLevel) {
+        boolean doubled = random.nextInt(100) < forestryLevel;
+
+        CatalystManager catalystManager = CatalystManager.getInstance();
+        boolean tripled = false;
+        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
+            Catalyst catalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);
+            if (catalyst != null) {
+                int tier = catalystManager.getCatalystTier(catalyst);
+                double chance = 0.40 + (tier * 0.10);
+                chance = Math.min(chance, 1.0);
+                tripled = random.nextDouble() < chance;
+            }
+        }
+
+        if (doubled || tripled) {
             final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
             final Material logType = block.getType();
+            final int extra = tripled ? 2 : 1;
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    dropLocation.getWorld().dropItemNaturally(dropLocation, new ItemStack(logType, 1));
+                    dropLocation.getWorld().dropItemNaturally(dropLocation, new ItemStack(logType, extra));
                     dropLocation.getWorld().playSound(dropLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.3f, 1.0f);
                     dropLocation.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, dropLocation, 5, 0.3, 0.3, 0.3, 0);
                 }

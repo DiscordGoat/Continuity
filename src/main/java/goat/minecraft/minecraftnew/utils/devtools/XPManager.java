@@ -292,6 +292,17 @@ public class XPManager implements CommandExecutor {
             xp *= 1.25;
         }
 
+        CatalystManager catalystManager = CatalystManager.getInstance();
+        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
+            Catalyst catalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);
+            if (catalyst != null) {
+                int tier = catalystManager.getCatalystTier(catalyst);
+                double bonus = 0.20 + (tier * 0.05);
+                bonus = Math.min(bonus, 0.50);
+                xp *= 1.0 + bonus;
+            }
+        }
+
         // Count how many 'Savant' enchantment items they have for a bonus.
         int savantCount = 0;
         for (ItemStack item : player.getInventory().getContents()) {

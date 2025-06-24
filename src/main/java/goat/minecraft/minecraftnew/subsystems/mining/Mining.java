@@ -5,6 +5,9 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -232,6 +235,17 @@ public class Mining implements Listener {
 
             boolean hasDiamondGem = gemManager.getGemsFromItem(tool).contains(MiningGemManager.MiningGem.DIAMOND_GEM);
             double tripleDropChance = hasDiamondGem ? 10 : 0; // 10% chance for triple drops if Diamond Gem is applied
+
+            CatalystManager catalystManager = CatalystManager.getInstance();
+            if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
+                Catalyst catalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);
+                if (catalyst != null) {
+                    int tier = catalystManager.getCatalystTier(catalyst);
+                    double bonus = 40 + (tier * 10); // percentage
+                    if (bonus > 100) bonus = 100;
+                    tripleDropChance = Math.max(tripleDropChance, bonus);
+                }
+            }
 
             double roll = random.nextInt(100) + 1;
 

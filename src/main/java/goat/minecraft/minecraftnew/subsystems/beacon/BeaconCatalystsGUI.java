@@ -127,6 +127,26 @@ public class BeaconCatalystsGUI implements Listener {
         );
         gui.setItem(catalystSlots[4], insanityCatalyst);
 
+        // Catalyst of Prosperity
+        int prosperityTriple = 40 + (tier * 10);
+        int prosperityXP = 20 + (tier * 5);
+        int prosperityRare = 20 + (tier * 5);
+        ItemStack prosperityCatalyst = createCatalystButton(
+            Material.EMERALD_BLOCK,
+            ChatColor.GREEN + "Catalyst of Prosperity",
+            true,
+            "Increases resource yields and", 
+            "skill experience for players within", 
+            "range.",
+            "",
+            ChatColor.GOLD + "Triple Drop Chance: " + ChatColor.YELLOW + "+" + prosperityTriple + "%",
+            ChatColor.GOLD + "Skill XP Bonus: " + ChatColor.YELLOW + "+" + prosperityXP + "%",
+            ChatColor.GOLD + "Rare Drop Bonus: " + ChatColor.YELLOW + "+" + prosperityRare + "%",
+            ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
+            ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
+        );
+        gui.setItem(catalystSlots[5], prosperityCatalyst);
+
 
         // Fill empty slots
         fillEmptySlots(gui);
@@ -269,6 +289,15 @@ public class BeaconCatalystsGUI implements Listener {
                 player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.2f);
                 if (BeaconManager.updateBeaconInInventory(player, "Catalyst of Oxygen")) {
                     player.sendMessage(ChatColor.GREEN + "Selected: " + ChatColor.BLUE + "Catalyst of Oxygen");
+                } else {
+                    player.sendMessage(ChatColor.RED + "Could not find beacon in inventory!");
+                }
+                break;
+
+            case "Catalyst of Prosperity":
+                player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.2f);
+                if (BeaconManager.updateBeaconInInventory(player, "Catalyst of Prosperity")) {
+                    player.sendMessage(ChatColor.GREEN + "Selected: " + ChatColor.GREEN + "Catalyst of Prosperity");
                 } else {
                     player.sendMessage(ChatColor.RED + "Could not find beacon in inventory!");
                 }
