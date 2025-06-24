@@ -1091,6 +1091,20 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getSeedPouchTrinket() {
+        return createCustomItem(
+                Material.BUNDLE,
+                ChatColor.YELLOW + "Pouch of Seeds",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store seeds",
+                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getClericEnchant() {
         return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(
