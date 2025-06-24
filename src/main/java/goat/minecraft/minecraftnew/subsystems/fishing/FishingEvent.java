@@ -303,23 +303,29 @@ public class FishingEvent implements Listener {
         // Calculate the direction vector from sea creature to player
         Vector direction = player.getLocation().subtract(bobberLocation).toVector().normalize();
 
-        // Base vertical force
+        // Base vertical force used for most creatures
         double verticalBoost = 0.2;
 
-        // If the player is significantly above the water, give the creature extra lift
-        double heightDifference = player.getLocation().getY() - bobberLocation.getY();
-        if (heightDifference >= 4) {
-            verticalBoost += heightDifference * 0.1; // scale boost with difference
+        if (spawnedEntity.getType() == EntityType.SQUID || spawnedEntity.getType() == EntityType.GLOW_SQUID) {
+            // Squids teleport above the player instead of being launched
+            Location abovePlayer = player.getLocation().clone().add(0, 2, 0);
+            spawnedEntity.teleport(abovePlayer);
+        } else {
+            // If the player is significantly above the water, give the creature extra lift
+            double heightDifference = player.getLocation().getY() - bobberLocation.getY();
+            if (heightDifference >= 4) {
+                verticalBoost += heightDifference * 0.1; // scale boost with difference
+            }
+
+            // Apply vertical boost
+            direction.setY(verticalBoost);
+
+            // Multiply the vector to control overall speed towards the player
+            direction.multiply(2); // Adjust speed multiplier as needed
+
+            // Set the sea creature's velocity towards the player, including upward motion
+            spawnedEntity.setVelocity(direction);
         }
-
-        // Apply vertical boost
-        direction.setY(verticalBoost);
-
-        // Multiply the vector to control overall speed towards the player
-        direction.multiply(2); // Adjust speed multiplier as needed
-
-        // Set the sea creature's velocity towards the player, including upward motion
-        spawnedEntity.setVelocity(direction);
 
         player.sendMessage("A " + seaCreature.getColoredDisplayName() + " is approaching!");
         playSplashSound(player, seaCreature.getRarity());
@@ -366,19 +372,25 @@ public class FishingEvent implements Listener {
         // the initial spawn to keep behavior consistent.
         Vector direction = player.getLocation().subtract(bobberLocation).toVector().normalize();
 
-        // Base vertical force
+        // Base vertical force for non-squid creatures
         double verticalBoost = 0.2;
 
-        // Extra lift if the player is well above the water
-        double heightDifference = player.getLocation().getY() - bobberLocation.getY();
-        if (heightDifference >= 4) {
-            verticalBoost += heightDifference * 0.1;
-        }
+        if (spawned.getType() == EntityType.SQUID || spawned.getType() == EntityType.GLOW_SQUID) {
+            // Squids teleport directly above the player
+            Location abovePlayer = player.getLocation().clone().add(0, 2, 0);
+            spawned.teleport(abovePlayer);
+        } else {
+            // Extra lift if the player is well above the water
+            double heightDifference = player.getLocation().getY() - bobberLocation.getY();
+            if (heightDifference >= 4) {
+                verticalBoost += heightDifference * 0.1;
+            }
 
-        // Apply vertical boost and speed multiplier
-        direction.setY(verticalBoost);
-        direction.multiply(2);
-        spawned.setVelocity(direction);
+            // Apply vertical boost and speed multiplier
+            direction.setY(verticalBoost);
+            direction.multiply(2);
+            spawned.setVelocity(direction);
+        }
         ((LivingEntity) spawned).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, false));
     }
 
