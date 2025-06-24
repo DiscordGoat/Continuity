@@ -426,6 +426,7 @@ public class Mining implements Listener {
             case DEEPSLATE_DIAMOND_ORE:
                 return 20;
             case NETHER_QUARTZ_ORE:
+
                 return 6;
             case NETHER_GOLD_ORE:
                 return 4;
