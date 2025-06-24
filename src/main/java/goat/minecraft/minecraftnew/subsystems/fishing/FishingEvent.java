@@ -115,27 +115,18 @@ public class FishingEvent implements Listener {
             seaCreatureChance += 10;
         }
         CatalystManager catalystManager = CatalystManager.getInstance();
-        if (catalystManager == null) {
-            return;
+        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.DEPTH)) {
+            // Player is near a Depth catalyst - apply additional chance based on tier
+            Catalyst nearestDepthCatalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.DEPTH);
+            if (nearestDepthCatalyst != null) {
+                int catalystTier = catalystManager.getCatalystTier(nearestDepthCatalyst);
+                final double BASE_SEA_CREATURE_CHANCE_INCREASE = 0.05; // 5% base increase
+                final double PER_TIER_SEA_CREATURE_INCREASE = 0.01;    // 1% per tier
+                // Calculate bonus: 5% + (tier * 1%)
+                double seaCreatureBonus = BASE_SEA_CREATURE_CHANCE_INCREASE + (catalystTier * PER_TIER_SEA_CREATURE_INCREASE);
+                seaCreatureChance += seaCreatureBonus;
+            }
         }
-
-        // Check if player is near an Insanity catalyst
-        if (!catalystManager.isNearCatalyst(player.getLocation(), CatalystType.DEPTH)) {
-            return;
-        }
-
-        // Find the nearest Insanity catalyst to get its tier
-        Catalyst nearestDepthCatalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.DEPTH);
-        if (nearestDepthCatalyst == null) {
-            return;
-        }
-
-        int catalystTier = catalystManager.getCatalystTier(nearestDepthCatalyst);
-        final double BASE_SEA_CREATURE_CHANCE_INCREASE = 0.05; // 5% base increase
-        final double PER_TIER_SEA_CREATURE_INCREASE = 0.01;    // 1% per tier
-        // Calculate spirit chance bonus: 5% + (tier * 1%)
-        double seaCreatureBonus = BASE_SEA_CREATURE_CHANCE_INCREASE + (catalystTier * PER_TIER_SEA_CREATURE_INCREASE);
-        seaCreatureChance += seaCreatureBonus;
         // Check for reforged items for sea creatures
         if (isReforgedForSeaCreatures(player.getInventory().getItemInMainHand())) {
             seaCreatureChance += 5; // +4% if the item is reforged
