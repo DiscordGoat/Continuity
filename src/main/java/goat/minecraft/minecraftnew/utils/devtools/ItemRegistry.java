@@ -3108,6 +3108,27 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getUnbreakableShears() {
+        ItemStack item = createCustomItem(
+                Material.SHEARS,
+                ChatColor.LIGHT_PURPLE + "Unbreakable Shears",
+                Arrays.asList(
+                        ChatColor.GRAY + "Shears that never dull.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                true,
+                true
+        );
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setUnbreakable(true);
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
     public static ItemStack getAbyssalInk() {
         return createCustomItem(
                 Material.BLACK_DYE,

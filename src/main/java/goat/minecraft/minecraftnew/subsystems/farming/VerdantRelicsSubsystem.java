@@ -543,24 +543,28 @@ public class VerdantRelicsSubsystem implements Listener {
                         org.bukkit.inventory.meta.Damageable dmgMeta =
                                 (org.bukkit.inventory.meta.Damageable) hand.getItemMeta();
 
-                        int cost = 10;
-                        int unbreakingLevel = hand.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.DURABILITY);
-                        if (unbreakingLevel > 5) unbreakingLevel = 5;
+                        if (!dmgMeta.isUnbreakable()) {
+                            int cost = 10;
+                            int unbreakingLevel = hand.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.DURABILITY);
+                            if (unbreakingLevel > 5) unbreakingLevel = 5;
 
-                        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
-                        int perkReduction = 0;
-                        if (meritManager.hasPerk(player.getUniqueId(), "Unbreaking")) perkReduction++;
+                            PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
+                            int perkReduction = 0;
+                            if (meritManager.hasPerk(player.getUniqueId(), "Unbreaking")) perkReduction++;
 
-                        cost -= unbreakingLevel;
-                        cost -= perkReduction;
-                        if (cost < 0) cost = 0;
+                            cost -= unbreakingLevel;
+                            cost -= perkReduction;
+                            if (cost < 0) cost = 0;
 
-                        dmgMeta.setDamage(dmgMeta.getDamage() + cost);
-                        hand.setItemMeta((org.bukkit.inventory.meta.ItemMeta) dmgMeta);
+                            dmgMeta.setDamage(dmgMeta.getDamage() + cost);
+                            hand.setItemMeta((org.bukkit.inventory.meta.ItemMeta) dmgMeta);
 
-                        if (dmgMeta.getDamage() >= hand.getType().getMaxDurability()) {
-                            hand.setAmount(0);
-                            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                            if (dmgMeta.getDamage() >= hand.getType().getMaxDurability()) {
+                                hand.setAmount(0);
+                                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+                            } else {
+                                player.playSound(player.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1000.0f, 1.0f);
+                            }
                         } else {
                             player.playSound(player.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 1000.0f, 1.0f);
                         }
