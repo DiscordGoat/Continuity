@@ -113,9 +113,8 @@ public class SeaCreatureRegistry implements Listener {
         ));
         List<SeaCreature.DropItem> luminescentDrownedDrops = new ArrayList<>();
         luminescentDrownedDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 1, 1, 2)); // Common drop for a luminescent drowned
-        luminescentDrownedDrops.add(new SeaCreature.DropItem(ItemRegistry.getLuminescentInk(), 1, 1, 3)); // Luminescent Ink drop
-        luminescentDrownedDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 1, 1, 1)); // Luminescent Ink drop
-        luminescentDrownedDrops.add(new SeaCreature.DropItem(ItemRegistry.getAquaAffinity(), 1, 1, 12)); // Luminescent Ink drop
+        luminescentDrownedDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 1, 1, 1));
+        luminescentDrownedDrops.add(new SeaCreature.DropItem(ItemRegistry.getAquaAffinity(), 1, 1, 12));
         SEA_CREATURES.add(new SeaCreature(
                 "Luminescent Drowned", // Name of the sea creature
                 Rarity.UNCOMMON, // Rarity of the sea creature
@@ -216,7 +215,6 @@ public class SeaCreatureRegistry implements Listener {
         List<SeaCreature.DropItem> waterSpiderDrops = new ArrayList<>();
         waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 14, 1, 5));
         waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 14, 1, 4));
-        waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalVenom(), 1, 1, 2));
         SEA_CREATURES.add(new SeaCreature(
                 "Water Spider",
                 Rarity.EPIC,
@@ -277,7 +275,6 @@ public class SeaCreatureRegistry implements Listener {
         //LEGENDARY
         List<SeaCreature.DropItem> bioluminescentGuardianDrops = new ArrayList<>();
         bioluminescentGuardianDrops.add(new SeaCreature.DropItem(ItemRegistry.getAbyssalInk(), 2, 1, 2));
-        bioluminescentGuardianDrops.add(new SeaCreature.DropItem(ItemRegistry.getLuminescentInk(), 8, 1, 2));
         SEA_CREATURES.add(new SeaCreature(
                 "Bioluminescent Guardian",
                 Rarity.LEGENDARY,
