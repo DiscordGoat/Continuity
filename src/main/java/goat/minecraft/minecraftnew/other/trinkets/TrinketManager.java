@@ -102,6 +102,16 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 }
             }
+            case "Pouch of Culinary Delights" -> {
+                if (event.getClick() == ClickType.LEFT) {
+                    CulinaryPouchManager.getInstance().depositDelights(player);
+                    CulinaryPouchManager.getInstance().refreshPouchLore(player);
+                    event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
+                    CulinaryPouchManager.getInstance().openPouch(player);
+                    event.setCancelled(true);
+                }
+            }
             case "Pouch of Seeds" -> {
                 if (event.getClick() == ClickType.LEFT) {
                     SeedPouchManager.getInstance().depositSeeds(player);
@@ -184,6 +194,18 @@ public class TrinketManager implements Listener {
         item.setItemMeta(meta);
     }
 
+    private void updateCulinaryPouchLore(ItemStack item, int count) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Stores Culinary Delights");
+        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store delights");
+        lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch");
+        lore.add(ChatColor.GRAY + "Delights: " + ChatColor.GREEN + count);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
+
     public void refreshPouchLore(Player player) {
         int count = SeedPouchManager.getInstance().countSeeds(player.getUniqueId());
         for (ItemStack stack : player.getInventory().getContents()) {
@@ -205,6 +227,19 @@ public class TrinketManager implements Listener {
             if (meta == null || !meta.hasDisplayName()) continue;
             if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Potions")) {
                 updatePotionPouchLore(stack, count);
+            }
+        }
+        player.updateInventory();
+    }
+
+    public void refreshCulinaryPouchLore(Player player) {
+        int count = CulinaryPouchManager.getInstance().countDelights(player.getUniqueId());
+        for (ItemStack stack : player.getInventory().getContents()) {
+            if (stack == null) continue;
+            ItemMeta meta = stack.getItemMeta();
+            if (meta == null || !meta.hasDisplayName()) continue;
+            if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Culinary Delights")) {
+                updateCulinaryPouchLore(stack, count);
             }
         }
         player.updateInventory();
