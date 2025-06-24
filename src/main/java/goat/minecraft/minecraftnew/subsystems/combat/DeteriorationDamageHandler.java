@@ -44,10 +44,17 @@ public class DeteriorationDamageHandler implements Listener {
     }
 
     /**
-     * Adds deterioration stacks to a monster.
+     * Adds deterioration stacks to an entity.
+     * <p>
+     * The effect normally applies to {@link Monster}s but should
+     * also work on registered sea creatures. Sea creatures are
+     * identified through the {@code SEA_CREATURE} metadata key.
      */
     public void addDeterioration(LivingEntity entity, int amount) {
-        if (!(entity instanceof Monster)) return;
+        boolean isMonster = entity instanceof Monster;
+        boolean isSeaCreature = !entity.getMetadata("SEA_CREATURE").isEmpty();
+        if (!isMonster && !isSeaCreature) return;
+
         UUID id = entity.getUniqueId();
         int newLevel = stacks.getOrDefault(id, 0) + amount;
         stacks.put(id, newLevel);
