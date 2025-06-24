@@ -1105,6 +1105,20 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getDelightPouchTrinket() {
+        return createCustomItem(
+                Material.BUNDLE,
+                ChatColor.YELLOW + "Pouch of Delights",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store delights",
+                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getEnchantedLavaBucketTrinket() {
         return createCustomItem(
                 Material.LAVA_BUCKET,
