@@ -545,9 +545,6 @@ public class VillagerTradeManager implements Listener {
         fishermanPurchases.add(createTradeMap("FISHERMAN_LUCK_OF_THE_SEA", 1, 64, 4)); // Custom Item
         fishermanPurchases.add(createTradeMap("ABYSSAL_SHELL", 1, 32, 5)); // Custom Item
         fishermanPurchases.add(createTradeMap("ABYSSAL_INK", 1, 64, 5)); // Custom Item
-        fishermanPurchases.add(createTradeMap("ABYSSAL_VENOM", 1, 64, 5)); // Custom Item
-
-
         defaultConfig.set("FISHERMAN.purchases", fishermanPurchases);
 
 // Fisherman Sells
@@ -560,7 +557,6 @@ public class VillagerTradeManager implements Listener {
         fishermanSells.add(createTradeMap("TROPICAL_FISH", 1, 1, 2)); // Material
         fishermanSells.add(createTradeMap("GLOW_INK_SAC", 4, 1, 2)); // Material
         fishermanSells.add(createTradeMap("TOOTH", 1, 2, 2)); // Custom Item
-        fishermanSells.add(createTradeMap("LUMINESCENT_INK", 1, 2, 2)); // Custom Item
         fishermanSells.add(createTradeMap("NAUTILUS_SHELL", 1, 4, 2)); // Material
         fishermanSells.add(createTradeMap("HEART_OF_THE_SEA", 1, 16, 2)); // Material
         fishermanSells.add(createTradeMap("FISH_BONE", 1, 1, 2)); // Custom Item
