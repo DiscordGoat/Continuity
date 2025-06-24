@@ -93,6 +93,11 @@ public class CatalystManager implements Listener {
         int tier = BeaconManager.getBeaconTier(item);
         int duration = BeaconManager.getBeaconDuration(item);
         int range = BeaconManager.getBeaconRange(item);
+
+        if (catalystType == CatalystType.PROSPERITY) {
+            duration *= 2;
+            range *= 2;
+        }
         summonCatalyst(playerLoc, catalystType, player.getUniqueId(), duration, range, tier);
 
         player.sendMessage(ChatColor.GREEN + "Summoned " + catalystType.getDisplayName() +

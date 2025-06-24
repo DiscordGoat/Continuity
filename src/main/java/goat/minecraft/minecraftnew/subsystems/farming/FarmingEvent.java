@@ -3,6 +3,9 @@ package goat.minecraft.minecraftnew.subsystems.farming;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
+import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.ChatColor;
@@ -111,10 +114,26 @@ public class FarmingEvent implements Listener {
 
             // Calculate level/2 chance for double drops
             int farmingLevel = xpManager.getPlayerLevel(player, "Farming");
-            if (random.nextInt(100) < farmingLevel) {
+            boolean doubled = random.nextInt(100) < farmingLevel;
+
+            CatalystManager catalystManager = CatalystManager.getInstance();
+            boolean tripled = false;
+            if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
+                Catalyst catalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);
+                if (catalyst != null) {
+                    int tier = catalystManager.getCatalystTier(catalyst);
+                    double chance = 0.40 + (tier * 0.10);
+                    chance = Math.min(chance, 1.0);
+                    tripled = random.nextDouble() < chance;
+                }
+            }
+
+            if (doubled || tripled) {
                 Collection<ItemStack> drops = block.getDrops();
                 for (ItemStack drop : drops) {
-                    Objects.requireNonNull(e.getBlock().getLocation().getWorld()).dropItem(e.getBlock().getLocation(), drop.clone());
+                    ItemStack extra = drop.clone();
+                    extra.setAmount(tripled ? drop.getAmount() * 2 : drop.getAmount());
+                    Objects.requireNonNull(e.getBlock().getLocation().getWorld()).dropItem(e.getBlock().getLocation(), extra);
                 }
                 player.playSound(player.getLocation(), Sound.BLOCK_ROOTED_DIRT_PLACE, 1.0f, 1.0f);
                 petGrantingManager.attemptGrantPet(player);
