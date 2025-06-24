@@ -362,10 +362,23 @@ public class FishingEvent implements Listener {
         spawned.setCustomNameVisible(true);
         spawned.setMetadata("SEA_CREATURE", new FixedMetadataValue(MinecraftNew.getInstance(), seaCreature.getDisplayName()));
 
-        Vector dir = player.getLocation().subtract(bobberLocation).toVector().normalize();
-        dir.setY(0.2);
-        dir.multiply(2);
-        spawned.setVelocity(dir);
+        // Launch the sea creature towards the player using the same logic as
+        // the initial spawn to keep behavior consistent.
+        Vector direction = player.getLocation().subtract(bobberLocation).toVector().normalize();
+
+        // Base vertical force
+        double verticalBoost = 0.2;
+
+        // Extra lift if the player is well above the water
+        double heightDifference = player.getLocation().getY() - bobberLocation.getY();
+        if (heightDifference >= 4) {
+            verticalBoost += heightDifference * 0.1;
+        }
+
+        // Apply vertical boost and speed multiplier
+        direction.setY(verticalBoost);
+        direction.multiply(2);
+        spawned.setVelocity(direction);
         ((LivingEntity) spawned).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, false));
     }
 
