@@ -22,11 +22,13 @@ public class Flight implements Listener {
     private static final double MAX_FLIGHT_DISTANCE_AT_LEVEL_100 = 1.0; // Max flight distance at level 100 in km
     private static final double DRAIN_RATE_PER_SECOND = 0.01; // Drain rate per second in kilometers
     private static final int TICKS_PER_SECOND = 20; // Number of ticks in one second
+    private static final double REGEN_RATE_PER_SECOND = 0.01; // Regeneration rate while near a Flight Catalyst
     private final PetManager petManager;
     private final PlayerMeritManager meritManager;
     private final Map<UUID, Double> dailyFlightTracker = new HashMap<>();
     private final Map<UUID, Long> lastFlightReset = new HashMap<>();
     private final Map<UUID, BukkitRunnable> flightTasks = new HashMap<>();
+    private final Map<UUID, BukkitRunnable> regenTasks = new HashMap<>();
     private final JavaPlugin plugin;
 
     public Flight(JavaPlugin plugin) {
@@ -67,7 +69,10 @@ public class Flight implements Listener {
         if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.FLIGHT)) {
             // Flight Catalyst takes priority - enable flight regardless of pet limitations
             enableFlightFromCatalyst(player);
+            startRegenTask(player);
             return;
+        } else {
+            stopRegenTask(player);
         }
 
         // Check if the player has exceeded the flight limit
@@ -168,6 +173,41 @@ public class Flight implements Listener {
         }
     }
 
+    private void startRegenTask(Player player) {
+        UUID playerId = player.getUniqueId();
+
+        if (regenTasks.containsKey(playerId)) {
+            return;
+        }
+
+        BukkitRunnable regenTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                double flown = dailyFlightTracker.getOrDefault(playerId, 0.0);
+                if (flown <= 0) {
+                    this.cancel();
+                    regenTasks.remove(playerId);
+                    return;
+                }
+
+                flown -= REGEN_RATE_PER_SECOND / TICKS_PER_SECOND;
+                if (flown < 0) flown = 0;
+                dailyFlightTracker.put(playerId, flown);
+            }
+        };
+
+        regenTask.runTaskTimer(plugin, 0, 1); // run every tick
+        regenTasks.put(playerId, regenTask);
+    }
+
+    private void stopRegenTask(Player player) {
+        UUID playerId = player.getUniqueId();
+        if (regenTasks.containsKey(playerId)) {
+            regenTasks.get(playerId).cancel();
+            regenTasks.remove(playerId);
+        }
+    }
+
 
 
     private void disableFlight(Player player) {
@@ -191,6 +231,8 @@ public class Flight implements Listener {
             flightTasks.get(playerId).cancel();
             flightTasks.remove(playerId);
         }
+
+        stopRegenTask(player);
     }
 
     private void displayFlightProgress(Player player, double flownDistanceKm, double remainingDistance) {
