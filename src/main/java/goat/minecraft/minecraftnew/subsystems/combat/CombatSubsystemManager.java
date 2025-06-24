@@ -15,6 +15,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotifica
 import goat.minecraft.minecraftnew.subsystems.combat.notification.PlayerFeedbackService;
 import goat.minecraft.minecraftnew.subsystems.combat.FireDamageHandler;
 import goat.minecraft.minecraftnew.subsystems.combat.DeteriorationDamageHandler;
+import goat.minecraft.minecraftnew.subsystems.combat.ZombieReinforcementBlocker;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -46,6 +47,7 @@ public class CombatSubsystemManager implements CommandExecutor {
 
     private FireDamageHandler fireDamageHandler;
     private DeteriorationDamageHandler decayDamageHandler;
+    private ZombieReinforcementBlocker reinforcementBlocker;
     
     // Controllers and handlers
     private CombatEventHandler eventHandler;
@@ -267,7 +269,8 @@ public class CombatSubsystemManager implements CommandExecutor {
 
         fireDamageHandler = new FireDamageHandler(plugin, notificationService);
         decayDamageHandler = DeteriorationDamageHandler.getInstance(plugin, notificationService);
-        
+        reinforcementBlocker = new ZombieReinforcementBlocker();
+
         logger.fine("Combat controllers and handlers initialized");
     }
     
@@ -279,6 +282,7 @@ public class CombatSubsystemManager implements CommandExecutor {
         Bukkit.getPluginManager().registerEvents(hostilityGUIController, plugin);
         Bukkit.getPluginManager().registerEvents(fireDamageHandler, plugin);
         Bukkit.getPluginManager().registerEvents(decayDamageHandler, plugin);
+        Bukkit.getPluginManager().registerEvents(reinforcementBlocker, plugin);
         // Register blood moon assault listener
         logger.fine("Combat event listeners registered");
     }
