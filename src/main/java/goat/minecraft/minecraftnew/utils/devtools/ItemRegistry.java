@@ -1105,6 +1105,20 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getEnchantedLavaBucketTrinket() {
+        return createCustomItem(
+                Material.LAVA_BUCKET,
+                ChatColor.YELLOW + "Enchanted Lava Bucket",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Trash cursor item",
+                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open trash"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getClericEnchant() {
         return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(
