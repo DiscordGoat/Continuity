@@ -133,6 +133,9 @@ public class SeedPouchManager implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent event) {
         if (!event.getView().getTitle().equals("Seed Pouch")) return;
+        if (event.getClickedInventory() == null || event.getClickedInventory() != event.getInventory()) {
+            return;
+        }
         event.setCancelled(true);
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null || clicked.getType() == Material.AIR || clicked.getType() == Material.GRAY_STAINED_GLASS_PANE) return;
