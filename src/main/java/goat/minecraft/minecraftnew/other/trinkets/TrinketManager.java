@@ -101,6 +101,15 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 }
             }
+            case "Enchanted Lava Bucket" -> {
+                if (event.getClick() == ClickType.LEFT && event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
+                    event.getWhoClicked().setItemOnCursor(null);
+                    event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
+                    LavaBucketManager.getInstance().openTrash(player);
+                    event.setCancelled(true);
+                }
+            }
         }
     }
 

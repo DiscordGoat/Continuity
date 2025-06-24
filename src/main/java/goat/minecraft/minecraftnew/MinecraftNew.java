@@ -60,6 +60,7 @@ import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
 import goat.minecraft.minecraftnew.other.trinkets.SatchelManager;
 import goat.minecraft.minecraftnew.other.trinkets.SeedPouchManager;
+import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
@@ -278,6 +279,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         BankAccountManager.init(this);
         SatchelManager.init(this);
         SeedPouchManager.init(this);
+        LavaBucketManager.init(this);
         TrinketManager.init(this);
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 

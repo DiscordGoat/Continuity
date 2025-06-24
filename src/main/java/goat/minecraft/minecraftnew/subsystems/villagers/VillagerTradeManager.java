@@ -365,6 +365,7 @@ public class VillagerTradeManager implements Listener {
         leatherworkerPurchases.add(createTradeMap("BLACK_SATCHEL", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("GREEN_SATCHEL", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("POUCH_OF_SEEDS", 1, 90, 3));
+        leatherworkerPurchases.add(createTradeMap("ENCHANTED_LAVA_BUCKET_TRINKET", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("SHULKER_SHELL", 1, 64, 3)); // Material
         leatherworkerPurchases.add(createTradeMap("ANVIL_TRINKET", 1, 90, 4));
 
@@ -865,6 +866,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getGreenSatchelTrinket();
             case "POUCH_OF_SEEDS":
                 return ItemRegistry.getSeedPouchTrinket();
+            case "ENCHANTED_LAVA_BUCKET_TRINKET":
+                return ItemRegistry.getEnchantedLavaBucketTrinket();
             case "CLERIC_ENCHANT":
                 return ItemRegistry.getClericEnchant();
             case "SUNFLARE":
