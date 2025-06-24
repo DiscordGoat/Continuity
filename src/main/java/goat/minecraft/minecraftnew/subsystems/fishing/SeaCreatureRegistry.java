@@ -140,7 +140,6 @@ public class SeaCreatureRegistry implements Listener {
         //RARE
         List<SeaCreature.DropItem> deepTurtleDrops = new ArrayList<>();
         deepTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getDeepShell(), 2, 1, 2)); // Common drop for a cod fish
-        deepTurtleDrops.add(new SeaCreature.DropItem(ItemRegistry.getRainArtifact(), 1, 1, 2)); // Common drop for a cod fish
         SEA_CREATURES.add(new SeaCreature(
                 "Deep Sea Turtle", // Name of the sea creature
                 Rarity.RARE, // Rarity of the sea creature
