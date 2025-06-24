@@ -84,8 +84,9 @@ public class BeaconPassivesGUI implements Listener {
         ItemStack mendingButton = createPassiveButton(Material.GOLDEN_APPLE, 
             "Mending", "+1 row of hearts", passives.getOrDefault("mending", false));
         
-        ItemStack sturdyButton = createPassiveButton(Material.SHIELD, 
-            "Sturdy", "+15% damage reduction", passives.getOrDefault("sturdy", false));
+        ItemStack sturdyButton = createPassiveButton(Material.SHIELD,
+            "Sturdy", "+15% damage reduction, knockback resistance",
+            passives.getOrDefault("sturdy", false));
         
         ItemStack swiftButton = createPassiveButton(Material.FEATHER, 
             "Swift", "+20% walk speed, -50% fall damage", passives.getOrDefault("swift", false));
