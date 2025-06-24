@@ -351,6 +351,7 @@ public class VillagerTradeManager implements Listener {
         clericSells.add(createTradeMap("STRING", 8, 1, 4)); // Material
         clericSells.add(createTradeMap("GUNPOWDER", 4, 1, 4)); // Material
         clericSells.add(createTradeMap("PHANTOM_MEMBRANE", 4, 1, 4)); // Material
+        clericSells.add(createTradeMap("TOTEM_OF_UNDYING", 1, 26, 4)); // Material
         // Sell Sunflare relic for brewing Potion of Solar Fury
 
         defaultConfig.set("CLERIC.sells", clericSells);
