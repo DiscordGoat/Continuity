@@ -28,6 +28,7 @@ public class CatalystManager implements Listener {
     private final JavaPlugin plugin;
     private final Map<String, Catalyst> activeCatalysts = new HashMap<>();
     private final Map<String, Integer> catalystTiers = new HashMap<>();
+    private final Map<UUID, BukkitTask> cooldownNotifyTasks = new HashMap<>();
     private BukkitTask cleanupTask;
     private BukkitTask debugTask;
     
@@ -98,6 +99,28 @@ public class CatalystManager implements Listener {
                          ChatColor.GREEN + " for " + duration + " seconds!");
         player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 1.2f);
         player.setCooldown(org.bukkit.Material.BEACON, 20 * 120);
+        scheduleCooldownSound(player, 20 * 120);
+    }
+
+    private void scheduleCooldownSound(Player player, int cooldownTicks) {
+        UUID id = player.getUniqueId();
+
+        BukkitTask existing = cooldownNotifyTasks.remove(id);
+        if (existing != null) {
+            existing.cancel();
+        }
+
+        BukkitTask task = new BukkitRunnable() {
+            @Override
+            public void run() {
+                cooldownNotifyTasks.remove(id);
+                if (player.isOnline()) {
+                    player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+                }
+            }
+        }.runTaskLater(plugin, cooldownTicks);
+
+        cooldownNotifyTasks.put(id, task);
     }
     
     @EventHandler
@@ -303,6 +326,11 @@ public class CatalystManager implements Listener {
         if (debugTask != null) {
             debugTask.cancel();
         }
+
+        for (BukkitTask task : cooldownNotifyTasks.values()) {
+            task.cancel();
+        }
+        cooldownNotifyTasks.clear();
     }
     
     private String getLocationKey(Location location) {
