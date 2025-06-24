@@ -94,10 +94,20 @@ public class TrinketManager implements Listener {
             case "Pouch of Seeds" -> {
                 if (event.getClick() == ClickType.LEFT) {
                     SeedPouchManager.getInstance().depositSeeds(player);
-                    SeedPouchManager.getInstance().refreshPouchLore(player);
+                    refreshSeedPouchLore(player);
                     event.setCancelled(true);
                 } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
                     SeedPouchManager.getInstance().openPouch(player);
+                    event.setCancelled(true);
+                }
+            }
+            case "Pouch of Discs" -> {
+                if (event.getClick() == ClickType.LEFT) {
+                    DiscPouchManager.getInstance().depositDiscs(player);
+                    refreshDiscPouchLore(player);
+                    event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
+                    DiscPouchManager.getInstance().openPouch(player);
                     event.setCancelled(true);
                 }
             }
@@ -149,7 +159,7 @@ public class TrinketManager implements Listener {
         CustomBundleGUI.getInstance().refreshBankLoreInStorage(player, balance);
     }
 
-    private void updatePouchLore(ItemStack item, int count) {
+    private void updateSeedPouchLore(ItemStack item, int count) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         List<String> lore = new ArrayList<>();
@@ -161,14 +171,39 @@ public class TrinketManager implements Listener {
         item.setItemMeta(meta);
     }
 
-    public void refreshPouchLore(Player player) {
+    private void updateDiscPouchLore(ItemStack item, int count) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Stores music discs");
+        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store discs");
+        lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch");
+        lore.add(ChatColor.GRAY + "Discs: " + ChatColor.GREEN + count);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
+
+    public void refreshSeedPouchLore(Player player) {
         int count = SeedPouchManager.getInstance().countSeeds(player.getUniqueId());
         for (ItemStack stack : player.getInventory().getContents()) {
             if (stack == null) continue;
             ItemMeta meta = stack.getItemMeta();
             if (meta == null || !meta.hasDisplayName()) continue;
             if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Seeds")) {
-                updatePouchLore(stack, count);
+                updateSeedPouchLore(stack, count);
+            }
+        }
+        player.updateInventory();
+    }
+
+    public void refreshDiscPouchLore(Player player) {
+        int count = DiscPouchManager.getInstance().countDiscs(player.getUniqueId());
+        for (ItemStack stack : player.getInventory().getContents()) {
+            if (stack == null) continue;
+            ItemMeta meta = stack.getItemMeta();
+            if (meta == null || !meta.hasDisplayName()) continue;
+            if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Discs")) {
+                updateDiscPouchLore(stack, count);
             }
         }
         player.updateInventory();
