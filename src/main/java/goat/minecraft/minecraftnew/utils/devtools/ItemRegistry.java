@@ -1093,7 +1093,7 @@ public class ItemRegistry {
 
     public static ItemStack getSeedPouchTrinket() {
         return createCustomItem(
-                Material.BUNDLE,
+                Material.GUNPOWDER,
                 ChatColor.YELLOW + "Pouch of Seeds",
                 List.of(
                         ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store seeds",

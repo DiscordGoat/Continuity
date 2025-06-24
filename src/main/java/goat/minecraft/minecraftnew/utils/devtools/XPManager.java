@@ -3,6 +3,9 @@ package goat.minecraft.minecraftnew.utils.devtools;
 import java.io.*;
 import java.util.UUID;
 
+import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.other.trims.CustomTrimEffects;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;

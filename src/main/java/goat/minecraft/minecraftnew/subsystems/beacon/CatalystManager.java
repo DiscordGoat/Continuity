@@ -120,7 +120,7 @@ public class CatalystManager implements Listener {
             public void run() {
                 cooldownNotifyTasks.remove(id);
                 if (player.isOnline()) {
-                    player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 1.0f);
                 }
             }
         }.runTaskLater(plugin, cooldownTicks);

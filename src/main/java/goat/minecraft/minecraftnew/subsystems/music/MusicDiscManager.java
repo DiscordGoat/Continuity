@@ -1061,7 +1061,6 @@ public class MusicDiscManager implements Listener {
         ItemStack abyssalShell = ItemRegistry.getAbyssalShell();
         ItemStack forbiddenBook = ItemRegistry.getForbiddenBook();
         ItemStack mithrilChunk = ItemRegistry.getMithrilChunk();
-        ItemStack perfectDiamond = ItemRegistry.getPerfectDiamond();
 
         auctionItems.add(new AuctionItem(enderDrop, 32));
         auctionItems.add(new AuctionItem(undeadDrop, 32));
@@ -1129,15 +1128,15 @@ public class MusicDiscManager implements Listener {
         auctionItems.add(new AuctionItem(ItemRegistry.getFisherEnchant(), 8));
         auctionItems.add(new AuctionItem(ItemRegistry.getFishermanReforge(), 8));
         auctionItems.add(new AuctionItem(ItemRegistry.getFishermanLuckoftheSea(), 8));
-        auctionItems.add(new AuctionItem(ItemRegistry.getPowerCrystal(), 8));
-        auctionItems.add(new AuctionItem(ItemRegistry.getPowerCrystal(), 8));
-        auctionItems.add(new AuctionItem(ItemRegistry.getPearlOfTheDeep(), 8));
-        auctionItems.add(new AuctionItem(ItemRegistry.getPearlOfTheDeep(), 8));
-        auctionItems.add(new AuctionItem(ItemRegistry.getEntBark(), 8));
-        auctionItems.add(new AuctionItem(ItemRegistry.getEntBark(), 8));
-        auctionItems.add(new AuctionItem(ItemRegistry.getBlueLantern(), 8));
-        auctionItems.add(new AuctionItem(ItemRegistry.getBlueLantern(), 8));
-        auctionItems.add(new AuctionItem(ItemRegistry.getNetherStardust(), 16));
+
+        auctionItems.add(new AuctionItem(ItemRegistry.getPowerCrystal(), 64));
+
+        auctionItems.add(new AuctionItem(ItemRegistry.getPearlOfTheDeep(), 64));
+
+        auctionItems.add(new AuctionItem(ItemRegistry.getEntBark(), 64));
+
+        auctionItems.add(new AuctionItem(ItemRegistry.getBlueLantern(), 64));
+        auctionItems.add(new AuctionItem(ItemRegistry.getNetherStardust(), 32));
         auctionItems.add(new AuctionItem(new ItemStack(Material.MUSIC_DISC_PIGSTEP), 16));
         auctionItems.add(new AuctionItem(ItemRegistry.getEngineeringDegree(), 8));
 

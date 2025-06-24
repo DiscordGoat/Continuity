@@ -170,10 +170,6 @@ public class FishingEvent implements Listener {
         // Determine if a sea creature should replace this catch
         if (random.nextDouble() <= seaCreatureChance) {
             spawnAndLaunchSeaCreature(player, e.getHook().getLocation(), rod);
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR,
-                    //String.format("%.2f", damageMultiplier)
-                    new TextComponent(ChatColor.DARK_AQUA + "Sea Creature Chance: " + Math.round(seaCreatureChance * 100) + "%")
-            );
             applyReelInUpgrades(player, true, rod);
         } else {
             // Proceed with regular fish catch

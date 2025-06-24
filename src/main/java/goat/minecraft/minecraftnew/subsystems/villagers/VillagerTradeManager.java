@@ -443,6 +443,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT", 1, 64, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT_TWO", 1, 128, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("MERIT_ITEM", 1, 64, 3)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("UNBREAKABLE_SHEARS", 1, 128, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("LEGENDARY_TOOL_REFORGE", 1, 64, 5)); // Custom Item
         toolsmithPurchases.add(createTradeMap("POWER_CRYSTAL", 1, 512, 5)); // Custom Item
         toolsmithPurchases.add(createTradeMap("REDSTONE_GEMSTONE", 1, 128, 5)); // Custom Item
@@ -461,7 +462,6 @@ public class VillagerTradeManager implements Listener {
         toolsmithSells.add(createTradeMap("REDSTONE_GEMSTONE", 1, 32, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("DIAMOND_GEMSTONE", 1, 64, 3)); // Custom Item
         toolsmithSells.add(createTradeMap("JACKHAMMER", 1, 32, 3)); // Custom Item
-        toolsmithSells.add(createTradeMap("UNBREAKABLE_SHEARS", 1, 128, 5)); // Custom Item
 
         defaultConfig.set("TOOLSMITH.sells", toolsmithSells);
 // Armorer Purchases
@@ -495,7 +495,7 @@ public class VillagerTradeManager implements Listener {
 
 // Armorer Sells
         List<Map<String, Object>> armorerSells = new ArrayList<>();
-        armorerSells.add(createTradeMap("LEATHER_HORSE_ARMOR", 1, 6, 1)); // Material
+        armorerSells.add(createTradeMap("LEATHER_HORSE_ARMOR", 1, 3, 1)); // Material
         armorerSells.add(createTradeMap("IRON_HORSE_ARMOR", 1, 12, 1)); // Material
         armorerSells.add(createTradeMap("GOLDEN_HORSE_ARMOR", 1, 24, 1)); // Material
         armorerSells.add(createTradeMap("DIAMOND_HORSE_ARMOR", 1, 48, 1)); // Material

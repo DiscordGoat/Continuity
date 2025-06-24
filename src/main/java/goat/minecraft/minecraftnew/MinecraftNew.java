@@ -97,6 +97,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
     private BeaconPassiveEffects beaconPassiveEffects;
+    private RejuvenationCatalystListener rejuvenationCatalystListener;
 
 
 
@@ -251,7 +252,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         beaconPassiveEffects.reapplyAllPassiveEffects();
         // Initialize catalyst manager for beacon charm catalysts
         CatalystManager.initialize(this);
-        getServer().getPluginManager().registerEvents(new RejuvenationCatalystListener(this), this);
+        rejuvenationCatalystListener = new RejuvenationCatalystListener(this);
 
 
 

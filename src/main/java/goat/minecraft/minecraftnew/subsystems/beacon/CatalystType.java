@@ -12,7 +12,7 @@ public enum CatalystType {
     INSANITY("Catalyst of Insanity", Particle.SPELL_WITCH, Sound.BLOCK_WOOD_BREAK, ChatColor.DARK_PURPLE),
     OXYGEN("Catalyst of Oxygen", Particle.SMOKE_LARGE, Sound.BLOCK_STONE_BREAK, ChatColor.BLUE),
     REJUVENATION("Catalyst of Rejuvenation", Particle.HEART, Sound.ITEM_TOTEM_USE, ChatColor.GOLD),
-    PROSPERITY("Catalyst of Prosperity", Particle.VILLAGER_HAPPY, Sound.ENTITY_PLAYER_LEVELUP, ChatColor.GREEN);
+    PROSPERITY("Catalyst of Prosperity", Particle.VILLAGER_HAPPY, Sound.BLOCK_SNOW_BREAK, ChatColor.GREEN);
 
     private final String displayName;
     private final Particle particle;
