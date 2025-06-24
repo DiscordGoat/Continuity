@@ -1130,9 +1130,15 @@ public class MusicDiscManager implements Listener {
         auctionItems.add(new AuctionItem(ItemRegistry.getFishermanReforge(), 8));
         auctionItems.add(new AuctionItem(ItemRegistry.getFishermanLuckoftheSea(), 8));
         auctionItems.add(new AuctionItem(ItemRegistry.getPowerCrystal(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getPowerCrystal(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getPearlOfTheDeep(), 8));
         auctionItems.add(new AuctionItem(ItemRegistry.getPearlOfTheDeep(), 8));
         auctionItems.add(new AuctionItem(ItemRegistry.getEntBark(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getEntBark(), 8));
         auctionItems.add(new AuctionItem(ItemRegistry.getBlueLantern(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getBlueLantern(), 8));
+        auctionItems.add(new AuctionItem(ItemRegistry.getNetherStardust(), 16));
+        auctionItems.add(new AuctionItem(new ItemStack(Material.MUSIC_DISC_PIGSTEP), 16));
         auctionItems.add(new AuctionItem(ItemRegistry.getEngineeringDegree(), 8));
 
 
