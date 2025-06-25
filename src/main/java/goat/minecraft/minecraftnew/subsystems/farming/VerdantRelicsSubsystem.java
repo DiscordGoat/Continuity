@@ -143,6 +143,49 @@ public class VerdantRelicsSubsystem implements Listener {
                 + " relic session(s) to disk.");
     }
 
+    /**
+     * Removes the Overgrown complication from any relic within the given radius
+     * of the supplied location. Relic locations are read from the persistent
+     * verdant_relics.yml file for distance checks.
+     *
+     * @param center The location to search around
+     * @param radius Radius in blocks
+     * @return number of relics cured
+     */
+    public int cureOvergrownNearby(Location center, double radius) {
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(dataFile);
+        int cured = 0;
+        for (String key : config.getKeys(false)) {
+            Location relicLoc = fromLocKey(key);
+            if (relicLoc.getWorld() == null || !relicLoc.getWorld().equals(center.getWorld())) continue;
+            if (relicLoc.distance(center) > radius) continue;
+
+            List<String> comps = config.getStringList(key + ".complications");
+            boolean removed = comps.removeIf(c -> c.equalsIgnoreCase("overgrown"));
+            if (!removed) continue;
+
+            // Update in-memory session if loaded
+            RelicSession session = activeSessions.get(key);
+            if (session != null) {
+                session.activeComplications.removeIf(c -> c.equalsIgnoreCase("overgrown"));
+                session.spawnComplicationStands();
+                session.updateDisplayName();
+            }
+
+            config.set(key + ".complications", comps);
+            cured++;
+        }
+        if (cured > 0) {
+            try {
+                config.save(dataFile);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            dataConfig = config;
+        }
+        return cured;
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     //                         Coordinate Utilities
     // ─────────────────────────────────────────────────────────────────────────
