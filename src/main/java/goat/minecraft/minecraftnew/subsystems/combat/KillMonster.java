@@ -106,7 +106,13 @@ public class KillMonster implements Listener {
                         }
                     }
                 }
-                boolean allowNormalDrops = random.nextInt(100) < 20;
+                boolean allowNormalDrops;
+                if (entity instanceof Wither) {
+                    // Always allow normal drops for Withers
+                    allowNormalDrops = true;
+                } else {
+                    allowNormalDrops = random.nextInt(100) < 20;
+                }
                 if (!allowNormalDrops && entity instanceof Zombie zombie) {
                     ItemStack main = zombie.getEquipment().getItemInMainHand();
                     if (main != null && main.getType() != Material.AIR && !main.getType().name().endsWith("_SWORD")) {
