@@ -143,6 +143,10 @@ public class ForestSpiritManager implements Listener {
 
         // Spawn the spirit as a Skeleton.
         Skeleton spirit = (Skeleton) world.spawnEntity(loc, EntityType.SKELETON);
+
+        // Spawn spawn effects: item break particles of all wood types and clear nearby leaves
+        triggerSpawnEffects(loc);
+
         spirit.setPersistent(true);
         // Set a temporary name; true level will be applied after 41 ticks.
         spirit.setCustomName(ChatColor.RED + "[Lvl ?] " + spiritName);
@@ -357,6 +361,54 @@ public class ForestSpiritManager implements Listener {
                 }
             }
         }.runTaskTimer(plugin, 0L, interval);
+    }
+
+    // Triggers spawn effects: item break particles of all wood types and leaf removal
+    private void triggerSpawnEffects(Location loc) {
+        World world = loc.getWorld();
+        if (world == null) return;
+
+        Location particleLoc = loc.clone().add(0.5, 0.5, 0.5);
+        Material[] logs = {
+                Material.OAK_LOG,
+                Material.SPRUCE_LOG,
+                Material.BIRCH_LOG,
+                Material.JUNGLE_LOG,
+                Material.ACACIA_LOG,
+                Material.DARK_OAK_LOG,
+                Material.CHERRY_LOG,
+                Material.CRIMSON_STEM,
+                Material.WARPED_STEM
+        };
+
+        for (Material log : logs) {
+            ItemStack item = new ItemStack(log);
+            world.spawnParticle(Particle.ITEM_CRACK, particleLoc, 20, 0.5, 0.5, 0.5, 0.1, item);
+        }
+
+        int radius = 6; // 12x12x12 area around spawn
+        for (int x = -radius; x <= radius; x++) {
+            for (int y = -radius; y <= radius; y++) {
+                for (int z = -radius; z <= radius; z++) {
+                    Block block = loc.clone().add(x, y, z).getBlock();
+                    if (isLeafBlock(block.getType())) {
+                        block.setType(Material.AIR);
+                    }
+                }
+            }
+        }
+    }
+
+    // Determines if a material is a leaf block
+    private boolean isLeafBlock(Material material) {
+        return material == Material.OAK_LEAVES ||
+                material == Material.BIRCH_LEAVES ||
+                material == Material.SPRUCE_LEAVES ||
+                material == Material.JUNGLE_LEAVES ||
+                material == Material.ACACIA_LEAVES ||
+                material == Material.DARK_OAK_LEAVES ||
+                material == Material.NETHER_WART_BLOCK ||
+                material == Material.WARPED_WART_BLOCK;
     }
 
     // Event handler: handle combat interactions with forest spirits.
