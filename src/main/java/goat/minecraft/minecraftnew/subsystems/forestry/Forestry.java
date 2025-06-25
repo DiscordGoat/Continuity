@@ -338,28 +338,15 @@ public class Forestry implements Listener {
                 spiritChance += 0.05;
             }
             CatalystManager catalystManager = CatalystManager.getInstance();
-            if (catalystManager == null) {
-                return;
+            if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {
+                final double BASE_SPIRIT_CHANCE_INCREASE = 0.05; // 5% base increase
+                final double PER_TIER_SPIRIT_INCREASE = 0.01;    // 1% per tier
+                Catalyst nearestInsanityCatalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.INSANITY);
+                int catalystTier = catalystManager.getCatalystTier(nearestInsanityCatalyst);
+                double spiritChanceBonus = BASE_SPIRIT_CHANCE_INCREASE + (catalystTier * PER_TIER_SPIRIT_INCREASE);
+                spiritChance += spiritChanceBonus;
             }
 
-            // Check if player is near an Insanity catalyst
-            if (!catalystManager.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {
-                return;
-            }
-
-            // Find the nearest Insanity catalyst to get its tier
-            Catalyst nearestInsanityCatalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.INSANITY);
-            if (nearestInsanityCatalyst == null) {
-                return;
-            }
-
-            int catalystTier = catalystManager.getCatalystTier(nearestInsanityCatalyst);
-            final double BASE_SPIRIT_CHANCE_INCREASE = 0.05; // 5% base increase
-            final double PER_TIER_SPIRIT_INCREASE = 0.01;    // 1% per tier
-            // Calculate spirit chance bonus: 5% + (tier * 1%)
-            double spiritChanceBonus = BASE_SPIRIT_CHANCE_INCREASE + (catalystTier * PER_TIER_SPIRIT_INCREASE);
-            spiritChance += spiritChanceBonus;
-            // Grant haste effect.
             grantHaste(player, "Forestry");
 
             // Rare drops.
