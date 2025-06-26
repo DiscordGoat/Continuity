@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -794,6 +795,11 @@ public class UltimateEnchantmentListener implements Listener {
     }
 
     private int getAvailableWarpCharges(Player player) {
+        PetManager petManager = PetManager.getInstance(plugin);
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.ENDLESS_WARP)) {
+            return Integer.MAX_VALUE;
+        }
         List<Long> list = getWarpChargeList(player);
         long now = System.currentTimeMillis();
         int count = 0;
@@ -806,6 +812,11 @@ public class UltimateEnchantmentListener implements Listener {
     }
 
     private boolean consumeWarpCharge(Player player) {
+        PetManager petManager = PetManager.getInstance(plugin);
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.ENDLESS_WARP)) {
+            return true;
+        }
         List<Long> list = getWarpChargeList(player);
         long now = System.currentTimeMillis();
         for (int i = list.size() - 1; i >= 0; i--) {

@@ -148,7 +148,7 @@ public class PetRegistry {
                 PetManager.Rarity.LEGENDARY,
                 100,
                 Particle.ASH,
-                Arrays.asList(PetManager.PetPerk.ELITE, PetManager.PetPerk.ASPECT_OF_THE_END, PetManager.PetPerk.COLLECTOR)
+                Arrays.asList(PetManager.PetPerk.ELITE, PetManager.PetPerk.ENDLESS_WARP, PetManager.PetPerk.COLLECTOR)
         ));
         registry.put("Blaze", new PetDefinition(
                 "Blaze",
