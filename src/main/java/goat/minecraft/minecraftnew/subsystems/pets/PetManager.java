@@ -645,6 +645,8 @@ public class PetManager implements Listener {
             case FLAME_TRAIL:
                 double flameDamage = 3.0 + (level * 0.08);
                 return "Creates " + ChatColor.RED + "explosive fire bursts " + ChatColor.GRAY + "while moving that deal " + ChatColor.RED + String.format("%.1f", flameDamage) + " damage " + ChatColor.GRAY + "to monsters within " + ChatColor.YELLOW + "8 blocks" + ChatColor.GRAY + ". Distance reduces damage.";
+            case ENDLESS_WARP:
+                return ChatColor.DARK_PURPLE + "Grants infinite Warp charges for the Warp enchant.";
             default:
                 return ChatColor.GRAY + "Static effect or undefined scaling.";
 
@@ -944,7 +946,8 @@ public class PetManager implements Listener {
         PARKOUR_ROLL("Parkour Roll", ChatColor.GOLD + ""),
         EARTHWORM("Earthworm", ChatColor.GOLD + ""),
         PHOENIX_REBIRTH("Phoenix Rebirth", ChatColor.GOLD + ""),
-        FLAME_TRAIL("Flame Trail", ChatColor.GOLD + "");
+        FLAME_TRAIL("Flame Trail", ChatColor.GOLD + ""),
+        ENDLESS_WARP("Endless Warp", ChatColor.GOLD + "");
 
         private final String displayName;
         private final String description;
