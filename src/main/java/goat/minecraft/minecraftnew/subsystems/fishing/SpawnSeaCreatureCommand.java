@@ -29,6 +29,11 @@ public class SpawnSeaCreatureCommand implements CommandExecutor {
 
         Player player = (Player) sender;
 
+        if (!player.hasPermission("continuity.admin")) {
+            player.sendMessage(ChatColor.RED + "You do not have permission to use this command!");
+            return true;
+        }
+
         // Check if the player provided a sea creature name
         if (args.length != 1) {
             player.sendMessage(ChatColor.RED + "Usage: /spawnseacreature <creature_name>");
