@@ -328,6 +328,7 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("RECURVE", 1, 16, 2)); // Material
         clericPurchases.add(createTradeMap("STRENGTH", 1, 16, 2)); // Material
         clericPurchases.add(createTradeMap("SWIFT_STEP", 1, 16, 2)); // Material
+        clericPurchases.add(createTradeMap("OXYGEN_RECOVERY", 1, 16, 2)); // Material
         clericPurchases.add(createTradeMap("SOVEREIGNTY", 1, 16, 2)); // Material
         clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 2)); // Material
@@ -689,6 +690,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getRecurvePotionRecipePaper();
             case "SWIFT_STEP":
                 return ItemRegistry.getSwiftStepPotionRecipePaper();
+            case "OXYGEN_RECOVERY":
+                return ItemRegistry.getOxygenRecoveryRecipePaper();
             case "SOVEREIGNTY":
                 return ItemRegistry.getSovereigntyPotionRecipePaper();
             case "LIQUID_LUCK":

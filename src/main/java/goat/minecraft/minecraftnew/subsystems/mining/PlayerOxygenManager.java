@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.mining;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager; // Remove this if no longer needed anywhere else
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -64,6 +65,13 @@ public class PlayerOxygenManager implements Listener {
     // that’s roughly 12 seconds per oxygen increment when empty.
     private static final int RECOVERY_INTERVAL_SECONDS = 6;
     private int recoveryCounter = 0; // Counts seconds for recovery pacing
+
+    private int getRecoveryIntervalSeconds(Player player) {
+        if (PotionManager.isActive("Potion of Oxygen Recovery", player)) {
+            return 2;
+        }
+        return RECOVERY_INTERVAL_SECONDS;
+    }
 
     public PlayerOxygenManager(MinecraftNew plugin) {
         this.plugin = plugin;
@@ -196,7 +204,7 @@ public class PlayerOxygenManager implements Listener {
         } else {
             // Handle oxygen recovery
             if (currentOxygen < initialOxygen) {
-                if (recoveryCounter % RECOVERY_INTERVAL_SECONDS == 0) {
+                if (recoveryCounter % getRecoveryIntervalSeconds(player) == 0) {
                     currentOxygen++;
                     playerOxygenLevels.put(uuid, currentOxygen);
                 }

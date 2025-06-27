@@ -589,7 +589,16 @@ public class ItemRegistry {
                 Arrays.asList(
                         ChatColor.GRAY + "A relic seed brimming with monstrous power.",
                         ChatColor.BLUE + "Dropped from high level monsters.",
-                        ChatColor.BLUE + "Right-click on dirt/grass to plant."
+    // Ghost Relic
+    // ------------------------------------------------------------------
+
+    public static ItemStack getGhost() {
+        return createCustomItem(
+                Material.GHAST_TEAR,
+                ChatColor.GOLD + "Ghost",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic humming with spectral energy.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Oxygen Recovery."
                 ),
                 1,
                 false,
@@ -754,6 +763,21 @@ public class ItemRegistry {
                 ChatColor.LIGHT_PURPLE + "Potion of Charismatic Bartering Recipe (Potion Recipe)",
                 Arrays.asList(
                         ChatColor.GRAY + "Brewing instructions for Charismatic Bartering",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getOxygenRecoveryRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Oxygen Recovery Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Oxygen Recovery",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
                         ChatColor.DARK_PURPLE + "Potion Recipe"
                 ),

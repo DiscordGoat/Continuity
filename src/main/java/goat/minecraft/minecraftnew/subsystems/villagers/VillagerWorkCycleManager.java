@@ -23,10 +23,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -1237,38 +1235,14 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             harvestYield.put(new ItemStack(logVariant), 16); // Each variant yields (multiplier * 2) logs
         }
     
-        // Add healing arrows
-        Random random = new Random();
-        for (int i = 0; i < 8; i++) {
-            ItemStack arrow;
-            if (random.nextFloat() < 0.01) {
-                // 1% chance to create an arrow of healing 100
-                arrow = createHealingArrow(100);
-            } else {
-                // 99% chance to create an arrow of healing 2
-                arrow = createHealingArrow(2);
-            }
-            harvestYield.merge(arrow, 1, Integer::sum);
-        }
-    
         // Store or drop the items
         storeOrDropHarvestItemStack(villager, harvestYield);
         Speech speech = new Speech(plugin);
-        speech.createText(villager.getLocation(), "I gathered the wood and crafted some arrows for you!", 30);
+        speech.createText(villager.getLocation(), "I gathered the wood for you!", 30);
         // Play sound to indicate the fletcher's work
         villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
     }
     
-    private ItemStack createHealingArrow(int healingAmount) {
-        ItemStack arrow = new ItemStack(Material.TIPPED_ARROW);
-        PotionMeta meta = (PotionMeta) arrow.getItemMeta();
-        PotionData potionData = new PotionData(PotionType.INSTANT_HEAL);
-        meta.setBasePotionData(potionData);
-        meta.addCustomEffect(new PotionEffect(PotionEffectType.HEAL, 1, healingAmount - 1), true);
-        arrow.setItemMeta(meta);
-        return arrow;
-    }
-
     private Set<Material> findNearbyLogVariants(Villager villager, int radius) {
         Location loc = villager.getLocation();
         Set<Material> logVariants = new HashSet<>();
