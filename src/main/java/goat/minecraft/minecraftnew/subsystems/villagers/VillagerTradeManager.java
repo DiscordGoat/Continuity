@@ -336,6 +336,7 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("RIPTIDE", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("NIGHT_VISION", 1, 32, 2)); // Material
+        clericPurchases.add(createTradeMap("VACCINATION", 1, 32, 2)); // Custom item
         clericPurchases.add(createTradeMap("CHARISMATIC_BARTERING", 1, 64, 2)); // Material
 
         clericPurchases.add(createTradeMap("CLERIC_ENCHANT", 1, 64, 3)); // Custom Item
@@ -892,6 +893,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getShinyEmerald();
             case "PESTICIDE":
                 return ItemRegistry.getPesticide();
+            case "VACCINATION":
+                return ItemRegistry.getVaccination();
             case "CARTOGRAPHER_MINESHAFT":
                 return ItemRegistry.getCartographerMineshaft();
             case "CARTOGRAPHER_VILLAGE":
