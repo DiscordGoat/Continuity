@@ -105,6 +105,11 @@ public class SeaCreatureDeathEvent implements Listener {
             }
         }
 
+        // 2% chance to drop the Ghost relic
+        if (random.nextInt(100) < 2) {
+            event.getDrops().add(ItemRegistry.getGhost());
+        }
+
         Bukkit.getLogger().info("Player " + killer.getName() + " gained " + boostedXP + " Fishing XP.");
 
         if(seaCreature.getSkullName().equals("Pirate")){

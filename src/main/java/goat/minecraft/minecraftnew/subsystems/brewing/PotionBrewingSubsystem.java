@@ -283,6 +283,14 @@ public class PotionBrewingSubsystem implements Listener {
         recipeRegistry.add(
                 new PotionRecipe("Potion of Charismatic Bartering", charismaticIngredients, 60*10, new ItemStack(Material.POTION), charismaticColor, charismaticLore)
         );
+
+        // Potion of Oxygen Recovery
+        List<String> oxygenRecoveryIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Sponge", "Ghost");
+        List<String> oxygenRecoveryLore = Arrays.asList("Recover oxygen faster while mining", "Base Duration of " + baseDuration);
+        Color oxygenRecoveryColor = Color.fromRGB(0, 0, 0);
+        recipeRegistry.add(
+                new PotionRecipe("Potion of Oxygen Recovery", oxygenRecoveryIngredients, 60*10, new ItemStack(Material.POTION), oxygenRecoveryColor, oxygenRecoveryLore)
+        );
     }
 
     private PotionRecipe findRecipeByName(String potionName) {
