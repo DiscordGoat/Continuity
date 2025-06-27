@@ -551,16 +551,15 @@ public class RightClickArtifacts implements Listener {
                 decrementItemAmount(itemInHand, player);
             }
             if(displayName.equals(ChatColor.YELLOW + "Backpack")){
-                CustomBundleGUI.getInstance().openBundleGUI(player);
+                CustomBundleGUI.getInstance().openBundleGUIDelayed(player);
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         // <-- your code here
                         TrinketManager.getInstance().refreshBankLore(player);
                     }
-                }.runTaskLater(MinecraftNew.getInstance(), 10L);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 10, 10);
-
+                }.runTaskLater(MinecraftNew.getInstance(), 20L);
+                
             }
             StructureUtils structureUtils = new StructureUtils();
             if(displayName.equals(ChatColor.YELLOW + "Mineshaft Location")){
