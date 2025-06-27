@@ -722,6 +722,25 @@ public class SpawnMonsters implements Listener {
         }
     }
 
+    @EventHandler
+    public void onHighLevelMonsterDeath(EntityDeathEvent event) {
+        if (!(event.getEntity() instanceof Monster monster)) return;
+        if (monster.hasMetadata("SEA_CREATURE") || monster.hasMetadata("forestSpirit")) return;
+
+        Player killer = monster.getKiller();
+        if (killer == null) return;
+
+        int mobLevel = 0;
+        if (monster.hasMetadata("mobLevel")) {
+            mobLevel = monster.getMetadata("mobLevel").get(0).asInt();
+        }
+        int combatLevel = xpManager.getPlayerLevel(killer, "Combat");
+        if (mobLevel > combatLevel + 100 && Math.random() < 0.25) {
+            monster.getWorld().dropItemNaturally(monster.getLocation(), ItemRegistry.getVerdantRelicMonsterSeed());
+            killer.sendMessage(ChatColor.AQUA + "You found a " + ChatColor.GOLD + "Verdant Relic: Monster!");
+        }
+    }
+
 
     /**
      * When a Deep Sea Diver is hit, play a metal clang sound.
