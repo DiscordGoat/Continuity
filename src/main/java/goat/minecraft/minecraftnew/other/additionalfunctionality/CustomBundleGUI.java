@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -15,12 +16,17 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.Sound;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 public class CustomBundleGUI implements Listener {
 
@@ -31,6 +37,7 @@ public class CustomBundleGUI implements Listener {
     private final String fileName = "bundle_storage.yml";
     private File storageFile;
     private FileConfiguration storageConfig;
+    private final Set<UUID> refreshNeeded = new HashSet<>();
 
     // === 2) Private constructor ===
     private CustomBundleGUI(JavaPlugin plugin) {
@@ -86,6 +93,25 @@ public class CustomBundleGUI implements Listener {
         player.openInventory(bundleInventory);
     }
 
+    /**
+     * Opens the backpack after a short delay while playing a sound each tick.
+     * This avoids ghost cursor issues when opening from another GUI.
+     */
+    public void openBundleGUIDelayed(final Player player) {
+        new BukkitRunnable() {
+            int ticks = 0;
+
+            @Override
+            public void run() {
+                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1f, 1f);
+                if (ticks++ >= 9) {
+                    openBundleGUI(player);
+                    cancel();
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
+    }
+
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         if (event.getView().getTitle().equals("Backpack")) {
@@ -131,6 +157,22 @@ public class CustomBundleGUI implements Listener {
         if (event.getView().getTitle().equals("Backpack")) {
             Player player = (Player) event.getPlayer();
             saveBundleInventory(player, event.getInventory());
+            refreshNeeded.add(player.getUniqueId());
+        }
+    }
+
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        if (event.getInventory().getType() == InventoryType.CRAFTING) {
+            Player player = (Player) event.getPlayer();
+            if (refreshNeeded.remove(player.getUniqueId())) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.updateInventory();
+                    }
+                }.runTaskLater(plugin, 1L);
+            }
         }
     }
     public boolean removeRedstoneBlocksFromBackpack(Player player, int neededBlocks) {

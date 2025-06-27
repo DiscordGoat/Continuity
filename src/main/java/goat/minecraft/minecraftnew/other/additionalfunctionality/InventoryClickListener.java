@@ -38,14 +38,13 @@ public class InventoryClickListener implements Listener {
             if (isBackpackItem(item)) {
                 event.setCancelled(true);
                 Player player = (Player) event.getWhoClicked();
-                CustomBundleGUI.getInstance().openBundleGUI(player);
+                CustomBundleGUI.getInstance().openBundleGUIDelayed(player);
                 new BukkitRunnable() {
                     @Override
                     public void run() {
                         TrinketManager.getInstance().refreshBankLore(player);
                     }
-                }.runTaskLater(MinecraftNew.getInstance(), 10L);
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 10, 10);
+                }.runTaskLater(MinecraftNew.getInstance(), 20L);
             }
         }
     }
