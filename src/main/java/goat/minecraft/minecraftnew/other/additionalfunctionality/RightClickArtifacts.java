@@ -857,6 +857,16 @@ public class RightClickArtifacts implements Listener {
                 Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
                 villager.setProfession(profession);
                 villager.setVillagerType(type);
+
+                String rawName = zombie.getCustomName() != null ? zombie.getCustomName() : "";
+                // Remove color codes then strip any level prefix such as "[Lv: 10] "
+                String stripped = ChatColor.stripColor(rawName).replaceFirst("(?i)^\\s*\\[?\\s*(?:level|lv\\.?|lvl)\\s*:?\\s*\\d+\\s*\\]?\\s*", "");
+                if (!stripped.isEmpty()) {
+                    ChatColor nameColor = stripped.equalsIgnoreCase("Bartender") ? ChatColor.GOLD : ChatColor.GREEN;
+                    villager.setCustomName(nameColor + stripped);
+                    villager.setCustomNameVisible(true);
+                }
+
                 world.spawnParticle(Particle.VILLAGER_HAPPY, loc.add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
                 world.playSound(loc, Sound.ENTITY_VILLAGER_CELEBRATE, 1f, 1f);
             }
