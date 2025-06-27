@@ -22,6 +22,7 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
@@ -809,6 +810,57 @@ public class RightClickArtifacts implements Listener {
         } else {
             player.getInventory().removeItem(item);
         }
+    }
+
+    /**
+     * Handles using the Vaccination artifact on Zombie Villagers.
+     */
+    @EventHandler
+    public void onEntityInteract(PlayerInteractEntityEvent event) {
+        if (!(event.getRightClicked() instanceof ZombieVillager zombie)) {
+            return;
+        }
+        Player player = event.getPlayer();
+        ItemStack itemInHand = player.getInventory().getItemInMainHand();
+        if (itemInHand == null || !itemInHand.hasItemMeta()) {
+            return;
+        }
+        ItemMeta meta = itemInHand.getItemMeta();
+        if (meta == null || !meta.hasDisplayName()) {
+            return;
+        }
+        if (!meta.getDisplayName().equals(ChatColor.YELLOW + "Vaccination")) {
+            return;
+        }
+
+        event.setCancelled(true);
+        cureZombieVillager(player, zombie);
+        decrementItemAmount(itemInHand, player);
+    }
+
+    /**
+     * Converts the given ZombieVillager back to a Villager after a short delay.
+     */
+    private void cureZombieVillager(Player player, ZombieVillager zombie) {
+        World world = zombie.getWorld();
+        Location loc = zombie.getLocation();
+        Villager.Profession profession = zombie.getVillagerProfession();
+        Villager.Type type = zombie.getVillagerType();
+
+        world.playSound(loc, Sound.ENTITY_ZOMBIE_VILLAGER_CURE, 1f, 1f);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!zombie.isValid()) return;
+                zombie.remove();
+                Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
+                villager.setProfession(profession);
+                villager.setVillagerType(type);
+                world.spawnParticle(Particle.VILLAGER_HAPPY, loc.add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
+                world.playSound(loc, Sound.ENTITY_VILLAGER_CELEBRATE, 1f, 1f);
+            }
+        }.runTaskLater(MinecraftNew.getInstance(), 100L); // 5 seconds
     }
 
     /**
