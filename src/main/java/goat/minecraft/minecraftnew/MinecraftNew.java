@@ -190,6 +190,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PotionOfSovereignty(), this);
         getServer().getPluginManager().registerEvents(new PotionOfLiquidLuck(), this);
         getServer().getPluginManager().registerEvents(new PotionOfFountains(), this);
+        getServer().getPluginManager().registerEvents(new PotionOfVitality(), this);
         getServer().getPluginManager().registerEvents(new PotionOfSwiftStep(), this);
         getServer().getPluginManager().registerEvents(new PotionOfRecurve(), this);
         getServer().getPluginManager().registerEvents(new PotionOfSolarFury(), this);

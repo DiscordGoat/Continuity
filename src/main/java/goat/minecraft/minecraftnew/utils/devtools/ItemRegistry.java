@@ -558,6 +558,45 @@ public class ItemRegistry {
         );
     }
 
+    // ------------------------------------------------------------------
+    // Monster Relic & Seed
+    // ------------------------------------------------------------------
+
+    /**
+     * Mature Monster relic used in brewing the Potion of Vitality.
+     */
+    public static ItemStack getMonster() {
+        return createCustomItem(
+                Material.ROTTEN_FLESH,
+                ChatColor.GOLD + "Monster",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic pulsating with feral energy.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Vitality."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /**
+     * Seed form dropped from powerful monsters, plant to grow Monster.
+     */
+    public static ItemStack getVerdantRelicMonsterSeed() {
+        return createCustomItem(
+                Material.WHEAT_SEEDS,
+                ChatColor.GOLD + "Verdant Relic Monster",
+                Arrays.asList(
+                        ChatColor.GRAY + "A relic seed brimming with monstrous power.",
+                        ChatColor.BLUE + "Dropped from high level monsters.",
+                        ChatColor.BLUE + "Right-click on dirt/grass to plant."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
 
     public static ItemStack getRecurvePotionRecipePaper() {
         // This returns a piece of PAPER with a custom name + lore that says "Potion of Recurve Recipe".
@@ -640,6 +679,21 @@ public class ItemRegistry {
                 ChatColor.LIGHT_PURPLE + "Potion of Fountains Recipe (Potion Recipe)",
                 Arrays.asList(
                         ChatColor.GRAY + "Brewing instructions for Sea Creature Chance",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getVitalityRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Vitality Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Vitality",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
                         ChatColor.DARK_PURPLE + "Potion Recipe"
                 ),
