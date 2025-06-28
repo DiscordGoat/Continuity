@@ -139,6 +139,10 @@ commands:
     description: Repairs the held item to full durability
     usage: /repair
     permission: continuity.admin
+  openvillagertrademenu:
+    description: Opens a villager trade menu for testing
+    usage: /openVillagerTradeMenu <profession> <tier>
+    permission: continuity.admin
   setskilllevel:
     description: Sets a player's skill level
     usage: /setskilllevel <player> <skill> <level>

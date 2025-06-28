@@ -1095,6 +1095,22 @@ public class VillagerTradeManager implements Listener {
         return Math.max(1, (int) Math.floor(finalCost));
     }
 
+    /**
+     * Opens the villager trade menu using a temporary villager instance.
+     * The spawned villager is removed once the menu closes.
+     */
+    public void openTradeMenu(Player player, Villager.Profession profession, int tier) {
+        int level = Math.max(1, Math.min(tier, MAX_VILLAGER_LEVEL));
+        Villager temp = player.getWorld().spawn(player.getLocation(), Villager.class);
+        temp.setAI(false);
+        temp.setInvisible(true);
+        temp.setProfession(profession);
+        temp.setVillagerLevel(level);
+        temp.setMetadata("tempTradeVillager", new FixedMetadataValue(plugin, true));
+        playerVillagerMap.put(player, temp);
+        openVillagerTradeGUI(player);
+    }
+
 
 
 
@@ -1324,6 +1340,12 @@ public class VillagerTradeManager implements Listener {
                         petManager.despawnPet(player);
                     }
                     player.playSound(player.getLocation(), Sound.BLOCK_FIRE_EXTINGUISH, 1.0f, 1.0f);
+                }
+
+                Villager stored = playerVillagerMap.get(player);
+                if (stored != null && stored.hasMetadata("tempTradeVillager")) {
+                    stored.remove();
+                    playerVillagerMap.remove(player);
                 }
 
                 // Reset the toggle-flag on close
