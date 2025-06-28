@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.utils.devtools;
 
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -4243,5 +4244,14 @@ public class ItemRegistry {
                 false,
                 true
         );
+    }
+
+    /** Provides the Structure Block Charm for building assistance. */
+    public static ItemStack getStructureBlockCharm() {
+        StructureBlockManager manager = StructureBlockManager.getInstance();
+        if (manager == null) {
+            return null;
+        }
+        return manager.createStructureBlock();
     }
 }

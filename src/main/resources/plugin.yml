@@ -163,3 +163,11 @@ commands:
     description: Skip the assault rest period
     usage: /skip
     default: true
+  getstructureblock:
+    description: Gives a Structure Block Charm with zero power
+    usage: /getstructureblock
+    permission: continuity.admin
+  setstructureblockpower:
+    description: Sets the power of a Structure Block Charm in your hand
+    usage: /setstructureblockpower <power>
+    permission: continuity.admin
