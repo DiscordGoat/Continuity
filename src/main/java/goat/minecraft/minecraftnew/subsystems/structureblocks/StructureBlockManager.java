@@ -200,6 +200,7 @@ public class StructureBlockManager implements Listener {
         }
     }
 
+    private void applyWall3x3(Block clicked, BlockFace clickedFace, Player player, ItemStack item) {
     private void applyWall3x3(Block clicked, BlockFace face, Player player, ItemStack item) {
         ItemStack stored = getStoredMaterial(getId(item));
         if (stored == null || stored.getType() == Material.AIR) {
@@ -213,6 +214,9 @@ public class StructureBlockManager implements Listener {
             return;
         }
 
+        Block start = clicked.getRelative(clickedFace);
+        BlockFace playerFacing = player.getFacing();
+        BlockFace right = rotateRight(playerFacing);
         Block start = clicked.getRelative(face);
         BlockFace right = rotateRight(face);
 
@@ -351,6 +355,9 @@ public class StructureBlockManager implements Listener {
             ItemMeta meta = filler.getItemMeta();
             meta.setDisplayName(" ");
             filler.setItemMeta(meta);
+            for (int i = 0; i < inv.getSize(); i++) {
+                if (i == 13) continue;
+                if (inv.getItem(i) == null) inv.setItem(i, filler);
             for (int i=0;i<inv.getSize();i++) {
                 if (inv.getItem(i)==null) inv.setItem(i, filler);
             }
@@ -382,6 +389,12 @@ public class StructureBlockManager implements Listener {
             if (!event.getView().getTitle().equals(title)) return;
             org.bukkit.inventory.Inventory inv = event.getInventory();
             ItemStack mat = inv.getItem(13);
+            if (mat != null) {
+                ItemMeta im = mat.getItemMeta();
+                if (im == null || !im.hasDisplayName() || ChatColor.stripColor(im.getDisplayName()).isEmpty()) {
+                    mat = null;
+                }
+            }
             saveStoredMaterial(id, mat);
             HandlerList.unregisterAll(this);
         }
