@@ -17,17 +17,32 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-public class PotionPouchManager implements Listener {
-    private static PotionPouchManager instance;
+public class MiningPouchManager implements Listener {
+    private static MiningPouchManager instance;
     private final JavaPlugin plugin;
     private File pouchFile;
     private FileConfiguration pouchConfig;
+    private static final Set<Material> ALLOWED_ITEMS = EnumSet.of(
+            Material.COAL_ORE, Material.DEEPSLATE_COAL_ORE,
+            Material.IRON_ORE, Material.DEEPSLATE_IRON_ORE,
+            Material.COPPER_ORE, Material.DEEPSLATE_COPPER_ORE,
+            Material.GOLD_ORE, Material.DEEPSLATE_GOLD_ORE,
+            Material.REDSTONE_ORE, Material.DEEPSLATE_REDSTONE_ORE,
+            Material.EMERALD_ORE, Material.DEEPSLATE_EMERALD_ORE,
+            Material.LAPIS_ORE, Material.DEEPSLATE_LAPIS_ORE,
+            Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE,
+            Material.NETHER_QUARTZ_ORE, Material.NETHER_GOLD_ORE,
+            Material.ANCIENT_DEBRIS,
+            Material.RAW_IRON, Material.RAW_COPPER, Material.RAW_GOLD,
+            Material.IRON_INGOT, Material.COPPER_INGOT, Material.GOLD_INGOT,
+            Material.DIAMOND, Material.EMERALD, Material.LAPIS_LAZULI,
+            Material.REDSTONE, Material.COAL, Material.QUARTZ,
+            Material.NETHERITE_SCRAP, Material.GOLD_NUGGET
+    );
 
-    private PotionPouchManager(JavaPlugin plugin) {
+    private MiningPouchManager(JavaPlugin plugin) {
         this.plugin = plugin;
         initFile();
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -35,16 +50,16 @@ public class PotionPouchManager implements Listener {
 
     public static void init(JavaPlugin plugin) {
         if (instance == null) {
-            instance = new PotionPouchManager(plugin);
+            instance = new MiningPouchManager(plugin);
         }
     }
 
-    public static PotionPouchManager getInstance() {
+    public static MiningPouchManager getInstance() {
         return instance;
     }
 
     private void initFile() {
-        pouchFile = new File(plugin.getDataFolder(), "potion_pouches.yml");
+        pouchFile = new File(plugin.getDataFolder(), "mining_pouches.yml");
         if (!pouchFile.exists()) {
             try {
                 plugin.getDataFolder().mkdirs();
@@ -64,10 +79,8 @@ public class PotionPouchManager implements Listener {
         }
     }
 
-    private boolean isPotion(ItemStack item) {
-        if (item == null) return false;
-        Material type = item.getType();
-        return type == Material.POTION || type == Material.SPLASH_POTION || type == Material.LINGERING_POTION;
+    private boolean isOre(ItemStack item) {
+        return item != null && ALLOWED_ITEMS.contains(item.getType());
     }
 
     private ItemStack addToStorage(UUID id, ItemStack stack) {
@@ -83,16 +96,17 @@ public class PotionPouchManager implements Listener {
         return stack; // no space left
     }
 
-    public int depositPotions(Player player) {
+    public int depositOres(Player player) {
         Inventory inv = player.getInventory();
         int total = 0;
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
-            if (isPotion(item)) {
+            if (isOre(item)) {
+                total += item.getAmount();
+                inv.setItem(i, null);
                 ItemStack leftover = addToStorage(player.getUniqueId(), item.clone());
-                if (leftover == null) {
-                    total += item.getAmount();
-                    inv.setItem(i, null);
+                if (leftover != null) {
+                    player.getWorld().dropItemNaturally(player.getLocation(), leftover);
                 }
             }
         }
@@ -103,7 +117,7 @@ public class PotionPouchManager implements Listener {
     }
 
     public void openPouch(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 54, "Potion Pouch");
+        Inventory inv = Bukkit.createInventory(null, 54, "Mining Pouch");
         String base = player.getUniqueId().toString();
         for (int i = 0; i < 54; i++) {
             String path = base + "." + i;
@@ -129,13 +143,14 @@ public class PotionPouchManager implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!event.getView().getTitle().equals("Potion Pouch")) return;
+        if (!event.getView().getTitle().equals("Mining Pouch")) return;
         if (event.getClickedInventory() == null || event.getClickedInventory() != event.getInventory()) {
             return;
         }
         event.setCancelled(true);
         ItemStack clicked = event.getCurrentItem();
-        if (clicked == null || clicked.getType() == Material.AIR || clicked.getType() == Material.GRAY_STAINED_GLASS_PANE) return;
+        if (clicked == null || clicked.getType() == Material.AIR || clicked.getType() == Material.GRAY_STAINED_GLASS_PANE)
+            return;
         Player player = (Player) event.getWhoClicked();
         if (event.isLeftClick()) {
             ItemStack toGive = clicked.clone();
@@ -153,7 +168,7 @@ public class PotionPouchManager implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if (!event.getView().getTitle().equals("Potion Pouch")) return;
+        if (!event.getView().getTitle().equals("Mining Pouch")) return;
         Player player = (Player) event.getPlayer();
         saveInventory(player, event.getInventory());
         refreshPouchLore(player);
@@ -172,7 +187,7 @@ public class PotionPouchManager implements Listener {
         save();
     }
 
-    public int countPotions(UUID id) {
+    public int countOres(UUID id) {
         String base = id.toString();
         int count = 0;
         for (int i = 0; i < 54; i++) {
@@ -186,21 +201,21 @@ public class PotionPouchManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Stores potions");
-        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store potions");
+        lore.add(ChatColor.GRAY + "Stores ores and ingots");
+        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store ores");
         lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch");
-        lore.add(ChatColor.GRAY + "Potions: " + ChatColor.GREEN + count);
+        lore.add(ChatColor.GRAY + "Items: " + ChatColor.GREEN + count);
         meta.setLore(lore);
         item.setItemMeta(meta);
     }
 
     public void refreshPouchLore(Player player) {
-        int count = countPotions(player.getUniqueId());
+        int count = countOres(player.getUniqueId());
         for (ItemStack stack : player.getInventory().getContents()) {
             if (stack == null) continue;
             ItemMeta meta = stack.getItemMeta();
             if (meta == null || !meta.hasDisplayName()) continue;
-            if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Potions")) {
+            if (ChatColor.stripColor(meta.getDisplayName()).equals("Mining Pouch")) {
                 updateLore(stack, count);
             }
         }
