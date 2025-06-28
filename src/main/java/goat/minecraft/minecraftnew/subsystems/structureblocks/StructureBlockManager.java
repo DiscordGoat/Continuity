@@ -4,6 +4,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -188,6 +190,82 @@ public class StructureBlockManager implements Listener {
         }
     }
 
+    private BlockFace rotateRight(BlockFace face) {
+        switch (face) {
+            case NORTH: return BlockFace.EAST;
+            case EAST:  return BlockFace.SOUTH;
+            case SOUTH: return BlockFace.WEST;
+            case WEST:  return BlockFace.NORTH;
+            default:    return BlockFace.EAST;
+        }
+    }
+
+    private void applyWall3x3(Block clicked, BlockFace face, Player player, ItemStack item) {
+        ItemStack stored = getStoredMaterial(getId(item));
+        if (stored == null || stored.getType() == Material.AIR) {
+            player.sendMessage(ChatColor.RED + "No material stored in Structure Block!");
+            return;
+        }
+
+        int power = getPower(item);
+        if (power <= 0) {
+            player.sendMessage(ChatColor.RED + "Structure Block is out of power!");
+            return;
+        }
+
+        Block start = clicked.getRelative(face);
+        BlockFace right = rotateRight(face);
+
+        int placed = 0;
+        for (int w = -1; w <= 1; w++) {
+            for (int h = 0; h < 3; h++) {
+                if (power <= 0) break;
+                Block target = start.getRelative(right, w).getRelative(BlockFace.UP, h);
+                if (target.getType() == Material.AIR) {
+                    target.setType(stored.getType());
+                    power--;
+                    placed++;
+                }
+            }
+        }
+
+        if (placed > 0) {
+            setPower(item, power);
+            player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1.5f);
+            player.sendMessage(ChatColor.GREEN + "Placed " + placed + " blocks using Structure Block.");
+        } else {
+            player.sendMessage(ChatColor.RED + "No space to place blocks.");
+        }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+
+        Action action = event.getAction();
+        if (action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK && action != Action.RIGHT_CLICK_BLOCK)
+            return;
+
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (!isStructureBlock(item)) return;
+
+        if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
+            event.setCancelled(true);
+            new StructureBlockGUI(plugin, item).open(player);
+            return;
+        }
+
+        if (action == Action.RIGHT_CLICK_BLOCK) {
+            event.setCancelled(true);
+            Block clicked = event.getClickedBlock();
+            if (clicked == null) return;
+
+            String function = getFunction(item);
+            if (function.equalsIgnoreCase("3x3")) {
+                applyWall3x3(clicked, event.getBlockFace(), player, item);
+            }
+        }
     @EventHandler
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
