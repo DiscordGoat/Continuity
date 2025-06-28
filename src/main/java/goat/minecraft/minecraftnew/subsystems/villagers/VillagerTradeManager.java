@@ -63,6 +63,21 @@ public class VillagerTradeManager implements Listener {
         // Register events
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
+
+    /**
+     * Associate a player with a villager for trading.
+     */
+    public void setPlayerVillager(Player player, Villager villager) {
+        playerVillagerMap.put(player, villager);
+    }
+
+    /**
+     * Remove the stored villager for a player.
+     */
+    public void clearPlayerVillager(Player player) {
+        playerVillagerMap.remove(player);
+    }
+
     public static VillagerTradeManager getInstance(JavaPlugin plugin) {
         if (instance == null) {
             instance = new VillagerTradeManager(plugin);
@@ -1106,7 +1121,7 @@ public class VillagerTradeManager implements Listener {
 
 
 
-    private void openVillagerTradeGUI(Player player) {
+    public void openVillagerTradeGUI(Player player) {
         Inventory tradeGUI = Bukkit.createInventory(null, 54, ChatColor.GREEN + "Villager Trading");
         Villager villager = playerVillagerMap.get(player); // Retrieve the stored villager directly
 

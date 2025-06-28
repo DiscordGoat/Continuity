@@ -159,3 +159,7 @@ commands:
     description: Skip the assault rest period
     usage: /skip
     default: true
+  openvillagertrademenu:
+    description: Opens a villager trade menu for testing
+    usage: /openvillagertrademenu <profession> <tier>
+    permission: continuity.admin
