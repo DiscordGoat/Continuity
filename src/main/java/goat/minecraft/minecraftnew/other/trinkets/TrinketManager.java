@@ -122,6 +122,19 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 }
             }
+            case "Transfiguration Pouch" -> {
+                if (event.getClick() == ClickType.LEFT) {
+                    TransfigurationPouchManager.getInstance().depositAll(player);
+                    TransfigurationPouchManager.getInstance().refreshPouchLore(player);
+                    event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
+                    TransfigurationPouchManager.getInstance().openPouch(player);
+                    event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_LEFT) {
+                    TransfigurationPouchManager.getInstance().convertToXP(player);
+                    event.setCancelled(true);
+                }
+            }
             case "Enchanted Lava Bucket" -> {
                 if (event.getClick() == ClickType.LEFT && event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
                     event.getWhoClicked().setItemOnCursor(null);
@@ -206,6 +219,19 @@ public class TrinketManager implements Listener {
         item.setItemMeta(meta);
     }
 
+    private void updateTransfigurationPouchLore(ItemStack item, int count) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Stores power items");
+        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store items");
+        lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch");
+        lore.add(ChatColor.BLUE + "Shift-Left-click" + ChatColor.GRAY + ": Convert to XP");
+        lore.add(ChatColor.GRAY + "Items: " + ChatColor.GREEN + count);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
+
     public void refreshPouchLore(Player player) {
         int count = SeedPouchManager.getInstance().countSeeds(player.getUniqueId());
         for (ItemStack stack : player.getInventory().getContents()) {
@@ -240,6 +266,19 @@ public class TrinketManager implements Listener {
             if (meta == null || !meta.hasDisplayName()) continue;
             if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Culinary Delights")) {
                 updateCulinaryPouchLore(stack, count);
+            }
+        }
+        player.updateInventory();
+    }
+
+    public void refreshTransfigurationPouchLore(Player player) {
+        int count = TransfigurationPouchManager.getInstance().countItems(player.getUniqueId());
+        for (ItemStack stack : player.getInventory().getContents()) {
+            if (stack == null) continue;
+            ItemMeta meta = stack.getItemMeta();
+            if (meta == null || !meta.hasDisplayName()) continue;
+            if (ChatColor.stripColor(meta.getDisplayName()).equals("Transfiguration Pouch")) {
+                updateTransfigurationPouchLore(stack, count);
             }
         }
         player.updateInventory();
