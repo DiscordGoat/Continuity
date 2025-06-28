@@ -201,6 +201,7 @@ public class StructureBlockManager implements Listener {
     }
 
     private void applyWall3x3(Block clicked, BlockFace clickedFace, Player player, ItemStack item) {
+    private void applyWall3x3(Block clicked, BlockFace face, Player player, ItemStack item) {
         ItemStack stored = getStoredMaterial(getId(item));
         if (stored == null || stored.getType() == Material.AIR) {
             player.sendMessage(ChatColor.RED + "No material stored in Structure Block!");
@@ -216,6 +217,8 @@ public class StructureBlockManager implements Listener {
         Block start = clicked.getRelative(clickedFace);
         BlockFace playerFacing = player.getFacing();
         BlockFace right = rotateRight(playerFacing);
+        Block start = clicked.getRelative(face);
+        BlockFace right = rotateRight(face);
 
         int placed = 0;
         for (int w = -1; w <= 1; w++) {
@@ -267,6 +270,18 @@ public class StructureBlockManager implements Listener {
                 applyWall3x3(clicked, event.getBlockFace(), player, item);
             }
         }
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_AIR) return;
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (item == null || item.getType() != Material.STRUCTURE_BLOCK) return;
+        if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return;
+        String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+        if (!name.equals("Structure Block Charm")) return;
+        event.setCancelled(true);
+        new StructureBlockGUI(plugin, item).open(player);
     }
 
     @EventHandler
@@ -343,6 +358,8 @@ public class StructureBlockManager implements Listener {
             for (int i = 0; i < inv.getSize(); i++) {
                 if (i == 13) continue;
                 if (inv.getItem(i) == null) inv.setItem(i, filler);
+            for (int i=0;i<inv.getSize();i++) {
+                if (inv.getItem(i)==null) inv.setItem(i, filler);
             }
         }
 
