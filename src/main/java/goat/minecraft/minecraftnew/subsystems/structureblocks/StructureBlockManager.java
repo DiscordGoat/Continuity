@@ -87,6 +87,25 @@ public class StructureBlockManager implements Listener {
         return item;
     }
 
+    /** Determines if the given ItemStack is a Structure Block Charm. */
+    public boolean isStructureBlock(ItemStack item) {
+        if (item == null || item.getType() != Material.STRUCTURE_BLOCK) return false;
+        if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return false;
+        String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+        return name.equals("Structure Block Charm");
+    }
+
+    /** Sets the power of a Structure Block Charm. */
+    public void setStructureBlockPower(ItemStack item, int power) {
+        if (item == null) return;
+        setPower(item, power);
+    }
+
+    /** Returns the current power stored in a Structure Block Charm. */
+    public int getStructureBlockPower(ItemStack item) {
+        return getPower(item);
+    }
+
     private int getPower(ItemStack item) {
         if (item == null || item.getType() != Material.STRUCTURE_BLOCK) return 0;
         ItemMeta meta = item.getItemMeta();

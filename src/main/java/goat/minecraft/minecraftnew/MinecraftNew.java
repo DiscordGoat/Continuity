@@ -67,6 +67,8 @@ import goat.minecraft.minecraftnew.other.trinkets.TransfigurationPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
+import goat.minecraft.minecraftnew.subsystems.structureblocks.GetStructureBlockCommand;
+import goat.minecraft.minecraftnew.subsystems.structureblocks.SetStructureBlockPowerCommand;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.subsystems.realms.Tropic;
@@ -268,6 +270,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("continuitytp").setExecutor(new ContinuityTpCommand());
         getCommand("warp").setExecutor(new WarpCommand());
         getCommand("setbeaconpower").setExecutor(new SetBeaconPowerCommand());
+        getCommand("getstructureblock").setExecutor(new GetStructureBlockCommand());
+        getCommand("setstructureblockpower").setExecutor(new SetStructureBlockPowerCommand());
         getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
 
 
