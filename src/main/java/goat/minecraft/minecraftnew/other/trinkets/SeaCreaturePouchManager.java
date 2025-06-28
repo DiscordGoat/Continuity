@@ -19,15 +19,16 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
-public class PotionPouchManager implements Listener {
-    private static PotionPouchManager instance;
+public class SeaCreaturePouchManager implements Listener {
+    private static SeaCreaturePouchManager instance;
     private final JavaPlugin plugin;
     private File pouchFile;
     private FileConfiguration pouchConfig;
 
-    private PotionPouchManager(JavaPlugin plugin) {
+    private SeaCreaturePouchManager(JavaPlugin plugin) {
         this.plugin = plugin;
         initFile();
         Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -35,16 +36,16 @@ public class PotionPouchManager implements Listener {
 
     public static void init(JavaPlugin plugin) {
         if (instance == null) {
-            instance = new PotionPouchManager(plugin);
+            instance = new SeaCreaturePouchManager(plugin);
         }
     }
 
-    public static PotionPouchManager getInstance() {
+    public static SeaCreaturePouchManager getInstance() {
         return instance;
     }
 
     private void initFile() {
-        pouchFile = new File(plugin.getDataFolder(), "potion_pouches.yml");
+        pouchFile = new File(plugin.getDataFolder(), "sea_pouches.yml");
         if (!pouchFile.exists()) {
             try {
                 plugin.getDataFolder().mkdirs();
@@ -64,10 +65,58 @@ public class PotionPouchManager implements Listener {
         }
     }
 
-    private boolean isPotion(ItemStack item) {
-        if (item == null) return false;
+    private static final Set<String> DROP_NAMES = Set.of(
+            "Shallow Shell",
+            "Shell",
+            "Deep Shell",
+            "Abyssal Shell",
+            "Fish Bone",
+            "Sea Salt",
+            "Calamari",
+            "Turtle Tactics",
+            "Anaklusmos",
+            "Lightning Bolt",
+            "Loyal Declaration",
+            "Verdant Relic Tide",
+            "Creature Tooth",
+            "Fish Bait",
+            "Narwhal Tusk",
+            "Lucky",
+            "Diving Helmet",
+            "Leviathan Heart",
+            "Sweeping Edge",
+            "Shrapnel",
+            "Howl",
+            "Unbreakable",
+            "Swim Trunks",
+            "Verdant Relic Treasury",
+            "Abyssal Ink"
+    );
+
+    private boolean isSeaCreatureDrop(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) return false;
         Material type = item.getType();
-        return type == Material.POTION || type == Material.SPLASH_POTION || type == Material.LINGERING_POTION;
+        if (type == Material.COD || type == Material.SALMON || type == Material.PUFFERFISH || type == Material.TROPICAL_FISH)
+            return false;
+        if (type == Material.TRIDENT) return true;
+        if (!item.hasItemMeta()) return false;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+        if (meta.hasDisplayName() && DROP_NAMES.contains(ChatColor.stripColor(meta.getDisplayName()))) {
+            return true;
+        }
+        if (meta.hasLore()) {
+            for (String line : meta.getLore()) {
+                String stripped = ChatColor.stripColor(line);
+                if (stripped.contains("Water Technology.") || stripped.contains("Trophy Item") ||
+                        stripped.contains("Bait") || stripped.contains("Smithing Item") ||
+                        stripped.contains("Artifact") || stripped.contains("Culinary Ingredient") ||
+                        stripped.contains("Mastery")) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     private ItemStack addToStorage(UUID id, ItemStack stack) {
@@ -83,16 +132,17 @@ public class PotionPouchManager implements Listener {
         return stack; // no space left
     }
 
-    public int depositPotions(Player player) {
+    public int depositDrops(Player player) {
         Inventory inv = player.getInventory();
         int total = 0;
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
-            if (isPotion(item)) {
+            if (isSeaCreatureDrop(item)) {
+                total += item.getAmount();
+                inv.setItem(i, null);
                 ItemStack leftover = addToStorage(player.getUniqueId(), item.clone());
-                if (leftover == null) {
-                    total += item.getAmount();
-                    inv.setItem(i, null);
+                if (leftover != null) {
+                    player.getWorld().dropItemNaturally(player.getLocation(), leftover);
                 }
             }
         }
@@ -103,7 +153,7 @@ public class PotionPouchManager implements Listener {
     }
 
     public void openPouch(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 54, "Potion Pouch");
+        Inventory inv = Bukkit.createInventory(null, 54, "Sea Creature Pouch");
         String base = player.getUniqueId().toString();
         for (int i = 0; i < 54; i++) {
             String path = base + "." + i;
@@ -129,7 +179,7 @@ public class PotionPouchManager implements Listener {
 
     @EventHandler
     public void onClick(InventoryClickEvent event) {
-        if (!event.getView().getTitle().equals("Potion Pouch")) return;
+        if (!event.getView().getTitle().equals("Sea Creature Pouch")) return;
         if (event.getClickedInventory() == null || event.getClickedInventory() != event.getInventory()) {
             return;
         }
@@ -141,6 +191,7 @@ public class PotionPouchManager implements Listener {
             ItemStack toGive = clicked.clone();
             event.getInventory().setItem(event.getSlot(), createPane());
             saveInventory(player, event.getInventory());
+            // give to player or drop
             var notFit = player.getInventory().addItem(toGive);
             if (!notFit.isEmpty()) {
                 for (ItemStack left : notFit.values()) {
@@ -153,7 +204,7 @@ public class PotionPouchManager implements Listener {
 
     @EventHandler
     public void onClose(InventoryCloseEvent event) {
-        if (!event.getView().getTitle().equals("Potion Pouch")) return;
+        if (!event.getView().getTitle().equals("Sea Creature Pouch")) return;
         Player player = (Player) event.getPlayer();
         saveInventory(player, event.getInventory());
         refreshPouchLore(player);
@@ -172,7 +223,7 @@ public class PotionPouchManager implements Listener {
         save();
     }
 
-    public int countPotions(UUID id) {
+    public int countDrops(UUID id) {
         String base = id.toString();
         int count = 0;
         for (int i = 0; i < 54; i++) {
@@ -186,21 +237,21 @@ public class PotionPouchManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY + "Stores potions");
-        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store potions");
+        lore.add(ChatColor.GRAY + "Stores sea creature drops");
+        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store drops");
         lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch");
-        lore.add(ChatColor.GRAY + "Potions: " + ChatColor.GREEN + count);
+        lore.add(ChatColor.GRAY + "Drops: " + ChatColor.GREEN + count);
         meta.setLore(lore);
         item.setItemMeta(meta);
     }
 
     public void refreshPouchLore(Player player) {
-        int count = countPotions(player.getUniqueId());
+        int count = countDrops(player.getUniqueId());
         for (ItemStack stack : player.getInventory().getContents()) {
             if (stack == null) continue;
             ItemMeta meta = stack.getItemMeta();
             if (meta == null || !meta.hasDisplayName()) continue;
-            if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Potions")) {
+            if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Sea Creatures")) {
                 updateLore(stack, count);
             }
         }

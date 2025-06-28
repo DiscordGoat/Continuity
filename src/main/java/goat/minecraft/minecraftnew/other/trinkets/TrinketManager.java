@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.trinkets.PotionPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.TransfigurationPouchManager;
+import goat.minecraft.minecraftnew.other.trinkets.MiningPouchManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -103,6 +104,16 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 }
             }
+            case "Pouch of Sea Creatures" -> {
+                if (event.getClick() == ClickType.LEFT) {
+                    SeaCreaturePouchManager.getInstance().depositDrops(player);
+                    SeaCreaturePouchManager.getInstance().refreshPouchLore(player);
+                    event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
+                    SeaCreaturePouchManager.getInstance().openPouch(player);
+                    event.setCancelled(true);
+                }
+            }
             case "Pouch of Culinary Delights" -> {
                 if (event.getClick() == ClickType.LEFT) {
                     CulinaryPouchManager.getInstance().depositDelights(player);
@@ -133,6 +144,13 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
                     TransfigurationPouchManager.getInstance().openPouch(player);
+            case "Mining Pouch" -> {
+                if (event.getClick() == ClickType.LEFT) {
+                    MiningPouchManager.getInstance().depositOres(player);
+                    MiningPouchManager.getInstance().refreshPouchLore(player);
+                    event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
+                    MiningPouchManager.getInstance().openPouch(player);
                     event.setCancelled(true);
                 }
             }
@@ -220,6 +238,18 @@ public class TrinketManager implements Listener {
         item.setItemMeta(meta);
     }
 
+    private void updateMiningPouchLore(ItemStack item, int count) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Stores ores and ingots");
+        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store ores");
+        lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch");
+        lore.add(ChatColor.GRAY + "Items: " + ChatColor.GREEN + count);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
+
     public void refreshPouchLore(Player player) {
         int count = SeedPouchManager.getInstance().countSeeds(player.getUniqueId());
         for (ItemStack stack : player.getInventory().getContents()) {
@@ -254,6 +284,35 @@ public class TrinketManager implements Listener {
             if (meta == null || !meta.hasDisplayName()) continue;
             if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Culinary Delights")) {
                 updateCulinaryPouchLore(stack, count);
+            }
+        }
+        player.updateInventory();
+    }
+
+    public void refreshMiningPouchLore(Player player) {
+        int count = MiningPouchManager.getInstance().countOres(player.getUniqueId());
+    private void updateSeaPouchLore(ItemStack item, int count) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Stores sea creature drops");
+        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store drops");
+        lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch");
+        lore.add(ChatColor.GRAY + "Drops: " + ChatColor.GREEN + count);
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
+
+    public void refreshSeaPouchLore(Player player) {
+        int count = SeaCreaturePouchManager.getInstance().countDrops(player.getUniqueId());
+        for (ItemStack stack : player.getInventory().getContents()) {
+            if (stack == null) continue;
+            ItemMeta meta = stack.getItemMeta();
+            if (meta == null || !meta.hasDisplayName()) continue;
+            if (ChatColor.stripColor(meta.getDisplayName()).equals("Mining Pouch")) {
+                updateMiningPouchLore(stack, count);
+            if (ChatColor.stripColor(meta.getDisplayName()).equals("Pouch of Sea Creatures")) {
+                updateSeaPouchLore(stack, count);
             }
         }
         player.updateInventory();
