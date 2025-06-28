@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.villagers;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.ShelfManager;
+import goat.minecraft.minecraftnew.subsystems.farming.VerdantRelicsSubsystem;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
