@@ -91,11 +91,10 @@ public class SeedPouchManager implements Listener {
         for (int i = 0; i < inv.getSize(); i++) {
             ItemStack item = inv.getItem(i);
             if (isVerdantSeed(item)) {
-                total += item.getAmount();
-                inv.setItem(i, null);
                 ItemStack leftover = addToStorage(player.getUniqueId(), item.clone());
-                if (leftover != null) {
-                    player.getWorld().dropItemNaturally(player.getLocation(), leftover);
+                if (leftover == null) {
+                    total += item.getAmount();
+                    inv.setItem(i, null);
                 }
             }
         }

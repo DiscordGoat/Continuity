@@ -1235,6 +1235,12 @@ public class ItemRegistry {
                 ChatColor.YELLOW + "Mining Pouch",
                 List.of(
                         ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store ores",
+    public static ItemStack getSeaCreaturePouchTrinket() {
+        return createCustomItem(
+                Material.BUNDLE,
+                ChatColor.YELLOW + "Pouch of Sea Creatures",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store drops",
                         ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch"
                 ),
                 1,
