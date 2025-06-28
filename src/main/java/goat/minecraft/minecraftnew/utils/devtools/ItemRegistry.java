@@ -1229,6 +1229,20 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getMiningPouchTrinket() {
+        return createCustomItem(
+                Material.IRON_PICKAXE,
+                ChatColor.YELLOW + "Mining Pouch",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store ores",
+                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getEnchantedLavaBucketTrinket() {
         return createCustomItem(
                 Material.LAVA_BUCKET,
