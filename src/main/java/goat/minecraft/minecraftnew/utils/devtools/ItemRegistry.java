@@ -1263,6 +1263,21 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getTransfigurationPouchTrinket() {
+        return createCustomItem(
+                Material.GLOWSTONE,
+                ChatColor.YELLOW + "Transfiguration Pouch",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store items",
+                        ChatColor.BLUE + "Shift-Left-click" + ChatColor.GRAY + ": Convert to XP",
+                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Open pouch"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getClericEnchant() {
         return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(
