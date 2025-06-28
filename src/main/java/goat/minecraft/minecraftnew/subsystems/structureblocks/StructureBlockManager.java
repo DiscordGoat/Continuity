@@ -266,6 +266,18 @@ public class StructureBlockManager implements Listener {
                 applyWall3x3(clicked, event.getBlockFace(), player, item);
             }
         }
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_AIR) return;
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItemInMainHand();
+        if (item == null || item.getType() != Material.STRUCTURE_BLOCK) return;
+        if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return;
+        String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
+        if (!name.equals("Structure Block Charm")) return;
+        event.setCancelled(true);
+        new StructureBlockGUI(plugin, item).open(player);
     }
 
     @EventHandler
