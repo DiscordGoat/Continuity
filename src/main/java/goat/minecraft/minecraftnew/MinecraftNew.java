@@ -66,6 +66,7 @@ import goat.minecraft.minecraftnew.other.trinkets.MiningPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.TransfigurationPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
+import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.subsystems.realms.Tropic;
@@ -292,6 +293,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         TransfigurationPouchManager.init(this);
         LavaBucketManager.init(this);
         TrinketManager.init(this);
+        StructureBlockManager.init(this);
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
 
         forestryPetManager = new ForestryPetManager(this);
