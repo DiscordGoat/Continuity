@@ -62,6 +62,7 @@ import goat.minecraft.minecraftnew.other.trinkets.SatchelManager;
 import goat.minecraft.minecraftnew.other.trinkets.SeedPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.PotionPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.CulinaryPouchManager;
+import goat.minecraft.minecraftnew.other.trinkets.MiningPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.SeaCreaturePouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
@@ -288,6 +289,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         SeedPouchManager.init(this);
         PotionPouchManager.init(this);
         CulinaryPouchManager.init(this);
+        MiningPouchManager.init(this);
         SeaCreaturePouchManager.init(this);
         LavaBucketManager.init(this);
         TrinketManager.init(this);
