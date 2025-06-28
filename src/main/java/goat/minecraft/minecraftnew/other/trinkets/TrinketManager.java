@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other.trinkets;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.trinkets.PotionPouchManager;
+import goat.minecraft.minecraftnew.other.trinkets.TransfigurationPouchManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -119,6 +120,19 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
                     SeedPouchManager.getInstance().openPouch(player);
+                    event.setCancelled(true);
+                }
+            }
+            case "Transfiguration Pouch" -> {
+                if (event.getClick() == ClickType.LEFT) {
+                    TransfigurationPouchManager.getInstance().depositItems(player);
+                    TransfigurationPouchManager.getInstance().refreshLore(player);
+                    event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_LEFT) {
+                    TransfigurationPouchManager.getInstance().convertToXP(player);
+                    event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
+                    TransfigurationPouchManager.getInstance().openPouch(player);
                     event.setCancelled(true);
                 }
             }
