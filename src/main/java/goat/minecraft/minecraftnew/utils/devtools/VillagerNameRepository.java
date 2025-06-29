@@ -1,11 +1,19 @@
 package goat.minecraft.minecraftnew.utils.devtools;
 
 import java.util.*;
+import java.util.stream.Collectors;
+
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.World;
 import org.bukkit.entity.Villager;
 
 public class VillagerNameRepository {
 
     private static final Random RANDOM = new Random();
+
+    // Tracks how many times each name has been assigned
+    private static final Map<String, Integer> NAME_USAGE_COUNTS = new HashMap<>();
 
     // Map of names organized by starting letter. Each letter has 10 names; two of these are troll names.
     private static final Map<Character, List<String>> NAMES_BY_LETTER = new HashMap<>();
@@ -91,6 +99,20 @@ public class VillagerNameRepository {
         ));
     }
 
+    // Returns the set of villager names currently present in the world
+    private static Set<String> getCurrentlyUsedNames() {
+        Set<String> used = new HashSet<>();
+        for (World world : Bukkit.getWorlds()) {
+            for (Villager villager : world.getEntitiesByClass(Villager.class)) {
+                String custom = villager.getCustomName();
+                if (custom != null) {
+                    used.add(ChatColor.stripColor(custom));
+                }
+            }
+        }
+        return used;
+    }
+
     // Map of funny names for specific villager professions.
     private static final Map<Villager.Profession, String> FUNNY_PROFESSION_NAMES = new HashMap<>();
 
@@ -118,10 +140,26 @@ public class VillagerNameRepository {
      * @return A random male name.
      */
     public static String getRandomMaleName() {
-        List<Character> letters = new ArrayList<>(NAMES_BY_LETTER.keySet());
-        char randomLetter = letters.get(RANDOM.nextInt(letters.size()));
-        List<String> names = NAMES_BY_LETTER.get(randomLetter);
-        return names.get(RANDOM.nextInt(names.size()));
+        List<String> allNames = NAMES_BY_LETTER.values().stream()
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        Set<String> usedNames = getCurrentlyUsedNames();
+        List<String> available = allNames.stream()
+                .filter(name -> !usedNames.contains(name))
+                .collect(Collectors.toList());
+
+        String chosenName;
+        if (!available.isEmpty()) {
+            chosenName = available.get(RANDOM.nextInt(available.size()));
+        } else {
+            chosenName = allNames.stream()
+                    .min(Comparator.comparingInt(n -> NAME_USAGE_COUNTS.getOrDefault(n, 0)))
+                    .orElse(allNames.get(RANDOM.nextInt(allNames.size())));
+        }
+
+        NAME_USAGE_COUNTS.merge(chosenName, 1, Integer::sum);
+        return chosenName;
     }
 
     /**
