@@ -87,8 +87,11 @@ public class KillMonster implements Listener {
                 xpGain += bonusXP;
             }
     
-            // Add XP to the player
-            xpManager.addXP(playerKiller, "Combat", xpGain);
+            // Skip combat XP for sea creatures and forest spirits
+            if (!entity.hasMetadata("SEA_CREATURE") && !entity.hasMetadata("forestSpirit")) {
+                // Add XP to the player
+                xpManager.addXP(playerKiller, "Combat", xpGain);
+            }
 
             // 20% chance for loot to drop normally, else clear drops
             Random random = new Random();
