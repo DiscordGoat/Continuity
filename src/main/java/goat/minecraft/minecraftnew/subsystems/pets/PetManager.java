@@ -590,6 +590,8 @@ public class PetManager implements Listener {
             case ANGLER:
                 int anglerBonus = 5;
                 return "Grants " + ChatColor.AQUA + anglerBonus + "% Sea Creature Chance.";
+            case BUDDY_SYSTEM:
+                return "Grants " + ChatColor.AQUA + "+5 Sea Creature Chance " + ChatColor.GRAY + "near other players.";
             case HEART_OF_THE_SEA:
                 int heartBonus = 10;
                 return "Grants " + ChatColor.AQUA + heartBonus + "% Sea Creature Chance.";
@@ -920,6 +922,7 @@ public class PetManager implements Listener {
         COMFORTABLE("Comfortable","Grants you with 1 bonus health per 10 levels when eating."),
         LULLABY("Lullaby","Lulls monsters back to sleep, preventing their spawning."),
         ANGLER("Angler","+5 Sea Creature Chance"),
+        BUDDY_SYSTEM("Buddy System", "+5 Sea Creature Chance near other players"),
         ANTIDOTE("Antidote","Cures a random negative potion effect on eating."),
         LEAP("Leap","Enables you to leap forward when shifting."),
         SOFT_PAW("Soft Paw","Reduces fall damage."),

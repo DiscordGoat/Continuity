@@ -156,6 +156,15 @@ public class FishingEvent implements Listener {
                 seaCreatureChance += heartOfTheSeaBonus;
             }
 
+            if (activePet.hasPerk(PetManager.PetPerk.BUDDY_SYSTEM)) {
+                for (Player other : player.getWorld().getPlayers()) {
+                    if (!other.equals(player) && other.getLocation().distance(player.getLocation()) <= 20) {
+                        seaCreatureChance += 5;
+                        break;
+                    }
+                }
+            }
+
             if (activePet.hasPerk(PetManager.PetPerk.BAIT)) {
                 seaCreatureChance += (double) activePet.getLevel() / 10;; // +10% from Heart of the Sea perk
             }
