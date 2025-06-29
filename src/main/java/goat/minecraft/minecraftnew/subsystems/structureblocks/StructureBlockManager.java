@@ -135,15 +135,13 @@ public class StructureBlockManager implements Listener {
         queue.add(origin);
         visited.add(origin);
 
-        int placed = 0;
-        while (!queue.isEmpty() && power > 0) {
+        Block place = null;
+        while (!queue.isEmpty()) {
             Block current = queue.poll();
             Block target = current.getRelative(face);
             if (isReplaceable(target.getType())) {
-                target.setType(mat);
-                power--;
-                placed++;
-                if (power <= 0) break;
+                place = target;
+                break;
             }
 
             for (BlockFace dir : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN}) {
@@ -155,10 +153,11 @@ public class StructureBlockManager implements Listener {
             }
         }
 
-        if (placed > 0) {
-            setPower(item, power);
+        if (place != null) {
+            place.setType(mat);
+            setPower(item, power - 1);
             player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1f, 1.5f);
-            player.sendMessage(ChatColor.GREEN + "Placed " + placed + " blocks using Structure Block.");
+            player.sendMessage(ChatColor.GREEN + "Placed 1 block using Structure Block.");
         } else {
             player.sendMessage(ChatColor.RED + "No space to place blocks.");
         }
