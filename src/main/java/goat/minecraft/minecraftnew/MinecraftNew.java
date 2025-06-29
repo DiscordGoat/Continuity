@@ -672,6 +672,13 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             CatalystManager.getInstance().shutdown();
         }
 
+        // Persist forestry notoriety data on shutdown
+        try {
+            Forestry.getInstance().saveAllNotoriety();
+        } catch (Exception e) {
+            getLogger().warning("Failed to save notoriety data: " + e.getMessage());
+        }
+
 
         PetManager.getInstance(this).savePets();
         PetManager.getInstance(this).saveLastActivePets();

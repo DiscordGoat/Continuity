@@ -21,6 +21,9 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -97,6 +100,7 @@ public class Forestry implements Listener {
     public void init(MinecraftNew plugin) {
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
         startNotorietyDecayTask();
+        loadAllNotoriety();
     }
 
     /**
@@ -299,6 +303,36 @@ public class Forestry implements Listener {
             notorietyMap.put(uuid, config.getInt("notoriety"));
         } else {
             notorietyMap.put(uuid, 0);
+        }
+    }
+
+    /**
+     * Loads notoriety data for all currently online players.
+     */
+    public void loadAllNotoriety() {
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            loadNotoriety(p);
+        }
+    }
+
+    /**
+     * Saves notoriety values for all players currently tracked in memory.
+     */
+    public void saveAllNotoriety() {
+        for (UUID id : notorietyMap.keySet()) {
+            Player p = Bukkit.getPlayer(id);
+            if (p != null) {
+                saveNotoriety(p);
+            } else {
+                File notorietyFile = new File(plugin.getDataFolder(), "notoriety_" + id + ".yml");
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(notorietyFile);
+                config.set("notoriety", notorietyMap.get(id));
+                try {
+                    config.save(notorietyFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
@@ -578,5 +612,15 @@ public class Forestry implements Listener {
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
         Player player = event.getPlayer();
         halveNotoriety(player);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        loadNotoriety(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        saveNotoriety(event.getPlayer());
     }
 }
