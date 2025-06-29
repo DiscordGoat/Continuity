@@ -331,8 +331,8 @@ public class SpawnMonsters implements Listener {
         }
 
         if (entity instanceof Zombie zombie) {
-            //knight mutation
-            if (shouldMutationOccur(playerHostility)) {
+            //knight mutation - skip sea creatures
+            if (!entity.hasMetadata("SEA_CREATURE") && shouldMutationOccur(playerHostility)) {
                 KnightMob knightMob = new KnightMob(plugin);
                 knightMob.transformToKnight(zombie);
                 zombie.setCustomName(ChatColor.GRAY + "Knight");
@@ -387,7 +387,8 @@ public class SpawnMonsters implements Listener {
             }
         }
         if (entity instanceof WitherSkeleton ws) {
-            if (shouldMutationOccur(playerHostility)) {
+            //knight mutation - skip sea creatures
+            if (!entity.hasMetadata("SEA_CREATURE") && shouldMutationOccur(playerHostility)) {
                 KnightMob knightMob = new KnightMob(plugin);
                 knightMob.transformToKnight(ws);
                 ws.setCustomName(ChatColor.GRAY + "Knight");
