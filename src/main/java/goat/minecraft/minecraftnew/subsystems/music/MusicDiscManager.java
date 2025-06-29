@@ -8,6 +8,7 @@ import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
+import goat.minecraft.minecraftnew.subsystems.farming.VerdantRelicsSubsystem;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -877,6 +878,21 @@ public class MusicDiscManager implements Listener {
                 ticks++;
             }
         }.runTaskTimer(plugin, 0L, 1L);
+
+        // Accelerate growth of all Verdant Relics by 3 seconds each second
+        VerdantRelicsSubsystem relics = VerdantRelicsSubsystem.getInstance(MinecraftNew.getInstance());
+        new BukkitRunnable() {
+            int elapsed = 0;
+            @Override
+            public void run() {
+                if (elapsed >= durationTicks) {
+                    cancel();
+                    return;
+                }
+                relics.accelerateGrowthAll(3);
+                elapsed += 20;
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
 
         // Listener for block-breaking events during the Timber Boost
         Listener logBreakListener = new Listener() {

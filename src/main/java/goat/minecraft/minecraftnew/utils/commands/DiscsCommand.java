@@ -66,7 +66,8 @@ public class DiscsCommand implements CommandExecutor, Listener {
                 ChatColor.YELLOW,
                 Arrays.asList(
                         "Enrages the Forest Spirits for 3 minutes 5 seconds",
-                        "Chance to yield bonus logs and extra Forestry XP, as well as Tier 5 Forest Spirits"
+                        "Chance to yield bonus logs and extra Forestry XP, as well as Tier 5 Forest Spirits",
+                        "Speeds up Verdant Relic growth by 3 seconds every second"
                 )
         ));
         discDataMap.put(Material.MUSIC_DISC_FAR, new DiscData(

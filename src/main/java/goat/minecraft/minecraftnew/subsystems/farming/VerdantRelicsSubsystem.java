@@ -186,6 +186,20 @@ public class VerdantRelicsSubsystem implements Listener {
         return cured;
     }
 
+    /**
+     * Accelerates growth of all active relics by the given amount of seconds.
+     * Used by certain music discs to temporarily speed up farming progress.
+     *
+     * @param seconds amount of growth time to subtract from each relic
+     */
+    public void accelerateGrowthAll(int seconds) {
+        if (seconds <= 0) return;
+        for (RelicSession session : activeSessions.values()) {
+            session.accelerateGrowth(seconds);
+        }
+        saveAllRelics();
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     //                         Coordinate Utilities
     // ─────────────────────────────────────────────────────────────────────────
@@ -758,6 +772,19 @@ public class VerdantRelicsSubsystem implements Listener {
                 growthLine += ChatColor.GOLD + " [READY TO HARVEST]";
             }
             growthDisplayStand.setCustomName(growthLine);
+        }
+
+        /**
+         * Reduce the remaining growth time by the given seconds.
+         * Marks the relic ready for harvest if time reaches zero.
+         */
+        public void accelerateGrowth(int seconds) {
+            if (readyForHarvest || seconds <= 0) return;
+            growthTimeRemaining = Math.max(growthTimeRemaining - seconds, 0);
+            if (growthTimeRemaining == 0) {
+                readyForHarvest = true;
+            }
+            updateDisplayName();
         }
 
 
