@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.brewing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -44,6 +45,11 @@ public class PotionManager {
         if(playerMeritManager.hasPerk(player.getUniqueId(), "Strong Digestion")){
             duration = duration * 2;
             Bukkit.getLogger().info("Doubled Effect Duration from Strong Digestion Perk!");
+        }
+        PetManager petManager = PetManager.getInstance(plugin);
+        PetManager.Pet pet = petManager.getActivePet(player);
+        if(pet != null && pet.hasPerk(PetManager.PetPerk.EXPERIMENTATION)){
+            duration += 3 * pet.getLevel();
         }
         Map<String, Integer> playerEffects = activeEffects.getOrDefault(uuid, new HashMap<>());
         // If the effect is already active, add the new duration to the current duration

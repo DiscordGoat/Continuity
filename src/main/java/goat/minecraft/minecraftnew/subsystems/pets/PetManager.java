@@ -94,6 +94,7 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Poseidon", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmVjYjJhYTNhNTE0MTQ4ODU3NzI4OGEyOGZmMzk0NmI0MzQyOWY1NmJkMjIzMDFkOTFmYTM3MWU3NjVmM2I4YSJ9fX0=");
         PET_TEXTURES.put("waterspider", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzZhZjM5N2Q5N2I0NjcwMTQ5NmRmMmJkNmFmNGU0ZDdjZjYxMGY3MzcyMzlmZDMzYzlhMGE5MzMxOWUwODBmYiJ9fX0=");
         PET_TEXTURES.put("Midas", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjZjNWVlY2QyMTljNWUyM2Q4MjFjZmZkYWNiNTk3ZWQyM2M2MzI3YTI3MjM2Yzk4MjFjZGQ5NjgyNmQ5Y2E0MyJ9fX0=");
+        PET_TEXTURES.put("Witch", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2U3MWE2ZWIzMDNhYjdlNmY3MGVkNTRkZjkxNDZhODBlYWRmMzk2NDE3Y2VlOTQ5NTc3M2ZmYmViZmFkODg3YyJ9fX0=");
         //mutations
         PET_TEXTURES.put("diver", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTc4MzBjMWQ4Mjg0NWM5MWI4MzQyOWY5ZGM1OTczMTc4NDE1MzhlMTRkNGZiZWQ2MWFlMWEzYjBlYjdjY2QifX19");
     }
@@ -649,6 +650,10 @@ public class PetManager implements Listener {
                 return "Creates " + ChatColor.RED + "explosive fire bursts " + ChatColor.GRAY + "while moving that deal " + ChatColor.RED + String.format("%.1f", flameDamage) + " damage " + ChatColor.GRAY + "to monsters within " + ChatColor.YELLOW + "8 blocks" + ChatColor.GRAY + ". Distance reduces damage.";
             case ENDLESS_WARP:
                 return ChatColor.DARK_PURPLE + "Grants infinite Warp charges for the Warp enchant.";
+            case SPLASH_POTION:
+                return "Reduces brew time by " + ChatColor.YELLOW + level + "%" + ChatColor.GRAY + ".";
+            case EXPERIMENTATION:
+                return "Potions last " + ChatColor.YELLOW + (3 * level) + "s" + ChatColor.GRAY + " longer.";
             default:
                 return ChatColor.GRAY + "Static effect or undefined scaling.";
 
@@ -950,7 +955,9 @@ public class PetManager implements Listener {
         EARTHWORM("Earthworm", ChatColor.GOLD + ""),
         PHOENIX_REBIRTH("Phoenix Rebirth", ChatColor.GOLD + ""),
         FLAME_TRAIL("Flame Trail", ChatColor.GOLD + ""),
-        ENDLESS_WARP("Endless Warp", ChatColor.GOLD + "");
+        ENDLESS_WARP("Endless Warp", ChatColor.GOLD + ""),
+        SPLASH_POTION("Splash Potion", ChatColor.GOLD + ""),
+        EXPERIMENTATION("Experimentation", ChatColor.GOLD + "");
 
         private final String displayName;
         private final String description;

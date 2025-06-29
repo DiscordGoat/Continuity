@@ -58,6 +58,7 @@ public class PetDrops implements Listener {
         mobToPetMap.put(EntityType.ZOMBIE, "Zombie");
         mobToPetMap.put(EntityType.VINDICATOR, "Vindicator");
         mobToPetMap.put(EntityType.ZOMBIFIED_PIGLIN, "Zombie Pigman");
+        mobToPetMap.put(EntityType.WITCH, "Witch");
         // Add more mappings as needed
     }
 
@@ -94,6 +95,11 @@ public class PetDrops implements Listener {
                 if (random.nextDouble() < 0.5) {
                     // Drop the pet item
                     petRegistry.addPetByName(player, "Warden");                }
+            }
+            if(entityType.equals(EntityType.WITCH)) {
+                if (random.nextDouble() < 0.1) {
+                    petRegistry.addPetByName(player, "Witch");
+                }
             }
         }
     }
