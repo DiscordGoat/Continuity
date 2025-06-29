@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.other.additionalfunctionality.Pathfinder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Zombie;
@@ -48,15 +49,34 @@ public class NightHordeTask extends BukkitRunnable {
     private void spawnHorde(Player player, int size) {
         if (size <= 0) return;
         World world = player.getWorld();
-        Location base = player.getLocation();
         for (int i = 0; i < size; i++) {
-            Location spawn = base.clone().add(randomOffset(), 0, randomOffset());
+            Location spawn = getRandomHordeLocation(player);
+            if (spawn == null) {
+                continue; // couldn't find dark location
+            }
             Zombie zombie = (Zombie) world.spawnEntity(spawn, EntityType.ZOMBIE);
             pathfinder.moveTo(zombie, player.getLocation());
         }
     }
 
-    private double randomOffset() {
-        return (random.nextDouble() * 10) - 5; // -5 to 5 blocks
+    /**
+     * Finds a random location approximately 60 blocks from the player that is
+     * dark enough for hostile mobs to spawn.
+     */
+    private Location getRandomHordeLocation(Player player) {
+        World world = player.getWorld();
+        Location base = player.getLocation();
+        for (int attempt = 0; attempt < 10; attempt++) {
+            double angle = random.nextDouble() * 2 * Math.PI;
+            double x = base.getX() + Math.cos(angle) * 60;
+            double z = base.getZ() + Math.sin(angle) * 60;
+            Location spawn = new Location(world, x, base.getY(), z);
+            spawn.setY(world.getHighestBlockYAt(spawn) + 1);
+            Block block = spawn.getBlock();
+            if (block.getLightLevel() <= 7) {
+                return spawn;
+            }
+        }
+        return null; // Failed to find dark spot
     }
 }
