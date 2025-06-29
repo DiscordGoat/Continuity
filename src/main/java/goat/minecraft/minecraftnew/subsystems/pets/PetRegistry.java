@@ -362,6 +362,13 @@ public class PetRegistry {
                 Particle.FLAME,
                 Arrays.asList(PetManager.PetPerk.PHOENIX_REBIRTH, PetManager.PetPerk.FLAME_TRAIL, PetManager.PetPerk.FIREPROOF, PetManager.PetPerk.FLIGHT, PetManager.PetPerk.ELITE)
         ));
+        registry.put("Witch", new PetDefinition(
+                "Witch",
+                PetManager.Rarity.EPIC,
+                100,
+                Particle.SPELL_WITCH,
+                Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANTIDOTE, PetManager.PetPerk.FLIGHT, PetManager.PetPerk.SPLASH_POTION, PetManager.PetPerk.EXPERIMENTATION)
+        ));
     }
     // Inside PetManager class
     public void addPetByName(Player player, String petName) {

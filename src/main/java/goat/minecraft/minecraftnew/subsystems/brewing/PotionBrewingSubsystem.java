@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.brewing;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
@@ -529,6 +530,13 @@ public class PotionBrewingSubsystem implements Listener {
                     PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
                     if (meritManager.hasPerk(player.getUniqueId(), "Master Brewer")) {
                         brewTimeRemaining = (int) Math.ceil(brewTimeRemaining * 0.5);
+                    }
+
+                    PetManager petManager = PetManager.getInstance(plugin);
+                    PetManager.Pet pet = petManager.getActivePet(player);
+                    if (pet != null && pet.hasPerk(PetManager.PetPerk.SPLASH_POTION)) {
+                        double reduction = pet.getLevel() / 100.0;
+                        brewTimeRemaining = (int) Math.ceil(brewTimeRemaining * (1 - reduction));
                     }
                 }
             }
