@@ -132,7 +132,7 @@
                             <target>
                                 <copy
                                         file="${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar"
-                                        tofile="C:/Users/jacob/AppData/Roaming/.feather/player-server/servers/f5f0af46-afd9-419b-bbdf-0f9257f23cab/plugins/${project.artifactId}-${project.version}.jar"
+                                        tofile="C:/Users/jacob/AppData/Roaming/.feather/player-server/servers/497bf0ce-647d-4c1e-91cf-05d627cc5bee/plugins/${project.artifactId}-${project.version}.jar"
                                         overwrite="true"
                                         failonerror="false"/>
                             </target>

@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.Float;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -78,7 +79,7 @@ public class Broomstick implements Listener {
                 }
             }
             if (previousSaturation.containsKey(id)) {
-                float prevSat = previousSaturation.remove(id);
+                java.lang.Float prevSat = previousSaturation.remove(id);
                 if (player.getSaturation() < prevSat) {
                     player.setSaturation(Math.min(prevSat, player.getFoodLevel()));
                 }
