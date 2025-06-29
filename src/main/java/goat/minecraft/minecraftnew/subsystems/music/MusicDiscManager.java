@@ -1752,14 +1752,43 @@ public class MusicDiscManager implements Listener {
 
 
     private void handleMusicDisc5(Player player) {
-        PlayerOxygenManager playerOxygenManager = PlayerOxygenManager.getInstance();
-        UUID playerUUID = player.getUniqueId();
-        // Reset the player's oxygen to the initial value
-        int initialOxygen = playerOxygenManager.calculateInitialOxygen(player);
-        playerOxygenManager.setPlayerOxygenLevel(player, initialOxygen);
-        // Apply night vision for 20 minutes (20 ticks/second * 60 seconds/minute * 20 minutes)
-        player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 20 * 60 * 20, 0, true, false, false));
-        // Notify the player
+        // Find the nearest jukebox to place the ore above
+        Block jukebox = findNearestJukebox(player.getLocation(), 20);
+        if (jukebox == null) {
+            player.sendMessage(ChatColor.RED + "No jukebox found nearby to start the emerald rush.");
+            return;
+        }
+
+        Location jukeboxLocation = jukebox.getLocation();
+        player.getWorld().playSound(jukeboxLocation, Sound.MUSIC_DISC_5, SoundCategory.RECORDS, 3.0f, 1.0f);
+
+        // Duration of the song (~2 minutes)
+        int durationTicks = 120 * 20;
+
+        Location oreLoc = jukeboxLocation.clone().add(0, 1, 0);
+        Block oreBlock = oreLoc.getBlock();
+        Material originalType = oreBlock.getType();
+        org.bukkit.block.data.BlockData originalData = oreBlock.getBlockData();
+        oreBlock.setType(Material.EMERALD_ORE);
+
+        player.sendMessage(ChatColor.GREEN + "Mine emeralds before the song ends!");
+
+        Listener breakListener = new Listener() {
+            @EventHandler
+            public void onBlockBreak(org.bukkit.event.block.BlockBreakEvent event) {
+                if (!event.getBlock().getLocation().equals(oreLoc)) return;
+                // Replace the ore immediately after it's mined
+                Bukkit.getScheduler().runTask(plugin, () -> oreLoc.getBlock().setType(Material.EMERALD_ORE));
+            }
+        };
+        Bukkit.getPluginManager().registerEvents(breakListener, plugin);
+
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            HandlerList.unregisterAll(breakListener);
+            oreLoc.getBlock().setType(originalType);
+            oreLoc.getBlock().setBlockData(originalData);
+            player.sendMessage(ChatColor.RED + "The emerald rush has ended.");
+        }, durationTicks);
     }
 
     private void handleMusicDiscPigstep(Player player) {
