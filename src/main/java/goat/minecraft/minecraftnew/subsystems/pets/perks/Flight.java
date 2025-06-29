@@ -219,6 +219,9 @@ public class Flight implements Listener {
             // Don't disable flight if a Flight Catalyst is active
             return;
         }
+        if(petManager.getActivePet(player).hasPerk(PetManager.PetPerk.BROOMSTICK)){
+            return;
+        }
 
         if (player.getAllowFlight()) {
             player.setAllowFlight(false);
