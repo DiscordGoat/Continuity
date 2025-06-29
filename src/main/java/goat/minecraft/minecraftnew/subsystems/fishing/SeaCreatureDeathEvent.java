@@ -75,6 +75,8 @@ public class SeaCreatureDeathEvent implements Listener {
             return;
         }
 
+        // Prevent vanilla mob drops from being added to the loot table
+        event.getDrops().clear();
 
         SeaCreature seaCreature = optionalSeaCreature.get();
         Player killer = event.getEntity().getKiller();
