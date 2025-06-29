@@ -289,8 +289,6 @@ public class CombatSubsystemManager implements CommandExecutor {
      * Registers command executors.
      */
     private void registerCommands() {
-        plugin.getCommand("hostility").setExecutor(this);
-
         // Register reload command if it exists in plugin.yml
         if (plugin.getCommand("combatreload") != null) {
             plugin.getCommand("combatreload").setExecutor(new CombatReloadCommand(this));

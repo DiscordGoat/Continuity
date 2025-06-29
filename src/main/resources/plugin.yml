@@ -83,8 +83,6 @@ commands:
     description: List all custom recipes in chat
   viewrecipe:
     description: Opens a GUI showing a particular recipe
-  hostility:
-    description: opens difficulty GUI.
   spawnseacreature:
     description: Spawns a sea creature by name.
     permission: continuity.admin
