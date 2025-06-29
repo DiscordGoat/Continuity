@@ -9,6 +9,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -32,6 +33,8 @@ public class PetManager implements Listener {
     private Map<UUID, Horse> summonedHorses = new HashMap<>();
     // Tracks the last summoned pet for each player
     private final Map<UUID, String> lastActivePet = new HashMap<>();
+    // Stores the location a player was at before entering Spectral mode
+    private final Map<UUID, Location> ghostPreloc = new HashMap<>();
 
     // Instead of using IDs, we now store base64 textures directly.
     // You must populate these with actual base64 textures for each pet.
@@ -97,6 +100,7 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Witch", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2U3MWE2ZWIzMDNhYjdlNmY3MGVkNTRkZjkxNDZhODBlYWRmMzk2NDE3Y2VlOTQ5NTc3M2ZmYmViZmFkODg3YyJ9fX0=");
         //mutations
         PET_TEXTURES.put("diver", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTc4MzBjMWQ4Mjg0NWM5MWI4MzQyOWY5ZGM1OTczMTc4NDE1MzhlMTRkNGZiZWQ2MWFlMWEzYjBlYjdjY2QifX19");
+        PET_TEXTURES.put("Ghost", "");
     }
 
     public static PetManager getInstance(JavaPlugin plugin) {
@@ -253,6 +257,11 @@ public class PetManager implements Listener {
                     spawnPetParticle(player, pet);
                 }
 
+                if ("Ghost".equalsIgnoreCase(pet.getName())) {
+                    ghostPreloc.put(player.getUniqueId(), player.getLocation());
+                    player.setGameMode(GameMode.SPECTATOR);
+                }
+
                 // Remember last summoned pet name
                 lastActivePet.put(player.getUniqueId(), pet.getName());
 
@@ -334,6 +343,13 @@ public class PetManager implements Listener {
                 }
             } else {
                 removePetParticle(player);
+            }
+            if ("Ghost".equalsIgnoreCase(pet.getName())) {
+                Location pre = ghostPreloc.remove(player.getUniqueId());
+                if (pre != null) {
+                    player.teleport(pre);
+                }
+                player.setGameMode(GameMode.SURVIVAL);
             }
             player.sendMessage(ChatColor.YELLOW + "Your pet '" + pet.getName() + "' has been despawned.");
             removePetParticle(player);
@@ -442,6 +458,15 @@ public class PetManager implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        if (player.isOp()) {
+            Map<String, Pet> pets = playerPets.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
+            if (!pets.containsKey("Ghost")) {
+                Pet ghost = PetRegistry.getPetByName("Ghost", this);
+                if (ghost != null) {
+                    addPet(player, ghost);
+                }
+            }
+        }
         String lastPet = lastActivePet.get(player.getUniqueId());
         if (lastPet != null) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> summonPet(player, lastPet), 20L);
@@ -656,6 +681,8 @@ public class PetManager implements Listener {
                 return "Reduces brew time by " + ChatColor.YELLOW + level + "%" + ChatColor.GRAY + ".";
             case EXPERIMENTATION:
                 return "Potions last " + ChatColor.YELLOW + (3 * level) + "s" + ChatColor.GRAY + " longer.";
+            case SPECTRAL:
+                return ChatColor.GRAY + "Enter " + ChatColor.DARK_PURPLE + "Spectator" + ChatColor.GRAY + " mode for scouting.";
             default:
                 return ChatColor.GRAY + "Static effect or undefined scaling.";
 
@@ -960,7 +987,8 @@ public class PetManager implements Listener {
         FLAME_TRAIL("Flame Trail", ChatColor.GOLD + ""),
         ENDLESS_WARP("Endless Warp", ChatColor.GOLD + ""),
         SPLASH_POTION("Splash Potion", ChatColor.GOLD + ""),
-        EXPERIMENTATION("Experimentation", ChatColor.GOLD + "");
+        EXPERIMENTATION("Experimentation", ChatColor.GOLD + ""),
+        SPECTRAL("Spectral", ChatColor.GOLD + "Allows scouting in Spectator mode");
 
         private final String displayName;
         private final String description;
@@ -984,7 +1012,8 @@ public class PetManager implements Listener {
         UNCOMMON(ChatColor.GREEN),
         RARE(ChatColor.BLUE),
         EPIC(ChatColor.DARK_PURPLE),
-        LEGENDARY(ChatColor.GOLD);
+        LEGENDARY(ChatColor.GOLD),
+        ADMIN(ChatColor.DARK_RED);
 
         private final ChatColor color;
 

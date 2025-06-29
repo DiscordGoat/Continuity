@@ -369,6 +369,13 @@ public class PetRegistry {
                 Particle.SPELL_WITCH,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANTIDOTE, PetManager.PetPerk.BROOMSTICK, PetManager.PetPerk.SPLASH_POTION, PetManager.PetPerk.EXPERIMENTATION)
         ));
+        registry.put("Ghost", new PetDefinition(
+                "Ghost",
+                PetManager.Rarity.ADMIN,
+                1,
+                Particle.SOUL,
+                Arrays.asList(PetManager.PetPerk.SPECTRAL)
+        ));
     }
     // Inside PetManager class
     public void addPetByName(Player player, String petName) {

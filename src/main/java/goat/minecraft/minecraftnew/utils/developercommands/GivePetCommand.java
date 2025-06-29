@@ -158,6 +158,7 @@ public class GivePetCommand implements CommandExecutor, TabCompleter {
         petNames.add("Cow");
         petNames.add("Sheep");
         petNames.add("Squirrel");
+        petNames.add("Ghost");
         petNames.add("Wither");
         
         return petNames;
