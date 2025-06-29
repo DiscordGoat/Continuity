@@ -478,7 +478,8 @@ public class ForestSpiritManager implements Listener {
         Player killer = spirit.getKiller();
         if (killer != null) {
             event.setDroppedExp(tier * 50);
-            xpManager.addXP(killer, "Forestry", 10 * tier);
+            int notoriety = Forestry.getInstance().getNotoriety(killer);
+            xpManager.addXP(killer, "Forestry", notoriety);
             if (random.nextInt(100) < 16) {
                 int amount = 1;
                 PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);

@@ -102,28 +102,28 @@ public class CulinarySubsystem implements Listener {
                 Material.HONEY_BOTTLE,
                 "Tidal Shot",
                 Arrays.asList("Rum", "Gunpowder", "Ice"),
-                90
+                5000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,
                 "Coral Cooler",
                 Arrays.asList("Rum", "Ice", "Prismarine Shard", "Sea Pickle"),
-                200
+                5000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,
                 "Prismarita",
                 Arrays.asList("Rum", "Lime", "Sugar", "Ice", "Prismarine Shard"),
-                180
+                5000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,
                 "Kelp Mojito",
                 Arrays.asList("Rum", "Lime", "Sugar", "Ice", "Kelp"),
-                240
+                5000
         ));
         // (Water Breathing)
         // Bananas Split is bartender-only
@@ -132,21 +132,21 @@ public class CulinarySubsystem implements Listener {
                 Material.MELON_SLICE,  // stand-in for the banana split bowl
                 "Banana Split",
                 Arrays.asList("Banana", "Snowball", "Chocolate", "Milk Bucket"),
-                180
+                5000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,  // stand-in for the banana split bowl
                 "Pina Colada",
                 Arrays.asList("Milk Bucket", "Rum", "Ice", "Pineapple", "Coconut"),
-                180
+                5000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.PUMPKIN_PIE,       // stand-in for the Key Lime Pie slice
                 "Key Lime Pie",
                 Arrays.asList("Lime", "Sugar", "Egg", "Milk Bucket"),
-                200
+                5000
         ));
 
     }
@@ -157,35 +157,35 @@ public class CulinarySubsystem implements Listener {
                 Material.COOKED_BEEF,
                 "Salted Steak",
                 Arrays.asList("Cooked Beef", "Sea Salt"),
-                100
+                500
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKED_CHICKEN,
                 "Chicken Tenders",
                 Arrays.asList("Cooked Chicken", "Bread"),
-                100
+                500
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.YELLOW_DYE,
                 "Slice of Cheese",
                 Arrays.asList("Milk Bucket"),
-                100
+                500
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.BREAD,
                 "Ham and Cheese Sandwich",
                 Arrays.asList("Slice of Cheese", "Cooked Porkchop", "Bread"),
-                200
+                500
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.BREAD,
                 "Toast",
                 Arrays.asList("Bread", "Butter"),
-                200
+                500
         ));
 
 
@@ -195,49 +195,49 @@ public class CulinarySubsystem implements Listener {
                 Material.PUMPKIN_PIE,
                 "Sweet Feast",
                 Arrays.asList("Sugar", "Pumpkin", "Egg", "Wheat"),
-                1000
+                5000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.CARROT,
                 "Vegetarian Feast",
                 Arrays.asList("Carrot", "Potato", "Golden Carrot", "Beetroot"),
-                1000
+                5000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKED_RABBIT,
                 "Meatlovers Feast",
                 Arrays.asList("Cooked Beef", "Cooked Chicken", "Butter", "Sea Salt", "Cooked Mutton", "Cooked Rabbit", "Cooked Porkchop"),
-                1000
+                5000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.DRIED_KELP,
                 "Seafood Feast",
                 Arrays.asList("Dried Kelp Block", "Cod", "Salmon", "Tropical Fish", "Calamari"),
-                1000
+                5000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKED_SALMON,
                 "Grilled Salmon",
                 Arrays.asList("Cooked Salmon", "Sea Salt"),
-                150
+                500
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.BREAD,
                 "Mushroom Soup",
                 Arrays.asList("Red Mushroom", "Brown Mushroom", "Sea Salt"),
-                250
+                500
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.BAKED_POTATO,
                 "Loaded Baked Potato",
                 Arrays.asList("Baked Potato", "Butter", "Slice of Cheese", "Cooked Porkchop"),
-                300
+                500
         ));
     }
 
@@ -379,7 +379,7 @@ public class CulinarySubsystem implements Listener {
         XPManager xpManager = new XPManager(plugin);
 
         if(displayName.contains("Culinary")){
-            xpManager.addXP(player, "Culinary", 125);
+            xpManager.addXP(player, "Culinary", 500);
         }
         switch (displayName) {
             case "Tidal Shot (Culinary)":

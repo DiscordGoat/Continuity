@@ -86,9 +86,7 @@ public class SeaCreatureDeathEvent implements Listener {
         }
         Player player = (Player) killer;
 
-        HostilityManager hostilityManager = HostilityManager.getInstance(plugin);
-        int hostilityLevel = hostilityManager.getPlayerDifficultyTier(killer);
-        int boostedXP = getBoostedXP(seaCreature.getRarity(), hostilityLevel);
+        int boostedXP = getBoostedXP(seaCreature.getRarity());
         xpManager.addXP(killer, "Fishing", boostedXP);
         event.setDroppedExp(100);
         FishingPetManager fishingPetManager = FishingPetManager.getInstance();
@@ -96,7 +94,7 @@ public class SeaCreatureDeathEvent implements Listener {
         fishingPetManager.incrementSeaCreatureKills(player);
 
         // 16% chance to drop a Forbidden Book
-        if (random.nextInt(100) < 16) {
+        if (random.nextInt(100) < 32) {
             int amount = 1;
             PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
             if (merit.hasPerk(killer.getUniqueId(), "Librarian")) {
@@ -252,14 +250,14 @@ public class SeaCreatureDeathEvent implements Listener {
         entity.getWorld().spawnParticle(particle, entity.getLocation(), 50, 1.0, 1.0, 1.0, 0.1);
     }
 
-    private int getBoostedXP(Rarity rarity, int hostilityLevel) {
+    private int getBoostedXP(Rarity rarity) {
         return switch (rarity) {
-            case COMMON -> 20 * hostilityLevel/2;
-            case UNCOMMON -> 40 * hostilityLevel/2;
-            case RARE -> 80 * hostilityLevel/2;
-            case EPIC -> 160 * hostilityLevel/2;
-            case LEGENDARY -> 320 * hostilityLevel/2;
-            case MYTHIC -> 640 * hostilityLevel/2;
+            case COMMON -> 20 * 5/2;
+            case UNCOMMON -> 40 * 5/2;
+            case RARE -> 80 * 5/2;
+            case EPIC -> 160 * 5/2;
+            case LEGENDARY -> 320 * 5/2;
+            case MYTHIC -> 640 * 5/2;
             default -> 20;
         };
     }
