@@ -89,7 +89,9 @@ public class StructureBlockManager implements Listener {
         return item;
     }
 
-    /** Determines if the given ItemStack is a Structure Block Charm. */
+    /**
+     * Determines if the given ItemStack is a Structure Block Charm.
+     */
     public boolean isStructureBlock(ItemStack item) {
         if (item == null || item.getType() != Material.STRUCTURE_BLOCK) return false;
         if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return false;
@@ -97,13 +99,17 @@ public class StructureBlockManager implements Listener {
         return name.equals("Structure Block Charm");
     }
 
-    /** Sets the power of a Structure Block Charm. */
+    /**
+     * Sets the power of a Structure Block Charm.
+     */
     public void setStructureBlockPower(ItemStack item, int power) {
         if (item == null) return;
         setPower(item, power);
     }
 
-    /** Returns the current power stored in a Structure Block Charm. */
+    /**
+     * Returns the current power stored in a Structure Block Charm.
+     */
     public int getStructureBlockPower(ItemStack item) {
         return getPower(item);
     }
@@ -141,7 +147,11 @@ public class StructureBlockManager implements Listener {
         if (item == null || !item.hasItemMeta()) return null;
         String idStr = item.getItemMeta().getPersistentDataContainer().get(idKey, PersistentDataType.STRING);
         if (idStr == null) return null;
-        try { return UUID.fromString(idStr); } catch (IllegalArgumentException e) { return null; }
+        try {
+            return UUID.fromString(idStr);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     private void setFunction(ItemStack item, String function) {
@@ -200,7 +210,6 @@ public class StructureBlockManager implements Listener {
         }
     }
 
-    private void applyWall3x3(Block clicked, BlockFace clickedFace, Player player, ItemStack item) {
     private void applyWall3x3(Block clicked, BlockFace face, Player player, ItemStack item) {
         ItemStack stored = getStoredMaterial(getId(item));
         if (stored == null || stored.getType() == Material.AIR) {
@@ -214,13 +223,10 @@ public class StructureBlockManager implements Listener {
             return;
         }
 
-        Block start = clicked.getRelative(clickedFace);
-        BlockFace playerFacing = player.getFacing();
-        BlockFace right = rotateRight(playerFacing);
         Block start = clicked.getRelative(face);
         BlockFace right = rotateRight(face);
-
         int placed = 0;
+
         for (int w = -1; w <= 1; w++) {
             for (int h = 0; h < 3; h++) {
                 if (power <= 0) break;
@@ -242,47 +248,36 @@ public class StructureBlockManager implements Listener {
         }
     }
 
-    @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) return;
 
-        Action action = event.getAction();
-        if (action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK && action != Action.RIGHT_CLICK_BLOCK)
-            return;
+        @EventHandler
+        public void onInteract (PlayerInteractEvent event){
+            if (event.getHand() != EquipmentSlot.HAND) return;
 
-        Player player = event.getPlayer();
-        ItemStack item = player.getInventory().getItemInMainHand();
-        if (!isStructureBlock(item)) return;
+            Action action = event.getAction();
+            if (action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK && action != Action.RIGHT_CLICK_BLOCK)
+                return;
 
-        if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
-            event.setCancelled(true);
-            new StructureBlockGUI(plugin, item).open(player);
-            return;
-        }
+            Player player = event.getPlayer();
+            ItemStack item = player.getInventory().getItemInMainHand();
+            if (!isStructureBlock(item)) return;
 
-        if (action == Action.RIGHT_CLICK_BLOCK) {
-            event.setCancelled(true);
-            Block clicked = event.getClickedBlock();
-            if (clicked == null) return;
+            if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
+                event.setCancelled(true);
+                new StructureBlockGUI(plugin, item).open(player);
+                return;
+            }
 
-            String function = getFunction(item);
-            if (function.equalsIgnoreCase("3x3")) {
-                applyWall3x3(clicked, event.getBlockFace(), player, item);
+            if (action == Action.RIGHT_CLICK_BLOCK) {
+                event.setCancelled(true);
+                Block clicked = event.getClickedBlock();
+                if (clicked == null) return;
+
+                String function = getFunction(item);
+                if (function.equalsIgnoreCase("3x3")) {
+                    applyWall3x3(clicked, event.getBlockFace(), player, item);
+                }
             }
         }
-    @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) return;
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.LEFT_CLICK_AIR) return;
-        Player player = event.getPlayer();
-        ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null || item.getType() != Material.STRUCTURE_BLOCK) return;
-        if (!item.hasItemMeta() || !item.getItemMeta().hasDisplayName()) return;
-        String name = ChatColor.stripColor(item.getItemMeta().getDisplayName());
-        if (!name.equals("Structure Block Charm")) return;
-        event.setCancelled(true);
-        new StructureBlockGUI(plugin, item).open(player);
-    }
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
@@ -350,16 +345,18 @@ public class StructureBlockManager implements Listener {
             player.openInventory(gui);
         }
 
+
         private void fill(org.bukkit.inventory.Inventory inv) {
             ItemStack filler = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
             ItemMeta meta = filler.getItemMeta();
             meta.setDisplayName(" ");
             filler.setItemMeta(meta);
+
             for (int i = 0; i < inv.getSize(); i++) {
                 if (i == 13) continue;
-                if (inv.getItem(i) == null) inv.setItem(i, filler);
-            for (int i=0;i<inv.getSize();i++) {
-                if (inv.getItem(i)==null) inv.setItem(i, filler);
+                if (inv.getItem(i) == null) {
+                    inv.setItem(i, filler);
+                }
             }
         }
 

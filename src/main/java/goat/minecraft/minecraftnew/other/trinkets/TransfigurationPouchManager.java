@@ -222,7 +222,7 @@ public class TransfigurationPouchManager implements Listener {
     public void consumeForXP(Player player) {
         int power = calculateTotalPower(player.getUniqueId());
         if(power<=0) return;
-        int xp = power * 100;
+        int xp = power * 50;
         clearItems(player.getUniqueId());
         pendingXP.put(player.getUniqueId(), xp);
         openSkillSelect(player);
