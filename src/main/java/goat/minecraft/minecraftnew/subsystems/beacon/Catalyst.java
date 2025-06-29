@@ -95,16 +95,12 @@ public class Catalyst {
             if (type == CatalystType.POWER) {
                 location.getWorld().spawnParticle(type.getParticle(), effectLoc, 10, 0.5, 0.5, 0.5, 0.02,
                     new org.bukkit.Particle.DustOptions(org.bukkit.Color.RED, 1.0f));
-            } else if (type == CatalystType.FORTITUDE) {
-                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 8, 0.3, 0.3, 0.3, 0.01);
             } else if (type == CatalystType.FLIGHT) {
                 location.getWorld().spawnParticle(type.getParticle(), effectLoc, 15, 0.4, 0.4, 0.4, 0.05);
             } else if (type == CatalystType.DEPTH) {
                 location.getWorld().spawnParticle(type.getParticle(), effectLoc, 8, 0.3, 0.3, 0.3, 0.02);
             } else if (type == CatalystType.INSANITY) {
                 location.getWorld().spawnParticle(type.getParticle(), effectLoc, 12, 0.5, 0.5, 0.5, 0.03);
-            } else if (type == CatalystType.OXYGEN) {
-                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 6, 0.2, 0.2, 0.2, 0.01);
             }
         }
         

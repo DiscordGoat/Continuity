@@ -32,7 +32,7 @@ public class BeaconCatalystsGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 45, guiTitle); // 5 rows for catalysts + navigation
 
         // Create catalyst selection buttons (2x4 grid in center)
-        int[] catalystSlots = {11, 12, 13, 14, 20, 21, 22, 23};
+        int[] catalystSlots = {11, 12, 13, 20, 21, 22};
         
         // Get the current held beacon instead of relying on constructor parameter
         ItemStack heldBeacon = getHeldBeacon(player);
@@ -75,21 +75,6 @@ public class BeaconCatalystsGUI implements Listener {
         );
         gui.setItem(catalystSlots[1], flightCatalyst);
 
-        // Catalyst of Fortitude
-        int fortitudeDamageReduction = 40 + (tier * 5);
-        ItemStack fortitudeCatalyst = createCatalystButton(
-            Material.IRON_BLOCK,
-            ChatColor.GRAY + "Catalyst of Fortitude",
-            true,
-            "Grants damage resistance.",
-            "to players within range.",
-            "",
-            ChatColor.GOLD + "Total Damage Reduction: " + ChatColor.YELLOW + "+" + fortitudeDamageReduction + "%",
-            ChatColor.GRAY + "(Base: +40% + " + tier + " × 5%)",
-            ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
-            ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
-        );
-        gui.setItem(catalystSlots[2], fortitudeCatalyst);
 
         // Catalyst of Depth
         int depthSeaCreature = 5 + tier;
@@ -106,21 +91,8 @@ public class BeaconCatalystsGUI implements Listener {
             ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
             ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
         );
-        gui.setItem(catalystSlots[3], depthCatalyst);
+        gui.setItem(catalystSlots[2], depthCatalyst);
 
-        // Catalyst of Oxygen
-        ItemStack oxygenCatalyst = createCatalystButton(
-            Material.BUBBLE_CORAL_BLOCK,
-            ChatColor.BLUE + "Catalyst of Oxygen",
-            true,
-            "Restores oxygen to players",
-            "within range while underwater.",
-            "",
-            ChatColor.GOLD + "Effect: " + ChatColor.YELLOW + "Breath Recovery",
-            ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
-            ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
-        );
-        gui.setItem(catalystSlots[4], oxygenCatalyst);
 
         // Catalyst of Rejuvenation
         ItemStack rejuvenationCatalyst = createCatalystButton(
@@ -134,7 +106,7 @@ public class BeaconCatalystsGUI implements Listener {
             ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
             ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
         );
-        gui.setItem(catalystSlots[5], rejuvenationCatalyst);
+        gui.setItem(catalystSlots[3], rejuvenationCatalyst);
 
         // Catalyst of Insanity
         int insanitySpirit = 5 + tier;
@@ -153,7 +125,7 @@ public class BeaconCatalystsGUI implements Listener {
             ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
             ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
         );
-        gui.setItem(catalystSlots[6], insanityCatalyst);
+        gui.setItem(catalystSlots[4], insanityCatalyst);
 
         // Catalyst of Prosperity
         int prosperityTriple = 40 + (tier * 10);
@@ -173,7 +145,7 @@ public class BeaconCatalystsGUI implements Listener {
             ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
             ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
         );
-        gui.setItem(catalystSlots[7], prosperityCatalyst);
+        gui.setItem(catalystSlots[5], prosperityCatalyst);
 
 
         // Fill empty slots
@@ -286,14 +258,6 @@ public class BeaconCatalystsGUI implements Listener {
                 }
                 break;
                 
-            case "Catalyst of Fortitude":
-                player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.2f);
-                if (BeaconManager.updateBeaconInInventory(player, "Catalyst of Fortitude")) {
-                    player.sendMessage(ChatColor.GREEN + "Selected: " + ChatColor.GRAY + "Catalyst of Fortitude");
-                } else {
-                    player.sendMessage(ChatColor.RED + "Could not find beacon in inventory!");
-                }
-                break;
                 
             case "Catalyst of Depth":
                 player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.2f);
@@ -304,14 +268,6 @@ public class BeaconCatalystsGUI implements Listener {
                 }
                 break;
 
-            case "Catalyst of Oxygen":
-                player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.2f);
-                if (BeaconManager.updateBeaconInInventory(player, "Catalyst of Oxygen")) {
-                    player.sendMessage(ChatColor.GREEN + "Selected: " + ChatColor.BLUE + "Catalyst of Oxygen");
-                } else {
-                    player.sendMessage(ChatColor.RED + "Could not find beacon in inventory!");
-                }
-                break;
 
             case "Catalyst of Rejuvenation":
                 player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.2f);
