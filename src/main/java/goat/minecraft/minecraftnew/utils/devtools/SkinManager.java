@@ -48,5 +48,26 @@ public class SkinManager {
         item.setItemMeta(meta);
     }
 
+    /**
+     * Removes any skin information from the lore of the given ItemStack.
+     *
+     * @param item The ItemStack whose lore will be modified.
+     */
+    public static void removeSkin(ItemStack item) {
+        if (item == null) {
+            return; // No item provided
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null || !meta.hasLore()) {
+            return; // Nothing to remove
+        }
+
+        List<String> lore = new ArrayList<>(meta.getLore());
+        lore.removeIf(line -> line.startsWith(ChatColor.DARK_PURPLE + "Skin:"));
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
+
     // Additional helper methods can be added here if needed in the future.
 }
