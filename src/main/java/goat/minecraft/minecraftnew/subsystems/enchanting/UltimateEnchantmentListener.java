@@ -322,7 +322,7 @@ public class UltimateEnchantmentListener implements Listener {
             forestry.processDoubleDropChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"));
 
             if (visitedLogs.size() % 4 == 0) {
-                forestry.incrementNotoriety(player);
+                forestry.incrementNotoriety(player, true);
             }
 
             // 1% chance to summon a Forest Spirit if the block is wood

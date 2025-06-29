@@ -93,7 +93,7 @@ public class KillMonster implements Listener {
                 // Add XP to the player
                 xpManager.addXP(playerKiller, "Combat", xpGain);
                 // Increase forestry notoriety from combat
-                Forestry.getInstance().addNotoriety(playerKiller, 1, false);
+                Forestry.getInstance().addNotoriety(playerKiller, 1, false, false);
             }
 
             // 20% chance for loot to drop normally, else clear drops

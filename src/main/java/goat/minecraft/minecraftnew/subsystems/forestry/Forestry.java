@@ -104,7 +104,7 @@ public class Forestry implements Listener {
      * If the notoriety crosses a tier threshold, the player is notified.
      * @param player The player whose notoriety is incremented.
      */
-    public void incrementNotoriety(Player player) {
+    public void incrementNotoriety(Player player, boolean fromForestry) {
         UUID uuid = player.getUniqueId();
         int currentNotoriety = notorietyMap.getOrDefault(uuid, 0);
         int currentTier = getNotorietyTier(currentNotoriety);
@@ -112,15 +112,19 @@ public class Forestry implements Listener {
         notorietyMap.put(uuid, newNotoriety);
         int newTier = getNotorietyTier(newNotoriety);
         if (newTier > currentTier) {
-            notifyNotorietyMilestone(player, newTier);
+            notifyNotorietyMilestone(player, newTier, fromForestry);
         }
         saveNotoriety(player);
+    }
+
+    public void incrementNotoriety(Player player) {
+        incrementNotoriety(player, true);
     }
     /**
      * Adds the specified notoriety amount.
      */
     public void addNotoriety(Player player, int amount) {
-        addNotoriety(player, amount, true);
+        addNotoriety(player, amount, true, true);
     }
 
     /**
@@ -130,6 +134,10 @@ public class Forestry implements Listener {
      * @param notify Whether to notify the player about tier milestones.
      */
     public void addNotoriety(Player player, int amount, boolean notify) {
+        addNotoriety(player, amount, notify, true);
+    }
+
+    public void addNotoriety(Player player, int amount, boolean notify, boolean fromForestry) {
         UUID uuid = player.getUniqueId();
         int current = notorietyMap.getOrDefault(uuid, 0);
         int currentTier = getNotorietyTier(current);
@@ -137,7 +145,7 @@ public class Forestry implements Listener {
         notorietyMap.put(uuid, newValue);
         int newTier = getNotorietyTier(newValue);
         if (notify && newTier > currentTier) {
-            notifyNotorietyMilestone(player, newTier);
+            notifyNotorietyMilestone(player, newTier, fromForestry);
         }
         saveNotoriety(player);
     }
@@ -217,32 +225,32 @@ public class Forestry implements Listener {
      * @param player The player to notify.
      * @param tier The new notoriety tier.
      */
-    private void notifyNotorietyMilestone(Player player, int tier) {
+    private void notifyNotorietyMilestone(Player player, int tier, boolean fromForestry) {
         String message;
         ChatColor color;
         Sound sound;
         float pitch;
         switch (tier) {
             case 2:
-                message = "The forest seems uneasy...";
+                message = fromForestry ? "The forest seems uneasy..." : "You feel a bad presence...";
                 color = ChatColor.YELLOW;
                 sound = Sound.BLOCK_NOTE_BLOCK_PLING;
                 pitch = 1.0f;
                 break;
             case 3:
-                message = "The forest grows angry!";
+                message = fromForestry ? "The forest grows angry!" : "Dread settles over the area.";
                 color = ChatColor.GOLD;
                 sound = Sound.BLOCK_BELL_USE;
                 pitch = 1.0f;
                 break;
             case 4:
-                message = "The forest is enraged!";
+                message = fromForestry ? "The forest is enraged!" : "A dangerous aura surrounds you!";
                 color = ChatColor.RED;
                 sound = Sound.ENTITY_WITHER_SPAWN;
                 pitch = 1.0f;
                 break;
             case 5:
-                message = "The forest is in a murderous fury!";
+                message = fromForestry ? "The forest is in a murderous fury!" : "Pure malice closes in around you!";
                 color = ChatColor.DARK_RED;
                 sound = Sound.ENTITY_WITHER_DEATH;
                 pitch = 1.0f;
@@ -340,7 +348,7 @@ public class Forestry implements Listener {
             int fakeNews = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.FAKE_NEWS);
 
             int notorietyGain = 1 + (trespasser * 3);
-            addNotoriety(player, notorietyGain);
+            addNotoriety(player, notorietyGain, true, true);
             if (fakeNews > 0) {
                 decreaseNotoriety(player, fakeNews);
             }

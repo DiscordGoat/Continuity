@@ -873,7 +873,7 @@ public class MusicDiscManager implements Listener {
                     return;
                 }
                 // Increment notoriety by 1 every tick
-                Forestry.getInstance(MinecraftNew.getInstance()).incrementNotoriety(player);
+                Forestry.getInstance(MinecraftNew.getInstance()).incrementNotoriety(player, true);
                 ticks++;
             }
         }.runTaskTimer(plugin, 0L, 1L);
