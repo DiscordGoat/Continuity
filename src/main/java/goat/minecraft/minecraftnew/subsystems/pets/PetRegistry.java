@@ -367,7 +367,7 @@ public class PetRegistry {
                 PetManager.Rarity.EPIC,
                 100,
                 Particle.SPELL_WITCH,
-                Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANTIDOTE, PetManager.PetPerk.FLIGHT, PetManager.PetPerk.SPLASH_POTION, PetManager.PetPerk.EXPERIMENTATION)
+                Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANTIDOTE, PetManager.PetPerk.BROOMSTICK, PetManager.PetPerk.SPLASH_POTION, PetManager.PetPerk.EXPERIMENTATION)
         ));
     }
     // Inside PetManager class

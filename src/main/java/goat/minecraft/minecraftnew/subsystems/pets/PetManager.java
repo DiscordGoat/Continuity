@@ -541,6 +541,8 @@ public class PetManager implements Listener {
                 return "Prevents " + ChatColor.DARK_GRAY + "monsters from spawning " + ChatColor.GRAY + "within " + ChatColor.YELLOW + ((level * 4) + 40) + " blocks.";
             case FLIGHT:
                 return "Gain the ability to " + ChatColor.YELLOW + "Fly for " + level * 0.01 + " km";
+            case BROOMSTICK:
+                return "Fly endlessly but your health drops to 1 while flying.";
             case EMERALD_SEEKER:
                 return "Gain a " + ChatColor.GREEN + "4% chance " + ChatColor.GRAY + "to mine an " + ChatColor.GREEN + "Emerald.";
             case MITHRIL_MINER:
@@ -940,6 +942,7 @@ public class PetManager implements Listener {
         COLLECTOR("Collector", ChatColor.GOLD + "Automatically collects nearby items upon walking nearby."),
         LUMBERJACK("Lumberjack", ChatColor.GOLD + "Grants 2 extra logs when chopping trees."),
         FLIGHT("Flight", ChatColor.GOLD + "Grants the ability to fly."),
+        BROOMSTICK("Broomstick", ChatColor.GOLD + "Infinite flight but health is reduced to 1 while flying."),
         SPEED_BOOST("Speed Boost", ChatColor.GOLD + "Increases your walking speed by 100%."),
         SECOND_WIND("Second Wind", ChatColor.GOLD + "Provides [Lvl] seconds of regeneration when taking damage."),
         SHOTCALLING("Shotcalling", ChatColor.GOLD + "Increases arrow damage by 1% per [Lvl]"),
