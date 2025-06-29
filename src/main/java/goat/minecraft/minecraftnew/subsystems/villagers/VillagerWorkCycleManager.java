@@ -152,16 +152,10 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             Bukkit.getLogger().info("No players online, skipping work cycle for villagers");
             return; // No players online, do not perform work
         }
-        World overworld = Bukkit.getWorld("world");
-        if (overworld == null) {
-            Bukkit.getLogger().warning("Overworld not found, aborting villager cycle");
-            return;
-        }
-
-        if (overworld.getPlayers().isEmpty()) {
-            Bukkit.getLogger().info("No players in the Overworld, skipping work cycle for villagers");
-            return;
-        }
+        // Previously this logic only ran when players were present in the
+        // Overworld. This prevented work cycles from executing if everyone was
+        // online in another dimension. Now we simply ensure at least one player
+        // is online, regardless of their current world.
 
         switch (profession) {
             case FARMER -> performFarmerWork(villager);
