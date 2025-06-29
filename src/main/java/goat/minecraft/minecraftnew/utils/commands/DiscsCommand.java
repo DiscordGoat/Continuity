@@ -129,8 +129,8 @@ public class DiscsCommand implements CommandExecutor, Listener {
                 ChatColor.GRAY + "Music Disc 5",
                 ChatColor.GRAY,
                 Arrays.asList(
-                        "Resets your oxygen level",
-                        "Grants Night Vision for 20 minutes"
+                        "Places regenerating emerald ore above a jukebox",
+                        "Mine as many emeralds as you can before the song ends"
                 )
         ));
         discDataMap.put(Material.MUSIC_DISC_OTHERSIDE, new DiscData(
