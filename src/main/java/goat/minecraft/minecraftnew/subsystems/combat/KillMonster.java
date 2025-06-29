@@ -87,10 +87,14 @@ public class KillMonster implements Listener {
                 int bonusXP = levelDifference * 2;
                 xpGain += bonusXP;
             }
-    
+
             // Skip combat XP for sea creatures and forest spirits
             if (!entity.hasMetadata("SEA_CREATURE") && !entity.hasMetadata("forestSpirit")) {
                 // Add XP to the player
+                if (monsterLevel > 100) {
+                    xpGain = Math.min(xpGain, 150);
+                }
+
                 xpManager.addXP(playerKiller, "Combat", xpGain);
                 // Increase forestry notoriety from combat
                 Forestry.getInstance().addNotoriety(playerKiller, 3, false, false);
