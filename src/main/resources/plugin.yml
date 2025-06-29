@@ -59,6 +59,10 @@ commands:
   grantmerit:
     description: Grants a merit point to a player
     usage: /grantmerit <playerName>
+  grantGhostPet:
+    description: Grants the Ghost pet to a player
+    usage: /grantGhostPet <player>
+    permission: continuity.admin
   resetend:
     description: Resets The End dimension.
     usage: /resetend

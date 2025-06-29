@@ -187,6 +187,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         // Register commands
         getCommand("merits").setExecutor(new MeritCommand(this, playerData));
         getCommand("grantmerit").setExecutor(new GrantMerit(this, playerData));
+        getCommand("grantGhostPet").setExecutor(new GrantGhostPetCommand(petManager));
 
         // Register event listener for inventory clicks
 
@@ -408,6 +409,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new SpiderSteve(this), this);
         getServer().getPluginManager().registerEvents(new PhoenixRebirth(this), this);
         getServer().getPluginManager().registerEvents(new FlameTrail(this), this);
+        getServer().getPluginManager().registerEvents(new Spectral(this), this);
 
         this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
 
