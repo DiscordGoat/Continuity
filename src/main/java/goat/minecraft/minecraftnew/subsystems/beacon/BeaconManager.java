@@ -509,10 +509,8 @@ public class BeaconManager implements Listener {
         switch (catalystName) {
             case "Catalyst of Power": return ChatColor.RED.toString();
             case "Catalyst of Flight": return ChatColor.AQUA.toString();
-            case "Catalyst of Fortitude": return ChatColor.GRAY.toString();
             case "Catalyst of Depth": return ChatColor.DARK_AQUA.toString();
             case "Catalyst of Insanity": return ChatColor.DARK_PURPLE.toString();
-            case "Catalyst of Oxygen": return ChatColor.BLUE.toString();
             case "Catalyst of Rejuvenation": return ChatColor.GOLD.toString();
             case "Catalyst of Prosperity": return ChatColor.GREEN.toString();
             default: return ChatColor.WHITE.toString();
