@@ -3324,7 +3324,7 @@ public class ItemRegistry {
         return createCustomItem(Material.ENDER_CHEST, ChatColor.YELLOW +
                 "Contingency Plan", Arrays.asList(
                 ChatColor.GRAY + "Inventory Technology.",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 level of Preservation to Armor.",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 level of Preservation to Equipment.",
                 ChatColor.DARK_PURPLE + "Smithing Item"
         ), 1, false, true);
     }

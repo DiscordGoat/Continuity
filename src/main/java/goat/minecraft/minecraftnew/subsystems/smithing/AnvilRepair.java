@@ -921,11 +921,12 @@ public class AnvilRepair implements Listener {
 
             return;
         }
-        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Contingency Plan")&& ARMOR.contains(repairee.getType())) {
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Contingency Plan") && (ARMOR.contains(repairee.getType()) || TOOLS.contains(repairee.getType()) || MELEE.contains(repairee.getType()) || isBow(repairee) || isCrossbow(repairee))) {
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Preservation", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Preservation") + 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
 
             return;
+        }
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Climbing Rope")&& TOOLS.contains(repairee.getType())){
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Rappel", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Rappel") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
