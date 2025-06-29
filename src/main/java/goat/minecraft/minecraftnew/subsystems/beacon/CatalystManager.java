@@ -6,12 +6,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.entity.ArmorStand;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.ChatColor;
@@ -154,6 +156,14 @@ public class CatalystManager implements Listener {
         event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
         handleBeaconUse(player, item);
+    }
+
+    @EventHandler
+    public void onCatalystInteract(PlayerInteractAtEntityEvent event) {
+        if (!(event.getRightClicked() instanceof ArmorStand stand)) return;
+        if (isCatalystArmorStand(stand)) {
+            event.setCancelled(true);
+        }
     }
     
     public void summonCatalyst(Location location, CatalystType type, UUID placerUUID, int durationSeconds, int range, int tier) {
@@ -337,11 +347,21 @@ public class CatalystManager implements Listener {
         }
         cooldownNotifyTasks.clear();
     }
-    
+
+    private boolean isCatalystArmorStand(ArmorStand stand) {
+        for (Catalyst catalyst : activeCatalysts.values()) {
+            ArmorStand as = catalyst.getArmorStand();
+            if (as != null && as.getUniqueId().equals(stand.getUniqueId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private String getLocationKey(Location location) {
-        return location.getWorld().getName() + ":" + 
-               location.getBlockX() + ":" + 
-               location.getBlockY() + ":" + 
+        return location.getWorld().getName() + ":" +
+               location.getBlockX() + ":" +
+               location.getBlockY() + ":" +
                location.getBlockZ();
     }
     
