@@ -1117,8 +1117,8 @@ public class RightClickArtifacts implements Listener {
                 ChatColor.GRAY + "Music Disc 5",
                 ChatColor.GRAY,
                 List.of(
-                        ChatColor.GRAY + "Resets your oxygen level",
-                        ChatColor.GRAY + "Grants Night Vision for 20 minutes"
+                        ChatColor.GRAY + "Places regenerating emerald ore above a jukebox",
+                        ChatColor.GRAY + "Mine as many emeralds as possible before the song ends"
                 )
         ));
 
