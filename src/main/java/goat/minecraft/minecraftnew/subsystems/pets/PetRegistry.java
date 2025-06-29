@@ -88,7 +88,7 @@ public class PetRegistry {
                 PetManager.Rarity.EPIC,
                 100,
                 Particle.CRIMSON_SPORE,
-                Arrays.asList(PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.COMFORTABLE)
+                Arrays.asList(PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.BONE_PLATING, PetManager.PetPerk.COMFORTABLE, PetManager.PetPerk.BUDDY_SYSTEM)
         ));
         registry.put("Dolphin", new PetDefinition(
                 "Dolphin",
