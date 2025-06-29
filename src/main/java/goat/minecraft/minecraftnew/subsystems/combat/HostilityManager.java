@@ -33,6 +33,36 @@ public class HostilityManager {
         return instance;
     }
 
+    /** Mapping thresholds from notoriety to hostility level. */
+    private static final int[] HOSTILITY_THRESHOLDS = {
+            20, 55, 90, 125, 160, 195, 230, 265, 300, 335,
+            370, 405, 440, 475, 510, 545, 580, 615, 650, 700
+    };
+
+    /**
+     * Convert a notoriety value directly to a hostility level using the
+     * {@link #HOSTILITY_THRESHOLDS} mapping.
+     */
+    public int getHostilityLevel(int notoriety) {
+        for (int i = HOSTILITY_THRESHOLDS.length - 1; i >= 0; i--) {
+            if (notoriety > HOSTILITY_THRESHOLDS[i]) {
+                return i + 1;
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Convenience method to get hostility level for a player.
+     */
+    public int getPlayerHostility(Player player) {
+        if (player == null) {
+            return 0;
+        }
+        int notoriety = Forestry.getInstance().getNotoriety(player);
+        return getHostilityLevel(notoriety);
+    }
+
     /**
      * Calculates the player's hostility tier based solely on forestry notoriety.
      *
