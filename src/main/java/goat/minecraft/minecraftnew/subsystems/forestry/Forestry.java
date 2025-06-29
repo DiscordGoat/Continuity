@@ -19,6 +19,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
@@ -118,13 +120,23 @@ public class Forestry implements Listener {
      * Adds the specified notoriety amount.
      */
     public void addNotoriety(Player player, int amount) {
+        addNotoriety(player, amount, true);
+    }
+
+    /**
+     * Adds the specified notoriety amount.
+     * @param player The player to modify notoriety for.
+     * @param amount Amount to add.
+     * @param notify Whether to notify the player about tier milestones.
+     */
+    public void addNotoriety(Player player, int amount, boolean notify) {
         UUID uuid = player.getUniqueId();
         int current = notorietyMap.getOrDefault(uuid, 0);
         int currentTier = getNotorietyTier(current);
         int newValue = Math.min(current + amount, 700);
         notorietyMap.put(uuid, newValue);
         int newTier = getNotorietyTier(newValue);
-        if (newTier > currentTier) {
+        if (notify && newTier > currentTier) {
             notifyNotorietyMilestone(player, newTier);
         }
         saveNotoriety(player);
@@ -134,10 +146,43 @@ public class Forestry implements Listener {
      * Decreases notoriety, clamped to 0.
      */
     public void decreaseNotoriety(Player player, int amount) {
+        decreaseNotoriety(player, amount, true);
+    }
+
+    /**
+     * Decreases notoriety, clamped to 0.
+     * @param player The player whose notoriety is changed.
+     * @param amount Amount to subtract.
+     * @param notify Whether to notify milestone changes.
+     */
+    public void decreaseNotoriety(Player player, int amount, boolean notify) {
         UUID uuid = player.getUniqueId();
         int current = notorietyMap.getOrDefault(uuid, 0);
+        int currentTier = getNotorietyTier(current);
         int newValue = Math.max(current - amount, 0);
         notorietyMap.put(uuid, newValue);
+        int newTier = getNotorietyTier(newValue);
+        if (notify && newTier < currentTier) {
+            // No explicit message for decreasing, but could be added if desired
+        }
+        saveNotoriety(player);
+    }
+
+    /**
+     * Sets the player's notoriety to zero.
+     */
+    public void resetNotoriety(Player player) {
+        notorietyMap.put(player.getUniqueId(), 0);
+        saveNotoriety(player);
+    }
+
+    /**
+     * Halves the player's notoriety value.
+     */
+    public void halveNotoriety(Player player) {
+        UUID uuid = player.getUniqueId();
+        int current = notorietyMap.getOrDefault(uuid, 0);
+        notorietyMap.put(uuid, current / 2);
         saveNotoriety(player);
     }
 
@@ -215,26 +260,7 @@ public class Forestry implements Listener {
      * and saves the updated value.
      */
     private void startNotorietyDecayTask() {
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            for (Player player : plugin.getServer().getOnlinePlayers()) {
-                File notorietyFile = new File(plugin.getDataFolder(), "notoriety_" + player.getUniqueId() + ".yml");
-                if (notorietyFile.exists()) {
-                    YamlConfiguration config = YamlConfiguration.loadConfiguration(notorietyFile);
-                    int notoriety = config.getInt("notoriety");
-                    if (notoriety > 0) {
-                        notoriety--;
-                        config.set("notoriety", notoriety);
-                        try {
-                            config.save(notorietyFile);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        // Update the in-memory value so that external systems can pick it up.
-                        notorietyMap.put(player.getUniqueId(), notoriety);
-                    }
-                }
-            }
-        }, 0L, 20L * 5);
+        // Decay task disabled; notoriety is now adjusted via events.
     }
 
     /**
@@ -532,5 +558,17 @@ public class Forestry implements Listener {
         if (level > 0) {
             block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMat, level - 1));
         }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        resetNotoriety(player);
+    }
+
+    @EventHandler
+    public void onPlayerBedEnter(PlayerBedEnterEvent event) {
+        Player player = event.getPlayer();
+        halveNotoriety(player);
     }
 }
