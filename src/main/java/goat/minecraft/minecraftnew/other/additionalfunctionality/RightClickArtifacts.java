@@ -1045,7 +1045,8 @@ public class RightClickArtifacts implements Listener {
                 ChatColor.YELLOW,
                 List.of(
                         ChatColor.GRAY + "Triggers Timber Boost for 3 minutes 5 seconds",
-                        ChatColor.GRAY + "Chance to yield bonus logs and extra Forestry XP, as well as Forest Spirits"
+                        ChatColor.GRAY + "Chance to yield bonus logs and extra Forestry XP, as well as Forest Spirits",
+                        ChatColor.GRAY + "Speeds up Verdant Relic growth by 3 seconds every second"
                 )
         ));
 
