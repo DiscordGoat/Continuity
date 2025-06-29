@@ -16,6 +16,7 @@ import goat.minecraft.minecraftnew.subsystems.brewing.*;
 import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.*;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
 import goat.minecraft.minecraftnew.subsystems.combat.CombatSubsystemManager;
+import goat.minecraft.minecraftnew.subsystems.combat.NightHordeTask;
 
 import goat.minecraft.minecraftnew.subsystems.culinary.ShelfManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.*;
@@ -606,7 +607,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         System.out.println("[MinecraftNew] Plugin enabled.");
 
-
+        // Spawn nightly zombie hordes for online players
+        new NightHordeTask(this).start();
 
         getServer().getPluginManager().registerEvents(new HordeInstinct(), this);
 
