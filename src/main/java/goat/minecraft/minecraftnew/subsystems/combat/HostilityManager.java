@@ -45,7 +45,9 @@ public class HostilityManager {
      */
     public int getHostilityLevel(int notoriety) {
         for (int i = HOSTILITY_THRESHOLDS.length - 1; i >= 0; i--) {
-            if (notoriety > HOSTILITY_THRESHOLDS[i]) {
+            // Use >= so the final threshold maps correctly to the
+            // maximum hostility level when notoriety reaches 700.
+            if (notoriety >= HOSTILITY_THRESHOLDS[i]) {
                 return i + 1;
             }
         }
