@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.combat.utils.EntityLevelExtractor;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import me.gamercoder215.mobchip.EntityBrain;
 import me.gamercoder215.mobchip.ai.EntityAI;
 import me.gamercoder215.mobchip.bukkit.BukkitBrain;
@@ -91,6 +92,8 @@ public class KillMonster implements Listener {
             if (!entity.hasMetadata("SEA_CREATURE") && !entity.hasMetadata("forestSpirit")) {
                 // Add XP to the player
                 xpManager.addXP(playerKiller, "Combat", xpGain);
+                // Increase forestry notoriety from combat
+                Forestry.getInstance().addNotoriety(playerKiller, 1, false);
             }
 
             // 20% chance for loot to drop normally, else clear drops
