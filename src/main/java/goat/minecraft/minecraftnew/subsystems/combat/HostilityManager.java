@@ -75,18 +75,16 @@ public class HostilityManager {
         if (player == null) {
             return 1;
         }
+
         int notoriety = Forestry.getInstance().getNotoriety(player);
-        if (notoriety <= 64) {
-            return 1;
-        } else if (notoriety <= 192) {
-            return 2;
-        } else if (notoriety <= 384) {
-            return 3;
-        } else if (notoriety <= 640) {
-            return 4;
-        } else {
-            return 5;
+        // Walk through each threshold; the first one we exceed is our tier
+        for (int i = 0; i < HOSTILITY_THRESHOLDS.length; i++) {
+            if (notoriety <= HOSTILITY_THRESHOLDS[i]) {
+                return i + 1;
+            }
         }
+        // If we exceed all thresholds, assign the "overflow" tier
+        return HOSTILITY_THRESHOLDS.length;
     }
 
     /**
