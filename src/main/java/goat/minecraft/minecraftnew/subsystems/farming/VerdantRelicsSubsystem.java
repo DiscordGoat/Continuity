@@ -200,6 +200,18 @@ public class VerdantRelicsSubsystem implements Listener {
         saveAllRelics();
     }
 
+    /**
+     * Removes all active complications from every loaded relic.
+     * Used by music discs or other effects that grant temporary immunity
+     * to negative farming events.
+     */
+    public void cureAllComplicationsAll() {
+        for (RelicSession session : activeSessions.values()) {
+            session.cureAllComplications();
+        }
+        saveAllRelics();
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     //                         Coordinate Utilities
     // ─────────────────────────────────────────────────────────────────────────

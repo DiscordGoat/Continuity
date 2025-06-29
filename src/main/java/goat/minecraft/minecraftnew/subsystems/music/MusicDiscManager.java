@@ -859,8 +859,7 @@ public class MusicDiscManager implements Listener {
 
 
     private void handleMusicDiscChirp(Player player) {
-        XPManager xpManager = new XPManager(plugin);
-        Bukkit.broadcastMessage(ChatColor.YELLOW + "Timber Boost! Bonus log-chopping event activated for 3 minutes and 5 seconds!");
+        Bukkit.broadcastMessage(ChatColor.YELLOW + "Verdant Relic boost active! Relics grow faster for 3 minutes and 5 seconds.");
         player.playSound(player.getLocation(), Sound.MUSIC_DISC_CHIRP, 1000.0f, 1.0f);
 
         // Rapidly increase notoriety by 1 every tick for the duration of the song (185 seconds)
@@ -890,81 +889,15 @@ public class MusicDiscManager implements Listener {
                     return;
                 }
                 relics.accelerateGrowthAll(3);
+                relics.cureAllComplicationsAll();
                 elapsed += 20;
             }
         }.runTaskTimer(plugin, 0L, 20L);
 
-        // Listener for block-breaking events during the Timber Boost
-        Listener logBreakListener = new Listener() {
-            @EventHandler
-            public void onLogChop(org.bukkit.event.block.BlockBreakEvent event) {
-                // Ensure the event is triggered by the same player who activated the disc
-                if (!event.getPlayer().equals(player)) {
-                    return;
-                }
-
-                // Check if the broken block is one of the logs we're interested in
-                Material brokenMaterial = event.getBlock().getType();
-                if (brokenMaterial == Material.OAK_LOG ||
-                        brokenMaterial == Material.BIRCH_LOG ||
-                        brokenMaterial == Material.SPRUCE_LOG ||
-                        brokenMaterial == Material.JUNGLE_LOG ||
-                        brokenMaterial == Material.ACACIA_LOG ||
-                        brokenMaterial == Material.DARK_OAK_LOG) {
-
-                    // Determine the bonus logs based on a roll chance
-                    double roll = Math.random() * 100; // 0 to 100
-                    int bonusLogs = 0;
-                    Sound jingle = Sound.BLOCK_NOTE_BLOCK_BASS; // default sound
-                    float pitch = 1.0f;
-
-                    if (roll <= 0.2) { // Legendary (0.2% chance)
-                        bonusLogs = 64;
-                        jingle = Sound.ENTITY_ENDER_DRAGON_GROWL;
-                        pitch = 2.0f;
-                        xpManager.addXP(player, "Forestry", 500);
-                    } else if (roll <= 1) { // Epic (1% chance)
-                        bonusLogs = 32;
-                        jingle = Sound.UI_TOAST_CHALLENGE_COMPLETE;
-                        pitch = 1.8f;
-                        xpManager.addXP(player, "Forestry", 250);
-                    } else if (roll <= 2) { // Rare (2% chance)
-                        bonusLogs = 16;
-                        jingle = Sound.ENTITY_PLAYER_LEVELUP;
-                        pitch = 1.5f;
-                        xpManager.addXP(player, "Forestry", 175);
-                    } else if (roll <= 3.5) { // Uncommon (3.5% chance)
-                        bonusLogs = 8;
-                        jingle = Sound.BLOCK_NOTE_BLOCK_PLING;
-                        pitch = 1.2f;
-                        xpManager.addXP(player, "Forestry", 100);
-                    } else if (roll <= 5.5) { // Common (5.5% chance)
-                        bonusLogs = 4;
-                        jingle = Sound.BLOCK_NOTE_BLOCK_BASS;
-                        pitch = 1.0f;
-                        xpManager.addXP(player, "Forestry", 50);
-                    }
-
-                    // If bonus logs were rolled, drop them and notify the player
-                    if (bonusLogs > 0) {
-                        ItemStack bonusLogStack = new ItemStack(brokenMaterial, bonusLogs);
-                        event.getBlock().getWorld().dropItem(event.getBlock().getLocation(), bonusLogStack);
-                        player.playSound(player.getLocation(), jingle, 3.0f, pitch);
-                        player.sendMessage(ChatColor.GOLD + "Bonus Logs! You received " + bonusLogs + " extra " +
-                                brokenMaterial.name().toLowerCase().replace("_", " ") + "!");
-                    }
-                }
-            }
-        };
-
-        // Register the listener
-        Bukkit.getPluginManager().registerEvents(logBreakListener, plugin);
-
-        // Unregister the listener after 185 seconds (3 minutes and 5 seconds)
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            org.bukkit.event.HandlerList.unregisterAll(logBreakListener);
-            player.sendMessage(ChatColor.RED + "The Timber Boost event has ended!");
-        }, 185 * 20L);
+        // Notify player when the effect ends
+        Bukkit.getScheduler().runTaskLater(plugin, () ->
+                player.sendMessage(ChatColor.RED + "The Verdant Relic boost has ended!"),
+                185 * 20L);
     }
 
 
