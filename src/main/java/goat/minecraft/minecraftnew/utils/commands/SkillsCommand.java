@@ -55,7 +55,7 @@ public class SkillsCommand implements CommandExecutor {
         Inventory skillsInventory = Bukkit.createInventory(null, 27, ChatColor.GOLD + "Your Skills");
 
         // Define the skills to display
-        String[] skills = {"Fishing", "Farming", "Mining", "Combat", "Player", "Forestry", "Bartering", "Culinary", "Smithing", "Brewing"};
+        String[] skills = {"Fishing", "Farming", "Mining", "Combat", "Player", "Taming", "Forestry", "Bartering", "Culinary", "Smithing", "Brewing"};
 
         // Define icons for each skill (customize as desired)
         Material[] icons = {
@@ -64,11 +64,12 @@ public class SkillsCommand implements CommandExecutor {
                 Material.IRON_PICKAXE,   // Mining
                 Material.IRON_SWORD,     // Combat
                 Material.PLAYER_HEAD,    // Player
+                Material.LEAD,           // Taming
                 Material.GOLDEN_AXE,     // Forestry
                 Material.EMERALD,        // Bartering
                 Material.FURNACE,        // Culinary
-                Material.DAMAGED_ANVIL,    // Smithing
-                Material.BREWING_STAND    // Brewing
+                Material.DAMAGED_ANVIL,  // Smithing
+                Material.BREWING_STAND   // Brewing
         };
 
         // Populate the inventory with skill items

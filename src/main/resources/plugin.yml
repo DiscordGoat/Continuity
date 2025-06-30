@@ -148,6 +148,10 @@ commands:
     description: Sets a player's skill level
     usage: /setskilllevel <player> <skill> <level>
     permission: continuity.admin
+  grantLegacyTaming:
+    description: Grants Taming XP based on existing pets
+    usage: /grantLegacyTaming <player>
+    permission: continuity.admin
   getnearestcatalysttype:
     description: Gets the nearest catalyst type in range of the player
     usage: /getnearestcatalysttype
