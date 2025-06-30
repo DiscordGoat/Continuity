@@ -4182,6 +4182,23 @@ public class ItemRegistry {
         );
     }
 
+    /** Artifact granting a random armor blessing. */
+    public static ItemStack getBlessing() {
+        return createCustomItem(
+                Material.TOTEM_OF_UNDYING,
+                ChatColor.GOLD + "Blessing",
+                Arrays.asList(
+                        ChatColor.GRAY + "A sacred charm said to choose",
+                        ChatColor.GRAY + "a worthy armor set.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Opens the Blessing selector.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     /** Smithing item unlocking Unbreaking VI. */
     public static ItemStack getUnbreakingVI() {
         return createCustomItem(
