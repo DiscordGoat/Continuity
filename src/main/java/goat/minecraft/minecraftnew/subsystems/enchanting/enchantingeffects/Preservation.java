@@ -2,16 +2,51 @@ package goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
+import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.ItemMeta;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Preservation implements Listener {
+
+    private static final int COOLDOWN_DAYS = 7;
+
+    private Integer getPreservedDay(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) return null;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null || !meta.hasLore()) return null;
+        for (String line : meta.getLore()) {
+            String stripped = ChatColor.stripColor(line);
+            int idx = stripped.indexOf("preserved this item on Day ");
+            if (idx != -1) {
+                try {
+                    return Integer.parseInt(stripped.substring(idx + 25).trim());
+                } catch (NumberFormatException ignored) {}
+            }
+        }
+        return null;
+    }
+
+    private void removeCooldownLore(ItemStack item) {
+        if (item == null || !item.hasItemMeta()) return;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null || !meta.hasLore()) return;
+        List<String> lore = new ArrayList<>(meta.getLore());
+        lore.removeIf(l -> ChatColor.stripColor(l).contains("preserved this item on Day "));
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+    }
 
     @EventHandler
     public void onPlayerItemBreak(PlayerItemBreakEvent event) {
@@ -23,6 +58,12 @@ public class Preservation implements Listener {
 
         // Instead of letting the item break, "save" it by resetting its durability.
         item.setDurability((short) (item.getType().getMaxDurability() - 1));
+        ItemMeta meta = item.getItemMeta();
+        List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : new ArrayList<>();
+        lore.add(ChatColor.GRAY + player.getName() + " preserved this item on Day " + SpawnMonsters.getDayCount(player));
+        if (meta == null) meta = item.getItemMeta();
+        meta.setLore(lore);
+        item.setItemMeta(meta);
 
         // If the item was worn (armor), remove it from its slot
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
@@ -39,6 +80,45 @@ public class Preservation implements Listener {
 
         // Play a sound and notify the player that the item was saved.
 
+    }
+
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player player)) return;
+        ItemStack clicked = event.getCurrentItem();
+        if (clicked == null || clicked.getType() == Material.AIR) return;
+        Integer day = getPreservedDay(clicked);
+        if (day == null) return;
+        int current = SpawnMonsters.getDayCount(player);
+        if (current - day >= COOLDOWN_DAYS) {
+            removeCooldownLore(clicked);
+            event.setCurrentItem(clicked);
+            return;
+        }
+        event.setCancelled(true);
+        event.setCurrentItem(null);
+        CustomBundleGUI.getInstance().addItemToBackpack(player, clicked);
+        player.sendMessage(ChatColor.RED + "This item is still on cooldown!");
+    }
+
+    @EventHandler
+    public void onItemHeld(PlayerItemHeldEvent event) {
+        Player player = event.getPlayer();
+        ItemStack item = player.getInventory().getItem(event.getNewSlot());
+        if (item == null || item.getType() == Material.AIR) return;
+        Integer day = getPreservedDay(item);
+        if (day == null) return;
+        int current = SpawnMonsters.getDayCount(player);
+        if (current - day >= COOLDOWN_DAYS) {
+            removeCooldownLore(item);
+            player.getInventory().setItem(event.getNewSlot(), item);
+            return;
+        }
+        CustomBundleGUI.getInstance().addItemToBackpack(player, item.clone());
+        player.getInventory().setItem(event.getNewSlot(), null);
+        player.updateInventory();
+        player.sendMessage(ChatColor.RED + "This item is still on cooldown!");
+        event.setCancelled(true);
     }
 
     /**
