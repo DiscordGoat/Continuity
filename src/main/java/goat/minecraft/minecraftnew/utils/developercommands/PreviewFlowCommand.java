@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -154,7 +155,7 @@ public class PreviewFlowCommand implements CommandExecutor, Listener {
                             pose.getZ()
                     ));
                     stand.getWorld().spawnParticle(
-                            org.bukkit.Particle.END_ROD,
+                            type.getParticle(),
                             loc, 1, 0, 0, 0, 0
                     );
                 }
