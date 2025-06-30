@@ -277,6 +277,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("getstructureblock").setExecutor(new GetStructureBlockCommand());
         getCommand("setstructureblockpower").setExecutor(new SetStructureBlockPowerCommand());
         getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
+        getCommand("previewparticle").setExecutor(new PreviewParticleCommand(this));
 
 
         xpManager = new XPManager(this);
