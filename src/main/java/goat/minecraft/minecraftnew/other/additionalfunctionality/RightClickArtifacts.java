@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.farming.SeederType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.armorsets.BlessingSelectionGUI;
 import goat.minecraft.minecraftnew.utils.biomeutils.StructureUtils;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.VillagerNameRepository;
@@ -33,6 +34,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.*;
 
@@ -275,6 +277,12 @@ public class RightClickArtifacts implements Listener {
                 }
 
                 String displayName = meta.getDisplayName();
+                if (displayName.equals(ChatColor.GOLD + "Blessing")) {
+                    player.playSound(player.getLocation(), Sound.ITEM_TOTEM_USE, 1.0f, 1.0f);
+                    BlessingSelectionGUI gui = new BlessingSelectionGUI((JavaPlugin) plugin);
+                    gui.openGUI(player);
+                    return;
+                }
                 SeederType seederType = SeederType.fromDisplayName(displayName);
                 if (seederType == null) {
                     return; // The item is not a recognized seeder
@@ -409,6 +417,12 @@ public class RightClickArtifacts implements Listener {
             if (displayName.equals(ChatColor.YELLOW + "Inscriber")) {
                 player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0f, 1.0f);
                 openDiscSelectionGUI(player, itemInHand);
+                return;
+            }
+            if (displayName.equals(ChatColor.GOLD + "Blessing")) {
+                player.playSound(player.getLocation(), Sound.ITEM_TOTEM_USE, 1.0f, 1.0f);
+                BlessingSelectionGUI gui = new BlessingSelectionGUI((JavaPlugin) plugin);
+                gui.openGUI(player);
                 return;
             }
 
