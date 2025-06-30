@@ -105,6 +105,8 @@ public class Preservation implements Listener {
         } else {
             event.setCurrentItem(clicked);
         }
+        event.setCurrentItem(null);
+        CustomBundleGUI.getInstance().addItemToBackpack(player, clicked);
         player.sendMessage(ChatColor.RED + "You cannot use items that are repairing themselves.");
     }
 
