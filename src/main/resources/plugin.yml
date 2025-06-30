@@ -178,7 +178,7 @@ commands:
     permission: continuity.admin
   previewparticle:
     description: Shows a particle effect around the player until they move
-    usage: /previewparticle <particle> <intensity>
+    usage: /previewparticle <particle> <style> <count> <frequency>
     permission: continuity.admin
     aliases:
       - preview_particle
