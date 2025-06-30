@@ -32,8 +32,19 @@ public enum FlowType {
                     Material.LILY_PAD
             ),
             Particle.SPORE_BLOSSOM_AIR
-    );
+    ),
 
+    /**
+     * Flow effect that swirls sea-themed blocks around the player.
+     */
+    FATHMIC_IRON(
+            Arrays.asList(
+                    Material.SEA_LANTERN,
+                    Material.PRISMARINE,
+                    Material.PRISMARINE_SHARD
+            ),
+            Particle.WATER_BUBBLE
+    );
     private static final Random RANDOM = new Random();
     private final List<Material> materials;
     private final Particle particle;

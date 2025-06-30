@@ -6,7 +6,8 @@ import org.bukkit.Particle;
  * Template definition for an aura effect.
  */
 public enum Aura {
-    NATURES_WRATH_AURA(Particle.SOUL, ParticleStyle.AMBIENT, 1, 5.0);
+    NATURES_WRATH_AURA(Particle.SOUL, ParticleStyle.AMBIENT, 1, 5.0),
+    FATHMIC_IRON_AURA(Particle.GLOW, ParticleStyle.AMBIENT, 1, 5.0);
 
     private final Particle particle;
     private final ParticleStyle style;
