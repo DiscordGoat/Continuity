@@ -175,6 +175,56 @@ public class CustomBundleGUI implements Listener {
             }
         }
     }
+
+    /**
+     * Adds an item directly to a player's backpack storage.
+     * @return true if the item fit completely, false if no space was found.
+     */
+    public boolean addItemToBackpack(Player player, ItemStack stack) {
+        String playerUUID = player.getUniqueId().toString();
+        ItemStack toAdd = stack.clone();
+
+        for (int i = 0; i < 54; i++) {
+            String path = playerUUID + "." + i;
+            ItemStack current = storageConfig.getItemStack(path);
+
+            if (current == null || current.getType() == Material.AIR) {
+                storageConfig.set(path, toAdd);
+                try {
+                    storageConfig.save(storageFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return true;
+            }
+
+            if (current.isSimilar(toAdd) && current.getAmount() < current.getMaxStackSize()) {
+                int max = current.getMaxStackSize();
+                int total = current.getAmount() + toAdd.getAmount();
+                if (total <= max) {
+                    current.setAmount(total);
+                    storageConfig.set(path, current);
+                    try {
+                        storageConfig.save(storageFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    return true;
+                } else {
+                    current.setAmount(max);
+                    storageConfig.set(path, current);
+                    toAdd.setAmount(total - max);
+                    // continue looking for space for the remainder
+                }
+            }
+        }
+        try {
+            storageConfig.save(storageFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
     public boolean removeRedstoneBlocksFromBackpack(Player player, int neededBlocks) {
         String playerUUID = player.getUniqueId().toString();
 
