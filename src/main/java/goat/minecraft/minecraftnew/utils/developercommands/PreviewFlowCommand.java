@@ -118,6 +118,8 @@ public class PreviewFlowCommand implements CommandExecutor, Listener {
         stands.put(player.getUniqueId(), spawned);
 
         final Location[] center = {player.getLocation()};
+        int finalIntensity = intensity;
+        int finalIntensity1 = intensity;
         BukkitRunnable runnable = new BukkitRunnable() {
             double angle = 0;
             int tick = 0;
@@ -133,11 +135,10 @@ public class PreviewFlowCommand implements CommandExecutor, Listener {
                 if (++tick % 2 == 0) {
                     center[0] = player.getLocation();
                 }
-                angle += 0.03 + 0.01 * intensity;
-                if (++tick % 20 == 0) {
-                    center[0] = player.getLocation();
-                }
-                angle += 0.05 + 0.02 * intensity;
+
+                // Slow it way down:
+                angle += 0.05;
+
                 for (int i = 0; i < spawned.size(); i++) {
                     ArmorStand stand = spawned.get(i);
                     if (!stand.isValid()) continue;
@@ -147,11 +148,19 @@ public class PreviewFlowCommand implements CommandExecutor, Listener {
                     Location loc = center[0].clone().add(x, 0.5, z);
                     stand.teleport(loc);
                     EulerAngle pose = stand.getRightArmPose();
-                    stand.setRightArmPose(new EulerAngle(pose.getX() + Math.toRadians(20), pose.getY(), pose.getZ()));
-                    stand.getWorld().spawnParticle(org.bukkit.Particle.END_ROD, loc, 1, 0, 0, 0, 0);
+                    stand.setRightArmPose(new EulerAngle(
+                            pose.getX() + Math.toRadians(20),
+                            pose.getY(),
+                            pose.getZ()
+                    ));
+                    stand.getWorld().spawnParticle(
+                            org.bukkit.Particle.END_ROD,
+                            loc, 1, 0, 0, 0, 0
+                    );
                 }
             }
         };
+
 
         int id = runnable.runTaskTimer(plugin, 0L, 1L).getTaskId();
         tasks.put(player.getUniqueId(), id);
