@@ -2,7 +2,6 @@ package goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
-import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.Material;
@@ -10,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
@@ -21,10 +22,10 @@ import java.util.List;
 
 public class Preservation implements Listener {
 
-    private static final int COOLDOWN_DAYS = 7;
-    private static final String COOLDOWN_PREFIX = "Preservation: This item will be unusable until Day ";
+    private static final long COOLDOWN_MS = 60 * 1000; // 1 minute cooldown for testing
+    private static final String COOLDOWN_PREFIX = "Preservation: This item will be unusable until ";
 
-    private Integer getPreservedDay(ItemStack item) {
+    private Long getPreservedTimestamp(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return null;
         ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasLore()) return null;
@@ -32,7 +33,7 @@ public class Preservation implements Listener {
             String stripped = ChatColor.stripColor(line);
             if (stripped.startsWith(COOLDOWN_PREFIX)) {
                 try {
-                    return Integer.parseInt(stripped.substring(COOLDOWN_PREFIX.length()).trim());
+                    return Long.parseLong(stripped.substring(COOLDOWN_PREFIX.length()).trim());
                 } catch (NumberFormatException ignored) {}
             }
         }
@@ -61,9 +62,9 @@ public class Preservation implements Listener {
         item.setDurability((short) (item.getType().getMaxDurability() - 1));
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : new ArrayList<>();
-        if (getPreservedDay(item) == null) {
-            int untilDay = SpawnMonsters.getDayCount(player) + COOLDOWN_DAYS;
-            lore.add(ChatColor.DARK_RED + COOLDOWN_PREFIX + untilDay);
+        if (getPreservedTimestamp(item) == null) {
+            long until = System.currentTimeMillis() + COOLDOWN_MS;
+            lore.add(ChatColor.DARK_RED + COOLDOWN_PREFIX + until);
         }
         if (meta == null) meta = item.getItemMeta();
         meta.setLore(lore);
@@ -91,22 +92,21 @@ public class Preservation implements Listener {
         if (!(event.getWhoClicked() instanceof Player player)) return;
         ItemStack clicked = event.getCurrentItem();
         if (clicked == null || clicked.getType() == Material.AIR) return;
-        Integer day = getPreservedDay(clicked);
-        if (day == null) return;
-        int current = SpawnMonsters.getDayCount(player);
-        if (current >= day) {
+        Long until = getPreservedTimestamp(clicked);
+        if (until == null) return;
+        long current = System.currentTimeMillis();
+        if (current >= until) {
             removeCooldownLore(clicked);
             event.setCurrentItem(clicked);
             return;
         }
         event.setCancelled(true);
-        if (addToBackpack(player, clicked)) {
-            event.setCurrentItem(null);
-        } else {
+        if (!addToBackpack(player, clicked)) {
             event.setCurrentItem(clicked);
+        } else {
+            event.setCurrentItem(null);
         }
-        event.setCurrentItem(null);
-        CustomBundleGUI.getInstance().addItemToBackpack(player, clicked);
+        
         player.sendMessage(ChatColor.RED + "You cannot use items that are repairing themselves.");
     }
 
@@ -115,10 +115,10 @@ public class Preservation implements Listener {
         Player player = event.getPlayer();
         ItemStack item = player.getInventory().getItem(event.getNewSlot());
         if (item == null || item.getType() == Material.AIR) return;
-        Integer day = getPreservedDay(item);
-        if (day == null) return;
-        int current = SpawnMonsters.getDayCount(player);
-        if (current >= day) {
+        Long until = getPreservedTimestamp(item);
+        if (until == null) return;
+        long current = System.currentTimeMillis();
+        if (current >= until) {
             removeCooldownLore(item);
             player.getInventory().setItem(event.getNewSlot(), item);
             return;
@@ -139,11 +139,11 @@ public class Preservation implements Listener {
         Player player = event.getPlayer();
         if (item == null || !CustomEnchantmentManager.hasEnchantment(item, "Preservation")) return;
 
-        Integer day = getPreservedDay(item);
-        if (day == null) return;
+        Long until = getPreservedTimestamp(item);
+        if (until == null) return;
 
-        int current = SpawnMonsters.getDayCount(player);
-        if (current >= day) {
+        long current = System.currentTimeMillis();
+        if (current >= until) {
             removeCooldownLore(item);
             return;
         }
@@ -218,5 +218,31 @@ public class Preservation implements Listener {
         }
         item.setAmount(1);
         return false;
+    }
+
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        updateCooldowns(event.getInventory().getContents());
+        if (event.getPlayer() instanceof Player player) {
+            updateCooldowns(player.getInventory().getContents());
+        }
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        updateCooldowns(event.getInventory().getContents());
+        if (event.getPlayer() instanceof Player player) {
+            updateCooldowns(player.getInventory().getContents());
+        }
+    }
+
+    private void updateCooldowns(ItemStack[] items) {
+        long current = System.currentTimeMillis();
+        for (ItemStack stack : items) {
+            Long until = getPreservedTimestamp(stack);
+            if (until != null && current >= until) {
+                removeCooldownLore(stack);
+            }
+        }
     }
 }
