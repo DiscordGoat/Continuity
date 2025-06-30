@@ -182,3 +182,7 @@ commands:
     permission: continuity.admin
     aliases:
       - preview_particle
+  previewflow:
+    description: Shows flow entities spinning around the player
+    usage: /previewflow <flow> <intensity>
+    permission: continuity.admin
