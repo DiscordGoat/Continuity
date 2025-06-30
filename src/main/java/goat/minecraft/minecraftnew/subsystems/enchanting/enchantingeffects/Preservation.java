@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -60,7 +61,7 @@ public class Preservation implements Listener {
         item.setDurability((short) (item.getType().getMaxDurability() - 1));
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : new ArrayList<>();
-        lore.add(ChatColor.GRAY + player.getName() + " preserved this item on Day " + SpawnMonsters.getDayCount(player));
+        lore.add(ChatColor.DARK_RED + player.getName() + " preserved this item on Day " + SpawnMonsters.getDayCount(player));
         if (meta == null) meta = item.getItemMeta();
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -119,6 +120,31 @@ public class Preservation implements Listener {
         player.updateInventory();
         player.sendMessage(ChatColor.RED + "This item is still on cooldown!");
         event.setCancelled(true);
+    }
+
+    @EventHandler
+    public void onItemDamage(PlayerItemDamageEvent event) {
+        ItemStack item = event.getItem();
+        Player player = event.getPlayer();
+        if (item == null || !CustomEnchantmentManager.hasEnchantment(item, "Preservation")) return;
+
+        Integer day = getPreservedDay(item);
+        if (day == null) return;
+
+        int current = SpawnMonsters.getDayCount(player);
+        if (current - day >= COOLDOWN_DAYS) {
+            removeCooldownLore(item);
+            return;
+        }
+
+        event.setCancelled(true);
+        int slot = player.getInventory().first(item);
+        if (slot != -1) player.getInventory().setItem(slot, null);
+        removeIfWorn(player, item);
+        CustomBundleGUI.getInstance().addItemToBackpack(player, item.clone());
+        player.updateInventory();
+        int remaining = COOLDOWN_DAYS - (current - day);
+        player.sendMessage(ChatColor.RED + "Preservation prevented using a damaged item. Try again in " + remaining + " Days.");
     }
 
     /**
