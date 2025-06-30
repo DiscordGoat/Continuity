@@ -228,6 +228,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_BANE_OF_ARTHROPODS", 1, 64, 4)); // ItemRegistry.getWeaponsmithBaneofAnthropods()
 
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_ENCHANT", 1, 64, 4)); // ItemRegistry.getWeaponsmithEnchant()
+        weaponsmithPurchases.add(createTradeMap("BLESSING", 1, 64, 4)); // ItemRegistry.getBlessing()
         weaponsmithPurchases.add(createTradeMap("LEGENDARY_SWORD_REFORGE", 1, 512, 5)); // ItemRegistry.getLegendarySwordReforge()
         weaponsmithPurchases.add(createTradeMap("BLUE_LANTERN", 1, 512, 5)); // Custom Item
         defaultConfig.set("WEAPONSMITH.purchases", weaponsmithPurchases);
@@ -1032,6 +1033,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getVindicatorDrop();
             case "WITCH_DROP":
                 return ItemRegistry.getWitchDrop();
+            case "BLESSING":
+                return ItemRegistry.getBlessing();
             default:
                 plugin.getLogger().warning("Unknown custom item ID: " + identifier);
                 return null;
