@@ -150,7 +150,7 @@ public class PreviewFlowCommand implements CommandExecutor, Listener {
                     stand.teleport(loc);
                     EulerAngle pose = stand.getRightArmPose();
                     stand.setRightArmPose(new EulerAngle(
-                            pose.getX() + Math.toRadians(20),
+                            pose.getX() + Math.toRadians(15),
                             pose.getY(),
                             pose.getZ()
                     ));
