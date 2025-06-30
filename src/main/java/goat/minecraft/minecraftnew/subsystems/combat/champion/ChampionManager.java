@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.combat.champion;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
@@ -80,13 +81,13 @@ public class ChampionManager implements Listener {
     private enum Tier {
         WRATH(100, 1,
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjc3OWNmOTdlYzU2ZjgyMDQwNzM5NTU4ODZiMDNhZjJjNTZkOTk5YjEwMDU1N2VkYjVhMGJkYjFiNDdkYmUyNCJ9fX0=",
-                ChatColor.WHITE + "Champion of Wrath", Color.WHITE, 1),
+                ChatColor.WHITE + "Champion of Wrath", Color.WHITE),
         FURY(200, 3,
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmE2OGM2ZDcyYzhkNzA0ZWNmNDczOWMzZWY5MDgyMTY3ZjBhZTQ2MWQ0ZTdmN2I5MDlhYjRmNjE1YTgxM2ExNiJ9fX0=",
-                ChatColor.RED + "Champion of Fury", Color.BLACK, 3),
+                ChatColor.RED + "Champion of Fury", Color.BLACK),
         VENGEANCE(300, 6,
                 "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTY0MzIwNGE5ZDA3MjI4OGY3MmQyZmQwMmQxODljNWEzYjA0MTM4MzU4YzAyMmZiMmNkNTJlMTE1OTM4NDJmNyJ9fX0=",
-                ChatColor.GOLD + "Champion of Vengeance", Color.fromRGB(255,215,0), 6);
+                ChatColor.GOLD + "Champion of Vengeance", Color.fromRGB(255,215,0));
 
         final int level;
         final int speed;

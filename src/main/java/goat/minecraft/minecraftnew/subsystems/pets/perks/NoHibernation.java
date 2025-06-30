@@ -47,7 +47,7 @@ public class NoHibernation implements Listener {
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    if (player.getHealth() < player.getMaxHealth() && player.getFoodLevel() > 0) {
+                    if (player.getHealth() < player.getMaxHealth() && player.getFoodLevel() > 0 && player.getHealth() > 0) {
                         player.setHealth(Math.min(player.getMaxHealth(), player.getHealth() + 2)); // Heal 2 health (1 full heart)
 
                         if (player.getSaturation() > 0) {

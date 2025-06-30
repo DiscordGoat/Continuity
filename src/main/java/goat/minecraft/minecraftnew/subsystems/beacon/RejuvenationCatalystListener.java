@@ -52,6 +52,9 @@ public class RejuvenationCatalystListener {
     private void applyRejuvenation(Player player, int tier) {
         double healPercent = 0.025 * (tier + 1);
         double maxHealth = player.getMaxHealth();
+        if(player.getHealth() <= 0){
+            return;
+        }
         player.setHealth(Math.min(player.getHealth() + maxHealth * healPercent, maxHealth));
 
         player.setFoodLevel(Math.min(player.getFoodLevel() + 1, 20));
