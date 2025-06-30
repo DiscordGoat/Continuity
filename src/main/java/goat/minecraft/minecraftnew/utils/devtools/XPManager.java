@@ -558,7 +558,12 @@ public class XPManager implements CommandExecutor {
                         .append(ChatColor.WHITE).append(" is now ")
                         .append(ChatColor.YELLOW).append("" + (newLevel * 10));
                 break;
-
+            case "taming":
+                body.append(ChatColor.WHITE).append("Your ")
+                        .append(ChatColor.LIGHT_PURPLE).append("Bonus Pet XP")
+                        .append(ChatColor.WHITE).append(" is now ")
+                        .append(ChatColor.YELLOW).append("" + (newLevel) + "%");
+                break;
             default:
                 body.append(ChatColor.WHITE).append("Enjoy your new level in ")
                         .append(skill).append("!\n");

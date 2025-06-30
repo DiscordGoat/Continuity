@@ -193,6 +193,12 @@ public class SkillsCommand implements CommandExecutor {
                         ChatColor.LIGHT_PURPLE + "Bonus Potion Duration: " + (level * 10)
                 ));
                 break;
+            case "Taming":
+                lore = new ArrayList<>(Arrays.asList(
+                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level,
+                        ChatColor.LIGHT_PURPLE + "Bonus Pet XP: " + (level) + "%"
+                ));
+                break;
             default:
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.GRAY + "Level: " + ChatColor.GREEN + (int) level,
