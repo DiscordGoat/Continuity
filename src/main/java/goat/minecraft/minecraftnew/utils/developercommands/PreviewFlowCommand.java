@@ -130,6 +130,10 @@ public class PreviewFlowCommand implements CommandExecutor, Listener {
                     stands.remove(player.getUniqueId());
                     return;
                 }
+                if (++tick % 2 == 0) {
+                    center[0] = player.getLocation();
+                }
+                angle += 0.03 + 0.01 * intensity;
                 if (++tick % 20 == 0) {
                     center[0] = player.getLocation();
                 }
@@ -144,6 +148,7 @@ public class PreviewFlowCommand implements CommandExecutor, Listener {
                     stand.teleport(loc);
                     EulerAngle pose = stand.getRightArmPose();
                     stand.setRightArmPose(new EulerAngle(pose.getX() + Math.toRadians(20), pose.getY(), pose.getZ()));
+                    stand.getWorld().spawnParticle(org.bukkit.Particle.END_ROD, loc, 1, 0, 0, 0, 0);
                 }
             }
         };
