@@ -8,6 +8,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -21,13 +24,30 @@ import java.util.UUID;
  * <p>
  * Spawns the given particle around the player until they move.
  */
-public class PreviewParticleCommand implements CommandExecutor {
+public class PreviewParticleCommand implements CommandExecutor, Listener {
 
     private final JavaPlugin plugin;
     private final Map<UUID, Integer> tasks = new HashMap<>();
 
     public PreviewParticleCommand(JavaPlugin plugin) {
         this.plugin = plugin;
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
+    }
+
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        Player player = event.getPlayer();
+        Integer taskId = tasks.get(player.getUniqueId());
+        if (taskId == null) {
+            return;
+        }
+        switch (event.getAction()) {
+            case LEFT_CLICK_AIR, LEFT_CLICK_BLOCK -> {
+                Bukkit.getScheduler().cancelTask(taskId);
+                tasks.remove(player.getUniqueId());
+                player.sendMessage(ChatColor.GRAY + "Particle preview ended.");
+            }
+        }
     }
 
     @Override
@@ -68,7 +88,7 @@ public class PreviewParticleCommand implements CommandExecutor {
             Bukkit.getScheduler().cancelTask(existing);
         }
 
-        Location start = player.getLocation();
+        final Location[] center = {player.getLocation()};
         double radius = 1.5;
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
@@ -78,17 +98,14 @@ public class PreviewParticleCommand implements CommandExecutor {
                     tasks.remove(player.getUniqueId());
                     return;
                 }
-                if (player.getLocation().distanceSquared(start) > 0.01) {
-                    player.sendMessage(ChatColor.GRAY + "Particle preview ended.");
-                    cancel();
-                    tasks.remove(player.getUniqueId());
-                    return;
+                if (player.getLocation().distanceSquared(center[0]) > 0.01) {
+                    center[0] = player.getLocation();
                 }
                 for (int i = 0; i < intensity; i++) {
                     double angle = (2 * Math.PI / intensity) * i;
                     double x = radius * Math.cos(angle);
                     double z = radius * Math.sin(angle);
-                    Location loc = start.clone().add(x, 0.5, z);
+                    Location loc = center[0].clone().add(x, 0.5, z);
                     player.getWorld().spawnParticle(particle, loc, 0, 0, 0, 0, 0);
                 }
             }
@@ -96,7 +113,7 @@ public class PreviewParticleCommand implements CommandExecutor {
 
         int id = runnable.runTaskTimer(plugin, 0L, 2L).getTaskId();
         tasks.put(player.getUniqueId(), id);
-        player.sendMessage(ChatColor.GREEN + "Previewing " + particle + " with intensity " + intensity + ". Move to cancel.");
+        player.sendMessage(ChatColor.GREEN + "Previewing " + particle + " with intensity " + intensity + ". Left click to stop.");
         return true;
     }
 }
