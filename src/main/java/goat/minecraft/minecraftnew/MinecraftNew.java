@@ -189,6 +189,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("merits").setExecutor(new MeritCommand(this, playerData));
         getCommand("grantmerit").setExecutor(new GrantMerit(this, playerData));
         getCommand("grantGhostPet").setExecutor(new GrantGhostPetCommand(petManager));
+        new GrantLegacyTamingCommand(this, petManager, xpManager);
 
         // Register event listener for inventory clicks
 
@@ -279,6 +280,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
         xpManager = new XPManager(this);
+        PetManager.getInstance(this).setXPManager(xpManager);
 
         // Initialize the new combat subsystem (replaces old combat event registrations)
         try {

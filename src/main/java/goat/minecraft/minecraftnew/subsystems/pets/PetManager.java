@@ -15,6 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,10 +25,15 @@ import java.util.stream.Collectors;
 
 public class PetManager implements Listener {
     private JavaPlugin plugin;
+    private XPManager xpManager;
     private static PetManager instance;
     public PetManager(JavaPlugin plugin) {
         this.plugin = plugin;
         loadPets();
+    }
+
+    public void setXPManager(XPManager xpManager) {
+        this.xpManager = xpManager;
     }
 
     private Map<UUID, Horse> summonedHorses = new HashMap<>();
@@ -370,6 +376,10 @@ public class PetManager implements Listener {
         }
     }
 
+    public Map<String, Pet> getPlayerPets(Player player) {
+        return new HashMap<>(playerPets.getOrDefault(player.getUniqueId(), new HashMap<>()));
+    }
+
     public JavaPlugin getPlugin() {
         return this.plugin;
     }
@@ -450,7 +460,19 @@ public class PetManager implements Listener {
         Pet activePet = getActivePet(player);
         if (activePet != null) {
             double xpGained = event.getAmount();
-            activePet.addXP(xpGained);
+            int tamingLevel = 0;
+            if (xpManager != null) {
+                tamingLevel = xpManager.getPlayerLevel(player, "Taming");
+            }
+            double petXP = xpGained * (1.0 + tamingLevel * 0.01);
+            int before = activePet.getLevel();
+            activePet.addXP(petXP);
+            if (xpManager != null) {
+                xpManager.addXP(player, "Taming", petXP * 10);
+                if (before < 100 && activePet.getLevel() >= 100) {
+                    xpManager.addXP(player, "Taming", 5000);
+                }
+            }
             //player.sendMessage(ChatColor.AQUA + activePet.getName() + " gained " + xpGained + " XP!");
         }
     }
