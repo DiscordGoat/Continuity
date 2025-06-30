@@ -126,6 +126,7 @@ public class FishingEvent implements Listener {
                 double seaCreatureBonus = BASE_SEA_CREATURE_CHANCE_INCREASE + (catalystTier * PER_TIER_SEA_CREATURE_INCREASE);
                 seaCreatureChance += seaCreatureBonus;
             }
+
         }
         // Check for reforged items for sea creatures
         if (isReforgedForSeaCreatures(player.getInventory().getItemInMainHand())) {
