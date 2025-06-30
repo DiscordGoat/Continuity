@@ -22,6 +22,7 @@ import java.util.List;
 public class Preservation implements Listener {
 
     private static final int COOLDOWN_DAYS = 7;
+    private static final String COOLDOWN_PREFIX = "Preservation: This item will be unusable until Day ";
 
     private Integer getPreservedDay(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return null;
@@ -29,10 +30,9 @@ public class Preservation implements Listener {
         if (meta == null || !meta.hasLore()) return null;
         for (String line : meta.getLore()) {
             String stripped = ChatColor.stripColor(line);
-            int idx = stripped.indexOf("preserved this item on Day ");
-            if (idx != -1) {
+            if (stripped.startsWith(COOLDOWN_PREFIX)) {
                 try {
-                    return Integer.parseInt(stripped.substring(idx + 25).trim());
+                    return Integer.parseInt(stripped.substring(COOLDOWN_PREFIX.length()).trim());
                 } catch (NumberFormatException ignored) {}
             }
         }
@@ -44,7 +44,7 @@ public class Preservation implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null || !meta.hasLore()) return;
         List<String> lore = new ArrayList<>(meta.getLore());
-        lore.removeIf(l -> ChatColor.stripColor(l).contains("preserved this item on Day "));
+        lore.removeIf(l -> ChatColor.stripColor(l).startsWith(COOLDOWN_PREFIX));
         meta.setLore(lore);
         item.setItemMeta(meta);
     }
@@ -61,7 +61,10 @@ public class Preservation implements Listener {
         item.setDurability((short) (item.getType().getMaxDurability() - 1));
         ItemMeta meta = item.getItemMeta();
         List<String> lore = meta != null && meta.hasLore() ? meta.getLore() : new ArrayList<>();
-        lore.add(ChatColor.DARK_RED + player.getName() + " preserved this item on Day " + SpawnMonsters.getDayCount(player));
+        if (getPreservedDay(item) == null) {
+            int untilDay = SpawnMonsters.getDayCount(player) + COOLDOWN_DAYS;
+            lore.add(ChatColor.DARK_RED + COOLDOWN_PREFIX + untilDay);
+        }
         if (meta == null) meta = item.getItemMeta();
         meta.setLore(lore);
         item.setItemMeta(meta);
@@ -91,15 +94,18 @@ public class Preservation implements Listener {
         Integer day = getPreservedDay(clicked);
         if (day == null) return;
         int current = SpawnMonsters.getDayCount(player);
-        if (current - day >= COOLDOWN_DAYS) {
+        if (current >= day) {
             removeCooldownLore(clicked);
             event.setCurrentItem(clicked);
             return;
         }
         event.setCancelled(true);
-        event.setCurrentItem(null);
-        CustomBundleGUI.getInstance().addItemToBackpack(player, clicked);
-        player.sendMessage(ChatColor.RED + "This item is still on cooldown!");
+        if (addToBackpack(player, clicked)) {
+            event.setCurrentItem(null);
+        } else {
+            event.setCurrentItem(clicked);
+        }
+        player.sendMessage(ChatColor.RED + "You cannot use items that are repairing themselves.");
     }
 
     @EventHandler
@@ -110,15 +116,18 @@ public class Preservation implements Listener {
         Integer day = getPreservedDay(item);
         if (day == null) return;
         int current = SpawnMonsters.getDayCount(player);
-        if (current - day >= COOLDOWN_DAYS) {
+        if (current >= day) {
             removeCooldownLore(item);
             player.getInventory().setItem(event.getNewSlot(), item);
             return;
         }
-        CustomBundleGUI.getInstance().addItemToBackpack(player, item.clone());
-        player.getInventory().setItem(event.getNewSlot(), null);
+        if (addToBackpack(player, item)) {
+            player.getInventory().setItem(event.getNewSlot(), null);
+        } else {
+            player.getInventory().setItem(event.getNewSlot(), item);
+        }
         player.updateInventory();
-        player.sendMessage(ChatColor.RED + "This item is still on cooldown!");
+        player.sendMessage(ChatColor.RED + "You cannot use items that are repairing themselves.");
         event.setCancelled(true);
     }
 
@@ -132,7 +141,7 @@ public class Preservation implements Listener {
         if (day == null) return;
 
         int current = SpawnMonsters.getDayCount(player);
-        if (current - day >= COOLDOWN_DAYS) {
+        if (current >= day) {
             removeCooldownLore(item);
             return;
         }
@@ -141,10 +150,11 @@ public class Preservation implements Listener {
         int slot = player.getInventory().first(item);
         if (slot != -1) player.getInventory().setItem(slot, null);
         removeIfWorn(player, item);
-        CustomBundleGUI.getInstance().addItemToBackpack(player, item.clone());
+        if (!addToBackpack(player, item) && slot != -1) {
+            player.getInventory().setItem(slot, item);
+        }
         player.updateInventory();
-        int remaining = COOLDOWN_DAYS - (current - day);
-        player.sendMessage(ChatColor.RED + "Preservation prevented using a damaged item. Try again in " + remaining + " Days.");
+        player.sendMessage(ChatColor.RED + "You cannot use items that are repairing themselves.");
     }
 
     /**
