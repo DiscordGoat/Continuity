@@ -100,6 +100,11 @@ public class Preservation implements Listener {
             return;
         }
         event.setCancelled(true);
+        if (addToBackpack(player, clicked)) {
+            event.setCurrentItem(null);
+        } else {
+            event.setCurrentItem(clicked);
+        }
         event.setCurrentItem(null);
         CustomBundleGUI.getInstance().addItemToBackpack(player, clicked);
         player.sendMessage(ChatColor.RED + "You cannot use items that are repairing themselves.");
@@ -118,8 +123,11 @@ public class Preservation implements Listener {
             player.getInventory().setItem(event.getNewSlot(), item);
             return;
         }
-        CustomBundleGUI.getInstance().addItemToBackpack(player, item.clone());
-        player.getInventory().setItem(event.getNewSlot(), null);
+        if (addToBackpack(player, item)) {
+            player.getInventory().setItem(event.getNewSlot(), null);
+        } else {
+            player.getInventory().setItem(event.getNewSlot(), item);
+        }
         player.updateInventory();
         player.sendMessage(ChatColor.RED + "You cannot use items that are repairing themselves.");
         event.setCancelled(true);
@@ -144,7 +152,9 @@ public class Preservation implements Listener {
         int slot = player.getInventory().first(item);
         if (slot != -1) player.getInventory().setItem(slot, null);
         removeIfWorn(player, item);
-        CustomBundleGUI.getInstance().addItemToBackpack(player, item.clone());
+        if (!addToBackpack(player, item) && slot != -1) {
+            player.getInventory().setItem(slot, item);
+        }
         player.updateInventory();
         player.sendMessage(ChatColor.RED + "You cannot use items that are repairing themselves.");
     }
