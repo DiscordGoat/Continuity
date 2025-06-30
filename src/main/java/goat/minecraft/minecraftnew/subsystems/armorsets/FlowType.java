@@ -14,6 +14,12 @@ import java.util.Random;
 public enum FlowType {
     NATURES_WRATH(
             Arrays.asList(
+                    Material.IRON_AXE,
+                    Material.IRON_AXE,
+                    Material.IRON_AXE,
+                    Material.IRON_AXE,
+                    Material.IRON_AXE,
+                    Material.IRON_AXE,
                     Material.OAK_LOG,
                     Material.OAK_LEAVES,
                     Material.BIRCH_LOG,
