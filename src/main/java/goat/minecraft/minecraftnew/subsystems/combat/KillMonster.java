@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.Pathfinder;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.subsystems.combat.ChampionManager;
 import goat.minecraft.minecraftnew.subsystems.combat.utils.EntityLevelExtractor;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
@@ -90,14 +91,13 @@ public class KillMonster implements Listener {
 
             // Skip combat XP for sea creatures and forest spirits
             if (!entity.hasMetadata("SEA_CREATURE") && !entity.hasMetadata("forestSpirit")) {
-                // Add XP to the player
-                if (monsterLevel > 100) {
-                    xpGain = Math.min(xpGain, 150);
-                }
-
+                // Cap combat XP and award it
+                xpGain = Math.min(xpGain, 125);
                 xpManager.addXP(playerKiller, "Combat", xpGain);
                 // Increase forestry notoriety from combat
                 Forestry.getInstance().addNotoriety(playerKiller, 1, false, false);
+                ChampionManager.getInstance(MinecraftNew.getInstance())
+                        .recordKill(playerKiller, entity.getLocation());
             }
 
             // 20% chance for loot to drop normally, else clear drops
