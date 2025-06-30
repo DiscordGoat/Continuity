@@ -186,3 +186,11 @@ commands:
     description: Shows flow entities spinning around the player
     usage: /previewflow <flow> <intensity>
     permission: continuity.admin
+  previewauratemplate:
+    description: Shows an aura effect using a template
+    usage: /previewauratemplate <name>
+    permission: continuity.admin
+  aura:
+    description: Toggles display of your active aura
+    usage: /aura
+    default: true

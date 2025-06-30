@@ -55,6 +55,7 @@ import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager
 import goat.minecraft.minecraftnew.utils.commands.DiscsCommand;
 import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
+import goat.minecraft.minecraftnew.utils.commands.AuraCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.devtools.*;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
@@ -67,6 +68,7 @@ import goat.minecraft.minecraftnew.other.trinkets.MiningPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.TransfigurationPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
+import goat.minecraft.minecraftnew.subsystems.auras.AuraManager;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.SetStructureBlockPowerCommand;
@@ -110,6 +112,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private PotionBrewingSubsystem potionBrewingSubsystem;
     private VerdantRelicsSubsystem verdantRelicsSubsystem;
     private CombatSubsystemManager combatSubsystemManager;
+    private AuraManager auraManager;
 
     public ItemDisplayManager getItemDisplayManager() {
         return displayManager;
@@ -279,6 +282,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
         getCommand("previewparticle").setExecutor(new PreviewParticleCommand(this));
         getCommand("previewflow").setExecutor(new PreviewFlowCommand(this));
+        auraManager = new AuraManager(this);
+        getCommand("previewauratemplate").setExecutor(new PreviewAuraTemplateCommand(auraManager));
+        getCommand("aura").setExecutor(new AuraCommand(auraManager));
 
 
         xpManager = new XPManager(this);
