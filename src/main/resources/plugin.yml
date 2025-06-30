@@ -180,6 +180,8 @@ commands:
     description: Shows a particle effect around the player until they move
     usage: /previewparticle <particle> <intensity>
     permission: continuity.admin
+    aliases:
+      - preview_particle
   previewflow:
     description: Shows flow entities spinning around the player
     usage: /previewflow <flow> <intensity>

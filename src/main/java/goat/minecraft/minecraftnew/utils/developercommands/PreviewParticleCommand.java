@@ -67,8 +67,7 @@ public class PreviewParticleCommand implements CommandExecutor, Listener {
 
         Particle particle;
         try {
-            String particleName = args[0].replace("_", " ");
-            particle = Particle.valueOf(particleName.toUpperCase(Locale.ROOT));
+            particle = Particle.valueOf(args[0].toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             player.sendMessage(ChatColor.RED + "Unknown particle type: " + args[0]);
             return true;
