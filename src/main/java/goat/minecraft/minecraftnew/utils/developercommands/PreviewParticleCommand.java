@@ -67,7 +67,8 @@ public class PreviewParticleCommand implements CommandExecutor, Listener {
 
         Particle particle;
         try {
-            particle = Particle.valueOf(args[0].toUpperCase(Locale.ROOT));
+            String particleName = args[0].replace("_", " ");
+            particle = Particle.valueOf(particleName.toUpperCase(Locale.ROOT));
         } catch (IllegalArgumentException e) {
             player.sendMessage(ChatColor.RED + "Unknown particle type: " + args[0]);
             return true;
@@ -90,6 +91,7 @@ public class PreviewParticleCommand implements CommandExecutor, Listener {
 
         final Location[] center = {player.getLocation()};
         double radius = 1.5;
+        int finalIntensity = intensity;
         BukkitRunnable runnable = new BukkitRunnable() {
             @Override
             public void run() {
@@ -101,8 +103,8 @@ public class PreviewParticleCommand implements CommandExecutor, Listener {
                 if (player.getLocation().distanceSquared(center[0]) > 0.01) {
                     center[0] = player.getLocation();
                 }
-                for (int i = 0; i < intensity; i++) {
-                    double angle = (2 * Math.PI / intensity) * i;
+                for (int i = 0; i < finalIntensity; i++) {
+                    double angle = (2 * Math.PI / finalIntensity) * i;
                     double x = radius * Math.cos(angle);
                     double z = radius * Math.sin(angle);
                     Location loc = center[0].clone().add(x, 0.5, z);

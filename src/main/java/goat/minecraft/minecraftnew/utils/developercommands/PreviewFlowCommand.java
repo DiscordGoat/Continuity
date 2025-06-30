@@ -134,6 +134,10 @@ public class PreviewFlowCommand implements CommandExecutor, Listener {
                     center[0] = player.getLocation();
                 }
                 angle += 0.03 + 0.01 * intensity;
+                if (++tick % 20 == 0) {
+                    center[0] = player.getLocation();
+                }
+                angle += 0.05 + 0.02 * intensity;
                 for (int i = 0; i < spawned.size(); i++) {
                     ArmorStand stand = spawned.get(i);
                     if (!stand.isValid()) continue;
