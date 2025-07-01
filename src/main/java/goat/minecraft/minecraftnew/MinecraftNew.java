@@ -569,6 +569,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Accelerate(), this);
         getServer().getPluginManager().registerEvents(new FortuneRemover(), this);
         getServer().getPluginManager().registerEvents(new Defenestration(), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.enchanting.enchantingeffects.Velocity(), this);
 
         CustomEnchantmentManager.registerEnchantment("Feed", 3, true);
         CustomEnchantmentManager.registerEnchantment("Merit", 5, true);
@@ -590,6 +591,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomEnchantmentManager.registerEnchantment("Preservation", 1, true);
         CustomEnchantmentManager.registerEnchantment("Water Aspect", 4, true);
         CustomEnchantmentManager.registerEnchantment("Accelerate", 4, true);
+        CustomEnchantmentManager.registerEnchantment("Velocity", 3, true);
         CustomEnchantmentManager.registerEnchantment("Defenestration", 1, true);
 
 

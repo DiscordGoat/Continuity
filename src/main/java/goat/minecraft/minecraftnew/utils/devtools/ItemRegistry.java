@@ -1524,6 +1524,21 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getFletcherVelocityEnchant() {
+        return createCustomItem(
+                Material.SUGAR,
+                ChatColor.YELLOW + "Velocity",
+                Arrays.asList(
+                        ChatColor.GRAY + "Max level of 3",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Velocity to items.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getFletcherCrossbowEnchant() {
         return createCustomItem(
                 Material.FIRE_CHARGE,
