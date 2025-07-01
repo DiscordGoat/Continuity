@@ -37,9 +37,9 @@ public class BlessingArtifactGUI implements Listener {
 
     private void openGUI(Player player) {
         Inventory inv = Bukkit.createInventory(null, 9, GUI_TITLE);
-        inv.setItem(2, createChoice(Material.FEATHER, ChatColor.GREEN + "Feather"));
-        inv.setItem(4, createChoice(Material.SHIELD, ChatColor.GREEN + "Shield"));
-        inv.setItem(6, createChoice(Material.SUGAR, ChatColor.GREEN + "Speed"));
+        inv.setItem(2, createChoice(Material.FEATHER, ChatColor.GREEN + "Feather Armor"));
+        inv.setItem(4, createChoice(Material.SHIELD, ChatColor.GREEN + "Shield Armor"));
+        inv.setItem(6, createChoice(Material.SUGAR, ChatColor.GREEN + "Speed Armor"));
         player.openInventory(inv);
     }
 
