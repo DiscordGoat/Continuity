@@ -278,6 +278,7 @@ public class VillagerTradeManager implements Listener {
 
         fletcherPurchases.add(createTradeMap("ACACIA_BOW", 1, 128, 4)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_BOW_ENCHANT", 1, 16, 2)); // Custom item
+        fletcherPurchases.add(createTradeMap("FLETCHER_DEFENESTRATION", 1, 64, 4)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_POWER", 1, 64, 4)); // Custom item
         fletcherPurchases.add(createTradeMap("DARK_OAK_BOW", 1, 128*2, 5)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_CROSSBOW_ENCHANT", 1, 32, 5)); // Custom item
@@ -941,6 +942,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getPowerCrystal();
             case "FLETCHER_BOW_ENCHANT":
                 return ItemRegistry.getFletcherBowEnchant();
+            case "FLETCHER_DEFENESTRATION":
+                return ItemRegistry.getFletcherDefenestrationEnchant();
             case "FLETCHER_POWER":
                 return ItemRegistry.getFletcherPower();
             case "ENT_BARK":

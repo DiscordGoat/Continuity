@@ -1539,6 +1539,22 @@ public class ItemRegistry {
         );
     }
 
+    /** Creates the Defenestration enchant item used by fletchers. */
+    public static ItemStack getFletcherDefenestrationEnchant() {
+        return createCustomItem(
+                Material.AMETHYST_SHARD,
+                ChatColor.YELLOW + "Defenestration",
+                Arrays.asList(
+                        ChatColor.GRAY + "Max level of 1",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Defenestration to items.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getWeaponsmithEnchant() {
         return createCustomItem(
                 Material.RED_DYE,
