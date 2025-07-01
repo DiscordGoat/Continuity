@@ -20,15 +20,33 @@ public class BlessingArmorStandListener implements Listener {
     private final Map<String, List<String>> bonusMap = new HashMap<>();
 
     public BlessingArmorStandListener() {
-        colorMap.put("Feather", ChatColor.AQUA);
-        colorMap.put("Shield", ChatColor.DARK_AQUA);
-        colorMap.put("Speed", ChatColor.GOLD);
+        colorMap.put("Lost Legion", ChatColor.YELLOW);
+        colorMap.put("Monolith", ChatColor.BLACK);
+        colorMap.put("Scorchsteel", ChatColor.GOLD);
+        colorMap.put("Dweller", ChatColor.DARK_AQUA);
+        colorMap.put("Pastureshade", ChatColor.YELLOW);
+        colorMap.put("Countershot", ChatColor.DARK_GRAY);
+        colorMap.put("Shadowstep", ChatColor.LIGHT_PURPLE);
+        colorMap.put("Strider", ChatColor.WHITE);
+        colorMap.put("Slayer", ChatColor.DARK_RED);
+        colorMap.put("Duskblood", ChatColor.DARK_PURPLE);
+        colorMap.put("Thunderforge", ChatColor.BLUE);
+        colorMap.put("Fathmic Iron", ChatColor.AQUA);
         colorMap.put("Nature's Wrath", ChatColor.DARK_GREEN);
 
-        bonusMap.put("Feather", List.of(ChatColor.GRAY + "Full Set Bonus: Slow falling"));
-        bonusMap.put("Shield", List.of(ChatColor.GRAY + "Full Set Bonus: Extra defense"));
-        bonusMap.put("Speed", List.of(ChatColor.GRAY + "Full Set Bonus: Faster movement"));
-        bonusMap.put("Nature's Wrath", List.of(ChatColor.GRAY + "Full Set Bonus: Increased damage"));
+        bonusMap.put("Lost Legion", List.of(ChatColor.GRAY + "Full Set Bonus: +25% Arrow Damage"));
+        bonusMap.put("Monolith", List.of(ChatColor.GRAY + "Full Set Bonus: +20 Health, +20% Defense"));
+        bonusMap.put("Scorchsteel", List.of(ChatColor.GRAY + "Full Set Bonus: +20 Fire Stacks, +40% Nether Monster Damage Reduction"));
+        bonusMap.put("Nature's Wrath", List.of(ChatColor.GRAY + "Full Set Bonus: +4% Spirit Chance, +25% Spirit Defense, +25% Spirit Damage"));
+        bonusMap.put("Dweller", List.of(ChatColor.GRAY + "Full Set Bonus: +25% Ore Yield, +500 Oxygen"));
+        bonusMap.put("Pastureshade", List.of(ChatColor.GRAY + "Full Set Bonus: +100% Crop Yield, +1 Relic Yield"));
+        bonusMap.put("Countershot", List.of(ChatColor.GRAY + "Full Set Bonus: Arrow Deflection"));
+        bonusMap.put("Shadowstep", List.of(ChatColor.GRAY + "Full Set Bonus: +60% Dodge Chance"));
+        bonusMap.put("Strider", List.of(ChatColor.GRAY + "Full Set Bonus: +40 Walk Speed"));
+        bonusMap.put("Slayer", List.of(ChatColor.GRAY + "Full Set Bonus: +20% Damage"));
+        bonusMap.put("Duskblood", List.of(ChatColor.GRAY + "Full Set Bonus: +60 Warp Stacks"));
+        bonusMap.put("Thunderforge", List.of(ChatColor.GRAY + "Full Set Bonus: +15% Fury Chance"));
+        bonusMap.put("Fathmic Iron", List.of(ChatColor.GRAY + "Full Set Bonus: Removes Common/Uncommon Sea Creatures, -20% Sea Creature Chance."));
     }
 
     @EventHandler

@@ -36,10 +36,20 @@ public class BlessingArtifactGUI implements Listener {
     }
 
     private void openGUI(Player player) {
-        Inventory inv = Bukkit.createInventory(null, 9, GUI_TITLE);
-        inv.setItem(2, createChoice(Material.FEATHER, ChatColor.GREEN + "Feather"));
-        inv.setItem(4, createChoice(Material.SHIELD, ChatColor.GREEN + "Shield"));
-        inv.setItem(6, createChoice(Material.SUGAR, ChatColor.GREEN + "Speed"));
+        Inventory inv = Bukkit.createInventory(null, 18, GUI_TITLE);
+        inv.setItem(0, createChoice(Material.BOW, ChatColor.GREEN + "Lost Legion"));
+        inv.setItem(1, createChoice(Material.DIAMOND_CHESTPLATE, ChatColor.GREEN + "Monolith"));
+        inv.setItem(2, createChoice(Material.NETHERRACK, ChatColor.GREEN + "Scorchsteel"));
+        inv.setItem(3, createChoice(Material.BEDROCK, ChatColor.GREEN + "Dweller"));
+        inv.setItem(4, createChoice(Material.HAY_BLOCK, ChatColor.GREEN + "Pastureshade"));
+        inv.setItem(5, createChoice(Material.IRON_AXE, ChatColor.GREEN + "Nature's Wrath"));
+        inv.setItem(6, createChoice(Material.SHIELD, ChatColor.GREEN + "Countershot"));
+        inv.setItem(7, createChoice(Material.ENDER_PEARL, ChatColor.GREEN + "Shadowstep"));
+        inv.setItem(8, createChoice(Material.FEATHER, ChatColor.GREEN + "Strider"));
+        inv.setItem(9, createChoice(Material.DIAMOND_SWORD, ChatColor.GREEN + "Slayer"));
+        inv.setItem(10, createChoice(Material.ENDER_EYE, ChatColor.GREEN + "Duskblood"));
+        inv.setItem(11, createChoice(Material.LIGHTNING_ROD, ChatColor.GREEN + "Thunderforge"));
+        inv.setItem(12, createChoice(Material.SEA_LANTERN, ChatColor.GREEN + "Fathmic Iron"));
         player.openInventory(inv);
     }
 
