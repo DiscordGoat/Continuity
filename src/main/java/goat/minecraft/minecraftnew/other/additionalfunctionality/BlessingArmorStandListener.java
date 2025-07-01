@@ -22,7 +22,8 @@ public class BlessingArmorStandListener implements Listener {
 
     public BlessingArmorStandListener() {
         colorMap.put("Lost Legion", ChatColor.YELLOW);
-        colorMap.put("Monolith", ChatColor.BLACK);
+        //
+        colorMap.put("Monolith", ChatColor.RED);
         colorMap.put("Scorchsteel", ChatColor.GOLD);
         colorMap.put("Dweller", ChatColor.DARK_AQUA);
         colorMap.put("Pastureshade", ChatColor.YELLOW);

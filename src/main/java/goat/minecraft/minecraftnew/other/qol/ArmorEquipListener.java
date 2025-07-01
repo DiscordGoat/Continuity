@@ -21,8 +21,11 @@ public class ArmorEquipListener implements Listener {
         if (!armorStand.isVisible()) {
             return;
         }
-
         Player player = event.getPlayer();
+        if(player.getInventory().getItemInMainHand().getType() != Material.AIR){
+            return;
+        }
+
         ItemStack[] playerArmor = player.getInventory().getArmorContents();
         ItemStack[] standArmor = armorStand.getEquipment().getArmorContents();
 
