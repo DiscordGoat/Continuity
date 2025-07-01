@@ -81,7 +81,9 @@ public class BlessingSelectionGUI implements Listener {
         String name = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
         try {
             FlowType.valueOf(name.toUpperCase());
-            player.sendMessage(ChatColor.GREEN + "Selected Blessing: " + name);
+            ItemStack artifact = player.getInventory().getItemInMainHand();
+            ItemMeta artifactMeta = artifact.getItemMeta();
+            artifactMeta.setDisplayName(artifactMeta.getDisplayName() + ": " + name);
             player.closeInventory();
         } catch (IllegalArgumentException ignored) {
         }

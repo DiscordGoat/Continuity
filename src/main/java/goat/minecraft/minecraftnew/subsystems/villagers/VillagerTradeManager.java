@@ -493,6 +493,7 @@ public class VillagerTradeManager implements Listener {
         armorerPurchases.add(createTradeMap("LEGENDARY_ARMOR_REFORGE", 1, 128, 5)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE", 1, 32, 5)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE_TWO", 1, 64, 5)); // Custom Item
+        armorerPurchases.add(createTradeMap("BLESSING", 1, 64, 5)); // ItemRegistry.getBlessing()
 
         armorerPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
 
