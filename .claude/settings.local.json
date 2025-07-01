@@ -19,5 +19,6 @@
       "Bash(java:*)"
     ],
     "deny": []
-  }
+  },
+  "enableAllProjectMcpServers": false
 }

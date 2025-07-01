@@ -377,7 +377,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ArmorEquipListener(), this);
 
         getServer().getPluginManager().registerEvents(new Leap(this), this);
-// getServer().getPluginManager().registerEvents(new MobDamageHandler(), this); // Handled by new combat subsystem
         getServer().getPluginManager().registerEvents(new Comfortable(this), this);
         getServer().getPluginManager().registerEvents(new TerrorOfTheDeep(this), this);
         getServer().getPluginManager().registerEvents(new BonePlating(this), this);

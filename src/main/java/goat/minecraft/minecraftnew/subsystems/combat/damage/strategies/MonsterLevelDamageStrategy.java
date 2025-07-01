@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.combat.damage.strategies;
 
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.combat.config.CombatConfiguration;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationContext;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationResult;
@@ -48,6 +49,7 @@ public class MonsterLevelDamageStrategy implements DamageCalculationStrategy {
             }
             
             double multiplier = 1.0 + (monsterLevel * config.getMonsterPerLevel());
+
             double finalDamage = originalDamage * multiplier;
             
             DamageCalculationResult.DamageModifier modifier = 
