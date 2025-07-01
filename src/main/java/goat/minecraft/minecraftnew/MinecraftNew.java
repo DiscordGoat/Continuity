@@ -516,6 +516,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), MinecraftNew.getInstance());
         //getServer().getPluginManager().registerEvents(new CancelBrewing(MinecraftNew.getInstance()), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new RightClickArtifacts(this), this);
+        getServer().getPluginManager().registerEvents(new BlessingArtifactGUI(this), this);
         getServer().getPluginManager().registerEvents(new AnvilRepair(MinecraftNew.getInstance()), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         getServer().getPluginManager().registerEvents(new EpicEnderDragonFight(this), this);

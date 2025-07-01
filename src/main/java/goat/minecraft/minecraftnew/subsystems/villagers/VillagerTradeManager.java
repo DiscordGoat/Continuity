@@ -488,6 +488,7 @@ public class VillagerTradeManager implements Listener {
         armorerPurchases.add(createTradeMap("ARMOR_SMITH_THORNS", 1, 64, 4)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMOR_SMITH_FEATHER_FALLING", 1, 64, 4)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMORER_ENCHANT", 1, 16, 4)); // Custom Item
+        armorerPurchases.add(createTradeMap("BLESSING_ARTIFACT", 1, 64, 4)); // Custom Item
 
         armorerPurchases.add(createTradeMap("LEGENDARY_ARMOR_REFORGE", 1, 128, 5)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE", 1, 32, 5)); // Custom Item
@@ -858,6 +859,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLeatherworkerEnchant();
             case "LEATHERWORKER_ARTIFACT":
                 return ItemRegistry.getLeatherworkerArtifact();
+            case "BLESSING_ARTIFACT":
+                return ItemRegistry.getBlessingArtifact();
             case "WORKBENCH_TRINKET":
                 return ItemRegistry.getWorkbenchTrinket();
             case "DIVIDER_TRINKET":

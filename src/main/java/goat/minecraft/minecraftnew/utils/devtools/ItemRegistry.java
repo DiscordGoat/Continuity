@@ -4246,6 +4246,21 @@ public class ItemRegistry {
         );
     }
 
+    /** Simple artifact that lets players choose a blessing. */
+    public static ItemStack getBlessingArtifact() {
+        return createCustomItem(
+                Material.GOLD_NUGGET,
+                ChatColor.YELLOW + "Blessing Artifact",
+                List.of(
+                        ChatColor.GRAY + "Right-click to choose a blessing.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     /** Provides the Structure Block Charm for building assistance. */
     public static ItemStack getStructureBlockCharm() {
         StructureBlockManager manager = StructureBlockManager.getInstance();
