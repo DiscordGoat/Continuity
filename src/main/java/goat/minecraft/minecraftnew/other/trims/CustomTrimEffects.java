@@ -31,7 +31,11 @@ public class CustomTrimEffects implements Listener {
             "Amethyst", "Copper", "Netherite"
     };
 
-    private static String getTrimMaterial(ItemStack item) {
+    /**
+     * Extract the trim material from an armor piece based on its lore.
+     * This method is public so other systems can query trim data.
+     */
+    public static String getTrimMaterial(ItemStack item) {
         if (item == null || item.getType() == Material.AIR) return null;
         if (!item.hasItemMeta()) return null;
         ItemMeta meta = item.getItemMeta();
@@ -61,6 +65,26 @@ public class CustomTrimEffects implements Listener {
             }
         }
         return found;
+    }
+
+    /**
+     * Maps trim material names to display colors.
+     */
+    public static ChatColor getTrimColor(String material) {
+        if (material == null) return ChatColor.WHITE;
+        return switch (material.toLowerCase()) {
+            case "diamond" -> ChatColor.AQUA;
+            case "iron" -> ChatColor.GRAY;
+            case "gold" -> ChatColor.GOLD;
+            case "emerald" -> ChatColor.GREEN;
+            case "lapis" -> ChatColor.BLUE;
+            case "redstone" -> ChatColor.RED;
+            case "quartz" -> ChatColor.WHITE;
+            case "amethyst" -> ChatColor.LIGHT_PURPLE;
+            case "copper" -> ChatColor.GOLD;
+            case "netherite" -> ChatColor.DARK_GRAY;
+            default -> ChatColor.WHITE;
+        };
     }
 
     /* Diamond: 15% damage reduction */
