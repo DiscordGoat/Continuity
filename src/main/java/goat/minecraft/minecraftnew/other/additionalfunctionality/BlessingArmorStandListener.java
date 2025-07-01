@@ -43,8 +43,7 @@ public class BlessingArmorStandListener implements Listener {
         bonusMap.put("Dweller", List.of(ChatColor.GRAY + "Full Set Bonus: +25% Ore Yield, +500 Oxygen"));
         bonusMap.put("Pastureshade", List.of(ChatColor.GRAY + "Full Set Bonus: +100% Crop Yield, +1 Relic Yield"));
         bonusMap.put("Countershot", List.of(ChatColor.GRAY + "Full Set Bonus: Arrow Deflection"));
-        bonusMap.put("Shadowstep", List.of(ChatColor.GRAY + "Full Set Bonus: +60% Dodge Chance"));
-        bonusMap.put("Strider", List.of(ChatColor.GRAY + "Full Set Bonus: +40 Walk Speed"));
+        bonusMap.put("Shadowstep", List.of(ChatColor.GRAY + "Full Set Bonus: +40% Dodge Chance"));
         bonusMap.put("Slayer", List.of(ChatColor.GRAY + "Full Set Bonus: +20% Damage"));
         bonusMap.put("Duskblood", List.of(ChatColor.GRAY + "Full Set Bonus: +60 Warp Stacks"));
         bonusMap.put("Thunderforge", List.of(ChatColor.GRAY + "Full Set Bonus: +15% Fury Chance"));

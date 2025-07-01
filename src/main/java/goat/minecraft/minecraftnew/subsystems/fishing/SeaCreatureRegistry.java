@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class SeaCreatureRegistry implements Listener {
     private static final List<SeaCreature> SEA_CREATURES = new ArrayList<>();
@@ -403,6 +404,17 @@ public class SeaCreatureRegistry implements Listener {
         meta.setColor(color);
         armor.setItemMeta(meta);
         return armor;
+    }
+    public static Optional<SeaCreature> getRandomRareSeaCreature() {
+        // Filter out COMMON and UNCOMMON
+        List<SeaCreature> rares = SEA_CREATURES.stream()
+                .filter(c -> {
+                    Rarity r = c.getRarity();
+                    return r != Rarity.COMMON && r != Rarity.UNCOMMON;
+                })
+                .collect(Collectors.toList());
+        if (rares.isEmpty()) return Optional.empty();
+        return Optional.of(rares.get(RANDOM.nextInt(rares.size())));
     }
 
     /**

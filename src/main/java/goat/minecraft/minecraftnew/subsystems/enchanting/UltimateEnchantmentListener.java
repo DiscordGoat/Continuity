@@ -1,6 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.enchanting;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
+import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
 import goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
@@ -56,7 +58,7 @@ public class UltimateEnchantmentListener implements Listener {
 
     // Warp charge tracking
     private static final long WARP_CHARGE_COOLDOWN = 60_000L; // 60 seconds
-    private static final int DEFAULT_WARP_CHARGES = 10;
+    private static int DEFAULT_WARP_CHARGES = 10;
     private final Map<UUID, List<Long>> warpCharges = new HashMap<>();
     // Removed Leviathan ultimate enchantment
 
@@ -776,6 +778,9 @@ public class UltimateEnchantmentListener implements Listener {
     private int getMaxWarpCharges(Player player) {
         ItemStack sword = player.getInventory().getItemInMainHand();
         int lvl = SoulUpgradeSystem.getUpgradeLevel(sword, SoulUpgradeSystem.SwordUpgrade.WARP_AUGMENT);
+        if(BlessingUtils.hasFullSetBonus(player, "Duskblood")){
+            DEFAULT_WARP_CHARGES += 60;
+        }
         return DEFAULT_WARP_CHARGES + lvl * 5;
     }
 

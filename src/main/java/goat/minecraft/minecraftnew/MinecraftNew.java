@@ -71,6 +71,18 @@ import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.auras.AuraManager;
 import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
 import goat.minecraft.minecraftnew.subsystems.armorsets.MonolithSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.DuskbloodSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.DwellerSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.FathmicIronSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.NaturesWrathSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.PastureshadeSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.ScorechsteelSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.ShadowstepSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.SlayerSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.ThunderforgeSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.LostLegionSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.CountershotSetBonus;
+import goat.minecraft.minecraftnew.subsystems.armorsets.StriderSetBonus;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.SetStructureBlockPowerCommand;
@@ -108,6 +120,18 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private DoubleEnderchest doubleEnderchest;
     private BeaconPassiveEffects beaconPassiveEffects;
     private MonolithSetBonus monolithSetBonus;
+    private DuskbloodSetBonus duskbloodSetBonus;
+    private DwellerSetBonus dwellerSetBonus;
+    private FathmicIronSetBonus fathmicIronSetBonus;
+    private NaturesWrathSetBonus naturesWrathSetBonus;
+    private PastureshadeSetBonus pastureshadeSetBonus;
+    private ScorechsteelSetBonus scorechsteelSetBonus;
+    private ShadowstepSetBonus shadowstepSetBonus;
+    private SlayerSetBonus slayerSetBonus;
+    private ThunderforgeSetBonus thunderforgeSetBonus;
+    private LostLegionSetBonus lostLegionSetBonus;
+    private CountershotSetBonus countershotSetBonus;
+    private StriderSetBonus striderSetBonus;
     private RejuvenationCatalystListener rejuvenationCatalystListener;
 
 
@@ -268,6 +292,18 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(beaconPassiveEffects, this);
         beaconPassiveEffects.reapplyAllPassiveEffects();
         monolithSetBonus = new MonolithSetBonus(this);
+        duskbloodSetBonus = new DuskbloodSetBonus(this);
+        dwellerSetBonus = new DwellerSetBonus();
+        fathmicIronSetBonus = new FathmicIronSetBonus(this);
+        naturesWrathSetBonus = new NaturesWrathSetBonus(this);
+        pastureshadeSetBonus = new PastureshadeSetBonus(this);
+        scorechsteelSetBonus = new ScorechsteelSetBonus(this);
+        shadowstepSetBonus = new ShadowstepSetBonus(this);
+        slayerSetBonus = new SlayerSetBonus(this);
+        thunderforgeSetBonus = new ThunderforgeSetBonus(this);
+        lostLegionSetBonus = new LostLegionSetBonus(this);
+        countershotSetBonus = new CountershotSetBonus(this);
+        striderSetBonus = new StriderSetBonus(this);
         // Initialize catalyst manager for beacon charm catalysts
         CatalystManager.initialize(this);
         rejuvenationCatalystListener = new RejuvenationCatalystListener(this);
@@ -689,6 +725,42 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         if (monolithSetBonus != null) {
             monolithSetBonus.removeAllBonuses();
+        }
+        if (duskbloodSetBonus != null) {
+            duskbloodSetBonus.removeAllBonuses();
+        }
+        if (dwellerSetBonus != null) {
+            dwellerSetBonus.removeAllBonuses();
+        }
+        if (fathmicIronSetBonus != null) {
+            fathmicIronSetBonus.removeAllBonuses();
+        }
+        if (naturesWrathSetBonus != null) {
+            naturesWrathSetBonus.removeAllBonuses();
+        }
+        if (pastureshadeSetBonus != null) {
+            pastureshadeSetBonus.removeAllBonuses();
+        }
+        if (scorechsteelSetBonus != null) {
+            scorechsteelSetBonus.removeAllBonuses();
+        }
+        if (shadowstepSetBonus != null) {
+            shadowstepSetBonus.removeAllBonuses();
+        }
+        if (slayerSetBonus != null) {
+            slayerSetBonus.removeAllBonuses();
+        }
+        if (thunderforgeSetBonus != null) {
+            thunderforgeSetBonus.removeAllBonuses();
+        }
+        if (lostLegionSetBonus != null) {
+            lostLegionSetBonus.removeAllBonuses();
+        }
+        if (countershotSetBonus != null) {
+            countershotSetBonus.removeAllBonuses();
+        }
+        if (striderSetBonus != null) {
+            striderSetBonus.removeAllBonuses();
         }
         BeaconPassivesGUI.saveAllPassives();
         if (CatalystManager.getInstance() != null) {

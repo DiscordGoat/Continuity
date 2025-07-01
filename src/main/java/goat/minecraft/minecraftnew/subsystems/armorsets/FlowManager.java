@@ -101,6 +101,73 @@ public class FlowManager implements Listener {
         refreshAnimation(player, data.flow);
     }
 
+    @EventHandler
+    public void onBlockBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        
+        // Check if player has a blessed armor set
+        String blessing = BlessingUtils.getBlessing(player.getInventory().getHelmet());
+        if (blessing == null || !BlessingUtils.hasFullSetBonus(player, blessing)) {
+            return;
+        }
+        
+        // Get the appropriate FlowType for this blessing
+        String enumName = blessing.toUpperCase().replace(" ", "_").replace("'", "");
+        FlowType type;
+        try {
+            type = FlowType.valueOf(enumName);
+        } catch (IllegalArgumentException e) {
+            return;
+        }
+        
+        // Check if the broken block matches this FlowType's materials
+        if (type.getMaterials().contains(event.getBlock().getType())) {
+            addFlow(player, type, 1);
+        }
+    }
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        Player killer = event.getEntity().getKiller();
+        if (killer == null) {
+            return;
+        }
+        
+        // Check if player has a blessed armor set
+        String blessing = BlessingUtils.getBlessing(killer.getInventory().getHelmet());
+        if (blessing == null || !BlessingUtils.hasFullSetBonus(killer, blessing)) {
+            return;
+        }
+        
+        // Get the appropriate FlowType for this blessing
+        String enumName = blessing.toUpperCase().replace(" ", "_").replace("'", "");
+        FlowType type;
+        try {
+            type = FlowType.valueOf(enumName);
+        } catch (IllegalArgumentException e) {
+            return;
+        }
+        
+        // Add flow for killing entities (combat-themed armor sets get more)
+        int flowAmount = 1;
+        if (type == FlowType.SLAYER || type == FlowType.LOST_LEGION || type == FlowType.COUNTERSHOT) {
+            flowAmount = 2; // Combat armor sets get more flow from kills
+        }
+        
+        addFlow(killer, type, flowAmount);
+    }
+
+    /**
+     * Adds flow for a specific FlowType and triggers appropriate animations.
+     */
+    public void addFlow(Player player, FlowType type, int amount) {
+        if (amount <= 0) return;
+        FlowData data = flowMap.computeIfAbsent(player.getUniqueId(), k -> new FlowData());
+        data.flow += amount;
+        data.lastActivity = System.currentTimeMillis();
+        refreshAnimation(player, data.flow);
+    }
+
     private void startDecayTask() {
         new BukkitRunnable() {
             @Override

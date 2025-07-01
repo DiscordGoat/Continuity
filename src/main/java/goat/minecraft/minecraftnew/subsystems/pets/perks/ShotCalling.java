@@ -31,10 +31,6 @@ public class ShotCalling implements Listener {
                 // Get the player's active pet
                 PetManager petManager = PetManager.getInstance(plugin);
                 PetManager.Pet activePet = petManager.getActivePet(player);
-                if(BlessingUtils.hasFullSetBonus(player, "Lost Legion")){
-                    FlowManager flowManager = FlowManager.getInstance(MinecraftNew.getInstance());
-                    flowManager.addFlow(player, 1);
-                }
                 // Check if the player has an active pet with the SHOTCALLING perk
                 if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SHOTCALLING)) {
                     int petLevel = activePet.getLevel();

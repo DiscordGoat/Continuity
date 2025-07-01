@@ -50,7 +50,6 @@ public final class BlessingUtils {
         String c = getBlessing(player.getInventory().getChestplate());
         String l = getBlessing(player.getInventory().getLeggings());
         String b = getBlessing(player.getInventory().getBoots());
-        Bukkit.getLogger().info("Blessings → H=" + h + ", C=" + c + ", L=" + l + ", B=" + b);
 
 
         return blessing.equalsIgnoreCase(h) &&

@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.mining;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager; // Remove this if no longer needed anywhere else
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
@@ -220,7 +221,12 @@ public class PlayerOxygenManager implements Listener {
         XPManager xpManager = new XPManager(plugin);
         int miningLevel = xpManager.getPlayerLevel(player, "Mining");
         int ventilationBonus = getTotalVentilationEnchantmentLevel(player) * 25;
-        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (miningLevel * 4) + ventilationBonus;
+        int dwellerBonus = 0;
+        if(BlessingUtils.hasFullSetBonus(player, "Dweller")){
+            dwellerBonus += 500;
+        }
+
+        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (miningLevel * 4) + ventilationBonus + dwellerBonus;
         return initialOxygen;
     }
 

@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.farming;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
@@ -819,8 +820,13 @@ public class VerdantRelicsSubsystem implements Listener {
             ItemStack yield = getYieldForRelic();
 
             // Drop the yield at the relic's location
-            loc.getWorld().dropItemNaturally(loc.clone().add(0.5, 0.6, 0.5), yield);
-
+            if(BlessingUtils.hasFullSetBonus(harvester.getPlayer(), "Pastureshade")){
+                loc.getWorld().dropItemNaturally(loc.clone().add(0.5, 0.6, 0.5), yield);
+                loc.getWorld().dropItemNaturally(loc.clone().add(0.5, 0.6, 0.5), yield);
+            }
+            else{
+                loc.getWorld().dropItemNaturally(loc.clone().add(0.5, 0.6, 0.5), yield);
+            }
             // Award 1000 Farming XP upon harvest
             if (harvester != null) {
                 xpManager.addXP(harvester, "Farming", 250);

@@ -33,6 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class FireDamageHandler implements Listener {
 
+    private static FireDamageHandler instance;
     private final JavaPlugin plugin;
     private final DamageNotificationService notificationService;
     private final Map<UUID, Integer> fireLevels = new ConcurrentHashMap<>();
@@ -42,6 +43,21 @@ public class FireDamageHandler implements Listener {
     public FireDamageHandler(JavaPlugin plugin, DamageNotificationService notificationService) {
         this.plugin = plugin;
         this.notificationService = notificationService;
+        instance = this;
+    }
+
+    public static FireDamageHandler getInstance() {
+        return instance;
+    }
+
+    /**
+     * Static method to add fire stacks to an entity.
+     * This is used by external systems like armor set bonuses.
+     */
+    public static void addFireStacks(LivingEntity entity, int amount) {
+        if (instance != null) {
+            instance.addFire(entity, amount);
+        }
     }
 
     @EventHandler

@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
 import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
@@ -138,6 +139,9 @@ public class FishingEvent implements Listener {
         if (playerMeritManager.hasPerk(player.getUniqueId(), "Master Angler")) {
             seaCreatureChance += 5;
         }
+        if(BlessingUtils.hasFullSetBonus(player, "Fathmic Iron")){
+            seaCreatureChance -= 20;
+        }
 
         ItemStack rod = player.getInventory().getItemInMainHand();
         int sonarLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.SONAR);
@@ -240,9 +244,15 @@ public class FishingEvent implements Listener {
     private void spawnAndLaunchSeaCreature(Player player, Location bobberLocation, ItemStack rod) {
         PetManager petManager = PetManager.getInstance(plugin);
         Optional<SeaCreature> optionalSeaCreature = SeaCreatureRegistry.getRandomSeaCreature();
+        Optional<SeaCreature> optionalRareSeaCreature = SeaCreatureRegistry.getRandomRareSeaCreature();
+        SeaCreature seaCreature;
         if (!optionalSeaCreature.isPresent()) return;
 
-        SeaCreature seaCreature = optionalSeaCreature.get();
+        if(BlessingUtils.hasFullSetBonus(player, "Fathmic Iron")){
+            seaCreature = optionalRareSeaCreature.get();
+        }else{
+            seaCreature = optionalSeaCreature.get();
+        }
         EntityType entityType = seaCreature.getEntityType();
 
 

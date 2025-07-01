@@ -1,38 +1,39 @@
 package goat.minecraft.minecraftnew.subsystems.armorsets;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
+import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
+import goat.minecraft.minecraftnew.subsystems.armorsets.FlowType;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
 /**
- * Applies the Monolith full set bonus while the player is wearing the full set.
- * Grants +20 max health and 20% damage resistance. The bonus is automatically
- * applied on login and removed if any armor piece is unequipped.
+ * Applies the Lost Legion full set bonus while the player is wearing the full set.
+ * Provides +25% arrow damage bonus.
  */
-public class MonolithSetBonus implements Listener {
+public class LostLegionSetBonus implements Listener {
 
     private final JavaPlugin plugin;
+    private final FlowManager flowManager;
     private final Map<UUID, Boolean> applied = new HashMap<>();
-    private final Map<UUID, Double> baseHealth = new HashMap<>();
 
-    public MonolithSetBonus(JavaPlugin plugin) {
+    public LostLegionSetBonus(JavaPlugin plugin) {
         this.plugin = plugin;
+        this.flowManager = FlowManager.getInstance(plugin);
         Bukkit.getPluginManager().registerEvents(this, plugin);
         // Reapply bonus for players already online (e.g. during reload)
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -62,7 +63,30 @@ public class MonolithSetBonus implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamage(EntityDamageEvent event) {
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Arrow arrow)) {
+            return;
+        }
+
+        if (!(arrow.getShooter() instanceof Player shooter)) {
+            return;
+        }
+
+        if (!applied.getOrDefault(shooter.getUniqueId(), false)) {
+            return;
+        }
+
+        // Apply 25% bonus damage to arrows
+        double damage = event.getDamage();
+        double bonusDamage = damage * 0.25;
+        event.setDamage(damage + bonusDamage);
+
+        // Add flow when dealing damage
+        flowManager.addFlow(shooter, FlowType.LOST_LEGION, 1);
+    }
+
+    @EventHandler
+    public void onEntityShootBow(EntityShootBowEvent event) {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
@@ -71,13 +95,12 @@ public class MonolithSetBonus implements Listener {
             return;
         }
 
-        // Activate Flow when taking damage
-        FlowManager flowManager = FlowManager.getInstance(plugin);
-        flowManager.addFlowStacks(player, 1);
+        // Add flow when shooting arrows
+        flowManager.addFlow(player, FlowType.LOST_LEGION, 1);
     }
 
     private void checkPlayer(Player player) {
-        if (BlessingUtils.hasFullSetBonus(player, "Monolith")) {
+        if (BlessingUtils.hasFullSetBonus(player, "Lost Legion")) {
             applyBonus(player);
         } else {
             removeBonus(player);
@@ -89,17 +112,6 @@ public class MonolithSetBonus implements Listener {
         if (applied.getOrDefault(id, false)) {
             return;
         }
-        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
-        AttributeInstance attr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (attr != null) {
-            double current = attr.getBaseValue();
-            baseHealth.put(id, current);
-            double newMax = current + 20.0;
-            attr.setBaseValue(newMax);
-            if (player.getHealth() > newMax) {
-                player.setHealth(newMax);
-            }
-        }
         applied.put(id, true);
     }
 
@@ -108,27 +120,13 @@ public class MonolithSetBonus implements Listener {
         if (!applied.getOrDefault(id, false)) {
             return;
         }
-        player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-        AttributeInstance attr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (attr != null) {
-            double base = baseHealth.getOrDefault(id, attr.getBaseValue() - 20.0);
-            attr.setBaseValue(base);
-            if (player.getHealth() > base) {
-                player.setHealth(base);
-            }
-        }
         applied.put(id, false);
-        baseHealth.remove(id);
     }
 
     /**
      * Removes all active bonuses. Called on plugin disable to clean up.
      */
     public void removeAllBonuses() {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            removeBonus(player);
-        }
         applied.clear();
-        baseHealth.clear();
     }
 }

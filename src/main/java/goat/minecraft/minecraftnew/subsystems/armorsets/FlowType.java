@@ -244,4 +244,8 @@ public enum FlowType {
     public Particle getParticle() {
         return particle;
     }
+
+    public List<Material> getMaterials() {
+        return materials;
+    }
 }

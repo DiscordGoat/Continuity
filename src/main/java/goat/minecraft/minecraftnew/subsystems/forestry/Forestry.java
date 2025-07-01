@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
 import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
@@ -403,6 +404,9 @@ public class Forestry implements Listener {
             }
             if (activePet != null && activePet.hasPerk(PetManager.PetPerk.CHALLENGE)) {
                 spiritChance += 0.05;
+            }
+            if(BlessingUtils.hasFullSetBonus(player, "Nature's Wrath")){
+                spiritChance += 0.04;
             }
             CatalystManager catalystManager = CatalystManager.getInstance();
             if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {
