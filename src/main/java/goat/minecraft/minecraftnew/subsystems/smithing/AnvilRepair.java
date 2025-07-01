@@ -530,6 +530,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.ENCHANTED_BOOK);
                     billableItems.add(Material.ICE);
                     billableItems.add(Material.SLIME_BALL);
+                    billableItems.add(Material.AMETHYST_SHARD);
                     billableItems.add(Material.SOUL_SOIL);
                     billableItems.add(Material.LEATHER_BOOTS);
                     billableItems.add(Material.TURTLE_EGG);
@@ -560,6 +561,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.OBSIDIAN);
                     billableItems.add(Material.GOLDEN_SWORD);
                     billableItems.add(Material.WHEAT);
+                    billableItems.add(Material.SUGAR);
                     billableItems.add(Material.GOLD_INGOT);
                     billableItems.add(Material.SLIME_BLOCK);
                     billableItems.add(Material.FIRE_CHARGE);
@@ -976,6 +978,10 @@ public class AnvilRepair implements Listener {
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Bloodlust", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Bloodlust") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
 
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Defenestration") && isBow(repairee)) {
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Defenestration", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Defenestration") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Soul Lantern")&& isSword(repairee)){
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Experience", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Experience") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);

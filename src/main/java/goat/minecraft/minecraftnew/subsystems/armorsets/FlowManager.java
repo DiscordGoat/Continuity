@@ -107,19 +107,6 @@ public class FlowManager implements Listener {
         }.runTaskTimer(plugin, 20L, 20L);
     }
 
-    @EventHandler
-    public void onBlockBreak(BlockBreakEvent event) {
-        addFlowStacks(event.getPlayer(), 1);
-    }
-
-    @EventHandler
-    public void onEntityKill(EntityDeathEvent event) {
-        Player killer = event.getEntity().getKiller();
-        if (killer != null) {
-            addFlowStacks(killer, 1);
-        }
-    }
-
     private void refreshAnimation(Player player, int intensity) {
         String blessing = BlessingUtils.getBlessing(player.getInventory().getHelmet());
         if (blessing == null || !BlessingUtils.hasFullSetBonus(player, blessing)) {

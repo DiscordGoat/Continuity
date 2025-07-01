@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -49,6 +50,8 @@ public final class BlessingUtils {
         String c = getBlessing(player.getInventory().getChestplate());
         String l = getBlessing(player.getInventory().getLeggings());
         String b = getBlessing(player.getInventory().getBoots());
+        Bukkit.getLogger().info("Blessings → H=" + h + ", C=" + c + ", L=" + l + ", B=" + b);
+
 
         return blessing.equalsIgnoreCase(h) &&
                blessing.equalsIgnoreCase(c) &&

@@ -23,7 +23,7 @@ public class Velocity implements Listener {
         int level = CustomEnchantmentManager.getEnchantmentLevel(bow, "Velocity");
         if (level < 1) return;
 
-        Projectile projectile = event.getProjectile();
+        Projectile projectile = (Projectile) event.getProjectile();
         projectile.setVelocity(projectile.getVelocity().multiply(1 + 0.25 * level));
     }
 }

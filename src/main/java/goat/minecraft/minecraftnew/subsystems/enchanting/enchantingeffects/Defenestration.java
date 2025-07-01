@@ -42,7 +42,7 @@ public class Defenestration implements Listener {
             b.getWorld().playSound(b.getLocation(), Sound.BLOCK_GLASS_BREAK, 1f, 1f);
             b.setType(Material.AIR);
         }
-
+        arrow.remove();
         new BukkitRunnable() {
             @Override
             public void run() {

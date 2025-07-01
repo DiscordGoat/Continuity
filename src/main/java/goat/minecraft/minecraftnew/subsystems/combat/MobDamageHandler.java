@@ -52,7 +52,4 @@ public class MobDamageHandler implements Listener {
     }
 
 
-    public int extractIntegerFromEntityName(Entity entity) {
-        return levelExtractor.extractLevelFromName(entity);
-    }
 }

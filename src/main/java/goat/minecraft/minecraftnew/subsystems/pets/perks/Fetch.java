@@ -1,6 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
@@ -24,6 +26,11 @@ public class Fetch implements Listener {
         }
         if (!(event.getDamager() instanceof Arrow arrow)) {
             return;
+        }
+        if(BlessingUtils.hasFullSetBonus(player, "Countershot")){
+            event.setCancelled(true);
+            arrow.remove();
+            player.playSound(player.getLocation(), Sound.ENTITY_PARROT_EAT, 3, 1);
         }
 
         PetManager.Pet activePet = petManager.getActivePet(player);
