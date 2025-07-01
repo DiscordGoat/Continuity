@@ -813,11 +813,14 @@ public class RightClickArtifacts implements Listener {
     }
 
     /**
-     * Handles using the Vaccination artifact on Zombie Villagers.
+     * Handles using the Vaccination artifact on Zombie Villagers or Witches.
      */
     @EventHandler
     public void onEntityInteract(PlayerInteractEntityEvent event) {
-        if (!(event.getRightClicked() instanceof ZombieVillager zombie)) {
+        Entity clicked = event.getRightClicked();
+        ZombieVillager zombie = clicked instanceof ZombieVillager z ? z : null;
+        Witch witch = clicked instanceof Witch w ? w : null;
+        if (zombie == null && witch == null) {
             return;
         }
         Player player = event.getPlayer();
@@ -834,7 +837,11 @@ public class RightClickArtifacts implements Listener {
         }
 
         event.setCancelled(true);
-        cureZombieVillager(player, zombie);
+        if (zombie != null) {
+            cureZombieVillager(player, zombie);
+        } else {
+            cureWitch(player, Objects.requireNonNull(witch));
+        }
         decrementItemAmount(itemInHand, player);
     }
 
@@ -864,6 +871,37 @@ public class RightClickArtifacts implements Listener {
                 if (!stripped.isEmpty()) {
                     ChatColor nameColor = stripped.equalsIgnoreCase("Bartender") ? ChatColor.GOLD : ChatColor.GREEN;
                     villager.setCustomName(nameColor + stripped);
+                    villager.setCustomNameVisible(true);
+                }
+
+                world.spawnParticle(Particle.VILLAGER_HAPPY, loc.add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
+                world.playSound(loc, Sound.ENTITY_VILLAGER_CELEBRATE, 1f, 1f);
+            }
+        }.runTaskLater(MinecraftNew.getInstance(), 100L); // 5 seconds
+    }
+
+    /**
+     * Converts the given Witch back to a Villager after a short delay.
+     */
+    private void cureWitch(Player player, Witch witch) {
+        World world = witch.getWorld();
+        Location loc = witch.getLocation();
+
+        world.playSound(loc, Sound.ENTITY_ZOMBIE_VILLAGER_CURE, 1f, 1f);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!witch.isValid()) return;
+                witch.remove();
+                Villager villager = (Villager) world.spawnEntity(loc, EntityType.VILLAGER);
+                villager.setProfession(Villager.Profession.NONE);
+                villager.setVillagerType(Villager.Type.PLAINS);
+
+                String rawName = witch.getCustomName() != null ? witch.getCustomName() : "";
+                String stripped = ChatColor.stripColor(rawName).replaceFirst("(?i)^\\s*\\[?\\s*(?:level|lv\\.?|lvl)\\s*:?\\s*\\d+\\s*\\]?\\s*", "");
+                if (!stripped.isEmpty()) {
+                    villager.setCustomName(ChatColor.GREEN + stripped);
                     villager.setCustomNameVisible(true);
                 }
 

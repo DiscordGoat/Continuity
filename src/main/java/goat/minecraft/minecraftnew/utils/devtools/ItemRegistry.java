@@ -319,15 +319,15 @@ public class ItemRegistry {
     }
 
     /**
-     * Vaccination artifact used to cure Zombie Villagers.
+     * Vaccination artifact used to cure Zombie Villagers and Witches.
      */
     public static ItemStack getVaccination() {
         return createCustomItem(
                 Material.HONEY_BOTTLE,
                 ChatColor.YELLOW + "Vaccination",
                 Arrays.asList(
-                        ChatColor.GRAY + "A potent cure for zombification.",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Zombie Villager to cure it.",
+                        ChatColor.GRAY + "A potent cure for lingering curses.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Zombie Villager or Witch to cure it.",
                         ChatColor.DARK_PURPLE + "Artifact"
                 ),
                 1,
