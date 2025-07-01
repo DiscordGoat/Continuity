@@ -81,6 +81,12 @@ public class BlessingArmorStandListener implements Listener {
             return;
         }
 
+        if (isAlreadyBlessed(helmet) || isAlreadyBlessed(chest) || isAlreadyBlessed(legs) || isAlreadyBlessed(boots)) {
+            event.setCancelled(true);
+            player.sendMessage(ChatColor.RED + "This armor set has already been blessed.");
+            return;
+        }
+
         applyBlessing(helmet, blessing, "Helmet");
         applyBlessing(chest, blessing, "Chestplate");
         applyBlessing(legs, blessing, "Leggings");
@@ -100,6 +106,19 @@ public class BlessingArmorStandListener implements Listener {
                 chest != null && chest.getType() == Material.NETHERITE_CHESTPLATE &&
                 legs != null && legs.getType() == Material.NETHERITE_LEGGINGS &&
                 boots != null && boots.getType() == Material.NETHERITE_BOOTS;
+    }
+
+    private boolean isAlreadyBlessed(ItemStack piece) {
+        if (piece == null || !piece.hasItemMeta()) return false;
+        ItemMeta meta = piece.getItemMeta();
+        if (meta == null || !meta.hasLore()) return false;
+        for (String line : meta.getLore()) {
+            String stripped = ChatColor.stripColor(line);
+            if (stripped.startsWith("Full Set Bonus")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void applyBlessing(ItemStack piece, String blessing, String type) {
