@@ -36,8 +36,14 @@ public class Defenestration implements Listener {
         Set<Block> toBreak = findConnectedGlass(hit, 8);
         Map<Block, BlockData> original = new HashMap<>();
 
+        BlockFace[] faces = {BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST, BlockFace.UP, BlockFace.DOWN};
+
         for (Block b : toBreak) {
             original.put(b, b.getBlockData().clone());
+            for (BlockFace face : faces) {
+                Block neighbor = b.getRelative(face);
+                original.putIfAbsent(neighbor, neighbor.getBlockData().clone());
+            }
             b.getWorld().spawnParticle(Particle.BLOCK_CRACK, b.getLocation().add(0.5,0.5,0.5), 15, 0.3,0.3,0.3, b.getBlockData());
             b.getWorld().playSound(b.getLocation(), Sound.BLOCK_GLASS_BREAK, 1f, 1f);
             b.setType(Material.AIR);
@@ -48,9 +54,14 @@ public class Defenestration implements Listener {
             public void run() {
                 for (Map.Entry<Block, BlockData> entry : original.entrySet()) {
                     Block block = entry.getKey();
-                    if (block.getType() == Material.AIR) {
-                        block.setType(entry.getValue().getMaterial());
-                        block.setBlockData(entry.getValue());
+                    BlockData data = entry.getValue();
+                    if (toBreak.contains(block)) {
+                        if (block.getType() == Material.AIR) {
+                            block.setType(data.getMaterial());
+                            block.setBlockData(data);
+                        }
+                    } else if (block.getType() == data.getMaterial()) {
+                        block.setBlockData(data);
                     }
                 }
             }
