@@ -1,7 +1,8 @@
 package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.music.MusicDiscManager;
+import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -98,6 +99,21 @@ public class BlessingArmorStandListener implements Listener {
         armorStand.getEquipment().setBoots(boots);
 
         decrement(item, player);
+        // Celebration effects
+        player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+        World world = armorStand.getWorld();
+        Location effectLoc = armorStand.getLocation().add(0, 1, 0);
+        world.playSound(effectLoc, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 1.0f, 1.0f);
+        world.strikeLightningEffect(armorStand.getLocation());
+        ChatColor chatColor = colorMap.getOrDefault(blessing, ChatColor.GREEN);
+        world.spawnParticle(
+                Particle.REDSTONE,
+                effectLoc,
+                200,
+                0.5, 1, 0.5, 0,
+                new Particle.DustOptions(chatColorToColor(chatColor), 2f)
+        );
+        new MusicDiscManager(MinecraftNew.getInstance()).handleMusicDiscOtherside(player);
         event.setCancelled(true);
     }
 
@@ -143,5 +159,22 @@ public class BlessingArmorStandListener implements Listener {
         } else {
             player.getInventory().removeItem(item);
         }
+    }
+
+    private Color chatColorToColor(ChatColor chatColor) {
+        return switch (chatColor) {
+            case BLACK -> Color.BLACK;
+            case DARK_RED -> Color.MAROON;
+            case DARK_GREEN -> Color.GREEN;
+            case DARK_AQUA -> Color.TEAL;
+            case DARK_PURPLE, LIGHT_PURPLE -> Color.PURPLE;
+            case GOLD -> Color.ORANGE;
+            case GRAY, DARK_GRAY -> Color.GRAY;
+            case BLUE -> Color.BLUE;
+            case AQUA -> Color.AQUA;
+            case YELLOW -> Color.YELLOW;
+            case WHITE -> Color.WHITE;
+            default -> Color.WHITE;
+        };
     }
 }
