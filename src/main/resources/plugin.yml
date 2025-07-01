@@ -194,3 +194,7 @@ commands:
     description: Toggles display of your active aura
     usage: /aura
     default: true
+  flowdebug:
+    description: Shows a player's current flow level
+    usage: /flowdebug
+    permission: continuity.admin
