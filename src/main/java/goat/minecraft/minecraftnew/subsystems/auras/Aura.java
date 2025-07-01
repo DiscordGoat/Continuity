@@ -12,6 +12,12 @@ public enum Aura {
     SCORCHSTEEL(Particle.FLAME, ParticleStyle.RING, 8, 100.0),
     MONOLITH(Particle.FLAME, ParticleStyle.RING, 8, 100.0),
     LOST_LEGION(Particle.ASH, ParticleStyle.RING, 8, 100.0),
+    SLAYER(Particle.FLAME, ParticleStyle.RING, 8, 100.0),
+    COUNTERSHOT(Particle.SWEEP_ATTACK, ParticleStyle.RING, 4, 1.0),
+    SHADOWSTEP(Particle.PORTAL, ParticleStyle.AMBIENT, 4, 10.0),
+    STRIDER(Particle.CLOUD, ParticleStyle.TRAIL, 5, 20.0),
+    DUSKBLOOD(Particle.PORTAL, ParticleStyle.AMBIENT, 4, 10.0),
+    THUNDERFORGE(Particle.ASH, ParticleStyle.AMBIENT, 4, 10.0),
     FATHMIC_IRON(Particle.END_ROD, ParticleStyle.AMBIENT, 1, 5.0);
 
     private final Particle particle;

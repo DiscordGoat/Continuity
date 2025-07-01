@@ -154,7 +154,68 @@ public enum FlowType {
             ),
             Particle.SPORE_BLOSSOM_AIR
     ),
-
+    COUNTERSHOT(
+            Arrays.asList(
+                    // Deflecting core
+                    Material.SHIELD,
+                    // Iron-tier armor
+                    Material.IRON_HELMET,
+                    Material.IRON_CHESTPLATE,
+                    Material.IRON_LEGGINGS,
+                    Material.IRON_BOOTS,
+                    // Diamond-tier armor
+                    Material.DIAMOND_HELMET,
+                    Material.DIAMOND_CHESTPLATE,
+                    Material.DIAMOND_LEGGINGS,
+                    Material.DIAMOND_BOOTS,
+                    // Netherite-tier armor
+                    Material.NETHERITE_HELMET,
+                    Material.NETHERITE_CHESTPLATE,
+                    Material.NETHERITE_LEGGINGS,
+                    Material.NETHERITE_BOOTS
+            ),
+            Particle.END_ROD
+    ),
+    SHADOWSTEP(
+            Arrays.asList(
+                    // Deflecting core
+                    Material.ENDER_EYE,
+                    // Iron-tier armor
+                    Material.ENDER_PEARL,
+                    Material.BLACK_WOOL
+            ),
+            Particle.PORTAL
+    ),
+    STRIDER(
+            Arrays.asList(
+                    // Deflecting core
+                    Material.SUGAR,
+                    Material.FEATHER
+            ),
+            Particle.BUBBLE_POP
+    ),
+    SLAYER(
+            Arrays.asList(
+                    // Deflecting core
+                    Material.IRON_SWORD,
+                    Material.GOLDEN_AXE
+            ),
+            Particle.DAMAGE_INDICATOR
+    ),
+    DUSKBLOOD(
+            Arrays.asList(
+                    // Deflecting core
+                    Material.ENDER_CHEST
+            ),
+            Particle.PORTAL
+    ),
+    THUNDERFORGE(
+            Arrays.asList(
+                    // Deflecting core
+                    Material.GRAY_WOOL
+            ),
+            Particle.WATER_WAKE
+    ),
     /**
      * Flow effect that swirls sea-themed blocks around the player.
      */
