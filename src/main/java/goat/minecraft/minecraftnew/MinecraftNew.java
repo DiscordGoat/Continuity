@@ -70,6 +70,7 @@ import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.auras.AuraManager;
 import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
+import goat.minecraft.minecraftnew.subsystems.armorsets.MonolithSetBonus;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.SetStructureBlockPowerCommand;
@@ -106,6 +107,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
     private BeaconPassiveEffects beaconPassiveEffects;
+    private MonolithSetBonus monolithSetBonus;
     private RejuvenationCatalystListener rejuvenationCatalystListener;
 
 
@@ -265,6 +267,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         beaconPassiveEffects = new BeaconPassiveEffects(this);
         getServer().getPluginManager().registerEvents(beaconPassiveEffects, this);
         beaconPassiveEffects.reapplyAllPassiveEffects();
+        monolithSetBonus = new MonolithSetBonus(this);
         // Initialize catalyst manager for beacon charm catalysts
         CatalystManager.initialize(this);
         rejuvenationCatalystListener = new RejuvenationCatalystListener(this);
@@ -684,6 +687,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         if (beaconPassiveEffects != null) {
             beaconPassiveEffects.removeAllPassiveEffects();
+        }
+        if (monolithSetBonus != null) {
+            monolithSetBonus.removeAllBonuses();
         }
         BeaconPassivesGUI.saveAllPassives();
         if (CatalystManager.getInstance() != null) {
