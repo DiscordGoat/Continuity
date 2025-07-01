@@ -69,6 +69,7 @@ import goat.minecraft.minecraftnew.other.trinkets.TransfigurationPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.auras.AuraManager;
+import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.SetStructureBlockPowerCommand;
@@ -113,6 +114,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private VerdantRelicsSubsystem verdantRelicsSubsystem;
     private CombatSubsystemManager combatSubsystemManager;
     private AuraManager auraManager;
+    private FlowManager flowManager;
 
     public ItemDisplayManager getItemDisplayManager() {
         return displayManager;
@@ -282,6 +284,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
         getCommand("previewparticle").setExecutor(new PreviewParticleCommand(this));
         getCommand("previewflow").setExecutor(new PreviewFlowCommand(this));
+        flowManager = new FlowManager(this);
+        getCommand("flowdebug").setExecutor(new FlowDebugCommand(flowManager));
         auraManager = new AuraManager(this);
         getCommand("previewauratemplate").setExecutor(new PreviewAuraTemplateCommand(auraManager));
         getCommand("aura").setExecutor(new AuraCommand(auraManager));
