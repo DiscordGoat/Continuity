@@ -1,5 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
+import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Arrow;
@@ -28,7 +31,10 @@ public class ShotCalling implements Listener {
                 // Get the player's active pet
                 PetManager petManager = PetManager.getInstance(plugin);
                 PetManager.Pet activePet = petManager.getActivePet(player);
-
+                if(BlessingUtils.hasFullSetBonus(player, "Lost Legion")){
+                    FlowManager flowManager = FlowManager.getInstance(MinecraftNew.getInstance());
+                    flowManager.addFlow(player, 1);
+                }
                 // Check if the player has an active pet with the SHOTCALLING perk
                 if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SHOTCALLING)) {
                     int petLevel = activePet.getLevel();
@@ -39,12 +45,6 @@ public class ShotCalling implements Listener {
                     // Apply damage multiplier to the event
                     event.setDamage(event.getDamage() * damageMultiplier);
 
-                    // Optional: Chance to deal an additional effect (e.g., critical hit)
-                    double chance = 0.25; // 25% chance for a critical hit
-                    if (random.nextDouble() <= chance) {
-                        event.setDamage(event.getDamage() * 1.2); // Critical hit: 20% bonus damage
-                        player.sendMessage(ChatColor.BLUE + "Your ShotCalling perk triggered a critical hit!");
-                    }
 
                     // Optional: Notify the player about the damage boost
 

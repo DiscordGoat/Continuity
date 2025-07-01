@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
@@ -81,13 +82,14 @@ public class FireDamageHandler implements Listener {
         }
     }
 
-    private void addFire(LivingEntity entity, int amount) {
+    public void addFire(LivingEntity entity, int amount) {
         UUID id = entity.getUniqueId();
         int newLevel = fireLevels.getOrDefault(id, 0) + amount;
         fireLevels.put(id, newLevel);
 
         spawnFireParticles(entity.getLocation(), newLevel);
         startTask(entity);
+
     }
 
     private void startTask(LivingEntity entity) {

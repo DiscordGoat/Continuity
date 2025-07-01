@@ -1,5 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
+import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
+import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -45,7 +49,12 @@ public class MobDamageHandler implements Listener {
                     // Calculate the damage multiplier (4% per level)
                         double damageMultiplier = 1 + (attackerLevel * 0.06); // Multiplier should be 1 + (percentage increase)
                         double newDamage = originalDamage * damageMultiplier; // Apply the multiplier
+                    if(BlessingUtils.hasFullSetBonus(player, "Monolith")){
+                        newDamage *= 0.8;
+                        FlowManager.getInstance(MinecraftNew.getInstance()).addFlow(player, 1);
+                    }
                         event.setDamage(newDamage);
+
                 }
             }
         }

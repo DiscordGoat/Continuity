@@ -20,7 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.EulerAngle;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +33,8 @@ import java.util.UUID;
  */
 public class FlowManager implements Listener {
 
+    private static FlowManager instance;
+
     private final JavaPlugin plugin;
 
     private static class FlowData {
@@ -45,10 +46,24 @@ public class FlowManager implements Listener {
     private final Map<UUID, Integer> animationTasks = new HashMap<>();
     private final Map<UUID, List<ArmorStand>> animationStands = new HashMap<>();
 
-    public FlowManager(JavaPlugin plugin) {
+    /**
+     * Private constructor: use getInstance(...) to obtain the singleton.
+     */
+    private FlowManager(JavaPlugin plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
         startDecayTask();
+    }
+
+    /**
+     * Returns the singleton instance, creating it on first use.
+     * @param plugin your plugin instance (only used on first initialization)
+     */
+    public static synchronized FlowManager getInstance(JavaPlugin plugin) {
+        if (instance == null) {
+            instance = new FlowManager(plugin);
+        }
+        return instance;
     }
 
     /**
@@ -67,6 +82,7 @@ public class FlowManager implements Listener {
         FlowData data = flowMap.computeIfAbsent(player.getUniqueId(), k -> new FlowData());
         data.flow += amount;
         data.lastActivity = System.currentTimeMillis();
+        refreshAnimation(player, getFlow(player));
     }
 
     /**

@@ -1,11 +1,13 @@
 package goat.minecraft.minecraftnew.subsystems.combat.damage.strategies;
 
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.combat.config.CombatConfiguration;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationContext;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationResult;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationStrategy;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 
@@ -63,6 +65,10 @@ public class RangedDamageStrategy implements DamageCalculationStrategy {
                     potionMultiplier, 
                     "Recurve potion effect"
                 ));
+            }
+            if(BlessingUtils.hasFullSetBonus(shooter.getPlayer(), "Lost Legion")){
+                modifiers.add(DamageCalculationResult.DamageModifier.multiplicative("Lost Legion Set", 1.25, "Full set bonus"));
+                Bukkit.getLogger().info("Lost Legion buff applied");
             }
             
             logger.fine(String.format("Applied ranged damage bonuses: %s (level %d) -> %.1f total damage", 

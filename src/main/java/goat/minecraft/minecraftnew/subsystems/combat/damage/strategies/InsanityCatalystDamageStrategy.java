@@ -78,6 +78,7 @@ public class InsanityCatalystDamageStrategy implements DamageCalculationStrategy
             
             logger.fine(String.format("Applied Insanity Catalyst spirit damage reduction: %s (tier %d) -> %.1f%% reduction", 
                        targetPlayer.getName(), catalystTier, reductionPercentage * 100));
+
             
             return DamageCalculationResult.withModifier(originalDamage, finalDamage, modifier);
             
