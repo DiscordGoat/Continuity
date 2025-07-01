@@ -70,6 +70,7 @@ import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.auras.AuraManager;
 import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
+import goat.minecraft.minecraftnew.subsystems.armorsets.ArmorSetBonusListener;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.SetStructureBlockPowerCommand;
@@ -523,6 +524,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new BlessingArtifactGUI(this), this);
         getServer().getPluginManager().registerEvents(new BlessingArmorStandListener(), this);
         getServer().getPluginManager().registerEvents(new BlessedSetAuraListener(this, auraManager), this);
+        getServer().getPluginManager().registerEvents(new ArmorSetBonusListener(this, auraManager, flowManager), this);
         getServer().getPluginManager().registerEvents(new AnvilRepair(MinecraftNew.getInstance()), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         getServer().getPluginManager().registerEvents(new EpicEnderDragonFight(this), this);
