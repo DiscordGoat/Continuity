@@ -380,13 +380,21 @@ public class Forestry implements Listener {
             ItemStack axe = player.getInventory().getItemInMainHand();
 
             int trespasser = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.TRESPASSER);
-            int fakeNews = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.FAKE_NEWS);
+            int fakeNews   = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.FAKE_NEWS);
+
+// cap at level 5
+            fakeNews = Math.min(fakeNews, 5);
 
             int notorietyGain = 1 + (trespasser * 3);
             addNotoriety(player, notorietyGain, true, true);
+
             if (fakeNews > 0) {
-                decreaseNotoriety(player, fakeNews);
+                // roll 0–99; if less than (level * 10), reduce notoriety by 1
+                if (random.nextInt(100) < fakeNews * 10) {
+                    decreaseNotoriety(player, 1);
+                }
             }
+
 
             // Calculate spirit chance.
             double spiritChance = 0.0;

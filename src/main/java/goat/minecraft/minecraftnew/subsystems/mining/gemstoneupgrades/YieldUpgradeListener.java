@@ -29,7 +29,7 @@ public class YieldUpgradeListener implements Listener {
         Block block = event.getBlock();
         ItemStack tool = player.getInventory().getItemInMainHand();
 
-        if (!isDiamondTool(tool.getType()) || upgradeSystemInstance == null) return;
+        if (upgradeSystemInstance == null) return;
 
         Material blockType = block.getType();
         
@@ -68,10 +68,5 @@ public class YieldUpgradeListener implements Listener {
                 block.getWorld().dropItemNaturally(block.getLocation(), diamond);
             }
         }
-    }
-
-    private boolean isDiamondTool(Material material) {
-        return material == Material.DIAMOND_PICKAXE || material == Material.DIAMOND_AXE ||
-               material == Material.DIAMOND_SHOVEL || material == Material.DIAMOND_HOE;
     }
 }

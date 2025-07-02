@@ -28,7 +28,7 @@ public class MetalworkUpgradeListener implements Listener {
         Block block = event.getBlock();
         ItemStack tool = player.getInventory().getItemInMainHand();
 
-        if (!isDiamondTool(tool.getType()) || upgradeSystemInstance == null) return;
+        if (upgradeSystemInstance == null) return;
 
         Material blockType = block.getType();
         

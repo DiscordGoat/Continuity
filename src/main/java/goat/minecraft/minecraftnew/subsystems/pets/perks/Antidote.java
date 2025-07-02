@@ -24,6 +24,7 @@ public class Antidote implements Listener {
             PotionEffectType.POISON,
             PotionEffectType.SLOW,
             PotionEffectType.SLOW_DIGGING, // Mining Fatigue
+            PotionEffectType.DARKNESS, // Mining Fatigue
             PotionEffectType.UNLUCK,
             PotionEffectType.WEAKNESS,
             PotionEffectType.WITHER
