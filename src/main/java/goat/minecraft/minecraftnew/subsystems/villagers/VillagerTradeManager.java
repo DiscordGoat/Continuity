@@ -171,33 +171,29 @@ public class VillagerTradeManager implements Listener {
 
         // Example for MASON
         List<Map<String, Object>> masonPurchases = new ArrayList<>();
-        masonPurchases.add(createTradeMap("BRICKS", 4, 3, 1));    // item, quantity, emeralds, level, experience
-        masonPurchases.add(createTradeMap("STONE", 8, 3, 1));    // item, quantity, emeralds, level, experience
-        masonPurchases.add(createTradeMap("ANDESITE", 8, 3, 2));
-        masonPurchases.add(createTradeMap("DIORITE", 8, 3, 2));
-        masonPurchases.add(createTradeMap("GRANITE", 8, 3, 2));
-        masonPurchases.add(createTradeMap("TERRACOTTA", 8, 3, 3));
-        masonPurchases.add(createTradeMap("QUARTZ_BLOCK", 8, 5, 3));
-        masonPurchases.add(createTradeMap("SMOOTH_STONE", 8, 5, 3));
-        masonPurchases.add(createTradeMap("SANDSTONE", 8, 5, 3));
+        masonPurchases.add(createTradeMap("BRICKS", 4, 1, 1));    // item, quantity, emeralds, level, experience
+        masonPurchases.add(createTradeMap("STONE", 8, 1, 1));    // item, quantity, emeralds, level, experience
+        masonPurchases.add(createTradeMap("ANDESITE", 8, 1, 2));
+        masonPurchases.add(createTradeMap("DIORITE", 8, 1, 2));
+        masonPurchases.add(createTradeMap("GRANITE", 8, 1, 2));
+        masonPurchases.add(createTradeMap("TERRACOTTA", 8, 1, 3));
+        masonPurchases.add(createTradeMap("QUARTZ_BLOCK", 8, 2, 3));
+        masonPurchases.add(createTradeMap("SMOOTH_STONE", 8, 2, 3));
+        masonPurchases.add(createTradeMap("SANDSTONE", 8, 2, 3));
         masonPurchases.add(createTradeMap("CUSTOM_ITEM_DISPLAY", 1, 8, 3));    // ItemRegistry.getItemDisplayItem()
-        masonPurchases.add(createTradeMap("PRISMARINE", 8, 7, 4));
-        masonPurchases.add(createTradeMap("DARK_PRISMARINE", 8, 7, 4));
-        masonPurchases.add(createTradeMap("PRISMARINE_BRICKS", 8, 7, 4));
-        masonPurchases.add(createTradeMap("NETHER_BRICKS", 8, 7, 4));
-        masonPurchases.add(createTradeMap("BLACKSTONE", 8, 7, 4));
-        masonPurchases.add(createTradeMap("SOUL_SAND", 8, 7, 4));
-        masonPurchases.add(createTradeMap("TUBE_CORAL_BLOCK", 8, 7, 4));
-        masonPurchases.add(createTradeMap("BRAIN_CORAL_BLOCK", 8, 7, 4));
-        masonPurchases.add(createTradeMap("BUBBLE_CORAL_BLOCK", 8, 7, 4));
-        masonPurchases.add(createTradeMap("FIRE_CORAL_BLOCK", 8, 7, 4));
-        masonPurchases.add(createTradeMap("HORN_CORAL_BLOCK", 8, 7, 4));
+        masonPurchases.add(createTradeMap("PRISMARINE", 8, 4, 4));
+        masonPurchases.add(createTradeMap("DARK_PRISMARINE", 8, 4, 4));
+        masonPurchases.add(createTradeMap("PRISMARINE_BRICKS", 8, 4, 4));
+        masonPurchases.add(createTradeMap("NETHER_BRICKS", 8, 4, 4));
+        masonPurchases.add(createTradeMap("BLACKSTONE", 8, 4, 4));
+        masonPurchases.add(createTradeMap("SOUL_SAND", 8, 4, 4));
+        masonPurchases.add(createTradeMap("OBSIDIAN", 4, 12, 4));
         defaultConfig.set("MASON.purchases", masonPurchases);
 
         List<Map<String, Object>> masonSells = new ArrayList<>();
-        masonSells.add(createTradeMap("CLAY", 4, 1, 1));
-        masonSells.add(createTradeMap("COBBLESTONE", 32, 1, 1));
-        masonSells.add(createTradeMap("COPPER_INGOT", 9, 3, 1));
+        masonSells.add(createTradeMap("CLAY", 1, 1, 1));
+        masonSells.add(createTradeMap("COBBLESTONE", 16, 1, 1));
+        masonSells.add(createTradeMap("COPPER_INGOT", 3, 1, 1));
         masonSells.add(createTradeMap("OBSIDIAN", 1, 1, 1));
         masonSells.add(createTradeMap("COMPACT_STONE", 4, 8, 3)); // ItemRegistry.getRareSwordReforge()
         defaultConfig.set("MASON.sells", masonSells);
@@ -215,6 +211,7 @@ public class VillagerTradeManager implements Listener {
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_REFORGE_TWO", 1, 128, 3)); // ItemRegistry.getWeaponsmithReforgeTwo()
 
         weaponsmithPurchases.add(createTradeMap("RARE_SWORD_REFORGE", 1, 128, 3)); // ItemRegistry.getRareSwordReforge()
+        weaponsmithPurchases.add(createTradeMap("WATER_ASPECT_ENCHANT", 1, 128, 3)); // ItemRegistry.getRareSwordReforge()
 
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SHARPNESS", 1, 64, 4)); // ItemRegistry.getWeaponsmithSharpness()
         weaponsmithPurchases.add(createTradeMap("EPIC_SWORD_REFORGE", 1, 256, 4)); // ItemRegistry.getEpicSwordReforge()
@@ -223,7 +220,6 @@ public class VillagerTradeManager implements Listener {
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_LOOTING", 1, 64, 4)); // ItemRegistry.getWeaponsmithLooting()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_KNOCKBACK", 1, 64, 4)); // ItemRegistry.getWeaponsmithKnockback()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_FIRE_ASPECT", 1, 64, 4)); // ItemRegistry.getWeaponsmithFireAspect()
-        weaponsmithPurchases.add(createTradeMap("CURSED_CLOCK", 1, 64, 4)); // ItemRegistry.getCursedClock()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SMITE", 1, 64, 4)); // ItemRegistry.getWeaponsmithSmite()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_BANE_OF_ARTHROPODS", 1, 64, 4)); // ItemRegistry.getWeaponsmithBaneofAnthropods()
 
@@ -239,20 +235,13 @@ public class VillagerTradeManager implements Listener {
         weaponsmithSells.add(createTradeMap("SINGULARITY", 1, 8, 1)); // ItemRegistry.getSingularity()
         weaponsmithSells.add(createTradeMap("SKELETON_DROP", 1, 16, 1)); // skeletonDrop
         weaponsmithSells.add(createTradeMap("DROWNED_DROP", 1, 8, 1)); // drownedDrop
-        weaponsmithSells.add(createTradeMap("CREEPER_DROP", 1, 8, 1)); // creeperDrop
-        weaponsmithSells.add(createTradeMap("BLAZE_DROP", 1, 8, 1)); // blazeDrop
         weaponsmithSells.add(createTradeMap("ENDER_DROP", 1, 24, 1)); // enderDrop
         weaponsmithSells.add(createTradeMap("GUARDIAN_DROP", 1, 8, 1)); // guardianDrop
-        weaponsmithSells.add(createTradeMap("WATER_ASPECT_ENCHANT", 1, 8, 1)); // water aspect enchant
-        weaponsmithSells.add(createTradeMap("ELDER_GUARDIAN_DROP", 1, 4, 1)); // elderGuardianDrop
-        weaponsmithSells.add(createTradeMap("PIGLIN_BRUTE_DROP", 1, 8, 1)); // piglinBruteDrop
-        weaponsmithSells.add(createTradeMap("PIGLIN_DROP", 1, 8, 1)); // piglinDrop
         weaponsmithSells.add(createTradeMap("MIDAS", 1, 64, 1)); // piglinDrop
         weaponsmithSells.add(createTradeMap("GOLD_BAR", 1, 16, 1)); // piglinDrop
         weaponsmithSells.add(createTradeMap("SPIDER_DROP", 1, 16, 1)); // spiderDrop
         weaponsmithSells.add(createTradeMap("UNDEAD_DROP", 1, 16, 1)); // undeadDrop
         weaponsmithSells.add(createTradeMap("VINDICATOR_DROP", 1, 8, 1)); // vindicatorDrop
-        weaponsmithSells.add(createTradeMap("WITCH_DROP", 1, 32, 1)); // witchDrop
         weaponsmithSells.add(createTradeMap("SWEEPING", 1, 32, 1)); // witchDrop
         weaponsmithSells.add(createTradeMap("WEAPONSMITH_SHARPNESS_7", 1, 64, 1)); // witchDrop
         defaultConfig.set("WEAPONSMITH.sells", weaponsmithSells);
@@ -363,7 +352,7 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> leatherworkerPurchases = new ArrayList<>();
         leatherworkerPurchases.add(createTradeMap("LEATHER", 1, 3, 1)); // Material
         leatherworkerPurchases.add(createTradeMap("ITEM_FRAME", 1, 3, 1)); // Material
-        leatherworkerPurchases.add(createTradeMap("DIVIDER_TRINKET", 1, 90, 2));
+        leatherworkerPurchases.add(createTradeMap("DIVIDER_TRINKET", 1, 1, 2));
         leatherworkerPurchases.add(createTradeMap("WORKBENCH_TRINKET", 1, 90, 2));
         leatherworkerPurchases.add(createTradeMap("BANK_ACCOUNT_TRINKET", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("BLUE_SATCHEL", 1, 90, 3));

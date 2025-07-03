@@ -707,7 +707,10 @@ public class SpawnMonsters implements Listener {
                 killer.sendMessage(ChatColor.RED + "The Enraged monster has dropped a rare relic!");
 
                 // Drop the Enraged relic from your ItemRegistry at the location of the death.
-                entity.getWorld().dropItemNaturally(entity.getLocation(), ItemRegistry.getVerdantRelicGravity());
+                Random random = new Random();
+                if (random.nextBoolean()) {
+                    entity.getWorld().dropItemNaturally(entity.getLocation(), ItemRegistry.getVerdantRelicGravity());
+                }
             }
         }
     }

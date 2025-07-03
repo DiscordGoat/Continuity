@@ -534,7 +534,9 @@ public class ForestSpiritManager implements Listener {
             }
             for (int i = 0; i < amount; i++) {
                 if (random.nextBoolean()) {
+                if (random.nextBoolean()) {
                     event.getDrops().add(effigy.clone());
+                }
                 }
             }
 

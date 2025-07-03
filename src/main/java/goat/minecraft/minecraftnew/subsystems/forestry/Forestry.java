@@ -398,7 +398,7 @@ public class Forestry implements Listener {
 
             // Calculate spirit chance.
             double spiritChance = 0.0;
-            spiritChance += 0.2;
+            spiritChance += 0.02;
 
             int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
             spiritChance += effigyYield * 0.005; // +0.5% per level

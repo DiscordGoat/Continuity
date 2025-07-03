@@ -459,7 +459,7 @@ public class Mining implements Listener {
             case END_STONE:
                 return 2; // Basic stones give minimal XP
             case ANCIENT_DEBRIS:
-                return 850;
+                return 20;
             default:
                 return 2; // Default XP for any other blocks
         }
