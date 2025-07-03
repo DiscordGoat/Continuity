@@ -375,7 +375,6 @@ public class VillagerTradeManager implements Listener {
         leatherworkerPurchases.add(createTradeMap("MINING_POUCH", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("TRANSFIGURATION_POUCH", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("ENCHANTED_LAVA_BUCKET_TRINKET", 1, 90, 3));
-        leatherworkerPurchases.add(createTradeMap("SHULKER_SHELL", 1, 64, 3)); // Material
         leatherworkerPurchases.add(createTradeMap("ANVIL_TRINKET", 1, 90, 4));
 
 
@@ -555,6 +554,27 @@ public class VillagerTradeManager implements Listener {
         fishermanPurchases.add(createTradeMap("FISHERMAN_LUCK_OF_THE_SEA", 1, 64, 4)); // Custom Item
         fishermanPurchases.add(createTradeMap("ABYSSAL_SHELL", 1, 32, 5)); // Custom Item
         fishermanPurchases.add(createTradeMap("ABYSSAL_INK", 1, 64, 5)); // Custom Item
+        fishermanPurchases.add(createTradeMap("FISH_BONE", 1, 4, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("SEA_SALT", 1, 4, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("AQUA_AFFINITY", 1, 32, 3)); // Custom Item
+        fishermanPurchases.add(createTradeMap("CALAMARI", 1, 16, 3)); // Custom Item
+        fishermanPurchases.add(createTradeMap("TRIDENT", 1, 12, 2)); // Material
+        fishermanPurchases.add(createTradeMap("ANAKLUSMOS", 1, 12, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("LIGHTNING_BOLT", 1, 12, 2)); // Material
+        fishermanPurchases.add(createTradeMap("LOYAL_DECLARATION", 1, 12, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("VERDANT_RELIC_TIDE_SEED", 1, 64, 3)); // Custom Item
+        fishermanPurchases.add(createTradeMap("TOOTH", 1, 2, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("BAIT", 1, 12, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("IMPALING", 1, 12, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("LUCK", 1, 12, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("RESPIRATION", 1, 16, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("WEAPONSMITH_SHARPNESS_7", 1, 64, 4)); // Custom Item
+        fishermanPurchases.add(createTradeMap("LEVIATHAN_HEART", 1, 128, 5)); // Custom Item
+        fishermanPurchases.add(createTradeMap("SWEEPING", 1, 32, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("HOWL", 1, 32, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("INFERNAL_UNBREAKING", 1, 32, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("SWIFT_SNEAK", 1, 32, 2)); // Custom Item
+        fishermanPurchases.add(createTradeMap("VERDANT_RELIC_TREASURY", 1, 64, 4)); // Custom Item
         defaultConfig.set("FISHERMAN.purchases", fishermanPurchases);
 
 // Fisherman Sells
@@ -1041,6 +1061,22 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getVindicatorDrop();
             case "WITCH_DROP":
                 return ItemRegistry.getWitchDrop();
+            case "VERDANT_RELIC_TIDE_SEED":
+                return ItemRegistry.getVerdantRelicTideSeed();
+            case "VERDANT_RELIC_TREASURY":
+                return ItemRegistry.getVerdantRelicTreasury();
+            case "RESPIRATION":
+                return ItemRegistry.getRespiration();
+            case "LEVIATHAN_HEART":
+                return ItemRegistry.getLeviathanHeart();
+            case "IMPALING":
+                return ItemRegistry.getImpaling();
+            case "LUCK":
+                return ItemRegistry.getLuck();
+            case "INFERNAL_UNBREAKING":
+                return ItemRegistry.getInfernalUnbreaking();
+            case "INFERNAL_SHARPNESS":
+                return ItemRegistry.getInfernalSharpness();
             default:
                 plugin.getLogger().warning("Unknown custom item ID: " + identifier);
                 return null;
