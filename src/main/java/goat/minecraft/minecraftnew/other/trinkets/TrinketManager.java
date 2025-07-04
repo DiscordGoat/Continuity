@@ -148,6 +148,12 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 }
             }
+            case "Pocket Portal" -> {
+                if (event.getClick().isLeftClick()) {
+                    MinecraftNew.getInstance().getWarpGateManager().openWarpMenu(player);
+                    event.setCancelled(true);
+                }
+            }
             case "Enchanted Lava Bucket" -> {
                 if (event.getClick() == ClickType.LEFT && event.getCursor() != null && event.getCursor().getType() != Material.AIR) {
                     event.getWhoClicked().setItemOnCursor(null);
