@@ -31,7 +31,7 @@ import java.util.UUID;
 
 /**
  * Handles placement of Warp Gates. When the custom Warp Gate item is placed,
- * the block is replaced with an Ender Chest and the player is prompted to name
+ * the block is replaced with a prismarine lantern (Sea Lantern) and the player is prompted to name
  * the new instance. If the placement is cancelled or the block is broken before
  * naming completes, the original block is restored and the item refunded.
  */
@@ -119,8 +119,8 @@ public class WarpGateManager implements Listener {
         BlockState oldState = event.getBlockReplacedState();
         Player player = event.getPlayer();
 
-        // Replace with Ender Chest
-        placed.setType(Material.ENDER_CHEST);
+        // Replace with Sea Lantern (prismarine lantern)
+        placed.setType(Material.SEA_LANTERN);
 
         String key = toKey(placed.getLocation());
         pending.put(key, new PendingGate(oldState, player.getUniqueId()));
@@ -184,7 +184,7 @@ public class WarpGateManager implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         if (event.getHand() != EquipmentSlot.HAND) return;
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (event.getClickedBlock() == null || event.getClickedBlock().getType() != Material.ENDER_CHEST) return;
+        if (event.getClickedBlock() == null || event.getClickedBlock().getType() != Material.SEA_LANTERN) return;
 
         // Check if player is temporarily blocked from warping
         UUID pid = event.getPlayer().getUniqueId();
@@ -323,7 +323,8 @@ public class WarpGateManager implements Listener {
         int newOxy = Math.max(0, current - dist);
         oxygen.setPlayerOxygenLevel(player, newOxy);
 
-        player.teleport(inst.location);
+        // Warp the player to the block above the gate
+        player.teleport(inst.location.clone().add(0, 1, 0));
 
         if (newOxy <= 0 && !BlessingUtils.hasFullSetBonus(player, "Duskblood")) {
             blockedMenus.put(player.getUniqueId(), System.currentTimeMillis() + 10 * 60 * 1000L);
