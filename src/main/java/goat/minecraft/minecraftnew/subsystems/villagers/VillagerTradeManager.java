@@ -311,6 +311,7 @@ public class VillagerTradeManager implements Listener {
         List<Map<String, Object>> cartographerSells = new ArrayList<>();
         cartographerSells.add(createTradeMap("PAPER", 8, 1, 1));
         cartographerSells.add(createTradeMap("COMPASS", 1, 3, 1));
+        cartographerSells.add(createTradeMap("WARP_GATE", 1, 64, 4));
         defaultConfig.set("CARTOGRAPHER.sells", cartographerSells);
         // Cleric Purchases
         List<Map<String, Object>> clericPurchases = new ArrayList<>();
@@ -1066,6 +1067,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getInfernalUnbreaking();
             case "INFERNAL_SHARPNESS":
                 return ItemRegistry.getInfernalSharpness();
+            case "WARP_GATE":
+                return ItemRegistry.getWarpGate();
             default:
                 plugin.getLogger().warning("Unknown custom item ID: " + identifier);
                 return null;
