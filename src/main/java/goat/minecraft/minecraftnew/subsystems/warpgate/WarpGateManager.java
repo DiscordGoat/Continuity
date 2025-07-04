@@ -1,6 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.warpgate;
 
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
+import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -13,6 +15,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.EquipmentSlot;
@@ -68,6 +71,8 @@ public class WarpGateManager implements Listener {
     private final Map<UUID, String> naming = new HashMap<>();
     // Tracks slot -> warp instance mapping for open menus
     private final Map<UUID, Map<Integer, UUID>> openMenus = new HashMap<>();
+    // Players temporarily blocked from opening warp menus
+    private final Map<UUID, Long> blockedMenus = new HashMap<>();
 
     public WarpGateManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -178,6 +183,14 @@ public class WarpGateManager implements Listener {
         if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
         if (event.getClickedBlock() == null || event.getClickedBlock().getType() != Material.ENDER_CHEST) return;
 
+        // Check if player is temporarily blocked from warping
+        UUID pid = event.getPlayer().getUniqueId();
+        Long until = blockedMenus.get(pid);
+        if (until != null && until > System.currentTimeMillis()) {
+            event.getPlayer().sendMessage(ChatColor.RED + "You are too exhausted to use the warp gate.");
+            return;
+        }
+
         UUID thisGate = findInstanceAt(event.getClickedBlock().getLocation());
         if (thisGate == null) return;
 
@@ -217,6 +230,46 @@ public class WarpGateManager implements Listener {
     @EventHandler
     public void onMenuClose(InventoryCloseEvent event) {
         openMenus.remove(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onMenuClick(InventoryClickEvent event) {
+        if (!event.getView().getTitle().equals("Warp Gate")) return;
+
+        UUID id = event.getWhoClicked().getUniqueId();
+        Map<Integer, UUID> map = openMenus.get(id);
+        if (map == null) return;
+
+        if (event.getClickedInventory() == null || event.getClickedInventory() != event.getInventory()) {
+            event.setCancelled(true);
+            return;
+        }
+
+        event.setCancelled(true);
+
+        int slot = event.getSlot();
+        UUID warpId = map.get(slot);
+        if (warpId == null) return;
+
+        WarpInstance inst = instances.get(warpId);
+        if (inst == null) return;
+
+        Player player = (Player) event.getWhoClicked();
+        event.getWhoClicked().closeInventory();
+
+        int dist = (int) player.getLocation().distance(inst.location);
+
+        PlayerOxygenManager oxygen = PlayerOxygenManager.getInstance();
+        int current = oxygen.getPlayerOxygen(player);
+        int newOxy = Math.max(0, current - dist);
+        oxygen.setPlayerOxygenLevel(player, newOxy);
+
+        player.teleport(inst.location);
+
+        if (newOxy <= 0 && !BlessingUtils.hasFullSetBonus(player, "Duskblood")) {
+            blockedMenus.put(player.getUniqueId(), System.currentTimeMillis() + 10 * 60 * 1000L);
+            player.sendMessage(ChatColor.RED + "You are too exhausted to warp for 10 minutes!");
+        }
     }
 
     public void onDisable() {
