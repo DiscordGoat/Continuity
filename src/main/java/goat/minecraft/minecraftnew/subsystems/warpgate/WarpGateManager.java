@@ -11,6 +11,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.block.Action;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -61,6 +66,8 @@ public class WarpGateManager implements Listener {
     private final Map<String, PendingGate> pending = new HashMap<>();
     // Player waiting to name their placed gate
     private final Map<UUID, String> naming = new HashMap<>();
+    // Tracks slot -> warp instance mapping for open menus
+    private final Map<UUID, Map<Integer, UUID>> openMenus = new HashMap<>();
 
     public WarpGateManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -163,6 +170,53 @@ public class WarpGateManager implements Listener {
         if (instId != null) {
             instances.remove(instId);
         }
+    }
+
+    @EventHandler
+    public void onInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getClickedBlock() == null || event.getClickedBlock().getType() != Material.ENDER_CHEST) return;
+
+        UUID thisGate = findInstanceAt(event.getClickedBlock().getLocation());
+        if (thisGate == null) return;
+
+        event.setCancelled(true);
+
+        Location loc = event.getClickedBlock().getLocation();
+        Inventory inv = Bukkit.createInventory(null, 54, "Warp Gate");
+        Map<Integer, UUID> slotMap = new HashMap<>();
+        int slot = 0;
+        for (Map.Entry<UUID, WarpInstance> e : instances.entrySet()) {
+            UUID id = e.getKey();
+            WarpInstance inst = e.getValue();
+            if (id.equals(thisGate)) continue;
+            if (!inst.location.getWorld().equals(loc.getWorld())) continue;
+            double dist = inst.location.distance(loc);
+            if (dist > 2000) continue;
+            if (slot >= 54) break;
+
+            ItemStack item = new ItemStack(Material.ENDER_PEARL);
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(ChatColor.AQUA + inst.name);
+                java.util.List<String> lore = new java.util.ArrayList<>();
+                lore.add(ChatColor.GRAY + "Oxygen Cost: " + (int) dist);
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+            }
+            inv.setItem(slot, item);
+            slotMap.put(slot, id);
+            slot++;
+        }
+
+        openMenus.put(event.getPlayer().getUniqueId(), slotMap);
+        event.getPlayer().openInventory(inv);
+    }
+
+    @EventHandler
+    public void onMenuClose(InventoryCloseEvent event) {
+        openMenus.remove(event.getPlayer().getUniqueId());
     }
 
     public void onDisable() {
