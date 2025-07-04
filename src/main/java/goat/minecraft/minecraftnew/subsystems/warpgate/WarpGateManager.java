@@ -73,6 +73,9 @@ public class WarpGateManager implements Listener {
     private final Map<UUID, Map<Integer, UUID>> openMenus = new HashMap<>();
     // Players temporarily blocked from opening warp menus
     private final Map<UUID, Long> blockedMenus = new HashMap<>();
+    // Cooldown tracking for remote warp activations via Pocket Portal
+    private final Map<UUID, Long> remoteCooldowns = new HashMap<>();
+    private static final long REMOTE_COOLDOWN = 10 * 60 * 1000L; // 10 minutes
 
     public WarpGateManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -225,6 +228,60 @@ public class WarpGateManager implements Listener {
 
         openMenus.put(event.getPlayer().getUniqueId(), slotMap);
         event.getPlayer().openInventory(inv);
+    }
+
+    /**
+     * Opens the warp menu for the given player from any location. Used by
+     * remote activation items like the Pocket Portal.
+     *
+     * @param player the player for whom to open the menu
+     */
+    public void openWarpMenu(Player player) {
+        // Respect exhaustion lockout
+        UUID pid = player.getUniqueId();
+        Long until = blockedMenus.get(pid);
+        if (until != null && until > System.currentTimeMillis()) {
+            player.sendMessage(ChatColor.RED + "You are too exhausted to use the warp gate.");
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+        Long last = remoteCooldowns.get(pid);
+        if (last != null && now - last < REMOTE_COOLDOWN) {
+            long remaining = (REMOTE_COOLDOWN - (now - last)) / 1000;
+            player.sendMessage(ChatColor.RED + "Pocket Portal recharging: " + remaining + "s left.");
+            return;
+        }
+        remoteCooldowns.put(pid, now);
+
+        Location loc = player.getLocation();
+        Inventory inv = Bukkit.createInventory(null, 54, "Warp Gate");
+        Map<Integer, UUID> slotMap = new HashMap<>();
+        int slot = 0;
+        for (Map.Entry<UUID, WarpInstance> e : instances.entrySet()) {
+            UUID id = e.getKey();
+            WarpInstance inst = e.getValue();
+            if (!inst.location.getWorld().equals(loc.getWorld())) continue;
+            double dist = inst.location.distance(loc);
+            if (dist > 2000) continue;
+            if (slot >= 54) break;
+
+            ItemStack item = new ItemStack(Material.ENDER_PEARL);
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.setDisplayName(ChatColor.AQUA + inst.name);
+                java.util.List<String> lore = new java.util.ArrayList<>();
+                lore.add(ChatColor.GRAY + "Oxygen Cost: " + (int) dist);
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+            }
+            inv.setItem(slot, item);
+            slotMap.put(slot, id);
+            slot++;
+        }
+
+        openMenus.put(pid, slotMap);
+        player.openInventory(inv);
     }
 
     @EventHandler
