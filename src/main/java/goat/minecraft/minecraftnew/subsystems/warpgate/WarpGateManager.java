@@ -286,7 +286,9 @@ public class WarpGateManager implements Listener {
 
     @EventHandler
     public void onMenuClose(InventoryCloseEvent event) {
-        openMenus.remove(event.getPlayer().getUniqueId());
+        if (event.getView().getTitle().equals("Warp Gate")) {
+            openMenus.remove(event.getPlayer().getUniqueId());
+        }
     }
 
     @EventHandler
