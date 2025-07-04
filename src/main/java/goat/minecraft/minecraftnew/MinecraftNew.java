@@ -86,6 +86,7 @@ import goat.minecraft.minecraftnew.subsystems.armorsets.StriderSetBonus;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.subsystems.structureblocks.SetStructureBlockPowerCommand;
+import goat.minecraft.minecraftnew.subsystems.warpgate.WarpGateManager;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.subsystems.realms.Tropic;
@@ -118,6 +119,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private ForestryPetManager forestryPetManager;
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
+    private WarpGateManager warpGateManager;
     private BeaconPassiveEffects beaconPassiveEffects;
     private MonolithSetBonus monolithSetBonus;
     private DuskbloodSetBonus duskbloodSetBonus;
@@ -149,6 +151,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         return shelfManager;
     }
 
+    public WarpGateManager getWarpGateManager() {
+        return warpGateManager;
+    }
+
     public AnvilRepair getAnvilRepair() {
         return anvilRepair;
     }
@@ -169,6 +175,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("pasteSchem").setExecutor(new PasteSchemCommand(this));
 
         this.shelfManager = new ShelfManager(this);
+        this.warpGateManager = new WarpGateManager(this);
 
 
         Tropic tropicCommand = new Tropic(this);
