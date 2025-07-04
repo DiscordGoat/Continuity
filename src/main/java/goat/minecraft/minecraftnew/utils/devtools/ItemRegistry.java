@@ -2708,6 +2708,28 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getWarpGate() {
+        ItemStack item = createCustomItem(
+                Material.END_PORTAL_FRAME,
+                ChatColor.AQUA + "Warp Gate",
+                Arrays.asList(
+                        ChatColor.GRAY + "A gateway linking distant places.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Place and right-click to teleport.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                true,
+                true
+        );
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setUnbreakable(true);
+            meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
     public static ItemStack getGeneratorItem() {
         return createCustomItem(
                 Material.SCULK_SHRIEKER,
