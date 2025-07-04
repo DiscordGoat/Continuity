@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -27,6 +30,22 @@ import java.util.UUID;
 public class WarpGateManager implements Listener {
 
     private final JavaPlugin plugin;
+    private final File dataFile;
+    private YamlConfiguration dataConfig;
+
+    /** Simple representation of a warp instance. */
+    public static class WarpInstance {
+        public final Location location;
+        public final String name;
+
+        public WarpInstance(Location location, String name) {
+            this.location = location;
+            this.name = name;
+        }
+    }
+
+    // Stored warp instances by unique id
+    private final Map<UUID, WarpInstance> instances = new HashMap<>();
 
     /** Data about a pending warp gate placement. */
     private static class PendingGate {
@@ -45,11 +64,24 @@ public class WarpGateManager implements Listener {
 
     public WarpGateManager(JavaPlugin plugin) {
         this.plugin = plugin;
+        this.dataFile = new File(plugin.getDataFolder(), "warp_instances.yml");
+        if (!dataFile.exists()) {
+            try { dataFile.createNewFile(); } catch (IOException ignored) {}
+        }
+        this.dataConfig = YamlConfiguration.loadConfiguration(dataFile);
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        loadInstances();
     }
 
     private String toKey(Location loc) {
         return loc.getWorld().getName()+":"+loc.getBlockX()+":"+loc.getBlockY()+":"+loc.getBlockZ();
+    }
+
+    private Location fromKey(String key) {
+        String[] p = key.split(":");
+        World w = Bukkit.getWorld(p[0]);
+        int x = Integer.parseInt(p[1]), y = Integer.parseInt(p[2]), z = Integer.parseInt(p[3]);
+        return new Location(w, x, y, z);
     }
 
     private boolean isWarpGateItem(ItemStack stack) {
@@ -100,28 +132,96 @@ public class WarpGateManager implements Listener {
             return;
         }
 
-        // For now we simply acknowledge the name.
+        // Save the named warp instance
+        Location loc = fromKey(key);
+        UUID warpId = UUID.randomUUID();
+        instances.put(warpId, new WarpInstance(loc, msg));
         event.getPlayer().sendMessage(ChatColor.GREEN + "Created instance '" + msg + "'.");
-        // Further instance creation logic would go here.
     }
 
     @EventHandler
     public void onBreak(BlockBreakEvent event) {
         String key = toKey(event.getBlock().getLocation());
         PendingGate data = pending.remove(key);
-        if (data == null) return;
+        if (data != null) {
+            // Prevent drops and restore original block
+            event.setDropItems(false);
+            data.oldState.update(true, false);
 
-        // Prevent drops and restore original block
-        event.setDropItems(false);
-        data.oldState.update(true, false);
+            // Refund item to the player if they're the placer
+            if (data.playerId != null) {
+                Player p = Bukkit.getPlayer(data.playerId);
+                if (p != null) {
+                    p.getInventory().addItem(ItemRegistry.getWarpGate());
+                }
+            }
+            naming.values().remove(key);
+        }
 
-        // Refund item to the player if they're the placer
-        if (data.playerId != null) {
-            Player p = Bukkit.getPlayer(data.playerId);
-            if (p != null) {
-                p.getInventory().addItem(ItemRegistry.getWarpGate());
+        // Remove any saved instance at this location
+        UUID instId = findInstanceAt(event.getBlock().getLocation());
+        if (instId != null) {
+            instances.remove(instId);
+        }
+    }
+
+    public void onDisable() {
+        saveAllInstances();
+    }
+
+    //=======================================================================
+    // Persistence
+    //=======================================================================
+    private void loadInstances() {
+        dataConfig = YamlConfiguration.loadConfiguration(dataFile);
+        for (String key : dataConfig.getKeys(false)) {
+            String world = dataConfig.getString(key + ".world");
+            World w = Bukkit.getWorld(world);
+            if (w == null) {
+                plugin.getLogger().warning("[WarpGateManager] Skipping " + key + " because world is null.");
+                continue;
+            }
+            double x = dataConfig.getDouble(key + ".x");
+            double y = dataConfig.getDouble(key + ".y");
+            double z = dataConfig.getDouble(key + ".z");
+            String name = dataConfig.getString(key + ".name", "Unnamed");
+            Location loc = new Location(w, x, y, z);
+            instances.put(UUID.fromString(key), new WarpInstance(loc, name));
+        }
+        plugin.getLogger().info("[WarpGateManager] Loaded " + instances.size() + " warp instance(s).");
+    }
+
+    private void saveAllInstances() {
+        for (String key : dataConfig.getKeys(false)) {
+            dataConfig.set(key, null);
+        }
+        for (Map.Entry<UUID, WarpInstance> e : instances.entrySet()) {
+            UUID id = e.getKey();
+            WarpInstance inst = e.getValue();
+            dataConfig.set(id.toString() + ".world", inst.location.getWorld().getName());
+            dataConfig.set(id.toString() + ".x", inst.location.getX());
+            dataConfig.set(id.toString() + ".y", inst.location.getY());
+            dataConfig.set(id.toString() + ".z", inst.location.getZ());
+            dataConfig.set(id.toString() + ".name", inst.name);
+        }
+        try {
+            dataConfig.save(dataFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        plugin.getLogger().info("[WarpGateManager] Saved " + instances.size() + " warp instance(s).");
+    }
+
+    private UUID findInstanceAt(Location loc) {
+        for (Map.Entry<UUID, WarpInstance> e : instances.entrySet()) {
+            Location l = e.getValue().location;
+            if (l.getWorld().equals(loc.getWorld())
+                    && l.getBlockX() == loc.getBlockX()
+                    && l.getBlockY() == loc.getBlockY()
+                    && l.getBlockZ() == loc.getBlockZ()) {
+                return e.getKey();
             }
         }
-        naming.values().remove(key);
+        return null;
     }
 }
