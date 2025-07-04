@@ -695,6 +695,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (shelfManager != null) {
             shelfManager.onDisable();
         }
+        if (warpGateManager != null) {
+            warpGateManager.onDisable();
+        }
         if(potionBrewingSubsystem != null){
             potionBrewingSubsystem.onDisable();
         }
