@@ -1228,6 +1228,20 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getPocketPortal() {
+        return createCustomItem(
+                Material.ENDER_EYE,
+                ChatColor.YELLOW + "Pocket Portal",
+                List.of(
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Open Ender Chest",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getClericEnchant() {
         return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(
