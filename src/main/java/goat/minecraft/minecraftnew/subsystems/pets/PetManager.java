@@ -1098,7 +1098,7 @@ public class PetManager implements Listener {
 
             // Calculate the XP required for the next level
             // Each level requires 2 more XP than the previous level
-            return baseXP + (level - 1) * 2;
+            return baseXP + (level - 1) * 8;
         }
     }
 
