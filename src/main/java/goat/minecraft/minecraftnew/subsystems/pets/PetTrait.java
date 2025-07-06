@@ -38,6 +38,7 @@ public enum PetTrait {
         return description;
     }
 
+
     public double getValueForRarity(TraitRarity rarity) {
         int index = rarity.ordinal();
         if (index < 0 || index >= values.length) {
