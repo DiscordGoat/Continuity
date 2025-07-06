@@ -49,6 +49,9 @@ public class PetManager implements Listener {
     // The keys must match the pet names used elsewhere in your code.
     private static final Map<String, String> PET_TEXTURES = new HashMap<>();
 
+    // Pool of traits used when rolling a UNIQUE rarity trait. Modify as needed.
+    private static final PetTrait[] UNIQUE_TRAITS = PetTrait.values();
+
     static {
         // Example placeholders, replace with actual base64 textures.
         // You can find these by searching for "custom head textures" online.
@@ -176,6 +179,36 @@ public class PetManager implements Listener {
             return false;
         }
         return true;
+    }
+
+    // ====================
+    // Trait rolling utils
+    // ====================
+
+    /**
+     * Randomly selects a TraitRarity using the weight defined in {@link TraitRarity#getWeight()}.
+     */
+    private TraitRarity getRandomRarityWeighted() {
+        double total = 0;
+        for (TraitRarity r : TraitRarity.values()) {
+            total += r.getWeight();
+        }
+        double rand = Math.random() * total;
+        for (TraitRarity r : TraitRarity.values()) {
+            rand -= r.getWeight();
+            if (rand <= 0) {
+                return r;
+            }
+        }
+        return TraitRarity.COMMON;
+    }
+
+    /**
+     * Picks a random trait for the given rarity. Unique rarity pulls from {@link #UNIQUE_TRAITS}.
+     */
+    private PetTrait getRandomTraitForRarity(TraitRarity rarity) {
+        PetTrait[] pool = (rarity == TraitRarity.UNIQUE) ? UNIQUE_TRAITS : PetTrait.values();
+        return pool[new Random().nextInt(pool.length)];
     }
 
 
@@ -590,7 +623,7 @@ public class PetManager implements Listener {
                 double traitValue = pet.getTrait().getValueForRarity(pet.getTraitRarity());
                 lore.add(ChatColor.GRAY + pet.getTrait().getDescription() + ": "
                         + ChatColor.YELLOW + traitValue);
-                lore.add(ChatColor.DARK_GRAY + "Use a Trait Stone to modify");
+                lore.add(ChatColor.DARK_GRAY + "Right-click to spend 1 XP level for a random trait.");
                 if (pet.equals(active)) {
                     lore.add(ChatColor.GREEN + "Currently Active");
                 }
@@ -801,8 +834,23 @@ public class PetManager implements Listener {
                 String petName = displayName.replaceFirst("\\[Lvl \\d+\\] ", "");
                 Pet pet = getPet(player, petName);
                 if (pet != null) {
-                    summonPet(player, petName);
-                    player.closeInventory();
+                    if (event.getClick().isRightClick()) {
+                        if (player.getLevel() < 1) {
+                            player.sendMessage(ChatColor.RED + "You need at least 1 XP level to roll a trait.");
+                            return;
+                        }
+                        player.setLevel(player.getLevel() - 1);
+                        TraitRarity rarity = getRandomRarityWeighted();
+                        PetTrait trait = getRandomTraitForRarity(rarity);
+                        pet.setTrait(trait, rarity);
+                        savePets();
+                        player.sendMessage(ChatColor.GREEN + "Your pet " + pet.getName() + " gained the "
+                                + rarity.getColor() + trait.getDisplayName() + ChatColor.GREEN + " trait!");
+                        openPetGUI(player, currentPage);
+                    } else {
+                        summonPet(player, petName);
+                        player.closeInventory();
+                    }
                 }
             }
         }
@@ -1007,6 +1055,11 @@ public class PetManager implements Listener {
 
         public TraitRarity getTraitRarity() {
             return traitRarity;
+        }
+
+        public void setTrait(PetTrait trait, TraitRarity rarity) {
+            this.trait = trait;
+            this.traitRarity = rarity;
         }
 
         public void setLevel(int level) {
