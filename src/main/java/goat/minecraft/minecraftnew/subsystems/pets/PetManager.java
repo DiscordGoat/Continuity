@@ -558,6 +558,7 @@ public class PetManager implements Listener {
             ItemMeta meta = activeIcon.getItemMeta();
             if (meta != null) {
                 ChatColor rarityColor = active.getRarity().getColor();
+                meta.setDisplayName(rarityColor + "[Lvl " + active.getLevel() + "] " + active.getName());
                 meta.setDisplayName(rarityColor + "[Lvl " + active.getLevel() + "]" + active.getName());
                 List<String> lore = new ArrayList<>();
                 lore.add(ChatColor.GREEN + "XP: " + (int) active.getXp() + "/" + (int) active.getXPForNextLevel());
@@ -812,7 +813,7 @@ public class PetManager implements Listener {
                 Pet pet = getPet(player, petName);
                 if (pet != null) {
                     summonPet(player, petName);
-                    player.closeInventory();
+                    openPetGUI(player, page);
                 }
             }
         }
