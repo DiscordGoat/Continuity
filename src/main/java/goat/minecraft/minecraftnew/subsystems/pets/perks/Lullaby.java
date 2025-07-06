@@ -32,7 +32,8 @@ public class Lullaby implements Listener {
         for (Player player : world.getPlayers()) {
             // Get the player's active pet
             PetManager.Pet activePet = petManager.getActivePet(player);
-            if (activePet == null || !activePet.hasPerk(PetManager.PetPerk.LULLABY)) {
+            if (activePet == null || !(activePet.hasPerk(PetManager.PetPerk.LULLABY)
+                    || activePet.hasUniqueTraitPerk(PetManager.PetPerk.LULLABY))) {
                 continue;
             }
 

@@ -25,8 +25,9 @@ public class Echolocation implements Listener {
         // Get the player's active pet
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // Check if the player has the ECHOLOCATION perk
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.ECHOLOCATION)) {
+        // Check if the player has the ECHOLOCATION perk or unique trait
+        if (activePet != null && (activePet.hasPerk(PetManager.PetPerk.ECHOLOCATION)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.ECHOLOCATION))) {
             int petLevel = activePet.getLevel();
 
             // Calculate effect duration (e.g., 5 seconds + 1 second per pet level)

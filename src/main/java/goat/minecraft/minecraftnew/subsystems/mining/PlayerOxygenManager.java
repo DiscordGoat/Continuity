@@ -243,7 +243,8 @@ public class PlayerOxygenManager implements Listener {
 
         int y = location.getBlockY();
         PetManager.Pet activePet = PetManager.getInstance(plugin).getActivePet(player);
-        boolean hasBlacklung = activePet != null && activePet.hasPerk(PetManager.PetPerk.BLACKLUNG);
+        boolean hasBlacklung = activePet != null && (activePet.hasPerk(PetManager.PetPerk.BLACKLUNG)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.BLACKLUNG));
         Random random = new Random();
 
         if (world.getEnvironment() == World.Environment.NETHER) {

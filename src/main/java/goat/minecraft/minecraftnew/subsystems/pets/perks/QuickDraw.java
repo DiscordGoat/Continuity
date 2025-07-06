@@ -50,8 +50,9 @@ public class QuickDraw implements Listener {
         // Get the player's active pet
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // Check if the player has the Quick Draw perk
-        if (activePet == null || !activePet.hasPerk(PetManager.PetPerk.QUICK_DRAW)) {
+        // Check if the player has the Quick Draw perk or unique trait
+        if (activePet == null || !(activePet.hasPerk(PetManager.PetPerk.QUICK_DRAW)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.QUICK_DRAW))) {
             return;
         }
 

@@ -30,8 +30,9 @@ public class StrongSwimmer implements Listener {
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // Check if the player has the STRONG_SWIMMER perk
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.STRONG_SWIMMER)) {
+        // Check if the player has the STRONG_SWIMMER perk or unique trait
+        if (activePet != null && (activePet.hasPerk(PetManager.PetPerk.STRONG_SWIMMER)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.STRONG_SWIMMER))) {
             // Apply Dolphin's Grace effect
             player.addPotionEffect(new PotionEffect(PotionEffectType.DOLPHINS_GRACE, 200, 1));
 

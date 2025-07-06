@@ -12,6 +12,7 @@ import org.bukkit.event.player.*;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.subsystems.pets.TraitRarity;
+import goat.minecraft.minecraftnew.subsystems.pets.UniqueTrait;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -51,6 +52,8 @@ public class PetManager implements Listener {
 
     // Pool of traits used when rolling a UNIQUE rarity trait. Modify as needed.
     private static final PetTrait[] UNIQUE_TRAITS = PetTrait.values();
+    // Pool of perks that can be granted when rolling a UNIQUE trait.
+    private static final UniqueTrait[] UNIQUE_PERKS = UniqueTrait.values();
 
     static {
         // Example placeholders, replace with actual base64 textures.
@@ -617,6 +620,11 @@ public class PetManager implements Listener {
                     lore.add(ChatColor.GRAY + getDynamicPerkEffectDescription(perk, pet.getLevel()));
                     lore.add(ChatColor.GRAY + " ");
                 }
+                if (pet.getUniqueTrait() != null) {
+                    lore.add(ChatColor.AQUA + "Unique Trait: " + pet.getUniqueTrait().getDisplayName());
+                    lore.add(ChatColor.GRAY + getDynamicPerkEffectDescription(pet.getUniqueTrait().getPerk(), pet.getLevel()));
+                    lore.add(ChatColor.GRAY + " ");
+                }
                 lore.add(ChatColor.GRAY + "Trait: "
                         + pet.getTraitRarity().getColor()
                         + "[" + pet.getTraitRarity().getDisplayName() + "] "
@@ -841,13 +849,23 @@ public class PetManager implements Listener {
                         }
                         player.setLevel(player.getLevel() - 1);
                         TraitRarity rarity = getRandomRarityWeighted();
-                        PetTrait trait = getRandomTraitForRarity(rarity);
-                        pet.setTrait(trait, rarity);
-                        savePets();
-                        player.sendMessage(ChatColor.GREEN + "Your pet " + pet.getName() + " gained the "
-                                + rarity.getColor() + "[" + rarity.getDisplayName() + "] "
-                                + trait.getDisplayName() + ChatColor.GREEN + " trait!");
-                        openPetGUI(player, currentPage);
+                        if (rarity == TraitRarity.UNIQUE) {
+                            UniqueTrait uTrait = UNIQUE_PERKS[new Random().nextInt(UNIQUE_PERKS.length)];
+                            pet.setUniqueTrait(uTrait);
+                            savePets();
+                            player.sendMessage(ChatColor.GREEN + "Your pet " + pet.getName() + " gained the "
+                                    + rarity.getColor() + "[" + rarity.getDisplayName() + "] "
+                                    + uTrait.getDisplayName() + ChatColor.GREEN + " trait!");
+                            openPetGUI(player, currentPage);
+                        } else {
+                            PetTrait trait = getRandomTraitForRarity(rarity);
+                            pet.setTrait(trait, rarity);
+                            savePets();
+                            player.sendMessage(ChatColor.GREEN + "Your pet " + pet.getName() + " gained the "
+                                    + rarity.getColor() + "[" + rarity.getDisplayName() + "] "
+                                    + trait.getDisplayName() + ChatColor.GREEN + " trait!");
+                            openPetGUI(player, currentPage);
+                        }
                     } else {
                         summonPet(player, petName);
                         openPetGUI(player);
@@ -896,6 +914,11 @@ public class PetManager implements Listener {
 
                 List<String> perkNames = pet.getPerks().stream().map(Enum::name).collect(Collectors.toList());
                 config.set(path + ".perks", perkNames);
+                if (pet.getUniqueTrait() != null) {
+                    config.set(path + ".uniqueTrait", pet.getUniqueTrait().name());
+                } else {
+                    config.set(path + ".uniqueTrait", null);
+                }
                 config.set(path + ".trait", pet.getTrait().name());
                 config.set(path + ".traitRarity", pet.getTraitRarity().name());
             }
@@ -954,6 +977,7 @@ public class PetManager implements Listener {
                 String particleName = config.getString(path + ".particle");
                 String traitString = config.getString(path + ".trait");
                 String traitRarityString = config.getString(path + ".traitRarity");
+                String uniqueTraitString = config.getString(path + ".uniqueTrait");
                 List<String> perkNames = config.getStringList(path + ".perks");
 
                 List<PetPerk> perks = perkNames.stream().map(PetPerk::valueOf).collect(Collectors.toList());
@@ -971,6 +995,14 @@ public class PetManager implements Listener {
                     traitRarity = TraitRarity.COMMON;
                 }
 
+                UniqueTrait uniqueTrait = null;
+                if (uniqueTraitString != null) {
+                    try {
+                        uniqueTrait = UniqueTrait.valueOf(uniqueTraitString);
+                    } catch (Exception ignored) {
+                    }
+                }
+
                 // Retrieve icon from the pet name using the textures we have
                 ItemStack icon = getSkullForPet(petName);
 
@@ -984,6 +1016,7 @@ public class PetManager implements Listener {
                 Pet pet = new Pet(petName, rarity, 100, icon, particle, perks, trait, traitRarity);
                 pet.setLevel(level);
                 pet.setXp(xp);
+                pet.setUniqueTrait(uniqueTrait);
 
                 pets.put(petName, pet);
             }
@@ -1003,6 +1036,7 @@ public class PetManager implements Listener {
         private List<PetPerk> perks;
         private PetTrait trait;
         private TraitRarity traitRarity;
+        private UniqueTrait uniqueTrait;
 
         public Pet(String name, Rarity rarity, int maxLevel, ItemStack icon, Particle particle, List<PetPerk> perks,
                     PetTrait trait, TraitRarity traitRarity) {
@@ -1016,6 +1050,7 @@ public class PetManager implements Listener {
             this.xp = 0;
             this.trait = trait;
             this.traitRarity = traitRarity;
+            this.uniqueTrait = null;
         }
 
         public String getName() {
@@ -1063,6 +1098,14 @@ public class PetManager implements Listener {
             this.traitRarity = rarity;
         }
 
+        public UniqueTrait getUniqueTrait() {
+            return uniqueTrait;
+        }
+
+        public void setUniqueTrait(UniqueTrait uniqueTrait) {
+            this.uniqueTrait = uniqueTrait;
+        }
+
         public void setLevel(int level) {
             this.level = level;
         }
@@ -1073,6 +1116,10 @@ public class PetManager implements Listener {
 
         public boolean hasPerk(PetPerk perk) {
             return perks.contains(perk);
+        }
+
+        public boolean hasUniqueTraitPerk(PetPerk perk) {
+            return uniqueTrait != null && uniqueTrait.getPerk() == perk;
         }
 
         public void addXP(double amount) {
