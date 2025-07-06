@@ -153,6 +153,34 @@ public class PetManager implements Listener {
         return getCustomSkull(texture);
     }
 
+    private ItemStack createPetIcon(Player player, Pet pet) {
+        ItemStack petIcon = getSkullForPet(pet.getName());
+        if (petIcon == null) {
+            petIcon = new ItemStack(Material.NAME_TAG); // Fallback item
+        }
+
+        ItemMeta meta = petIcon.getItemMeta();
+        if (meta != null) {
+            ChatColor rarityColor = pet.getRarity().getColor();
+            meta.setDisplayName(rarityColor + "[Lvl " + pet.getLevel() + "]" + pet.getName());
+
+            List<String> lore = new ArrayList<>();
+            lore.add(ChatColor.GREEN + "XP: " + (int) pet.getXp() + "/" + (int) pet.getXPForNextLevel());
+            lore.add(ChatColor.GRAY + " ");
+            for (PetPerk perk : pet.getPerks()) {
+                lore.add(ChatColor.GOLD + perk.getDisplayName());
+                lore.add(ChatColor.GRAY + getDynamicPerkEffectDescription(perk, pet.getLevel()));
+                lore.add(ChatColor.GRAY + " ");
+            }
+            if (pet.equals(activePets.get(player.getUniqueId()))) {
+                lore.add(ChatColor.GREEN + "Currently Active");
+            }
+            meta.setLore(lore);
+            petIcon.setItemMeta(meta);
+        }
+        return petIcon;
+    }
+
     /**
      * Checks if the given texture string is likely a valid base64-encoded texture.
      *
@@ -190,6 +218,10 @@ public class PetManager implements Listener {
 
     private Set<UUID> guiCooldown = new HashSet<>();
     private final long COOLDOWN_TIME = 20L; // 1 second (20 ticks)
+
+    // Tracks which page of the pet GUI a player is currently viewing
+    private final Map<UUID, Integer> currentPage = new HashMap<>();
+    private static final int PETS_PER_PAGE = 45; // first row reserved for navigation
 
     public void addPet(Player player, Pet pet) {
         if(player == null){
@@ -503,51 +535,68 @@ public class PetManager implements Listener {
         despawnPet(player);
     }
 
+
     public void openPetGUI(Player player) {
-        Inventory gui = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Your Pets");
+        openPetGUI(player, 1);
+    }
+
+    public void openPetGUI(Player player, int page) {
         Map<String, Pet> pets = playerPets.getOrDefault(player.getUniqueId(), new HashMap<>());
+        List<Pet> petList = new ArrayList<>(pets.values());
 
-        int index = 0;
-        for (Pet pet : pets.values()) {
-            ItemStack petIcon = getSkullForPet(pet.getName());
-            if (petIcon == null) {
-                petIcon = new ItemStack(Material.NAME_TAG); // Fallback item
-            }
-
-            ItemMeta meta = petIcon.getItemMeta();
-            if (meta != null) {
-                ChatColor rarityColor = pet.getRarity().getColor();
-                meta.setDisplayName(rarityColor + "[Lvl " + pet.getLevel() + "] " + pet.getName());
-
-                List<String> lore = new ArrayList<>();
-                lore.add(ChatColor.GREEN + "XP: " + (int) pet.getXp() + "/" + (int) pet.getXPForNextLevel());
-                lore.add(ChatColor.GRAY + " ");
-                for (PetPerk perk : pet.getPerks()) {
-                    lore.add(ChatColor.GOLD + perk.getDisplayName());
-                    lore.add(ChatColor.GRAY + getDynamicPerkEffectDescription(perk, pet.getLevel()));
-                    lore.add(ChatColor.GRAY + " ");
-                }
-                if (pet.equals(activePets.get(player.getUniqueId()))) {
-                    lore.add(ChatColor.GREEN + "Currently Active");
-                }
-                meta.setLore(lore);
-                petIcon.setItemMeta(meta);
-            }
-
-            gui.setItem(index++, petIcon);
+        int maxPage = (int) Math.ceil(petList.size() / (double) PETS_PER_PAGE);
+        if (maxPage == 0) {
+            maxPage = 1;
         }
+        page = Math.max(1, Math.min(page, maxPage));
+        currentPage.put(player.getUniqueId(), page);
+
+        Inventory gui = Bukkit.createInventory(null, 54, ChatColor.DARK_GREEN + "Your Pets - Page " + page);
 
         ItemStack glassPane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta glassMeta = glassPane.getItemMeta();
         glassMeta.setDisplayName(" ");
         glassPane.setItemMeta(glassMeta);
+        for (int i = 0; i < 9; i++) {
+            gui.setItem(i, glassPane);
+        }
+
+        if (page > 1) {
+            ItemStack prev = new ItemStack(Material.PAPER);
+            ItemMeta meta = prev.getItemMeta();
+            meta.setDisplayName(ChatColor.GREEN + "Previous Page");
+            prev.setItemMeta(meta);
+            gui.setItem(0, prev);
+        }
+
+        if (page < maxPage) {
+            ItemStack next = new ItemStack(Material.PAPER);
+            ItemMeta meta = next.getItemMeta();
+            meta.setDisplayName(ChatColor.GREEN + "Next Page");
+            next.setItemMeta(meta);
+            gui.setItem(8, next);
+        }
+
+        Pet active = activePets.get(player.getUniqueId());
+        if (active != null) {
+            gui.setItem(4, createPetIcon(player, active));
+        }
+
+        int startIndex = (page - 1) * PETS_PER_PAGE;
+        int endIndex = Math.min(startIndex + PETS_PER_PAGE, petList.size());
+
+        int index = 9;
+        for (int i = startIndex; i < endIndex; i++) {
+            Pet pet = petList.get(i);
+            gui.setItem(index++, createPetIcon(player, pet));
+        }
+
         for (; index < gui.getSize(); index++) {
             gui.setItem(index, glassPane);
         }
 
         player.openInventory(gui);
     }
-
     private String getDynamicPerkEffectDescription(PetPerk perk, int level) {
 
         switch (perk) {
@@ -714,12 +763,25 @@ public class PetManager implements Listener {
 
     @EventHandler
     public void onInventoryClick(org.bukkit.event.inventory.InventoryClickEvent event) {
-        if (event.getView().getTitle().equals(ChatColor.DARK_GREEN + "Your Pets")) {
+        if (event.getView().getTitle().startsWith(ChatColor.DARK_GREEN + "Your Pets")) {
             event.setCancelled(true);
             Player player = (Player) event.getWhoClicked();
             ItemStack clicked = event.getCurrentItem();
             if (clicked != null && clicked.hasItemMeta()) {
                 String displayName = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
+
+                if (displayName.equalsIgnoreCase("Next Page")) {
+                    int page = currentPage.getOrDefault(player.getUniqueId(), 1);
+                    openPetGUI(player, page + 1);
+                    return;
+                }
+
+                if (displayName.equalsIgnoreCase("Previous Page")) {
+                    int page = currentPage.getOrDefault(player.getUniqueId(), 1);
+                    openPetGUI(player, page - 1);
+                    return;
+                }
+
                 String petName = displayName.replaceFirst("\\[Lvl \\d+\\] ", "");
                 Pet pet = getPet(player, petName);
                 if (pet != null) {
