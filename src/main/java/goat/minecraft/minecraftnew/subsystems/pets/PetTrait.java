@@ -9,16 +9,16 @@ import org.bukkit.ChatColor;
  */
 
 public enum PetTrait {
-    HEALTHY(ChatColor.RED, "Health Increase", new double[]{2,4,6,8,10,12,15}),
-    FAST(ChatColor.YELLOW, "Speed Increase", new double[]{2,3,4,5,6,7,8}),
-    STRONG(ChatColor.RED, "Damage Increase", new double[]{2,4,6,8,10,12,15}),
-    RESILIENT(ChatColor.DARK_GRAY, "Damage Reduction", new double[]{1,2,3,4,5,6,8}),
-    NAUTICAL(ChatColor.AQUA, "Sea Creature Chance", new double[]{1,2,3,4,5,6,8}),
-    HAUNTED(ChatColor.AQUA, "Spirit Chance", new double[]{1,2,3,4,5,6,8}),
-    PRECISE(ChatColor.RED, "Arrow Damage Increase", new double[]{1,2,3,4,5,6,8}),
-    FINANCIAL(ChatColor.YELLOW, "Discount", new double[]{1,2,3,4,5,6,8}),
-    EVASIVE(ChatColor.LIGHT_PURPLE, "Dodge Chance", new double[]{1,2,3,4,5,6,8}),
-    TREASURED(ChatColor.GOLD, "Treasure Chance", new double[]{1,2,3,4,5,6,8});
+    HEALTHY(ChatColor.RED, "Health Increase", new double[]{1,2, 4,6,10,20}),
+    FAST(ChatColor.YELLOW, "Speed Increase", new double[]{1,3,5,8,10,20}),
+    STRONG(ChatColor.RED, "Damage Increase", new double[]{3,5,8,10,15,20}),
+    RESILIENT(ChatColor.WHITE, "Damage Reduction", new double[]{3,5,8,10,15,20}),
+    NAUTICAL(ChatColor.AQUA, "Sea Creature Chance", new double[]{1,2,3,4,5,6}),
+    HAUNTED(ChatColor.AQUA, "Spirit Chance", new double[]{1,2,3,4,5,6}),
+    PRECISE(ChatColor.RED, "Arrow Damage Increase", new double[]{3,5,8, 10,15,20}),
+    FINANCIAL(ChatColor.YELLOW, "Discount", new double[]{3,5,8,10,15,20}),
+    EVASIVE(ChatColor.LIGHT_PURPLE, "Dodge Chance", new double[]{3,5,8,10,15,20}),
+    TREASURED(ChatColor.GOLD, "Treasure Chance", new double[]{1,2,3,4,5,6});
 
     private final ChatColor color;
     private final String description;
