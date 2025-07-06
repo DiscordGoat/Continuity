@@ -851,7 +851,7 @@ public class PetManager implements Listener {
                         openPetGUI(player, currentPage);
                     } else {
                         summonPet(player, petName);
-                        player.closeInventory();
+                        openPetGUI(player);
                     }
                 }
             }
