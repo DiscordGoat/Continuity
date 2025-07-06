@@ -859,6 +859,7 @@ public class PetManager implements Listener {
                             player.sendMessage(ChatColor.GREEN + "Your pet " + pet.getName() + " gained the "
                                     + rarity.getColor() + "[" + rarity.getDisplayName() + "] "
                                     + uTrait.getDisplayName() + ChatColor.GREEN + " trait!");
+                            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.1f);
                             openPetGUI(player, currentPage);
                         } else {
                             PetTrait trait = getRandomTraitForRarity(rarity);
@@ -867,6 +868,7 @@ public class PetManager implements Listener {
                             player.sendMessage(ChatColor.GREEN + "Your pet " + pet.getName() + " gained the "
                                     + rarity.getColor() + "[" + rarity.getDisplayName() + "] "
                                     + trait.getDisplayName() + ChatColor.GREEN + " trait!");
+                            player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
                             openPetGUI(player, currentPage);
                         }
                     } else {
