@@ -623,7 +623,7 @@ public class PetManager implements Listener {
                         + pet.getTrait().getDisplayName());
                 double traitValue = pet.getTrait().getValueForRarity(pet.getTraitRarity());
                 lore.add(ChatColor.GRAY + pet.getTrait().getDescription() + ": "
-                        + ChatColor.YELLOW + traitValue + "%");
+                        + ChatColor.YELLOW + "+" + ChatColor.YELLOW + traitValue + "%");
                 if (pet.equals(active)) {
                     lore.add(ChatColor.GREEN + "Currently Active");
                 }
