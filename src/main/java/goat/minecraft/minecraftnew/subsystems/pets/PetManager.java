@@ -10,6 +10,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
+import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
+import goat.minecraft.minecraftnew.subsystems.pets.TraitRarity;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -582,6 +584,13 @@ public class PetManager implements Listener {
                     lore.add(ChatColor.GRAY + getDynamicPerkEffectDescription(perk, pet.getLevel()));
                     lore.add(ChatColor.GRAY + " ");
                 }
+                lore.add(ChatColor.GRAY + "Trait: "
+                        + pet.getTraitRarity().getColor()
+                        + pet.getTrait().getDisplayName());
+                double traitValue = pet.getTrait().getValueForRarity(pet.getTraitRarity());
+                lore.add(ChatColor.GRAY + pet.getTrait().getDescription() + ": "
+                        + ChatColor.YELLOW + traitValue);
+                lore.add(ChatColor.DARK_GRAY + "Use a Trait Stone to modify");
                 if (pet.equals(active)) {
                     lore.add(ChatColor.GREEN + "Currently Active");
                 }
@@ -812,7 +821,8 @@ public class PetManager implements Listener {
     public void createPet(Player player, String name, Rarity rarity, int maxLevel, Particle particle, PetPerk... perks) {
         ItemStack icon = getSkullForPet(name);
         List<PetPerk> perkList = Arrays.asList(perks);
-        Pet newPet = new Pet(name, rarity, maxLevel, icon, particle, perkList);
+        Pet newPet = new Pet(name, rarity, maxLevel, icon, particle, perkList,
+                PetTrait.HEALTHY, TraitRarity.COMMON);
         addPet(player, newPet);
     }
 
@@ -837,6 +847,8 @@ public class PetManager implements Listener {
 
                 List<String> perkNames = pet.getPerks().stream().map(Enum::name).collect(Collectors.toList());
                 config.set(path + ".perks", perkNames);
+                config.set(path + ".trait", pet.getTrait().name());
+                config.set(path + ".traitRarity", pet.getTraitRarity().name());
             }
             // Save last active pet if known
             if (lastActivePet.containsKey(playerId)) {
@@ -891,10 +903,24 @@ public class PetManager implements Listener {
                 int level = config.getInt(path + ".level");
                 double xp = config.getDouble(path + ".xp");
                 String particleName = config.getString(path + ".particle");
+                String traitString = config.getString(path + ".trait");
+                String traitRarityString = config.getString(path + ".traitRarity");
                 List<String> perkNames = config.getStringList(path + ".perks");
 
                 List<PetPerk> perks = perkNames.stream().map(PetPerk::valueOf).collect(Collectors.toList());
                 Rarity rarity = Rarity.valueOf(rarityString);
+                PetTrait trait;
+                TraitRarity traitRarity;
+                try {
+                    trait = PetTrait.valueOf(traitString);
+                } catch (Exception e) {
+                    trait = PetTrait.HEALTHY;
+                }
+                try {
+                    traitRarity = TraitRarity.valueOf(traitRarityString);
+                } catch (Exception e) {
+                    traitRarity = TraitRarity.COMMON;
+                }
 
                 // Retrieve icon from the pet name using the textures we have
                 ItemStack icon = getSkullForPet(petName);
@@ -906,7 +932,7 @@ public class PetManager implements Listener {
                     particle = Particle.FLAME;
                 }
 
-                Pet pet = new Pet(petName, rarity, 100, icon, particle, perks);
+                Pet pet = new Pet(petName, rarity, 100, icon, particle, perks, trait, traitRarity);
                 pet.setLevel(level);
                 pet.setXp(xp);
 
@@ -926,8 +952,11 @@ public class PetManager implements Listener {
         private ItemStack icon;
         private Particle particle;
         private List<PetPerk> perks;
+        private PetTrait trait;
+        private TraitRarity traitRarity;
 
-        public Pet(String name, Rarity rarity, int maxLevel, ItemStack icon, Particle particle, List<PetPerk> perks) {
+        public Pet(String name, Rarity rarity, int maxLevel, ItemStack icon, Particle particle, List<PetPerk> perks,
+                    PetTrait trait, TraitRarity traitRarity) {
             this.name = name;
             this.rarity = rarity;
             this.maxLevel = maxLevel;
@@ -936,6 +965,8 @@ public class PetManager implements Listener {
             this.perks = perks;
             this.level = 1;
             this.xp = 0;
+            this.trait = trait;
+            this.traitRarity = traitRarity;
         }
 
         public String getName() {
@@ -968,6 +999,14 @@ public class PetManager implements Listener {
 
         public List<PetPerk> getPerks() {
             return perks;
+        }
+
+        public PetTrait getTrait() {
+            return trait;
+        }
+
+        public TraitRarity getTraitRarity() {
+            return traitRarity;
         }
 
         public void setLevel(int level) {
