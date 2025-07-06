@@ -624,14 +624,15 @@ public class PetManager implements Listener {
                     lore.add(ChatColor.AQUA + "Unique Trait: " + pet.getUniqueTrait().getDisplayName());
                     lore.add(ChatColor.GRAY + getDynamicPerkEffectDescription(pet.getUniqueTrait().getPerk(), pet.getLevel()));
                     lore.add(ChatColor.GRAY + " ");
+                } else {
+                    lore.add(ChatColor.GRAY + "Trait: "
+                            + pet.getTraitRarity().getColor()
+                            + "[" + pet.getTraitRarity().getDisplayName() + "] "
+                            + pet.getTraitRarity().getColor() + pet.getTrait().getDisplayName());
+                    double traitValue = pet.getTrait().getValueForRarity(pet.getTraitRarity());
+                    lore.add(pet.getTrait().getColor() + pet.getTrait().getDescription() + ": "
+                            + pet.getTrait().getColor() + "+" + traitValue + "%");
                 }
-                lore.add(ChatColor.GRAY + "Trait: "
-                        + pet.getTraitRarity().getColor()
-                        + "[" + pet.getTraitRarity().getDisplayName() + "] "
-                        + pet.getTraitRarity().getColor() + pet.getTrait().getDisplayName());
-                double traitValue = pet.getTrait().getValueForRarity(pet.getTraitRarity());
-                lore.add(pet.getTrait().getColor() + pet.getTrait().getDescription() + ": "
-                        + pet.getTrait().getColor() + "+" + traitValue + "%");
                 if (pet.equals(active)) {
                     lore.add(ChatColor.GREEN + "Currently Active");
                 }
@@ -848,6 +849,8 @@ public class PetManager implements Listener {
                             return;
                         }
                         player.setLevel(player.getLevel() - 1);
+                        // Rerolling a trait removes any current unique trait
+                        pet.setUniqueTrait(null);
                         TraitRarity rarity = getRandomRarityWeighted();
                         if (rarity == TraitRarity.UNIQUE) {
                             UniqueTrait uTrait = UNIQUE_PERKS[new Random().nextInt(UNIQUE_PERKS.length)];
@@ -1096,6 +1099,8 @@ public class PetManager implements Listener {
         public void setTrait(PetTrait trait, TraitRarity rarity) {
             this.trait = trait;
             this.traitRarity = rarity;
+            // Acquiring a normal trait removes any unique trait
+            this.uniqueTrait = null;
         }
 
         public UniqueTrait getUniqueTrait() {
