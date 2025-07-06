@@ -6,14 +6,14 @@ package goat.minecraft.minecraftnew.subsystems.pets;
  * The array order matches the enum order of TraitRarity.
  */
 public enum PetTrait {
-    HEALTHY("Bonus health", new double[]{2,4,6,8,10,12,15}),
-    FAST("Bonus speed", new double[]{2,3,4,5,6,7,8}),
-    STRONG("Bonus damage", new double[]{2,4,6,8,10,12,15}),
+    HEALTHY("Health", new double[]{2,4,6,8,10,12,15}),
+    FAST("Speed", new double[]{2,3,4,5,6,7,8}),
+    STRONG("Damage", new double[]{2,4,6,8,10,12,15}),
     RESILIENT("Damage reduction", new double[]{1,2,3,4,5,6,8}),
-    NAUTICAL("Swim speed", new double[]{1,2,3,4,5,6,8}),
-    HAUNTED("Spectral damage", new double[]{1,2,3,4,5,6,8}),
-    PRECISE("Accuracy", new double[]{1,2,3,4,5,6,8}),
-    FINANCIAL("Extra coins", new double[]{1,2,3,4,5,6,8}),
+    NAUTICAL("Sea Creature Chance", new double[]{1,2,3,4,5,6,8}),
+    HAUNTED("Spirit Chance", new double[]{1,2,3,4,5,6,8}),
+    PRECISE("Arrow Damage", new double[]{1,2,3,4,5,6,8}),
+    FINANCIAL("Discount", new double[]{1,2,3,4,5,6,8}),
     EVASIVE("Dodge chance", new double[]{1,2,3,4,5,6,8}),
     TREASURED("Treasure chance", new double[]{1,2,3,4,5,6,8});
 
