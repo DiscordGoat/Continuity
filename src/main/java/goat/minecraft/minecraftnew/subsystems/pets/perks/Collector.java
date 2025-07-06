@@ -31,8 +31,9 @@ public class Collector implements Listener {
         Player player = event.getPlayer();
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // Check if the player has the COLLECTOR perk
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.COLLECTOR)) {
+        // Check if the player has the COLLECTOR perk or unique trait
+        if (activePet != null && (activePet.hasPerk(PetManager.PetPerk.COLLECTOR)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.COLLECTOR))) {
             // Define the collection radius based on pet level:
             // start at 15 and increase by 1 per level, capped at 50
             int petLevel = activePet.getLevel();

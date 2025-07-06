@@ -34,7 +34,8 @@ public class Fetch implements Listener {
         }
 
         PetManager.Pet activePet = petManager.getActivePet(player);
-        if (activePet == null || !activePet.hasPerk(PetManager.PetPerk.FETCH)) {
+        if (activePet == null || !(activePet.hasPerk(PetManager.PetPerk.FETCH)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.FETCH))) {
             return;
         }
 

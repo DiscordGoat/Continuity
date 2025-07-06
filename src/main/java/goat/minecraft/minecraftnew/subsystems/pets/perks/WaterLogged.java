@@ -25,8 +25,9 @@ public class WaterLogged implements Listener {
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // Check if the player has the WATER_LOGGED perk
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.WATERLOGGED)) {
+        // Check if the player has the WATER_LOGGED perk or unique trait
+        if (activePet != null && (activePet.hasPerk(PetManager.PetPerk.WATERLOGGED)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.WATERLOGGED))) {
             if (player.isSwimming()) {
                 int petLevel = activePet.getLevel();
 

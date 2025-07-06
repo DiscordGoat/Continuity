@@ -46,9 +46,10 @@ public class GreenThumb implements Listener {
             return; // Growth cooldown hasn't passed
         }
 
-        // Check if player has the Green Thumb perk
+        // Check if player has the Green Thumb perk or unique trait
         PetManager.Pet activePet = petManager.getActivePet(player);
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.GREEN_THUMB)) {
+        if (activePet != null && (activePet.hasPerk(PetManager.PetPerk.GREEN_THUMB)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.GREEN_THUMB))) {
             int radius = 10 + activePet.getLevel();
             growCropsAroundPlayer(player, radius);
             player.sendMessage(ChatColor.YELLOW + "Your pet naturally grows nearby crops!");
