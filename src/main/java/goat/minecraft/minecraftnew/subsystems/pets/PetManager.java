@@ -619,6 +619,7 @@ public class PetManager implements Listener {
                 }
                 lore.add(ChatColor.GRAY + "Trait: "
                         + pet.getTraitRarity().getColor()
+                        + "[" + pet.getTraitRarity().getDisplayName() + "] "
                         + pet.getTrait().getDisplayName());
                 double traitValue = pet.getTrait().getValueForRarity(pet.getTraitRarity());
                 lore.add(ChatColor.GRAY + pet.getTrait().getDescription() + ": "
@@ -845,7 +846,8 @@ public class PetManager implements Listener {
                         pet.setTrait(trait, rarity);
                         savePets();
                         player.sendMessage(ChatColor.GREEN + "Your pet " + pet.getName() + " gained the "
-                                + rarity.getColor() + trait.getDisplayName() + ChatColor.GREEN + " trait!");
+                                + rarity.getColor() + "[" + rarity.getDisplayName() + "] "
+                                + trait.getDisplayName() + ChatColor.GREEN + " trait!");
                         openPetGUI(player, currentPage);
                     } else {
                         summonPet(player, petName);

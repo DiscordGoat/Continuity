@@ -40,4 +40,12 @@ public enum TraitRarity {
             default: return ChatColor.WHITE;
         }
     }
+
+    /**
+     * Returns a nicely formatted name for this rarity.
+     */
+    public String getDisplayName() {
+        String lower = name().toLowerCase();
+        return Character.toUpperCase(lower.charAt(0)) + lower.substring(1);
+    }
 }
