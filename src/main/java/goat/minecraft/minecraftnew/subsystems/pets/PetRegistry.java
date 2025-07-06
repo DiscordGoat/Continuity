@@ -411,6 +411,7 @@ public class PetRegistry {
         // Use PetManager's getSkullForPet to retrieve the proper icon.
         ItemStack icon = petManager.getSkullForPet(def.getName());
         // Create a new instance of the pet using PetManager's inner Pet class.
-        return petManager.new Pet(def.getName(), def.getRarity(), def.getMaxLevel(), icon, def.getParticle(), def.getPerks());
+        return petManager.new Pet(def.getName(), def.getRarity(), def.getMaxLevel(), icon,
+                def.getParticle(), def.getPerks(), PetTrait.HEALTHY, TraitRarity.COMMON);
     }
 }
