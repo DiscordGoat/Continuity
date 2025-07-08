@@ -1116,9 +1116,20 @@ public class VillagerTradeManager implements Listener {
         // Apply pet Haggle perk
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.HAGGLE)) {
             int petLevel = activePet.getLevel();
-            double maxDiscount = 0.25; // 25% discount
-            int maxLevel = 100;
-            double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
+            double discountFactor;
+            if (petLevel >= 100) {
+                discountFactor = 0.25;
+            } else if (petLevel >= 75) {
+                discountFactor = 0.20;
+            } else if (petLevel >= 50) {
+                discountFactor = 0.15;
+            } else if (petLevel >= 25) {
+                discountFactor = 0.10;
+            } else if (petLevel >= 1) {
+                discountFactor = 0.05;
+            } else {
+                discountFactor = 0.0;
+            }
             finalCost *= (1 - discountFactor);
         }
 
@@ -1535,9 +1546,20 @@ public class VillagerTradeManager implements Listener {
         double finalCost = emeraldCost;
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.HAGGLE)) {
             int petLevel = activePet.getLevel();
-            double maxDiscount = 0.25; // 25% discount at level 100
-            int maxLevel = 100;
-            double discountFactor = maxDiscount * ((double) petLevel / maxLevel);
+            double discountFactor;
+            if (petLevel >= 100) {
+                discountFactor = 0.25;
+            } else if (petLevel >= 75) {
+                discountFactor = 0.20;
+            } else if (petLevel >= 50) {
+                discountFactor = 0.15;
+            } else if (petLevel >= 25) {
+                discountFactor = 0.10;
+            } else if (petLevel >= 1) {
+                discountFactor = 0.05;
+            } else {
+                discountFactor = 0.0;
+            }
             finalCost *= (1 - discountFactor);
             finalCost = Math.floor(finalCost);
         }
@@ -1616,7 +1638,13 @@ public class VillagerTradeManager implements Listener {
         }
 
         // --- Add bartering XP ---
-        xpManager.addXP(player, "Bartering", 11);
+        int barterXP = 11;
+        if (activePet != null &&
+                activePet.getName().equalsIgnoreCase("Villager") &&
+                activePet.hasPerk(PetManager.PetPerk.PRACTICE)) {
+            barterXP *= 3;
+        }
+        xpManager.addXP(player, "Bartering", barterXP);
     }
 
     /**
@@ -1658,7 +1686,13 @@ public class VillagerTradeManager implements Listener {
             player.sendMessage(ChatColor.GREEN + "You sold " + quantity + " items for " + emeraldReward + " emeralds!");
 
             // Award Bartering XP to the player
-            xpManager.addXP(player, "Bartering", 11);
+            int barterXP = 11;
+            if (activePet != null &&
+                    activePet.getName().equalsIgnoreCase("Villager") &&
+                    activePet.hasPerk(PetManager.PetPerk.PRACTICE)) {
+                barterXP *= 3;
+            }
+            xpManager.addXP(player, "Bartering", barterXP);
 
         } else {
             // Not enough valid items were removed

@@ -752,9 +752,23 @@ public class PetManager implements Listener {
             case TREASURE_HUNTER:
                 return ChatColor.AQUA + "Treasure Chance: " + ChatColor.GOLD + (5 + (level * 0.1)) + "%";
             case PRACTICE:
-                return ChatColor.YELLOW + "Triples villager XP gains.";
+                return ChatColor.YELLOW + "Triples Bartering XP from trades while the Villager pet is active.";
             case HAGGLE:
-                return "Grants a trade discount of " + ChatColor.YELLOW + (level * 0.25) + "%.";
+                double discount;
+                if (level >= 100) {
+                    discount = 25;
+                } else if (level >= 75) {
+                    discount = 20;
+                } else if (level >= 50) {
+                    discount = 15;
+                } else if (level >= 25) {
+                    discount = 10;
+                } else if (level >= 1) {
+                    discount = 5;
+                } else {
+                    discount = 0;
+                }
+                return ChatColor.GRAY + "Villager trade discount: " + ChatColor.YELLOW + discount + "%";
             case LEAP:
                 return ChatColor.YELLOW + "Enables the ability to leap forward.";
             case SOFT_PAW:
@@ -1189,8 +1203,8 @@ public class PetManager implements Listener {
         TERROR_OF_THE_DEEP("Terror Of The Deep","Activates bloodlust when hitting Sea Creatures."),
         HEART_OF_THE_SEA("Heart Of The Sea","+10 Sea Creature Chance."),
         GREEN_THUMB("Green Thumb","Increases tick speed while equipped."),
-        HAGGLE("Haggle","Provides a 25% discount to villager transactions."),
-        PRACTICE("Practice","Boosts villager xp gains."),
+        HAGGLE("Haggle","Provides up to 25% discount on villager transactions."),
+        PRACTICE("Practice","Triples Bartering XP when the Villager pet is active"),
         COMFORTABLE("Comfortable","Grants you with 1 bonus health per 10 levels when eating."),
         LULLABY("Lullaby","Lulls monsters back to sleep, preventing their spawning."),
         ANGLER("Angler","+5 Sea Creature Chance"),
