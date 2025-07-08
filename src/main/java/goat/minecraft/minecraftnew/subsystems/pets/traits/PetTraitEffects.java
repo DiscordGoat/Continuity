@@ -11,8 +11,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -24,13 +22,19 @@ import java.util.UUID;
  */
 public class PetTraitEffects implements Listener {
 
+    private static PetTraitEffects instance;
     private final PetManager petManager;
 
     private final Map<UUID, Double> baseHealth = new HashMap<>();
     private final Map<UUID, Float> baseSpeed = new HashMap<>();
 
     public PetTraitEffects(JavaPlugin plugin) {
+        instance = this;
         this.petManager = PetManager.getInstance(plugin);
+    }
+
+    public static PetTraitEffects getInstance() {
+        return instance;
     }
 
     // ===== Attribute Helpers =====
@@ -86,20 +90,18 @@ public class PetTraitEffects implements Listener {
         baseSpeed.remove(id);
     }
 
-    // ===== Event Hooks =====
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
+    // ===== Application Methods =====
+    public void applyTraits(Player player) {
         applyHealthTrait(player);
         applySpeedTrait(player);
     }
 
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        applyHealthTrait(player);
-        applySpeedTrait(player);
+    public void removeTraits(Player player) {
+        removeHealthTrait(player);
+        removeSpeedTrait(player);
     }
+
+    // ===== Event Hooks =====
 
     @EventHandler
     public void onMeleeDamage(EntityDamageByEntityEvent event) {
