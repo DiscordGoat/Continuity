@@ -404,6 +404,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
         new SpeedBoost(petManager);
+        // Register trait-based stat modifications
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.pets.traits.PetTraitEffects(this), this);
         // Initialize the culinary subsystem
         culinarySubsystem = CulinarySubsystem.getInstance(this);
         new CulinaryCauldron(this);
