@@ -198,3 +198,11 @@ commands:
     description: Shows a player's current flow level
     usage: /flowdebug
     permission: continuity.admin
+  seacreaturechance:
+    description: Displays your total Sea Creature Chance
+    usage: /seacreaturechance
+    default: true
+  spiritchance:
+    description: Displays your total Spirit Chance
+    usage: /spiritchance
+    default: true
