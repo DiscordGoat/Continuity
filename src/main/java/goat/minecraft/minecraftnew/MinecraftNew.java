@@ -95,6 +95,8 @@ import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.subsystems.realms.Tropic;
 import goat.minecraft.minecraftnew.subsystems.realms.Frozen;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -165,6 +167,18 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+
+        // Reset player max health to default on startup to avoid stacked buffs
+        for (Player online : Bukkit.getOnlinePlayers()) {
+            AttributeInstance attr = online.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            if (attr != null) {
+                attr.setBaseValue(20.0);
+                if (online.getHealth() > 20.0) {
+                    online.setHealth(20.0);
+                }
+            }
+        }
+
         ArmorStandCommand armorStandCommand = new ArmorStandCommand(this);
         armorStandCommand.removeInvisibleArmorStands();
 
