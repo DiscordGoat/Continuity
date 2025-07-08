@@ -4,6 +4,9 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -25,30 +28,48 @@ public class TreasureChanceCommand implements CommandExecutor {
             return true;
         }
 
-        double chance = calculateTreasureChance(player);
-        player.sendMessage(ChatColor.GOLD + "Treasure Chance: " + ChatColor.YELLOW + String.format("%.2f", chance * 100) + "%");
+        sendTreasureChanceBreakdown(player);
         return true;
     }
 
-    private double calculateTreasureChance(Player player) {
-        double treasureChance = 0.05; // Base 5%
+    private void sendTreasureChanceBreakdown(Player player) {
+        double base = 5.0;
+
         ItemStack rod = player.getInventory().getItemInMainHand();
         int upgradeLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.TREASURE_HUNTER);
-        treasureChance += upgradeLevel / 100.0;
+        double upgradeBonus = upgradeLevel;
 
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
+        double petBonus = 0.0;
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.TREASURE_HUNTER)) {
-            treasureChance += activePet.getLevel() * 0.0010;
+            petBonus = activePet.getLevel() * 0.1;
         }
 
-        if (PotionManager.isActive("Potion of Liquid Luck", player)) {
-            treasureChance += 0.2;
-        }
+        double potionBonus = PotionManager.isActive("Potion of Liquid Luck", player) ? 20.0 : 0.0;
 
         int piracyLevel = CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Piracy");
-        treasureChance += piracyLevel / 100.0;
+        double piracyBonus = piracyLevel;
 
-        return treasureChance;
+        CatalystManager catalystManager = CatalystManager.getInstance();
+        double depthBonus = 0.0;
+        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.DEPTH)) {
+            Catalyst nearest = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.DEPTH);
+            if (nearest != null) {
+                int tier = catalystManager.getCatalystTier(nearest);
+                depthBonus = 5 + tier;
+            }
+        }
+
+        double total = base + upgradeBonus + petBonus + potionBonus + piracyBonus + depthBonus;
+
+        player.sendMessage(ChatColor.GOLD + "Treasure Chance Breakdown:");
+        player.sendMessage(ChatColor.AQUA + "Base TC: " + ChatColor.YELLOW + String.format("%.2f", base) + "%");
+        player.sendMessage(ChatColor.AQUA + "TC from Treasure Hunter Upgrade: " + ChatColor.YELLOW + String.format("%.2f", upgradeBonus) + "%");
+        player.sendMessage(ChatColor.AQUA + "TC from Treasure Hunter Pet: " + ChatColor.YELLOW + String.format("%.2f", petBonus) + "%");
+        player.sendMessage(ChatColor.AQUA + "TC from Potion of Liquid Luck: " + ChatColor.YELLOW + String.format("%.2f", potionBonus) + "%");
+        player.sendMessage(ChatColor.AQUA + "TC from Piracy: " + ChatColor.YELLOW + String.format("%.2f", piracyBonus) + "%");
+        player.sendMessage(ChatColor.AQUA + "TC from Depth Catalyst: " + ChatColor.YELLOW + String.format("%.2f", depthBonus) + "%");
+        player.sendMessage(ChatColor.GOLD + "Total Treasure Chance: " + ChatColor.YELLOW + String.format("%.2f", total) + "%");
     }
 }
