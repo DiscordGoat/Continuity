@@ -32,40 +32,47 @@ public class SpiritChanceCommand implements CommandExecutor {
             return true;
         }
 
-        double chance = calculateSpiritChance(player);
-        player.sendMessage(ChatColor.DARK_AQUA + "Spirit Chance: " + ChatColor.YELLOW + String.format("%.2f", chance * 100) + "%");
+        sendSpiritChanceBreakdown(player);
         return true;
     }
 
-    private double calculateSpiritChance(Player player) {
-        double spiritChance = 0.02;
+    private void sendSpiritChanceBreakdown(Player player) {
+        double base = 0.02;
         ItemStack axe = player.getInventory().getItemInMainHand();
         int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
-        spiritChance += effigyYield * 0.005;
+        double effigyBonus = effigyYield * 0.005;
 
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
+        double petBonus = 0.0;
         if (activePet != null) {
             if (activePet.hasPerk(PetManager.PetPerk.SKEPTICISM)) {
-                spiritChance += 0.02;
+                petBonus += 0.02;
             }
             if (activePet.hasPerk(PetManager.PetPerk.CHALLENGE)) {
-                spiritChance += 0.05;
+                petBonus += 0.05;
             }
         }
-
-        spiritChance += NaturesWrathSetBonus.getSpiritChanceBonus(player);
+        double natureBonus = NaturesWrathSetBonus.getSpiritChanceBonus(player);
 
         CatalystManager catalystManager = CatalystManager.getInstance();
+        double catalystBonus = 0.0;
         if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {
             Catalyst nearest = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.INSANITY);
             if (nearest != null) {
                 int tier = catalystManager.getCatalystTier(nearest);
-                double bonus = 0.05 + (tier * 0.01);
-                spiritChance += bonus;
+                catalystBonus = 0.05 + (tier * 0.01);
             }
         }
 
-        return spiritChance;
+        double total = base + effigyBonus + petBonus + natureBonus + catalystBonus;
+
+        player.sendMessage(ChatColor.DARK_AQUA + "Spirit Chance Breakdown:");
+        player.sendMessage(ChatColor.AQUA + "Base SC: " + ChatColor.YELLOW + "2%");
+        player.sendMessage(ChatColor.AQUA + "SC from Effigy Yield Upgrades: " + ChatColor.YELLOW + String.format("%.2f", effigyBonus * 100) + "%");
+        player.sendMessage(ChatColor.AQUA + "SC from Pet Perks: " + ChatColor.YELLOW + String.format("%.2f", petBonus * 100) + "%");
+        player.sendMessage(ChatColor.AQUA + "SC from Nature's Wrath: " + ChatColor.YELLOW + String.format("%.2f", natureBonus * 100) + "%");
+        player.sendMessage(ChatColor.AQUA + "SC from Insanity Catalyst: " + ChatColor.YELLOW + String.format("%.2f", catalystBonus * 100) + "%");
+        player.sendMessage(ChatColor.DARK_AQUA + "Total Spirit Chance: " + ChatColor.YELLOW + String.format("%.2f", total * 100) + "%");
     }
 }
