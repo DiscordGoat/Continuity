@@ -1687,6 +1687,8 @@ public class VillagerTradeManager implements Listener {
 
             // Award Bartering XP to the player
             int barterXP = 11;
+            PetManager petManager = PetManager.getInstance(plugin);
+            PetManager.Pet activePet = petManager.getActivePet(player);
             if (activePet != null &&
                     activePet.getName().equalsIgnoreCase("Villager") &&
                     activePet.hasPerk(PetManager.PetPerk.PRACTICE)) {
