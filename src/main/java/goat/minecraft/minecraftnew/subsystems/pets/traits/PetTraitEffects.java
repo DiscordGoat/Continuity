@@ -1,0 +1,137 @@
+package goat.minecraft.minecraftnew.subsystems.pets.traits;
+
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Arrow;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * Handles effects for core pet traits like HEALTHY, FAST, STRONG, PRECISE and EVASIVE.
+ */
+public class PetTraitEffects implements Listener {
+
+    private final PetManager petManager;
+
+    private final Map<UUID, Double> baseHealth = new HashMap<>();
+    private final Map<UUID, Float> baseSpeed = new HashMap<>();
+
+    public PetTraitEffects(JavaPlugin plugin) {
+        this.petManager = PetManager.getInstance(plugin);
+    }
+
+    // ===== Attribute Helpers =====
+    private void applyHealthTrait(Player player) {
+        PetManager.Pet active = petManager.getActivePet(player);
+        if (active != null && active.getTrait() == PetTrait.HEALTHY) {
+            double bonusPercent = active.getTrait().getValueForRarity(active.getTraitRarity());
+            AttributeInstance attr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            if (attr == null) return;
+            UUID id = player.getUniqueId();
+            double base = baseHealth.computeIfAbsent(id, k -> attr.getBaseValue());
+            double newBase = base * (1.0 + bonusPercent / 100.0);
+            attr.setBaseValue(newBase);
+            if (player.getHealth() > newBase) {
+                player.setHealth(newBase);
+            }
+            return;
+        }
+        removeHealthTrait(player);
+    }
+
+    private void removeHealthTrait(Player player) {
+        UUID id = player.getUniqueId();
+        if (!baseHealth.containsKey(id)) return;
+        AttributeInstance attr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if (attr != null) {
+            double base = baseHealth.get(id);
+            attr.setBaseValue(base);
+            if (player.getHealth() > base) {
+                player.setHealth(base);
+            }
+        }
+        baseHealth.remove(id);
+    }
+
+    private void applySpeedTrait(Player player) {
+        PetManager.Pet active = petManager.getActivePet(player);
+        if (active != null && active.getTrait() == PetTrait.FAST) {
+            double bonusPercent = active.getTrait().getValueForRarity(active.getTraitRarity());
+            UUID id = player.getUniqueId();
+            float base = baseSpeed.computeIfAbsent(id, k -> player.getWalkSpeed());
+            float newSpeed = (float) (base * (1.0 + bonusPercent / 100.0));
+            player.setWalkSpeed(newSpeed);
+            return;
+        }
+        removeSpeedTrait(player);
+    }
+
+    private void removeSpeedTrait(Player player) {
+        UUID id = player.getUniqueId();
+        if (!baseSpeed.containsKey(id)) return;
+        player.setWalkSpeed(baseSpeed.get(id));
+        baseSpeed.remove(id);
+    }
+
+    // ===== Event Hooks =====
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        applyHealthTrait(player);
+        applySpeedTrait(player);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        applyHealthTrait(player);
+        applySpeedTrait(player);
+    }
+
+    @EventHandler
+    public void onMeleeDamage(EntityDamageByEntityEvent event) {
+        if (!(event.getDamager() instanceof Player player)) return;
+        PetManager.Pet active = petManager.getActivePet(player);
+        if (active != null && active.getTrait() == PetTrait.STRONG) {
+            double bonus = active.getTrait().getValueForRarity(active.getTraitRarity());
+            event.setDamage(event.getDamage() * (1.0 + bonus / 100.0));
+        }
+    }
+
+    @EventHandler
+    public void onArrowDamage(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Arrow arrow && arrow.getShooter() instanceof Player player) {
+            PetManager.Pet active = petManager.getActivePet(player);
+            if (active != null && active.getTrait() == PetTrait.PRECISE) {
+                double bonus = active.getTrait().getValueForRarity(active.getTraitRarity());
+                event.setDamage(event.getDamage() * (1.0 + bonus / 100.0));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDamaged(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player player)) return;
+        PetManager.Pet active = petManager.getActivePet(player);
+        if (active != null && active.getTrait() == PetTrait.EVASIVE) {
+            double chance = active.getTrait().getValueForRarity(active.getTraitRarity());
+            if (Math.random() < chance / 100.0) {
+                event.setCancelled(true);
+                player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1f, 1f);
+            }
+        }
+    }
+}
