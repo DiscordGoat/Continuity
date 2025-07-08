@@ -202,6 +202,10 @@ commands:
     description: Displays your total Sea Creature Chance
     usage: /seacreaturechance
     default: true
+  treasurechance:
+    description: Displays your total Treasure Chance
+    usage: /treasurechance
+    default: true
   spiritchance:
     description: Displays your total Spirit Chance
     usage: /spiritchance

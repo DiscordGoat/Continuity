@@ -37,6 +37,7 @@ import goat.minecraft.minecraftnew.subsystems.fishing.FishingEvent;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
 import goat.minecraft.minecraftnew.subsystems.fishing.SpawnSeaCreatureCommand;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureChanceCommand;
+import goat.minecraft.minecraftnew.subsystems.fishing.TreasureChanceCommand;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.SpiritChanceCommand;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
@@ -406,6 +407,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
         getCommand("seacreaturechance").setExecutor(new SeaCreatureChanceCommand(this, xpManager));
+        getCommand("treasurechance").setExecutor(new TreasureChanceCommand(this));
         getCommand("spiritchance").setExecutor(new SpiritChanceCommand(this, xpManager));
         new SpeedBoost(petManager);
         // Register trait-based stat modifications
