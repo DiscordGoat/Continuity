@@ -301,6 +301,8 @@ public class PetManager implements Listener {
                     spawnPetParticle(player, pet);
                 }
 
+                goat.minecraft.minecraftnew.subsystems.pets.traits.PetTraitEffects.getInstance().applyTraits(player);
+
                 if ("Ghost".equalsIgnoreCase(pet.getName())) {
                     ghostPreloc.put(player.getUniqueId(), player.getLocation());
                     player.setGameMode(GameMode.SPECTATOR);
@@ -397,6 +399,7 @@ public class PetManager implements Listener {
             }
             player.sendMessage(ChatColor.YELLOW + "Your pet '" + pet.getName() + "' has been despawned.");
             removePetParticle(player);
+            goat.minecraft.minecraftnew.subsystems.pets.traits.PetTraitEffects.getInstance().removeTraits(player);
         }
     }
 
