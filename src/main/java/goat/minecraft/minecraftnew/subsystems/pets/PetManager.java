@@ -624,7 +624,7 @@ public class PetManager implements Listener {
                     lore.add(ChatColor.GRAY + " ");
                 }
                 if (pet.getUniqueTrait() != null) {
-                    lore.add(ChatColor.AQUA + "Unique Trait: " + pet.getUniqueTrait().getDisplayName());
+                    lore.add(ChatColor.DARK_RED + "Unique Trait: " + pet.getUniqueTrait().getDisplayName());
                     lore.add(ChatColor.GRAY + getDynamicPerkEffectDescription(pet.getUniqueTrait().getPerk(), pet.getLevel()));
                     lore.add(ChatColor.GRAY + " ");
                 } else {
@@ -753,7 +753,7 @@ public class PetManager implements Listener {
             case TERROR_OF_THE_DEEP:
                 return "Grants you " + ChatColor.RED + "Bloodlust " + ChatColor.GRAY + "when you strike a " + ChatColor.AQUA + "Sea Creature" + ChatColor.GRAY + " for " + level + " seconds.";
             case TREASURE_HUNTER:
-                return ChatColor.AQUA + "Treasure Chance: " + ChatColor.GOLD + (5 + (level * 0.1)) + "%";
+                return ChatColor.AQUA + "Bonus Treasure Chance: " + ChatColor.GOLD + (level * 0.1) + "%";
             case PRACTICE:
                 return ChatColor.YELLOW + "Triples Bartering XP from trades while the Villager pet is active.";
             case HAGGLE:

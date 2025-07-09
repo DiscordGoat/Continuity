@@ -8,6 +8,7 @@ import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.ChatColor;
@@ -68,7 +69,7 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
         ItemStack rod = player.getInventory().getItemInMainHand();
         int sonarLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.SONAR);
         double sonarBonus = sonarLevel;
-
+        int nauticalBonus = 0;
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
         double petBonus = 0.0;
@@ -90,9 +91,12 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
             if (activePet.hasPerk(PetManager.PetPerk.BAIT)) {
                 petBonus += (double) activePet.getLevel() / 10.0;
             }
+            if(activePet.getTrait().equals(PetTrait.NAUTICAL)){
+                nauticalBonus += (int) activePet.getTrait().getValueForRarity(activePet.getTraitRarity());
+            }
         }
 
-        double total = base + fishingLevelBonus + callOfTheVoidBonus + fountainBonus + depthBonus + talismanBonus + masterAnglerBonus + fathmicPenalty + sonarBonus + petBonus;
+        double total = base + nauticalBonus + fishingLevelBonus + callOfTheVoidBonus + fountainBonus + depthBonus + talismanBonus + masterAnglerBonus + fathmicPenalty + sonarBonus + petBonus;
 
         player.sendMessage(ChatColor.AQUA + "Sea Creature Chance Breakdown:");
         player.sendMessage(ChatColor.AQUA + "Base SCC: " + ChatColor.YELLOW + "0%");

@@ -9,6 +9,7 @@ import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
@@ -115,6 +116,7 @@ public class FishingEvent implements Listener {
         if(PotionManager.isActive("Potion of Fountains", player)){
             seaCreatureChance += 10;
         }
+
         CatalystManager catalystManager = CatalystManager.getInstance();
         if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.DEPTH)) {
             // Player is near a Depth catalyst - apply additional chance based on tier
@@ -172,6 +174,9 @@ public class FishingEvent implements Listener {
 
             if (activePet.hasPerk(PetManager.PetPerk.BAIT)) {
                 seaCreatureChance += (double) activePet.getLevel() / 10;; // +10% from Heart of the Sea perk
+            }
+            if(activePet.getTrait().equals(PetTrait.NAUTICAL)){
+                seaCreatureChance += (activePet.getTrait().getValueForRarity(activePet.getTraitRarity()));
             }
         }
 
