@@ -74,6 +74,7 @@ import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.auras.AuraManager;
 import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
 import goat.minecraft.minecraftnew.subsystems.armorsets.MonolithSetBonus;
+import goat.minecraft.minecraftnew.subsystems.health.HealthManager;
 import goat.minecraft.minecraftnew.subsystems.armorsets.DuskbloodSetBonus;
 import goat.minecraft.minecraftnew.subsystems.armorsets.DwellerSetBonus;
 import goat.minecraft.minecraftnew.subsystems.armorsets.FathmicIronSetBonus;
@@ -168,16 +169,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
 
-        // Reset player max health to default on startup to avoid stacked buffs
-        for (Player online : Bukkit.getOnlinePlayers()) {
-            AttributeInstance attr = online.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            if (attr != null) {
-                attr.setBaseValue(20.0);
-                if (online.getHealth() > 20.0) {
-                    online.setHealth(20.0);
-                }
-            }
-        }
+        HealthManager.getInstance(this).startup();
 
         ArmorStandCommand armorStandCommand = new ArmorStandCommand(this);
         armorStandCommand.removeInvisibleArmorStands();
@@ -714,6 +706,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
+        HealthManager.getInstance(this).shutdown();
         if (shelfManager != null) {
             shelfManager.onDisable();
         }
@@ -821,7 +814,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         return instance; // Provide a static method to get the instance
     }
+    public XPManager getXPManager() {
+        return xpManager;
+    }
     public ForestryPetManager getForestryManager() {
         return forestryPetManager;
-    }
-}
+    }}
