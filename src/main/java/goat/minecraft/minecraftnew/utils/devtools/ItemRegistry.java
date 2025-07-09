@@ -2,7 +2,7 @@ package goat.minecraft.minecraftnew.utils.devtools;
 
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.subsystems.structureblocks.StructureBlockManager;
+import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

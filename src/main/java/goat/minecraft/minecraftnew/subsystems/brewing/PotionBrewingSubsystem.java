@@ -235,7 +235,7 @@ public class PotionBrewingSubsystem implements Listener {
                 new PotionRecipe("Potion of Liquid Luck", liquidLuckIngredients, 60*20, new ItemStack(Material.POTION), liquidLuckColor, liquidLuckLore)
         );
         List<String> fountainsIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Heart of the Sea", "EntionPlast");
-        List<String> fountainsLore = Arrays.asList("Boosts sea creature chance by 20%", "Base Duration of " + baseDuration);
+        List<String> fountainsLore = Arrays.asList("Boosts sea creature chance by 10%", "Base Duration of " + baseDuration);
         Color fountainsColor = Color.fromRGB(0, 255, 171);
         recipeRegistry.add(
                 new PotionRecipe("Potion of Fountains", fountainsIngredients, 60*4, new ItemStack(Material.POTION), fountainsColor, fountainsLore)

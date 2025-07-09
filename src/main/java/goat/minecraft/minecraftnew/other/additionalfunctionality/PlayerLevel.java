@@ -2,7 +2,7 @@ package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import goat.minecraft.minecraftnew.subsystems.health.HealthManager;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -3,16 +3,13 @@ package goat.minecraft.minecraftnew.utils.devtools;
 import java.io.*;
 import java.util.UUID;
 
-import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
-import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
-import goat.minecraft.minecraftnew.other.trims.CustomTrimEffects;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.other.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.beacon.CatalystType;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -22,7 +19,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import goat.minecraft.minecraftnew.subsystems.health.HealthManager;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
 
 public class XPManager implements CommandExecutor {
 
@@ -290,12 +287,6 @@ public class XPManager implements CommandExecutor {
     public void addXP(Player player, String skill, double xp) {
         UUID uuid = player.getUniqueId();
         int currentXP = loadXP(uuid, skill);
-
-        String trimMaterial = CustomTrimEffects.getFullTrimMaterial(player);
-        if (trimMaterial != null && trimMaterial.equalsIgnoreCase("Lapis")) {
-            xp *= 1.25;
-        }
-
         CatalystManager catalystManager = CatalystManager.getInstance();
         if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
             Catalyst catalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);

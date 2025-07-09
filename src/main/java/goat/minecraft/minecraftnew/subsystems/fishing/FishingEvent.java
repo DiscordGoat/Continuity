@@ -2,20 +2,18 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
-import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
+import goat.minecraft.minecraftnew.other.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
-import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -521,7 +519,7 @@ public class FishingEvent implements Listener {
             treasureChance += (petLevel * 0.0010); // Scale to add 0.45 at pet level 100
         }
         if(PotionManager.isActive("Potion of Liquid Luck", player)){
-            treasureChance += 0.2;
+            treasureChance += 0.1;
         }
 
         // Add bonus from "Piracy" enchantment

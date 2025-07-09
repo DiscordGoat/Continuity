@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.Random;
 
-import static goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager.getEnchantmentLevel;
+import static goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager.getEnchantmentLevel;
 
 public class PlayerOxygenManager implements Listener {
 

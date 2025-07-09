@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 
-import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
+import goat.minecraft.minecraftnew.other.armorsets.FlowManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

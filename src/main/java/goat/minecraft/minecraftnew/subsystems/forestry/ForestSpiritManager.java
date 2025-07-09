@@ -2,9 +2,9 @@ package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import com.mojang.authlib.GameProfile;
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
+import goat.minecraft.minecraftnew.other.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;

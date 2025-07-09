@@ -1,6 +1,6 @@
 package goat.minecraft.minecraftnew.utils.commands;
 
-import goat.minecraft.minecraftnew.subsystems.auras.AuraManager;
+import goat.minecraft.minecraftnew.other.auras.AuraManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

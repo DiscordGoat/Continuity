@@ -2,11 +2,11 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
-import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
+import goat.minecraft.minecraftnew.other.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
-import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
@@ -69,7 +69,7 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
         ItemStack rod = player.getInventory().getItemInMainHand();
         int sonarLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.SONAR);
         double sonarBonus = sonarLevel;
-        int nauticalBonus = 0;
+        double nauticalBonus = 0;
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
         double petBonus = 0.0;
@@ -110,6 +110,7 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
         player.sendMessage(ChatColor.AQUA + "SCC Reduction from Fathmic Iron: " + ChatColor.YELLOW + String.format("%.2f", fathmicPenalty) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from Sonor Upgrade: " + ChatColor.YELLOW + String.format("%.2f", sonarBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from Pet Perks: " + ChatColor.YELLOW + String.format("%.2f", petBonus) + "%");
+        player.sendMessage(ChatColor.AQUA + "SCC from Nautical: " + ChatColor.YELLOW + String.format("%.2f", nauticalBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "Total Sea Creature Chance: " + ChatColor.YELLOW + String.format("%.2f", total) + "%");
     }
 

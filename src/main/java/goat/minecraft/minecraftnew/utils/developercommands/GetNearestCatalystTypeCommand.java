@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
+import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

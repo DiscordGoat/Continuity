@@ -1,10 +1,10 @@
 package goat.minecraft.minecraftnew.subsystems.smithing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.mining.MiningGemManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
-import goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentUtils;
+import goat.minecraft.minecraftnew.other.enchanting.EnchantmentUtils;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -28,8 +28,7 @@ import java.io.IOException;
 import java.util.*;
 
 
-import static goat.minecraft.minecraftnew.subsystems.enchanting.EnchantmentUtils.*;
-import static goat.minecraft.minecraftnew.utils.devtools.ItemRegistry.createCustomItem;
+import static goat.minecraft.minecraftnew.other.enchanting.EnchantmentUtils.*;
 
 public class AnvilRepair implements Listener {
     // Mapping of player UUIDs to their custom anvil inventories

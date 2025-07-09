@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
-import goat.minecraft.minecraftnew.subsystems.auras.Aura;
-import goat.minecraft.minecraftnew.subsystems.auras.AuraManager;
+import goat.minecraft.minecraftnew.other.auras.Aura;
+import goat.minecraft.minecraftnew.other.auras.AuraManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

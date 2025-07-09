@@ -1,8 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.combat.damage.strategies;
 
-import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
+import goat.minecraft.minecraftnew.other.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationContext;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationResult;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationStrategy;

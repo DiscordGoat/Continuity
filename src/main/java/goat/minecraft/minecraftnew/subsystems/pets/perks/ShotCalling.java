@@ -1,10 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
-import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
-import goat.minecraft.minecraftnew.subsystems.armorsets.FlowManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

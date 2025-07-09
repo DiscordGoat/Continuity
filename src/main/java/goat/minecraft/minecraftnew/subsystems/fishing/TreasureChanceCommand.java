@@ -2,11 +2,12 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
-import goat.minecraft.minecraftnew.subsystems.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.beacon.Catalyst;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.subsystems.beacon.CatalystType;
+import goat.minecraft.minecraftnew.other.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.beacon.CatalystType;
+import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -38,6 +39,7 @@ public class TreasureChanceCommand implements CommandExecutor {
         ItemStack rod = player.getInventory().getItemInMainHand();
         int upgradeLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.TREASURE_HUNTER);
         double upgradeBonus = upgradeLevel;
+        double treasureChance = 0.0;
 
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
@@ -60,8 +62,10 @@ public class TreasureChanceCommand implements CommandExecutor {
                 depthBonus = 5 + tier;
             }
         }
-
-        double total = base + upgradeBonus + petBonus + potionBonus + piracyBonus + depthBonus;
+        if(petManager.getActivePet(player).getTrait().equals(PetTrait.TREASURED)){
+            treasureChance += (petManager.getActivePet(player).getTrait().getValueForRarity(petManager.getActivePet(player).getTraitRarity()) / 100);
+        }
+        double total = base + treasureChance + upgradeBonus + petBonus + potionBonus + piracyBonus + depthBonus;
 
         player.sendMessage(ChatColor.GOLD + "Treasure Chance Breakdown:");
         player.sendMessage(ChatColor.AQUA + "Base TC: " + ChatColor.YELLOW + String.format("%.2f", base) + "%");
@@ -70,6 +74,7 @@ public class TreasureChanceCommand implements CommandExecutor {
         player.sendMessage(ChatColor.AQUA + "TC from Potion of Liquid Luck: " + ChatColor.YELLOW + String.format("%.2f", potionBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "TC from Piracy: " + ChatColor.YELLOW + String.format("%.2f", piracyBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "TC from Depth Catalyst: " + ChatColor.YELLOW + String.format("%.2f", depthBonus) + "%");
+        player.sendMessage(ChatColor.AQUA + "TC from Treasured Trait: " + ChatColor.YELLOW + String.format("%.2f", treasureChance) + "%");
         player.sendMessage(ChatColor.GOLD + "Total Treasure Chance: " + ChatColor.YELLOW + String.format("%.2f", total) + "%");
     }
 }
