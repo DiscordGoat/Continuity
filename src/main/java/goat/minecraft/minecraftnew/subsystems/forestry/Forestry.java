@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.ChatColor;
@@ -415,6 +416,9 @@ public class Forestry implements Listener {
             }
             if(BlessingUtils.hasFullSetBonus(player, "Nature's Wrath")){
                 spiritChance += 0.04;
+            }
+            if(petManager.getActivePet(player).getTrait().equals(PetTrait.HAUNTED)){
+                spiritChance += (petManager.getActivePet(player).getTrait().getValueForRarity(petManager.getActivePet(player).getTraitRarity()) / 100);
             }
             CatalystManager catalystManager = CatalystManager.getInstance();
             if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {

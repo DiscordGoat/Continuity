@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
+import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
@@ -1138,7 +1139,9 @@ public class VillagerTradeManager implements Listener {
         if (meritManager.hasPerk(player.getUniqueId(), "Haggler")) {
             finalCost *= 0.9; // 10% discount
         }
-
+        if(petManager.getActivePet(player).getTrait().equals(PetTrait.FINANCIAL)){
+            finalCost *= (petManager.getActivePet(player).getTrait().getValueForRarity(petManager.getActivePet(player).getTraitRarity()) - 1);
+        }
         // Apply Bartering discount
         XPManager xpManager = new XPManager(plugin);
         int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
