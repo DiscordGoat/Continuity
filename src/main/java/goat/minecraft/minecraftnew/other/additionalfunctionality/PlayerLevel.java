@@ -2,8 +2,7 @@ package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
+import goat.minecraft.minecraftnew.subsystems.health.HealthManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,26 +21,7 @@ public class PlayerLevel implements Listener {
 
     // Method to apply attribute bonuses to a player
     public void applyPlayerAttributes(Player player) {
-        int level = xpManager.getPlayerLevel(player, "Player");
-
-        // Cap level at 100
-        level = Math.min(level, 100);
-
-        // Calculate health multiplier (max double health at level 50)
-        double healthMultiplier = 1 + ((Math.min(level, 100) * 0.01)); // 2% per level up to level 50
-
-        // Apply health (max double)
-        AttributeInstance healthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (healthAttribute != null) {
-            double baseHealth = 20.0; // Default player health
-            double newHealth = baseHealth * healthMultiplier;
-            healthAttribute.setBaseValue(newHealth);
-
-            // Ensure current health does not exceed max health
-            if (player.getHealth() > newHealth) {
-                player.setHealth(newHealth);
-            }
-        }
+        HealthManager.getInstance(plugin, xpManager).recalculate(player);
     }
 
     // Event handlers to apply attributes when necessary

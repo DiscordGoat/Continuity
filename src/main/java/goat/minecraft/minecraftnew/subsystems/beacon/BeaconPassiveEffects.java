@@ -8,10 +8,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import goat.minecraft.minecraftnew.subsystems.health.HealthManager;
+import goat.minecraft.minecraftnew.MinecraftNew;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +21,6 @@ public class BeaconPassiveEffects implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<UUID, Boolean> mendingApplied = new HashMap<>();
-    private final Map<UUID, Double> mendingBaseHealth = new HashMap<>();
     private final Map<UUID, Boolean> swiftApplied = new HashMap<>();
 
     public BeaconPassiveEffects(JavaPlugin plugin) {
@@ -61,32 +60,16 @@ public class BeaconPassiveEffects implements Listener {
     private void applyMendingEffect(Player player) {
         UUID playerId = player.getUniqueId();
         if (!mendingApplied.getOrDefault(playerId, false)) {
-            // Increase max health by 20 (10 hearts)
-            AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            if (maxHealth != null) {
-                double currentMax = maxHealth.getBaseValue();
-                mendingBaseHealth.put(playerId, currentMax);
-                double newMax = currentMax + 20.0; // +20 health
-                maxHealth.setBaseValue(newMax);
-                player.setHealth(Math.min(player.getHealth() + 20.0, newMax));
-            }
             mendingApplied.put(playerId, true);
+            HealthManager.getInstance(plugin, MinecraftNew.getInstance().getXpManager()).recalculate(player);
         }
     }
 
     private void removeMendingEffect(Player player) {
         UUID playerId = player.getUniqueId();
         if (mendingApplied.getOrDefault(playerId, false)) {
-            // Remove the 20 health bonus
-            AttributeInstance maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            if (maxHealth != null) {
-                double originalMax = mendingBaseHealth.getOrDefault(playerId, maxHealth.getBaseValue() - 20.0);
-                double currentHealth = player.getHealth();
-                maxHealth.setBaseValue(originalMax);
-                player.setHealth(Math.min(currentHealth, originalMax));
-            }
             mendingApplied.put(playerId, false);
-            mendingBaseHealth.remove(playerId);
+            HealthManager.getInstance(plugin, MinecraftNew.getInstance().getXpManager()).recalculate(player);
         }
     }
 
@@ -175,7 +158,6 @@ public class BeaconPassiveEffects implements Listener {
         }
         // Clear tracking maps
         mendingApplied.clear();
-        mendingBaseHealth.clear();
         swiftApplied.clear();
     }
 
@@ -187,5 +169,4 @@ public class BeaconPassiveEffects implements Listener {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             updatePassiveEffects(player);
         }
-    }
-}
+    }}

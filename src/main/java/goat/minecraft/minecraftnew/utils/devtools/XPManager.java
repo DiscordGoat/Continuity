@@ -456,10 +456,9 @@ public class XPManager implements CommandExecutor {
             player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200, 0));
             player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 600, 0));
 
-            // Adjust max health
-            double healthMultiplier = 1 + (Math.min(newLevel, 100) * 0.01);
-            double newMaxHealth = 20.0 * healthMultiplier;
-            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHealth);
+            // Recalculate health using central manager
+            goat.minecraft.minecraftnew.subsystems.health.HealthManager.getInstance(
+                    plugin, this).recalculate(player);
         }
 
         //==========================
@@ -478,9 +477,10 @@ public class XPManager implements CommandExecutor {
         // Then skill-specific details
         switch (skill.toLowerCase()) {
             case "player":
-                double healthMultiplier = 1 + (Math.min(newLevel, 100) * 0.01);
-                double newMaxHealth = 20.0 * healthMultiplier;
-                int displayHealth = (int)newMaxHealth + 1;  // add 1 to match the actual health
+                goat.minecraft.minecraftnew.subsystems.health.HealthManager.getInstance(
+                        plugin, this).recalculate(player);
+                double newMaxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+                int displayHealth = (int) newMaxHealth + 1;
                 body.append(ChatColor.WHITE).append("Your ")
                         .append(ChatColor.GREEN).append("Max Health ")
                         .append(ChatColor.WHITE).append("is now ")

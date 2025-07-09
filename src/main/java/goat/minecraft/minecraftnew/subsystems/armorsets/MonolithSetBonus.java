@@ -2,8 +2,8 @@ package goat.minecraft.minecraftnew.subsystems.armorsets;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
+import goat.minecraft.minecraftnew.subsystems.health.HealthManager;
+import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,7 +29,6 @@ public class MonolithSetBonus implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<UUID, Boolean> applied = new HashMap<>();
-    private final Map<UUID, Double> baseHealth = new HashMap<>();
 
     public MonolithSetBonus(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -90,17 +89,8 @@ public class MonolithSetBonus implements Listener {
             return;
         }
         player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
-        AttributeInstance attr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (attr != null) {
-            double current = attr.getBaseValue();
-            baseHealth.put(id, current);
-            double newMax = current + 20.0;
-            attr.setBaseValue(newMax);
-            if (player.getHealth() > newMax) {
-                player.setHealth(newMax);
-            }
-        }
         applied.put(id, true);
+        HealthManager.getInstance(MinecraftNew.getInstance(), MinecraftNew.getInstance().getXpManager()).recalculate(player);
     }
 
     private void removeBonus(Player player) {
@@ -109,16 +99,8 @@ public class MonolithSetBonus implements Listener {
             return;
         }
         player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
-        AttributeInstance attr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (attr != null) {
-            double base = baseHealth.getOrDefault(id, attr.getBaseValue() - 20.0);
-            attr.setBaseValue(base);
-            if (player.getHealth() > base) {
-                player.setHealth(base);
-            }
-        }
         applied.put(id, false);
-        baseHealth.remove(id);
+        HealthManager.getInstance(MinecraftNew.getInstance(), MinecraftNew.getInstance().getXpManager()).recalculate(player);
     }
 
     /**
@@ -129,6 +111,5 @@ public class MonolithSetBonus implements Listener {
             removeBonus(player);
         }
         applied.clear();
-        baseHealth.clear();
     }
 }

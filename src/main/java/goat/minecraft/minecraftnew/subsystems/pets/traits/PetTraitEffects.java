@@ -3,8 +3,8 @@ package goat.minecraft.minecraftnew.subsystems.pets.traits;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import org.bukkit.Sound;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
+import goat.minecraft.minecraftnew.subsystems.health.HealthManager;
+import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,7 +25,6 @@ public class PetTraitEffects implements Listener {
     private static PetTraitEffects instance;
     private final PetManager petManager;
 
-    private final Map<UUID, Double> baseHealth = new HashMap<>();
     private final Map<UUID, Float> baseSpeed = new HashMap<>();
 
     public PetTraitEffects(JavaPlugin plugin) {
@@ -41,33 +40,14 @@ public class PetTraitEffects implements Listener {
     private void applyHealthTrait(Player player) {
         PetManager.Pet active = petManager.getActivePet(player);
         if (active != null && active.getTrait() == PetTrait.HEALTHY) {
-            double bonusPercent = active.getTrait().getValueForRarity(active.getTraitRarity());
-            AttributeInstance attr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-            if (attr == null) return;
-            UUID id = player.getUniqueId();
-            double base = baseHealth.computeIfAbsent(id, k -> attr.getBaseValue());
-            double newBase = base * (1.0 + bonusPercent / 100.0);
-            attr.setBaseValue(newBase);
-            if (player.getHealth() > newBase) {
-                player.setHealth(newBase);
-            }
+            HealthManager.getInstance(MinecraftNew.getInstance(), MinecraftNew.getInstance().getXpManager()).recalculate(player);
             return;
         }
         removeHealthTrait(player);
     }
 
     private void removeHealthTrait(Player player) {
-        UUID id = player.getUniqueId();
-        if (!baseHealth.containsKey(id)) return;
-        AttributeInstance attr = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if (attr != null) {
-            double base = baseHealth.get(id);
-            attr.setBaseValue(base);
-            if (player.getHealth() > base) {
-                player.setHealth(base);
-            }
-        }
-        baseHealth.remove(id);
+        HealthManager.getInstance(MinecraftNew.getInstance(), MinecraftNew.getInstance().getXpManager()).recalculate(player);
     }
 
     private void applySpeedTrait(Player player) {
