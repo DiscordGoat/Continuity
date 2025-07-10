@@ -30,6 +30,7 @@ import goat.minecraft.minecraftnew.subsystems.farming.FarmingEvent;
 import goat.minecraft.minecraftnew.subsystems.fishing.FishingEvent;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
 import goat.minecraft.minecraftnew.subsystems.fishing.SpawnSeaCreatureCommand;
+import goat.minecraft.minecraftnew.subsystems.corpses.SpawnCorpseCommand;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureChanceCommand;
 import goat.minecraft.minecraftnew.subsystems.fishing.TreasureChanceCommand;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
@@ -390,6 +391,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             getDataFolder().mkdirs();
         }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
+        this.getCommand("spawncorpse").setExecutor(new SpawnCorpseCommand());
         getCommand("seacreaturechance").setExecutor(new SeaCreatureChanceCommand(this, xpManager));
         getCommand("treasurechance").setExecutor(new TreasureChanceCommand(this));
         getCommand("spiritchance").setExecutor(new SpiritChanceCommand(this, xpManager));
