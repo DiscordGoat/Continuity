@@ -29,9 +29,10 @@ public class TransfigurationPouchManager implements Listener {
     private FileConfiguration pouchConfig;
     private final Map<UUID, Integer> pendingXP = new HashMap<>();
 
-    private static final String[] SKILLS = {"Fishing","Farming","Mining","Combat","Player","Taming","Forestry","Bartering","Culinary","Smithing","Brewing"};
+    private static final String[] SKILLS = {"Fishing","Farming","Mining","Terraforming","Combat","Player","Taming","Forestry","Bartering","Culinary","Smithing","Brewing"};
     private static final Material[] SKILL_ICONS = {
             Material.FISHING_ROD, Material.WHEAT, Material.IRON_PICKAXE,
+            Material.GRASS_BLOCK,
             Material.IRON_SWORD, Material.PLAYER_HEAD, Material.LEAD, Material.GOLDEN_AXE,
             Material.EMERALD, Material.FURNACE, Material.DAMAGED_ANVIL,
             Material.BREWING_STAND
