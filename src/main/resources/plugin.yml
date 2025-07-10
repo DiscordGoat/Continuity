@@ -16,6 +16,10 @@ commands:
   spawnhostile:
     description: Spawns a hostile player NPC that attacks nearby players
     usage: /<command>
+  debugplayer:
+    description: Spawns a hostile debug player that hunts you
+    usage: /debugplayer
+    permission: continuity.admin
   getculinaryrecipe:
     description: Gives you the crafted output for a culinary recipe.
     usage: /getculinaryrecipe <recipe name>
