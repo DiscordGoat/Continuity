@@ -45,7 +45,7 @@ public class SeaCreatureDeathEvent implements Listener {
             world.playSound(loc, Sound.ENTITY_ZOMBIE_CONVERTED_TO_DROWNED, 0.1f, 0.5f);
 
             // Spawn iron particles
-            world.spawnParticle(Particle.WATER_WAKE, loc, 10, 0.5, 1, 0.5);
+            world.spawnParticle(Particle.FISHING, loc, 10, 0.5, 1, 0.5);
         }
     }
 
@@ -213,19 +213,19 @@ public class SeaCreatureDeathEvent implements Listener {
         switch (rarity) {
             case COMMON:
                 sound = Sound.ENTITY_FISH_SWIM;
-                particle = Particle.WATER_BUBBLE;
+                particle = Particle.BUBBLE_POP;
                 break;
             case UNCOMMON:
                 sound = Sound.ENTITY_DOLPHIN_HURT;
-                particle = Particle.WATER_SPLASH;
+                particle = Particle.FISHING;
                 break;
             case RARE:
                 sound = Sound.ENTITY_GUARDIAN_DEATH;
-                particle = Particle.CRIT_MAGIC;
+                particle = Particle.CRIT;
                 break;
             case EPIC:
                 sound = Sound.ENTITY_WITHER_DEATH;
-                particle = Particle.EXPLOSION_LARGE;
+                particle = Particle.EXPLOSION;
                 volume = 1.5f;
                 pitch = 0.8f;
                 break;
@@ -237,13 +237,13 @@ public class SeaCreatureDeathEvent implements Listener {
                 break;
             case MYTHIC:
                 sound = Sound.MUSIC_CREDITS;
-                particle = Particle.TOTEM;
+                particle = Particle.TOTEM_OF_UNDYING;
                 volume = 2.0f;
                 pitch = 0.5f;
                 break;
             default:
                 sound = Sound.ENTITY_GENERIC_EXPLODE;
-                particle = Particle.SMOKE_LARGE;
+                particle = Particle.SMOKE;
                 break;
         }
 

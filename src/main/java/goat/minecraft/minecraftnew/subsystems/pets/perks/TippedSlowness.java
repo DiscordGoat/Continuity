@@ -29,7 +29,7 @@ public class TippedSlowness implements Listener {
                 // Check if the player has an active pet with the TIPPED_SLOWNESS perk
                 if (activePet != null && activePet.hasPerk(PetManager.PetPerk.TIPPED_SLOWNESS)) {
                     // Apply the slowness effect to the arrow
-                    PotionEffect slowness = new PotionEffect(PotionEffectType.SLOW, 100, 0); // 5 seconds of Slowness I
+                    PotionEffect slowness = new PotionEffect(PotionEffectType.SLOWNESS, 100, 0); // 5 seconds of Slowness I
                     arrow.addCustomEffect(slowness, true);
 
                     // Notify the player

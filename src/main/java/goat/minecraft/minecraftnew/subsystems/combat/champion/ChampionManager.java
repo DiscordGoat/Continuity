@@ -1,7 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.combat.champion;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
@@ -23,9 +24,14 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -111,7 +117,7 @@ public class ChampionManager implements Listener {
         SpawnMonsters.getInstance(xpManager).applyMobAttributes(champion, tier.level);
 
         loc.getWorld().strikeLightningEffect(loc);
-        loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 40, 1,1,1,0.1);
+        loc.getWorld().spawnParticle(Particle.LARGE_SMOKE, loc, 40, 1,1,1,0.1);
         if (tier == Tier.FURY || tier == Tier.VENGEANCE) {
             loc.getWorld().playSound(loc, Sound.ENTITY_WITHER_SPAWN, 1f, 1f);
         }
@@ -159,16 +165,38 @@ public class ChampionManager implements Listener {
         return item;
     }
 
-    private SkullMeta setCustomSkullTexture(SkullMeta skullMeta, String texture) {
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-        profile.getProperties().put("textures", new Property("textures", texture));
-        try {
-            Field profileField = skullMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(skullMeta, profile);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+    private SkullMeta setCustomSkullTexture(SkullMeta skullMeta, String base64Json) {
+        if (skullMeta == null || base64Json == null || base64Json.isEmpty()) {
+            return skullMeta;
         }
+
+        try {
+            // 1) Decode the JSON payload from your Base64 string
+            byte[] decoded = Base64.getDecoder().decode(base64Json);
+            String json   = new String(decoded, StandardCharsets.UTF_8);
+
+            // 2) Parse out the actual skin URL
+            JsonObject root   = JsonParser.parseString(json).getAsJsonObject();
+            String    urlText = root
+                    .getAsJsonObject("textures")
+                    .getAsJsonObject("SKIN")
+                    .get("url")
+                    .getAsString();
+
+            // 3) Build a fresh profile + textures object
+            PlayerProfile profile  = Bukkit.createPlayerProfile(UUID.randomUUID());
+            PlayerTextures textures = profile.getTextures();
+            textures.setSkin(new URL(urlText), PlayerTextures.SkinModel.CLASSIC);
+            profile.setTextures(textures);
+
+            // 4) Apply it to the SkullMeta
+            skullMeta.setOwnerProfile(profile);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // if anything fails, we just leave the meta untouched
+        }
+
         return skullMeta;
     }
 

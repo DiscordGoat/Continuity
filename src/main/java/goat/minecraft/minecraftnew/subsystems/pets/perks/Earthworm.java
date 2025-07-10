@@ -45,7 +45,7 @@ public class Earthworm implements Listener {
 
         // Give Haste 8 (amplifier 7) for 10 ticks (0.5s)
         PotionEffect haste = new PotionEffect(
-                PotionEffectType.FAST_DIGGING,
+                PotionEffectType.HASTE,
                 10,     // duration in ticks
                 50,      // amplifier (8 = amplifier+1)
                 false,  // ambient

@@ -349,7 +349,7 @@ public class Mining implements Listener {
                     
                     if (roll <= totalChance) {
                         // Apply Gold Fever effect
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, totalDuration, totalPotency, false));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, totalDuration, totalPotency, false));
                         player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_STEP, 1.0f, 1.0f);
                     }
                     return; // Exit early if using new system
@@ -365,7 +365,7 @@ public class Mining implements Listener {
 
         if (roll < 2) { // 2% chance for legacy system
             int duration = 200 + (level * 5);
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, hasteLevel, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, duration, hasteLevel, false));
             player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_STEP, 1.0f, 1.0f);
         }
     }

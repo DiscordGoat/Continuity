@@ -108,12 +108,12 @@ public class FlameTrail implements Listener {
                     particleCount / 2, 4.0, 2.0, 4.0, 0.0);
                 
                 // Add explosion particles
-                location.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, 
+                location.getWorld().spawnParticle(Particle.EXPLOSION,
                     location.clone().add(0, 1, 0), 
                     2, 2.0, 1.0, 2.0, 0.0);
                 
                 // Add smoke for lingering effect
-                location.getWorld().spawnParticle(Particle.SMOKE_LARGE, 
+                location.getWorld().spawnParticle(Particle.SMOKE,
                     location.clone().add(0, 2, 0), 
                     particleCount / 3, 3.0, 1.5, 3.0, 0.05);
                 

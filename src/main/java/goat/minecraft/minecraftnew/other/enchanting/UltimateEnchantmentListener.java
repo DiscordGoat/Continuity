@@ -122,7 +122,7 @@ public class UltimateEnchantmentListener implements Listener {
 
         if (consumeDurabilityIfNotOre && tool != null && tool.getType().getMaxDurability() > 0) {
             short currentDamage = tool.getDurability();
-            int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.DURABILITY); // Get Unbreaking level
+            int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.UNBREAKING); // Get Unbreaking level
             double chanceToNotUseDurability = unbreakingLevel * 0.15; // 15% chance per level
             if (Math.random() > chanceToNotUseDurability) { // Spend durability only if random value exceeds the chance
                 tool.setDurability((short) (currentDamage + 1));
@@ -143,7 +143,7 @@ public class UltimateEnchantmentListener implements Listener {
                 && tool.getType().getMaxDurability() > 0) {
 
             // Gather unbreaking level (e.g., Unbreaking VI => 6 => 90% skip chance).
-            int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.DURABILITY);
+            int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.UNBREAKING);
             double skipChance = 0.15 * unbreakingLevel;  // 15% per Unbreaking level
 
             // We will accumulate how many times durability is actually used
@@ -1047,7 +1047,7 @@ public class UltimateEnchantmentListener implements Listener {
                 armorStand.setRightArmPose(newArmPose);
 
                 // Spawn particle effects along the return path.
-                armorStand.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, armorStand.getLocation(), 10, 0.2, 0.2, 0.2, 0.01);
+                armorStand.getWorld().spawnParticle(Particle.ENCHANT, armorStand.getLocation(), 10, 0.2, 0.2, 0.2, 0.01);
 
                 // Check if the distance isn't decreasing (indicating a "miss").
                 if (distance >= previousDistance - 0.1) {

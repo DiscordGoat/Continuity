@@ -109,7 +109,7 @@ public class Shear implements Listener {
                 new ItemStack(Material.LEATHER, 1)
         ));
         mobStandardDrops.put(EntityType.TURTLE, Arrays.asList(
-                new ItemStack(Material.SCUTE, 1)
+                new ItemStack(Material.TURTLE_SCUTE, 1)
         ));
         mobStandardDrops.put(EntityType.SQUID, Collections.singletonList(
                 new ItemStack(Material.INK_SAC, 1)

@@ -61,14 +61,14 @@ public class ReforgeSwiftBlade implements Listener {
                 // Player hasn't attacked in 5 seconds, remove Haste effect
 
                 // Check if the player has Haste IV before removing it
-                PotionEffect hasteEffect = player.getPotionEffect(PotionEffectType.FAST_DIGGING);
+                PotionEffect hasteEffect = player.getPotionEffect(PotionEffectType.HASTE);
                 if (hasteEffect != null && hasteEffect.getAmplifier() == 3) { // Amplifier 3 means Haste IV
-                    player.removePotionEffect(PotionEffectType.FAST_DIGGING);
+                    player.removePotionEffect(PotionEffectType.HASTE);
                 }
             } else {
                 // Apply Haste if chance triggers
                 if (RANDOM.nextDouble() < HASTE_CHANCE) {
-                    player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, HASTE_DURATION, 3, true, true));
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, HASTE_DURATION, 3, true, true));
                 }
             }
         });

@@ -361,7 +361,7 @@ public class Forestry implements Listener {
         if (random.nextInt(100) + 1 >= 90) { // 10% chance to grant Haste
             int hasteLevel = 0; // Haste level increases every 33 levels, max level 2
             int duration = 100 + (level * 5); // Duration scales with level (in ticks)
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, hasteLevel), true);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, duration, hasteLevel), true);
             player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_STEP, 1.0f, 1.0f);
         }
     }
@@ -503,7 +503,7 @@ public class Forestry implements Listener {
                 public void run() {
                     dropLocation.getWorld().dropItemNaturally(dropLocation, new ItemStack(logType, extra));
                     dropLocation.getWorld().playSound(dropLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.3f, 1.0f);
-                    dropLocation.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, dropLocation, 5, 0.3, 0.3, 0.3, 0);
+                    dropLocation.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, dropLocation, 5, 0.3, 0.3, 0.3, 0);
                 }
             }.runTaskLater(plugin, 1L);
         }

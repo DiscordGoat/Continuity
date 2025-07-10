@@ -355,7 +355,7 @@ public class CulinarySubsystem implements Listener {
         }
 
         if (consumedItem.getItemMeta().getDisplayName().contains("Raw")) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 100, 0));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 100, 0));
             player.sendMessage(ChatColor.GREEN + "You ate raw food! What is wrong with you!");
         }
         if (consumedItem.getItemMeta().getDisplayName().contains("Burnt")) {
@@ -384,27 +384,27 @@ public class CulinarySubsystem implements Listener {
         switch (displayName) {
             case "Tidal Shot (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20*60*60, 4));
                 break;
             case "Coral Cooler (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*60*60, 0));
                 break;
             case "Prismarita (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*60*60, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 20*60*60, 0));
                 break;
             case "Kelp Mojito (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*60, 0));
                 break;
             case "Pina Colada (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20*10, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*60*60, 0));
                 break;
             case "Banana Split (Culinary)":
@@ -455,7 +455,7 @@ public class CulinarySubsystem implements Listener {
                 player.setHealth(player.getMaxHealth());
                 break;
             case "Meatlovers Feast (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*60*60*1, 0));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 20*60*60*1, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
                 player.setFoodLevel(20);
                 player.setSaturation(player.getSaturation() + 100);
@@ -586,7 +586,7 @@ public class CulinarySubsystem implements Listener {
                     event.setCancelled(true);
                     logger.info("[CulinarySubsystem] Finalizing recipe " + session.recipe.getName());
                     finalizeRecipe(session, player);
-                    player.getWorld().spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 50, 0.5, 0.5, 0.5, 0.1);
+                    player.getWorld().spawnParticle(Particle.SMOKE, player.getLocation(), 50, 0.5, 0.5, 0.5, 0.1);
                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
                 } else {
                     event.setCancelled(true);

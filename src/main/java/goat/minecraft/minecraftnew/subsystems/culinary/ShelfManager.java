@@ -185,7 +185,7 @@ public class ShelfManager implements Listener {
             World world = loc.getWorld();
             if (world != null) {
                 world.playSound(loc, Sound.ENTITY_ITEM_FRAME_ADD_ITEM, 0.8f, 1.0f);
-                world.spawnParticle(Particle.ITEM_CRACK, loc, 10, 0.2, 0.2, 0.2, 0.05, itemToStore);
+                world.spawnParticle(Particle.ENCHANT, loc, 10, 0.2, 0.2, 0.2, 0.05, itemToStore);
             }
             return; // Don't open GUI
         }

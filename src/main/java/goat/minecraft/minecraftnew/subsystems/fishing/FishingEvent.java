@@ -350,7 +350,7 @@ public class FishingEvent implements Listener {
         playSplashSound(player, seaCreature.getRarity());
 
         // Play particles at the bobber location
-        bobberLocation.getWorld().spawnParticle(Particle.WATER_SPLASH, bobberLocation, 30, 0.5, 0.5, 0.5, 0.1);
+        bobberLocation.getWorld().spawnParticle(Particle.FISHING, bobberLocation, 30, 0.5, 0.5, 0.5, 0.1);
         bobberLocation.getWorld().playSound(bobberLocation, Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
 
         ((LivingEntity) spawnedEntity).addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, false));
@@ -491,14 +491,6 @@ public class FishingEvent implements Listener {
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 1.0f, 1.0f);
         }
     }
-    public int getLuckOfTheSeaLevel(ItemStack item) {
-        // Check if the item is not null and has the Luck of the Sea enchantment
-        if (item != null && item.containsEnchantment(Enchantment.LUCK)) {
-            return item.getEnchantmentLevel(Enchantment.LUCK);
-        }
-        // Return 0 if no Luck of the Sea enchantment is found
-        return 0;
-    }
     /**
      * Implements the enhanced treasure system.
      *
@@ -536,7 +528,7 @@ public class FishingEvent implements Listener {
                 player.playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
 
                 // Play particle effect
-                player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, player.getLocation(), 30, 1, 1, 1, 0.1);
+                player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, player.getLocation(), 30, 1, 1, 1, 0.1);
             }
         }
     }
@@ -560,7 +552,7 @@ public class FishingEvent implements Listener {
                 new LootItem(new ItemStack(Material.HEART_OF_THE_SEA), 5),
                 new LootItem(new ItemStack(Material.SHULKER_SHELL), 10),
                 new LootItem(new ItemStack(Material.SPONGE), 8),
-                new LootItem(new ItemStack(Material.SCUTE), 7),
+                new LootItem(new ItemStack(Material.TURTLE_SCUTE), 7),
                 new LootItem(new ItemStack(Material.WITHER_SKELETON_SKULL), 4),
                 new LootItem(new ItemStack(Material.CREEPER_HEAD), 7),
                 new LootItem(new ItemStack(Material.ZOMBIE_HEAD), 7),

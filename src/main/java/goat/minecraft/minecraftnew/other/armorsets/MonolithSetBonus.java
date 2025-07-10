@@ -87,7 +87,7 @@ public class MonolithSetBonus implements Listener {
         if (applied.getOrDefault(id, false)) {
             return;
         }
-        player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 0, false, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, Integer.MAX_VALUE, 0, false, false));
         HealthManager.getInstance(plugin).updateHealth(player);
         applied.put(id, true);
     }
@@ -97,7 +97,7 @@ public class MonolithSetBonus implements Listener {
         if (!applied.getOrDefault(id, false)) {
             return;
         }
-        player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+        player.removePotionEffect(PotionEffectType.RESISTANCE);
         HealthManager.getInstance(plugin).updateHealth(player);
         applied.put(id, false);
     }

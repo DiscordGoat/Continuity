@@ -327,7 +327,7 @@ public class RightClickArtifacts implements Listener {
                 player.sendMessage(ChatColor.GREEN + "Seeds planted on " + plantedCount + " blocks!");
 
                 // Optional: Display particles at the clicked location
-                clickedBlock.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
+                clickedBlock.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
 
             }
             if (itemInHand.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Jackhammer")) {
@@ -489,7 +489,7 @@ public class RightClickArtifacts implements Listener {
                 return;
             }
             if (displayName.equals(ChatColor.LIGHT_PURPLE + "Deep Tooth")) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 30 * 20, 3, true));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 30 * 20, 3, true));
                 decrementItemAmount(itemInHand, player);
                 return;
             }
@@ -874,7 +874,7 @@ public class RightClickArtifacts implements Listener {
                     villager.setCustomNameVisible(true);
                 }
 
-                world.spawnParticle(Particle.VILLAGER_HAPPY, loc.add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
+                world.spawnParticle(Particle.HAPPY_VILLAGER, loc.add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
                 world.playSound(loc, Sound.ENTITY_VILLAGER_CELEBRATE, 1f, 1f);
             }
         }.runTaskLater(MinecraftNew.getInstance(), 100L); // 5 seconds
@@ -905,7 +905,7 @@ public class RightClickArtifacts implements Listener {
                     villager.setCustomNameVisible(true);
                 }
 
-                world.spawnParticle(Particle.VILLAGER_HAPPY, loc.add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
+                world.spawnParticle(Particle.HAPPY_VILLAGER, loc.add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.1);
                 world.playSound(loc, Sound.ENTITY_VILLAGER_CELEBRATE, 1f, 1f);
             }
         }.runTaskLater(MinecraftNew.getInstance(), 100L); // 5 seconds

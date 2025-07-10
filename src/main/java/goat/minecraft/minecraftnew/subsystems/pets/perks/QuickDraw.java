@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -70,7 +71,7 @@ public class QuickDraw implements Listener {
 
         // Damage the bow by 1 durability
         if (itemInHand.getItemMeta() instanceof Damageable damageable) {
-            int unbreakingLevel = itemInHand.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.DURABILITY);
+            int unbreakingLevel = itemInHand.getEnchantmentLevel(Enchantment.UNBREAKING);
             double chance = 1 - (0.15 * unbreakingLevel);
             if (Math.random() > chance) {
                 damageable.setDamage(damageable.getDamage() + 1);

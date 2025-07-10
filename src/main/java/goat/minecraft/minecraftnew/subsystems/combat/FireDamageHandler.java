@@ -171,7 +171,7 @@ public class FireDamageHandler implements Listener {
 
     private void spawnExplosion(Location location) {
         if (location.getWorld() != null) {
-            location.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, location, 2);
+            location.getWorld().spawnParticle(Particle.EXPLOSION, location, 2);
             location.getWorld().spawnParticle(Particle.FLAME, location, 100, 1, 1, 1, 0.1);
         }
     }

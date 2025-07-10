@@ -118,7 +118,7 @@ public class StructureBlockManager implements Listener {
     private boolean isReplaceable(Material m) {
         return m == Material.AIR || m == Material.CAVE_AIR || m == Material.VOID_AIR ||
                m == Material.WATER || m == Material.LAVA ||
-               m == Material.GRASS || m == Material.TALL_GRASS ||
+               m == Material.TALL_GRASS || m == Material.TALL_GRASS ||
                m == Material.SNOW || m == Material.SNOW_BLOCK;
     }
 

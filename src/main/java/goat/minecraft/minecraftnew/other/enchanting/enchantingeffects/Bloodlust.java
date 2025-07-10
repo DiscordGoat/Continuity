@@ -81,12 +81,12 @@ public class Bloodlust implements Listener {
         // Apply effects based on specific kill thresholds
         // 1 kill: Haste I
         if (killCount >= 1) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 0, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, Integer.MAX_VALUE, 0, true, false));
         }
 
         // 3 kills: Strength I + previous effects
         if (killCount >= 3) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 0, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, Integer.MAX_VALUE, 0, true, false));
         }
 
         // 5 kills: Speed I + previous effects
@@ -96,12 +96,12 @@ public class Bloodlust implements Listener {
 
         // 10 kills: Double all effects (Haste II, Strength II, Speed II)
         if (killCount >= 10) {
-            player.removePotionEffect(PotionEffectType.FAST_DIGGING);
-            player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+            player.removePotionEffect(PotionEffectType.HASTE);
+            player.removePotionEffect(PotionEffectType.STRENGTH);
             player.removePotionEffect(PotionEffectType.SPEED);
             
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 1, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 1, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, Integer.MAX_VALUE, 1, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, Integer.MAX_VALUE, 1, true, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, true, false));
         }
 
@@ -112,7 +112,7 @@ public class Bloodlust implements Listener {
 
         // 20 kills: Resistance II + previous effects
         if (killCount >= 20) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 1, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, Integer.MAX_VALUE, 1, true, false));
         }
 
         // 25 kills: Absorption V + previous effects
@@ -125,11 +125,11 @@ public class Bloodlust implements Listener {
             // Remove all current effects and apply max level versions
             removeBloodlustEffects(player);
             
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, Integer.MAX_VALUE, 2, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 2, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, Integer.MAX_VALUE, 2, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, Integer.MAX_VALUE, 2, true, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, true, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 2, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 2, true, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, Integer.MAX_VALUE, 2, true, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, Integer.MAX_VALUE, 4, true, false)); // Keep Absorption V
         }
     }
@@ -157,11 +157,11 @@ public class Bloodlust implements Listener {
     }
 
     private void removeBloodlustEffects(Player player) {
-        player.removePotionEffect(PotionEffectType.INCREASE_DAMAGE);
+        player.removePotionEffect(PotionEffectType.STRENGTH);
         player.removePotionEffect(PotionEffectType.SPEED);
-        player.removePotionEffect(PotionEffectType.FAST_DIGGING);
+        player.removePotionEffect(PotionEffectType.HASTE);
         player.removePotionEffect(PotionEffectType.REGENERATION);
-        player.removePotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+        player.removePotionEffect(PotionEffectType.RESISTANCE);
         player.removePotionEffect(PotionEffectType.ABSORPTION);
     }
 

@@ -621,7 +621,7 @@ public class Frozen implements CommandExecutor, TabCompleter {
         int y = frozenWorld.getHighestBlockYAt(x, z) + 1;
         Location loc = new Location(frozenWorld, x + 0.5, y, z + 0.5);
         if (frozenWorld.getBlockAt(x, y - 1, z).getType() != Material.AIR) {
-            frozenWorld.spawnEntity(loc, EntityType.SNOWMAN);
+            frozenWorld.spawnEntity(loc, EntityType.SNOW_GOLEM);
         }
     }
 

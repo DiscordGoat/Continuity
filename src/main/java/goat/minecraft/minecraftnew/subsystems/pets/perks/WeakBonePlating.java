@@ -33,8 +33,8 @@ public class WeakBonePlating implements Listener {
             int petLevel = activePet.getLevel();
 
             // Apply Resistance I effect for <level> seconds
-            if (!player.hasPotionEffect(PotionEffectType.DAMAGE_RESISTANCE)) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, petLevel * 20, 0));
+            if (!player.hasPotionEffect(PotionEffectType.RESISTANCE)) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, petLevel * 20, 0));
 
                 // Notify the player
                 player.sendMessage(ChatColor.GRAY + "Your " + ChatColor.DARK_GRAY + "Weak Bone Plating" + ChatColor.GRAY +

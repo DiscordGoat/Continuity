@@ -194,14 +194,14 @@ public class PotionBrewingSubsystem implements Listener {
     // Candidate particles for random selection
     private static final Particle[] CANDIDATE_PARTICLES = {
             Particle.FLAME,
-            Particle.SMOKE_NORMAL,
+            Particle.SMOKE,
             Particle.CRIT,
             Particle.END_ROD,
             Particle.CLOUD,
-            Particle.SPELL_WITCH,
-            Particle.SPELL,
+            Particle.WITCH,
+            Particle.EFFECT,
             Particle.PORTAL,
-            Particle.SLIME
+            Particle.ITEM_SLIME
     };
 
     private static final List<PotionRecipe> recipeRegistry = new ArrayList<>();
@@ -754,7 +754,7 @@ public class PotionBrewingSubsystem implements Listener {
                 }
                 finalPotion.setItemMeta(meta);
 
-                finalPotion.addUnsafeEnchantment(Enchantment.DURABILITY, 1);
+                finalPotion.addUnsafeEnchantment(Enchantment.UNBREAKING, 1);
                 finalPotion.getItemMeta().addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
             return finalPotion;

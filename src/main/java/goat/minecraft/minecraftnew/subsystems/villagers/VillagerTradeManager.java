@@ -1139,8 +1139,11 @@ public class VillagerTradeManager implements Listener {
         if (meritManager.hasPerk(player.getUniqueId(), "Haggler")) {
             finalCost *= 0.9; // 10% discount
         }
-        if(petManager.getActivePet(player).getTrait().equals(PetTrait.FINANCIAL)){
-            finalCost *= (petManager.getActivePet(player).getTrait().getValueForRarity(petManager.getActivePet(player).getTraitRarity()) - 1);
+        if ( activePet != null && activePet.getTrait() == PetTrait.FINANCIAL ) {
+            double rawPct    = activePet.getTrait()
+                    .getValueForRarity(activePet.getTraitRarity()); // e.g. 8
+            double discount = rawPct / 100.0;                   // 0.08
+            finalCost *= (1 - discount);                       // 92% of original
         }
         // Apply Bartering discount
         XPManager xpManager = new XPManager(plugin);

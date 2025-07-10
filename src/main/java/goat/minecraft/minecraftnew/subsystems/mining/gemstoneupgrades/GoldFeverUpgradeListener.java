@@ -61,7 +61,7 @@ public class GoldFeverUpgradeListener implements Listener {
 
         if (roll <= totalChance) {
             // Apply Gold Fever effect to the mining player
-            player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, totalDuration, totalPotency, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, totalDuration, totalPotency, false));
             player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_STEP, 1.0f, 1.0f);
 
             // Apply range effect if Gold Fever Range upgrade is present
@@ -83,7 +83,7 @@ public class GoldFeverUpgradeListener implements Listener {
             double distance = sourcePlayer.getLocation().distance(nearbyPlayer.getLocation());
             if (distance <= range) {
                 // Apply the same Gold Fever effect to nearby players
-                nearbyPlayer.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, duration, potency, false));
+                nearbyPlayer.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, duration, potency, false));
                 nearbyPlayer.playSound(nearbyPlayer.getLocation(), Sound.BLOCK_DEEPSLATE_STEP, 0.7f, 1.2f);
                 nearbyPlayer.sendMessage("§6⚡ You feel the Gold Fever spreading from nearby mining!");
             }

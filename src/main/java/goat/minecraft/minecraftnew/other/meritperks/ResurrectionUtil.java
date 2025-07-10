@@ -56,7 +56,7 @@ public final class ResurrectionUtil {
         player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 40 * 20, 0));
 
         player.getWorld().playSound(player.getLocation(), Sound.ITEM_TOTEM_USE, 1f, 1f);
-        player.getWorld().spawnParticle(Particle.TOTEM, player.getLocation().add(0, 1, 0), 30);
+        player.getWorld().spawnParticle(Particle.TOTEM_OF_UNDYING, player.getLocation().add(0, 1, 0), 30);
 
         return true;
     }

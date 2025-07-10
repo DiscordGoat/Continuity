@@ -176,19 +176,19 @@ public class UltimateEnchantingSystem implements Listener {
         boolean isUpgradeApplicable = false;
         if (MELEE.contains(heldItem.getType()) && !isBow(heldItem)) {
             // For swords: sharpness (using vanilla DAMAGE_ALL)
-            requiredEnchantment = Enchantment.DAMAGE_ALL;
+            requiredEnchantment = Enchantment.SHARPNESS;
             upgradeName = "Sharpness";
             numTiers = 5;
             isUpgradeApplicable = true;
         } else if (TOOLS.contains(heldItem.getType())) {
             // For tools: efficiency (using DIG_SPEED)
-            requiredEnchantment = Enchantment.DIG_SPEED;
+            requiredEnchantment = Enchantment.EFFICIENCY;
             upgradeName = "Efficiency";
             numTiers = 5;
             isUpgradeApplicable = true;
         } else if (ARMOR.contains(heldItem.getType())) {
             // For armor: protection (using PROTECTION_ENVIRONMENTAL)
-            requiredEnchantment = Enchantment.PROTECTION_ENVIRONMENTAL;
+            requiredEnchantment = Enchantment.PROTECTION;
             upgradeName = "Protection";
             numTiers = 4;
             isUpgradeApplicable = true;
@@ -414,17 +414,17 @@ public class UltimateEnchantingSystem implements Listener {
             int numTiers = 0;
             boolean isUpgradeApplicable = false;
             if (MELEE.contains(handItem.getType()) && !isBow(handItem)) {
-                requiredEnchantment = Enchantment.DAMAGE_ALL;
+                requiredEnchantment = Enchantment.SHARPNESS;
                 upgradeName = "Sharpness";
                 numTiers = 5;
                 isUpgradeApplicable = true;
             } else if (TOOLS.contains(handItem.getType())) {
-                requiredEnchantment = Enchantment.DIG_SPEED;
+                requiredEnchantment = Enchantment.EFFICIENCY;
                 upgradeName = "Efficiency";
                 numTiers = 5;
                 isUpgradeApplicable = true;
             } else if (ARMOR.contains(handItem.getType())) {
-                requiredEnchantment = Enchantment.PROTECTION_ENVIRONMENTAL;
+                requiredEnchantment = Enchantment.PROTECTION;
                 upgradeName = "Protection";
                 numTiers = 4;
                 isUpgradeApplicable = true;

@@ -17,8 +17,8 @@ public class FortuneRemover implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         ItemStack tool = player.getInventory().getItemInMainHand();
-        if (tool != null && tool.containsEnchantment(Enchantment.LOOT_BONUS_BLOCKS)) {
-            tool.removeEnchantment(Enchantment.LOOT_BONUS_BLOCKS);
+        if (tool != null && tool.containsEnchantment(Enchantment.FORTUNE)) {
+            tool.removeEnchantment(Enchantment.FORTUNE);
         }
     }
 }

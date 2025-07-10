@@ -36,7 +36,7 @@ public class Stun implements Listener {
                 LivingEntity target = (LivingEntity) hitEntity;
 
                 // Always apply stun for 10 seconds
-                target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 10 * 20, 255));
+                target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 10 * 20, 255));
                 if (target instanceof Creature creature) {
                     new BukkitRunnable() {
                         int ticks = 10 * 20;

@@ -200,7 +200,7 @@ public class CulinaryCauldron implements Listener {
 
                 // Spawn bubble particles
                 cauldronLoc.getWorld().spawnParticle(
-                        Particle.WATER_BUBBLE,
+                        Particle.BUBBLE_POP,
                         cauldronLoc.clone().add(0.5, 0.9, 0.5),
                         5, 0.2, 0.2, 0.2, 0.01
                 );
@@ -240,7 +240,7 @@ private void finishCooking(Location cauldronLoc, ItemStack inputKey, Player play
     // Play a completion sound and particles
     cauldronLoc.getWorld().playSound(cauldronLoc, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.0f);
     cauldronLoc.getWorld().spawnParticle(
-            Particle.SPELL_WITCH,
+            Particle.WITCH,
             cauldronLoc.clone().add(0.5, 1.0, 0.5),
             20, 0.3, 0.3, 0.3, 0.05
     );

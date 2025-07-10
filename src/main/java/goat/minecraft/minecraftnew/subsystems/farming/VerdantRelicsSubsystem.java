@@ -246,7 +246,7 @@ public class VerdantRelicsSubsystem implements Listener {
 
         Block clicked = event.getClickedBlock();
         Material mat = clicked.getType();
-        if (mat != Material.DIRT && mat != Material.GRASS_BLOCK && mat != Material.GRASS) {
+        if (mat != Material.DIRT && mat != Material.GRASS_BLOCK) {
             return;
         }
 
@@ -569,11 +569,11 @@ public class VerdantRelicsSubsystem implements Listener {
             Particle particle;
             switch (comp.toLowerCase()) {
                 case "drought":
-                    particle = Particle.WATER_SPLASH; break;
+                    particle = Particle.SPLASH; break;
                 case "overgrown":
-                    particle = Particle.VILLAGER_HAPPY; break;
+                    particle = Particle.HAPPY_VILLAGER; break;
                 case "infested":
-                    particle = Particle.SPELL_WITCH; break;
+                    particle = Particle.WITCH; break;
                 case "malnutrition":
                     particle = Particle.CLOUD; break;
                 default:
@@ -615,7 +615,7 @@ public class VerdantRelicsSubsystem implements Listener {
 
                         if (!dmgMeta.isUnbreakable()) {
                             int cost = 10;
-                            int unbreakingLevel = hand.getEnchantmentLevel(org.bukkit.enchantments.Enchantment.DURABILITY);
+                            int unbreakingLevel = hand.getEnchantmentLevel(Enchantment.UNBREAKING);
                             if (unbreakingLevel > 5) unbreakingLevel = 5;
 
                             PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
@@ -687,7 +687,7 @@ public class VerdantRelicsSubsystem implements Listener {
                         return;
                     }
                     // Spawn multiple types of particles in a tight radius
-                    world.spawnParticle(Particle.VILLAGER_HAPPY, location, 40, 1.0, 1.0, 1.0, 0.2);
+                    world.spawnParticle(Particle.HAPPY_VILLAGER, location, 40, 1.0, 1.0, 1.0, 0.2);
                     count++;
                 }
             }.runTaskTimer(plugin, 0L, 1L);
@@ -721,7 +721,8 @@ public class VerdantRelicsSubsystem implements Listener {
                         return;
                     }
                     // Spawn multiple types of particles in a tight radius
-                    world.spawnParticle(Particle.DRIP_WATER, location, 40, 1.0, 1.0, 1.0, 0.2);
+                    world.spawnParticle(Particle.DRIPPING_WATER
+                            , location, 40, 1.0, 1.0, 1.0, 0.2);
                     count++;
                 }
             }.runTaskTimer(plugin, 0L, 1L);

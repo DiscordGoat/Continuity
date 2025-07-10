@@ -1,6 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.forestry;
 
-import com.mojang.authlib.GameProfile;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
@@ -26,9 +28,13 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class ForestSpiritManager implements Listener {
@@ -85,15 +91,15 @@ public class ForestSpiritManager implements Listener {
         rareDropMapping.put("Warped Spirit", ItemRegistry.getBlueNetherWart());
 
         // Particle mapping per spirit type.
-        particleMapping.put("Oak Spirit", Particle.VILLAGER_HAPPY);
+        particleMapping.put("Oak Spirit", Particle.HAPPY_VILLAGER);
         particleMapping.put("Spruce Spirit", Particle.CRIT);
-        particleMapping.put("Birch Spirit", Particle.SPELL);
+        particleMapping.put("Birch Spirit", Particle.WITCH);
         particleMapping.put("Jungle Spirit", Particle.FLAME);
         particleMapping.put("Acacia Spirit", Particle.CLOUD);
-        particleMapping.put("Dark Oak Spirit", Particle.SMOKE_NORMAL);
+        particleMapping.put("Dark Oak Spirit", Particle.SMOKE);
         particleMapping.put("Cherry Spirit", Particle.HEART);
-        particleMapping.put("Crimson Spirit", Particle.REDSTONE);
-        particleMapping.put("Warped Spirit", Particle.SPELL_WITCH);
+        particleMapping.put("Crimson Spirit", Particle.ASH);
+        particleMapping.put("Warped Spirit", Particle.WITCH);
     }
 
     // Determine the spirit tier based on the player's notoriety from Forestry.
@@ -261,34 +267,49 @@ public class ForestSpiritManager implements Listener {
 
     // Creates a custom skull for the spirit using the Base64 texture from our mapping.
     private ItemStack createSpiritHead(String spiritName) {
-        String texture = headTextureMapping.getOrDefault(spiritName, "");
-        return getCustomSkull(texture);
-    }
+        String base64 = headTextureMapping.getOrDefault(spiritName, "");
+        if (base64.isEmpty()) {
+            // no texture → fallback to name tag
+            return new ItemStack(Material.NAME_TAG);
+        }
 
-    // Helper method to create a custom skull from a Base64 texture.
-    private ItemStack getCustomSkull(String base64) {
-        if (base64 == null || base64.isEmpty()) {
-            return new ItemStack(Material.NAME_TAG);
-        }
         ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
-        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        if (skullMeta == null) {
-            return skull;
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
+        if (meta != null) {
+            applyCustomSkin(meta, base64);
+            skull.setItemMeta(meta);
         }
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-        profile.getProperties().put("textures", new com.mojang.authlib.properties.Property("textures", base64));
-        try {
-            Field profileField = skullMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(skullMeta, profile);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            return new ItemStack(Material.NAME_TAG);
-        }
-        skull.setItemMeta(skullMeta);
         return skull;
     }
 
+    private void applyCustomSkin(SkullMeta skullMeta, String base64Json) {
+        try {
+            // 1) Decode your Base64 JSON
+            byte[] decoded = Base64.getDecoder().decode(base64Json);
+            String json   = new String(decoded, StandardCharsets.UTF_8);
+
+            // 2) Parse out the actual texture URL
+            JsonObject root   = JsonParser.parseString(json).getAsJsonObject();
+            String    urlText = root
+                    .getAsJsonObject("textures")
+                    .getAsJsonObject("SKIN")
+                    .get("url")
+                    .getAsString();
+
+            // 3) Build a fresh PlayerProfile + PlayerTextures
+            PlayerProfile profile  = Bukkit.createPlayerProfile(UUID.randomUUID());
+            PlayerTextures textures = profile.getTextures();
+            textures.setSkin(new URL(urlText), PlayerTextures.SkinModel.CLASSIC);
+            profile.setTextures(textures);
+
+            // 4) Apply it—no reflection needed
+            skullMeta.setOwnerProfile(profile);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // on error, leave the meta as-is
+        }
+    }
     // Creates dyed leather armor with the given material and color.
     private ItemStack createColoredArmor(Material material, Color color) {
         ItemStack armor = new ItemStack(material, 1);
@@ -328,7 +349,7 @@ public class ForestSpiritManager implements Listener {
 
     // Schedules a repeating task to emit enhanced particles every half second.
     private void scheduleParticleEmission(Skeleton spirit, String spiritName, int tier) {
-        Particle particle = particleMapping.getOrDefault(spiritName, Particle.VILLAGER_HAPPY);
+        Particle particle = particleMapping.getOrDefault(spiritName, Particle.HAPPY_VILLAGER);
         int count = tier * 100;         // Increased count for high visibility.
         double speed = tier * 0.2;        // Increased speed.
         new BukkitRunnable() {
@@ -383,7 +404,7 @@ public class ForestSpiritManager implements Listener {
 
         for (Material log : logs) {
             ItemStack item = new ItemStack(log);
-            world.spawnParticle(Particle.ITEM_CRACK, particleLoc, 20, 0.5, 0.5, 0.5, 0.1, item);
+            world.spawnParticle(Particle.ITEM, particleLoc, 20, 0.5, 0.5, 0.5, 0.1, item);
         }
 
         int radius = 6; // 12x12x12 area around spawn
@@ -569,7 +590,7 @@ public class ForestSpiritManager implements Listener {
                 }
             }.runTaskTimer(plugin, 0L, 1L);
             world.playSound(loc, Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
-            world.spawnParticle(Particle.EXPLOSION_LARGE, loc, 1);
+            world.spawnParticle(Particle.EXPLOSION, loc, 1);
         }
     }
 

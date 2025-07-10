@@ -3191,7 +3191,7 @@ public class ItemRegistry {
     }
     public static ItemStack getShallowShell() {
         return createCustomItem(
-                Material.SCUTE,
+                Material.TURTLE_SCUTE,
                 ChatColor.LIGHT_PURPLE + "Shallow Shell",
                 Arrays.asList(
                         ChatColor.GRAY + "A shell found in shallow waters.",
@@ -3481,7 +3481,7 @@ public class ItemRegistry {
                 new ItemStack(Material.HEART_OF_THE_SEA),
                 new ItemStack(Material.SHULKER_SHELL),
                 new ItemStack(Material.SPONGE),
-                new ItemStack(Material.SCUTE),
+                new ItemStack(Material.TURTLE_SCUTE),
                 new ItemStack(Material.WITHER_SKELETON_SKULL),
                 new ItemStack(Material.CREEPER_HEAD),
                 new ItemStack(Material.ZOMBIE_HEAD),
@@ -3534,7 +3534,7 @@ public class ItemRegistry {
         item.setItemMeta(meta);
         if (addEnchantmentShimmer) {
             // Add a dummy enchantment to create the shimmer effect
-            item.addUnsafeEnchantment(Enchantment.DURABILITY, 1); // This enchantment does not affect gameplay
+            item.addUnsafeEnchantment(Enchantment.UNBREAKING, 1); // This enchantment does not affect gameplay
 
         }
         return item;

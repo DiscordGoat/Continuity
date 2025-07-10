@@ -38,7 +38,7 @@ public class Blizzard implements Listener {
             if (event.getEntity() instanceof LivingEntity target) {
                 // Apply the slowness effect
                 int effectDuration = Math.max(petLevel * 20, 40); // Minimum duration of 2 seconds
-                target.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, effectDuration, 1));
+                target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, effectDuration, 1));
 
                 // Notify the player (optional)
                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_HURT_FREEZE, 10, 100);

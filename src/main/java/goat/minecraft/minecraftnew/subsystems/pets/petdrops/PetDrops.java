@@ -37,7 +37,6 @@ public class PetDrops implements Listener {
 
     private void initializeMobToPetMap() {
         // Map mobs to their pet variants
-        mobToPetMap.put(EntityType.ZOMBIFIED_PIGLIN, "Zombie Pigman");
         mobToPetMap.put(EntityType.COW, "Cow");
         mobToPetMap.put(EntityType.PIG, "Pig");
         mobToPetMap.put(EntityType.SHEEP, "Sheep");
@@ -54,7 +53,7 @@ public class PetDrops implements Listener {
         mobToPetMap.put(EntityType.STRAY, "Stray");
         mobToPetMap.put(EntityType.PILLAGER, "Pillager");
         mobToPetMap.put(EntityType.AXOLOTL, "Axolotl");
-        mobToPetMap.put(EntityType.MUSHROOM_COW, "Mooshroom");
+        mobToPetMap.put(EntityType.MOOSHROOM, "Mooshroom");
         mobToPetMap.put(EntityType.ZOMBIE, "Zombie");
         mobToPetMap.put(EntityType.VINDICATOR, "Vindicator");
         mobToPetMap.put(EntityType.ZOMBIFIED_PIGLIN, "Zombie Pigman");

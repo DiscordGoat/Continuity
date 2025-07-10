@@ -323,7 +323,7 @@ public class MeritCommand implements CommandExecutor, Listener {
             // add glow if already purchased
             String stripped = ChatColor.stripColor(name);
             if (playerData.hasPerk(player.getUniqueId(), stripped)) {
-                pm.addEnchant(Enchantment.DURABILITY, 1, true);
+                pm.addEnchant(Enchantment.UNBREAKING, 1, true);
                 pm.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
 

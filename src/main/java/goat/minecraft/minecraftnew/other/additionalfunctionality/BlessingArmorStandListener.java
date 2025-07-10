@@ -107,7 +107,7 @@ public class BlessingArmorStandListener implements Listener {
         world.strikeLightningEffect(armorStand.getLocation());
         ChatColor chatColor = colorMap.getOrDefault(blessing, ChatColor.GREEN);
         world.spawnParticle(
-                Particle.REDSTONE,
+                Particle.DRIPPING_HONEY,
                 effectLoc,
                 200,
                 0.5, 1, 0.5, 0,

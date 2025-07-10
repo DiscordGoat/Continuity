@@ -64,14 +64,14 @@ public class PetRegistry {
                 "Villager",
                 PetManager.Rarity.LEGENDARY,
                 100,
-                Particle.VILLAGER_ANGRY,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.HAGGLE, PetManager.PetPerk.PRACTICE, PetManager.PetPerk.SPEED_BOOST)
         ));
         registry.put("Golden Steve", new PetDefinition(
                 "Golden Steve",
                 PetManager.Rarity.LEGENDARY,
                 100,
-                Particle.VILLAGER_ANGRY,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.TREASURE_HUNTER, PetManager.PetPerk.COMFORTABLE)
         ));
 
@@ -80,7 +80,7 @@ public class PetRegistry {
                 "Leviathan",
                 PetManager.Rarity.LEGENDARY,
                 100,
-                Particle.VILLAGER_ANGRY,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.ANGLER, PetManager.PetPerk.HEART_OF_THE_SEA, PetManager.PetPerk.TERROR_OF_THE_DEEP, PetManager.PetPerk.ELITE, PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.COLLECTOR)
         ));
         registry.put("Turtle", new PetDefinition(
@@ -94,7 +94,7 @@ public class PetRegistry {
                 "Dolphin",
                 PetManager.Rarity.RARE,
                 100,
-                Particle.WATER_SPLASH,
+                Particle.FISHING,
                 Arrays.asList(PetManager.PetPerk.STRONG_SWIMMER, PetManager.PetPerk.ANGLER)
         ));
         registry.put("Glow Squid", new PetDefinition(
@@ -182,21 +182,21 @@ public class PetRegistry {
                 "Yeti",
                 PetManager.Rarity.EPIC,
                 100,
-                Particle.CRIT_MAGIC,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.NO_HIBERNATION, PetManager.PetPerk.ASPECT_OF_THE_FROST, PetManager.PetPerk.BLIZZARD, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.BONE_COLD, PetManager.PetPerk.ELITE)
         ));
         registry.put("Axolotl", new PetDefinition(
                 "Axolotl",
                 PetManager.Rarity.EPIC,
                 100,
-                Particle.SPELL_WITCH,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.DEVOUR, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.REBIRTH)
         ));
         registry.put("Zombie", new PetDefinition(
                 "Zombie",
                 PetManager.Rarity.RARE,
                 100,
-                Particle.CRIT_MAGIC,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.DEVOUR, PetManager.PetPerk.ECHOLOCATION)
         ));
         registry.put("Iron Golem", new PetDefinition(
@@ -249,7 +249,7 @@ public class PetRegistry {
                 "Parrot",
                 PetManager.Rarity.LEGENDARY,
                 100,
-                Particle.TOTEM,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.FLIGHT, PetManager.PetPerk.LULLABY)
         ));
         registry.put("Allay", new PetDefinition(
@@ -272,14 +272,14 @@ public class PetRegistry {
                 "Piglin Brute",
                 PetManager.Rarity.LEGENDARY,
                 100,
-                Particle.FIREWORKS_SPARK,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.CHALLENGE, PetManager.PetPerk.BLACKLUNG, PetManager.PetPerk.SECOND_WIND, PetManager.PetPerk.ELITE)
         ));
         registry.put("Vindicator", new PetDefinition(
                 "Vindicator",
                 PetManager.Rarity.LEGENDARY,
                 100,
-                Particle.FIREWORKS_SPARK,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.SKEPTICISM, PetManager.PetPerk.GREED, PetManager.PetPerk.ELITE)
         ));
         registry.put("Ent", new PetDefinition(
@@ -293,14 +293,14 @@ public class PetRegistry {
                 "Monkey",
                 PetManager.Rarity.EPIC,
                 100,
-                Particle.VILLAGER_HAPPY,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS, PetManager.PetPerk.COLLECTOR)
         ));
         registry.put("Raccoon", new PetDefinition(
                 "Raccoon",
                 PetManager.Rarity.RARE,
                 100,
-                Particle.VILLAGER_HAPPY,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS)
         ));
         //Building
@@ -317,35 +317,35 @@ public class PetRegistry {
                 "Pig",
                 PetManager.Rarity.LEGENDARY,
                 100,
-                Particle.FIREWORKS_SPARK,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.SUPERIOR_ENDURANCE, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.COMPOSTER)
         ));
         registry.put("Mooshroom", new PetDefinition(
                 "Mooshroom",
                 PetManager.Rarity.EPIC,
                 100,
-                Particle.FIREWORKS_SPARK,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANTIDOTE, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR)
         ));
         registry.put("Cow", new PetDefinition(
                 "Cow",
                 PetManager.Rarity.RARE,
                 100,
-                Particle.FIREWORKS_SPARK,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.ANTIDOTE, PetManager.PetPerk.COLLECTOR)
         ));
         registry.put("Sheep", new PetDefinition(
                 "Sheep",
                 PetManager.Rarity.UNCOMMON,
                 100,
-                Particle.FIREWORKS_SPARK,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB)
         ));
         registry.put("Squirrel", new PetDefinition(
                 "Squirrel",
                 PetManager.Rarity.COMMON,
                 100,
-                Particle.FIREWORKS_SPARK,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.GREEN_THUMB)
         ));
         registry.put("Wither", new PetDefinition(
@@ -366,7 +366,7 @@ public class PetRegistry {
                 "Witch",
                 PetManager.Rarity.EPIC,
                 100,
-                Particle.SPELL_WITCH,
+                Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.ANTIDOTE, PetManager.PetPerk.BROOMSTICK, PetManager.PetPerk.SPLASH_POTION, PetManager.PetPerk.EXPERIMENTATION)
         ));
         registry.put("Ghost", new PetDefinition(

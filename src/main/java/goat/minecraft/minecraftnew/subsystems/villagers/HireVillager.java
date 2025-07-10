@@ -38,7 +38,7 @@ public class HireVillager implements Listener {
             villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_BELL_RESONATE, 1.0f, 1.0f);
 
             // Spawn happy villager particles
-            villager.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, villager.getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.2);
+            villager.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, villager.getLocation().add(0, 1, 0), 30, 0.5, 0.5, 0.5, 0.2);
 
             villager.remove();
         }

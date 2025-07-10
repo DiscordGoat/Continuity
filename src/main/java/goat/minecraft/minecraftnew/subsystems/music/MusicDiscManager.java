@@ -573,7 +573,7 @@ public class MusicDiscManager implements Listener {
                 player.getWorld().dropItemNaturally(dropLocation, chestItem);
 
                 // Add particles and sound effects at the drop location
-                dropLocation.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, dropLocation, 50, 0.5, 1, 0.5, 0.1);
+                dropLocation.getWorld().spawnParticle(Particle.ENCHANT, dropLocation, 50, 0.5, 1, 0.5, 0.1);
                 player.getWorld().playSound(dropLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
 
                 chestsSpawned++;
@@ -617,7 +617,7 @@ public class MusicDiscManager implements Listener {
                                     loot.forEach(itemStack -> location.getWorld().dropItemNaturally(location, itemStack));
 
                                     // Add particle and sound effects
-                                    location.getWorld().spawnParticle(Particle.FIREWORKS_SPARK, location.add(0, 1, 0), 100, 0.5, 1, 0.5, 0.1);
+                                    location.getWorld().spawnParticle(Particle.FIREWORK, location.add(0, 1, 0), 100, 0.5, 1, 0.5, 0.1);
                                     location.getWorld().playSound(location, Sound.BLOCK_CHEST_OPEN, 1.0f, 1.0f);
 
                                     // Remove the chest from the player's inventory
@@ -716,10 +716,10 @@ public class MusicDiscManager implements Listener {
                         entity.setCustomName(ChatColor.AQUA + "BT-Infected " + entity.getType().name());
                         entity.setCustomNameVisible(true);
                         entity.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, (2 * 60 + 58) * 20, 0)); // Aqua glowing effect
-                        entity.getWorld().spawnParticle(Particle.WATER_SPLASH, entity.getLocation(), 50, 0.5, 0.5, 0.5, 0.1); // Aqua particles
+                        entity.getWorld().spawnParticle(Particle.FISHING, entity.getLocation(), 50, 0.5, 0.5, 0.5, 0.1); // Aqua particles
 
                         // Apply BT behavior: Slower movement
-                        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, (2 * 60 + 58) * 20, 2)); // Slower movement
+                        entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, (2 * 60 + 58) * 20, 2)); // Slower movement
                         entity.getPersistentDataContainer().set(new NamespacedKey(MinecraftNew.getInstance(), "bt_monster"), PersistentDataType.BYTE, (byte) 1);
                     }
                 }
@@ -1183,7 +1183,7 @@ public class MusicDiscManager implements Listener {
 
                 // Add a large particle effect when a new item is displayed
                 armorStand.getWorld().spawnParticle(
-                        Particle.FIREWORKS_SPARK,
+                        Particle.FIREWORK,
                         armorStand.getLocation().add(0, 1, 0),
                         100, // Number of particles
                         0.5, 0.5, 0.5, // Offset
@@ -1223,7 +1223,7 @@ public class MusicDiscManager implements Listener {
                     this.cancel();
                 } else {
                     // Generate particle effects around the jukebox
-                    jukeboxLocation.getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE,
+                    jukeboxLocation.getWorld().spawnParticle(Particle.ENCHANT,
                             jukeboxLocation.clone().add(0.5, 1, 0.5), 20, 0.5, 1, 0.5, 0);
                     ticksRun += 20;
                 }
@@ -1265,7 +1265,7 @@ public class MusicDiscManager implements Listener {
                                     // Place particle effect and sound when a player purchases an item
                                     interactingPlayer.playSound(interactingPlayer.getLocation(),
                                             Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-                                    interactingPlayer.spawnParticle(Particle.VILLAGER_HAPPY,
+                                    interactingPlayer.spawnParticle(Particle.HAPPY_VILLAGER,
                                             interactingPlayer.getLocation(), 20, 0.5, 0.5, 0.5);
                                 }
                             }
@@ -2053,7 +2053,7 @@ public class MusicDiscManager implements Listener {
     // Helper method to launch a firework at a location with a given color
     private void launchFirework(World world, Location location, Color color) {
         Random random = new Random();
-        Firework firework = (Firework) world.spawnEntity(location, EntityType.FIREWORK);
+        Firework firework = (Firework) world.spawnEntity(location, EntityType.FIREWORK_ROCKET);
         FireworkMeta meta = firework.getFireworkMeta();
 
         // Create firework effect with random type and effects

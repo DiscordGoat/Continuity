@@ -373,7 +373,7 @@ public class BetterEnd implements Listener {
                                             (source.getX() << 4) + x + 0.5,
                                             y + 1.0,
                                             (source.getZ() << 4) + z + 0.5);
-                                    world.spawnEntity(spawnLoc, EntityType.ENDER_CRYSTAL);
+                                    world.spawnEntity(spawnLoc, EntityType.END_CRYSTAL);
                                 }
                             }
                         }

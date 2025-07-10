@@ -63,8 +63,8 @@ public class TerrorOfTheDeep implements Listener {
 
                 // Apply Bloodlust effects
                 player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1.0f, 1.0f);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 20*petLevel, 1)); // Haste II
-                player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20*petLevel, 1)); // Strength II
+                player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 20*petLevel, 1)); // Haste II
+                player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 20*petLevel, 1)); // Strength II
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*petLevel, 1)); // Speed II
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*petLevel, 1)); // Regeneration II
 

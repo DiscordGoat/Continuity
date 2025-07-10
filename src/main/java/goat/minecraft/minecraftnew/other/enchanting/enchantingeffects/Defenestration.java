@@ -44,7 +44,7 @@ public class Defenestration implements Listener {
                 Block neighbor = b.getRelative(face);
                 original.putIfAbsent(neighbor, neighbor.getBlockData().clone());
             }
-            b.getWorld().spawnParticle(Particle.BLOCK_CRACK, b.getLocation().add(0.5,0.5,0.5), 15, 0.3,0.3,0.3, b.getBlockData());
+            b.getWorld().spawnParticle(Particle.BLOCK, b.getLocation().add(0.5,0.5,0.5), 15, 0.3,0.3,0.3, b.getBlockData());
             b.getWorld().playSound(b.getLocation(), Sound.BLOCK_GLASS_BREAK, 1f, 1f);
             b.setType(Material.AIR);
         }

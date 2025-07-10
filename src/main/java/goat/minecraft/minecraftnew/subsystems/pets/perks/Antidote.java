@@ -19,11 +19,11 @@ public class Antidote implements Listener {
 
     private static final List<PotionEffectType> NEGATIVE_EFFECTS = List.of(
             PotionEffectType.BLINDNESS,
-            PotionEffectType.CONFUSION, // Nausea
+            PotionEffectType.NAUSEA, // Nausea
             PotionEffectType.HUNGER,
             PotionEffectType.POISON,
-            PotionEffectType.SLOW,
-            PotionEffectType.SLOW_DIGGING, // Mining Fatigue
+            PotionEffectType.SLOWNESS,
+            PotionEffectType.MINING_FATIGUE, // Mining Fatigue
             PotionEffectType.DARKNESS, // Mining Fatigue
             PotionEffectType.UNLUCK,
             PotionEffectType.WEAKNESS,

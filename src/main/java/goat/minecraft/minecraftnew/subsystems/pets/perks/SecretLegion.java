@@ -346,7 +346,7 @@ public class SecretLegion implements Listener {
         // Strength effect for higher aggression
         if (aggressionLevel >= 2) {
             piglin.addPotionEffect(new PotionEffect(
-                    PotionEffectType.INCREASE_DAMAGE,
+                    PotionEffectType.STRENGTH,
                     PIGLIN_LIFETIME,
                     aggressionLevel - 2, // Level 0 for aggr 2, Level 1 for aggr 3
                     false,
@@ -366,7 +366,7 @@ public class SecretLegion implements Listener {
 
             // Add resistance effect for berserkers
             piglin.addPotionEffect(new PotionEffect(
-                    PotionEffectType.DAMAGE_RESISTANCE,
+                    PotionEffectType.RESISTANCE,
                     PIGLIN_LIFETIME,
                     1,
                     false,

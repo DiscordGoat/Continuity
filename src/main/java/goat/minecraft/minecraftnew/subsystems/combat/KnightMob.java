@@ -39,7 +39,7 @@ public class KnightMob implements Listener {
             ItemStack ironBoots = new ItemStack(Material.IRON_BOOTS);
 
             // Optionally add enchantments (e.g., for more challenge)
-            ironSword.addEnchantment(Enchantment.DAMAGE_ALL, 1);
+            ironSword.addEnchantment(Enchantment.SHARPNESS, 1);
 
             // Set the mob's equipment
             mob.getEquipment().setItemInMainHand(ironSword);

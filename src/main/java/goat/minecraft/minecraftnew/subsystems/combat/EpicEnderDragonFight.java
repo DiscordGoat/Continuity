@@ -57,7 +57,7 @@ public class EpicEnderDragonFight implements Listener {
                 Projectile projectile = event.getEntity();
                 projectile.setVelocity(projectile.getVelocity().multiply(-1));
                 projectile.getWorld().playSound(projectile.getLocation(), Sound.ITEM_SHIELD_BLOCK, 1000.0f, 1.0f);
-                projectile.getWorld().spawnParticle(Particle.CRIT_MAGIC, projectile.getLocation(), 10, 0.2, 0.2, 0.2, 0.1);
+                projectile.getWorld().spawnParticle(Particle.CRIT, projectile.getLocation(), 10, 0.2, 0.2, 0.2, 0.1);
             }
         }
     }
@@ -75,8 +75,8 @@ public class EpicEnderDragonFight implements Listener {
                 // Play explosion sound and particles
                 World world = location.getWorld();
                 world.playSound(location, Sound.ENTITY_WITHER_SPAWN, 1000.0f, 0.5f);
-                world.spawnParticle(Particle.EXPLOSION_HUGE, location, 1);
-                world.spawnParticle(Particle.SMOKE_LARGE, location, 20, 1, 1, 1, 0.1);
+                world.spawnParticle(Particle.EXPLOSION, location, 1);
+                world.spawnParticle(Particle.SMOKE, location, 20, 1, 1, 1, 0.1);
         }
     }
 
@@ -92,7 +92,7 @@ public class EpicEnderDragonFight implements Listener {
 
             // Play sound and spawn particles
             world.playSound(location, Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
-            world.spawnParticle(Particle.FIREWORKS_SPARK, location, 100, 3, 3, 3, 0.1);
+            world.spawnParticle(Particle.FIREWORK, location, 100, 3, 3, 3, 0.1);
 
             // Optionally, spawn additional loot or mobs
         }

@@ -1,17 +1,11 @@
 package goat.minecraft.minecraftnew;
 import goat.minecraft.minecraftnew.other.beacon.*;
-import goat.minecraft.minecraftnew.cut_content.CancelBrewing;
-import goat.minecraft.minecraftnew.cut_content.Collections;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender.BartenderVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineeringProfessionListener;
 import goat.minecraft.minecraftnew.other.meritperks.*;
 import goat.minecraft.minecraftnew.other.qol.*;
-import goat.minecraft.minecraftnew.cut_content.recipes.LockedRecipeManager;
-import goat.minecraft.minecraftnew.cut_content.recipes.RecipeManager;
-import goat.minecraft.minecraftnew.cut_content.recipes.RecipesCommand;
-import goat.minecraft.minecraftnew.cut_content.recipes.ViewRecipeCommand;
 import goat.minecraft.minecraftnew.subsystems.brewing.*;
 import goat.minecraft.minecraftnew.subsystems.brewing.custompotions.*;
 import goat.minecraft.minecraftnew.subsystems.combat.*;
@@ -109,16 +103,12 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private XPManager xpManager;
     //instancing
     private static MinecraftNew instance;
-    CancelBrewing cancelBrewing = new CancelBrewing(this);
     private AnvilRepair anvilRepair;
     private CulinarySubsystem culinarySubsystem;
     private ItemDisplayManager displayManager;
     private PlayerOxygenManager playerOxygenManager;
     private UltimateEnchantingSystem ultimateEnchantmentManager;
-    private static Collections collectionsManager;
     private EngineerVillagerManager engineerVillagerManager;
-    private LockedRecipeManager lockedRecipeManager;
-    private RecipeManager recipeManager;
     private ForestryPetManager forestryPetManager;
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
@@ -213,11 +203,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         new SetDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
-        if (getCommand("testdragon") != null) {
-            getCommand("testdragon").setExecutor(new TestDragonCommand());
-        } else {
-            getLogger().severe("Command 'testdragon' not found in plugin.yml!");
-        }
         PetManager petManager = PetManager.getInstance(this);
         this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));
         this.getCommand("island").setExecutor(new IslandCommand());
@@ -236,6 +221,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         new GrantLegacyTamingCommand(this, petManager, xpManager);
 
         // Register event listener for inventory clicks
+        
 
         //potions
         getServer().getPluginManager().registerEvents(new PotionOfStrength(), this);
@@ -375,15 +361,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         new ArmorStandCommand(this); // This will automatically set up the command
 
-        recipeManager = new RecipeManager(this);
-        recipeManager.registerAllRecipes();
-
-        getCommand("recipes").setExecutor(new RecipesCommand(recipeManager));
         getCommand("discs").setExecutor(new DiscsCommand());
         getServer().getPluginManager().registerEvents(new DiscsCommand(), this);
-        getCommand("viewrecipe").setExecutor(new ViewRecipeCommand(recipeManager));
         getServer().getPluginManager().registerEvents(new Doors(), this);
-        getServer().getPluginManager().registerEvents(new ViewRecipeCommand.ViewRecipeListener(), this);
 
         displayManager = new ItemDisplayManager(this);
 
@@ -800,7 +780,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         PetManager.getInstance(this).savePets();
         PetManager.getInstance(this).saveLastActivePets();
         anvilRepair.saveAllInventories();
-        cancelBrewing.saveAllInventories();
         if (doubleEnderchest != null) {
             doubleEnderchest.saveAllInventories();
         }

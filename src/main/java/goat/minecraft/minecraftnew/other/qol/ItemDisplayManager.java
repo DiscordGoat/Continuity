@@ -48,34 +48,28 @@ public class ItemDisplayManager implements Listener {
     private final List<Particle> availableParticles = Arrays.asList(
             Particle.FLAME,
             Particle.HEART,
-            Particle.VILLAGER_HAPPY,
-            Particle.SPELL_WITCH,
+            Particle.HAPPY_VILLAGER,
+            Particle.WITCH,
             Particle.END_ROD,
             Particle.CRIT,
             Particle.CLOUD,
             Particle.NAUTILUS,
-            Particle.SPELL_MOB_AMBIENT,
-            Particle.TOTEM,
-            Particle.CRIT_MAGIC,
+            Particle.ENTITY_EFFECT,
+            Particle.TOTEM_OF_UNDYING,
+            Particle.CRIT,
             Particle.CAMPFIRE_COSY_SMOKE,
             Particle.CAMPFIRE_SIGNAL_SMOKE,
             Particle.COMPOSTER,
-            Particle.CRIT_MAGIC,
+            Particle.DAMAGE_INDICATOR,
             Particle.DRAGON_BREATH,
-            Particle.SMOKE_LARGE,
+            Particle.SMOKE,
             Particle.DUST_COLOR_TRANSITION,
-            Particle.ENCHANTMENT_TABLE,
-            Particle.EXPLOSION_HUGE,
-            Particle.EXPLOSION_LARGE,
-            Particle.EXPLOSION_NORMAL,
-            Particle.FIREWORKS_SPARK,
+            Particle.ENCHANT,
             Particle.FALLING_DUST,
-            Particle.SLIME,
-            Particle.SNOWBALL,
+            Particle.ITEM_SLIME,
+            Particle.ITEM_SNOWBALL,
             Particle.SNOWFLAKE,
             Particle.SQUID_INK,
-            Particle.SMOKE_NORMAL,
-            Particle.SMOKE_LARGE,
             Particle.LAVA,
             Particle.WARPED_SPORE,
             Particle.SPORE_BLOSSOM_AIR,
@@ -86,7 +80,7 @@ public class ItemDisplayManager implements Listener {
             Particle.DRIPPING_HONEY,
             Particle.FALLING_HONEY,
             Particle.LANDING_HONEY,
-            Particle.WATER_WAKE,
+            Particle.FISHING,
             Particle.FALLING_LAVA,
             Particle.LANDING_LAVA
     );
@@ -330,7 +324,7 @@ public class ItemDisplayManager implements Listener {
     private boolean isItemDisplayItem(ItemStack item) {
         if (item == null || !item.hasItemMeta()) return false;
         ItemMeta meta = item.getItemMeta();
-        if (!meta.hasEnchant(Enchantment.DURABILITY)) return false;
+        if (!meta.hasEnchant(Enchantment.UNBREAKING)) return false;
         if (!meta.hasDisplayName()) return false;
         return ChatColor.stripColor(meta.getDisplayName()).equals("Item Display");
     }

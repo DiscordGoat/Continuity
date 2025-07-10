@@ -48,7 +48,7 @@ public enum FlowType {
                     Material.IRON_TRAPDOOR,
                     Material.IRON_DOOR
             ),
-            Particle.SMOKE_LARGE
+            Particle.SMOKE
     ),
 
     SCORCHSTEEL(
@@ -214,7 +214,7 @@ public enum FlowType {
                     // Deflecting core
                     Material.GRAY_WOOL
             ),
-            Particle.WATER_WAKE
+            Particle.UNDERWATER
     ),
     /**
      * Flow effect that swirls sea-themed blocks around the player.
@@ -225,7 +225,7 @@ public enum FlowType {
                     Material.PRISMARINE,
                     Material.PRISMARINE_SHARD
             ),
-            Particle.WATER_BUBBLE
+            Particle.BUBBLE_POP
     );
     private static final Random RANDOM = new Random();
     private final List<Material> materials;

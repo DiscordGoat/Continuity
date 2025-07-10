@@ -49,7 +49,7 @@ public class LaserBeamPerkHandler implements Listener {
 
                         // Deal additional damage to the target
                         target.damage(laserDamage, player);
-                        target.getWorld().spawnParticle(Particle.WATER_WAKE, target.getLocation(), 200);
+                        target.getWorld().spawnParticle(Particle.FISHING, target.getLocation(), 200);
 
                         // Notify the player
                         player.sendMessage(ChatColor.AQUA + "Your pet zapped the enemy with a laser beam!");

@@ -1,7 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.combat;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -30,9 +31,13 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class SpawnMonsters implements Listener {
@@ -289,7 +294,7 @@ public class SpawnMonsters implements Listener {
         for (ItemStack item : armor) {
             if (item != null && item.getType() != Material.AIR) {
                 ItemMeta meta = item.getItemMeta();
-                meta.addEnchant(Enchantment.PROTECTION_ENVIRONMENTAL, 3, true);
+                meta.addEnchant(Enchantment.PROTECTION, 3, true);
                 item.setItemMeta(meta);
             }
         }
@@ -378,7 +383,7 @@ public class SpawnMonsters implements Listener {
                             drowned.setGlowing(false);  // Remove glowing effect
 
                             // Transformation complete effects
-                            drowned.getWorld().spawnParticle(Particle.WATER_WAKE,
+                            drowned.getWorld().spawnParticle(Particle.UNDERWATER,
                                     drowned.getLocation(), 100, 0.5, 1, 0.5);
                             drowned.getWorld().playSound(drowned.getLocation(),
                                     Sound.ENTITY_ZOMBIE_CONVERTED_TO_DROWNED, 1.0f, 1.0f);
@@ -450,8 +455,8 @@ public class SpawnMonsters implements Listener {
                 monster.setCustomName(ChatColor.RED + "Sniper");
                 monster.setCustomNameVisible(true);
                 ItemStack sniperHelmet = new ItemStack(Material.DIAMOND_HELMET);
-                sniperHelmet.addEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL, 2);
-                sniperHelmet.addEnchantment(Enchantment.OXYGEN, 1);
+                sniperHelmet.addEnchantment(Enchantment.PROTECTION, 2);
+                sniperHelmet.addEnchantment(Enchantment.RESPIRATION, 1);
                 monster.getEquipment().setHelmet(sniperHelmet);
             }
         }
@@ -521,7 +526,7 @@ public class SpawnMonsters implements Listener {
         dragon.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
         dragon.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, Integer.MAX_VALUE, 255, true));
         dragon.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, Integer.MAX_VALUE, 255, true));
-        dragon.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, Integer.MAX_VALUE, 3, true));
+        dragon.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, Integer.MAX_VALUE, 3, true));
         double healthMultiplier = 1 + (level * 0.1);
         double originalHealth = dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
         double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
@@ -619,16 +624,38 @@ public class SpawnMonsters implements Listener {
     /**
      * Helper method to set a custom texture on a SkullMeta.
      */
-    private SkullMeta setCustomSkullTexture(SkullMeta skullMeta, String texture) {
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-        profile.getProperties().put("textures", new Property("textures", texture));
-        try {
-            Field profileField = skullMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(skullMeta, profile);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+    private SkullMeta setCustomSkullTexture(SkullMeta skullMeta, String base64Json) {
+        if (skullMeta == null || base64Json == null || base64Json.isEmpty()) {
+            return skullMeta;
         }
+
+        try {
+            // 1) Decode the JSON payload from your Base64 string
+            byte[] decoded = Base64.getDecoder().decode(base64Json);
+            String json   = new String(decoded, StandardCharsets.UTF_8);
+
+            // 2) Parse out the actual skin URL
+            JsonObject root   = JsonParser.parseString(json).getAsJsonObject();
+            String    urlText = root
+                    .getAsJsonObject("textures")
+                    .getAsJsonObject("SKIN")
+                    .get("url")
+                    .getAsString();
+
+            // 3) Build a fresh profile + textures object
+            PlayerProfile profile  = Bukkit.createPlayerProfile(UUID.randomUUID());
+            PlayerTextures textures = profile.getTextures();
+            textures.setSkin(new URL(urlText), PlayerTextures.SkinModel.CLASSIC);
+            profile.setTextures(textures);
+
+            // 4) Apply it to the SkullMeta
+            skullMeta.setOwnerProfile(profile);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            // if anything fails, we just leave the meta untouched
+        }
+
         return skullMeta;
     }
 

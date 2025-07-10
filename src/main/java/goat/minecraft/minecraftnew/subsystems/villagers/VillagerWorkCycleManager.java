@@ -15,6 +15,7 @@ import org.bukkit.block.data.type.Slab;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,13 +25,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
+
+import static org.bukkit.entity.Villager.Profession.*;
 
 public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
@@ -156,27 +158,35 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         // Overworld. This prevented work cycles from executing if everyone was
         // online in another dimension. Now we simply ensure at least one player
         // is online, regardless of their current world.
-
-        switch (profession) {
-            case FARMER -> performFarmerWork(villager);
-            case BUTCHER -> performButcherWork(villager, searchRadius);
-            case FISHERMAN -> performFishermanWork(villager, searchRadius);
-            case LIBRARIAN -> performLibrarianWork(villager, searchRadius);
-            case CLERIC -> performClericWork(villager);
-            case CARTOGRAPHER -> performCartographerWork(villager, 20);
-            case FLETCHER -> performFletcherWork(villager, 50);
-            case LEATHERWORKER -> performLeatherworkerWork(villager, searchRadius);
-            case MASON -> performMasonWork(villager, searchRadius);
-            case SHEPHERD -> performShepherdWork(villager, searchRadius);
-            case TOOLSMITH -> performToolsmithWork(villager, searchRadius);
-            case WEAPONSMITH -> performWeaponsmithWork(villager, searchRadius);
-            case ARMORER -> performArmorerWork(villager, 20);
-
-            // Add other professions as needed
-            default -> {
-                // No action for other professions
-            }
+        if (profession == FARMER) {
+            performFarmerWork(villager);
+        } else if (profession == BUTCHER) {
+            performButcherWork(villager, searchRadius);
+        } else if (profession == FISHERMAN) {
+            performFishermanWork(villager, searchRadius);
+        } else if (profession == LIBRARIAN) {
+            performLibrarianWork(villager, searchRadius);
+        } else if (profession == CLERIC) {
+            performClericWork(villager);
+        } else if (profession == CARTOGRAPHER) {
+            performCartographerWork(villager, 20);
+        } else if (profession == FLETCHER) {
+            performFletcherWork(villager, 50);
+        } else if (profession == LEATHERWORKER) {
+            performLeatherworkerWork(villager, searchRadius);
+        } else if (profession == MASON) {
+            performMasonWork(villager, searchRadius);
+        } else if (profession == SHEPHERD) {
+            performShepherdWork(villager, searchRadius);
+        } else if (profession == TOOLSMITH) {
+            performToolsmithWork(villager, searchRadius);
+        } else if (profession == WEAPONSMITH) {
+            performWeaponsmithWork(villager, searchRadius);
+        } else if (profession == ARMORER) {
+            performArmorerWork(villager, 20);
         }
+// unhandled professions are simply skipped
+
     }
 
     // Farmers harvest nearby crops
@@ -442,7 +452,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 Material.SHULKER_SHELL,
                 Material.TRIDENT,
                 Material.SPONGE,
-                Material.SCUTE,
+                Material.TURTLE_SCUTE,
                 Material.WITHER_SKELETON_SKULL,
                 Material.CREEPER_HEAD,
                 Material.ZOMBIE_HEAD,
@@ -1068,8 +1078,8 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                     PotionEffectType.FIRE_RESISTANCE,
                     PotionEffectType.WATER_BREATHING,
                     PotionEffectType.NIGHT_VISION,
-                    PotionEffectType.JUMP,
-                    PotionEffectType.DAMAGE_RESISTANCE,
+                    PotionEffectType.JUMP_BOOST,
+                    PotionEffectType.RESISTANCE,
                     PotionEffectType.LUCK,
                     PotionEffectType.SLOW_FALLING
             };
@@ -1081,7 +1091,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             // 3 hours = 216000 ticks (20 ticks/sec * 60 sec/min * 180 min)
             meta.addCustomEffect(new PotionEffect(effect, 216000, 0), true);
             meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Extended " + effect.getName() + " Potion");
-            meta.addEnchant(org.bukkit.enchantments.Enchantment.LUCK, 1, true);
+            meta.addEnchant(Enchantment.UNBREAKING, 1, true);
             meta.addItemFlags(org.bukkit.inventory.ItemFlag.HIDE_ENCHANTS);
             specialPotion.setItemMeta(meta);
 
@@ -1232,20 +1242,6 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             harvestYield.put(new ItemStack(logVariant), 16); // Each variant yields (multiplier * 2) logs
         }
     
-        // Add healing arrows
-        Random random = new Random();
-        for (int i = 0; i < 8; i++) {
-            ItemStack arrow;
-            if (random.nextFloat() < 0.01) {
-                // 1% chance to create an arrow of healing 100
-                arrow = createHealingArrow(100);
-            } else {
-                // 99% chance to create an arrow of healing 2
-                arrow = createHealingArrow(2);
-            }
-            harvestYield.merge(arrow, 1, Integer::sum);
-        }
-    
         // Store or drop the items
         storeOrDropHarvestItemStack(villager, harvestYield);
         Speech speech = new Speech(plugin);
@@ -1253,16 +1249,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         // Play sound to indicate the fletcher's work
         villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
     }
-    
-    private ItemStack createHealingArrow(int healingAmount) {
-        ItemStack arrow = new ItemStack(Material.TIPPED_ARROW);
-        PotionMeta meta = (PotionMeta) arrow.getItemMeta();
-        PotionData potionData = new PotionData(PotionType.INSTANT_HEAL);
-        meta.setBasePotionData(potionData);
-        meta.addCustomEffect(new PotionEffect(PotionEffectType.HEAL, 1, healingAmount - 1), true);
-        arrow.setItemMeta(meta);
-        return arrow;
-    }
+
 
     private Set<Material> findNearbyLogVariants(Villager villager, int radius) {
         Location loc = villager.getLocation();

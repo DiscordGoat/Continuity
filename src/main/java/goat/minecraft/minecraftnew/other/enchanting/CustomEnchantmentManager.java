@@ -77,7 +77,7 @@ public class CustomEnchantmentManager {
         if (billItem != null && billItem.getAmount() > 0) {
             billItem.setAmount(billItem.getAmount() - 1);
         }
-        player.getLocation().getWorld().spawnParticle(Particle.ENCHANTMENT_TABLE, player.getLocation(), 30, 0.5, 0.5, 0.5, 0.1);
+        player.getLocation().getWorld().spawnParticle(Particle.ENCHANT, player.getLocation(), 30, 0.5, 0.5, 0.5, 0.1);
         player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
 
         // 6) Send a message to the player

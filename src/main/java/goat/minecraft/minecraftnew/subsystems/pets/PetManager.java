@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.pets;
 
-import com.mojang.authlib.GameProfile;
-import com.mojang.authlib.properties.Property;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -17,12 +17,16 @@ import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitTask;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -125,30 +129,45 @@ public class PetManager implements Listener {
     }
 
     // Helper method to create a custom skull from a base64 texture
-    public ItemStack getCustomSkull(String base64) {
-        if (base64 == null || base64.isEmpty()) {
+    public ItemStack getCustomSkull(String base64Json) {
+        // fallback if no texture
+        if (base64Json == null || base64Json.isEmpty()) {
             return new ItemStack(Material.NAME_TAG);
         }
-        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
-        SkullMeta skullMeta = (SkullMeta) skull.getItemMeta();
-        if (skullMeta == null) {
-            return skull;
-        }
 
-        GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-        profile.getProperties().put("textures", new Property("textures", base64));
+        ItemStack skull = new ItemStack(Material.PLAYER_HEAD, 1);
+        SkullMeta meta = (SkullMeta) skull.getItemMeta();
+        if (meta == null) return skull;
 
         try {
-            Field profileField = skullMeta.getClass().getDeclaredField("profile");
-            profileField.setAccessible(true);
-            profileField.set(skullMeta, profile);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            return new ItemStack(Material.NAME_TAG); // Fallback if reflection fails
-        }
+            // 1) Decode the JSON payload
+            byte[] decoded = Base64.getDecoder().decode(base64Json);
+            String json   = new String(decoded, StandardCharsets.UTF_8);
 
-        skull.setItemMeta(skullMeta);
-        return skull;
+            // 2) Extract the URL field
+            JsonObject root   = JsonParser.parseString(json).getAsJsonObject();
+            String    urlText = root
+                    .getAsJsonObject("textures")
+                    .getAsJsonObject("SKIN")
+                    .get("url")
+                    .getAsString();
+
+            // 3) Build a fresh PlayerProfile + PlayerTextures
+            PlayerProfile   profile  = Bukkit.createPlayerProfile(UUID.randomUUID());
+            PlayerTextures  textures = profile.getTextures();
+            textures.setSkin(new URL(urlText), PlayerTextures.SkinModel.CLASSIC);
+            profile.setTextures(textures);
+
+            // 4) Apply it to the SkullMeta
+            meta.setOwnerProfile(profile);
+            skull.setItemMeta(meta);
+            return skull;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // if anything goes wrong, fallback
+            return new ItemStack(Material.NAME_TAG);
+        }
     }
 
 

@@ -35,7 +35,7 @@ public class DiggingClaws implements Listener {
 
             // Apply Haste II effect
             player.addPotionEffect(new PotionEffect(
-                    PotionEffectType.FAST_DIGGING,
+                    PotionEffectType.HASTE,
                     duration, // Duration in ticks
                     1, // Haste II
                     false,
