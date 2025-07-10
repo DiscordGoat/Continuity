@@ -13,9 +13,9 @@ permissions:
     description: "Grants admin access to Continuity"
     default: op     # op = only given to server operators (OPs) by default
 commands:
-  spawnhostile:
-    description: Spawns a hostile player NPC that attacks nearby players
-    usage: /<command>
+  debugplayer:
+    description: Spawns a hostile player NPC that attacks the sender
+    usage: /debugplayer
   getculinaryrecipe:
     description: Gives you the crafted output for a culinary recipe.
     usage: /getculinaryrecipe <recipe name>
