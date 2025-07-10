@@ -1548,7 +1548,7 @@ public class MusicDiscManager implements Listener {
         int totalCycles = durationTicks / intervalTicks;
 
         // List of skills
-        String[] skills = {"Combat", "Fishing", "Forestry", "Mining", "Farming", "Bartering", "Smithing", "Culinary", "Taming"};
+        String[] skills = {"Combat", "Fishing", "Forestry", "Mining", "Terraforming", "Farming", "Bartering", "Smithing", "Culinary", "Taming"};
 
         // Colors for each skill
         Map<String, ChatColor> skillColors = new HashMap<>();
@@ -1556,6 +1556,7 @@ public class MusicDiscManager implements Listener {
         skillColors.put("Fishing", ChatColor.AQUA);
         skillColors.put("Forestry", ChatColor.DARK_GREEN);
         skillColors.put("Mining", ChatColor.GRAY);
+        skillColors.put("Terraforming", ChatColor.GREEN);
         skillColors.put("Farming", ChatColor.YELLOW);
         skillColors.put("Bartering", ChatColor.GREEN);
         skillColors.put("Culinary", ChatColor.YELLOW);
@@ -1786,7 +1787,7 @@ public class MusicDiscManager implements Listener {
                 Arrays.asList(ChatColor.GRAY + "Gain 500-1000 XP in a random skill."),
                 1, false, false);
         list.add(new LotteryReward(xpIcon, p -> {
-            String[] skills = {"Combat","Fishing","Forestry","Mining","Farming","Bartering","Smithing","Culinary","Taming"};
+            String[] skills = {"Combat","Fishing","Forestry","Mining","Terraforming","Farming","Bartering","Smithing","Culinary","Taming"};
             String skill = skills[random.nextInt(skills.length)];
             int xp = 5000 + random.nextInt(10000);
             xpManager.addXP(p, skill, xp);
