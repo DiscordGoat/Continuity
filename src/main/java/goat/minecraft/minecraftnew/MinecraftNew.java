@@ -390,6 +390,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             getDataFolder().mkdirs();
         }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
+        this.getCommand("spawncorpse").setExecutor(new goat.minecraft.minecraftnew.subsystems.corpses.SpawnCorpseCommand(this));
         getCommand("seacreaturechance").setExecutor(new SeaCreatureChanceCommand(this, xpManager));
         getCommand("treasurechance").setExecutor(new TreasureChanceCommand(this));
         getCommand("spiritchance").setExecutor(new SpiritChanceCommand(this, xpManager));
@@ -558,6 +559,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(new FarmingEvent(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.corpses.CorpseDeathEvent(), this);
         //getServer().getPluginManager().registerEvents(new CancelBrewing(MinecraftNew.getInstance()), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new RightClickArtifacts(this), this);
         getServer().getPluginManager().registerEvents(new BlessingArtifactGUI(this), this);

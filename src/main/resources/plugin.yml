@@ -90,6 +90,9 @@ commands:
   spawnseacreature:
     description: Spawns a sea creature by name.
     permission: continuity.admin
+  spawncorpse:
+    description: Spawns a corpse by name.
+    permission: continuity.admin
   givecustomitem:
     description: Gives a predefined custom item to the player.
     usage: /givecustomitem <customitem>
