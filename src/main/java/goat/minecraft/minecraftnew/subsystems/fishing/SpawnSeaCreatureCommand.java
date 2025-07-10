@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.fishing.npc.SeaCreatureNPCManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -52,18 +53,19 @@ public class SpawnSeaCreatureCommand implements CommandExecutor {
         SeaCreature seaCreature = optionalSeaCreature.get();
 
         // Spawn the sea creature at the player's location
-
-        Entity spawnedEntity = player.getWorld().spawnEntity(player.getLocation(), seaCreature.getEntityType());
-        if (spawnedEntity instanceof org.bukkit.entity.LivingEntity) {
-            org.bukkit.entity.LivingEntity livingEntity = (org.bukkit.entity.LivingEntity) spawnedEntity;
-            applySeaCreatureEquipment(livingEntity, seaCreature);
-            SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(new XPManager(MinecraftNew.getInstance()));
-            spawnMonsters.applyMobAttributes(livingEntity, seaCreature.getLevel());
+        if (seaCreature.isNPC()) {
+            SeaCreatureNPCManager.getInstance(MinecraftNew.getInstance()).spawnSeaCreatureNPC(player, player.getLocation(), seaCreature, seaCreature.getLevel());
+        } else {
+            Entity spawnedEntity = player.getWorld().spawnEntity(player.getLocation(), seaCreature.getEntityType());
+            if (spawnedEntity instanceof org.bukkit.entity.LivingEntity livingEntity) {
+                applySeaCreatureEquipment(livingEntity, seaCreature);
+                SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(new XPManager(MinecraftNew.getInstance()));
+                spawnMonsters.applyMobAttributes(livingEntity, seaCreature.getLevel());
+            }
+            spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + seaCreature.getLevel() + "] " + seaCreature.getColoredDisplayName());
+            spawnedEntity.setCustomNameVisible(true);
+            spawnedEntity.setMetadata("SEA_CREATURE", new FixedMetadataValue(Bukkit.getPluginManager().getPlugin("MinecraftNew"), seaCreature.getDisplayName()));
         }
-
-        spawnedEntity.setCustomName(ChatColor.AQUA + "[Lvl " + seaCreature.getLevel() + "] " + seaCreature.getColoredDisplayName());
-        spawnedEntity.setCustomNameVisible(true);
-        spawnedEntity.setMetadata("SEA_CREATURE", new FixedMetadataValue(Bukkit.getPluginManager().getPlugin("MinecraftNew"), seaCreature.getDisplayName()));
 
         // Apply attributes and equipment
 

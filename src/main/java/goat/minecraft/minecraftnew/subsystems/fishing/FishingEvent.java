@@ -10,6 +10,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
+import goat.minecraft.minecraftnew.subsystems.fishing.npc.SeaCreatureNPCManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
@@ -258,13 +259,24 @@ public class FishingEvent implements Listener {
         }
         EntityType entityType = seaCreature.getEntityType();
 
-
-
         // Log sea creature stats to the console
         Bukkit.getLogger().info("Sea Creature Stats:");
         Bukkit.getLogger().info("Name: " + seaCreature.getDisplayName());
         Bukkit.getLogger().info("Rarity: " + seaCreature.getRarity());
         Bukkit.getLogger().info("Level: " + seaCreature.getLevel());
+
+        // If this creature should be an NPC, delegate to the NPC manager
+        int baseLevel = seaCreature.getLevel();
+        int biggerLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.BIGGER_FISH);
+        int adjustedLevel = (int) Math.max(1, Math.round(baseLevel * (1.0 - biggerLevel * 0.10)));
+        if (seaCreature.isNPC()) {
+            SeaCreatureNPCManager.getInstance(plugin).spawnSeaCreatureNPC(player, bobberLocation, seaCreature, adjustedLevel);
+            player.sendMessage("A " + seaCreature.getColoredDisplayName() + " is approaching!");
+            playSplashSound(player, seaCreature.getRarity());
+            bobberLocation.getWorld().spawnParticle(Particle.FISHING, bobberLocation, 30, 0.5, 0.5, 0.5, 0.1);
+            bobberLocation.getWorld().playSound(bobberLocation, Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
+            return;
+        }
 
         // Spawn the sea creature at the bobber's location
         Entity spawnedEntity = player.getWorld().spawnEntity(bobberLocation, entityType);
@@ -302,9 +314,6 @@ public class FishingEvent implements Listener {
         plugin.getLogger().info("Hostility Level for player " + player.getName() + ": " + hostilityLevel);
 
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
-        int baseLevel = seaCreature.getLevel();
-        int biggerLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.BIGGER_FISH);
-        int adjustedLevel = (int)Math.max(1, Math.round(baseLevel * (1.0 - biggerLevel * 0.10)));
         plugin.getLogger().info("Base Level of Sea Creature: " + baseLevel);
 
         spawnMonsters.applyMobAttributes(livingEntity, adjustedLevel);
