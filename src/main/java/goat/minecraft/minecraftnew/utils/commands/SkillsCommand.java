@@ -165,7 +165,7 @@ public class SkillsCommand implements CommandExecutor {
             case "Terraforming":
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.GREEN + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.GREEN + "XP from surface blocks" // simple descriptor
+                        ChatColor.GREEN + "Unbreaking Chance: " + level * 0.25 // simple descriptor
                 ));
                 break;
             case "Combat":
