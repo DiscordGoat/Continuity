@@ -206,6 +206,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         PetManager petManager = PetManager.getInstance(this);
         this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));
         this.getCommand("island").setExecutor(new IslandCommand());
+        this.getCommand("debugplayer").setExecutor(new DebugPlayerCommand(this));
 
 
         PigStepArena.init(this);
