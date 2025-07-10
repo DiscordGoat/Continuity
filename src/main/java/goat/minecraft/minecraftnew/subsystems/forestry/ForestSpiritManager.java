@@ -11,6 +11,10 @@ import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -18,6 +22,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Skeleton;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -126,6 +131,21 @@ public class ForestSpiritManager implements Listener {
     }
 
     /**
+     * Creates and spawns a Citizens NPC representing a forest spirit.
+     */
+    private NPC createSpiritNPC(String spiritName, Location loc) {
+        NPCRegistry registry = CitizensAPI.getNPCRegistry();
+        NPC npc = registry.createNPC(EntityType.PLAYER, spiritName);
+        String skin = headTextureMapping.getOrDefault(spiritName, "");
+        if (!skin.isEmpty()) {
+            npc.getOrAddTrait(SkinTrait.class).setSkinPersistent(UUID.randomUUID().toString(), null, skin);
+        }
+        npc.spawn(loc);
+        npc.setProtected(false);
+        return npc;
+    }
+
+    /**
      * Spawns a forest spirit.
      *
      * @param spiritName The name (type) of the spirit (e.g., "Oak Spirit").
@@ -147,8 +167,10 @@ public class ForestSpiritManager implements Listener {
         World world = loc.getWorld();
         if (world == null) return;
 
-        // Spawn the spirit as a Skeleton.
-        Skeleton spirit = (Skeleton) world.spawnEntity(loc, EntityType.SKELETON);
+        // Create the spirit as a Citizens NPC (player type).
+        NPC npc = createSpiritNPC(spiritName, loc);
+        if (!npc.isSpawned()) return;
+        LivingEntity spirit = (LivingEntity) npc.getEntity();
 
         // Spawn spawn effects: item break particles of all wood types and clear nearby leaves
         triggerSpawnEffects(loc);
@@ -348,7 +370,7 @@ public class ForestSpiritManager implements Listener {
     }
 
     // Schedules a repeating task to emit enhanced particles every half second.
-    private void scheduleParticleEmission(Skeleton spirit, String spiritName, int tier) {
+    private void scheduleParticleEmission(LivingEntity spirit, String spiritName, int tier) {
         Particle particle = particleMapping.getOrDefault(spiritName, Particle.HAPPY_VILLAGER);
         int count = tier * 100;         // Increased count for high visibility.
         double speed = tier * 0.2;        // Increased speed.
@@ -366,7 +388,7 @@ public class ForestSpiritManager implements Listener {
     }
 
     // Schedules a repeating heartbeat sound for nearby players if the spirit is Tier 4 or 5.
-    private void scheduleHeartbeatSound(Skeleton spirit, int tier) {
+    private void scheduleHeartbeatSound(LivingEntity spirit, int tier) {
         long interval = (tier == 4) ? 80L : 40L; // Tier 4: every 4 sec; Tier 5: every 2 sec.
         new BukkitRunnable() {
             @Override
@@ -595,7 +617,7 @@ public class ForestSpiritManager implements Listener {
     }
 
     // Helper method to extract the spirit name from its custom name.
-    private String getSpiritNameFromEntity(Skeleton spirit) {
+    private String getSpiritNameFromEntity(LivingEntity spirit) {
         String name = spirit.getCustomName();
         if (name != null && name.contains("] ")) {
             return name.substring(name.indexOf("] ") + 2);
