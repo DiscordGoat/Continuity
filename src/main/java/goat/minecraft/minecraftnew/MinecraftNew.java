@@ -324,6 +324,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("previewflow").setExecutor(new PreviewFlowCommand(this));
         FlowManager.getInstance(this);
         getCommand("flowdebug").setExecutor(new FlowDebugCommand(flowManager));
+        getCommand("debugplayer").setExecutor(new DebugPlayerCommand(this));
         auraManager = new AuraManager(this);
         getCommand("previewauratemplate").setExecutor(new PreviewAuraTemplateCommand(auraManager));
         getCommand("aura").setExecutor(new AuraCommand(auraManager));
