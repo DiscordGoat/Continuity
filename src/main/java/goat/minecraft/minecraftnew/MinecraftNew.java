@@ -397,7 +397,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             getDataFolder().mkdirs();
         }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
-        this.getCommand("spawncorpse").setExecutor(new goat.minecraft.minecraftnew.subsystems.corpses.SpawnCorpseCommand(this));
         getCommand("seacreaturechance").setExecutor(new SeaCreatureChanceCommand(this, xpManager));
         getCommand("treasurechance").setExecutor(new TreasureChanceCommand(this));
         getCommand("spiritchance").setExecutor(new SpiritChanceCommand(this, xpManager));

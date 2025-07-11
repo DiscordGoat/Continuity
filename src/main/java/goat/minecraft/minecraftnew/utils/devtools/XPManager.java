@@ -552,6 +552,12 @@ public class XPManager implements CommandExecutor {
                         .append(ChatColor.WHITE).append(" is now ")
                         .append(ChatColor.YELLOW).append("" + (newLevel) + "%");
                 break;
+            case "terraforming":
+                body.append(ChatColor.WHITE).append("Your ")
+                        .append(ChatColor.LIGHT_PURPLE).append("Bonus Durability")
+                        .append(ChatColor.WHITE).append(" is now ")
+                        .append(ChatColor.YELLOW).append("" + (newLevel * 0.25) + "%");
+                break;
             default:
                 body.append(ChatColor.WHITE).append("Enjoy your new level in ")
                         .append(skill).append("!\n");
