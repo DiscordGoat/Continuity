@@ -69,12 +69,13 @@ public class SpawnCorpseCommand implements CommandExecutor {
         npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
         npc.addTrait(new CorpseTrait(plugin, corpse.getLevel(), corpse.usesBow(),
                 corpse.getDisplayName().equalsIgnoreCase("Duskblood") ? 100 : 0));
-        ChatColor color = getColorForRarity(corpse.getRarity());
-        npc.getEntity().setCustomName(ChatColor.GRAY + "[Lv: " + corpse.getLevel() + "] " + color + corpse.getDisplayName());
+        ChatColor color = getColorForRarityStatic(corpse.getRarity());
+        npc.getEntity().setCustomName(ChatColor.GRAY + "[Lvl " + corpse.getLevel() + "] " + color + corpse.getDisplayName());
         npc.getEntity().setCustomNameVisible(true);
         npc.getEntity().setMetadata("CORPSE", new FixedMetadataValue(plugin, corpse.getDisplayName()));
     }
 
+    public static ChatColor getColorForRarityStatic(Rarity rarity) {
     /**
      * Applies a player skin to the given NPC.
      *

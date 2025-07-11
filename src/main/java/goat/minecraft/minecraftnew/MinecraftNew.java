@@ -160,6 +160,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
 
+        removeAllCorpseNPCs();
+        removeAllCitizenEntities();
+
         HealthManager.getInstance(this).startup();
 
         ArmorStandCommand armorStandCommand = new ArmorStandCommand(this);
@@ -517,7 +520,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new KillMonster(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new Mining(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.terraforming.Terraforming(), MinecraftNew.getInstance());
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.gravedigging.Gravedigging(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.gravedigging.Gravedigging(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.GemstoneApplicationSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.fishing.BaitApplicationSystem(this), this);
@@ -794,6 +797,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             doubleEnderchest.saveAllInventories();
         }
         removeAllCorpseNPCs();
+        removeAllCitizenEntities();
         System.out.println("[MinecraftNew] Plugin disabled.");//
     }
     public static MinecraftNew getInstance() {
@@ -813,6 +817,14 @@ public class MinecraftNew extends JavaPlugin implements Listener {
                     (npc.getEntity() != null && npc.getEntity().hasMetadata("CORPSE"))) {
                 npc.destroy();
             }
+        }
+    }
+
+    private void removeAllCitizenEntities() {
+        for (org.bukkit.World world : Bukkit.getWorlds()) {
+            world.getEntities().stream()
+                    .filter(e -> e.hasMetadata("NPC"))
+                    .forEach(org.bukkit.entity.Entity::remove);
         }
     }
 }
