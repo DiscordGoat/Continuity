@@ -3,6 +3,8 @@ package goat.minecraft.minecraftnew.subsystems.corpses;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.util.Skin;
+import net.citizensnpcs.api.util.SkinnableEntity;
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -56,6 +58,8 @@ public class SpawnCorpseCommand implements CommandExecutor {
         NPC npc = registry.createNPC(EntityType.PLAYER, corpse.getDisplayName());
         npc.spawn(player.getLocation());
 
+        applySkin(npc, corpse.getSkinUrl());
+
         if (npc.getEntity() instanceof org.bukkit.entity.LivingEntity le) {
             EntityEquipment eq = le.getEquipment();
             if (eq != null && corpse.getWeaponMaterial() != null && corpse.getWeaponMaterial() != org.bukkit.Material.AIR) {
@@ -69,6 +73,33 @@ public class SpawnCorpseCommand implements CommandExecutor {
         npc.getEntity().setCustomName(ChatColor.GRAY + "[Lv: " + corpse.getLevel() + "] " + color + corpse.getDisplayName());
         npc.getEntity().setCustomNameVisible(true);
         npc.getEntity().setMetadata("CORPSE", new FixedMetadataValue(plugin, corpse.getDisplayName()));
+    }
+
+    /**
+     * Applies a player skin to the given NPC.
+     *
+     * @param npc   The NPC to modify.
+     * @param skin  The skin name or texture identifier. If null or blank, nothing is applied.
+     */
+    private void applySkin(NPC npc, String skin) {
+        if (skin == null || skin.isEmpty()) {
+            return;
+        }
+
+        npc.data().remove(NPC.PLAYER_SKIN_UUID_METADATA);
+        npc.data().remove(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_METADATA);
+        npc.data().remove(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_SIGN_METADATA);
+        npc.data().remove("cached-skin-uuid-name");
+        npc.data().remove("cached-skin-uuid");
+
+        npc.data().set(NPC.PLAYER_SKIN_USE_LATEST, false);
+        npc.data().set("cached-skin-uuid-name", skin);
+        npc.data().set("cached-skin-uuid", skin);
+        npc.data().setPersistent(NPC.PLAYER_SKIN_UUID_METADATA, skin);
+
+        if (npc.isSpawned() && npc.getEntity() instanceof SkinnableEntity skinnable) {
+            Skin.get(skinnable).applyAndRespawn(skinnable);
+        }
     }
 
     private ChatColor getColorForRarity(Rarity rarity) {

@@ -16,6 +16,7 @@ public class Corpse {
     private final Rarity rarity;
     private final int level;
     private final Material weaponMaterial;
+    /** Identifier for the NPC skin. This may be a player name or texture URL. */
     private final String skinUrl;
     private final boolean usesBow;
     private final List<DropItem> dropItems;
@@ -38,6 +39,9 @@ public class Corpse {
     public Rarity getRarity() { return rarity; }
     public int getLevel() { return level; }
     public Material getWeaponMaterial() { return weaponMaterial; }
+    /**
+     * @return identifier used to fetch a skin for this corpse
+     */
     public String getSkinUrl() { return skinUrl; }
     public boolean usesBow() { return usesBow; }
 
