@@ -642,6 +642,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomEnchantmentManager.registerEnchantment("Accelerate", 4, true);
         CustomEnchantmentManager.registerEnchantment("Velocity", 3, true);
         CustomEnchantmentManager.registerEnchantment("Defenestration", 1, true);
+        CustomEnchantmentManager.registerEnchantment("Lynch", 4, true);
 
 
         getServer().getPluginManager().registerEvents(new KnightMob(this), this);
