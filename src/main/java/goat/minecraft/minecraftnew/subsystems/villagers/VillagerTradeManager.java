@@ -445,6 +445,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("POWER_CRYSTAL", 1, 512, 5)); // Custom Item
         toolsmithPurchases.add(createTradeMap("REDSTONE_GEMSTONE", 1, 128, 5)); // Custom Item
         toolsmithPurchases.add(createTradeMap("JACKHAMMER", 1, 32, 3)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("COMPOSTER_ENCHANT", 1, 32, 3)); // Custom Item
 
         defaultConfig.set("TOOLSMITH.purchases", toolsmithPurchases);
 
@@ -849,6 +850,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getToolsmithEnchant();
             case "TOOLSMITH_ENCHANT_TWO":
                 return ItemRegistry.getToolsmithEnchantTwo();
+            case "COMPOSTER_ENCHANT":
+                return ItemRegistry.getComposterEnchant();
             case "LEGENDARY_TOOL_REFORGE":
                 return ItemRegistry.getLegendaryToolReforge();
             case "MERIT_ITEM":

@@ -998,6 +998,15 @@ public class ItemRegistry {
         ), 1, false, true);
     }
 
+    public static ItemStack getComposterEnchant() {
+        return createCustomItem(Material.COMPOSTER, ChatColor.YELLOW +
+                "Composter", Arrays.asList(
+                ChatColor.GRAY + "Max level of V",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Composter to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+
     public static ItemStack getShepherdArtifact() {
         return createCustomItem(Material.BRUSH, ChatColor.YELLOW +
                 "Creative Mind", Arrays.asList(
