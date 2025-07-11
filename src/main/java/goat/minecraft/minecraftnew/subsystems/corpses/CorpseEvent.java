@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.corpses;
 
+import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
@@ -72,7 +73,7 @@ public class CorpseEvent {
                 }
                 Location current = npc.getEntity().getLocation();
                 npc.teleport(current.add(0, 0.05, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
-                current.getWorld().spawnParticle(Particle.BLOCK_CRACK, current, 5, 0.2, 0.1, 0.2, current.getBlock().getBlockData());
+                current.getWorld().spawnParticle(Particle.BLOCK, current, 5, 0.2, 0.1, 0.2, current.getBlock().getBlockData());
                 ticks++;
             }
         }.runTaskTimer(plugin, 1L, 1L);

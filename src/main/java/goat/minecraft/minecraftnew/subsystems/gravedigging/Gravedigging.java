@@ -105,7 +105,7 @@ public class Gravedigging implements Listener {
         } else {
             player.sendMessage(ChatColor.AQUA + "Treasure unearthed! (TreasureEvent)");
         }
-        loc.getWorld().spawnParticle(Particle.BLOCK_CRACK, loc, 20, 0.2, 0.2, 0.2, Material.DIRT.createBlockData());
+        loc.getWorld().spawnParticle(Particle.BLOCK, loc, 20, 0.2, 0.2, 0.2, Material.DIRT.createBlockData());
         loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1.0f, 1.0f);
     }
 }

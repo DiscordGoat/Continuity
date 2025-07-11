@@ -82,8 +82,9 @@ public class CorpseRegistry implements Listener {
                 break;
             }
         }
+        Rarity finalSelected = selected;
         List<Corpse> filtered = CORPSES.stream()
-                .filter(c -> c.getRarity() == selected)
+                .filter(c -> c.getRarity() == finalSelected)
                 .collect(Collectors.toList());
         if (filtered.isEmpty()) return Optional.empty();
         return Optional.of(filtered.get(RANDOM.nextInt(filtered.size())));

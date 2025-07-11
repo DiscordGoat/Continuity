@@ -44,7 +44,7 @@ public class CorpseDeathEvent implements Listener {
     private void playDeathEffects(Entity entity, Rarity rarity) {
         if (entity.getWorld() == null) return;
         Sound sound;
-        Particle particle = Particle.SMOKE_NORMAL;
+        Particle particle = Particle.SMOKE;
         float volume = 1.0f;
         float pitch = 1.0f;
         switch (rarity) {
@@ -55,13 +55,13 @@ public class CorpseDeathEvent implements Listener {
             }
             case EPIC -> {
                 sound = Sound.ENTITY_WITHER_DEATH;
-                particle = Particle.EXPLOSION_LARGE;
+                particle = Particle.EXPLOSION;
                 volume = 1.5f;
                 pitch = 0.8f;
             }
             case LEGENDARY -> {
                 sound = Sound.ENTITY_ENDER_DRAGON_DEATH;
-                particle = Particle.EXPLOSION_HUGE;
+                particle = Particle.EXPLOSION;
                 volume = 2.0f;
                 pitch = 0.6f;
             }
