@@ -47,11 +47,7 @@ public class CorpseTrait extends Trait {
         if (entity.getAttribute(Attribute.GENERIC_ARMOR) != null) {
             entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(armorValue);
         }
-        if (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null) {
-            double baseHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-            entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(baseHealth * healthMultiplier);
-            entity.setHealth(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
-        }
+        entity.setHealth(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
         entity.setCustomNameVisible(true);
         entity.setMetadata("mobLevel", new org.bukkit.metadata.FixedMetadataValue(plugin, level));
     }

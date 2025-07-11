@@ -789,17 +789,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (doubleEnderchest != null) {
             doubleEnderchest.saveAllInventories();
         }
-        // Remove any remaining Corpse NPCs to prevent persistence on reload
-        try {
-            net.citizensnpcs.api.npc.NPCRegistry registry = net.citizensnpcs.api.CitizensAPI.getNPCRegistry();
-            for (net.citizensnpcs.api.npc.NPC npc : registry) {
-                if (npc.isSpawned() && npc.getEntity().hasMetadata("CORPSE")) {
-                    npc.destroy();
-                }
-            }
-        } catch (Exception e) {
-            getLogger().warning("Failed to remove corpses on shutdown: " + e.getMessage());
-        }
         System.out.println("[MinecraftNew] Plugin disabled.");//
     }
     public static MinecraftNew getInstance() {
