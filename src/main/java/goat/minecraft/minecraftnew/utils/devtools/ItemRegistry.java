@@ -998,6 +998,15 @@ public class ItemRegistry {
         ), 1, false, true);
     }
 
+    public static ItemStack getLynchEnchant() {
+        return createCustomItem(Material.IRON_SHOVEL, ChatColor.YELLOW +
+                "Lynch", Arrays.asList(
+                ChatColor.GRAY + "Max level of 4",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Lynch to shovels.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
+
     public static ItemStack getShepherdArtifact() {
         return createCustomItem(Material.BRUSH, ChatColor.YELLOW +
                 "Creative Mind", Arrays.asList(

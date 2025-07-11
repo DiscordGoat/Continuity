@@ -439,6 +439,7 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT", 1, 64, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT_TWO", 1, 128, 3)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("LYNCH_ENCHANT", 1, 64, 4)); // Custom Item
         toolsmithPurchases.add(createTradeMap("MERIT_ITEM", 1, 64, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("UNBREAKABLE_SHEARS", 1, 128, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("LEGENDARY_TOOL_REFORGE", 1, 64, 5)); // Custom Item
@@ -849,6 +850,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getToolsmithEnchant();
             case "TOOLSMITH_ENCHANT_TWO":
                 return ItemRegistry.getToolsmithEnchantTwo();
+            case "LYNCH_ENCHANT":
+                return ItemRegistry.getLynchEnchant();
             case "LEGENDARY_TOOL_REFORGE":
                 return ItemRegistry.getLegendaryToolReforge();
             case "MERIT_ITEM":
