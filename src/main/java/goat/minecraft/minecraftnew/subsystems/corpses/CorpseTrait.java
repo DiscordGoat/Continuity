@@ -42,12 +42,19 @@ public class CorpseTrait extends Trait {
 
     private void applyAttributes(NPC npc) {
         if (!(npc.getEntity() instanceof LivingEntity entity)) return;
-        double healthMultiplier = level <= 10 ? 0.1 + 0.1 * (level - 1) : 1 + ((level - 10) * 0.1);
+        double healthMultiplier = level <= 10 ? 0.1 + 0.1 * (level - 1)
+                : 1 + ((level - 10) * 0.1);
         double armorValue = Math.min(healthMultiplier * 20, 100);
         if (entity.getAttribute(Attribute.GENERIC_ARMOR) != null) {
             entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(armorValue);
         }
-        entity.setHealth(entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue());
+
+        if (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null) {
+            double base = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+            double scaled = base * healthMultiplier;
+            entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(scaled);
+            entity.setHealth(scaled);
+        }
         entity.setCustomNameVisible(true);
         entity.setMetadata("mobLevel", new org.bukkit.metadata.FixedMetadataValue(plugin, level));
     }

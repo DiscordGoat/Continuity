@@ -92,6 +92,10 @@ import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+
+import goat.minecraft.minecraftnew.subsystems.corpses.CorpseTrait;
 
 import java.util.Objects;
 
@@ -789,6 +793,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (doubleEnderchest != null) {
             doubleEnderchest.saveAllInventories();
         }
+        removeAllCorpseNPCs();
         System.out.println("[MinecraftNew] Plugin disabled.");//
     }
     public static MinecraftNew getInstance() {
@@ -800,4 +805,14 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     }
     public ForestryPetManager getForestryManager() {
         return forestryPetManager;
-    }}
+    }
+
+    private void removeAllCorpseNPCs() {
+        for (NPC npc : CitizensAPI.getNPCRegistry()) {
+            if (npc.hasTrait(CorpseTrait.class) ||
+                    (npc.getEntity() != null && npc.getEntity().hasMetadata("CORPSE"))) {
+                npc.destroy();
+            }
+        }
+    }
+}
