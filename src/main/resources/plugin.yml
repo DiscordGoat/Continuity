@@ -147,6 +147,10 @@ commands:
     description: Repairs the held item to full durability
     usage: /repair
     permission: continuity.admin
+  repairall:
+    description: Repairs all durable items in your inventory to full durability
+    usage: /repairall
+    permission: continuity.admin
   openvillagertrademenu:
     description: Opens a villager trade menu for testing
     usage: /openVillagerTradeMenu <profession> <tier>
