@@ -49,7 +49,8 @@ public class SeaCreatureRegistry implements Listener {
                 turtleDrops, // Drops for the cod fish
                 Color.fromRGB(162, 162, 162), // Light gray color to represent a cod fish
                 "Fish", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.COMMON) // Rarity level for common creatures
+                RARITY_LEVELS.get(Rarity.COMMON), // Rarity level for common creatures
+                false
         ));
         List<SeaCreature.DropItem> codFishDrops = new ArrayList<>();
         codFishDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 1, 1, 4)); // Common drop for a cod fish
@@ -61,7 +62,8 @@ public class SeaCreatureRegistry implements Listener {
                 codFishDrops, // Drops for the cod fish
                 Color.fromRGB(162, 162, 162), // Light gray color to represent a cod fish
                 "Fish", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.COMMON) // Rarity level for common creatures
+                RARITY_LEVELS.get(Rarity.COMMON), // Rarity level for common creatures
+                false
         ));
         List<SeaCreature.DropItem> salmonDrops = new ArrayList<>();
         salmonDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 1, 1, 4)); // Common drop for a salmon
@@ -73,7 +75,8 @@ public class SeaCreatureRegistry implements Listener {
                 salmonDrops, // Drops for the salmon
                 Color.fromRGB(255, 105, 180), // Pink color to represent a salmon
                 "Salmon", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.COMMON) // Rarity level for common creatures
+                RARITY_LEVELS.get(Rarity.COMMON), // Rarity level for common creatures
+                false
         ));
         List<SeaCreature.DropItem> pufferfishDrops = new ArrayList<>();
         pufferfishDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 1, 1, 4)); // Common drop for a pufferfish
@@ -85,7 +88,8 @@ public class SeaCreatureRegistry implements Listener {
                 pufferfishDrops, // Drops for the pufferfish
                 Color.fromRGB(255, 165, 0), // Orange color to represent a pufferfish
                 "Pufferfish", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.COMMON) // Rarity level for common creatures
+                RARITY_LEVELS.get(Rarity.COMMON), // Rarity level for common creatures
+                false
         ));
         List<SeaCreature.DropItem> tropicalFishDrops = new ArrayList<>();
         tropicalFishDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 1, 1, 1)); // Common drop for a tropical fish
@@ -97,7 +101,8 @@ public class SeaCreatureRegistry implements Listener {
                 tropicalFishDrops, // Drops for the tropical fish
                 Color.fromRGB(255, 215, 0), // Gold color to represent a tropical fish
                 "Tropical_Fish", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.COMMON) // Rarity level for common creatures
+                RARITY_LEVELS.get(Rarity.COMMON), // Rarity level for common creatures
+                false
         ));
 
         //UNCOMMON
@@ -110,7 +115,8 @@ public class SeaCreatureRegistry implements Listener {
                 turdleDrops, // Drops for the cod fish
                 Color.fromRGB(162, 162, 162), // Light gray color to represent a cod fish
                 "Fish", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.UNCOMMON) // Rarity level for common creatures
+                RARITY_LEVELS.get(Rarity.UNCOMMON), // Rarity level for common creatures
+                false
         ));
         List<SeaCreature.DropItem> luminescentDrownedDrops = new ArrayList<>();
         luminescentDrownedDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 1, 1, 2)); // Common drop for a luminescent drowned
@@ -123,7 +129,8 @@ public class SeaCreatureRegistry implements Listener {
                 luminescentDrownedDrops, // Drops for the luminescent drowned
                 Color.fromRGB(50, 150, 255), // Light blue color to represent a luminescent drowned
                 "Luminescent_Drowned", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.UNCOMMON) // Rarity level for uncommon creatures
+                RARITY_LEVELS.get(Rarity.UNCOMMON), // Rarity level for uncommon creatures
+                false
         ));
         List<SeaCreature.DropItem> squidDrops = new ArrayList<>();
         squidDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 1, 1, 1)); // Luminescent Ink drop
@@ -135,7 +142,8 @@ public class SeaCreatureRegistry implements Listener {
                 squidDrops, // Drops for the luminescent drowned
                 Color.fromRGB(50, 150, 255), // Light blue color to represent a luminescent drowned
                 "Luminescent_Drowned", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.UNCOMMON) // Rarity level for uncommon creatures
+                RARITY_LEVELS.get(Rarity.UNCOMMON), // Rarity level for uncommon creatures
+                false
         ));
 
         //RARE
@@ -148,7 +156,8 @@ public class SeaCreatureRegistry implements Listener {
                 deepTurtleDrops, // Drops for the cod fish
                 Color.fromRGB(162, 162, 162), // Light gray color to represent a cod fish
                 "Fish", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.RARE) // Rarity level for common creatures
+                RARITY_LEVELS.get(Rarity.RARE), // Rarity level for common creatures
+                false
         ));
         List<SeaCreature.DropItem> poseidonDrops = new ArrayList<>();
         poseidonDrops.add(new SeaCreature.DropItem(ItemRegistry.getSeaSalt(), 6, 1, 3));
@@ -164,7 +173,8 @@ public class SeaCreatureRegistry implements Listener {
                 poseidonDrops,
                 Color.fromRGB(0, 0, 255),
                 "Poseidon",  // unique texture for this creature
-                RARITY_LEVELS.get(Rarity.RARE)
+                RARITY_LEVELS.get(Rarity.RARE),
+                true
         ));
         List<SeaCreature.DropItem> sharkDrops = new ArrayList<>();
         sharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 12, 1, 5));
@@ -178,7 +188,8 @@ public class SeaCreatureRegistry implements Listener {
                 sharkDrops,
                 Color.fromRGB(47, 47, 47),
                 "Shark",  // unique texture for this creature
-                RARITY_LEVELS.get(Rarity.RARE)
+                RARITY_LEVELS.get(Rarity.RARE),
+                false
         ));
         List<SeaCreature.DropItem> pirateDrops = new ArrayList<>();
         pirateDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 6, 1, 5));
@@ -193,7 +204,8 @@ public class SeaCreatureRegistry implements Listener {
                 null,
                 Color.fromRGB(0, 0, 0),
                 "Pirate",  // unique texture for this creature
-                RARITY_LEVELS.get(Rarity.RARE)
+                RARITY_LEVELS.get(Rarity.RARE),
+                true
         ));
 
 
@@ -210,7 +222,8 @@ public class SeaCreatureRegistry implements Listener {
                 abyssalTurtleDrops, // Drops for the cod fish
                 Color.fromRGB(162, 162, 162), // Light gray color to represent a cod fish
                 "Fish", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.EPIC) // Rarity level for common creatures
+                RARITY_LEVELS.get(Rarity.EPIC), // Rarity level for common creatures
+                false
         ));
         List<SeaCreature.DropItem> waterSpiderDrops = new ArrayList<>();
         waterSpiderDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 14, 1, 5));
@@ -222,7 +235,8 @@ public class SeaCreatureRegistry implements Listener {
                 waterSpiderDrops,
                 Color.fromRGB(0, 51, 102),
                 "waterspider",  // unique texture for this creature
-                RARITY_LEVELS.get(Rarity.EPIC)
+                RARITY_LEVELS.get(Rarity.EPIC),
+                false
         ));
         List<SeaCreature.DropItem> greatWhiteSharkDrops = new ArrayList<>();
         greatWhiteSharkDrops.add(new SeaCreature.DropItem(ItemRegistry.getFishBone(), 14, 1, 5));
@@ -237,7 +251,8 @@ public class SeaCreatureRegistry implements Listener {
                 greatWhiteSharkDrops,
                 Color.fromRGB(0, 51, 102),
                 "Great_White_Shark",  // unique texture for this creature
-                RARITY_LEVELS.get(Rarity.EPIC)
+                RARITY_LEVELS.get(Rarity.EPIC),
+                false
         ));
         List<SeaCreature.DropItem> leviathanDrops = new ArrayList<>();
         leviathanDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 30, 1, 4));
@@ -251,7 +266,8 @@ public class SeaCreatureRegistry implements Listener {
                 leviathanDrops,
                 Color.fromRGB(0, 100, 100), // Dark aqua color
                 "Leviathan", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.EPIC)
+                RARITY_LEVELS.get(Rarity.EPIC),
+                false
         ));
         List<SeaCreature.DropItem> yetiDrops = new ArrayList<>();
         yetiDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 20, 1, 3)); // Example drop
@@ -264,7 +280,8 @@ public class SeaCreatureRegistry implements Listener {
                 yetiDrops, // Drops for the Yeti
                 Color.fromRGB(255, 255, 255), // White color to represent a Yeti
                 "Yeti", // Unique texture for this creature
-                RARITY_LEVELS.get(Rarity.EPIC) // Rarity level for epic creatures
+                RARITY_LEVELS.get(Rarity.EPIC), // Rarity level for epic creatures
+                false
         ));
 
 
@@ -282,7 +299,8 @@ public class SeaCreatureRegistry implements Listener {
                 bioluminescentGuardianDrops,
                 Color.fromRGB(211, 211, 211),
                 "Megalodon",  // unique texture for this creature
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
+                RARITY_LEVELS.get(Rarity.LEGENDARY),
+                false
         ));
         List<SeaCreature.DropItem> megalodonDrops = new ArrayList<>();
         megalodonDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 30, 1, 4));
@@ -295,7 +313,8 @@ public class SeaCreatureRegistry implements Listener {
                 megalodonDrops,
                 Color.fromRGB(211, 211, 211),
                 "Megalodon",  // unique texture for this creature
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
+                RARITY_LEVELS.get(Rarity.LEGENDARY),
+                false
         ));
         List<SeaCreature.DropItem> abominationDrops = new ArrayList<>();
         abominationDrops.add(new SeaCreature.DropItem(ItemRegistry.getTooth(), 64, 1, 4));
@@ -309,7 +328,8 @@ public class SeaCreatureRegistry implements Listener {
                 abominationDrops,
                 Color.fromRGB(250, 10, 20),
                 "Abomination",  // unique texture for this creature
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
+                RARITY_LEVELS.get(Rarity.LEGENDARY),
+                false
         ));
         List<SeaCreature.DropItem> midasDrops = new ArrayList<>();
         midasDrops.add(new SeaCreature.DropItem(ItemRegistry.getVerdantRelicTreasury(), 1, 1, 1));
@@ -321,7 +341,8 @@ public class SeaCreatureRegistry implements Listener {
                 midasDrops,
                 Color.fromRGB(212, 175, 55),  // A gold-like color.
                 "Midas",  // Unique texture for this creature (ensure your texture key/method is set up accordingly).
-                RARITY_LEVELS.get(Rarity.LEGENDARY)
+                RARITY_LEVELS.get(Rarity.LEGENDARY),
+                true
         ));
 
         //MYTHIC
