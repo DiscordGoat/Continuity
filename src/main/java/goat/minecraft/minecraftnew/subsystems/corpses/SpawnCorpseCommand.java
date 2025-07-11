@@ -54,6 +54,7 @@ public class SpawnCorpseCommand implements CommandExecutor {
         NPCRegistry registry = CitizensAPI.getNPCRegistry();
         NPC npc = registry.createNPC(EntityType.PLAYER, corpse.getDisplayName());
         npc.spawn(player.getLocation());
+        npc.setPersistent(false); // ensure corpses are not saved between restarts
 
         if (npc.getEntity() instanceof org.bukkit.entity.LivingEntity le) {
             EntityEquipment eq = le.getEquipment();
