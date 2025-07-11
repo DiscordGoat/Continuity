@@ -1,7 +1,11 @@
 package goat.minecraft.minecraftnew.subsystems.corpses;
 
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
+import goat.minecraft.minecraftnew.subsystems.pets.TraitRarity;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -34,12 +38,30 @@ public class Corpse {
         this.dropItems = dropItems;
     }
 
-    public String getDisplayName() { return displayName; }
+    public String getDisplayName() {
+        // Pick the right ChatColor for this corpse’s rarity
+        ChatColor color = getColorForRarityStatic(rarity);
+        // Build "[Lv X] Name" in that color
+        return color + "[Lv: " + level + "] " + displayName;
+    }
+
+    // (You already have this helper; make sure it returns the ChatColor you want)
+    public static ChatColor getColorForRarityStatic(Rarity rarity) {
+        return switch (rarity) {
+            case COMMON     -> ChatColor.WHITE;
+            case UNCOMMON   -> ChatColor.GREEN;
+            case RARE       -> ChatColor.BLUE;
+            case EPIC       -> ChatColor.DARK_PURPLE;
+            case LEGENDARY,
+                 MYTHIC    -> ChatColor.GOLD;
+        };
+    }
     public Rarity getRarity() { return rarity; }
     public int getLevel() { return level; }
     public Material getWeaponMaterial() { return weaponMaterial; }
     public String getSkinUrl() { return skinUrl; }
     public boolean usesBow() { return usesBow; }
+
 
     public List<ItemStack> getDrops() {
         List<ItemStack> drops = new ArrayList<>();

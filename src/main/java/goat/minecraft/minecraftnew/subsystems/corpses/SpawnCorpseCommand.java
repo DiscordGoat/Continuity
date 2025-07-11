@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.corpses;
 
+import goat.minecraft.minecraftnew.utils.devtools.SkinManager;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
@@ -55,7 +56,6 @@ public class SpawnCorpseCommand implements CommandExecutor {
         NPCRegistry registry = CitizensAPI.getNPCRegistry();
         NPC npc = registry.createNPC(EntityType.PLAYER, corpse.getDisplayName());
         npc.spawn(player.getLocation());
-
         if (npc.getEntity() instanceof org.bukkit.entity.LivingEntity le) {
             EntityEquipment eq = le.getEquipment();
             if (eq != null && corpse.getWeaponMaterial() != null && corpse.getWeaponMaterial() != org.bukkit.Material.AIR) {

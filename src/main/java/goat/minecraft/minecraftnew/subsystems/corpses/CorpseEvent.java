@@ -55,28 +55,9 @@ public class CorpseEvent {
         npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
         npc.addTrait(new CorpseTrait(plugin, corpse.getLevel(), corpse.usesBow(),
                 corpse.getDisplayName().equalsIgnoreCase("Duskblood") ? 100 : 0));
-        ChatColor color = SpawnCorpseCommand.getColorForRarityStatic(corpse.getRarity());
-        npc.getEntity().setCustomName(ChatColor.GRAY + "[Lvl " + corpse.getLevel() + "] " + color + corpse.getDisplayName());
-        npc.getEntity().setCustomNameVisible(true);
         npc.getEntity().setMetadata("CORPSE", new FixedMetadataValue(plugin, corpse.getDisplayName()));
 
         playSpawnSound(loc, corpse.getRarity());
-
-        // Raise the corpse over 20 ticks with block crack particles
-        new BukkitRunnable() {
-            int ticks = 0;
-            @Override
-            public void run() {
-                if (ticks >= 20 || !npc.isSpawned()) {
-                    cancel();
-                    return;
-                }
-                Location current = npc.getEntity().getLocation();
-                npc.teleport(current.add(0, 0.05, 0), PlayerTeleportEvent.TeleportCause.PLUGIN);
-                current.getWorld().spawnParticle(Particle.BLOCK, current, 5, 0.2, 0.1, 0.2, current.getBlock().getBlockData());
-                ticks++;
-            }
-        }.runTaskTimer(plugin, 1L, 1L);
     }
 
     private void playSpawnSound(Location loc, Rarity rarity) {

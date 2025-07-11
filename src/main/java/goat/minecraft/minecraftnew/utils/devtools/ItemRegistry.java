@@ -998,20 +998,6 @@ public class ItemRegistry {
         ), 1, false, true);
     }
 
-    public static ItemStack getComposterEnchant() {
-        return createCustomItem(Material.COMPOSTER, ChatColor.YELLOW +
-                "Composter", Arrays.asList(
-                ChatColor.GRAY + "Max level of V",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Composter to items.",
-    public static ItemStack getLynchEnchant() {
-        return createCustomItem(Material.IRON_SHOVEL, ChatColor.YELLOW +
-                "Lynch", Arrays.asList(
-                ChatColor.GRAY + "Max level of 4",
-                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Lynch to shovels.",
-                ChatColor.DARK_PURPLE + "Smithing Item"
-        ), 1, false, true);
-    }
-
     public static ItemStack getShepherdArtifact() {
         return createCustomItem(Material.BRUSH, ChatColor.YELLOW +
                 "Creative Mind", Arrays.asList(
@@ -2830,25 +2816,25 @@ public class ItemRegistry {
                 true);
     }
     public static ItemStack getTooth() {
-    return createCustomItem(Material.IRON_NUGGET, ChatColor.BLUE + "Creature Tooth",
-            Arrays.asList(
-            ChatColor.GRAY + "A sharp bone from the mouth of a Sea Creature.",
-                    ChatColor.BLUE + "Use: " + ChatColor.GREEN + "Valuable",
-                    ChatColor.GRAY + "",
-                    ChatColor.DARK_PURPLE + "Trophy Item"
-            ),
-            1,
-            false,
-            true);
+        return createCustomItem(Material.IRON_NUGGET, ChatColor.BLUE + "Creature Tooth",
+                Arrays.asList(
+                        ChatColor.GRAY + "A sharp bone from the mouth of a Sea Creature.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GREEN + "Valuable",
+                        ChatColor.GRAY + "",
+                        ChatColor.DARK_PURPLE + "Trophy Item"
+                ),
+                1,
+                false,
+                true);
     }
 
     public static ItemStack getSkeletonDrop() {
         return createCustomItem(Material.STRING, ChatColor.YELLOW +
-            "Bowstring", Arrays.asList(
-            ChatColor.GRAY + "Air Technology.",
-            ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Power.",
-            ChatColor.DARK_PURPLE + "Smithing Item"
-    ), 1, false, true);
+                "Bowstring", Arrays.asList(
+                ChatColor.GRAY + "Air Technology.",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Apply it to equipment to unlock the secrets of Power.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
     }
     public static ItemStack getDrownedDrop() {
         return createCustomItem(
@@ -2869,7 +2855,7 @@ public class ItemRegistry {
                 Material.GOLD_INGOT,
                 ChatColor.YELLOW + "Gold Bar",
                 Arrays.asList( ChatColor.GRAY +
-                        "High value magnet.",
+                                "High value magnet.",
                         ChatColor.BLUE + "Use: " +
                                 ChatColor.GRAY +
                                 "Apply it to equipment to unlock the secrets of Looting.",
@@ -3555,7 +3541,7 @@ public class ItemRegistry {
     }
 
     // ===== GEMSTONES =====
-    
+
     // COMMON GEMSTONES (+1 Gemstone Power)
     public static ItemStack getQuartz() {
         return createCustomItem(
@@ -3848,7 +3834,7 @@ public class ItemRegistry {
                 true
         );
     }
-    
+
     public static ItemStack getPowerCrystal() {
         return createCustomItem(
                 Material.PRISMARINE_CRYSTALS,
@@ -4196,9 +4182,9 @@ public class ItemRegistry {
 
         return getSoulshard();
     }
-    
+
     // ===== GEMSTONE UTILITY METHODS =====
-    
+
     /**
      * Gets a random gemstone based on rarity weights
      * @return A random gemstone ItemStack
@@ -4206,11 +4192,11 @@ public class ItemRegistry {
     public static ItemStack getRandomGemstone() {
         Random random = new Random();
         double roll = random.nextDouble() * 100;
-        
+
         if (roll < 4.0) { // 4% total for all common
             ItemStack[] commonGems = {getQuartz(), getHematite(), getObsidian(), getAgate()};
             return commonGems[random.nextInt(commonGems.length)];
-        } else if (roll < 6.0) { // 2% total for all uncommon  
+        } else if (roll < 6.0) { // 2% total for all uncommon
             ItemStack[] uncommonGems = {getTurquoise(), getAmethyst(), getCitrine(), getGarnet()};
             return uncommonGems[random.nextInt(uncommonGems.length)];
         } else if (roll < 7.0) { // 1% total for all rare
@@ -4223,27 +4209,27 @@ public class ItemRegistry {
             ItemStack[] legendaryGems = {getEmerald(), getDiamond()};
             return legendaryGems[random.nextInt(legendaryGems.length)];
         }
-        
+
         // Default fallback (should never happen)
         return getQuartz();
     }
-    
+
     /**
      * Gets all gemstone ItemStacks
      * @return Array of all 16 gemstone ItemStacks
      */
     public static ItemStack[] getAllGemstones() {
         return new ItemStack[]{
-            // Common
-            getQuartz(), getHematite(), getObsidian(), getAgate(),
-            // Uncommon
-            getTurquoise(), getAmethyst(), getCitrine(), getGarnet(),
-            // Rare
-            getTopaz(), getPeridot(), getAquamarine(), getTanzanite(),
-            // Epic
-            getSapphire(), getRuby(),
-            // Legendary
-            getEmerald(), getDiamond()
+                // Common
+                getQuartz(), getHematite(), getObsidian(), getAgate(),
+                // Uncommon
+                getTurquoise(), getAmethyst(), getCitrine(), getGarnet(),
+                // Rare
+                getTopaz(), getPeridot(), getAquamarine(), getTanzanite(),
+                // Epic
+                getSapphire(), getRuby(),
+                // Legendary
+                getEmerald(), getDiamond()
         };
     }
 
@@ -4326,7 +4312,14 @@ public class ItemRegistry {
                 true
         );
     }
-
+    public static ItemStack getLynchEnchant() {
+        return createCustomItem(Material.IRON_SHOVEL, ChatColor.YELLOW +
+                "Lynch", Arrays.asList(
+                ChatColor.GRAY + "Max level of 4",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Lynch to shovels.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
     /** Simple artifact that lets players choose a blessing. */
     public static ItemStack getBlessingArtifact() {
         return createCustomItem(
@@ -4341,7 +4334,14 @@ public class ItemRegistry {
                 true
         );
     }
-
+    public static ItemStack getComposterEnchant() {
+        return createCustomItem(Material.COMPOSTER, ChatColor.YELLOW +
+                "Composter", Arrays.asList(
+                ChatColor.GRAY + "Max level of V",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Composter to items.",
+                ChatColor.DARK_PURPLE + "Smithing Item"
+        ), 1, false, true);
+    }
     /** Provides the Structure Block Charm for building assistance. */
     public static ItemStack getStructureBlockCharm() {
         StructureBlockManager manager = StructureBlockManager.getInstance();

@@ -226,6 +226,13 @@ public class AnvilRepair implements Listener {
 
         return item.getType().toString().toUpperCase().endsWith("PICKAXE");
     }
+    public boolean isShovel(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false; // Check for null or empty items
+        }
+
+        return item.getType().toString().toUpperCase().endsWith("SHOVEL");
+    }
 
     public boolean isBow(ItemStack item) {
         if (item == null || item.getType() == Material.AIR) {
@@ -533,6 +540,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.SOUL_SOIL);
                     billableItems.add(Material.LEATHER_BOOTS);
                     billableItems.add(Material.TURTLE_EGG);
+                    billableItems.add(Material.COMPOSTER);
                     billableItems.add(Material.GLASS);
                     billableItems.add(Material.LEATHER_LEGGINGS);
                     billableItems.add(Material.BONE);
@@ -551,6 +559,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.SUGAR_CANE);
                     billableItems.add(Material.ENDER_EYE);
                     billableItems.add(Material.WHITE_DYE);
+                    billableItems.add(Material.IRON_SHOVEL);
                     billableItems.add(Material.LEATHER);
                     billableItems.add(Material.RED_DYE);
                     billableItems.add(Material.MOJANG_BANNER_PATTERN);
@@ -975,6 +984,14 @@ public class AnvilRepair implements Listener {
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lethal Tempo")&& isSword(repairee)){
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Bloodlust", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Bloodlust") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Composter")&& isShovel(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Composter", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Composter") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lynch")&& isShovel(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Lynch", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Lynch") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
 
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Defenestration") && isBow(repairee)) {

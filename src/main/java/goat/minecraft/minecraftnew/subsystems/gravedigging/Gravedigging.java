@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.gravedigging;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.subsystems.corpses.CorpseEvent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,18 +10,17 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Player;
-import goat.minecraft.minecraftnew.subsystems.corpses.CorpseEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.Bukkit;
+
 import java.util.HashMap;
 import java.util.Map;
-
 import java.util.Random;
 
 /**
@@ -29,7 +29,7 @@ import java.util.Random;
  * triggers a random event.
  */
 public class Gravedigging implements Listener {
-    private static final double BASE_CHANCE = 1.0; // 100% for testing
+    private static final double BASE_CHANCE = 0.10; // 10%
     private final Random random = new Random();
     private final Map<Location, BukkitTask> graves = new HashMap<>();
     private final JavaPlugin plugin;
@@ -50,6 +50,8 @@ public class Gravedigging implements Listener {
         Location loc = block.getLocation();
         World world = loc.getWorld();
         if (world == null) return;
+
+        // If there's already a grave here, trigger it
         if (graves.containsKey(loc)) {
             BukkitTask task = graves.remove(loc);
             if (task != null) task.cancel();
@@ -57,9 +59,12 @@ public class Gravedigging implements Listener {
             event.setCancelled(true);
             return;
         }
-        int highest = world.getHighestBlockYAt(loc);
-        if (loc.getBlockY() < highest) return; // only surface blocks
 
+        // Only surface blocks
+        int highest = world.getHighestBlockYAt(loc);
+        if (loc.getBlockY() < highest) return;
+
+        // Calculate chance
         double chance = BASE_CHANCE;
         ItemStack tool = player.getInventory().getItemInMainHand();
         if (tool != null && tool.getType().toString().endsWith("_SHOVEL")) {
@@ -69,6 +74,8 @@ public class Gravedigging implements Listener {
         if (isNight(world)) {
             chance = Math.min(1.0, chance * 2);
         }
+
+        // Roll for grave spawn
         if (random.nextDouble() <= chance) {
             spawnGraveNear(player);
         }
@@ -83,9 +90,10 @@ public class Gravedigging implements Listener {
             int dx = random.nextInt(17) - 8;
             int dz = random.nextInt(17) - 8;
             Location target = base.clone().add(dx, 0, dz);
-            int y = world.getHighestBlockYAt(target)+1;
+            int y = world.getHighestBlockYAt(target) + 1;
             Block block = world.getBlockAt(target.getBlockX(), y - 1, target.getBlockZ());
             if (!block.getType().isAir() && !graves.containsKey(block.getLocation())) {
+                // Particle marker & sound when grave appears
                 startParticle(block.getLocation());
                 world.playSound(block.getLocation().add(0.5, 1, 0.5), Sound.ENTITY_WITHER_SPAWN, 1.0f, 0.6f);
                 break;
@@ -103,17 +111,35 @@ public class Gravedigging implements Listener {
         graves.put(loc, task);
     }
 
-
     private void triggerEvent(Player player, Location loc) {
+        World world = loc.getWorld();
+        if (world == null) return;
+
         double roll = random.nextDouble();
+        Location center = loc.clone().add(0.5, 2, 0.5);
+
         if (roll < 0.5) {
-            new CorpseEvent(plugin).trigger(loc);
-        } else if (roll < 0.85) {
-            player.sendMessage(ChatColor.GOLD + "You find something... (LootEvent)");
-        } else {
-            player.sendMessage(ChatColor.AQUA + "Treasure unearthed! (TreasureEvent)");
+            // --- CORPSE EVENT ---
+            // explosion effect and sound, then spawn corpse above the block
+            world.spawnParticle(Particle.EXPLOSION, center, 10, 0, 0, 0, 0);
+            world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
+            new CorpseEvent(plugin).trigger(center);
         }
-        loc.getWorld().spawnParticle(Particle.BLOCK, loc, 20, 0.2, 0.2, 0.2, Material.DIRT.createBlockData());
-        loc.getWorld().playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1.0f, 1.0f);
+        else if (roll < 0.85) {
+            // --- LOOT EVENT ---
+            world.dropItemNaturally(center, new ItemStack(Material.GOLD_INGOT));
+            world.playSound(center, Sound.ENTITY_ITEM_PICKUP, 1.0f, 1.2f);
+            player.sendMessage(ChatColor.GOLD + "You dig up some loot! (Gold Ingot)");
+        }
+        else {
+            // --- TREASURE EVENT ---
+            world.dropItemNaturally(center, new ItemStack(Material.GOLD_BLOCK));
+            world.playSound(center, Sound.ENTITY_ITEM_PICKUP, 1.0f, 0.8f);
+            player.sendMessage(ChatColor.AQUA + "You uncover a treasure! (Gold Block)");
+        }
+
+        // common dust + gravel sound for breaking the grave
+        world.spawnParticle(Particle.BLOCK, loc, 20, 0.2, 0.2, 0.2, Material.DIRT.createBlockData());
+        world.playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1.0f, 1.0f);
     }
 }
