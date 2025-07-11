@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.corpses;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -64,8 +65,19 @@ public class SpawnCorpseCommand implements CommandExecutor {
         npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
         npc.addTrait(new CorpseTrait(plugin, corpse.getLevel(), corpse.usesBow(),
                 corpse.getDisplayName().equalsIgnoreCase("Duskblood") ? 100 : 0));
-        npc.getEntity().setCustomName(ChatColor.GRAY + "[Lv: " + corpse.getLevel() + "] " + corpse.getDisplayName());
+        ChatColor color = getColorForRarity(corpse.getRarity());
+        npc.getEntity().setCustomName(ChatColor.GRAY + "[Lv: " + corpse.getLevel() + "] " + color + corpse.getDisplayName());
         npc.getEntity().setCustomNameVisible(true);
         npc.getEntity().setMetadata("CORPSE", new FixedMetadataValue(plugin, corpse.getDisplayName()));
+    }
+
+    private ChatColor getColorForRarity(Rarity rarity) {
+        return switch (rarity) {
+            case COMMON -> ChatColor.WHITE;
+            case UNCOMMON -> ChatColor.GREEN;
+            case RARE -> ChatColor.BLUE;
+            case EPIC -> ChatColor.DARK_PURPLE;
+            case LEGENDARY, MYTHIC -> ChatColor.GOLD;
+        };
     }
 }

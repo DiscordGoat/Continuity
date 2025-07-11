@@ -73,7 +73,7 @@ public class CorpseTrait extends Trait {
                 self.teleport(target.getLocation());
             }
 
-            double damageMultiplier = 1.0 + level * 0.06;
+            double damageMultiplier = getLevelMultiplier(level);
             double damage = BASE_DAMAGE * damageMultiplier;
 
             if (ranged) {
@@ -89,6 +89,13 @@ public class CorpseTrait extends Trait {
                 }
             }
         }, 20L, 20L);
+    }
+
+    private double getLevelMultiplier(int lvl) {
+        if (lvl <= 10) {
+            return 0.1 + 0.1 * (lvl - 1);
+        }
+        return 1 + ((lvl - 10) * 0.1);
     }
 
     private Player getNearestPlayer(Location loc) {

@@ -8,16 +8,14 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.Bukkit;
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.Random;
 
@@ -29,6 +27,7 @@ import java.util.Random;
 public class Gravedigging implements Listener {
     private static final double BASE_CHANCE = 1.0; // 100% for testing
     private final Random random = new Random();
+    private final Map<Location, BukkitTask> graves = new HashMap<>();
 
     private boolean isNight(World world) {
         long time = world.getTime();
@@ -42,6 +41,12 @@ public class Gravedigging implements Listener {
         Location loc = block.getLocation();
         World world = loc.getWorld();
         if (world == null) return;
+        if (graves.containsKey(loc)) {
+            BukkitTask task = graves.remove(loc);
+            if (task != null) task.cancel();
+            triggerEvent(player, loc);
+            return;
+        }
         int highest = world.getHighestBlockYAt(loc);
         if (loc.getBlockY() < highest) return; // only surface blocks
 
@@ -50,54 +55,39 @@ public class Gravedigging implements Listener {
             chance = Math.min(1.0, chance * 2);
         }
         if (random.nextDouble() <= chance) {
-            spawnGrave(loc);
+            spawnGraveNear(player);
         }
     }
 
-    private void spawnGrave(Location loc) {
-        World world = loc.getWorld();
+    private void spawnGraveNear(Player player) {
+        Location base = player.getLocation();
+        World world = base.getWorld();
         if (world == null) return;
-        Location spawnLoc = loc.clone().add(0.5, 0, 0.5);
-        ArmorStand stand = (ArmorStand) world.spawnEntity(spawnLoc, EntityType.ARMOR_STAND);
-        stand.setVisible(false);
-        stand.setGravity(false);
-        stand.setCustomNameVisible(true);
-        stand.setCustomName(ChatColor.GRAY + "Grave");
-        stand.setMarker(true);
-        stand.getEquipment().setHelmet(new ItemStack(Material.STONE_BRICK_SLAB));
-        stand.getEquipment().setHelmetDropChance(0f);
-        stand.setMetadata("grave", new FixedMetadataValue(MinecraftNew.getInstance(), true));
-        world.spawnParticle(Particle.SMOKE_NORMAL, spawnLoc.add(0, 0.5, 0), 20, 0.2, 0.2, 0.2, 0);
-        world.playSound(spawnLoc, Sound.ENTITY_WITHER_SPAWN, 1.0f, 0.6f);
-    }
 
-    @EventHandler
-    public void onGraveHit(EntityDamageByEntityEvent event) {
-        if (!(event.getEntity() instanceof ArmorStand stand)) return;
-        if (!stand.hasMetadata("grave")) return;
-        if (!(event.getDamager() instanceof Player player)) return;
-
-        ItemStack item = player.getInventory().getItemInMainHand();
-        if (item == null || !item.getType().toString().contains("SHOVEL")) {
-            return; // only shovels interact
-        }
-        event.setCancelled(true);
-        stand.remove();
-        triggerEvent(player, stand.getLocation());
-    }
-
-    @EventHandler
-    public void onSneakDig(PlayerToggleSneakEvent event) {
-        if (!event.isSneaking()) return;
-        Player player = event.getPlayer();
-        for (org.bukkit.entity.Entity ent : player.getNearbyEntities(4, 4, 4)) {
-            if (ent instanceof ArmorStand stand && stand.hasMetadata("grave")) {
-                Location loc = stand.getLocation();
-                stand.remove();
-                triggerEvent(player, loc);
+        for (int i = 0; i < 20; i++) {
+            int dx = random.nextInt(17) - 8;
+            int dz = random.nextInt(17) - 8;
+            Location target = base.clone().add(dx, 0, dz);
+            int y = world.getHighestBlockYAt(target);
+            Block block = world.getBlockAt(target.getBlockX(), y - 1, target.getBlockZ());
+            if (!block.getType().isAir() && !graves.containsKey(block.getLocation())) {
+                startParticle(block.getLocation());
+                world.playSound(block.getLocation().add(0.5, 1, 0.5), Sound.ENTITY_WITHER_SPAWN, 1.0f, 0.6f);
+                break;
             }
         }
     }
+
+    private void startParticle(Location loc) {
+        World world = loc.getWorld();
+        if (world == null) return;
+        Location effectLoc = loc.clone().add(0.5, 1, 0.5);
+        BukkitTask task = Bukkit.getScheduler().runTaskTimer(MinecraftNew.getInstance(), () -> {
+            world.spawnParticle(Particle.SOUL, effectLoc, 3, 0.1, 0.1, 0.1, 0);
+        }, 0L, 20L);
+        graves.put(loc, task);
+    }
+
 
     private void triggerEvent(Player player, Location loc) {
         double roll = random.nextDouble();
