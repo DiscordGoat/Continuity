@@ -85,22 +85,6 @@ public class Gravedigging implements Listener {
         triggerEvent(player, stand.getLocation());
     }
 
-    // Sneaking digs up any graves nearby to improve reliability
-    @EventHandler
-    public void onPlayerSneak(org.bukkit.event.player.PlayerToggleSneakEvent event) {
-        if (!event.isSneaking()) return;
-        Player player = event.getPlayer();
-        Location ploc = player.getLocation();
-        World world = ploc.getWorld();
-        if (world == null) return;
-        for (org.bukkit.entity.Entity entity : world.getNearbyEntities(ploc, 4, 4, 4)) {
-            if (entity instanceof ArmorStand stand && stand.hasMetadata("grave")) {
-                stand.remove();
-                triggerEvent(player, stand.getLocation());
-            }
-        }
-    }
-
     private void triggerEvent(Player player, Location loc) {
         double roll = random.nextDouble();
         if (roll < 0.5) {
