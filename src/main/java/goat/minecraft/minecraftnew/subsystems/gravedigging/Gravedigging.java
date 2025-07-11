@@ -52,6 +52,7 @@ public class Gravedigging implements Listener {
             BukkitTask task = graves.remove(loc);
             if (task != null) task.cancel();
             triggerEvent(player, loc);
+            event.setCancelled(true);
             return;
         }
         int highest = world.getHighestBlockYAt(loc);
@@ -75,7 +76,7 @@ public class Gravedigging implements Listener {
             int dx = random.nextInt(17) - 8;
             int dz = random.nextInt(17) - 8;
             Location target = base.clone().add(dx, 0, dz);
-            int y = world.getHighestBlockYAt(target);
+            int y = world.getHighestBlockYAt(target)+1;
             Block block = world.getBlockAt(target.getBlockX(), y - 1, target.getBlockZ());
             if (!block.getType().isAir() && !graves.containsKey(block.getLocation())) {
                 startParticle(block.getLocation());
