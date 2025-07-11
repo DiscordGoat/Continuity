@@ -8,9 +8,7 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.entity.Player;
-import goat.minecraft.minecraftnew.subsystems.corpses.CorpseEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
@@ -30,11 +28,6 @@ public class Gravedigging implements Listener {
     private static final double BASE_CHANCE = 1.0; // 100% for testing
     private final Random random = new Random();
     private final Map<Location, BukkitTask> graves = new HashMap<>();
-    private final JavaPlugin plugin;
-
-    public Gravedigging(JavaPlugin plugin) {
-        this.plugin = plugin;
-    }
 
     private boolean isNight(World world) {
         long time = world.getTime();
@@ -89,7 +82,7 @@ public class Gravedigging implements Listener {
         World world = loc.getWorld();
         if (world == null) return;
         Location effectLoc = loc.clone().add(0.5, 1, 0.5);
-        BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+        BukkitTask task = Bukkit.getScheduler().runTaskTimer(MinecraftNew.getInstance(), () -> {
             world.spawnParticle(Particle.SOUL, effectLoc, 3, 0.1, 0.1, 0.1, 0);
         }, 0L, 20L);
         graves.put(loc, task);
@@ -99,7 +92,7 @@ public class Gravedigging implements Listener {
     private void triggerEvent(Player player, Location loc) {
         double roll = random.nextDouble();
         if (roll < 0.5) {
-            new CorpseEvent(plugin).trigger(loc);
+            player.sendMessage(ChatColor.DARK_RED + "A Corpse stirs... (CorpseEvent)");
         } else if (roll < 0.85) {
             player.sendMessage(ChatColor.GOLD + "You find something... (LootEvent)");
         } else {
