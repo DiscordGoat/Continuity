@@ -61,6 +61,13 @@ public class UltimateEnchantingSystem implements Listener {
             Material.FLINT_AND_STEEL
     );
 
+    // Subset of shovels for the Mulch ultimate enchantment
+    public static final Set<Material> SHOVELS = EnumSet.of(
+            Material.WOODEN_SHOVEL,  Material.STONE_SHOVEL,
+            Material.IRON_SHOVEL,    Material.GOLDEN_SHOVEL,
+            Material.DIAMOND_SHOVEL, Material.NETHERITE_SHOVEL
+    );
+
     // Define a set for armor pieces
     public static final Set<Material> ARMOR = EnumSet.of(
             Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS,
@@ -88,6 +95,7 @@ public class UltimateEnchantingSystem implements Listener {
         // 3) Tools
         registerEnchantmentForType("Ultimate: Hammer", 1, false, TOOLS.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Treecapitator", 1, false, TOOLS.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Mulch", 1, false, SHOVELS.toArray(new Material[0]));
     }
 
     /**
@@ -541,6 +549,10 @@ public class UltimateEnchantingSystem implements Listener {
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Hammer")){
             CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Hammer", 1);
+            xpManager.addXP(player, "Smithing", 500);
+        }
+        if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Mulch")){
+            CustomEnchantmentManager.addUltimateEnchantment(player, null, handItem, "Ultimate: Mulch", 1);
             xpManager.addXP(player, "Smithing", 500);
         }
         if(clickedItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Ultimate: Headshot")){

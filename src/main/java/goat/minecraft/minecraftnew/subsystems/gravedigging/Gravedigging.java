@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.gravedigging;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -9,6 +10,7 @@ import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.entity.Player;
 import goat.minecraft.minecraftnew.subsystems.corpses.CorpseEvent;
 import org.bukkit.event.EventHandler;
@@ -59,6 +61,11 @@ public class Gravedigging implements Listener {
         if (loc.getBlockY() < highest) return; // only surface blocks
 
         double chance = BASE_CHANCE;
+        ItemStack tool = player.getInventory().getItemInMainHand();
+        if (tool != null && tool.getType().toString().endsWith("_SHOVEL")) {
+            int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Lynch");
+            chance += level * 0.01;
+        }
         if (isNight(world)) {
             chance = Math.min(1.0, chance * 2);
         }

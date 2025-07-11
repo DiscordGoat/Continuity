@@ -89,6 +89,16 @@ public class UltimateEnchantmentListener implements Listener {
     }
 
     /**
+     * Check if the player's item has the Mulch ultimate enchantment.
+     */
+    private boolean hasMulchEnchant(ItemStack item) {
+        if (item == null) return false;
+        return item.getItemMeta() != null && item.getItemMeta().hasLore()
+                && item.getItemMeta().getLore().stream()
+                .anyMatch(l -> l.toLowerCase().contains("mulch"));
+    }
+
+    /**
      * Example check for whether the player's item is “Treecapitator” enchanted.
      */
     private boolean hasTreecapEnchant(ItemStack item) {
@@ -265,6 +275,31 @@ public class UltimateEnchantmentListener implements Listener {
         }
     }
 
+    /**
+     * Break a 3x3x1 area for the Mulch enchantment.
+     */
+    private void breakMulchArea(Player player, Block centerBlock, BlockFace face) {
+        int range = 1;
+        for (int a = -range; a <= range; a++) {
+            for (int b = -range; b <= range; b++) {
+                int dx = 0, dy = 0, dz = 0;
+                switch (face) {
+                    case UP, DOWN -> { dx = a; dz = b; }
+                    case NORTH, SOUTH -> { dx = a; dy = b; }
+                    case EAST, WEST -> { dz = a; dy = b; }
+                }
+
+                if (dx == 0 && dy == 0 && dz == 0) continue;
+                Block relative = centerBlock.getRelative(dx, dy, dz);
+                if (!relative.getType().isAir() && isMulchMaterial(relative.getType())) {
+                    breakBlock(player, relative, true);
+                    XPManager xpManager = new XPManager(plugin);
+                    xpManager.addXP(player, "Mining", 1);
+                }
+            }
+        }
+    }
+
 
     /**
      * Determine if a material is a log or wood block (for Treecapitator).
@@ -281,6 +316,12 @@ public class UltimateEnchantmentListener implements Listener {
                 material == Material.SPRUCE_LEAVES || material == Material.JUNGLE_LEAVES ||
                 material == Material.ACACIA_LEAVES || material == Material.DARK_OAK_LEAVES ||
                 material == Material.NETHER_WART_BLOCK || material == Material.WARPED_WART_BLOCK;
+    }
+
+    // Blocks affected by the Mulch enchantment
+    private boolean isMulchMaterial(Material material) {
+        return material == Material.DIRT || material == Material.GRASS_BLOCK ||
+                material == Material.SAND || material == Material.GRAVEL;
     }
 
     /**
@@ -409,6 +450,21 @@ public class UltimateEnchantmentListener implements Listener {
                 event.setCancelled(true);
                 breakConnectedWoodAndLeaves(player, brokenBlock);
             }
+        }
+
+        // If the player is sneaking (holding Shift) and the tool has "Mulch"
+        if (player.isSneaking() && hasMulchEnchant(tool)) {
+            if (tool != null && tool.getType().getMaxDurability() > 0 &&
+                    tool.getDurability() >= tool.getType().getMaxDurability() * 0.9) {
+                player.sendMessage(ChatColor.RED + "Your tool is too damaged to use Mulch enchant!");
+                return;
+            }
+            if (isMulchMaterial(brokenBlock.getType())) {
+                breakBlock(player, brokenBlock, true);
+                BlockFace face = player.getFacing();
+                breakMulchArea(player, brokenBlock, face);
+            }
+            return;
         }
 
         // If the player is sneaking (holding Shift) and the tool has "Hammer"
