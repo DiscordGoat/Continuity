@@ -998,6 +998,11 @@ public class ItemRegistry {
         ), 1, false, true);
     }
 
+    public static ItemStack getComposterEnchant() {
+        return createCustomItem(Material.COMPOSTER, ChatColor.YELLOW +
+                "Composter", Arrays.asList(
+                ChatColor.GRAY + "Max level of V",
+                ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Composter to items.",
     public static ItemStack getLynchEnchant() {
         return createCustomItem(Material.IRON_SHOVEL, ChatColor.YELLOW +
                 "Lynch", Arrays.asList(
