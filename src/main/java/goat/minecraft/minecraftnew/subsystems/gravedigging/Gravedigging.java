@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 
@@ -83,6 +84,19 @@ public class Gravedigging implements Listener {
         event.setCancelled(true);
         stand.remove();
         triggerEvent(player, stand.getLocation());
+    }
+
+    @EventHandler
+    public void onSneakDig(PlayerToggleSneakEvent event) {
+        if (!event.isSneaking()) return;
+        Player player = event.getPlayer();
+        for (org.bukkit.entity.Entity ent : player.getNearbyEntities(4, 4, 4)) {
+            if (ent instanceof ArmorStand stand && stand.hasMetadata("grave")) {
+                Location loc = stand.getLocation();
+                stand.remove();
+                triggerEvent(player, loc);
+            }
+        }
     }
 
     private void triggerEvent(Player player, Location loc) {
