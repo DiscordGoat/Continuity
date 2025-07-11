@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.corpses;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
@@ -34,6 +37,37 @@ public class CorpseDeathEvent implements Listener {
         if (!opt.isPresent()) return;
 
         event.getDrops().clear();
+        playDeathEffects(entity, opt.get().getRarity());
         // Future drop logic using opt.get().getDrops()
+    }
+
+    private void playDeathEffects(Entity entity, Rarity rarity) {
+        if (entity.getWorld() == null) return;
+        Sound sound;
+        Particle particle = Particle.SMOKE_NORMAL;
+        float volume = 1.0f;
+        float pitch = 1.0f;
+        switch (rarity) {
+            case UNCOMMON -> sound = Sound.ENTITY_SKELETON_DEATH;
+            case RARE -> {
+                sound = Sound.ENTITY_ZOMBIE_VILLAGER_DEATH;
+                particle = Particle.CRIT;
+            }
+            case EPIC -> {
+                sound = Sound.ENTITY_WITHER_DEATH;
+                particle = Particle.EXPLOSION_LARGE;
+                volume = 1.5f;
+                pitch = 0.8f;
+            }
+            case LEGENDARY -> {
+                sound = Sound.ENTITY_ENDER_DRAGON_DEATH;
+                particle = Particle.EXPLOSION_HUGE;
+                volume = 2.0f;
+                pitch = 0.6f;
+            }
+            default -> sound = Sound.ENTITY_ZOMBIE_DEATH;
+        }
+        entity.getWorld().playSound(entity.getLocation(), sound, volume, pitch);
+        entity.getWorld().spawnParticle(particle, entity.getLocation(), 25, 0.5, 0.5, 0.5, 0.1);
     }
 }
