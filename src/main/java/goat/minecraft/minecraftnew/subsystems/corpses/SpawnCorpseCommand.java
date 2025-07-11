@@ -3,6 +3,8 @@ package goat.minecraft.minecraftnew.subsystems.corpses;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.api.util.Skin;
+import net.citizensnpcs.api.util.SkinnableEntity;
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -56,6 +58,8 @@ public class SpawnCorpseCommand implements CommandExecutor {
         NPC npc = registry.createNPC(EntityType.PLAYER, corpse.getDisplayName());
         npc.spawn(player.getLocation());
 
+        applySkin(npc, corpse.getSkinUrl());
+
         if (npc.getEntity() instanceof org.bukkit.entity.LivingEntity le) {
             EntityEquipment eq = le.getEquipment();
             if (eq != null && corpse.getWeaponMaterial() != null && corpse.getWeaponMaterial() != org.bukkit.Material.AIR) {
@@ -65,13 +69,34 @@ public class SpawnCorpseCommand implements CommandExecutor {
         npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
         npc.addTrait(new CorpseTrait(plugin, corpse.getLevel(), corpse.usesBow(),
                 corpse.getDisplayName().equalsIgnoreCase("Duskblood") ? 100 : 0));
-        ChatColor color = getColorForRarityStatic(corpse.getRarity());
+        ChatColor color = getColorForRarity(corpse.getRarity());
         npc.getEntity().setCustomName(ChatColor.GRAY + "[Lvl " + corpse.getLevel() + "] " + color + corpse.getDisplayName());
         npc.getEntity().setCustomNameVisible(true);
         npc.getEntity().setMetadata("CORPSE", new FixedMetadataValue(plugin, corpse.getDisplayName()));
     }
 
-    public static ChatColor getColorForRarityStatic(Rarity rarity) {
+    private void applySkin(NPC npc, String skin) {
+        if (skin == null || skin.isEmpty()) {
+            return;
+        }
+
+        npc.data().remove(NPC.PLAYER_SKIN_UUID_METADATA);
+        npc.data().remove(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_METADATA);
+        npc.data().remove(NPC.PLAYER_SKIN_TEXTURE_PROPERTIES_SIGN_METADATA);
+        npc.data().remove("cached-skin-uuid-name");
+        npc.data().remove("cached-skin-uuid");
+
+        npc.data().set(NPC.PLAYER_SKIN_USE_LATEST, false);
+        npc.data().set("cached-skin-uuid-name", skin);
+        npc.data().set("cached-skin-uuid", skin);
+        npc.data().setPersistent(NPC.PLAYER_SKIN_UUID_METADATA, skin);
+
+        if (npc.isSpawned() && npc.getEntity() instanceof SkinnableEntity skinnable) {
+            Skin.get(skinnable).applyAndRespawn(skinnable);
+        }
+    }
+
+    private ChatColor getColorForRarity(Rarity rarity) {
         return switch (rarity) {
             case COMMON -> ChatColor.WHITE;
             case UNCOMMON -> ChatColor.GREEN;
