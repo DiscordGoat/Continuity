@@ -588,6 +588,7 @@ public class ItemRegistry {
                 getVerdantRelicSunflareSeed(),
                 getVerdantRelicStarlightSeed(),
                 getVerdantRelicTideSeed(),
+                getDinosaurBones(),
                 getVerdantRelicShinyEmeraldSeed()
         );
         return seeds.get(random.nextInt(seeds.size()));

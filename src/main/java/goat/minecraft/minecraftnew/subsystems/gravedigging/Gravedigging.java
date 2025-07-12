@@ -143,7 +143,6 @@ public class Gravedigging implements Listener {
             if (!block.getType().isAir() && !graves.containsKey(block.getLocation())) {
                 // Particle marker & sound when grave appears
                 startParticle(block.getLocation());
-                world.playSound(block.getLocation().add(0.5, 1, 0.5), Sound.ENTITY_WITHER_SPAWN, 1.0f, 0.6f);
                 break;
             }
         }
@@ -173,7 +172,7 @@ public class Gravedigging implements Listener {
             new CorpseEvent(plugin).trigger(center);
         } else {
             // --- TREASURE EVENT ---
-            ItemStack relic = ItemRegistry.getDinosaurBones();
+            ItemStack relic = ItemRegistry.getRandomVerdantRelicSeed();
             world.dropItemNaturally(center, relic);
             world.playSound(center, Sound.ENTITY_ITEM_PICKUP, 1.0f, 0.8f);
             String name = relic.getItemMeta() != null
