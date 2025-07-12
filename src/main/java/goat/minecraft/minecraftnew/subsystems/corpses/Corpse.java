@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /**
@@ -17,28 +18,32 @@ import java.util.Random;
  */
 public class Corpse {
     private final String displayName;
+    private final String skinValue;      // the “eyJ…” blob
+    private final String skinSignature;  // Mojang’s signature
     private final Rarity rarity;
     private final int level;
     private final Material weaponMaterial;
     private final boolean usesBow;
     private final List<DropItem> dropItems;
-    private final String skinTexture;
 
     private final Random random = new Random();
 
     public Corpse(String displayName, Rarity rarity, int level,
                   Material weaponMaterial,
                   boolean usesBow, List<DropItem> dropItems,
-                  String skinTexture) {
+                  String skinValue,
+                  String skinSignature) {
         this.displayName = displayName;
         this.rarity = rarity;
         this.level = level;
         this.weaponMaterial = weaponMaterial;
         this.usesBow = usesBow;
         this.dropItems = dropItems;
-        this.skinTexture = skinTexture;
+        this.skinValue     = Objects.requireNonNull(skinValue,     "skinValue");
+        this.skinSignature = Objects.requireNonNull(skinSignature, "skinSignature");
     }
-
+    public String getSkinTexture()   { return skinValue; }
+    public String getSkinSignature() { return skinSignature; }
     public String getDisplayName() {
         // Pick the right ChatColor for this corpse’s rarity
         ChatColor color = getColorForRarityStatic(rarity);
@@ -61,7 +66,6 @@ public class Corpse {
     public int getLevel() { return level; }
     public Material getWeaponMaterial() { return weaponMaterial; }
     public boolean usesBow() { return usesBow; }
-    public String getSkinTexture() { return skinTexture; }
 
     public List<ItemStack> getDrops() {
         List<ItemStack> drops = new ArrayList<>();

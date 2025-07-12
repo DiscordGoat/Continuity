@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.corpses;
 
+import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import net.citizensnpcs.api.npc.NPC;
@@ -73,7 +74,7 @@ public class CorpseTrait extends Trait {
                 self.teleport(target.getLocation());
             }
 
-            double damageMultiplier = getLevelMultiplier(level);
+            double damageMultiplier = getLevelMultiplier(level) * 2;
             double damage = BASE_DAMAGE * damageMultiplier;
 
             if (ranged) {
