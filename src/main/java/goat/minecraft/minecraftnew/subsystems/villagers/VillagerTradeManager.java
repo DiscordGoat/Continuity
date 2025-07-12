@@ -328,6 +328,7 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("RIPTIDE", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("NIGHT_VISION", 1, 32, 2)); // Material
+        clericPurchases.add(createTradeMap("METAL_DETECTION", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("VACCINATION", 1, 32, 2)); // Custom item
         clericPurchases.add(createTradeMap("CHARISMATIC_BARTERING", 1, 64, 2)); // Material
 
@@ -723,6 +724,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getSolarFuryRecipePaper();
             case "NIGHT_VISION":
                 return ItemRegistry.getNightVisionRecipePaper();
+            case "METAL_DETECTION":
+                return ItemRegistry.getMetalDetectionRecipePaper();
             case "CHARISMATIC_BARTERING":
                 return ItemRegistry.getCharismaticBarteringRecipePaper();
 
@@ -919,6 +922,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getTide();
             case "SHINY_EMERALD":
                 return ItemRegistry.getShinyEmerald();
+            case "DINOSAUR_BONES":
+                return ItemRegistry.getDinosaurBones();
             case "PESTICIDE":
                 return ItemRegistry.getPesticide();
             case "VACCINATION":

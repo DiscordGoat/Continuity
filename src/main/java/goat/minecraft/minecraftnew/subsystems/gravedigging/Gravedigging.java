@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.gravedigging.corpses.CorpseEvent;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -115,6 +116,9 @@ public class Gravedigging implements Listener {
                 chance += activePet.getTrait().getValueForRarity(activePet.getTraitRarity());
             }
         }
+        if (PotionManager.isActive("Potion of Metal Detection", player)) {
+            chance += 0.05;
+        }
         if (isNight(world)) {
             chance = Math.min(1.0, chance * 2);
         }
@@ -177,10 +181,10 @@ public class Gravedigging implements Listener {
         }
         else {
             // --- TREASURE EVENT ---
-            ItemStack seed = ItemRegistry.getRandomVerdantRelicSeed();
-            world.dropItemNaturally(center, seed);
+            ItemStack relic = ItemRegistry.getDinosaurBones();
+            world.dropItemNaturally(center, relic);
             world.playSound(center, Sound.ENTITY_ITEM_PICKUP, 1.0f, 0.8f);
-            String name = seed.getItemMeta() != null ? seed.getItemMeta().getDisplayName() : "Verdant Relic Seed";
+            String name = relic.getItemMeta() != null ? relic.getItemMeta().getDisplayName() : "Relic";
             player.sendMessage(ChatColor.AQUA + "You uncover a treasure! (" + name + ChatColor.AQUA + ")");
         }
 
