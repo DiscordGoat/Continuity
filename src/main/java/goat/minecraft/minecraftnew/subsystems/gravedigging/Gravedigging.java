@@ -90,7 +90,7 @@ public class Gravedigging implements Listener {
         ItemStack tool = player.getInventory().getItemInMainHand();
         if (tool != null && tool.getType().toString().endsWith("_SHOVEL")) {
             int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Lynch");
-            chance += level * 0.0025;
+            chance += level * 0.001;
         }
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
