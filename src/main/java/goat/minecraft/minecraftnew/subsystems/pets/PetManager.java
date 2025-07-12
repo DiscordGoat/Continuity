@@ -841,6 +841,18 @@ public class PetManager implements Listener {
                 return "Reduces brew time by " + ChatColor.YELLOW + level + "%" + ChatColor.GRAY + ".";
             case EXPERIMENTATION:
                 return "Potions last " + ChatColor.YELLOW + (3 * level) + "s" + ChatColor.GRAY + " longer.";
+            case MEMORY:
+                return ChatColor.GRAY + "+0.01 Grave Chance";
+            case HAUNTING:
+                return ChatColor.GRAY + "+0.02 Grave Chance";
+            case SCREAM:
+                return ChatColor.GRAY + "+0.04 Grave Chance";
+            case COLD:
+                return ChatColor.GRAY + "+0.05 Grave Chance";
+            case MALIGNANCE:
+                return ChatColor.GRAY + "+0.10 Grave Chance";
+            case REVENANT:
+                return ChatColor.GRAY + "Return from death after 2 minutes";
             case SPECTRAL:
                 return ChatColor.GRAY + "Enter " + ChatColor.DARK_PURPLE + "Spectator" + ChatColor.GRAY + " mode for scouting.";
             default:
@@ -1262,6 +1274,12 @@ public class PetManager implements Listener {
         ENDLESS_WARP("Endless Warp", ChatColor.GOLD + ""),
         SPLASH_POTION("Splash Potion", ChatColor.GOLD + ""),
         EXPERIMENTATION("Experimentation", ChatColor.GOLD + ""),
+        MEMORY("Memory", ChatColor.GOLD + "+0.01 Grave Chance"),
+        HAUNTING("Haunting", ChatColor.GOLD + "+0.02 Grave Chance"),
+        SCREAM("Scream", ChatColor.GOLD + "+0.04 Grave Chance"),
+        COLD("Cold", ChatColor.GOLD + "+0.05 Grave Chance"),
+        MALIGNANCE("Malignance", ChatColor.GOLD + "+0.10 Grave Chance"),
+        REVENANT("Revenant", ChatColor.GOLD + "Return from the dead after 2 minutes"),
         SPECTRAL("Spectral", ChatColor.GOLD + "Allows scouting in Spectator mode");
 
         private final String displayName;
