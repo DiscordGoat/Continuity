@@ -26,7 +26,7 @@ public class Corpse {
     private final Random random = new Random();
 
     public Corpse(String displayName, Rarity rarity, int level,
-                  Material weaponMaterial, String skinUrl,
+                  Material weaponMaterial,
                   boolean usesBow, List<DropItem> dropItems) {
         this.displayName = displayName;
         this.rarity = rarity;
