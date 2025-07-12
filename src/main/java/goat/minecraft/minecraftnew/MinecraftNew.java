@@ -89,12 +89,12 @@ import goat.minecraft.minecraftnew.other.warpgate.WarpGateManager;
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.other.realms.Tropic;
 import goat.minecraft.minecraftnew.other.realms.Frozen;
+import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.npc.NPC;
+
 
 import goat.minecraft.minecraftnew.subsystems.corpses.CorpseTrait;
 
@@ -161,7 +161,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
 
-        removeAllCorpseNPCs();
         removeAllCitizenEntities();
 
         HealthManager.getInstance(this).startup();
@@ -803,7 +802,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (doubleEnderchest != null) {
             doubleEnderchest.saveAllInventories();
         }
-        removeAllCorpseNPCs();
         removeAllCitizenEntities();
         System.out.println("[MinecraftNew] Plugin disabled.");//
     }
@@ -818,14 +816,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         return forestryPetManager;
     }
 
-    private void removeAllCorpseNPCs() {
-        for (NPC npc : CitizensAPI.getNPCRegistry()) {
-            if (npc.hasTrait(CorpseTrait.class) ||
-                    (npc.getEntity() != null && npc.getEntity().hasMetadata("CORPSE"))) {
-                npc.destroy();
-            }
-        }
-    }
 
     private void removeAllCitizenEntities() {
         for (org.bukkit.World world : Bukkit.getWorlds()) {

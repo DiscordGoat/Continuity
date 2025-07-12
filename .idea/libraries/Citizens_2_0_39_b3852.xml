@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Citizens-2.0.39-b3852">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/libs/Citizens-2.0.39-b3851.jar!/" />
+      <root url="jar://$PROJECT_DIR$/libs/citizensapi-2.0.39-SNAPSHOT (1).jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

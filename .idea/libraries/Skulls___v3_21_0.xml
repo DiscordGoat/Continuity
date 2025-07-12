@@ -2,6 +2,7 @@
   <library name="Skulls - v3.21.0">
     <CLASSES>
       <root url="jar://$USER_HOME$/Downloads/Skulls - v3.21.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/Citizens-2.0.39-b3851.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />

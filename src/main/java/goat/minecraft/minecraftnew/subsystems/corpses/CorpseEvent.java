@@ -70,7 +70,7 @@ public class CorpseEvent {
                 eq.setItemInMainHand(new ItemStack(corpse.getWeaponMaterial()));
             }
         }
-        npc.data().setPersistent(NPC.DEFAULT_PROTECTED_METADATA, false);
+        npc.data().setPersistent(NPC.Metadata.DEFAULT_PROTECTED, false);
         npc.addTrait(new CorpseTrait(plugin, corpse.getLevel(), corpse.usesBow(),
                 corpse.getDisplayName().equalsIgnoreCase("Duskblood") ? 100 : 0));
         npc.getEntity().setMetadata("CORPSE", new FixedMetadataValue(plugin, corpse.getDisplayName()));

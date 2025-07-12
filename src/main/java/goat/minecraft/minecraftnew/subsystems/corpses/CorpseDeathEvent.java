@@ -31,7 +31,7 @@ public class CorpseDeathEvent implements Listener {
         if (meta.isEmpty()) return;
 
         // 2) Get the Citizens NPC wrapper for this entity
-        NPC npc = CitizensAPI.getNPCRegistry().getNPC(entity);
+        NPC npc = net.citizensnpcs.api.CitizensAPI.getNPCRegistry().getNPC(entity);
         if (npc == null) return;  // not a Citizens NPC
 
         // 3) Clear any item drops (we handle loot ourselves)
