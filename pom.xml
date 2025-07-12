@@ -37,7 +37,11 @@
         <repository>
             <id>citizens-repo</id>
             <url>https://maven.citizensnpcs.co/repo</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
         </repository>
+
         <repository>
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
@@ -75,16 +79,18 @@
         <dependency>
             <groupId>net.citizensnpcs</groupId>
             <artifactId>citizens-main</artifactId>
-            <version>2.0.20-SNAPSHOT</version>  <!-- use the latest SNAPSHOT -->
-            <type>jar</type>
+            <version>2.0.20-SNAPSHOT</version>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
+        <!-- if you only care about the API at compile time you can also add: -->
+        <dependency>
+            <groupId>net.citizensnpcs</groupId>
+            <artifactId>citizensapi</artifactId>
+            <version>2.0.35-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+
     </dependencies>
 
     <build>

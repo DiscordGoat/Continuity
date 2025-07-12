@@ -24,7 +24,7 @@ public class CorpseRegistry implements Listener {
 
         // COMMON
         CORPSES.add(new Corpse("Farmer Corpse", Rarity.COMMON, 30,
-                Material.IRON_HOE, "", false, new ArrayList<>()));
+                Material.IRON_HOE, "69696munie69696", false, new ArrayList<>()));
         CORPSES.add(new Corpse("Guard Corpse", Rarity.COMMON, 35,
                 Material.IRON_SWORD, "", false, new ArrayList<>()));
         CORPSES.add(new Corpse("Archer Corpse", Rarity.COMMON, 40,

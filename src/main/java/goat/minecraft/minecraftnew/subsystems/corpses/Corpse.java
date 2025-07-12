@@ -20,7 +20,6 @@ public class Corpse {
     private final Rarity rarity;
     private final int level;
     private final Material weaponMaterial;
-    private final String skinUrl;
     private final boolean usesBow;
     private final List<DropItem> dropItems;
 
@@ -33,7 +32,6 @@ public class Corpse {
         this.rarity = rarity;
         this.level = level;
         this.weaponMaterial = weaponMaterial;
-        this.skinUrl = skinUrl;
         this.usesBow = usesBow;
         this.dropItems = dropItems;
     }
@@ -59,9 +57,7 @@ public class Corpse {
     public Rarity getRarity() { return rarity; }
     public int getLevel() { return level; }
     public Material getWeaponMaterial() { return weaponMaterial; }
-    public String getSkinUrl() { return skinUrl; }
     public boolean usesBow() { return usesBow; }
-
 
     public List<ItemStack> getDrops() {
         List<ItemStack> drops = new ArrayList<>();

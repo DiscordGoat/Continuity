@@ -2,6 +2,9 @@ package goat.minecraft.minecraftnew.subsystems.corpses;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -22,24 +25,31 @@ public class CorpseDeathEvent implements Listener {
     @EventHandler
     public void onCorpseDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
-        List<MetadataValue> data = entity.getMetadata("CORPSE");
-        if (data == null || data.isEmpty()) {
-            return;
-        }
-        if (entity instanceof LivingEntity) {
-            EntityEquipment eq = ((LivingEntity) entity).getEquipment();
-            if (eq != null) {
-                eq.setItemInMainHandDropChance(0);
-            }
-        }
-        String name = data.get(0).asString();
-        Optional<Corpse> opt = CorpseRegistry.getCorpseByName(name);
-        if (!opt.isPresent()) return;
 
+        // 1) Check metadata so we only handle our corpses
+        List<MetadataValue> meta = entity.getMetadata("CORPSE");
+        if (meta.isEmpty()) return;
+
+        // 2) Get the Citizens NPC wrapper for this entity
+        NPC npc = CitizensAPI.getNPCRegistry().getNPC(entity);
+        if (npc == null) return;  // not a Citizens NPC
+
+        // 3) Clear any item drops (we handle loot ourselves)
         event.getDrops().clear();
-        playDeathEffects(entity, opt.get().getRarity());
-        // Future drop logic using opt.get().getDrops()
+
+        // 4) Fetch your Corpse data by name
+        String corpseName = meta.get(0).asString();
+        Optional<Corpse> corpseOpt = CorpseRegistry.getCorpseByName(corpseName);
+        corpseOpt.ifPresent(corpse -> {
+            playDeathEffects(entity, corpse.getRarity());
+        });
+
+        // 5) Destroy the NPC so it won’t re-spawn on reload
+        npc.destroy();
+
+        Bukkit.getLogger().info("Destroyed corpse NPC #" + npc.getId() + " on death.");
     }
+
 
     private void playDeathEffects(Entity entity, Rarity rarity) {
         if (entity.getWorld() == null) return;

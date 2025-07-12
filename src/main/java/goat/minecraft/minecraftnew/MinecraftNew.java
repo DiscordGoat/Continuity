@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew;
 import goat.minecraft.minecraftnew.other.beacon.*;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
+import goat.minecraft.minecraftnew.subsystems.gravedigging.Gravedigging;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender.BartenderVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineeringProfessionListener;
@@ -519,7 +520,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new KillMonster(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new Mining(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.terraforming.Terraforming(), MinecraftNew.getInstance());
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.gravedigging.Gravedigging(this), this);
+
+        getServer().getPluginManager().registerEvents(new Gravedigging(this), this);
+        Gravedigging gravedigging = new Gravedigging(this);
+        gravedigging.startup();
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.GemstoneApplicationSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.fishing.BaitApplicationSystem(this), this);
@@ -566,7 +570,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new FarmingEvent(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.corpses.CorpseDeathEvent(), this);
-        //getServer().getPluginManager().registerEvents(new CancelBrewing(MinecraftNew.getInstance()), MinecraftNew.getInstance());
+        CitizensAPI.getNPCRegistry().deregisterAll();
         getServer().getPluginManager().registerEvents(new RightClickArtifacts(this), this);
         getServer().getPluginManager().registerEvents(new BlessingArtifactGUI(this), this);
         getServer().getPluginManager().registerEvents(new BlessingArmorStandListener(), this);

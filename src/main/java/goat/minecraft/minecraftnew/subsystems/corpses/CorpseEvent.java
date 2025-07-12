@@ -2,14 +2,22 @@ package goat.minecraft.minecraftnew.subsystems.corpses;
 
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.event.DespawnReason;
+import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
+import net.citizensnpcs.npc.CitizensNPC;
+import net.citizensnpcs.npc.ai.NPCHolder;
+import net.citizensnpcs.npc.skin.Skin;
+import net.citizensnpcs.npc.skin.SkinnableEntity;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -40,9 +48,14 @@ public class CorpseEvent {
         spawnCorpse(optional.get(), location);
     }
 
+
+
+
+
     private void spawnCorpse(Corpse corpse, Location loc) {
-        NPCRegistry registry = CitizensAPI.getNPCRegistry();
+        NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
         NPC npc = registry.createNPC(EntityType.PLAYER, corpse.getDisplayName());
+        npc.setName(corpse.getDisplayName());
         Location spawnLoc = loc.clone().subtract(0, 1, 0);
         npc.spawn(spawnLoc);
 

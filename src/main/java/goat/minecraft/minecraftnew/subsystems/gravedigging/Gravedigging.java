@@ -3,6 +3,8 @@ package goat.minecraft.minecraftnew.subsystems.gravedigging;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.corpses.CorpseEvent;
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -37,7 +39,25 @@ public class Gravedigging implements Listener {
     public Gravedigging(JavaPlugin plugin) {
         this.plugin = plugin;
     }
+    public void startup() {
+        World world = Bukkit.getWorld("world");
+        if (world == null) {
+            Bukkit.getLogger().warning("World 'world' not found!");
+            return;
+        }
 
+        // Iterate over all registered NPCs
+        for (NPC npc : CitizensAPI.getNPCRegistry()) {
+            // Make sure the NPC is spawned in our target world
+            if (npc.isSpawned() && npc.getEntity().getWorld().equals(world)) {
+                // Despawn and deregister the NPC
+                npc.despawn();
+                CitizensAPI.getNPCRegistry().deregister(npc);
+            }
+        }
+
+        Bukkit.getLogger().info("All Citizens NPCs in world 'world' have been cleared.");
+    }
     private boolean isNight(World world) {
         long time = world.getTime();
         return time >= 13000 && time <= 23000;
