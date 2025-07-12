@@ -22,18 +22,21 @@ public class Corpse {
     private final Material weaponMaterial;
     private final boolean usesBow;
     private final List<DropItem> dropItems;
+    private final String skinName;
 
     private final Random random = new Random();
 
     public Corpse(String displayName, Rarity rarity, int level,
                   Material weaponMaterial,
-                  boolean usesBow, List<DropItem> dropItems) {
+                  boolean usesBow, List<DropItem> dropItems,
+                  String skinName) {
         this.displayName = displayName;
         this.rarity = rarity;
         this.level = level;
         this.weaponMaterial = weaponMaterial;
         this.usesBow = usesBow;
         this.dropItems = dropItems;
+        this.skinName = skinName;
     }
 
     public String getDisplayName() {
@@ -58,6 +61,7 @@ public class Corpse {
     public int getLevel() { return level; }
     public Material getWeaponMaterial() { return weaponMaterial; }
     public boolean usesBow() { return usesBow; }
+    public String getSkinName() { return skinName; }
 
     public List<ItemStack> getDrops() {
         List<ItemStack> drops = new ArrayList<>();
