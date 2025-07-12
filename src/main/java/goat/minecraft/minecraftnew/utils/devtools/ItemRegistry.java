@@ -577,6 +577,22 @@ public class ItemRegistry {
         );
     }
 
+    /**
+     * Returns a random Verdant Relic seed.
+     */
+    public static ItemStack getRandomVerdantRelicSeed() {
+        Random random = new Random();
+        List<ItemStack> seeds = Arrays.asList(
+                getVerdantRelicEntionPlastSeed(),
+                getVerdantRelicEntropySeed(),
+                getVerdantRelicSunflareSeed(),
+                getVerdantRelicStarlightSeed(),
+                getVerdantRelicTideSeed(),
+                getVerdantRelicShinyEmeraldSeed()
+        );
+        return seeds.get(random.nextInt(seeds.size()));
+    }
+
     // ------------------------------------------------------------------
     // Ghost Relic
     // ------------------------------------------------------------------

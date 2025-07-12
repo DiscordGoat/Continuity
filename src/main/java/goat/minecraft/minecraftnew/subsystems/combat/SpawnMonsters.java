@@ -676,7 +676,7 @@ public class SpawnMonsters implements Listener {
                     int currentOxygen = oxygenManager.getPlayerOxygen(killer);
                     oxygenManager.setPlayerOxygenLevel(killer, currentOxygen + 100);
                     event.setDroppedExp(100);
-                    drowned.getLocation().getWorld().dropItem(drowned.getLocation(), ItemRegistry.getVerdantRelicEntionPlastSeed());
+                    // Relic seed drops moved to gravedigging treasure rewards
                 }
             }
         }
@@ -699,7 +699,7 @@ public class SpawnMonsters implements Listener {
                 event.setDroppedExp(100);
                 if(random.nextDouble() < 0.125) {
                     killer.sendMessage(ChatColor.AQUA + "You found a " + ChatColor.GOLD + "Verdant Relic: Entropy!");
-                    Objects.requireNonNull(monster.getLocation().getWorld()).dropItem(monster.getLocation(), ItemRegistry.getVerdantRelicEntropySeed());
+                    // Relic seed drops moved to gravedigging treasure rewards
                 }
             }
         }
@@ -749,8 +749,8 @@ public class SpawnMonsters implements Listener {
 
         Player killer = spider.getKiller();
         if (killer != null) {
-            spider.getWorld().dropItemNaturally(spider.getLocation(), ItemRegistry.getVerdantRelicStarlightSeed());
             killer.sendMessage(ChatColor.AQUA + "You found a " + ChatColor.GOLD + "Verdant Relic: Starlight!");
+            // Relic seed drops moved to gravedigging treasure rewards
         }
     }
 

@@ -1061,8 +1061,6 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getVindicatorDrop();
             case "WITCH_DROP":
                 return ItemRegistry.getWitchDrop();
-            case "VERDANT_RELIC_TIDE_SEED":
-                return ItemRegistry.getVerdantRelicTideSeed();
             case "VERDANT_RELIC_TREASURY":
                 return ItemRegistry.getVerdantRelicTreasury();
             case "RESPIRATION":
