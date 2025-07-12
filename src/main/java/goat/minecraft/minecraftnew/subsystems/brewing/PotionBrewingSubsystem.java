@@ -295,7 +295,7 @@ public class PotionBrewingSubsystem implements Listener {
 
         // Potion of Metal Detection
         List<String> metalDetectionIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Dinosaur Bones");
-        List<String> metalDetectionLore = Arrays.asList("Increases Grave Chance by 0.05", "Base Duration of " + baseDuration);
+        List<String> metalDetectionLore = Arrays.asList("Increases Grave Chance by 0.01", "Base Duration of " + baseDuration);
         Color metalDetectionColor = Color.RED;
         recipeRegistry.add(
                 new PotionRecipe("Potion of Metal Detection", metalDetectionIngredients, 60*3, new ItemStack(Material.POTION), metalDetectionColor, metalDetectionLore)

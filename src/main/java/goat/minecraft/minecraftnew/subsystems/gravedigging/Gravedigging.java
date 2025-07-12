@@ -34,7 +34,7 @@ import java.util.Random;
  * triggers a random event.
  */
 public class Gravedigging implements Listener {
-    private static final double BASE_CHANCE = 0.001; // 0.01%
+    private static final double BASE_CHANCE = 0.0005; // 0.01%
     private final Random random = new Random();
     private final Map<Location, BukkitTask> graves = new HashMap<>();
     private final JavaPlugin plugin;
@@ -92,7 +92,7 @@ public class Gravedigging implements Listener {
         ItemStack tool = player.getInventory().getItemInMainHand();
         if (tool != null && tool.getType().toString().endsWith("_SHOVEL")) {
             int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Lynch");
-            chance += level * 0.001;
+            chance += level * 0.0002;
         }
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
@@ -117,7 +117,7 @@ public class Gravedigging implements Listener {
             }
         }
         if (PotionManager.isActive("Potion of Metal Detection", player)) {
-            chance += 0.05;
+            chance += 0.01;
         }
         if (isNight(world)) {
             chance = Math.min(1.0, chance * 2);
@@ -168,28 +168,33 @@ public class Gravedigging implements Listener {
 
         if (roll < 0.5) {
             // --- CORPSE EVENT ---
-            // explosion effect and sound, then spawn corpse above the block
             world.spawnParticle(Particle.EXPLOSION, center, 10, 0, 0, 0, 0);
             world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
             new CorpseEvent(plugin).trigger(center);
-        }
-        else if (roll < 0.85) {
-            // --- LOOT EVENT ---
-            world.dropItemNaturally(center, new ItemStack(Material.GOLD_INGOT));
-            world.playSound(center, Sound.ENTITY_ITEM_PICKUP, 1.0f, 1.2f);
-            player.sendMessage(ChatColor.GOLD + "You dig up some loot! (Gold Ingot)");
-        }
-        else {
+        } else {
             // --- TREASURE EVENT ---
             ItemStack relic = ItemRegistry.getDinosaurBones();
             world.dropItemNaturally(center, relic);
             world.playSound(center, Sound.ENTITY_ITEM_PICKUP, 1.0f, 0.8f);
-            String name = relic.getItemMeta() != null ? relic.getItemMeta().getDisplayName() : "Relic";
-            player.sendMessage(ChatColor.AQUA + "You uncover a treasure! (" + name + ChatColor.AQUA + ")");
+            String name = relic.getItemMeta() != null
+                    ? relic.getItemMeta().getDisplayName()
+                    : "Relic";
+            player.sendMessage(ChatColor.AQUA
+                    + "You uncover a treasure! ("
+                    + name
+                    + ChatColor.AQUA
+                    + ")");
         }
 
         // common dust + gravel sound for breaking the grave
-        world.spawnParticle(Particle.BLOCK, loc, 20, 0.2, 0.2, 0.2, Material.DIRT.createBlockData());
+        world.spawnParticle(
+                Particle.BLOCK,
+                loc,
+                20,
+                0.2, 0.2, 0.2,
+                Material.DIRT.createBlockData()
+        );
         world.playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1.0f, 1.0f);
     }
+
 }
