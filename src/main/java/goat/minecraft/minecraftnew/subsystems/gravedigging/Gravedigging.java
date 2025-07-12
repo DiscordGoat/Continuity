@@ -32,7 +32,7 @@ import java.util.Random;
  * triggers a random event.
  */
 public class Gravedigging implements Listener {
-    private static final double BASE_CHANCE = 0.10; // 10%
+    private static final double BASE_CHANCE = 0.001; // 0.01%
     private final Random random = new Random();
     private final Map<Location, BukkitTask> graves = new HashMap<>();
     private final JavaPlugin plugin;
@@ -90,25 +90,25 @@ public class Gravedigging implements Listener {
         ItemStack tool = player.getInventory().getItemInMainHand();
         if (tool != null && tool.getType().toString().endsWith("_SHOVEL")) {
             int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Lynch");
-            chance += level * 0.01;
+            chance += level * 0.0025;
         }
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
         if (activePet != null) {
             if (activePet.hasPerk(PetManager.PetPerk.MEMORY)) {
-                chance += 0.01;
+                chance += 0.001;
             }
             if (activePet.hasPerk(PetManager.PetPerk.HAUNTING)) {
-                chance += 0.02;
+                chance += 0.002;
             }
             if (activePet.hasPerk(PetManager.PetPerk.SCREAM)) {
-                chance += 0.04;
+                chance += 0.004;
             }
             if (activePet.hasPerk(PetManager.PetPerk.COLD)) {
-                chance += 0.05;
+                chance += 0.005;
             }
             if (activePet.hasPerk(PetManager.PetPerk.MALIGNANCE)) {
-                chance += 0.10;
+                chance += 0.010;
             }
         }
         if (isNight(world)) {

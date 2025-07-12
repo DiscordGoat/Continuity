@@ -105,6 +105,12 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Wolf", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2MyNWQ1ZGMwYjViZDkxMjI2YTNhZWYzYzJkNjdhYjVlNTcyNjkxMDVkZTUxYjM5OWJlMzhiYzc1N2Y0MWQifX19");
         PET_TEXTURES.put("Phoenix", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmRmZTU4ZGNhNDQ2ODg4MDlhNDRjMjczNjdmY2MyODgwODk3NzkyYWY4ODM4ZjkzZjJiNTg1YWZjYmU4ZjEzNyJ9fX0=");
 
+        PET_TEXTURES.put("Imprint", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjMyZDgxMjRkZmRiYTczMzU4YWMxNDVkZmFkNTljOTc5NDkyNDBlMGUwZmI5ZTZlZDUzYzlkMjA5MmI4NGQwMiJ9fX0=");
+        PET_TEXTURES.put("Spirit", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGZkOTk5NjdjY2Y5MzgyOTUwODA3NGEyNjZiMTBkNGQ2YmNiOWMxYTFmYjJiZjZkNTk0ZmIxN2I3YjE2OTBjNCJ9fX0=");
+        PET_TEXTURES.put("Banshee", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjc2OTkwYjYzZWJjMzVhZDdkZmVmMzM1Y2IyNGM1N2JmZDY5NGZjODg0MjdjNzczNjJlMWI0ZTYxYzc4OTAzZSJ9fX0=");
+        PET_TEXTURES.put("Wraith", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGE1NGRmMDNlMzY1ODkyMDUyODYwNTNkOWNhNzg1MGNlMjU2Y2M2ZDQ0ZDcwZmRmOWVkNTkwOTllY2Q2OWFmYyJ9fX0=");
+        PET_TEXTURES.put("Revenant", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNTQ5YjMyOTQ3Zjc2ZWM3ZmI0YjMxMTczZWFlNDc2YTZmZWQ4Y2Y4NTY3M2MwZTMxMGJlODM3NTlhOThkNTJlNiJ9fX0=");
+
         //sea creature textures...
         PET_TEXTURES.put("Shark", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2QyMTEzZmJhNTFiODM2NTIyOWUwZmYxZjIwMWY1MzMxNDgzMzcxZjE4NjA1N2JhNzQyMDMyOTRkMDYxMDgyZiJ9fX0=");
         PET_TEXTURES.put("Great_White_Shark", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGUyZTU4NjU0MjlkZDI1MjBiYmM3MDNlNGE5ZjJmMWFiZDVlMWNjNWQzMWI4YTlhY2JmNzRiN2E5N2M5MzdhYSJ9fX0=");
@@ -842,15 +848,15 @@ public class PetManager implements Listener {
             case EXPERIMENTATION:
                 return "Potions last " + ChatColor.YELLOW + (3 * level) + "s" + ChatColor.GRAY + " longer.";
             case MEMORY:
-                return ChatColor.GRAY + "+0.01 Grave Chance";
+                return ChatColor.GRAY + "+0.01 " + ChatColor.AQUA + "Grave Chance";
             case HAUNTING:
-                return ChatColor.GRAY + "+0.02 Grave Chance";
+                return ChatColor.GRAY + "+0.02 " + ChatColor.AQUA + "Grave Chance";
             case SCREAM:
-                return ChatColor.GRAY + "+0.04 Grave Chance";
+                return ChatColor.GRAY + "+0.04 " + ChatColor.AQUA + "Grave Chance";
             case COLD:
-                return ChatColor.GRAY + "+0.05 Grave Chance";
+                return ChatColor.GRAY + "+0.05 " + ChatColor.AQUA + "Grave Chance";
             case MALIGNANCE:
-                return ChatColor.GRAY + "+0.10 Grave Chance";
+                return ChatColor.GRAY + "+0.10 " + ChatColor.AQUA + "Grave Chance";
             case REVENANT:
                 return ChatColor.GRAY + "Return from death after 2 minutes";
             case SPECTRAL:
@@ -1274,11 +1280,11 @@ public class PetManager implements Listener {
         ENDLESS_WARP("Endless Warp", ChatColor.GOLD + ""),
         SPLASH_POTION("Splash Potion", ChatColor.GOLD + ""),
         EXPERIMENTATION("Experimentation", ChatColor.GOLD + ""),
-        MEMORY("Memory", ChatColor.GOLD + "+0.01 Grave Chance"),
-        HAUNTING("Haunting", ChatColor.GOLD + "+0.02 Grave Chance"),
-        SCREAM("Scream", ChatColor.GOLD + "+0.04 Grave Chance"),
-        COLD("Cold", ChatColor.GOLD + "+0.05 Grave Chance"),
-        MALIGNANCE("Malignance", ChatColor.GOLD + "+0.10 Grave Chance"),
+        MEMORY("Memory", ChatColor.GOLD + "+0.01 " + ChatColor.AQUA + "Grave Chance"),
+        HAUNTING("Haunting", ChatColor.GOLD + "+0.02 " + ChatColor.AQUA + "Grave Chance"),
+        SCREAM("Scream", ChatColor.GOLD + "+0.04 " + ChatColor.AQUA + "Grave Chance"),
+        COLD("Cold", ChatColor.GOLD + "+0.05 " + ChatColor.AQUA + " Grave Chance"),
+        MALIGNANCE("Malignance", ChatColor.GOLD + "+0.10 " + ChatColor.AQUA + " Grave Chance"),
         REVENANT("Revenant", ChatColor.GOLD + "Return from the dead after 2 minutes"),
         SPECTRAL("Spectral", ChatColor.GOLD + "Allows scouting in Spectator mode");
 

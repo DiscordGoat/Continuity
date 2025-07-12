@@ -60,7 +60,7 @@ public class CorpseDeathEvent implements Listener {
             }
         });
 
-        Player killer = entity.getKiller();
+        Player killer = event.getEntity().getKiller();
         if (killer != null) {
             CorpseKillManager killManager = CorpseKillManager.getInstance();
             killManager.incrementCorpseKills(killer);
