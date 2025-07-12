@@ -61,6 +61,7 @@ public class CorpseEvent {
 
         if (npc.getEntity() instanceof SkinnableEntity skinnable) {
             skinnable.setSkinName(corpse.getSkinName());
+            
         }
 
         if (npc.getEntity() instanceof org.bukkit.entity.LivingEntity le) {
