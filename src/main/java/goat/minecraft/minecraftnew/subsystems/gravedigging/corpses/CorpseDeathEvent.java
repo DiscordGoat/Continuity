@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.subsystems.gravedigging.CorpseKillManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.entity.Player;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
@@ -57,6 +58,10 @@ public class CorpseDeathEvent implements Listener {
                 };
                 int terraXP = 200 * tier;
                 xpManager.addXP(killer, "Terraforming", terraXP);
+            }
+
+            if (corpse.getRarity() == Rarity.LEGENDARY && Math.random() < 0.04) {
+                event.getDrops().add(ItemRegistry.getRandomUltimateSmithingItem());
             }
         });
 

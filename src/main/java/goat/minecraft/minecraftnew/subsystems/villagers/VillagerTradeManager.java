@@ -227,6 +227,8 @@ public class VillagerTradeManager implements Listener {
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_ENCHANT", 1, 64, 4)); // ItemRegistry.getWeaponsmithEnchant()
         weaponsmithPurchases.add(createTradeMap("LEGENDARY_SWORD_REFORGE", 1, 512, 5)); // ItemRegistry.getLegendarySwordReforge()
         weaponsmithPurchases.add(createTradeMap("BLUE_LANTERN", 1, 512, 5)); // Custom Item
+        weaponsmithPurchases.add(createTradeMap("REVENANT", 1, 256, 5));
+        weaponsmithPurchases.add(createTradeMap("DRAUPNIR", 1, 256, 5));
         defaultConfig.set("WEAPONSMITH.purchases", weaponsmithPurchases);
 
         List<Map<String, Object>> weaponsmithSells = new ArrayList<>();
@@ -273,6 +275,7 @@ public class VillagerTradeManager implements Listener {
         fletcherPurchases.add(createTradeMap("FLETCHER_POWER", 1, 64, 4)); // Custom item
         fletcherPurchases.add(createTradeMap("DARK_OAK_BOW", 1, 128*2, 5)); // Custom item
         fletcherPurchases.add(createTradeMap("FLETCHER_CROSSBOW_ENCHANT", 1, 32, 5)); // Custom item
+        fletcherPurchases.add(createTradeMap("THE_LAW_OF_GRAVITY", 1, 256, 5));
         defaultConfig.set("FLETCHER.purchases", fletcherPurchases);
 
         List<Map<String, Object>> fletcherSells = new ArrayList<>();
@@ -306,6 +309,7 @@ public class VillagerTradeManager implements Listener {
         cartographerPurchases.add(createTradeMap("CARTOGRAPHER_BASTION_REMNANT", 1, 64, 4)); // Custom item
 
         cartographerPurchases.add(createTradeMap("CARTOGRAPHER_WOODLAND_MANSION", 1, 128, 5)); // Custom item
+        cartographerPurchases.add(createTradeMap("QUANTUM_PHYSICS", 1, 256, 5));
         defaultConfig.set("CARTOGRAPHER.purchases", cartographerPurchases);
 
 // Cartographer Sells
@@ -447,6 +451,8 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("REDSTONE_GEMSTONE", 1, 128, 5)); // Custom Item
         toolsmithPurchases.add(createTradeMap("JACKHAMMER", 1, 32, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("COMPOSTER_ENCHANT", 1, 32, 3)); // Custom Item
+        toolsmithPurchases.add(createTradeMap("EVISCERATION", 1, 256, 5));
+        toolsmithPurchases.add(createTradeMap("UNSTOPPABLE_VS_IMMOVABLE", 1, 256, 5));
 
         defaultConfig.set("TOOLSMITH.purchases", toolsmithPurchases);
 
@@ -1077,6 +1083,18 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getInfernalSharpness();
             case "WARP_GATE":
                 return ItemRegistry.getWarpGate();
+            case "THE_LAW_OF_GRAVITY":
+                return ItemRegistry.getLawOfGravity();
+            case "UNSTOPPABLE_VS_IMMOVABLE":
+                return ItemRegistry.getUnstoppableVsImmovable();
+            case "DRAUPNIR":
+                return ItemRegistry.getDraupnir();
+            case "QUANTUM_PHYSICS":
+                return ItemRegistry.getQuantumPhysics();
+            case "EVISCERATION":
+                return ItemRegistry.getEvisceration();
+            case "REVENANT":
+                return ItemRegistry.getRevenant();
             default:
                 plugin.getLogger().warning("Unknown custom item ID: " + identifier);
                 return null;
