@@ -577,6 +577,22 @@ public class ItemRegistry {
         );
     }
 
+    /**
+     * Returns a random Verdant Relic seed.
+     */
+    public static ItemStack getRandomVerdantRelicSeed() {
+        Random random = new Random();
+        List<ItemStack> seeds = Arrays.asList(
+                getVerdantRelicEntionPlastSeed(),
+                getVerdantRelicEntropySeed(),
+                getVerdantRelicSunflareSeed(),
+                getVerdantRelicStarlightSeed(),
+                getVerdantRelicTideSeed(),
+                getVerdantRelicShinyEmeraldSeed()
+        );
+        return seeds.get(random.nextInt(seeds.size()));
+    }
+
     // ------------------------------------------------------------------
     // Ghost Relic
     // ------------------------------------------------------------------
@@ -4327,6 +4343,21 @@ public class ItemRegistry {
                 ChatColor.YELLOW + "Blessing Artifact",
                 List.of(
                         ChatColor.GRAY + "Right-click to choose a blessing.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Artifact awarded from fishing that contains a random treasure. */
+    public static ItemStack getTreasureChest() {
+        return createCustomItem(
+                Material.CHEST,
+                ChatColor.YELLOW + "Treasure Chest",
+                Arrays.asList(
+                        ChatColor.GRAY + "Right-click to claim a random treasure.",
                         ChatColor.DARK_PURPLE + "Artifact"
                 ),
                 1,

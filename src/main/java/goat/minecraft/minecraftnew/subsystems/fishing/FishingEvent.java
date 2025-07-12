@@ -520,16 +520,13 @@ public class FishingEvent implements Listener {
 
         // Roll for treasure
         if (random.nextDouble() <= treasureChance) {
-            ItemStack treasure = getRandomTreasure(player);
+            ItemStack chest = ItemRegistry.getTreasureChest();
+            player.getInventory().addItem(chest);
+            player.sendMessage(ChatColor.GOLD + "You fished up a treasure chest!");
+            player.playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
 
-            if (treasure != null) {
-                player.getInventory().addItem(treasure);
-                player.sendMessage(ChatColor.GOLD + "You fished up a treasure!");
-                player.playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
-
-                // Play particle effect
-                player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, player.getLocation(), 30, 1, 1, 1, 0.1);
-            }
+            // Play particle effect
+            player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, player.getLocation(), 30, 1, 1, 1, 0.1);
         }
     }
 

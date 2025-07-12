@@ -1,9 +1,11 @@
 package goat.minecraft.minecraftnew.subsystems.gravedigging.corpses;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import goat.minecraft.minecraftnew.subsystems.gravedigging.CorpseKillManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import org.bukkit.entity.Player;
+import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
@@ -21,6 +23,7 @@ import java.util.Optional;
  * Handles drops and cleanup when a Corpse NPC dies.
  */
 public class CorpseDeathEvent implements Listener {
+    private final XPManager xpManager = new XPManager(MinecraftNew.getInstance());
     @EventHandler
     public void onCorpseDeath(EntityDeathEvent event) {
         Entity entity = event.getEntity();
@@ -36,11 +39,25 @@ public class CorpseDeathEvent implements Listener {
         // 3) Clear any item drops (we handle loot ourselves)
         event.getDrops().clear();
 
-        // 4) Fetch your Corpse data by name
+        // 4) Fetch your Corpse data by name and handle XP/visuals
         String corpseName = meta.get(0).asString();
         Optional<Corpse> corpseOpt = CorpseRegistry.getCorpseByName(corpseName);
         corpseOpt.ifPresent(corpse -> {
             playDeathEffects(entity, corpse.getRarity());
+
+            // Award Terraforming XP to the killer based on corpse rarity
+            var killer = event.getEntity().getKiller();
+            if (killer != null) {
+                int tier = switch (corpse.getRarity()) {
+                    case UNCOMMON -> 2;
+                    case RARE -> 3;
+                    case EPIC -> 4;
+                    case LEGENDARY -> 5;
+                    default -> 1; // COMMON or unknown
+                };
+                int terraXP = 200 * tier;
+                xpManager.addXP(killer, "Terraforming", terraXP);
+            }
         });
 
         Player killer = entity.getKiller();
