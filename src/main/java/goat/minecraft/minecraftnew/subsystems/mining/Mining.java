@@ -293,13 +293,13 @@ public class Mining implements Listener {
             Material type = block.getType();
             if (type == Material.EMERALD_ORE || type == Material.DEEPSLATE_EMERALD_ORE) {
                 if (random.nextInt(100) < 5) { // 5% chance
-                    block.getWorld().dropItemNaturally(block.getLocation(), ItemRegistry.getVerdantRelicShinyEmeraldSeed());
+                    // Relic seed drops moved to gravedigging treasure rewards
                 }
             } else if (type == Material.DIAMOND_ORE || type == Material.DEEPSLATE_DIAMOND_ORE ||
                     type == Material.LAPIS_ORE || type == Material.DEEPSLATE_LAPIS_ORE ||
                     type == Material.REDSTONE_ORE || type == Material.DEEPSLATE_REDSTONE_ORE) {
                 if (random.nextInt(100) < 1) { // 1% chance
-                    block.getWorld().dropItemNaturally(block.getLocation(), ItemRegistry.getVerdantRelicShinyEmeraldSeed());
+                    // Relic seed drops moved to gravedigging treasure rewards
                 }
             }
         }

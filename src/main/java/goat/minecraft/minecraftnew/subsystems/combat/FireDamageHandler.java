@@ -137,9 +137,6 @@ public class FireDamageHandler implements Listener {
                 double damage = level / 2.0;
                 double newHealth = Math.max(0.0, entity.getHealth() - damage);
                 entity.setHealth(newHealth);
-                if(newHealth <= 0.0 && entity.getWorld() != null) {
-                    entity.getWorld().dropItemNaturally(entity.getLocation(), ItemRegistry.getVerdantRelicSunflareSeed());
-                }
                 if (entity.getWorld() != null) {
                     entity.getWorld().playSound(entity.getLocation(), Sound.ENTITY_BLAZE_HURT, 1.0f, 1.0f);
                 }
