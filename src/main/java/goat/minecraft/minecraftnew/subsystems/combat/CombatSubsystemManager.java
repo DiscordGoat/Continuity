@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.MeleeDama
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.MonsterLevelDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.PowerCatalystDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.RangedDamageStrategy;
+import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.CorpseLevelDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.commands.CombatReloadCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIController;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
@@ -240,6 +241,8 @@ public class CombatSubsystemManager implements CommandExecutor {
         if (configuration.getBuffConfig().isMonsterLevelScaling()) {
             damageCalculationService.registerStrategy(
                 new MonsterLevelDamageStrategy(configuration.getDamageConfig()));
+            damageCalculationService.registerStrategy(
+                new CorpseLevelDamageStrategy(configuration.getDamageConfig()));
         }
         
         // Register catalyst damage strategies (always enabled)
