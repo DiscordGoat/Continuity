@@ -1,32 +1,25 @@
-package goat.minecraft.minecraftnew.subsystems.corpses;
+package goat.minecraft.minecraftnew.subsystems.gravedigging.corpses;
 
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import net.citizensnpcs.api.CitizensAPI;
-import net.citizensnpcs.api.event.DespawnReason;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.npc.CitizensNPC;
-import net.citizensnpcs.npc.ai.NPCHolder;
-import net.citizensnpcs.npc.skin.Skin;
-import net.citizensnpcs.npc.skin.SkinnableEntity;
 import net.citizensnpcs.trait.SkinTrait;
-import net.citizensnpcs.util.SkinProperty;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 /**
@@ -50,17 +43,70 @@ public class CorpseEvent {
         spawnCorpse(optional.get(), location);
     }
 
+    private void applyAttributes(NPC npc, Rarity rarity) {
+        if (!(npc.getEntity() instanceof LivingEntity entity)) return;
 
+        // 1) Clear any previous effects
+        for (PotionEffectType type : Arrays.asList(
+                PotionEffectType.HEALTH_BOOST,
+                PotionEffectType.SLOWNESS,
+                PotionEffectType.STRENGTH,
+                PotionEffectType.RESISTANCE)) {
+            entity.removePotionEffect(type);
+        }
 
+        // 2) Decide how much Health Boost you need to reach your target HP.
+        //    Health Boost adds 4 hearts (8 HP) per amplifier level + base 20 HP.
+        //    amp = ((targetHP − 20) / 4) − 1
+        int hpBoostAmp = switch (rarity) {
+            case COMMON    -> 19;   // (100-20)/4 -1 = 19
+            case UNCOMMON  -> 44;   // (200-20)/4 -1 = 44
+            case RARE      -> 69;   // (300-20)/4 -1 = 69
+            case EPIC      -> 94;   // (400-20)/4 -1 = 94
+            case LEGENDARY -> 119;  // (500-20)/4 -1 = 119
+            case MYTHIC    -> 144;  // (600-20)/4 -1 = 144
+        };
+
+        // 3) Slowness II to cap movement speed near 0.1
+        int slownessAmp = 1;
+
+        // 4) Strength II to roughly double base melee damage
+        int strengthAmp = 1;
+
+        // Apply the effects “permanently”
+        int duration = Integer.MAX_VALUE;
+        entity.addPotionEffect(new PotionEffect(
+                PotionEffectType.HEALTH_BOOST,
+                duration, hpBoostAmp, true, false
+        ));
+        // reset health to the new max
+        double newMax = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+        entity.setHealth(newMax);
+
+        entity.addPotionEffect(new PotionEffect(
+                PotionEffectType.RESISTANCE,
+                duration, 1, true, false
+        ));
+        entity.addPotionEffect(new PotionEffect(
+                PotionEffectType.SLOWNESS,
+                duration, slownessAmp, true, false
+        ));
+        entity.addPotionEffect(new PotionEffect(
+                PotionEffectType.STRENGTH,
+                duration, strengthAmp, true, false
+        ));
+    }
 
 
     private void spawnCorpse(Corpse corpse, Location loc) {
         NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
         NPC npc = registry.createNPC(EntityType.PLAYER, corpse.getDisplayName());
+
         npc.setName(corpse.getDisplayName());
         Location spawnLoc = loc.clone().subtract(0, 1, 0);
 
         npc.spawn(spawnLoc);
+        applyAttributes(npc, corpse.getRarity());
         npc.getOrAddTrait(SkinTrait.class).setSkinPersistent("corpse", corpse.getSkinSignature(),
                 corpse.getSkinTexture());
         if (npc.getEntity() instanceof org.bukkit.entity.LivingEntity le) {
@@ -70,10 +116,9 @@ public class CorpseEvent {
             }
         }
         npc.data().setPersistent(NPC.Metadata.DEFAULT_PROTECTED, false);
-        npc.addTrait(new CorpseTrait(plugin, corpse.getLevel(), corpse.usesBow(),
+        npc.addTrait(new CorpseTrait(plugin, corpse.getRarity(), corpse.usesBow(),
                 corpse.getDisplayName().equalsIgnoreCase("Duskblood") ? 100 : 0));
         npc.getEntity().setMetadata("CORPSE", new FixedMetadataValue(plugin, corpse.getDisplayName()));
-
         playSpawnSound(loc, corpse.getRarity());
     }
 

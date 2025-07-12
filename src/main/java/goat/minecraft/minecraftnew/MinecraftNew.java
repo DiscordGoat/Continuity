@@ -96,8 +96,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
-import goat.minecraft.minecraftnew.subsystems.corpses.CorpseTrait;
-
 import java.util.Objects;
 
 public class MinecraftNew extends JavaPlugin implements Listener {
@@ -568,7 +566,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(new FarmingEvent(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), MinecraftNew.getInstance());
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.corpses.CorpseDeathEvent(), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.gravedigging.corpses.CorpseDeathEvent(), this);
         CitizensAPI.getNPCRegistry().deregisterAll();
         getServer().getPluginManager().registerEvents(new RightClickArtifacts(this), this);
         getServer().getPluginManager().registerEvents(new BlessingArtifactGUI(this), this);

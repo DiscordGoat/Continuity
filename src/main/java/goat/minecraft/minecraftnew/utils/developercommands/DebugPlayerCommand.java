@@ -33,7 +33,6 @@ public class DebugPlayerCommand implements CommandExecutor {
         NPC npc = registry.createNPC(EntityType.PLAYER, "HostileDebug");
         npc.setProtected(false);
         npc.spawn(player.getLocation().add(1, 0, 1));
-        npc.addTrait(new HostilePlayerTrait(plugin, player.getUniqueId()));
 
         sender.sendMessage(ChatColor.GREEN + "Hostile player spawned.");
         return true;

@@ -1,18 +1,14 @@
-package goat.minecraft.minecraftnew.subsystems.corpses;
+package goat.minecraft.minecraftnew.subsystems.gravedigging.corpses;
 
-import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
-import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.metadata.MetadataValue;
 
 import java.util.List;

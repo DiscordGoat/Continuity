@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.subsystems.corpses;
+package goat.minecraft.minecraftnew.subsystems.gravedigging.corpses;
 
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import org.bukkit.Material;

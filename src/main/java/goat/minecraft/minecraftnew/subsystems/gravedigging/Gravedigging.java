@@ -1,8 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.gravedigging;
 
-import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
-import goat.minecraft.minecraftnew.subsystems.corpses.CorpseEvent;
+import goat.minecraft.minecraftnew.subsystems.gravedigging.corpses.CorpseEvent;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.ChatColor;

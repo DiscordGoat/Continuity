@@ -1,11 +1,8 @@
-package goat.minecraft.minecraftnew.subsystems.corpses;
+package goat.minecraft.minecraftnew.subsystems.gravedigging.corpses;
 
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
-import goat.minecraft.minecraftnew.subsystems.pets.TraitRarity;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
