@@ -5,6 +5,8 @@ import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.farming.SeederType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreature;
+import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
 import goat.minecraft.minecraftnew.utils.biomeutils.StructureUtils;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.VillagerNameRepository;
@@ -65,6 +67,96 @@ public class RightClickArtifacts implements Listener {
     }
     public static ItemStack getRandomArmorTrim() {
         return armorTrims.get(random.nextInt(armorTrims.size()));
+    }
+
+    private static ItemStack getRandomSeaCreatureAlchemyItem() {
+        List<SeaCreature> seaCreatures = SeaCreatureRegistry.getSeaCreatures();
+        if (seaCreatures.isEmpty()) return null;
+        SeaCreature creature = seaCreatures.get(random.nextInt(seaCreatures.size()));
+        List<ItemStack> drops = creature.getDrops();
+        if (drops.isEmpty()) return null;
+        return drops.get(random.nextInt(drops.size()));
+    }
+
+    private static ItemStack getRandomRareSapling() {
+        Material[] rareSaplings = {
+                Material.ACACIA_SAPLING,
+                Material.DARK_OAK_SAPLING,
+                Material.JUNGLE_SAPLING,
+                Material.BIRCH_SAPLING,
+                Material.SPRUCE_SAPLING,
+                Material.OAK_SAPLING
+        };
+        Material saplingType = rareSaplings[random.nextInt(rareSaplings.length)];
+        return new ItemStack(saplingType, random.nextInt(3) + 1);
+    }
+
+    private static ItemStack getRandomFishingTreasure() {
+        List<LootItem> lootTable = Arrays.asList(
+                new LootItem(new ItemStack(Material.NAUTILUS_SHELL, 8), 10),
+                new LootItem(new ItemStack(Material.SADDLE), 10),
+                new LootItem(new ItemStack(Material.DIAMOND, random.nextInt(10) + 1), 10),
+                new LootItem(new ItemStack(Material.EMERALD, 64), 10),
+                new LootItem(new ItemStack(Material.ANCIENT_DEBRIS), 7),
+                new LootItem(new ItemStack(Material.ENCHANTED_GOLDEN_APPLE), 3),
+                new LootItem(new ItemStack(Material.TOTEM_OF_UNDYING), 13),
+                new LootItem(new ItemStack(Material.HEART_OF_THE_SEA), 5),
+                new LootItem(new ItemStack(Material.SHULKER_SHELL), 10),
+                new LootItem(new ItemStack(Material.SPONGE), 8),
+                new LootItem(new ItemStack(Material.TURTLE_SCUTE), 7),
+                new LootItem(new ItemStack(Material.WITHER_SKELETON_SKULL), 4),
+                new LootItem(new ItemStack(Material.CREEPER_HEAD), 7),
+                new LootItem(new ItemStack(Material.ZOMBIE_HEAD), 7),
+                new LootItem(new ItemStack(Material.SKELETON_SKULL), 7),
+                new LootItem(new ItemStack(Material.NETHER_WART, random.nextInt(3) + 1), 10),
+                new LootItem(new ItemStack(Material.EXPERIENCE_BOTTLE, 64), 7),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_13), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_CAT), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_BLOCKS), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_CHIRP), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_FAR), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_MALL), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_MELLOHI), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_STAL), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_STRAD), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_WARD), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_11), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_WAIT), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_OTHERSIDE), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_RELIC), 2),
+                new LootItem(new ItemStack(Material.MUSIC_DISC_5), 2),
+                new LootItem(getRandomSeaCreatureAlchemyItem(), 1),
+                new LootItem(getRandomRareSapling(), 10)
+        );
+
+        int totalWeight = lootTable.stream().mapToInt(LootItem::getWeight).sum();
+        int roll = random.nextInt(totalWeight);
+        int cumulative = 0;
+        for (LootItem item : lootTable) {
+            cumulative += item.getWeight();
+            if (roll < cumulative) {
+                return item.getItem();
+            }
+        }
+        return null;
+    }
+
+    private static class LootItem {
+        private final ItemStack item;
+        private final int weight;
+
+        LootItem(ItemStack item, int weight) {
+            this.item = item;
+            this.weight = weight;
+        }
+
+        public ItemStack getItem() {
+            return item;
+        }
+
+        public int getWeight() {
+            return weight;
+        }
     }
     private final ItemStack enderDrop = ItemRegistry.getEnderDrop();
     private final Plugin plugin;
@@ -421,6 +513,16 @@ public class RightClickArtifacts implements Listener {
             }
             if (displayName.equals(ChatColor.YELLOW + "Experience Artifact Tier 1")) {
                 summonXP(player);
+                decrementItemAmount(itemInHand, player);
+                return;
+            }
+            if (displayName.equals(ChatColor.YELLOW + "Treasure Chest")) {
+                ItemStack treasure = getRandomFishingTreasure();
+                if (treasure != null) {
+                    player.getInventory().addItem(treasure);
+                }
+                player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 1.0f);
+                player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, player.getLocation(), 20, 1, 1, 1, 0.1);
                 decrementItemAmount(itemInHand, player);
                 return;
             }

@@ -4334,6 +4334,21 @@ public class ItemRegistry {
                 true
         );
     }
+
+    /** Artifact awarded from fishing that contains a random treasure. */
+    public static ItemStack getTreasureChest() {
+        return createCustomItem(
+                Material.CHEST,
+                ChatColor.YELLOW + "Treasure Chest",
+                Arrays.asList(
+                        ChatColor.GRAY + "Right-click to claim a random treasure.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
     public static ItemStack getComposterEnchant() {
         return createCustomItem(Material.COMPOSTER, ChatColor.YELLOW +
                 "Composter", Arrays.asList(
