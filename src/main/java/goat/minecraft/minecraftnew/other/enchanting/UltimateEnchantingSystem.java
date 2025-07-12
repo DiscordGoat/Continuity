@@ -473,6 +473,7 @@ public class UltimateEnchantingSystem implements Listener {
                     1.0f,                          // volume
                     1.0f                           // pitch
             );
+            openUltimateEnchantmentGUI(player);
 
 // ─── NEW: spawn enchantment particles ──────────────────────────────────────────
 // this will create a swirl of enchantment particles around the player
