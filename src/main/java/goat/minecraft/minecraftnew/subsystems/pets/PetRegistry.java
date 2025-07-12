@@ -376,6 +376,42 @@ public class PetRegistry {
                 Particle.SOUL,
                 Arrays.asList(PetManager.PetPerk.SPECTRAL)
         ));
+
+        registry.put("Imprint", new PetDefinition(
+                "Imprint",
+                PetManager.Rarity.COMMON,
+                100,
+                Particle.SOUL,
+                Arrays.asList(PetManager.PetPerk.MEMORY)
+        ));
+        registry.put("Spirit", new PetDefinition(
+                "Spirit",
+                PetManager.Rarity.UNCOMMON,
+                100,
+                Particle.SOUL,
+                Arrays.asList(PetManager.PetPerk.HAUNTING, PetManager.PetPerk.SPEED_BOOST)
+        ));
+        registry.put("Banshee", new PetDefinition(
+                "Banshee",
+                PetManager.Rarity.RARE,
+                100,
+                Particle.SOUL,
+                Arrays.asList(PetManager.PetPerk.SCREAM, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.DIGGING_CLAWS)
+        ));
+        registry.put("Wraith", new PetDefinition(
+                "Wraith",
+                PetManager.Rarity.EPIC,
+                100,
+                Particle.SOUL,
+                Arrays.asList(PetManager.PetPerk.COLD, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.EARTHWORM, PetManager.PetPerk.COLLECTOR)
+        ));
+        registry.put("Revenant", new PetDefinition(
+                "Revenant",
+                PetManager.Rarity.LEGENDARY,
+                100,
+                Particle.SOUL,
+                Arrays.asList(PetManager.PetPerk.MALIGNANCE, PetManager.PetPerk.REVENANT, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.EARTHWORM, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.ELITE)
+        ));
     }
     // Inside PetManager class
     public void addPetByName(Player player, String petName) {

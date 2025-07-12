@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.gravedigging.corpses;
 
 import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
+import goat.minecraft.minecraftnew.subsystems.gravedigging.CorpseKillManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
+import org.bukkit.entity.Player;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Particle;
@@ -39,6 +42,30 @@ public class CorpseDeathEvent implements Listener {
         corpseOpt.ifPresent(corpse -> {
             playDeathEffects(entity, corpse.getRarity());
         });
+
+        Player killer = entity.getKiller();
+        if (killer != null) {
+            CorpseKillManager killManager = CorpseKillManager.getInstance();
+            killManager.incrementCorpseKills(killer);
+            int kills = killManager.getCorpseKills(killer);
+            PetRegistry petRegistry = new PetRegistry();
+
+            if (kills >= 3) {
+                petRegistry.addPetByName(killer, "Imprint");
+            }
+            if (kills >= 9) {
+                petRegistry.addPetByName(killer, "Spirit");
+            }
+            if (kills >= 27) {
+                petRegistry.addPetByName(killer, "Banshee");
+            }
+            if (kills >= 94) {
+                petRegistry.addPetByName(killer, "Wraith");
+            }
+            if (kills >= 200) {
+                petRegistry.addPetByName(killer, "Revenant");
+            }
+        }
 
         // 5) Destroy the NPC so it won’t re-spawn on reload
         npc.destroy();

@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -89,6 +90,25 @@ public class Gravedigging implements Listener {
         if (tool != null && tool.getType().toString().endsWith("_SHOVEL")) {
             int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Lynch");
             chance += level * 0.01;
+        }
+        PetManager petManager = PetManager.getInstance(plugin);
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        if (activePet != null) {
+            if (activePet.hasPerk(PetManager.PetPerk.MEMORY)) {
+                chance += 0.01;
+            }
+            if (activePet.hasPerk(PetManager.PetPerk.HAUNTING)) {
+                chance += 0.02;
+            }
+            if (activePet.hasPerk(PetManager.PetPerk.SCREAM)) {
+                chance += 0.04;
+            }
+            if (activePet.hasPerk(PetManager.PetPerk.COLD)) {
+                chance += 0.05;
+            }
+            if (activePet.hasPerk(PetManager.PetPerk.MALIGNANCE)) {
+                chance += 0.10;
+            }
         }
         if (isNight(world)) {
             chance = Math.min(1.0, chance * 2);
