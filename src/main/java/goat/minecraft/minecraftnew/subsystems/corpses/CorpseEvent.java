@@ -60,8 +60,8 @@ public class CorpseEvent {
         npc.spawn(spawnLoc);
 
         if (npc.getEntity() instanceof SkinnableEntity skinnable) {
-            skinnable.setSkinName(corpse.getSkinName());
-            
+            skinnable.setSkinPersistent("corpse-" + npc.getId(), "", corpse.getSkinTexture());
+
         }
 
         if (npc.getEntity() instanceof org.bukkit.entity.LivingEntity le) {
