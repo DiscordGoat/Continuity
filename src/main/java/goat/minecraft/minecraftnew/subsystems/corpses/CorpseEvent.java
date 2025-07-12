@@ -59,6 +59,10 @@ public class CorpseEvent {
         Location spawnLoc = loc.clone().subtract(0, 1, 0);
         npc.spawn(spawnLoc);
 
+        if (npc.getEntity() instanceof SkinnableEntity skinnable) {
+            skinnable.setSkinName(corpse.getSkinName());
+        }
+
         if (npc.getEntity() instanceof org.bukkit.entity.LivingEntity le) {
             EntityEquipment eq = le.getEquipment();
             if (eq != null && corpse.getWeaponMaterial() != null && corpse.getWeaponMaterial() != Material.AIR) {

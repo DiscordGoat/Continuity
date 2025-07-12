@@ -24,43 +24,43 @@ public class CorpseRegistry implements Listener {
 
         // COMMON
         CORPSES.add(new Corpse("Farmer Corpse", Rarity.COMMON, 30,
-                Material.IRON_HOE, false, new ArrayList<>()));
+                Material.IRON_HOE, false, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Guard Corpse", Rarity.COMMON, 35,
-                Material.IRON_SWORD, false, new ArrayList<>()));
+                Material.IRON_SWORD, false, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Archer Corpse", Rarity.COMMON, 40,
-                Material.BOW, true, new ArrayList<>()));
+                Material.BOW, true, new ArrayList<>(), "Notch"));
 
         // UNCOMMON
         CORPSES.add(new Corpse("Diver Corpse", Rarity.UNCOMMON, 50,
-                Material.AIR, false, new ArrayList<>()));
+                Material.AIR, false, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Fisherman Corpse", Rarity.UNCOMMON, 55,
-                Material.FISHING_ROD, false, new ArrayList<>()));
+                Material.FISHING_ROD, false, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Lumberjack Corpse", Rarity.UNCOMMON, 60,
-                Material.IRON_AXE, false, new ArrayList<>()));
+                Material.IRON_AXE, false, new ArrayList<>(), "Notch"));
 
         // RARE
         CORPSES.add(new Corpse("Adventurer Corpse", Rarity.RARE, 70,
-                Material.MAP, false, new ArrayList<>()));
+                Material.MAP, false, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Pirates Corpse", Rarity.RARE, 75,
-                Material.IRON_SWORD, false, new ArrayList<>()));
+                Material.IRON_SWORD, false, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Sculk Infected", Rarity.RARE, 80,
-                Material.AIR, false, new ArrayList<>()));
+                Material.AIR, false, new ArrayList<>(), "Notch"));
 
         // EPIC
         CORPSES.add(new Corpse("Necromancer Corpse", Rarity.EPIC, 90,
-                Material.SKELETON_SKULL, false, new ArrayList<>()));
+                Material.SKELETON_SKULL, false, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Gladiator Corpse", Rarity.EPIC, 100,
-                Material.DIAMOND_SWORD, false, new ArrayList<>()));
+                Material.DIAMOND_SWORD, false, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Duskblood", Rarity.EPIC, 110,
-                Material.AIR, false, new ArrayList<>()));
+                Material.AIR, false, new ArrayList<>(), "Notch"));
 
         // LEGENDARY
         CORPSES.add(new Corpse("Trauma", Rarity.LEGENDARY, 120,
-                Material.DIAMOND_AXE, false, new ArrayList<>()));
+                Material.DIAMOND_AXE, false, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Cryptic", Rarity.LEGENDARY, 140,
-                Material.BOW, true, new ArrayList<>()));
+                Material.BOW, true, new ArrayList<>(), "Notch"));
         CORPSES.add(new Corpse("Dreadnaught", Rarity.LEGENDARY, 150,
-                Material.NETHERITE_SWORD, false, new ArrayList<>()));
+                Material.NETHERITE_SWORD, false, new ArrayList<>(), "Notch"));
     }
 
     public static Optional<Corpse> getCorpseByName(String name) {
