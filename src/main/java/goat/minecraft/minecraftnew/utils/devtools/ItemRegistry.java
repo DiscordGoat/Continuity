@@ -611,6 +611,20 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getDinosaurBones() {
+        return createCustomItem(
+                Material.BONE,
+                ChatColor.GOLD + "Dinosaur Bones",
+                Arrays.asList(
+                        ChatColor.GRAY + "Ancient bones unearthed from forgotten graves.",
+                        ChatColor.BLUE + "Used in brewing the Potion of Metal Detection."
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
 
     public static ItemStack getRecurvePotionRecipePaper() {
         // This returns a piece of PAPER with a custom name + lore that says "Potion of Recurve Recipe".
@@ -768,6 +782,21 @@ public class ItemRegistry {
                 ChatColor.LIGHT_PURPLE + "Potion of Oxygen Recovery Recipe (Potion Recipe)",
                 Arrays.asList(
                         ChatColor.GRAY + "Brewing instructions for Oxygen Recovery",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getMetalDetectionRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Metal Detection Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Metal Detection",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
                         ChatColor.DARK_PURPLE + "Potion Recipe"
                 ),
