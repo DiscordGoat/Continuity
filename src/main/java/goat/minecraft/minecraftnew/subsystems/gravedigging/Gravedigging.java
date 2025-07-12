@@ -21,6 +21,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -109,6 +110,9 @@ public class Gravedigging implements Listener {
             }
             if (activePet.hasPerk(PetManager.PetPerk.MALIGNANCE)) {
                 chance += 0.010;
+            }
+            if (activePet.getTrait() == PetTrait.PARANORMAL) {
+                chance += activePet.getTrait().getValueForRarity(activePet.getTraitRarity());
             }
         }
         if (isNight(world)) {

@@ -15,6 +15,7 @@ public enum PetTrait {
     RESILIENT(ChatColor.WHITE, "Damage Reduction", new double[]{3,5,8,10,15,20}),
     NAUTICAL(ChatColor.AQUA, "Sea Creature Chance", new double[]{1,2,3,4,5,6}),
     HAUNTED(ChatColor.AQUA, "Spirit Chance", new double[]{1,2,3,4,5,6}),
+    PARANORMAL(ChatColor.DARK_PURPLE, "Grave Chance", new double[]{0.001,0.002,0.003,0.005,0.01,0.02}),
     PRECISE(ChatColor.RED, "Arrow Damage Increase", new double[]{3,5,8, 10,15,20}),
     FINANCIAL(ChatColor.YELLOW, "Discount", new double[]{3,5,8,10,15,20}),
     EVASIVE(ChatColor.LIGHT_PURPLE, "Dodge Chance", new double[]{3,5,8,10,15,20}),
