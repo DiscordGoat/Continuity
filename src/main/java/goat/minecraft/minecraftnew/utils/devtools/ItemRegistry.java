@@ -897,6 +897,78 @@ public class ItemRegistry {
                 ), 1, false, true);
     }
 
+    public static ItemStack getLawOfGravity() {
+        return createCustomItem(
+                Material.ANVIL,
+                ChatColor.YELLOW + "The Law of Gravity",
+                Arrays.asList(
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Applies Treecapitator.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+    }
+
+    public static ItemStack getUnstoppableVsImmovable() {
+        return createCustomItem(
+                Material.IRON_BLOCK,
+                ChatColor.YELLOW + "Unstoppable vs Immovable",
+                Arrays.asList(
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Applies Hammer.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+    }
+
+    public static ItemStack getDraupnir() {
+        return createCustomItem(
+                Material.GOLD_NUGGET,
+                ChatColor.YELLOW + "Draupnir",
+                Arrays.asList(
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Applies Shred.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+    }
+
+    public static ItemStack getQuantumPhysics() {
+        return createCustomItem(
+                Material.ENDER_PEARL,
+                ChatColor.YELLOW + "Quantum Physics",
+                Arrays.asList(
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Applies Warp.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+    }
+
+    public static ItemStack getEvisceration() {
+        return createCustomItem(
+                Material.FLINT,
+                ChatColor.YELLOW + "Evisceration",
+                Arrays.asList(
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Applies Mulch.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+    }
+
+    public static ItemStack getRevenant() {
+        return createCustomItem(
+                Material.ROTTEN_FLESH,
+                ChatColor.YELLOW + "Revenant",
+                Arrays.asList(
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Applies Loyal.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+    }
+
+    public static ItemStack getRandomUltimateSmithingItem() {
+        ItemStack[] items = {
+                getLawOfGravity(),
+                getUnstoppableVsImmovable(),
+                getDraupnir(),
+                getQuantumPhysics(),
+                getEvisceration(),
+                getRevenant()
+        };
+        return items[new java.util.Random().nextInt(items.length)];
+    }
+
 
 
     public static ItemStack getExperienceArtifact() {

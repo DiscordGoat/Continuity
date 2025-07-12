@@ -118,7 +118,7 @@ public class UltimateEnchantingSystem implements Listener {
         if (event.getClickedBlock().getType() == Material.ENCHANTING_TABLE &&
                 event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             event.setCancelled(true);
-            openUltimateEnchantmentGUI(event.getPlayer());
+            event.getPlayer().sendMessage(ChatColor.RED + "Ultimate enchantments are applied with smithing items.");
         }
     }
 

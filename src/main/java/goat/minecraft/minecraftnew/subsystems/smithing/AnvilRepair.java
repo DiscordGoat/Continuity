@@ -1006,6 +1006,30 @@ public class AnvilRepair implements Listener {
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Water Aspect", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Water Aspect") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "The Law of Gravity") && TOOLS.contains(repairee.getType())){
+            CustomEnchantmentManager.addUltimateEnchantment(player, billItem, repairee, "Ultimate: Treecapitator", 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Unstoppable vs Immovable") && TOOLS.contains(repairee.getType())){
+            CustomEnchantmentManager.addUltimateEnchantment(player, billItem, repairee, "Ultimate: Hammer", 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Draupnir") && MELEE.contains(repairee.getType())){
+            CustomEnchantmentManager.addUltimateEnchantment(player, billItem, repairee, "Ultimate: Shred", 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Quantum Physics") && MELEE.contains(repairee.getType())){
+            CustomEnchantmentManager.addUltimateEnchantment(player, billItem, repairee, "Ultimate: Warp", 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Evisceration") && isShovel(repairee)){
+            CustomEnchantmentManager.addUltimateEnchantment(player, billItem, repairee, "Ultimate: Mulch", 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Revenant") && MELEE.contains(repairee.getType())){
+            CustomEnchantmentManager.addUltimateEnchantment(player, billItem, repairee, "Ultimate: Loyal", 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
         }
 
 
