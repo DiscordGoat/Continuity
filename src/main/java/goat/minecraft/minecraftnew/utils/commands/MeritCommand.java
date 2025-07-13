@@ -82,11 +82,6 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Prevents 15% of durability losses.",
                             ChatColor.BLUE + "On Lose Durability: " + ChatColor.GRAY + "15% chance to refund."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Excavator", 1, Material.DIAMOND_SHOVEL,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Shovels rarely wear down.",
-                            ChatColor.BLUE + "On Shovel Use: " + ChatColor.GRAY + "90% chance durability is preserved."
-                    )),
             new Perk(ChatColor.DARK_GRAY + "Trainer", 3, Material.LEAD,
                     Arrays.asList(
                             ChatColor.GRAY + "Boosts pet XP gains.",
