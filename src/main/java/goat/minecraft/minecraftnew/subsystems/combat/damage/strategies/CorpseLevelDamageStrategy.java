@@ -46,7 +46,7 @@ public class CorpseLevelDamageStrategy implements DamageCalculationStrategy {
                 return DamageCalculationResult.noChange(originalDamage);
             }
 
-            double multiplier = 1.0 + (level * (config.getMonsterPerLevel() / 2));
+            double multiplier = 1.0 + (level * (config.getMonsterPerLevel()));
             double finalDamage = originalDamage * multiplier;
 
             DamageCalculationResult.DamageModifier modifier =
