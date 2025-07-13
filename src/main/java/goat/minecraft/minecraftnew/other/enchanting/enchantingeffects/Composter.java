@@ -67,7 +67,7 @@ public class Composter implements Listener {
     private void autoCompost(Player player, Location dropLoc) {
         for (Material mat : ELIGIBLE_MATERIALS) {
             int count = countItem(player, mat);
-            if (count >= 64) {
+            if (count >= 256) {
                 removeItem(player, mat, 64);
                 dropLoc.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getOrganicSoil());
                 return;

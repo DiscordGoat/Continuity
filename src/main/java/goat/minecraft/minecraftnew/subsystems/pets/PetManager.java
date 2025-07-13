@@ -534,9 +534,11 @@ public class PetManager implements Listener {
             int before = activePet.getLevel();
             activePet.addXP(petXP);
             if (xpManager != null) {
-                xpManager.addXP(player, "Taming", petXP * 2);
-                if (before < 100 && activePet.getLevel() >= 100) {
-                    xpManager.addXP(player, "Taming", 2500);
+                if(activePet.getLevel() < 100) {
+                    xpManager.addXP(player, "Taming", petXP);
+                    if (before < 100 && activePet.getLevel() >= 100) {
+                        xpManager.addXP(player, "Taming", 2500);
+                    }
                 }
             }
             //player.sendMessage(ChatColor.AQUA + activePet.getName() + " gained " + xpGained + " XP!");

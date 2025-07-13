@@ -451,8 +451,6 @@ public class VillagerTradeManager implements Listener {
         toolsmithPurchases.add(createTradeMap("UNBREAKABLE_SHEARS", 1, 128, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("LEGENDARY_TOOL_REFORGE", 1, 64, 5)); // Custom Item
         toolsmithPurchases.add(createTradeMap("POWER_CRYSTAL", 1, 512, 5)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("REDSTONE_GEMSTONE", 1, 128, 5)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("JACKHAMMER", 1, 32, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("COMPOSTER_ENCHANT", 1, 32, 3)); // Custom Item
 
 
