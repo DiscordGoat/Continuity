@@ -13,6 +13,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -52,6 +53,10 @@ public class EnchantedClockManager {
     }
 
     private void processPlayer(Player player) {
+        InventoryType openType = player.getOpenInventory().getTopInventory().getType();
+        if (openType != InventoryType.CRAFTING && openType != InventoryType.CREATIVE) {
+            return; // pause while the player has any other inventory open
+        }
         for (int slot = 9; slot < 54; slot++) {
             ItemStack item = CustomBundleGUI.getInstance().getBackpackItem(player, slot);
             if (item == null) continue;
