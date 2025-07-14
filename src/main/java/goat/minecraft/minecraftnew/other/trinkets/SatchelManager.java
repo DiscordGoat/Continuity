@@ -89,4 +89,48 @@ public class SatchelManager implements Listener {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Deposits a single item stack into the specified satchel color. Stacks with
+     * similar type and meta will be combined when possible.
+     */
+    public void depositItem(Player player, String color, ItemStack toDeposit) {
+        String base = player.getUniqueId() + "." + color;
+        ItemStack remaining = toDeposit.clone();
+        for (int i = 0; i < 54 && remaining.getAmount() > 0; i++) {
+            String path = base + "." + i;
+            ItemStack existing = satchelConfig.getItemStack(path);
+            if (existing == null || existing.getType() == Material.AIR) {
+                satchelConfig.set(path, remaining);
+                remaining = null;
+                break;
+            }
+            if (existing.isSimilar(remaining) && existing.getAmount() < existing.getMaxStackSize()) {
+                int max = existing.getMaxStackSize();
+                int total = existing.getAmount() + remaining.getAmount();
+                if (total <= max) {
+                    existing.setAmount(total);
+                    satchelConfig.set(path, existing);
+                    remaining = null;
+                    break;
+                } else {
+                    existing.setAmount(max);
+                    satchelConfig.set(path, existing);
+                    remaining.setAmount(total - max);
+                }
+            }
+        }
+        saveSatchelConfig();
+        if (remaining != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), remaining);
+        }
+    }
+
+    private void saveSatchelConfig() {
+        try {
+            satchelConfig.save(satchelFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
