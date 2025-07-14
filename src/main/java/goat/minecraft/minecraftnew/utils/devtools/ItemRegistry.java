@@ -1360,6 +1360,44 @@ public class ItemRegistry {
         );
     }
 
+    /**
+     * Creates an Enchanted Clock trinket. When placed in the backpack the clock
+     * will automatically activate the left-click behaviour of the trinket
+     * directly above it every three minutes.
+     */
+    public static ItemStack getEnchantedClockTrinket() {
+        return createCustomItem(
+                Material.CLOCK,
+                ChatColor.YELLOW + "Enchanted Clock",
+                List.of(
+                        ChatColor.GRAY + "Activates the trinket above every 3 minutes",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /**
+     * Creates an Enchanted Hopper trinket. Items placed inside will be
+     * periodically transferred to the container above it when kept in the
+     * backpack.
+     */
+    public static ItemStack getEnchantedHopperTrinket() {
+        return createCustomItem(
+                Material.HOPPER,
+                ChatColor.YELLOW + "Enchanted Hopper",
+                List.of(
+                        ChatColor.GRAY + "Transfers whitelisted items to container above",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Configure"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getClericEnchant() {
         return createCustomItem(Material.SUGAR_CANE, ChatColor.YELLOW +
                 "Alchemical Bundle", Arrays.asList(

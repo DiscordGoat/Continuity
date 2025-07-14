@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.trinkets.PotionPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.MiningPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.TransfigurationPouchManager;
+import goat.minecraft.minecraftnew.other.trinkets.EnchantedHopperManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -160,6 +161,12 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
                     LavaBucketManager.getInstance().openTrash(player);
+                    event.setCancelled(true);
+                }
+            }
+            case "Enchanted Hopper" -> {
+                if (event.getClick().isLeftClick()) {
+                    EnchantedHopperManager.getInstance().openHopper(player, item);
                     event.setCancelled(true);
                 }
             }

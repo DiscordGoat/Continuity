@@ -609,4 +609,30 @@ public class CustomBundleGUI implements Listener {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Retrieves an item from the player's stored backpack at the given slot.
+     */
+    public ItemStack getBackpackItem(Player player, int slot) {
+        String path = player.getUniqueId() + "." + slot;
+        if (!storageConfig.contains(path)) return null;
+        return storageConfig.getItemStack(path);
+    }
+
+    /**
+     * Sets an item in the player's stored backpack at the given slot.
+     */
+    public void setBackpackItem(Player player, int slot, ItemStack item) {
+        String path = player.getUniqueId() + "." + slot;
+        if (item == null) {
+            storageConfig.set(path, null);
+        } else {
+            storageConfig.set(path, item);
+        }
+        try {
+            storageConfig.save(storageFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

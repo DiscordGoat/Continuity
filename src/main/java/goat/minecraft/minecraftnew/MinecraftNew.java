@@ -64,6 +64,8 @@ import goat.minecraft.minecraftnew.other.trinkets.CulinaryPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.MiningPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.TransfigurationPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.LavaBucketManager;
+import goat.minecraft.minecraftnew.other.trinkets.EnchantedClockManager;
+import goat.minecraft.minecraftnew.other.trinkets.EnchantedHopperManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.other.auras.AuraManager;
 import goat.minecraft.minecraftnew.other.armorsets.FlowManager;
@@ -357,6 +359,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         MiningPouchManager.init(this);
         TransfigurationPouchManager.init(this);
         LavaBucketManager.init(this);
+        EnchantedClockManager.init(this);
+        EnchantedHopperManager.init(this);
         TrinketManager.init(this);
         StructureBlockManager.init(this);
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
