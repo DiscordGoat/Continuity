@@ -21,6 +21,7 @@ public final class TalentRegistry {
                         Talent.TRIPLE_BATCH,
                         Talent.RECURVE_MASTERY,
                         Talent.REJUVENATION,
+                        Talent.SOVEREIGNTY_MASTERY,
                         Talent.STRENGTH_MASTERY)
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));

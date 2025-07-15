@@ -220,6 +220,13 @@ public class PotionBrewingSubsystem implements Listener {
             }
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
         }
+        if (base != null && name.equalsIgnoreCase("Potion of Sovereignty") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.SOVEREIGNTY_MASTERY)) {
+            if (!ingredients.contains("Ender Pearl")) {
+                ingredients.add("Ender Pearl");
+            }
+            return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
+        }
         return base;
     }
 
