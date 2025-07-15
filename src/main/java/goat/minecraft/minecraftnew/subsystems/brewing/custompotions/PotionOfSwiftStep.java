@@ -3,6 +3,9 @@ package goat.minecraft.minecraftnew.subsystems.brewing.custompotions;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -31,6 +34,11 @@ public class PotionOfSwiftStep implements Listener {
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
                 int brewingLevel = xpManager.getPlayerLevel(player, "Brewing");
                 int duration = (60 * 3) + (brewingLevel * 10); // Custom scaling
+                if (SkillTreeManager.getInstance().hasTalent(player, Talent.SWIFT_STEP_MASTERY)) {
+                    int bonus = 50 * SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.SWIFT_STEP_MASTERY);
+                    duration += bonus;
+                }
                 PotionManager.addCustomPotionEffect("Potion of Swift Step", player, duration);
                 player.sendMessage(ChatColor.AQUA + "Potion of Swift Step activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);

@@ -85,6 +85,7 @@ import goat.minecraft.minecraftnew.other.armorsets.ThunderforgeSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.LostLegionSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.CountershotSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.StriderSetBonus;
+import goat.minecraft.minecraftnew.other.skilltree.SwiftStepMasteryBonus;
 import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.other.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.other.structureblocks.SetStructureBlockPowerCommand;
@@ -134,6 +135,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private LostLegionSetBonus lostLegionSetBonus;
     private CountershotSetBonus countershotSetBonus;
     private StriderSetBonus striderSetBonus;
+    private SwiftStepMasteryBonus swiftStepMasteryBonus;
     private RejuvenationCatalystListener rejuvenationCatalystListener;
 
 
@@ -312,6 +314,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         lostLegionSetBonus = new LostLegionSetBonus(this);
         countershotSetBonus = new CountershotSetBonus(this);
         striderSetBonus = new StriderSetBonus(this);
+        swiftStepMasteryBonus = new SwiftStepMasteryBonus(this);
         // Initialize catalyst manager for beacon charm catalysts
         CatalystManager.initialize(this);
         rejuvenationCatalystListener = new RejuvenationCatalystListener(this);
@@ -792,6 +795,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         if (striderSetBonus != null) {
             striderSetBonus.removeAllBonuses();
+        }
+        if (swiftStepMasteryBonus != null) {
+            swiftStepMasteryBonus.removeAllBonuses();
         }
         BeaconPassivesGUI.saveAllPassives();
         if (CatalystManager.getInstance() != null) {
