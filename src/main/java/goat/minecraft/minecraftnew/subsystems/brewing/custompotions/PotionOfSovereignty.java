@@ -56,6 +56,7 @@ public class PotionOfSovereignty implements Listener {
                                 goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY);
                 duration += bonus;
             }
+            int duration = (60 * 3);
             PotionManager.addCustomPotionEffect("Potion of Sovereignty", player, duration);
 
             player.sendMessage(ChatColor.GREEN + "Sovereignty activated! Your deflections have been refreshed to " + maxDeflections + ".");

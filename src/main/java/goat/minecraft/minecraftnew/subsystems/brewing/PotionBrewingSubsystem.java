@@ -165,6 +165,28 @@ public class PotionBrewingSubsystem implements Listener {
         plugin.getLogger().info("[PotionBrewingSubsystem] All sessions finalized & cleared on shutdown.");
     }
 
+    /**
+     * Developer utility: set all actively brewing sessions to finish in one second.
+     *
+     * @return number of sessions affected
+     */
+    public int finishAllBrewsSoon() {
+        int affected = 0;
+        for (BrewSession session : activeSessions.values()) {
+            if (session.brewInProgress() && session.brewTimeRemaining > 1) {
+                session.brewTimeRemaining = 1;
+                // update timer stand display
+                Entity ent = Bukkit.getEntity(session.timerStand);
+                if (ent instanceof ArmorStand stand && stand.isValid()) {
+                    stand.setCustomName(ChatColor.YELLOW + "1s");
+                }
+                session.updateDB();
+                affected++;
+            }
+        }
+        return affected;
+    }
+
     // ========================================================================
     // Helper
     // ========================================================================
@@ -206,6 +228,19 @@ public class PotionBrewingSubsystem implements Listener {
                 SkillTreeManager.getInstance().hasTalent(player, Talent.RECURVE_MASTERY)) {
             if (!ingredients.contains("Skeleton Skull")) {
                 ingredients.add("Skeleton Skull");
+            }
+        }
+
+        if (name.equalsIgnoreCase("Potion of Oxygen Recovery") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.OXYGEN_MASTERY)) {
+            if (!ingredients.contains("Obsidian")) {
+                ingredients.add("Obsidian");
+            }
+        }
+        if (name.equalsIgnoreCase("Potion of Swift Step") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.SWIFT_STEP_MASTERY)) {
+            if (!ingredients.contains("Pumpkin")) {
+                ingredients.add("Pumpkin");
             }
         }
 

@@ -46,12 +46,6 @@ public class PotionManager {
      */
     public static void addCustomPotionEffect(String name, Player player, int duration) {
         UUID uuid = player.getUniqueId();
-        PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
-
-        if(playerMeritManager.hasPerk(player.getUniqueId(), "Strong Digestion")){
-            duration = duration * 2;
-            Bukkit.getLogger().info("Doubled Effect Duration from Strong Digestion Perk!");
-        }
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet pet = petManager.getActivePet(player);
         if(pet != null && pet.hasPerk(PetManager.PetPerk.EXPERIMENTATION)){

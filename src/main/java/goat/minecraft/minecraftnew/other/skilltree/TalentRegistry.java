@@ -22,7 +22,9 @@ public final class TalentRegistry {
                         Talent.RECURVE_MASTERY,
                         Talent.REJUVENATION,
                         Talent.SOVEREIGNTY_MASTERY,
-                        Talent.STRENGTH_MASTERY)
+                        Talent.STRENGTH_MASTERY,
+                        Talent.OXYGEN_MASTERY,
+                        Talent.SWIFT_STEP_MASTERY)
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }
