@@ -11,6 +11,8 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -48,6 +50,7 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
         double callOfTheVoidBonus = callOfTheVoidLevel;
 
         double fountainBonus = PotionManager.isActive("Potion of Fountains", player) ? 10.0 : 0.0;
+        double fountainMastery = SkillTreeManager.getInstance().hasTalent(player, Talent.FOUNTAIN_MASTERY) ? 5.0 : 0.0;
 
         CatalystManager catalystManager = CatalystManager.getInstance();
         double depthBonus = 0.0;
@@ -96,7 +99,7 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
             }
         }
 
-        double total = base + nauticalBonus + fishingLevelBonus + callOfTheVoidBonus + fountainBonus + depthBonus + talismanBonus + masterAnglerBonus + fathmicPenalty + sonarBonus + petBonus;
+        double total = base + nauticalBonus + fishingLevelBonus + callOfTheVoidBonus + fountainBonus + fountainMastery + depthBonus + talismanBonus + masterAnglerBonus + fathmicPenalty + sonarBonus + petBonus;
 
         player.sendMessage(ChatColor.AQUA + "Sea Creature Chance Breakdown:");
         player.sendMessage(ChatColor.AQUA + "Base SCC: " + ChatColor.YELLOW + "0%");
@@ -104,6 +107,9 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
         player.sendMessage(ChatColor.AQUA + "SCC from Fishing Level: " + ChatColor.YELLOW + String.format("%.2f", fishingLevelBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from COTV: " + ChatColor.YELLOW + String.format("%.2f", callOfTheVoidBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from Potion of Fountains: " + ChatColor.YELLOW + String.format("%.2f", fountainBonus) + "%");
+        if(fountainMastery > 0){
+            player.sendMessage(ChatColor.AQUA + "SCC from Fountain Mastery: " + ChatColor.YELLOW + String.format("%.2f", fountainMastery) + "%");
+        }
         player.sendMessage(ChatColor.AQUA + "SCC from Depth Catalyst: " + ChatColor.YELLOW + String.format("%.2f", depthBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from Sea Creature Talisman: " + ChatColor.YELLOW + String.format("%.2f", talismanBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from Master Angler Merit: " + ChatColor.YELLOW + String.format("%.2f", masterAnglerBonus) + "%");

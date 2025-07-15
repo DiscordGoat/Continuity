@@ -108,6 +108,22 @@ public enum Talent {
             4,
             40,
             Material.SPIDER_EYE
+      ),
+    SOLAR_FURY_MASTERY(
+            "Solar Fury Mastery",
+            ChatColor.GRAY + "Add a blaze rod",
+            ChatColor.YELLOW + "+50s " + ChatColor.GOLD + "Solar Fury Duration",
+            4,
+            75,
+            Material.FIRE_CHARGE
+    FOUNTAIN_MASTERY(
+            "Fountain Mastery",
+            ChatColor.GRAY + "Add a heart of the sea",
+            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Fountains Duration, "
+                    + ChatColor.AQUA + "+5% Sea Creature Chance",
+            4,
+            60,
+            Material.DARK_PRISMARINE
     );
 
 

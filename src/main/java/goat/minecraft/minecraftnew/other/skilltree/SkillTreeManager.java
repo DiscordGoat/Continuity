@@ -233,6 +233,14 @@ public class SkillTreeManager implements Listener {
                 int nvDuration = level * 50;
                 return ChatColor.YELLOW + "+" + nvDuration + "s " + ChatColor.AQUA + "Night Vision Duration";
             default:
+            case SOLAR_FURY_MASTERY:
+                int solarDuration = level * 50;
+                return ChatColor.YELLOW + "+" + solarDuration + "s " + ChatColor.GOLD + "Solar Fury Duration";
+            case FOUNTAIN_MASTERY:
+                int fountainDuration = level * 50;
+                return ChatColor.YELLOW + "+" + fountainDuration + "s " + ChatColor.LIGHT_PURPLE + "Fountains Duration, "
+                        + ChatColor.AQUA + "+5% Sea Creature Chance";
+          default:
                 return talent.getTechnicalDescription();
         }
     }
