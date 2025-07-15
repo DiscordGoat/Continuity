@@ -159,6 +159,10 @@ commands:
     description: Sets a player's skill level
     usage: /setskilllevel <player> <skill> <level>
     permission: continuity.admin
+  addtalentpoint:
+    description: Gives talent points to a player
+    usage: /addTalentPoint <player> <skill> <amount>
+    permission: continuity.admin
   grantLegacyTaming:
     description: Grants Taming XP based on existing pets
     usage: /grantLegacyTaming <player>
