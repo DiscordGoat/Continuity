@@ -14,6 +14,8 @@ import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -113,6 +115,9 @@ public class FishingEvent implements Listener {
 
         if(PotionManager.isActive("Potion of Fountains", player)){
             seaCreatureChance += 10;
+        }
+        if(SkillTreeManager.getInstance().hasTalent(player, Talent.FOUNTAIN_MASTERY)){
+            seaCreatureChance += 5;
         }
 
         CatalystManager catalystManager = CatalystManager.getInstance();

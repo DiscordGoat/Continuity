@@ -3,6 +3,9 @@ package goat.minecraft.minecraftnew.subsystems.brewing.custompotions;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +23,12 @@ public class PotionOfFountains implements Listener {
             int duration = (60 * 3);
             if (displayName.equals("Potion of Fountains")) {
                 Player player = event.getPlayer();
-                // Add the custom effect for 15 seconds
+                if (SkillTreeManager.getInstance().hasTalent(player, Talent.FOUNTAIN_MASTERY)) {
+                    int bonus = 50 * SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.FOUNTAIN_MASTERY);
+                    duration += bonus;
+                }
+                // Add the custom effect
                 PotionManager.addCustomPotionEffect("Potion of Fountains", player, duration);
                 player.sendMessage(ChatColor.GREEN + "Potion of Fountains effect activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);
