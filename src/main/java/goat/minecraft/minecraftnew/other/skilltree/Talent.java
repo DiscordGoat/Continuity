@@ -23,7 +23,7 @@ public enum Talent {
             ChatColor.YELLOW + "-4s " + ChatColor.GOLD + "Brew Time.",
             10,
             1,
-            Material.REDSTONE
+            Material.BREWING_STAND
     ),
     REDSTONE_ONE(
             "Redstone I",
