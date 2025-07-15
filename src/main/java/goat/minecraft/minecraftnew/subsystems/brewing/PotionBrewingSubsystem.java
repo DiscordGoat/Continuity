@@ -209,6 +209,13 @@ public class PotionBrewingSubsystem implements Listener {
             }
         }
 
+        if (name.equalsIgnoreCase("Potion of Liquid Luck") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.LIQUID_LUCK_MASTERY)) {
+            if (!ingredients.contains("Golden Ingot")) {
+                ingredients.add("Golden Ingot");
+            }
+        }
+
         if (!ingredients.equals(base.getRequiredIngredients())) {
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
         }

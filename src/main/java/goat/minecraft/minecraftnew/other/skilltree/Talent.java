@@ -66,6 +66,14 @@ public enum Talent {
             4,
             25,
             Material.DIAMOND_SWORD
+    ),
+    LIQUID_LUCK_MASTERY(
+            "Liquid Luck Mastery",
+            ChatColor.GRAY + "Add a Golden Ingot",
+            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Liquid Luck Duration",
+            4,
+            60,
+            Material.HONEY_BOTTLE
     );
 
 
