@@ -236,6 +236,12 @@ public class PotionBrewingSubsystem implements Listener {
                 ingredients.add("Gold Block");
             }
         }
+        if (name.equalsIgnoreCase("Potion of Charismatic Bartering") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.CHARISMA_MASTERY)) {
+            if (!ingredients.contains("Gold Block")) {
+                ingredients.add("Gold Block");
+            }
+        }
         if (name.equalsIgnoreCase("Potion of Oxygen Recovery") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.OXYGEN_MASTERY)) {
             if (!ingredients.contains("Obsidian")) {

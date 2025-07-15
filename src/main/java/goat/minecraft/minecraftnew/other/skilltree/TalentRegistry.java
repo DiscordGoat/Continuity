@@ -30,7 +30,8 @@ public final class TalentRegistry {
                         Talent.METAL_DETECTION_MASTERY,
                         Talent.NIGHT_VISION_MASTERY,
                         Talent.SOLAR_FURY_MASTERY,
-                        Talent.FOUNTAIN_MASTERY)
+                        Talent.FOUNTAIN_MASTERY,
+                        Talent.CHARISMA_MASTERY)
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }

@@ -244,6 +244,10 @@ public class SkillTreeManager implements Listener {
                 int fountainDuration = level * 50;
                 return ChatColor.YELLOW + "+" + fountainDuration + "s " + ChatColor.LIGHT_PURPLE + "Fountains Duration, "
                         + ChatColor.AQUA + "+5% Sea Creature Chance";
+            case CHARISMA_MASTERY:
+                int charismaDuration = level * 50;
+                return ChatColor.YELLOW + "+" + charismaDuration + "s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration, "
+                        + ChatColor.GOLD + "+5% Discount";
           default:
                 return talent.getTechnicalDescription();
         }
