@@ -19,9 +19,10 @@ public class SeaCreature {
     private int level; // Level based on rarity
     private String skullName; // Holds the base64 URL string
     private Random random = new Random();
+    private boolean npc;
 
     public SeaCreature(String displayName, Rarity rarity, EntityType entityType, List<DropItem> dropItems,
-                       Color armorColor, String skullName, int level) {
+                       Color armorColor, String skullName, int level, boolean npc) {
         this.displayName = displayName;
         this.rarity = rarity;
         this.entityType = entityType;
@@ -29,6 +30,7 @@ public class SeaCreature {
         this.armorColor = armorColor;
         this.level = level;
         this.skullName = skullName;
+        this.npc = npc;
     }
 
     // Add a getter for the texture
@@ -75,6 +77,10 @@ public class SeaCreature {
 
     public int getLevel() {
         return level;
+    }
+
+    public boolean isNPC() {
+        return npc;
     }
 
     public static ItemStack createDyedLeatherArmor(Material material, Color color) {
