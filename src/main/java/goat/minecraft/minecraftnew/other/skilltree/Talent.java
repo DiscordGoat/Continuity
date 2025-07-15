@@ -125,6 +125,7 @@ public enum Talent {
             4,
             75,
             Material.FIRE_CHARGE
+    ),
     FOUNTAIN_MASTERY(
             "Fountain Mastery",
             ChatColor.GRAY + "Add a heart of the sea",
