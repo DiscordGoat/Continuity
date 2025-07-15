@@ -241,7 +241,7 @@ public class PotionBrewingSubsystem implements Listener {
                 new PotionRecipe("Potion of Fountains", fountainsIngredients, 60*4, new ItemStack(Material.POTION), fountainsColor, fountainsLore)
         );
         List<String> swiftStepIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Sugar", "Entropy");
-        List<String> swiftStepLore = Arrays.asList("Increases movement speed by 30%", "Base Duration of " + baseDuration);
+        List<String> swiftStepLore = Arrays.asList("Increases movement speed by 40%", "Base Duration of " + baseDuration);
         Color swiftStepColor = Color.fromRGB(150, 200, 255); // A light blue-ish color
         recipeRegistry.add(
                 new PotionRecipe("Potion of Swift Step", swiftStepIngredients, 60*30, new ItemStack(Material.POTION), swiftStepColor, swiftStepLore)
