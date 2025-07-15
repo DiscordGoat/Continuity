@@ -248,6 +248,12 @@ public class PotionBrewingSubsystem implements Listener {
                 ingredients.add("Pumpkin");
             }
         }
+        if (name.equalsIgnoreCase("Potion of Metal Detection") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.METAL_DETECTION_MASTERY)) {
+            if (!ingredients.contains("Diamond")) {
+                ingredients.add("Diamond");
+            }
+        }
 
         if (!ingredients.equals(base.getRequiredIngredients())) {
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());

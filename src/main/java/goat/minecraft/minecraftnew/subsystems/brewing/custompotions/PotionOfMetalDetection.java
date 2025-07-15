@@ -20,6 +20,13 @@ public class PotionOfMetalDetection implements Listener {
                 Player player = event.getPlayer();
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
                 int duration = (60 * 3);
+                if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                        .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.METAL_DETECTION_MASTERY)) {
+                    int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
+                                    goat.minecraft.minecraftnew.other.skilltree.Talent.METAL_DETECTION_MASTERY);
+                    duration += bonus;
+                }
                 PotionManager.addCustomPotionEffect("Potion of Metal Detection", player, duration);
                 player.sendMessage(ChatColor.GREEN + "Potion of Metal Detection effect activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);

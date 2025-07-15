@@ -229,6 +229,11 @@ public class SkillTreeManager implements Listener {
                 int swiftDuration = level * 50;
                 return ChatColor.YELLOW + "+" + swiftDuration + "s " + ChatColor.LIGHT_PURPLE + "Swift Step Duration, "
                         + ChatColor.AQUA + "+5% Speed";
+            case METAL_DETECTION_MASTERY:
+                int metalDuration = level * 50;
+                double graveBonus = level * 0.01;
+                return ChatColor.YELLOW + "+" + metalDuration + "s " + ChatColor.LIGHT_PURPLE + "Metal Detection Duration, "
+                        + ChatColor.YELLOW + "+" + graveBonus + ChatColor.GRAY + " grave chance";
             default:
                 return talent.getTechnicalDescription();
         }

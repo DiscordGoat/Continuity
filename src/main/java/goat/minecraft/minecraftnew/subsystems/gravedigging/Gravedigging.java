@@ -23,6 +23,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -118,6 +121,10 @@ public class Gravedigging implements Listener {
         }
         if (PotionManager.isActive("Potion of Metal Detection", player)) {
             chance += 0.01;
+            if (SkillTreeManager.getInstance().hasTalent(player, Talent.METAL_DETECTION_MASTERY)) {
+                int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.METAL_DETECTION_MASTERY);
+                chance += 0.01 * level;
+            }
         }
         if (isNight(world)) {
             chance = Math.min(1.0, chance * 2);

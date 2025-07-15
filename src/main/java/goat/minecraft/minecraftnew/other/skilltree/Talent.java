@@ -100,6 +100,15 @@ public enum Talent {
             4,
             35,
             Material.FEATHER
+    ),
+    METAL_DETECTION_MASTERY(
+            "Metal Detection Mastery",
+            ChatColor.GRAY + "Add a diamond",
+            ChatColor.YELLOW + "+(50*level)s " + ChatColor.LIGHT_PURPLE + "Metal Detection Duration, "
+                    + ChatColor.YELLOW + "+(0.01*level) " + ChatColor.GRAY + "grave chance",
+            4,
+            55,
+            Material.ZOMBIE_HEAD
     );
 
 
