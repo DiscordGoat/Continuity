@@ -6,6 +6,8 @@ import goat.minecraft.minecraftnew.subsystems.combat.config.CombatConfiguration;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationContext;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationResult;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationStrategy;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Arrow;
@@ -65,6 +67,12 @@ public class RangedDamageStrategy implements DamageCalculationStrategy {
                     potionMultiplier, 
                     "Recurve potion effect"
                 ));
+            }
+            if (SkillTreeManager.getInstance() != null &&
+                    SkillTreeManager.getInstance().hasTalent(shooter, Talent.RECURVE_MASTERY)) {
+                finalDamage *= 1.05;
+                modifiers.add(DamageCalculationResult.DamageModifier.multiplicative(
+                        "Recurve Mastery", 1.05, "+5% Arrow Damage"));
             }
             if(BlessingUtils.hasFullSetBonus(shooter.getPlayer(), "Lost Legion")){
                 modifiers.add(DamageCalculationResult.DamageModifier.multiplicative("Lost Legion Set", 1.25, "Full set bonus"));

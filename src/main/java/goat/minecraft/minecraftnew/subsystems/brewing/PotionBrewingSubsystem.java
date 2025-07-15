@@ -200,6 +200,14 @@ public class PotionBrewingSubsystem implements Listener {
             }
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
         }
+        if (base != null && name.equalsIgnoreCase("Potion of Strength") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.STRENGTH_MASTERY)) {
+            java.util.List<String> ingredients = new java.util.ArrayList<>(base.getRequiredIngredients());
+            if (!ingredients.contains("Singularity")) {
+                ingredients.add("Singularity");
+            }
+            return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
+        }
         return base;
     }
 
