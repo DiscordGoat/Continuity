@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.subsystems.terraforming;
+package goat.minecraft.minecraftnew.subsystems.gravedigging.terraforming;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;

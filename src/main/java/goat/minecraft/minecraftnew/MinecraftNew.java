@@ -531,7 +531,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(SpawnMonsters.getInstance(xpManager), this);
         getServer().getPluginManager().registerEvents(new KillMonster(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new Mining(), MinecraftNew.getInstance());
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.terraforming.Terraforming(), MinecraftNew.getInstance());
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.gravedigging.terraforming.Terraforming(), MinecraftNew.getInstance());
 
         getServer().getPluginManager().registerEvents(new Gravedigging(this), this);
         Gravedigging gravedigging = new Gravedigging(this);
@@ -612,7 +612,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new ReforgeArmorToughness(), this);
         getServer().getPluginManager().registerEvents(new ReforgeArmor(), this);
         getServer().getPluginManager().registerEvents(new ReforgeDurability(), this);
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.terraforming.TerraformingDurability(), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.gravedigging.terraforming.TerraformingDurability(), this);
         getServer().getPluginManager().registerEvents(new ReforgeSwiftBlade(), this);
         getServer().getPluginManager().registerEvents(new WaterLogged(this), this);
 
