@@ -515,7 +515,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         new PlayerTabListUpdater(this, xpManager);
         this.getCommand("xp").setExecutor(xpManager);
         this.getCommand("loadsubsystems").setExecutor(new LoadSubsystemsCommand(this));
-        this.getCommand("skills").setExecutor(new SkillsCommand(xpManager));
+        SkillsCommand skillsCommand = new SkillsCommand(xpManager);
+        this.getCommand("skills").setExecutor(skillsCommand);
+        getServer().getPluginManager().registerEvents(skillsCommand, this);
         new SetSkillLevelCommand(this, xpManager);
 
         SkillTreeManager.init(this);

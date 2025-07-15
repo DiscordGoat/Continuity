@@ -18,12 +18,13 @@ import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SkillsCommand implements CommandExecutor {
+public class SkillsCommand implements CommandExecutor, Listener {
 
     private final XPManager xpManager;
 
