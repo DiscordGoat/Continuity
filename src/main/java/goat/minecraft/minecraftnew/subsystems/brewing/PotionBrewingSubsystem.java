@@ -249,6 +249,13 @@ public class PotionBrewingSubsystem implements Listener {
             }
         }
 
+        if (name.equalsIgnoreCase("Potion of Fountains") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.FOUNTAIN_MASTERY)) {
+            if (!ingredients.contains("Heart of the Sea")) {
+                ingredients.add("Heart of the Sea");
+            }
+        }
+
         if (!ingredients.equals(base.getRequiredIngredients())) {
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
         }
