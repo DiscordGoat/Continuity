@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.utils.devtools;
 
 import java.io.*;
-import java.util.UUID;
+import java.util.*;
 
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
@@ -20,11 +20,14 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 public class XPManager implements CommandExecutor {
 
     private final JavaPlugin plugin;
     private final java.util.Map<String, HotbarAnimation> activeAnimations = new java.util.HashMap<>();
+    private final File xpFolder;
 
     // XP thresholds for levels 0 to 100
     private final int[] xpThresholds = new int[] {
@@ -132,45 +135,116 @@ public class XPManager implements CommandExecutor {
 
     public XPManager(JavaPlugin plugin) {
         this.plugin = plugin;
+        this.xpFolder = new File(plugin.getDataFolder(), "skills");
+        if (!xpFolder.exists()) {
+            xpFolder.mkdirs();
+        }
+        convertOldFiles();
+        cleanupEmptyFiles();
     }
 
     // =================================================
     // ===============  FILE OPERATIONS  ===============
     // =================================================
     public void createDatabase(UUID uuid, String skill) {
-        File file = new File(plugin.getDataFolder(), uuid + "_" + skill + ".txt");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-                saveXP(uuid, skill, 0); // Initialize with 0 XP
-                Bukkit.getLogger().info("Created new XP database for " + uuid + " and skill " + skill);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        FileConfiguration config = getPlayerConfig(uuid);
+        if (!config.contains(skill)) {
+            config.set(skill, 0);
+            savePlayerConfig(uuid, config);
+            Bukkit.getLogger().info("Created new XP database for " + uuid + " and skill " + skill);
         }
     }
 
     public int loadXP(UUID uuid, String skill) {
-        File file = new File(plugin.getDataFolder(), uuid + "_" + skill + ".txt");
-        if (!file.exists()) {
-            createDatabase(uuid, skill);
-            return 0;
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            return Integer.parseInt(reader.readLine());
-        } catch (IOException | NumberFormatException e) {
-            e.printStackTrace();
-            return 0;
-        }
+        FileConfiguration config = getPlayerConfig(uuid);
+        return config.getInt(skill, 0);
     }
 
     public void saveXP(UUID uuid, String skill, int xp) {
-        File file = new File(plugin.getDataFolder(), uuid + "_" + skill + ".txt");
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            writer.write(String.valueOf(xp));
+        FileConfiguration config = getPlayerConfig(uuid);
+        config.set(skill, xp);
+        savePlayerConfig(uuid, config);
+    }
+
+    private File getPlayerFile(UUID uuid) {
+        String name = Bukkit.getOfflinePlayer(uuid).getName();
+        if (name == null || name.isEmpty()) {
+            name = uuid.toString();
+        }
+        return new File(xpFolder, name + ".yml");
+    }
+
+    private FileConfiguration getPlayerConfig(UUID uuid) {
+        File file = getPlayerFile(uuid);
+        if (!file.exists()) {
+            try {
+                file.getParentFile().mkdirs();
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
+        config.set("uuid", uuid.toString());
+        return config;
+    }
+
+    private void savePlayerConfig(UUID uuid, FileConfiguration config) {
+        try {
+            config.save(getPlayerFile(uuid));
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private void convertOldFiles() {
+        File folder = plugin.getDataFolder();
+        File[] oldFiles = folder.listFiles((dir, name) -> name.endsWith(".txt") && name.contains("_"));
+        if (oldFiles == null) return;
+
+        Map<UUID, Map<String, Integer>> accum = new HashMap<>();
+        for (File f : oldFiles) {
+            String base = f.getName().replace(".txt", "");
+            String[] parts = base.split("_");
+            if (parts.length != 2) continue;
+            try {
+                UUID id = UUID.fromString(parts[0]);
+                String skill = parts[1];
+                int xp = 0;
+                try (BufferedReader r = new BufferedReader(new FileReader(f))) {
+                    String line = r.readLine();
+                    if (line != null) xp = Integer.parseInt(line.trim());
+                } catch (Exception ignored) {}
+                accum.computeIfAbsent(id, k -> new HashMap<>()).put(skill, xp);
+            } catch (IllegalArgumentException ignored) {}
+        }
+
+        for (Map.Entry<UUID, Map<String, Integer>> entry : accum.entrySet()) {
+            UUID id = entry.getKey();
+            FileConfiguration config = getPlayerConfig(id);
+            for (Map.Entry<String, Integer> e : entry.getValue().entrySet()) {
+                int existing = config.getInt(e.getKey(), 0);
+                if (existing < e.getValue()) {
+                    config.set(e.getKey(), e.getValue());
+                }
+            }
+            savePlayerConfig(id, config);
+        }
+
+        for (File f : oldFiles) {
+            f.delete();
+        }
+    }
+
+    private void cleanupEmptyFiles() {
+        File[] files = xpFolder.listFiles((dir, name) -> name.endsWith(".yml"));
+        if (files == null) return;
+        for (File f : files) {
+            FileConfiguration config = YamlConfiguration.loadConfiguration(f);
+            int playerXP = config.getInt("Player", 0);
+            if (playerXP <= 0) {
+                f.delete();
+            }
         }
     }
 
