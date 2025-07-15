@@ -40,7 +40,15 @@ public enum Talent {
             10,
                     20,
             Material.REDSTONE_BLOCK
-            );
+    ),
+    RECURVE_MASTERY(
+            "Recurve Mastery",
+            ChatColor.GRAY + "Add a Skeleton Skull",
+            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Recurve Duration",
+            4,
+            25,
+            Material.BOW
+    );
 
 
     private final String name;

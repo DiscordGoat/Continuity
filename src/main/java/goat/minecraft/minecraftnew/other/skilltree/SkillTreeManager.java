@@ -203,6 +203,9 @@ public class SkillTreeManager implements Listener {
                 int seconds = level * 4;
                 return ChatColor.YELLOW + "+" + seconds + "s " + ChatColor.LIGHT_PURPLE + "Potion Duration, "
                         + ChatColor.GOLD + "+" + seconds + "s " + ChatColor.GOLD + "Brew Time.";
+            case RECURVE_MASTERY:
+                int recurveDuration = level * 50;
+                return ChatColor.YELLOW + "+" + recurveDuration + "s " + ChatColor.LIGHT_PURPLE + "Recurve Duration";
             default:
                 return talent.getTechnicalDescription();
         }

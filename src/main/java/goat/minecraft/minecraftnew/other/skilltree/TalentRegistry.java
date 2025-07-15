@@ -14,7 +14,12 @@ public final class TalentRegistry {
         // Currently only the Brewing skill has talents defined.
         SKILL_TALENTS.put(
                 Skill.BREWING,
-                Arrays.asList(Talent.REDSTONE_ONE, Talent.REDSTONE_TWO, Talent.OPTIMAL_CONFIGURATION, Talent.TRIPLE_BATCH)
+                Arrays.asList(
+                        Talent.REDSTONE_ONE,
+                        Talent.REDSTONE_TWO,
+                        Talent.OPTIMAL_CONFIGURATION,
+                        Talent.TRIPLE_BATCH,
+                        Talent.RECURVE_MASTERY)
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }

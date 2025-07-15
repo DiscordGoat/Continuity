@@ -22,6 +22,10 @@ public class PotionOfRecurve implements Listener {
             int duration = (60 * 3) + (brewingLevel * 10);
             if (displayName.equals("Potion of Recurve")) {
                 Player player = event.getPlayer();
+                if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance().hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.RECURVE_MASTERY)) {
+                    int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING, goat.minecraft.minecraftnew.other.skilltree.Talent.RECURVE_MASTERY);
+                    duration += bonus;
+                }
                 PotionManager.addCustomPotionEffect("Potion of Recurve", player, duration);
                 player.sendMessage(ChatColor.DARK_GREEN + "Potion of Recurve effect activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);

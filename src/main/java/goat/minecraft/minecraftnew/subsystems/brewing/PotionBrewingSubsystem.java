@@ -187,11 +187,20 @@ public class PotionBrewingSubsystem implements Listener {
         return item.getItemMeta().getDisplayName().contains("Potion Recipe");
     }
 
-    private PotionRecipe parseRecipeFromPaper(ItemStack paper) {
+    private PotionRecipe parseRecipeFromPaper(ItemStack paper, Player player) {
         String name = ChatColor.stripColor(paper.getItemMeta().getDisplayName())
                 .replace("Recipe (Potion Recipe)", "")
                 .trim();
-        return findRecipeByName(name);
+        PotionRecipe base = findRecipeByName(name);
+        if (base != null && name.equalsIgnoreCase("Potion of Recurve") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.RECURVE_MASTERY)) {
+            java.util.List<String> ingredients = new java.util.ArrayList<>(base.getRequiredIngredients());
+            if (!ingredients.contains("Skeleton Skull")) {
+                ingredients.add("Skeleton Skull");
+            }
+            return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
+        }
+        return base;
     }
 
     // Candidate particles for random selection
@@ -362,7 +371,7 @@ public class PotionBrewingSubsystem implements Listener {
                 player.sendMessage(ChatColor.RED + "That is not a valid potion recipe item.");
                 return;
             }
-            PotionRecipe recipe = parseRecipeFromPaper(hand);
+            PotionRecipe recipe = parseRecipeFromPaper(hand, player);
             if (recipe == null) {
                 player.sendMessage(ChatColor.RED + "Unrecognized or invalid potion recipe item.");
                 return;
