@@ -1277,7 +1277,7 @@ public class ItemRegistry {
 
     public static ItemStack getPotionPouchTrinket() {
         return createCustomItem(
-                Material.BUNDLE,
+                Material.BREWING_STAND,
                 ChatColor.YELLOW + "Pouch of Potions",
                 List.of(
                         ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store potions",
@@ -1291,7 +1291,7 @@ public class ItemRegistry {
 
     public static ItemStack getCulinaryPouchTrinket() {
         return createCustomItem(
-                Material.BUNDLE,
+                Material.CAKE,
                 ChatColor.YELLOW + "Pouch of Culinary Delights",
                 List.of(
                         ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Store delights",

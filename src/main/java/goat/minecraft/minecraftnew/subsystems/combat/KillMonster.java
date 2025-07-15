@@ -95,7 +95,7 @@ public class KillMonster implements Listener {
                 xpGain = Math.min(xpGain, 125);
                 xpManager.addXP(playerKiller, "Combat", xpGain);
                 // Increase forestry notoriety from combat
-                Forestry.getInstance().addNotoriety(playerKiller, 1, false, false);
+                Forestry.getInstance().addNotoriety(playerKiller, 3, false, false);
                 ChampionManager.getInstance(MinecraftNew.getInstance())
                         .recordKill(playerKiller, entity.getLocation());
             }

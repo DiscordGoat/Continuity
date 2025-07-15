@@ -40,7 +40,11 @@ public class NightHordeTask extends BukkitRunnable {
                 for (Player player : world.getPlayers()) {
                     int hostility = HostilityManager.getInstance(plugin)
                             .getPlayerHostility(player);
-                    spawnHorde(player, hostility);
+                    if(hostility > 300){
+                        return;
+                    }else{
+                        spawnHorde(player, hostility);
+                    }
                 }
             }
         }

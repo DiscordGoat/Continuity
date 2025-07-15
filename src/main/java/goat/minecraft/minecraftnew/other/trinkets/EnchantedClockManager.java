@@ -49,7 +49,7 @@ public class EnchantedClockManager {
                     processPlayer(player);
                 }
             }
-        }.runTaskTimer(plugin, 20L * 60 * 3, 20L * 60 * 3);
+        }.runTaskTimer(plugin, 20, 20L * 60 * 3);
     }
 
     private void processPlayer(Player player) {

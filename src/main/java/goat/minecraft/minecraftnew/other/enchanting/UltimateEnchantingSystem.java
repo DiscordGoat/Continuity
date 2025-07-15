@@ -118,7 +118,7 @@ public class UltimateEnchantingSystem implements Listener {
         if (event.getClickedBlock().getType() == Material.ENCHANTING_TABLE &&
                 event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.RED + "Ultimate enchantments are applied with smithing items.");
+                openUltimateEnchantmentGUI(event.getPlayer());
         }
     }
 
@@ -155,13 +155,7 @@ public class UltimateEnchantingSystem implements Listener {
         }
 
         // Place icons for up to 8 ultimate enchants in specific slots
-        int[] iconSlots = {12, 13, 14, 21, 23, 30, 31, 32};
-        int enchantCount = Math.min(relevantEnchants.size(), 8);
 
-        for (int i = 0; i < enchantCount && i < iconSlots.length; i++) {
-            String enchantName = relevantEnchants.get(i);
-            inv.setItem(iconSlots[i], createCustomIcon(enchantName));
-        }
 
         if (isEffigyAxe(heldItem.getType())) {
             inv.setItem(53, createEffigyUpgradeButton(heldItem));

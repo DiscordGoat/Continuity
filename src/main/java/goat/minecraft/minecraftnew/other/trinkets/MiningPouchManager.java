@@ -73,11 +73,25 @@ public class MiningPouchManager implements Listener {
             Material.DIAMOND_ORE, Material.DEEPSLATE_DIAMOND_ORE,
             Material.NETHER_QUARTZ_ORE, Material.NETHER_GOLD_ORE,
             Material.ANCIENT_DEBRIS,
+            // Raw ores
             Material.RAW_IRON, Material.RAW_COPPER, Material.RAW_GOLD,
+            // Ingots and resources
             Material.IRON_INGOT, Material.GOLD_INGOT, Material.COPPER_INGOT,
-            Material.DIAMOND, Material.EMERALD, Material.LAPIS_LAZULI,
+            Material.DIAMOND, Material.LAPIS_LAZULI,
             Material.REDSTONE, Material.QUARTZ, Material.NETHERITE_SCRAP,
-            Material.NETHERITE_INGOT, Material.COAL
+            Material.NETHERITE_INGOT, Material.COAL,
+            // Block variants (excluding emerald and emerald_block)
+            Material.COAL_BLOCK,
+            Material.IRON_BLOCK,
+            Material.GOLD_BLOCK,
+            Material.COPPER_BLOCK,
+            Material.DIAMOND_BLOCK,
+            Material.LAPIS_BLOCK,
+            Material.REDSTONE_BLOCK,
+            Material.RAW_IRON_BLOCK,
+            Material.RAW_GOLD_BLOCK,
+            Material.RAW_COPPER_BLOCK,
+            Material.NETHERITE_BLOCK
     );
 
     private boolean isOre(ItemStack item) {

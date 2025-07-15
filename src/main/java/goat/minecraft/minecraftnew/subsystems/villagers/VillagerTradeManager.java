@@ -371,6 +371,8 @@ public class VillagerTradeManager implements Listener {
         leatherworkerPurchases.add(createTradeMap("POUCH_OF_SEEDS", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("POUCH_OF_POTIONS", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("POUCH_OF_DELIGHTS", 1, 90, 3));
+        leatherworkerPurchases.add(createTradeMap("ENCHANTED_CLOCK", 1, 90, 3));
+        leatherworkerPurchases.add(createTradeMap("ENCHANTED_HOPPER", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("MINING_POUCH", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("TRANSFIGURATION_POUCH", 1, 90, 3));
         leatherworkerPurchases.add(createTradeMap("ENCHANTED_LAVA_BUCKET_TRINKET", 1, 90, 3));
@@ -892,6 +894,10 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getPotionPouchTrinket();
             case "POUCH_OF_DELIGHTS":
                 return ItemRegistry.getCulinaryPouchTrinket();
+            case "ENCHANTED_CLOCK":
+                return ItemRegistry.getEnchantedClockTrinket();
+            case "ENCHANTED_HOPPER":
+                return ItemRegistry.getEnchantedHopperTrinket();
             case "MINING_POUCH":
                 return ItemRegistry.getMiningPouchTrinket();
             case "TRANSFIGURATION_POUCH":
