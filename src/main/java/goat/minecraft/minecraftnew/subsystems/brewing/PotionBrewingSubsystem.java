@@ -209,6 +209,13 @@ public class PotionBrewingSubsystem implements Listener {
             }
         }
 
+        if (name.equalsIgnoreCase("Potion of Oxygen Recovery") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.OXYGEN_MASTERY)) {
+            if (!ingredients.contains("Obsidian")) {
+                ingredients.add("Obsidian");
+            }
+        }
+
         if (!ingredients.equals(base.getRequiredIngredients())) {
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
         }
