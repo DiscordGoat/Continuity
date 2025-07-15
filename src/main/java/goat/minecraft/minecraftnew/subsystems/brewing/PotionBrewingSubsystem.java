@@ -230,7 +230,12 @@ public class PotionBrewingSubsystem implements Listener {
                 ingredients.add("Skeleton Skull");
             }
         }
-
+        if (name.equalsIgnoreCase("Potion of Liquid Luck") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.LIQUID_LUCK_MASTERY)) {
+            if (!ingredients.contains("Golden Ingot")) {
+                ingredients.add("Golden Ingot");
+            }
+        }
         if (name.equalsIgnoreCase("Potion of Oxygen Recovery") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.OXYGEN_MASTERY)) {
             if (!ingredients.contains("Obsidian")) {
