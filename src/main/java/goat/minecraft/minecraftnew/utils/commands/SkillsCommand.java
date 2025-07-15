@@ -1,6 +1,8 @@
 package goat.minecraft.minecraftnew.utils.commands;
 
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -37,6 +39,19 @@ public class SkillsCommand implements CommandExecutor {
         // Check if the clicked inventory is the Skills GUI
         if (title.equals("Your Skills")) {
             event.setCancelled(true); // Prevent any interaction
+
+            ItemStack clicked = event.getCurrentItem();
+            if (clicked == null || clicked.getType() == Material.AIR || !clicked.hasItemMeta()) {
+                return;
+            }
+            String name = ChatColor.stripColor(clicked.getItemMeta().getDisplayName());
+            if (name.endsWith(" Skill")) {
+                name = name.replace(" Skill", "");
+                Skill skill = Skill.fromDisplay(name);
+                if (skill != null) {
+                    SkillTreeManager.getInstance().openSkillTree((Player) event.getWhoClicked(), skill);
+                }
+            }
         }
     }
 
