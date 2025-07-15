@@ -229,6 +229,10 @@ public class SkillTreeManager implements Listener {
                 int swiftDuration = level * 50;
                 return ChatColor.YELLOW + "+" + swiftDuration + "s " + ChatColor.LIGHT_PURPLE + "Swift Step Duration, "
                         + ChatColor.AQUA + "+5% Speed";
+            case NIGHT_VISION_MASTERY:
+                int nvDuration = level * 50;
+                return ChatColor.YELLOW + "+" + nvDuration + "s " + ChatColor.AQUA + "Night Vision Duration";
+            default:
             case SOLAR_FURY_MASTERY:
                 int solarDuration = level * 50;
                 return ChatColor.YELLOW + "+" + solarDuration + "s " + ChatColor.GOLD + "Solar Fury Duration";

@@ -27,6 +27,7 @@ public final class TalentRegistry {
                         Talent.STRENGTH_MASTERY,
                         Talent.OXYGEN_MASTERY,
                         Talent.SWIFT_STEP_MASTERY,
+                        Talent.NIGHT_VISION_MASTERY)
                         Talent.SOLAR_FURY_MASTERY,
                         Talent.FOUNTAIN_MASTERY)
         );
