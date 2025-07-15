@@ -214,6 +214,10 @@ public class SkillTreeManager implements Listener {
                 int strengthDuration = level * 50;
                 return ChatColor.YELLOW + "+" + strengthDuration + "s " + ChatColor.LIGHT_PURPLE + "Strength Duration, "
                         + ChatColor.RED + "+5% Damage";
+            case SWIFT_STEP_MASTERY:
+                int swiftDuration = level * 50;
+                return ChatColor.YELLOW + "+" + swiftDuration + "s " + ChatColor.LIGHT_PURPLE + "Swift Step Duration, "
+                        + ChatColor.AQUA + "+5% Speed";
             default:
                 return talent.getTechnicalDescription();
         }

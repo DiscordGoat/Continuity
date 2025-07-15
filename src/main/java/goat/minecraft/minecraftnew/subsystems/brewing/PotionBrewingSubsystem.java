@@ -209,6 +209,13 @@ public class PotionBrewingSubsystem implements Listener {
             }
         }
 
+        if (name.equalsIgnoreCase("Potion of Swift Step") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.SWIFT_STEP_MASTERY)) {
+            if (!ingredients.contains("Pumpkin")) {
+                ingredients.add("Pumpkin");
+            }
+        }
+
         if (!ingredients.equals(base.getRequiredIngredients())) {
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
         }
