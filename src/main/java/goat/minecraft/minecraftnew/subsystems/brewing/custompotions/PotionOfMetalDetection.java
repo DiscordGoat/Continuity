@@ -19,8 +19,7 @@ public class PotionOfMetalDetection implements Listener {
             if (displayName.equals("Potion of Metal Detection")) {
                 Player player = event.getPlayer();
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
-                int brewingLevel = xpManager.getPlayerLevel(player, "Brewing");
-                int duration = (60 * 3) + (brewingLevel * 10);
+                int duration = (60 * 3);
                 PotionManager.addCustomPotionEffect("Potion of Metal Detection", player, duration);
                 player.sendMessage(ChatColor.GREEN + "Potion of Metal Detection effect activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);

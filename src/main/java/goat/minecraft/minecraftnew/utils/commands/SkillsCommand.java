@@ -212,8 +212,7 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 break;
             case "Brewing":
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.LIGHT_PURPLE + "Bonus Potion Duration: " + (level * 10)
+                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level
                 ));
                 break;
             case "Taming":

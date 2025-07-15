@@ -22,8 +22,7 @@ public class PotionOfCharismaticBartering implements Listener {
             if (displayName.equals("Potion of Charismatic Bartering")) {
                 Player player = event.getPlayer();
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
-                int brewingLevel = xpManager.getPlayerLevel(player, "Brewing");
-                int duration = (60 * 3) + (brewingLevel * 10);
+                int duration = (60 * 3);
                 PotionManager.addCustomPotionEffect("Potion of Charismatic Bartering", player, duration);
                 player.sendMessage(ChatColor.GREEN + "Potion of Charismatic Bartering activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);

@@ -23,8 +23,7 @@ public class PotionOfOxygenRecovery implements Listener {
             if (displayName.equals("Potion of Oxygen Recovery")) {
                 Player player = event.getPlayer();
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
-                int brewingLevel = xpManager.getPlayerLevel(player, "Brewing");
-                int duration = (60 * 3) + (brewingLevel * 10);
+                int duration = (60 * 3);
                 if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
                         .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.OXYGEN_MASTERY)) {
                     int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()

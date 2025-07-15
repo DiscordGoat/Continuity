@@ -22,8 +22,7 @@ public class PotionOfRiptide implements Listener {
             if (displayName.equals("Potion of Riptide")) {
                 Player player = event.getPlayer();
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
-                int brewingLevel = xpManager.getPlayerLevel(player, "Brewing");
-                int duration = (60 * 30) + (brewingLevel * 10);
+                int duration = (60 * 30);
                 PotionManager.addCustomPotionEffect("Potion of Riptide", player, duration);
                 player.sendMessage(ChatColor.AQUA + "Potion of Riptide activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);
