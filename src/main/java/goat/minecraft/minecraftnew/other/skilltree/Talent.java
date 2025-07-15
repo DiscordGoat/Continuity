@@ -101,6 +101,13 @@ public enum Talent {
             35,
             Material.FEATHER
     ),
+    SOLAR_FURY_MASTERY(
+            "Solar Fury Mastery",
+            ChatColor.GRAY + "Add a blaze rod",
+            ChatColor.YELLOW + "+50s " + ChatColor.GOLD + "Solar Fury Duration",
+            4,
+            75,
+            Material.FIRE_CHARGE
     FOUNTAIN_MASTERY(
             "Fountain Mastery",
             ChatColor.GRAY + "Add a heart of the sea",

@@ -248,6 +248,12 @@ public class PotionBrewingSubsystem implements Listener {
                 ingredients.add("Pumpkin");
             }
         }
+        if (name.equalsIgnoreCase("Potion of Solar Fury") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.SOLAR_FURY_MASTERY)) {
+            if (!ingredients.contains("Blaze Rod")) {
+                ingredients.add("Blaze Rod");
+            }
+        }
 
         if (name.equalsIgnoreCase("Potion of Fountains") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.FOUNTAIN_MASTERY)) {
