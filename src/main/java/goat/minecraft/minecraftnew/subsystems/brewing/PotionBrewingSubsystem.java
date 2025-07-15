@@ -232,8 +232,8 @@ public class PotionBrewingSubsystem implements Listener {
         }
         if (name.equalsIgnoreCase("Potion of Liquid Luck") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.LIQUID_LUCK_MASTERY)) {
-            if (!ingredients.contains("Golden Ingot")) {
-                ingredients.add("Golden Ingot");
+            if (!ingredients.contains("Gold Block")) {
+                ingredients.add("Gold Block");
             }
         }
         if (name.equalsIgnoreCase("Potion of Oxygen Recovery") &&

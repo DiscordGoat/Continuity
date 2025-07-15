@@ -47,8 +47,7 @@ public class PotionOfSovereignty implements Listener {
             activeDeflections.put(uuid, maxDeflections);
 
             XPManager xpManager = new XPManager(MinecraftNew.getInstance());
-            int brewingLevel = xpManager.getPlayerLevel(player, "Brewing");
-            int duration = (60 * 3) + (brewingLevel * 10);
+            int duration = (60 * 3);
             if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
                     .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY)) {
                 int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
@@ -56,7 +55,7 @@ public class PotionOfSovereignty implements Listener {
                                 goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY);
                 duration += bonus;
             }
-            int duration = (60 * 3);
+
             PotionManager.addCustomPotionEffect("Potion of Sovereignty", player, duration);
 
             player.sendMessage(ChatColor.GREEN + "Sovereignty activated! Your deflections have been refreshed to " + maxDeflections + ".");
