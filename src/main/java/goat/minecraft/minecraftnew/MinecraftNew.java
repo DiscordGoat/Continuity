@@ -681,6 +681,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("forceworkcycle").setExecutor(villagerWorkCycleManager);
         getCommand("repair").setExecutor(new RepairCommand());
         getCommand("repairall").setExecutor(new RepairAllCommand());
+        getCommand("finishbrews").setExecutor(new FinishBrewsCommand(this));
         getCommand("openvillagertrademenu").setExecutor(new OpenVillagerTradeMenuCommand(this));
 
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
