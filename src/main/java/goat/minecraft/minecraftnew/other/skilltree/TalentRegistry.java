@@ -28,6 +28,9 @@ public final class TalentRegistry {
                         Talent.OXYGEN_MASTERY,
                         Talent.SWIFT_STEP_MASTERY,
                         Talent.METAL_DETECTION_MASTERY)
+                        Talent.NIGHT_VISION_MASTERY)
+                        Talent.SOLAR_FURY_MASTERY,
+                        Talent.FOUNTAIN_MASTERY)
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }

@@ -254,6 +254,25 @@ public class PotionBrewingSubsystem implements Listener {
                 ingredients.add("Diamond");
             }
         }
+        if (name.equalsIgnoreCase("Potion of Night Vision") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.NIGHT_VISION_MASTERY)) {
+            if (!ingredients.contains("Spider Eye")) {
+                ingredients.add("Spider Eye");
+            }
+        }
+        if (name.equalsIgnoreCase("Potion of Solar Fury") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.SOLAR_FURY_MASTERY)) {
+            if (!ingredients.contains("Blaze Rod")) {
+                ingredients.add("Blaze Rod");
+            }
+        }
+
+        if (name.equalsIgnoreCase("Potion of Fountains") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.FOUNTAIN_MASTERY)) {
+            if (!ingredients.contains("Heart of the Sea")) {
+                ingredients.add("Heart of the Sea");
+            }
+        }
 
         if (!ingredients.equals(base.getRequiredIngredients())) {
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
