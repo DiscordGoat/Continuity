@@ -18,8 +18,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
 
@@ -136,111 +134,15 @@ public class XPManager implements CommandExecutor {
         this.plugin = plugin;
     }
 
-    // Returns the YAML file storing all skill XP for the given player name.
-    private File getPlayerFile(UUID uuid) {
-        String name = Bukkit.getOfflinePlayer(uuid).getName();
-        if (name == null) {
-            // Fallback to UUID string if name is unavailable
-            name = uuid.toString();
-        }
-        return new File(plugin.getDataFolder(), name + ".yml");
-    }
-
-    /**
-     * Migrates legacy per-skill text files into the single YAML format.
-     */
-    public void migrateLegacyData() {
-        File folder = plugin.getDataFolder();
-        File[] legacyFiles = folder.listFiles((dir, n) -> n.endsWith(".txt"));
-        if (legacyFiles == null || legacyFiles.length == 0) {
-            return;
-        }
-
-        java.util.Map<UUID, java.util.Map<String, Integer>> data = new java.util.HashMap<>();
-
-        for (File f : legacyFiles) {
-            String base = f.getName().replace(".txt", "");
-            String[] parts = base.split("_");
-            if (parts.length != 2) continue;
-            try {
-                UUID id = java.util.UUID.fromString(parts[0]);
-                String skill = parts[1];
-                int val = 0;
-                try (BufferedReader reader = new BufferedReader(new FileReader(f))) {
-                    String line = reader.readLine();
-                    if (line != null) {
-                        val = Integer.parseInt(line.trim());
-                    }
-                } catch (Exception ignore) {}
-
-                data.computeIfAbsent(id, k -> new java.util.HashMap<>()).put(skill, val);
-            } catch (IllegalArgumentException ex) {
-                // Ignore malformed file names
-            }
-        }
-
-        for (java.util.Map.Entry<UUID, java.util.Map<String, Integer>> entry : data.entrySet()) {
-            UUID id = entry.getKey();
-            File file = getPlayerFile(id);
-            FileConfiguration cfg = file.exists() ? YamlConfiguration.loadConfiguration(file) : new YamlConfiguration();
-            for (java.util.Map.Entry<String, Integer> e : entry.getValue().entrySet()) {
-                cfg.set(e.getKey(), e.getValue());
-            }
-            try {
-                if (!file.exists()) file.createNewFile();
-                cfg.save(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        // Remove legacy files
-        for (File f : legacyFiles) {
-            f.delete();
-        }
-    }
-
-    /**
-     * Removes player data files where the Player skill has 0 XP.
-     */
-    public void cleanupZeroXPFiles() {
-        File folder = plugin.getDataFolder();
-        File[] files = folder.listFiles((dir, n) -> n.endsWith(".yml"));
-        if (files == null) return;
-        for (File f : files) {
-            FileConfiguration cfg = YamlConfiguration.loadConfiguration(f);
-            if (cfg.getInt("Player", 0) == 0) {
-                f.delete();
-            }
-        }
-    }
-
-    /**
-     * Should be called during plugin startup to migrate and clean data.
-     */
-    public void startup() {
-        migrateLegacyData();
-        cleanupZeroXPFiles();
-    }
-
     // =================================================
     // ===============  FILE OPERATIONS  ===============
     // =================================================
     public void createDatabase(UUID uuid, String skill) {
-        File file = getPlayerFile(uuid);
+        File file = new File(plugin.getDataFolder(), uuid + "_" + skill + ".txt");
         if (!file.exists()) {
             try {
                 file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        if (!config.contains(skill)) {
-            config.set(skill, 0);
-            try {
-                config.save(file);
+                saveXP(uuid, skill, 0); // Initialize with 0 XP
                 Bukkit.getLogger().info("Created new XP database for " + uuid + " and skill " + skill);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -249,26 +151,24 @@ public class XPManager implements CommandExecutor {
     }
 
     public int loadXP(UUID uuid, String skill) {
-        File file = getPlayerFile(uuid);
+        File file = new File(plugin.getDataFolder(), uuid + "_" + skill + ".txt");
         if (!file.exists()) {
             createDatabase(uuid, skill);
             return 0;
         }
 
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        return config.getInt(skill, 0);
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            return Integer.parseInt(reader.readLine());
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+            return 0;
+        }
     }
 
     public void saveXP(UUID uuid, String skill, int xp) {
-        File file = getPlayerFile(uuid);
-        if (!file.exists()) {
-            createDatabase(uuid, skill);
-        }
-
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        config.set(skill, xp);
-        try {
-            config.save(file);
+        File file = new File(plugin.getDataFolder(), uuid + "_" + skill + ".txt");
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(String.valueOf(xp));
         } catch (IOException e) {
             e.printStackTrace();
         }
