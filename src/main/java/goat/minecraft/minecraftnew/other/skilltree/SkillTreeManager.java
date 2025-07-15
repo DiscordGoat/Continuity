@@ -214,6 +214,9 @@ public class SkillTreeManager implements Listener {
                 int strengthDuration = level * 50;
                 return ChatColor.YELLOW + "+" + strengthDuration + "s " + ChatColor.LIGHT_PURPLE + "Strength Duration, "
                         + ChatColor.RED + "+5% Damage";
+            case OXYGEN_MASTERY:
+                int oxygenDuration = level * 50;
+                return ChatColor.YELLOW + "+" + oxygenDuration + "s " + ChatColor.AQUA + "Oxygen Recovery Duration";
             default:
                 return talent.getTechnicalDescription();
         }
