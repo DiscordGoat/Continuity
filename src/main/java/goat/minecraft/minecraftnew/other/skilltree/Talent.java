@@ -134,6 +134,15 @@ public enum Talent {
             4,
             60,
             Material.DARK_PRISMARINE
+    ),
+    CHARISMA_MASTERY(
+            "Charisma Mastery",
+            ChatColor.GRAY + "Add a bribe",
+            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration, "
+                    + ChatColor.GOLD + "+5% Discount",
+            4,
+            50,
+            Material.GOLD_BLOCK
     );
 
 

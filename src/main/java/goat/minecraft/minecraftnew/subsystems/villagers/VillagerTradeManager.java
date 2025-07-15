@@ -14,6 +14,9 @@ import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import org.bukkit.*;
@@ -1165,7 +1168,12 @@ public class VillagerTradeManager implements Listener {
         finalCost *= (1 - barteringDiscount);
 
         if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
-            finalCost *= 0.8; // additional 20% discount
+            double discount = 0.20;
+            if (SkillTreeManager.getInstance().hasTalent(player, Talent.CHARISMA_MASTERY)) {
+                int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.CHARISMA_MASTERY);
+                discount += 0.05 * level;
+            }
+            finalCost *= (1 - discount);
         }
 
         return Math.max(1, (int) Math.floor(finalCost));
@@ -1596,7 +1604,12 @@ public class VillagerTradeManager implements Listener {
         finalCost *= (1 - barteringDiscount);
 
         if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
-            finalCost *= 0.8; // additional 20% discount
+            double discount = 0.20;
+            if (SkillTreeManager.getInstance().hasTalent(player, Talent.CHARISMA_MASTERY)) {
+                int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.CHARISMA_MASTERY);
+                discount += 0.05 * level;
+            }
+            finalCost *= (1 - discount);
         }
 
         // Ensure at least cost of 1
