@@ -24,6 +24,13 @@ public class PotionOfSolarFury implements Listener {
             int duration = (60 * 3);
             if (displayName.equals("Potion of Solar Fury")) {
                 Player player = event.getPlayer();
+                if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                        .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.SOLAR_FURY_MASTERY)) {
+                    int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
+                                    goat.minecraft.minecraftnew.other.skilltree.Talent.SOLAR_FURY_MASTERY);
+                    duration += bonus;
+                }
                 PotionManager.addCustomPotionEffect("Potion of Solar Fury", player, duration);
                 player.sendMessage(ChatColor.RED + "Potion of Solar Fury effect activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);
