@@ -136,7 +136,7 @@ public class SkillTreeManager implements Listener {
             im.setDisplayName(talent.getRarity().getColor() + talent.getName());
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.GRAY + talent.getDescription());
-            lore.add(ChatColor.GRAY + talent.getTechnicalDescription());
+            lore.add(ChatColor.GRAY + getDynamicTechnicalDescription(talent, currentLevel));
             lore.add(ChatColor.YELLOW + "Level: " + currentLevel + "/" + talent.getMaxLevel());
             lore.add(ChatColor.RED + "Requires " + skill.getDisplayName() + " " + talent.getLevelRequirement());
             im.setLore(lore);
@@ -188,6 +188,24 @@ public class SkillTreeManager implements Listener {
         int current = dataConfig.getInt(uuid + "." + skill + ".extra_points", 0);
         dataConfig.set(uuid + "." + skill + ".extra_points", current + amount);
         saveConfig();
+    }
+
+    private String getDynamicTechnicalDescription(Talent talent, int level) {
+        switch (talent) {
+            case TRIPLE_BATCH:
+                double chance = level * 5;
+                return ChatColor.YELLOW + "+" + chance + "% " + ChatColor.GRAY + "Chance to brew 3 Potions.";
+            case OPTIMAL_CONFIGURATION:
+                int reduction = level * 4;
+                return ChatColor.YELLOW + "-" + reduction + "s " + ChatColor.GOLD + "Brew Time.";
+            case REDSTONE_ONE:
+            case REDSTONE_TWO:
+                int seconds = level * 4;
+                return ChatColor.YELLOW + "+" + seconds + "s " + ChatColor.LIGHT_PURPLE + "Potion Duration, "
+                        + ChatColor.GOLD + "+" + seconds + "s " + ChatColor.GOLD + "Brew Time.";
+            default:
+                return talent.getTechnicalDescription();
+        }
     }
 
     // =============================================================
