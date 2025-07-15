@@ -36,15 +36,30 @@ public class PotionOfSovereignty implements Listener {
         if (displayName.equals("Potion of Sovereignty")) {
             Player player = event.getPlayer();
             UUID uuid = player.getUniqueId();
-            // Reset deflections to 5
-            activeDeflections.put(uuid, 5);
+            int maxDeflections = 5;
+            if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                    .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY)) {
+                int level = goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
+                                goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY);
+                maxDeflections += 5 * level;
+            }
+            activeDeflections.put(uuid, maxDeflections);
 
             XPManager xpManager = new XPManager(MinecraftNew.getInstance());
             int brewingLevel = xpManager.getPlayerLevel(player, "Brewing");
             int duration = (60 * 3) + (brewingLevel * 10);
+            if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                    .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY)) {
+                int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
+                                goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY);
+                duration += bonus;
+            }
+            int duration = (60 * 3);
             PotionManager.addCustomPotionEffect("Potion of Sovereignty", player, duration);
 
-            player.sendMessage(ChatColor.GREEN + "Sovereignty activated! Your deflections have been refreshed to 5.");
+            player.sendMessage(ChatColor.GREEN + "Sovereignty activated! Your deflections have been refreshed to " + maxDeflections + ".");
             xpManager.addXP(player, "Brewing", 100);
         }
     }
@@ -62,7 +77,15 @@ public class PotionOfSovereignty implements Listener {
         if(PotionManager.isActive("Potion of Sovereignty", player)) {
             UUID uuid = player.getUniqueId();
             if(!activeDeflections.containsKey(uuid)){
-                activeDeflections.put(uuid, 5);
+                int maxDeflections = 5;
+                if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                        .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY)) {
+                    int level = goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
+                                    goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY);
+                    maxDeflections += 5 * level;
+                }
+                activeDeflections.put(uuid, maxDeflections);
             }
             int availableDeflections = activeDeflections.getOrDefault(uuid, 0);
             if (availableDeflections > 0) {
@@ -74,8 +97,15 @@ public class PotionOfSovereignty implements Listener {
                 // Schedule restoration of one deflection after 2 minutes (120 seconds)
                 Bukkit.getScheduler().runTaskLater(MinecraftNew.getInstance(), () -> {
                     int current = activeDeflections.getOrDefault(uuid, 0);
-                    // Restore a deflection but never exceed 5 total
-                    activeDeflections.put(uuid, Math.min(current + 1, 5));
+                    int maxDeflections = 5;
+                    if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                            .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY)) {
+                        int level = goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                                .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
+                                        goat.minecraft.minecraftnew.other.skilltree.Talent.SOVEREIGNTY_MASTERY);
+                        maxDeflections += 5 * level;
+                    }
+                    activeDeflections.put(uuid, Math.min(current + 1, maxDeflections));
                     // Play a sound to indicate the deflection is restored
                     player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f, 10.0f);
                     player.sendMessage(ChatColor.GREEN + "A Sovereignty deflection has been restored! You now have " + activeDeflections.get(uuid) + " deflections available.");

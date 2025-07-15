@@ -20,8 +20,7 @@ public class PotionOfLiquidLuck implements Listener {
         if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
             String displayName = ChatColor.stripColor(item.getItemMeta().getDisplayName());
             XPManager xpManager = new XPManager(MinecraftNew.getInstance());
-            int brewingLevel = xpManager.getPlayerLevel(event.getPlayer(), "Brewing");
-            int duration = (60 * 3) + (brewingLevel * 10);
+            int duration = (60 * 3);
             if (displayName.equals("Potion of Liquid Luck")) {
                 Player player = event.getPlayer();
                 if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()

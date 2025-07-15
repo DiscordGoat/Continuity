@@ -165,6 +165,28 @@ public class PotionBrewingSubsystem implements Listener {
         plugin.getLogger().info("[PotionBrewingSubsystem] All sessions finalized & cleared on shutdown.");
     }
 
+    /**
+     * Developer utility: set all actively brewing sessions to finish in one second.
+     *
+     * @return number of sessions affected
+     */
+    public int finishAllBrewsSoon() {
+        int affected = 0;
+        for (BrewSession session : activeSessions.values()) {
+            if (session.brewInProgress() && session.brewTimeRemaining > 1) {
+                session.brewTimeRemaining = 1;
+                // update timer stand display
+                Entity ent = Bukkit.getEntity(session.timerStand);
+                if (ent instanceof ArmorStand stand && stand.isValid()) {
+                    stand.setCustomName(ChatColor.YELLOW + "1s");
+                }
+                session.updateDB();
+                affected++;
+            }
+        }
+        return affected;
+    }
+
     // ========================================================================
     // Helper
     // ========================================================================
@@ -208,11 +230,22 @@ public class PotionBrewingSubsystem implements Listener {
                 ingredients.add("Skeleton Skull");
             }
         }
-
         if (name.equalsIgnoreCase("Potion of Liquid Luck") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.LIQUID_LUCK_MASTERY)) {
             if (!ingredients.contains("Golden Ingot")) {
                 ingredients.add("Golden Ingot");
+            }
+        }
+        if (name.equalsIgnoreCase("Potion of Oxygen Recovery") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.OXYGEN_MASTERY)) {
+            if (!ingredients.contains("Obsidian")) {
+                ingredients.add("Obsidian");
+            }
+        }
+        if (name.equalsIgnoreCase("Potion of Swift Step") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.SWIFT_STEP_MASTERY)) {
+            if (!ingredients.contains("Pumpkin")) {
+                ingredients.add("Pumpkin");
             }
         }
 
@@ -224,6 +257,13 @@ public class PotionBrewingSubsystem implements Listener {
                 SkillTreeManager.getInstance().hasTalent(player, Talent.STRENGTH_MASTERY)) {
             if (!ingredients.contains("Singularity")) {
                 ingredients.add("Singularity");
+            }
+            return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
+        }
+        if (base != null && name.equalsIgnoreCase("Potion of Sovereignty") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.SOVEREIGNTY_MASTERY)) {
+            if (!ingredients.contains("Ender Pearl")) {
+                ingredients.add("Ender Pearl");
             }
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
         }

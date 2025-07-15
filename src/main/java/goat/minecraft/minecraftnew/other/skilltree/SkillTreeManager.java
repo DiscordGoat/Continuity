@@ -210,6 +210,11 @@ public class SkillTreeManager implements Listener {
             case REJUVENATION:
                 int bonusTime = level * 50;
                 return ChatColor.YELLOW + "+" + bonusTime + "s " + ChatColor.GREEN + "Bonus Health" + ChatColor.GRAY + " and " + ChatColor.GREEN + "Health Surge";
+            case SOVEREIGNTY_MASTERY:
+                int sovDuration = level * 50;
+                int deflect = level * 5;
+                return ChatColor.YELLOW + "+" + sovDuration + "s " + ChatColor.LIGHT_PURPLE + "Sovereignty Duration, "
+                        + ChatColor.RED + "+" + deflect + " Deflection Stacks";
             case STRENGTH_MASTERY:
                 int strengthDuration = level * 50;
                 return ChatColor.YELLOW + "+" + strengthDuration + "s " + ChatColor.LIGHT_PURPLE + "Strength Duration, "
@@ -217,6 +222,13 @@ public class SkillTreeManager implements Listener {
             case LIQUID_LUCK_MASTERY:
                 int luckDuration = level * 50;
                 return ChatColor.YELLOW + "+" + luckDuration + "s " + ChatColor.LIGHT_PURPLE + "Liquid Luck Duration";
+            case OXYGEN_MASTERY:
+                int oxygenDuration = level * 50;
+                return ChatColor.YELLOW + "+" + oxygenDuration + "s " + ChatColor.AQUA + "Oxygen Recovery Duration";
+            case SWIFT_STEP_MASTERY:
+                int swiftDuration = level * 50;
+                return ChatColor.YELLOW + "+" + swiftDuration + "s " + ChatColor.LIGHT_PURPLE + "Swift Step Duration, "
+                        + ChatColor.AQUA + "+5% Speed";
             default:
                 return talent.getTechnicalDescription();
         }

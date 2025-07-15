@@ -23,8 +23,14 @@ public class PotionOfOxygenRecovery implements Listener {
             if (displayName.equals("Potion of Oxygen Recovery")) {
                 Player player = event.getPlayer();
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
-                int brewingLevel = xpManager.getPlayerLevel(player, "Brewing");
-                int duration = (60 * 3) + (brewingLevel * 10);
+                int duration = (60 * 3);
+                if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                        .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.OXYGEN_MASTERY)) {
+                    int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
+                                    goat.minecraft.minecraftnew.other.skilltree.Talent.OXYGEN_MASTERY);
+                    duration += bonus;
+                }
                 PotionManager.addCustomPotionEffect("Potion of Oxygen Recovery", player, duration);
                 player.sendMessage(ChatColor.AQUA + "Potion of Oxygen Recovery activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);
