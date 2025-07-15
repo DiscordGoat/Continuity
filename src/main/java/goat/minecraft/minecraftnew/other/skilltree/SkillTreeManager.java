@@ -20,6 +20,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import goat.minecraft.minecraftnew.other.skilltree.TalentRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,15 +32,6 @@ public class SkillTreeManager implements Listener {
     private final JavaPlugin plugin;
     private File dataFile;
     private FileConfiguration dataConfig;
-    private final Map<Skill, List<Talent>> skillTalents = new HashMap<>();
-
-    private final Talent redstoneTalent = new Talent(
-            "Redstone",
-            "Adds 4s to potions you drink per level.",
-            25,
-            1,
-            Material.REDSTONE
-    );
 
     public static void init(JavaPlugin plugin) {
         if (instance == null) {
@@ -55,7 +47,6 @@ public class SkillTreeManager implements Listener {
     private SkillTreeManager(JavaPlugin plugin) {
         this.plugin = plugin;
         initStorage();
-        loadTalents();
     }
 
     private void initStorage() {
@@ -78,10 +69,6 @@ public class SkillTreeManager implements Listener {
         }
     }
 
-    private void loadTalents() {
-        skillTalents.put(Skill.BREWING, Collections.singletonList(redstoneTalent));
-    }
-
     // =============================================================
     // Public API
     // =============================================================
@@ -91,7 +78,7 @@ public class SkillTreeManager implements Listener {
     }
 
     private void openSkillTree(Player player, Skill skill, int page) {
-        List<Talent> talents = skillTalents.getOrDefault(skill, Collections.emptyList());
+        List<Talent> talents = TalentRegistry.getTalents(skill);
         int totalPages = (int) Math.ceil(talents.size() / 40.0);
         if (totalPages == 0) totalPages = 1;
         if (page < 1) page = 1;
@@ -173,7 +160,7 @@ public class SkillTreeManager implements Listener {
         XPManager xp = MinecraftNew.getInstance().getXPManager();
         int levelPoints = xp.getPlayerLevel(player, skill.getDisplayName());
         int extra = dataConfig.getInt(player.getUniqueId() + "." + skill + ".extra_points", 0);
-        int spent = skillTalents.getOrDefault(skill, Collections.emptyList()).stream()
+        int spent = TalentRegistry.getTalents(skill).stream()
                 .mapToInt(t -> getTalentLevel(player.getUniqueId(), skill, t)).sum();
         return levelPoints + extra - spent;
     }
@@ -183,7 +170,11 @@ public class SkillTreeManager implements Listener {
     }
 
     public boolean hasTalent(Player player, Talent talent) {
-        return getTalentLevel(player.getUniqueId(), Skill.BREWING, talent) > 0;
+        Skill skill = TalentRegistry.getSkillForTalent(talent);
+        if (skill == null) {
+            return false;
+        }
+        return getTalentLevel(player.getUniqueId(), skill, talent) > 0;
     }
 
     private void setTalentLevel(UUID uuid, Skill skill, Talent talent, int level) {
@@ -227,7 +218,7 @@ public class SkillTreeManager implements Listener {
             openSkillTree(player, skill, page - 1);
             return;
         }
-        Talent talent = skillTalents.get(skill).stream()
+        Talent talent = TalentRegistry.getTalents(skill).stream()
                 .filter(t -> t.getName().equalsIgnoreCase(name))
                 .findFirst().orElse(null);
         if (talent == null) return;
@@ -258,7 +249,7 @@ public class SkillTreeManager implements Listener {
         Material type = item.getType();
         if (type != Material.POTION && type != Material.SPLASH_POTION && type != Material.LINGERING_POTION) return;
         Player player = event.getPlayer();
-        int redstoneLevel = getTalentLevel(player.getUniqueId(), Skill.BREWING, redstoneTalent);
+        int redstoneLevel = getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE);
         if (redstoneLevel <= 0) return;
         Set<PotionEffectType> before = player.getActivePotionEffects().stream()
                 .map(PotionEffect::getType).collect(Collectors.toSet());
