@@ -13,6 +13,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -64,6 +66,12 @@ public class PotionManager {
             int redstoneBuff = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_TWO));
             Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
             duration += redstoneBuff;
+        }
+        if (SkillTreeManager.getInstance().hasTalent(player, Talent.REJUVENATION)) {
+            int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REJUVENATION);
+            int hpBoostduration = level * 50 * 20;
+            player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, hpBoostduration, 4));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 5 * 20, 255));
         }
         Map<String, Integer> playerEffects = activeEffects.getOrDefault(uuid, new HashMap<>());
         // If the effect is already active, add the new duration to the current duration

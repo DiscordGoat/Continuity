@@ -215,7 +215,6 @@ public class PotionBrewingSubsystem implements Listener {
 
         if (base != null && name.equalsIgnoreCase("Potion of Strength") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.STRENGTH_MASTERY)) {
-            java.util.List<String> ingredients = new java.util.ArrayList<>(base.getRequiredIngredients());
             if (!ingredients.contains("Singularity")) {
                 ingredients.add("Singularity");
             }
@@ -759,6 +758,10 @@ public class PotionBrewingSubsystem implements Listener {
                         dropped.setUnlimitedLifetime(true);
                         dropped2.setUnlimitedLifetime(true);
                         dropped3.setUnlimitedLifetime(true);
+                    }
+                    else{
+                        Item dropped = w.dropItem(standLoc, finalPotion);
+                        dropped.setUnlimitedLifetime(true);
                     }
                 }else{
                     Item dropped = w.dropItem(standLoc, finalPotion);

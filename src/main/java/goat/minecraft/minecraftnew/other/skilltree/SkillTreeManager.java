@@ -205,12 +205,11 @@ public class SkillTreeManager implements Listener {
                         + ChatColor.GOLD + "+" + seconds + "s " + ChatColor.GOLD + "Brew Time.";
             case RECURVE_MASTERY:
                 int recurveDuration = level * 50;
-                return ChatColor.YELLOW + "+" + recurveDuration + "s " + ChatColor.LIGHT_PURPLE + "Recurve Duration";
-            case REJUVENATION:
-                int bonusTime = level * 50;
-                return ChatColor.YELLOW + "+" + bonusTime + "s " + ChatColor.GREEN + "Bonus Health" + ChatColor.GRAY + " and " + ChatColor.GREEN + "Potion Surge";
                 return ChatColor.YELLOW + "+" + recurveDuration + "s " + ChatColor.LIGHT_PURPLE + "Recurve Duration, "
                         + ChatColor.RED + "+5% Arrow Damage";
+            case REJUVENATION:
+                int bonusTime = level * 50;
+                return ChatColor.YELLOW + "+" + bonusTime + "s " + ChatColor.GREEN + "Bonus Health" + ChatColor.GRAY + " and " + ChatColor.GREEN + "Health Surge";
             case STRENGTH_MASTERY:
                 int strengthDuration = level * 50;
                 return ChatColor.YELLOW + "+" + strengthDuration + "s " + ChatColor.LIGHT_PURPLE + "Strength Duration, "
@@ -272,21 +271,5 @@ public class SkillTreeManager implements Listener {
         setTalentLevel(player.getUniqueId(), skill, talent, currentLevel + 1);
         player.sendMessage(ChatColor.GREEN + "Upgraded " + talent.getName() + " to " + (currentLevel + 1));
         openSkillTree(player, skill, page);
-    }
-
-    @EventHandler
-    public void onPotionConsume(PlayerItemConsumeEvent event) {
-        ItemStack item = event.getItem();
-        if (item == null) return;
-        Material type = item.getType();
-        if (type == Material.POTION || type == Material.SPLASH_POTION || type == Material.LINGERING_POTION) {
-            Player player = event.getPlayer();
-            if (hasTalent(player, Talent.REJUVENATION)) {
-                int level = getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REJUVENATION);
-                int duration = level * 50 * 20;
-                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, duration, 4));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 5 * 20, 255));
-            }
-        }
     }
 }

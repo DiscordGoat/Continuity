@@ -57,6 +57,7 @@ public enum Talent {
             4,
             45,
             Material.GHAST_TEAR
+    ),
     STRENGTH_MASTERY(
             "Strength Mastery",
             ChatColor.GRAY + "Add a Singularity",
