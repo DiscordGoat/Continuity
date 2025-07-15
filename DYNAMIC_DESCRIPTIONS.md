@@ -37,3 +37,4 @@ This document explains the conventions and nuances behind our use of `ChatColor`
 | `GOLD`             | `#FFAA00`   | Treasure‑related highlights, rare drop chances  | `ChatColor.GOLD + (level * 0.1) + "%"`                                 |
 
 ---
+the 2 best examples of dynamic descriptions are found in PetManager and SkillTreeManager, where dynamic descriptions are used to great effect.
