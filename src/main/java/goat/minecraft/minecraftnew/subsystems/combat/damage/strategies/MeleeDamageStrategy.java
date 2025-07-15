@@ -4,6 +4,8 @@ import goat.minecraft.minecraftnew.subsystems.combat.config.CombatConfiguration;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationContext;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationResult;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationStrategy;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.entity.Player;
 
@@ -39,18 +41,31 @@ public class MeleeDamageStrategy implements DamageCalculationStrategy {
             
             double multiplier = 1.0 + (cappedLevel * config.getMeleePerLevel());
             double finalDamage = originalDamage * multiplier;
+
+            boolean strengthTalent = SkillTreeManager.getInstance() != null &&
+                    SkillTreeManager.getInstance().hasTalent(player, Talent.STRENGTH_MASTERY);
+            if (strengthTalent) {
+                finalDamage *= 1.05;
+            }
             
-            DamageCalculationResult.DamageModifier modifier = 
+            DamageCalculationResult.DamageModifier modifier =
                 DamageCalculationResult.DamageModifier.multiplicative(
-                    "Combat Skill", 
-                    multiplier, 
+                    "Combat Skill",
+                    multiplier,
                     String.format("Level %d melee bonus", cappedLevel)
                 );
             
             logger.fine(String.format("Applied melee damage bonus: %s (level %d) -> %.1f%% increase", 
                        player.getName(), cappedLevel, (multiplier - 1.0) * 100));
             
-            return DamageCalculationResult.withModifier(originalDamage, finalDamage, modifier);
+            DamageCalculationResult result = DamageCalculationResult.withModifier(originalDamage, finalDamage, modifier);
+
+            if (strengthTalent) {
+                result.getAppliedModifiers().add(DamageCalculationResult.DamageModifier.multiplicative(
+                        "Strength Mastery", 1.05, "+5% Damage"));
+            }
+
+            return result;
             
         } catch (Exception e) {
             logger.warning(String.format("Failed to calculate melee damage for player %s: %s", 
