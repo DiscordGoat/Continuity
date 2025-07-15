@@ -67,6 +67,14 @@ public enum Talent {
             25,
             Material.DIAMOND_SWORD
     ),
+    OXYGEN_MASTERY(
+            "Oxygen Mastery",
+            ChatColor.GRAY + "Add an obsidian block",
+            ChatColor.YELLOW + "+50s " + ChatColor.AQUA + "Oxygen Recovery Duration",
+            4,
+            45,
+            Material.GLASS_BOTTLE
+    ),
     SWIFT_STEP_MASTERY(
             "Swift Step Mastery",
             ChatColor.GRAY + "Add a Pumpkin for added sugar",

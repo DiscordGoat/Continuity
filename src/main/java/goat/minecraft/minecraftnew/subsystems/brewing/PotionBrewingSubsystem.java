@@ -209,6 +209,12 @@ public class PotionBrewingSubsystem implements Listener {
             }
         }
 
+        if (name.equalsIgnoreCase("Potion of Oxygen Recovery") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.OXYGEN_MASTERY)) {
+            if (!ingredients.contains("Obsidian")) {
+                ingredients.add("Obsidian");
+            }
+        }
         if (name.equalsIgnoreCase("Potion of Swift Step") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.SWIFT_STEP_MASTERY)) {
             if (!ingredients.contains("Pumpkin")) {
