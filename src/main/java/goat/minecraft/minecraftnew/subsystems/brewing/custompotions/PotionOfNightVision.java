@@ -27,6 +27,13 @@ public class PotionOfNightVision implements Listener {
                 Player player = event.getPlayer();
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
                 int duration = (60 * 30);
+                if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                        .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.NIGHT_VISION_MASTERY)) {
+                    int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
+                                    goat.minecraft.minecraftnew.other.skilltree.Talent.NIGHT_VISION_MASTERY);
+                    duration += bonus;
+                }
                 PotionManager.addCustomPotionEffect("Potion of Night Vision", player, duration);
                 player.sendMessage(ChatColor.AQUA + "Potion of Night Vision activated for " + duration + " seconds!");
                 xpManager.addXP(player, "Brewing", 100);

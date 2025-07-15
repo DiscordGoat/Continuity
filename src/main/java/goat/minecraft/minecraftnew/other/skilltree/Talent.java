@@ -100,6 +100,14 @@ public enum Talent {
             4,
             35,
             Material.FEATHER
+    ),
+    NIGHT_VISION_MASTERY(
+            "Night Vision Mastery",
+            ChatColor.GRAY + "Add a Spider eye",
+            ChatColor.YELLOW + "+50s " + ChatColor.AQUA + "Night Vision Duration",
+            4,
+            40,
+            Material.SPIDER_EYE
     );
 
 
