@@ -265,7 +265,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Keepinventory(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterSmith(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterBotanist(this, playerData), this);
-        getServer().getPluginManager().registerEvents(new MasterBrewer(this, playerData), this);
+
         getServer().getPluginManager().registerEvents(new MasterChef(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterThief(this, playerData), this);
         getServer().getPluginManager().registerEvents(new MasterDuelist(this, playerData), this);

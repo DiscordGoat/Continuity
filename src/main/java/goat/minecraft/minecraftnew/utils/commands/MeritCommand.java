@@ -117,11 +117,6 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Verdant relics mature 20% faster.",
                             ChatColor.BLUE + "On Verdant Relic Growth: " + ChatColor.GRAY + "Time reduced by 20%."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Brewer", 3, Material.BREWING_STAND,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Brews potions 50% faster.",
-                            ChatColor.BLUE + "On Brewing: " + ChatColor.GRAY + "Total time reduced by 50%."
-                    )),
             new Perk(ChatColor.DARK_GRAY + "Master Chef", 3, Material.COOKED_BEEF,
                     Arrays.asList(
                             ChatColor.GRAY + "50% chance to cook double culinary delights.",
