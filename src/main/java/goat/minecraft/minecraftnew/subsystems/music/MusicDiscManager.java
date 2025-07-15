@@ -16,6 +16,8 @@ import goat.minecraft.minecraftnew.utils.biomeutils.BiomeMapper;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -1522,6 +1524,7 @@ public class MusicDiscManager implements Listener {
 
     public void handleMusicDiscWait(Player player) {
         XPManager xpManager = new XPManager(plugin);
+        SkillTreeManager skillTree = SkillTreeManager.getInstance();
 
         // Find the nearest jukebox to the player
         Block nearestJukeboxBlock = findNearestJukebox(player.getLocation(), 20); // Search radius of 20 blocks
@@ -1607,6 +1610,17 @@ public class MusicDiscManager implements Listener {
                 cyclesRun++;
             }
         }.runTaskTimer(plugin, 0L, intervalTicks);
+
+        // Grant a talent point when the song ends
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!player.isOnline()) return;
+                for (Skill skill : Skill.values()) {
+                    skillTree.addExtraTalentPoints(player.getUniqueId(), skill, 1);
+                }
+            }
+        }.runTaskLater(plugin, durationTicks);
     }
 
     // Method to find the nearest jukebox within a certain radius
