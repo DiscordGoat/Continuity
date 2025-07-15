@@ -30,6 +30,13 @@ public class PotionOfStrength implements Listener {
             int duration = (60 * 3) +  (brewingLevel * 10);
             if (displayName.equals("Potion of Strength")) {
                 Player player = event.getPlayer();
+                if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                        .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.STRENGTH_MASTERY)) {
+                    int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
+                                    goat.minecraft.minecraftnew.other.skilltree.Talent.STRENGTH_MASTERY);
+                    duration += bonus;
+                }
                 // Add the custom effect for 15 seconds
                 PotionManager.addCustomPotionEffect("Potion of Strength", player, duration);
                 player.sendMessage(ChatColor.GREEN + "Potion of Strength effect activated for " + duration + " seconds!");

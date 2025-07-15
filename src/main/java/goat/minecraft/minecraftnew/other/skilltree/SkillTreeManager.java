@@ -205,7 +205,12 @@ public class SkillTreeManager implements Listener {
                         + ChatColor.GOLD + "+" + seconds + "s " + ChatColor.GOLD + "Brew Time.";
             case RECURVE_MASTERY:
                 int recurveDuration = level * 50;
-                return ChatColor.YELLOW + "+" + recurveDuration + "s " + ChatColor.LIGHT_PURPLE + "Recurve Duration";
+                return ChatColor.YELLOW + "+" + recurveDuration + "s " + ChatColor.LIGHT_PURPLE + "Recurve Duration, "
+                        + ChatColor.RED + "+5% Arrow Damage";
+            case STRENGTH_MASTERY:
+                int strengthDuration = level * 50;
+                return ChatColor.YELLOW + "+" + strengthDuration + "s " + ChatColor.LIGHT_PURPLE + "Strength Duration, "
+                        + ChatColor.RED + "+5% Damage";
             default:
                 return talent.getTechnicalDescription();
         }

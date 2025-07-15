@@ -44,10 +44,20 @@ public enum Talent {
     RECURVE_MASTERY(
             "Recurve Mastery",
             ChatColor.GRAY + "Add a Skeleton Skull",
-            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Recurve Duration",
+            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Recurve Duration, "
+                    + ChatColor.RED + "+5% Arrow Damage",
             4,
             25,
             Material.BOW
+    ),
+    STRENGTH_MASTERY(
+            "Strength Mastery",
+            ChatColor.GRAY + "Add a Singularity",
+            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Strength Duration, "
+                    + ChatColor.RED + "+5% Damage",
+            4,
+            25,
+            Material.DIAMOND_SWORD
     );
 
 
