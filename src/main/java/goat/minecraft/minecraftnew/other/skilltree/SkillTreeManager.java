@@ -82,81 +82,98 @@ public class SkillTreeManager implements Listener {
         List<Talent> talents = TalentRegistry.getTalents(skill);
         int totalPages = (int) Math.ceil(talents.size() / 40.0);
         if (totalPages == 0) totalPages = 1;
-        if (page < 1) page = 1;
-        if (page > totalPages) page = totalPages;
+        page = Math.max(1, Math.min(page, totalPages));
 
         Inventory gui = Bukkit.createInventory(null, 54,
-                ChatColor.DARK_GREEN + skill.getDisplayName() + " Skill Tree: Page " + page + "/" + totalPages);
+                ChatColor.DARK_GREEN + skill.getDisplayName() +
+                        " Skill Tree: Page " + page + "/" + totalPages);
 
+        // prepare one pane stack
         ItemStack pane = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         ItemMeta pm = pane.getItemMeta();
-        pm.setDisplayName(ChatColor.BLACK + "");
+        pm.setDisplayName(" ");
         pane.setItemMeta(pm);
 
+        // 1) Top row (slots 0–8)
         for (int i = 0; i < 9; i++) {
-            gui.setItem(i, pane.clone());
+            gui.setItem(i, pane);
         }
-        for (int row = 0; row < 5; row++) {
-            gui.setItem(9 + row * 9, pane.clone());
+
+        // 2) Bottom row (slots 45–53)
+        for (int i = 45; i < 54; i++) {
+            gui.setItem(i, pane);
         }
+
+        // 3) Left & right columns for rows 1–4
+        for (int row = 1; row <= 4; row++) {
+            int left  = row * 9;
+            int right = row * 9 + 8;
+            gui.setItem(left,  pane);
+            gui.setItem(right, pane);
+        }
+
+        // — now your arrows, diamond counter, etc. go into the frame —
 
         if (page > 1) {
             ItemStack prev = new ItemStack(Material.ARROW);
-            ItemMeta meta = prev.getItemMeta();
-            meta.setDisplayName(ChatColor.YELLOW + "Previous Page");
-            prev.setItemMeta(meta);
+            ItemMeta m = prev.getItemMeta();
+            m.setDisplayName(ChatColor.YELLOW + "Previous Page");
+            prev.setItemMeta(m);
             gui.setItem(0, prev);
         }
-
         if (page < totalPages) {
             ItemStack next = new ItemStack(Material.ARROW);
-            ItemMeta meta = next.getItemMeta();
-            meta.setDisplayName(ChatColor.YELLOW + "Next Page");
-            next.setItemMeta(meta);
+            ItemMeta m = next.getItemMeta();
+            m.setDisplayName(ChatColor.YELLOW + "Next Page");
+            next.setItemMeta(m);
             gui.setItem(8, next);
         }
-
         ItemStack points = new ItemStack(Material.DIAMOND);
         ItemMeta dmeta = points.getItemMeta();
-        dmeta.setDisplayName(ChatColor.AQUA + "Talent Points: " + getAvailableTalentPoints(player, skill));
+        dmeta.setDisplayName(ChatColor.AQUA + "Talent Points: " +
+                getAvailableTalentPoints(player, skill));
         points.setItemMeta(dmeta);
         gui.setItem(4, points);
 
-        int startIndex = (page - 1) * 40;
-        int endIndex = Math.min(talents.size(), startIndex + 40);
-        int slotIndex = 9;
-        for (int i = startIndex; i < endIndex; i++) {
-            Talent talent = talents.get(i);
-            if (slotIndex % 9 == 0) slotIndex++;
-            if (slotIndex >= 54) break;
 
-            int currentLevel = getTalentLevel(player.getUniqueId(), skill, talent);
-            ItemStack item = new ItemStack(talent.getIcon());
-            ItemMeta im = item.getItemMeta();
-            im.setDisplayName(talent.getRarity().getColor() + talent.getName());
-            List<String> lore = new ArrayList<>();
-            lore.add(ChatColor.GRAY + talent.getDescription());
-            lore.add(ChatColor.GRAY + getDynamicTechnicalDescription(talent, currentLevel));
-            lore.add(ChatColor.YELLOW + "Level: " + currentLevel + "/" + talent.getMaxLevel());
-            lore.add(ChatColor.RED + "Requires " + skill.getDisplayName() + " " + talent.getLevelRequirement());
+        // 4) Fill talents into the “interior” (slots 10–16, 19–25, 28–34, 37–43, 46–52)
+        int startIndex = (page - 1) * 40;
+        int endIndex   = Math.min(talents.size(), startIndex + 40);
+        int slot       = 10; // row-1, col-1
+
+        for (int i = startIndex; i < endIndex && slot < 54; i++) {
+            Talent t = talents.get(i);
+
+            ItemStack icon = new ItemStack(t.getIcon());
+            ItemMeta im = icon.getItemMeta();
+            im.setDisplayName(t.getRarity().getColor() + t.getName());
+            List<String> lore = List.of(
+                    ChatColor.GRAY + t.getDescription(),
+                    ChatColor.GRAY + getDynamicTechnicalDescription(t, getTalentLevel(player.getUniqueId(), skill, t)),
+                    ChatColor.YELLOW + "Level: " + getTalentLevel(player.getUniqueId(), skill, t) +
+                            "/" + t.getMaxLevel(),
+                    ChatColor.RED + "Requires " + skill.getDisplayName() + " " + t.getLevelRequirement()
+            );
             im.setLore(lore);
-            if (currentLevel > 0) {
+            if (getTalentLevel(player.getUniqueId(), skill, t) > 0) {
                 im.addEnchant(org.bukkit.enchantments.Enchantment.UNBREAKING, 1, true);
                 im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
             }
-            item.setItemMeta(im);
-            gui.setItem(slotIndex, item);
-            slotIndex++;
-        }
+            icon.setItemMeta(im);
 
-        for (int i = 0; i < gui.getSize(); i++) {
-            if (gui.getItem(i) == null) {
-                gui.setItem(i, pane.clone());
+            gui.setItem(slot, icon);
+
+            // advance slot, skipping the right-border column
+            slot++;
+            if (slot % 9 == 8) {
+                // jumped into the right border → move to next row’s first interior slot
+                slot += 2;
             }
         }
 
         player.openInventory(gui);
     }
+
 
     public int getAvailableTalentPoints(Player player, Skill skill) {
         XPManager xp = MinecraftNew.getInstance().getXPManager();
