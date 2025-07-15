@@ -210,6 +210,11 @@ public class SkillTreeManager implements Listener {
             case REJUVENATION:
                 int bonusTime = level * 50;
                 return ChatColor.YELLOW + "+" + bonusTime + "s " + ChatColor.GREEN + "Bonus Health" + ChatColor.GRAY + " and " + ChatColor.GREEN + "Health Surge";
+            case SOVEREIGNTY_MASTERY:
+                int sovDuration = level * 50;
+                int deflect = level * 5;
+                return ChatColor.YELLOW + "+" + sovDuration + "s " + ChatColor.LIGHT_PURPLE + "Sovereignty Duration, "
+                        + ChatColor.RED + "+" + deflect + " Deflection Stacks";
             case STRENGTH_MASTERY:
                 int strengthDuration = level * 50;
                 return ChatColor.YELLOW + "+" + strengthDuration + "s " + ChatColor.LIGHT_PURPLE + "Strength Duration, "

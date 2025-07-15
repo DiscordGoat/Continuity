@@ -58,6 +58,15 @@ public enum Talent {
             45,
             Material.GHAST_TEAR
     ),
+    SOVEREIGNTY_MASTERY(
+            "Sovereignty Mastery",
+            ChatColor.GRAY + "Add an ender pearl",
+            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Sovereignty Duration, "
+                    + ChatColor.RED + "+5 Deflection Stacks",
+            4,
+            60,
+            Material.PRISMARINE_SHARD
+    ),
     STRENGTH_MASTERY(
             "Strength Mastery",
             ChatColor.GRAY + "Add a Singularity",
