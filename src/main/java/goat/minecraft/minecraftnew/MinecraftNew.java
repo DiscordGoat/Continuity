@@ -340,6 +340,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
         xpManager = new XPManager(this);
+        xpManager.startup();
         PetManager.getInstance(this).setXPManager(xpManager);
 
         // Initialize the new combat subsystem (replaces old combat event registrations)
