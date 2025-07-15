@@ -50,6 +50,13 @@ public enum Talent {
             25,
             Material.BOW
     ),
+    REJUVENATION(
+            "Rejuvenation",
+            ChatColor.GRAY + "Add a Golden Apple",
+            ChatColor.YELLOW + "+50s " + ChatColor.GREEN + "Bonus Health " + ChatColor.GRAY + "and " + ChatColor.GREEN + "Potion Surge",
+            4,
+            45,
+            Material.GHAST_TEAR
     STRENGTH_MASTERY(
             "Strength Mastery",
             ChatColor.GRAY + "Add a Singularity",

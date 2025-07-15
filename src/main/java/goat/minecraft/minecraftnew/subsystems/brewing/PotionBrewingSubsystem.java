@@ -192,14 +192,27 @@ public class PotionBrewingSubsystem implements Listener {
                 .replace("Recipe (Potion Recipe)", "")
                 .trim();
         PotionRecipe base = findRecipeByName(name);
-        if (base != null && name.equalsIgnoreCase("Potion of Recurve") &&
+        if (base == null) return null;
+
+        java.util.List<String> ingredients = new java.util.ArrayList<>(base.getRequiredIngredients());
+
+        if (SkillTreeManager.getInstance().hasTalent(player, Talent.REJUVENATION)) {
+            if (!ingredients.contains("Golden Apple")) {
+                ingredients.add("Golden Apple");
+            }
+        }
+
+        if (name.equalsIgnoreCase("Potion of Recurve") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.RECURVE_MASTERY)) {
-            java.util.List<String> ingredients = new java.util.ArrayList<>(base.getRequiredIngredients());
             if (!ingredients.contains("Skeleton Skull")) {
                 ingredients.add("Skeleton Skull");
             }
+        }
+
+        if (!ingredients.equals(base.getRequiredIngredients())) {
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
         }
+
         if (base != null && name.equalsIgnoreCase("Potion of Strength") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.STRENGTH_MASTERY)) {
             java.util.List<String> ingredients = new java.util.ArrayList<>(base.getRequiredIngredients());
