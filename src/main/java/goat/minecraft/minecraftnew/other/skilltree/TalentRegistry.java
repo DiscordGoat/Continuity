@@ -19,7 +19,8 @@ public final class TalentRegistry {
                         Talent.REDSTONE_TWO,
                         Talent.OPTIMAL_CONFIGURATION,
                         Talent.TRIPLE_BATCH,
-                        Talent.RECURVE_MASTERY)
+                        Talent.RECURVE_MASTERY,
+                        Talent.REJUVENATION)
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }
