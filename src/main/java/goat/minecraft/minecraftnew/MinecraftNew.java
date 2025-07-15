@@ -54,6 +54,8 @@ import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.commands.AuraCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.utils.developercommands.AddTalentPointCommand;
 import goat.minecraft.minecraftnew.utils.devtools.*;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
@@ -515,6 +517,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("loadsubsystems").setExecutor(new LoadSubsystemsCommand(this));
         this.getCommand("skills").setExecutor(new SkillsCommand(xpManager));
         new SetSkillLevelCommand(this, xpManager);
+
+        SkillTreeManager.init(this);
+        new AddTalentPointCommand(this, SkillTreeManager.getInstance());
 
         getCommand("getpet").setExecutor(new PetCommand(petManager));
         getServer().getPluginManager().registerEvents(new FishingEvent(), MinecraftNew.getInstance());
