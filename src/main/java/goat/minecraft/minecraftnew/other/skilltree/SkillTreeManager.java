@@ -217,6 +217,8 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "-" + reduction + "s " + ChatColor.GOLD + "Brew Time.";
             case REDSTONE_ONE:
             case REDSTONE_TWO:
+            case REDSTONE_THREE:
+            case REDSTONE_FOUR:
                 int seconds = level * 4;
                 return ChatColor.YELLOW + "+" + seconds + "s " + ChatColor.LIGHT_PURPLE + "Potion Duration, "
                         + ChatColor.GOLD + "+" + seconds + "s " + ChatColor.GOLD + "Brew Time.";

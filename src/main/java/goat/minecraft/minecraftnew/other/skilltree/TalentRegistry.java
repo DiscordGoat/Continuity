@@ -17,6 +17,8 @@ public final class TalentRegistry {
                 Arrays.asList(
                         Talent.REDSTONE_ONE,
                         Talent.REDSTONE_TWO,
+                        Talent.REDSTONE_THREE,
+                        Talent.REDSTONE_FOUR,
                         Talent.OPTIMAL_CONFIGURATION,
                         Talent.TRIPLE_BATCH,
                         Talent.RECURVE_MASTERY,
