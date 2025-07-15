@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.brewing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
@@ -217,7 +220,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // New recipe for Sovereignty
-        List<String> sovereigntyIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Obsidian", "Shatterproof");
+        List<String> sovereigntyIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Shatterproof");
         baseDuration = 60 * 3; // 120 seconds cooldown (adjust as needed for effect duration)
         List<String> sovereigntyLore = Arrays.asList("Deflects the first 5 attacks", "Cooldown: 120 seconds");
         // Choose a color that fits a regal theme (adjust the RGB values as needed)
@@ -234,13 +237,13 @@ public class PotionBrewingSubsystem implements Listener {
         recipeRegistry.add(
                 new PotionRecipe("Potion of Liquid Luck", liquidLuckIngredients, 60*20, new ItemStack(Material.POTION), liquidLuckColor, liquidLuckLore)
         );
-        List<String> fountainsIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Heart of the Sea", "EntionPlast");
+        List<String> fountainsIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "EntionPlast");
         List<String> fountainsLore = Arrays.asList("Boosts sea creature chance by 10%", "Base Duration of " + baseDuration);
         Color fountainsColor = Color.fromRGB(0, 255, 171);
         recipeRegistry.add(
                 new PotionRecipe("Potion of Fountains", fountainsIngredients, 60*4, new ItemStack(Material.POTION), fountainsColor, fountainsLore)
         );
-        List<String> swiftStepIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Sugar", "Entropy");
+        List<String> swiftStepIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Entropy");
         List<String> swiftStepLore = Arrays.asList("Increases movement speed by 40%", "Base Duration of " + baseDuration);
         Color swiftStepColor = Color.fromRGB(150, 200, 255); // A light blue-ish color
         recipeRegistry.add(
@@ -254,7 +257,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // Potion of Solar Fury
-        List<String> solarFuryIngredients = Arrays.asList("Glass Bottle", "Sunflare", "Magma Cream", "Nether Wart");
+        List<String> solarFuryIngredients = Arrays.asList("Glass Bottle", "Sunflare", "Nether Wart");
         List<String> solarFuryLore = Arrays.asList("Doubles fire level gains to monsters.", "Base Duration of " + baseDuration);
         Color solarFuryColor = Color.fromRGB(255, 120, 0);
         recipeRegistry.add(
@@ -262,7 +265,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // Potion of Riptide
-        List<String> riptideIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Heart of the Sea", "Kelp", "Tide");
+        List<String> riptideIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Tide");
         List<String> riptideLore = Arrays.asList("Boosts riptide velocity", "Base Duration of " + 60*30);
         Color riptideColor = Color.fromRGB(173, 216, 230);
         recipeRegistry.add(
@@ -270,7 +273,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // Potion of Night Vision
-        List<String> nightVisionIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Starlight", "Fermented Spider Eye");
+        List<String> nightVisionIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Starlight");
         List<String> nightVisionLore = Arrays.asList("Grants Night Vision while moving", "Base Duration of " + 60*30);
         Color nightVisionColor = Color.fromRGB(255, 255, 255);
         recipeRegistry.add(
@@ -278,7 +281,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // Potion of Charismatic Bartering
-        List<String> charismaticIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Gold Block", "Shiny Emerald");
+        List<String> charismaticIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Shiny Emerald");
         List<String> charismaticLore = Arrays.asList("Villager trades 20% cheaper", "Base Duration of " + baseDuration);
         Color charismaticColor = Color.fromRGB(80, 200, 120); // emerald green tone
         recipeRegistry.add(
@@ -286,7 +289,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // Potion of Oxygen Recovery
-        List<String> oxygenRecoveryIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Sponge", "Ghost");
+        List<String> oxygenRecoveryIngredients = Arrays.asList("Glass Bottle", "Nether Wart");
         List<String> oxygenRecoveryLore = Arrays.asList("Recover oxygen faster while mining", "Base Duration of " + baseDuration);
         Color oxygenRecoveryColor = Color.fromRGB(0, 0, 0);
         recipeRegistry.add(
@@ -536,14 +539,15 @@ public class PotionBrewingSubsystem implements Listener {
                 brewTimeRemaining = recipe.getBrewTime();
                 if (player != null) {
                     PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
-                    if (meritManager.hasPerk(player.getUniqueId(), "Master Brewer")) {
-                        brewTimeRemaining = (int) Math.ceil(brewTimeRemaining * 0.5);
+                    if(SkillTreeManager.getInstance().hasTalent(player, Talent.OPTIMAL_CONFIGURATION)){
+                        int brewTimeReduction = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.OPTIMAL_CONFIGURATION));
+                        brewTimeRemaining -= brewTimeReduction;
                     }
 
                     PetManager petManager = PetManager.getInstance(plugin);
                     PetManager.Pet pet = petManager.getActivePet(player);
                     if (pet != null && pet.hasPerk(PetManager.PetPerk.SPLASH_POTION)) {
-                        double reduction = pet.getLevel() / 100.0;
+                        double reduction = pet.getLevel() / 200.0;
                         brewTimeRemaining = (int) Math.ceil(brewTimeRemaining * (1 - reduction));
                     }
                 }
@@ -716,8 +720,22 @@ public class PotionBrewingSubsystem implements Listener {
 
                 // build final potion
                 ItemStack finalPotion = buildFinalPotion();
-                Item dropped = w.dropItem(standLoc, finalPotion);
-                dropped.setUnlimitedLifetime(true);
+                if(SkillTreeManager.getInstance().hasTalent(getNearestPlayer(standLoc), Talent.TRIPLE_BATCH)) {
+                    double chance = (SkillTreeManager.getInstance().getTalentLevel(getNearestPlayer(standLoc).getUniqueId(), Skill.BREWING, Talent.TRIPLE_BATCH) * 5) / 100.0;   // 0.0–0.50
+                    if (Math.random() < chance) {
+                        Item dropped = w.dropItem(standLoc, finalPotion);
+                        Item dropped2 = w.dropItem(standLoc, finalPotion);
+                        Item dropped3 = w.dropItem(standLoc, finalPotion);
+                        dropped.setUnlimitedLifetime(true);
+                        dropped2.setUnlimitedLifetime(true);
+                        dropped3.setUnlimitedLifetime(true);
+                    }
+                }else{
+                    Item dropped = w.dropItem(standLoc, finalPotion);
+                    dropped.setUnlimitedLifetime(true);
+                }
+
+
 
                 // Cleanup stands
                 removeEntityByUUID(mainArmorStand);

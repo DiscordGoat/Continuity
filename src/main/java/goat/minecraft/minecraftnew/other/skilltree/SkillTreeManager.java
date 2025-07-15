@@ -136,6 +136,7 @@ public class SkillTreeManager implements Listener {
             im.setDisplayName(talent.getRarity().getColor() + talent.getName());
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.GRAY + talent.getDescription());
+            lore.add(ChatColor.GRAY + talent.getTechnicalDescription());
             lore.add(ChatColor.YELLOW + "Level: " + currentLevel + "/" + talent.getMaxLevel());
             lore.add(ChatColor.RED + "Requires " + skill.getDisplayName() + " " + talent.getLevelRequirement());
             im.setLore(lore);

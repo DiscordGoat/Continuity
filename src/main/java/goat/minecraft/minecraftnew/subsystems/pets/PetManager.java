@@ -846,7 +846,7 @@ public class PetManager implements Listener {
             case ENDLESS_WARP:
                 return ChatColor.DARK_PURPLE + "Grants infinite Warp charges for the Warp enchant.";
             case SPLASH_POTION:
-                return "Reduces brew time by " + ChatColor.YELLOW + level + "%" + ChatColor.GRAY + ".";
+                return "Reduces brew time by " + ChatColor.YELLOW + level/2 + "%" + ChatColor.GRAY + ".";
             case EXPERIMENTATION:
                 return "Potions last " + ChatColor.YELLOW + (3 * level) + "s" + ChatColor.GRAY + " longer.";
             case MEMORY:

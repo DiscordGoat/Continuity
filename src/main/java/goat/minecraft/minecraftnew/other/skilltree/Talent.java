@@ -9,23 +9,51 @@ import org.bukkit.Material;
  * using <code>Talent.REDSTONE</code> for example.
  */
 public enum Talent {
-    REDSTONE(
-            "Redstone",
-            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration.",
-            25,
+    TRIPLE_BATCH(
+            "Triple Batch Upgrade",
+            ChatColor.GRAY + "Catches the excess potion in a glass bottle",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "Chance to brew 3 Potions.",
+            10,
+            50,
+            Material.CAULDRON
+    ),
+    OPTIMAL_CONFIGURATION(
+            "Optimal Brewing Stand Settings",
+            ChatColor.GRAY + "Installs an ad-blocker to prevent wasted time",
+            ChatColor.YELLOW + "-4s " + ChatColor.GOLD + "Brew Time.",
+            10,
             1,
             Material.REDSTONE
-    );
+    ),
+    REDSTONE_ONE(
+            "Redstone I",
+            ChatColor.GRAY + "Allows Potions to steep for longer",
+            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+4s " + ChatColor.GOLD + "Brew Time.",
+            10,
+            1,
+            Material.REDSTONE
+    ),
+    REDSTONE_TWO(
+            "Redstone II",
+            ChatColor.GRAY + "Allows Potions to steep for even longer",
+            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+4s " + ChatColor.GOLD + "Brew Time.",
+            10,
+                    20,
+            Material.REDSTONE_BLOCK
+            );
+
 
     private final String name;
     private final String description;
+    private final String technicalDescription;
     private final int maxLevel;
     private final int levelRequirement;
     private final Material icon;
 
-    Talent(String name, String description, int maxLevel, int levelRequirement, Material icon) {
+    Talent(String name, String description, String technicalDescription, int maxLevel, int levelRequirement, Material icon) {
         this.name = name;
         this.description = description;
+        this.technicalDescription = technicalDescription;
         this.maxLevel = maxLevel;
         this.levelRequirement = levelRequirement;
         this.icon = icon;
@@ -37,6 +65,9 @@ public enum Talent {
 
     public String getDescription() {
         return description;
+    }
+    public String getTechnicalDescription() {
+        return technicalDescription;
     }
 
     public int getMaxLevel() {
