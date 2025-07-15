@@ -61,6 +61,16 @@ public class PotionManager {
             Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
             duration += redstoneBuff;
         }
+        if(SkillTreeManager.getInstance().hasTalent(player, Talent.REDSTONE_THREE)){
+            int redstoneBuff = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_THREE));
+            Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
+            duration += redstoneBuff;
+        }
+        if(SkillTreeManager.getInstance().hasTalent(player, Talent.REDSTONE_FOUR)){
+            int redstoneBuff = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_FOUR));
+            Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
+            duration += redstoneBuff;
+        }
         if (SkillTreeManager.getInstance().hasTalent(player, Talent.REJUVENATION)) {
             int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REJUVENATION);
             int hpBoostduration = level * 50 * 20;

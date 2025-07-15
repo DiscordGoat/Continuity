@@ -41,6 +41,22 @@ public enum Talent {
                     20,
             Material.REDSTONE_BLOCK
     ),
+    REDSTONE_THREE(
+            "Redstone III",
+            ChatColor.GRAY + "Allows Potions to steep for even longer",
+            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+4s " + ChatColor.GOLD + "Brew Time.",
+            10,
+            60,
+            Material.REDSTONE_TORCH
+    ),
+    REDSTONE_FOUR(
+            "Redstone IV",
+            ChatColor.GRAY + "Allows Potions to steep for even longer",
+            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+4s " + ChatColor.GOLD + "Brew Time.",
+            10,
+            80,
+            Material.REDSTONE_ORE
+    ),
     RECURVE_MASTERY(
             "Recurve Mastery",
             ChatColor.GRAY + "Add a Skeleton Skull",
