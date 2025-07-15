@@ -32,6 +32,7 @@ public class SkillTreeManager implements Listener {
     private final JavaPlugin plugin;
     private File dataFile;
     private FileConfiguration dataConfig;
+    private final Map<Skill, List<Talent>> skillTalents = new HashMap<>();
 
     public static void init(JavaPlugin plugin) {
         if (instance == null) {
@@ -136,7 +137,7 @@ public class SkillTreeManager implements Listener {
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.GRAY + talent.getDescription());
             lore.add(ChatColor.YELLOW + "Level: " + currentLevel + "/" + talent.getMaxLevel());
-            lore.add(ChatColor.GRAY + "Requires " + skill.getDisplayName() + " " + talent.getLevelRequirement());
+            lore.add(ChatColor.RED + "Requires " + skill.getDisplayName() + " " + talent.getLevelRequirement());
             im.setLore(lore);
             if (currentLevel > 0) {
                 im.addEnchant(org.bukkit.enchantments.Enchantment.UNBREAKING, 1, true);
@@ -240,36 +241,5 @@ public class SkillTreeManager implements Listener {
         setTalentLevel(player.getUniqueId(), skill, talent, currentLevel + 1);
         player.sendMessage(ChatColor.GREEN + "Upgraded " + talent.getName() + " to " + (currentLevel + 1));
         openSkillTree(player, skill, page);
-    }
-
-    @EventHandler
-    public void onPotionDrink(PlayerItemConsumeEvent event) {
-        ItemStack item = event.getItem();
-        if (item == null) return;
-        Material type = item.getType();
-        if (type != Material.POTION && type != Material.SPLASH_POTION && type != Material.LINGERING_POTION) return;
-        Player player = event.getPlayer();
-        int redstoneLevel = getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE);
-        if (redstoneLevel <= 0) return;
-        Set<PotionEffectType> before = player.getActivePotionEffects().stream()
-                .map(PotionEffect::getType).collect(Collectors.toSet());
-        int extra = redstoneLevel * 4 * 20;
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                for (PotionEffect effect : player.getActivePotionEffects()) {
-                    if (!before.contains(effect.getType())) {
-                        player.addPotionEffect(new PotionEffect(
-                                effect.getType(),
-                                effect.getDuration() + extra,
-                                effect.getAmplifier(),
-                                effect.isAmbient(),
-                                effect.hasParticles(),
-                                effect.hasIcon()
-                        ), true);
-                    }
-                }
-            }
-        }.runTaskLater(plugin, 1L);
     }
 }

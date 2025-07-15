@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.other.skilltree;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 /**
@@ -10,7 +11,7 @@ import org.bukkit.Material;
 public enum Talent {
     REDSTONE(
             "Redstone",
-            "Adds 4s to potions you drink per level.",
+            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration.",
             25,
             1,
             Material.REDSTONE

@@ -1,8 +1,12 @@
 package goat.minecraft.minecraftnew.subsystems.brewing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.utils.devtools.SkinManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
@@ -50,6 +54,11 @@ public class PotionManager {
         PetManager.Pet pet = petManager.getActivePet(player);
         if(pet != null && pet.hasPerk(PetManager.PetPerk.EXPERIMENTATION)){
             duration += 3 * pet.getLevel();
+        }
+        if(SkillTreeManager.getInstance().hasTalent(player, Talent.REDSTONE)){
+            int redstoneBuff = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE));
+            Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
+            duration += redstoneBuff;
         }
         Map<String, Integer> playerEffects = activeEffects.getOrDefault(uuid, new HashMap<>());
         // If the effect is already active, add the new duration to the current duration
