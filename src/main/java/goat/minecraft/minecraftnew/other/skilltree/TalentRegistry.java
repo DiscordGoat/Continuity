@@ -45,7 +45,8 @@ public final class TalentRegistry {
                         Talent.GOLD_SWORD,
                         Talent.DIAMOND_SWORD,
                         Talent.NETHERITE_SWORD,
-                        Talent.BOW_MASTERY
+                        Talent.BOW_MASTERY,
+                        Talent.DONT_MINE_AT_NIGHT
                 )
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));

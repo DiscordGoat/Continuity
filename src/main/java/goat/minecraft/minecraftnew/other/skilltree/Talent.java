@@ -215,6 +215,14 @@ public enum Talent {
             25,
             10,
             Material.BOW
+    ),
+    DONT_MINE_AT_NIGHT(
+            "Don't Mine at Night",
+            ChatColor.GRAY + "Creepers beware of seasoned fighters",
+            ChatColor.YELLOW + "+(10*level)% " + ChatColor.RED + "Creeper Damage",
+            6,
+            50,
+            Material.TNT
     );
 
 

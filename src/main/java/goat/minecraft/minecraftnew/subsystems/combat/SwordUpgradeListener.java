@@ -4,6 +4,9 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.combat.DeteriorationDamageHandler;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -53,9 +56,13 @@ public class SwordUpgradeListener implements Listener {
             DeteriorationDamageHandler.getInstance().addDeterioration(target, stacks);
         }
         if (target instanceof Creeper) {
-            int diamond = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.DIAMOND_ESSENCE);
-            if (diamond > 0) {
-                event.setDamage(event.getDamage() * (1 + diamond * 0.10));
+            int level = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                level = SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.DONT_MINE_AT_NIGHT);
+            }
+            if (level > 0) {
+                event.setDamage(event.getDamage() * (1 + level * 0.10));
             }
         }
 
