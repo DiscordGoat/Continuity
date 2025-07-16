@@ -29,21 +29,19 @@ public class SoulUpgradeSystem implements Listener {
     // ----- ENUMERATIONS -----
 
     public enum SwordUpgrade {
-        LETHALITY("Lethality", "+2% damage per level", Material.NETHERITE_SWORD, 5, 5),
-        LIFESTEAL_REGEN("Regeneration", "+5% chance to gain regeneration per level", Material.GHAST_TEAR, 3, 11),
-        LIFESTEAL_POTENCY("Potency", "+1 regen potency per level", Material.BLAZE_POWDER, 2, 12),
-        LIFESTEAL_DURATION("Duration", "+5 seconds of regeneration per level", Material.CLOCK, 3, 13),
-        FEED("Feed", "15% chance to gain +1 hunger and +2 saturation when hitting a monster", Material.COOKED_BEEF, 1, 14),
+        /* Removed Lethality upgrade */
+        /* Removed regeneration upgrades */
+        /* Removed feed upgrade */
         ASPECT_OF_DECAY("Aspect of Decay", "+5 Deterioration stacks per level", Material.WITHER_ROSE, 4, 6),
         LOYAL_AUGMENT("Loyal Augment", "-1s cooldown per level", Material.NETHER_STAR, 4, 20),
         SHRED_AUGMENT("Shred Augment", "+3 stacks of shredders per level", Material.IRON_SWORD, 6, 21),
         WARP_AUGMENT("Warp Augment", "+5 warp charges per level", Material.ENDER_PEARL, 6, 22),
-        FURY("Fury", "Strike lightning when below 50% HP (30s CD)", Material.LIGHTNING_ROD, 1, 3),
-        BETRAYAL("Betrayal", "+4% creeper disc chance per level", Material.MUSIC_DISC_11, 4, 4),
+        /* Removed fury upgrade */
+        /* Removed betrayal upgrade */
         STARLESS_NIGHT("Starless Night", "+3 seconds of night when killing a monster", Material.BLACK_DYE, 1, 29),
         CHALLENGE("Challenge", "Chance for monsters to spawn twice: +5% chance per level", Material.PAPER, 4, 30),
         BLOOD_MOON("Blood Moon", "Chance for monsters to spawn an additional time: +5% chance per level", Material.RED_BED, 5, 31),
-        APOCALYPSE("Apocalypse", "Enables Death Mutation: 5% per level", Material.WITHER_SKELETON_SKULL, 3, 32),
+        /* Removed apocalypse upgrade */
         BALLAD_OF_THE_CATS("Ballad of the Cats", "increases monster level by 20 per level", Material.MUSIC_DISC_CAT, 5, 33);
 
         private final String name;
@@ -91,18 +89,13 @@ public class SoulUpgradeSystem implements Listener {
         // ----- Hit Effects Row -----
         gui.setItem(0, createHeader(Material.DIAMOND_SWORD, ChatColor.GOLD + "⚔ Hit Effects"));
         gui.setItem(1, createColoredPane(Material.ORANGE_STAINED_GLASS_PANE, ""));
-        gui.setItem(SwordUpgrade.FURY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.FURY, available));
-        gui.setItem(SwordUpgrade.BETRAYAL.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BETRAYAL, available));
-        gui.setItem(SwordUpgrade.LETHALITY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LETHALITY, available));
+        // Removed Fury, Betrayal and Lethality upgrades
         gui.setItem(SwordUpgrade.ASPECT_OF_DECAY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.ASPECT_OF_DECAY, available));
 
         // ----- Regeneration Row -----
         gui.setItem(9, createHeader(Material.GHAST_TEAR, ChatColor.LIGHT_PURPLE + "❤ Regeneration"));
         gui.setItem(10, createColoredPane(Material.PINK_STAINED_GLASS_PANE, ""));
-        gui.setItem(SwordUpgrade.LIFESTEAL_REGEN.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LIFESTEAL_REGEN, available));
-        gui.setItem(SwordUpgrade.LIFESTEAL_POTENCY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LIFESTEAL_POTENCY, available));
-        gui.setItem(SwordUpgrade.LIFESTEAL_DURATION.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LIFESTEAL_DURATION, available));
-        gui.setItem(SwordUpgrade.FEED.getSlot(), createUpgradeItem(weapon, SwordUpgrade.FEED, available));
+        // Removed regeneration and feed upgrades
 
         // ----- Augment Row -----
         gui.setItem(18, createHeader(Material.NETHER_STAR, ChatColor.AQUA + "✦ Augments"));
@@ -117,7 +110,7 @@ public class SoulUpgradeSystem implements Listener {
         gui.setItem(SwordUpgrade.STARLESS_NIGHT.getSlot(), createUpgradeItem(weapon, SwordUpgrade.STARLESS_NIGHT, available));
         gui.setItem(SwordUpgrade.CHALLENGE.getSlot(), createUpgradeItem(weapon, SwordUpgrade.CHALLENGE, available));
         gui.setItem(SwordUpgrade.BLOOD_MOON.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BLOOD_MOON, available));
-        gui.setItem(SwordUpgrade.APOCALYPSE.getSlot(), createUpgradeItem(weapon, SwordUpgrade.APOCALYPSE, available));
+        // Removed apocalypse upgrade
         gui.setItem(SwordUpgrade.BALLAD_OF_THE_CATS.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BALLAD_OF_THE_CATS, available));
 
         gui.setItem(49, createExtendedPowerDisplay(power, getPowerCap(weapon), available));
@@ -360,21 +353,19 @@ public class SoulUpgradeSystem implements Listener {
     // ----- SYMBOLS & COLORS -----
     private String getSymbol(String key) {
         switch (key) {
-            case "LIFESTEAL_REGEN": return "❤";
-            case "LIFESTEAL_POTENCY": return "✚";
-            case "LIFESTEAL_DURATION": return "⌛";
+            // Removed regeneration related symbols
             case "LOYAL_AUGMENT": return "⚔";
             case "SHRED_AUGMENT": return "✂";
             case "WARP_AUGMENT": return "✦";
-            case "FURY": return "⚡";
-            case "BETRAYAL": return "♬";
-            case "LETHALITY": return "✖";
-            case "FEED": return "☕";
+            // Removed fury symbol
+            // Removed betrayal symbol
+            // Removed lethality symbol
+            // Removed feed symbol
             case "ASPECT_OF_DECAY": return "☣";
             case "STARLESS_NIGHT": return "☾";
             case "CHALLENGE": return "⚑";
             case "BLOOD_MOON": return "☽";
-            case "APOCALYPSE": return "☢";
+            // Removed apocalypse symbol
             case "BALLAD_OF_THE_CATS": return "♪";
             default: return "⬡";
         }
@@ -478,21 +469,19 @@ public class SoulUpgradeSystem implements Listener {
 
     private static String getSymbolStatic(String key) {
         return switch (key) {
-            case "LIFESTEAL_REGEN" -> "❤";
-            case "LIFESTEAL_POTENCY" -> "✚";
-            case "LIFESTEAL_DURATION" -> "⌛";
+            // Removed regeneration related symbols
             case "LOYAL_AUGMENT" -> "⚔";
             case "SHRED_AUGMENT" -> "✂";
             case "WARP_AUGMENT" -> "✦";
-            case "FURY" -> "⚡";
-            case "BETRAYAL" -> "♬";
-            case "LETHALITY" -> "✖";
-            case "FEED" -> "☕";
+            // Removed fury symbol
+            // Removed betrayal symbol
+            // Removed lethality symbol
+            // Removed feed symbol
             case "ASPECT_OF_DECAY" -> "☣";
             case "STARLESS_NIGHT" -> "☾";
             case "CHALLENGE" -> "⚑";
             case "BLOOD_MOON" -> "☽";
-            case "APOCALYPSE" -> "☢";
+            // Removed apocalypse symbol
             case "BALLAD_OF_THE_CATS" -> "♪";
             default -> "⬡";
         };

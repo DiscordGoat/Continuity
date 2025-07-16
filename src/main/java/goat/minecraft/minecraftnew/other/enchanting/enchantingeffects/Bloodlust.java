@@ -84,53 +84,25 @@ public class Bloodlust implements Listener {
             player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, Integer.MAX_VALUE, 0, true, false));
         }
 
-        // 3 kills: Strength I + previous effects
-        if (killCount >= 3) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, Integer.MAX_VALUE, 0, true, false));
-        }
-
-        // 5 kills: Speed I + previous effects
+        // 5 kills: Speed I
         if (killCount >= 5) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 0, true, false));
         }
 
-        // 10 kills: Double all effects (Haste II, Strength II, Speed II)
+        // 10 kills: Haste II and Speed II
         if (killCount >= 10) {
             player.removePotionEffect(PotionEffectType.HASTE);
-            player.removePotionEffect(PotionEffectType.STRENGTH);
             player.removePotionEffect(PotionEffectType.SPEED);
-            
             player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, Integer.MAX_VALUE, 1, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, Integer.MAX_VALUE, 1, true, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 1, true, false));
         }
 
-        // 15 kills: Regeneration II + previous effects
-        if (killCount >= 15) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true, false));
-        }
-
-        // 20 kills: Resistance II + previous effects
+        // 20 kills: Haste III and Speed III
         if (killCount >= 20) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, Integer.MAX_VALUE, 1, true, false));
-        }
-
-        // 25 kills: Absorption V + previous effects
-        if (killCount >= 25) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, Integer.MAX_VALUE, 4, true, false));
-        }
-
-        // 30 kills: Max bloodlust - all effects at level III
-        if (killCount >= 30) {
-            // Remove all current effects and apply max level versions
-            removeBloodlustEffects(player);
-            
+            player.removePotionEffect(PotionEffectType.HASTE);
+            player.removePotionEffect(PotionEffectType.SPEED);
             player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, Integer.MAX_VALUE, 2, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, Integer.MAX_VALUE, 2, true, false));
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 2, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, Integer.MAX_VALUE, 2, true, false));
-            player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, Integer.MAX_VALUE, 4, true, false)); // Keep Absorption V
         }
     }
 
@@ -157,7 +129,6 @@ public class Bloodlust implements Listener {
     }
 
     private void removeBloodlustEffects(Player player) {
-        player.removePotionEffect(PotionEffectType.STRENGTH);
         player.removePotionEffect(PotionEffectType.SPEED);
         player.removePotionEffect(PotionEffectType.HASTE);
         player.removePotionEffect(PotionEffectType.REGENERATION);

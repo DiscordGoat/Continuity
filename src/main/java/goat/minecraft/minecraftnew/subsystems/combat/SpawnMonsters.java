@@ -309,18 +309,7 @@ public class SpawnMonsters implements Listener {
         Random random = new Random();
 
 
-        if(getNearestPlayer(entity, 1000) != null){
-            int apocalypse = SoulUpgradeSystem.getUpgradeLevel(getNearestPlayer(entity, 1000).getItemInUse(), SoulUpgradeSystem.SwordUpgrade.APOCALYPSE);
-            if (apocalypse > 0 && entity instanceof Monster && random.nextDouble() < apocalypse * 0.05) {
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        applyMobAttributes((LivingEntity) entity, 300);
-                    }
-                }.runTaskLater(MinecraftNew.getInstance(), 41L);
-
-            }
-        }
+        // Apocalypse upgrade removed
 
         if (entity instanceof Creeper) {
             int randomValue = random.nextInt(100) + 1;

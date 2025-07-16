@@ -223,6 +223,30 @@ public enum Talent {
             6,
             50,
             Material.TNT
+    ),
+    ULTIMATUM(
+            "Ultimatum",
+            ChatColor.GRAY + "Occasionally unleash devastating fury",
+            ChatColor.YELLOW + "1% chance per level to trigger Fury",
+            25,
+            50,
+            Material.LIGHTNING_ROD
+    ),
+    ARMAGEDDON(
+            "Armageddon",
+            ChatColor.GRAY + "Scatter hordes with a kinetic blast",
+            ChatColor.YELLOW + "1% chance per level to blast foes away",
+            25,
+            50,
+            Material.TNT
+    ),
+    VAMPIRIC_STRIKE(
+            "Vampiric Strike",
+            ChatColor.GRAY + "Harvest souls for brief vitality",
+            ChatColor.YELLOW + "1% chance per level to spawn a Soul Orb",
+            25,
+            50,
+            Material.GHAST_TEAR
     );
 
 
