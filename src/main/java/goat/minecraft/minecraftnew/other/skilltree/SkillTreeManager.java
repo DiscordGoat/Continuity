@@ -287,10 +287,18 @@ public class SkillTreeManager implements Listener {
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
         String raw = ChatColor.stripColor(event.getView().getTitle());
-        if (!raw.endsWith("Skill Tree") && !raw.contains("Skill Tree: Page")) return;
+        if (!raw.contains("Skill Tree")) return;
         event.setCancelled(true);
         Player player = (Player) event.getWhoClicked();
-        Skill skill = Skill.BREWING; // only one supported for now
+
+        // Determine the skill from the inventory title. Titles are in the form
+        // "<Skill Display> Skill Tree" or "<Skill Display> Skill Tree: Page X/Y".
+        int skillEnd = raw.indexOf(" Skill Tree");
+        if (skillEnd == -1) return;
+        String skillName = raw.substring(0, skillEnd).trim();
+        Skill skill = Skill.fromDisplay(skillName);
+        if (skill == null) return;
+
         int page = 1;
         if (raw.contains("Page")) {
             try {
