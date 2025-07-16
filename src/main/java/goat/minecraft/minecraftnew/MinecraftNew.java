@@ -53,6 +53,7 @@ import goat.minecraft.minecraftnew.utils.commands.DiscsCommand;
 import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.commands.AuraCommand;
+import goat.minecraft.minecraftnew.utils.commands.ToggleHealthBarsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.developercommands.AddTalentPointCommand;
@@ -70,6 +71,7 @@ import goat.minecraft.minecraftnew.other.trinkets.EnchantedClockManager;
 import goat.minecraft.minecraftnew.other.trinkets.EnchantedHopperManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.other.auras.AuraManager;
+import goat.minecraft.minecraftnew.subsystems.combat.notification.MonsterHealthBarManager;
 import goat.minecraft.minecraftnew.other.armorsets.FlowManager;
 import goat.minecraft.minecraftnew.other.armorsets.MonolithSetBonus;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
@@ -144,6 +146,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private VerdantRelicsSubsystem verdantRelicsSubsystem;
     private CombatSubsystemManager combatSubsystemManager;
     private AuraManager auraManager;
+    private MonsterHealthBarManager healthBarManager;
     private FlowManager flowManager;
 
     public ItemDisplayManager getItemDisplayManager() {
@@ -340,6 +343,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         auraManager = new AuraManager(this);
         getCommand("previewauratemplate").setExecutor(new PreviewAuraTemplateCommand(auraManager));
         getCommand("aura").setExecutor(new AuraCommand(auraManager));
+
+        healthBarManager = MonsterHealthBarManager.getInstance(this);
+        getCommand("togglehealthbars").setExecutor(new ToggleHealthBarsCommand(healthBarManager));
 
 
         xpManager = new XPManager(this);
@@ -749,6 +755,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         if (playerOxygenManager != null) {
             playerOxygenManager.saveOnShutdown();
+        }
+        if (healthBarManager != null) {
+            healthBarManager.shutdown();
         }
 
         if (combatSubsystemManager != null) {
