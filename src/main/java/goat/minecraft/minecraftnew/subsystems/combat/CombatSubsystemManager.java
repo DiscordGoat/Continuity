@@ -10,12 +10,10 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.RangedDam
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.CorpseLevelDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SwordTalentDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.commands.CombatReloadCommand;
-import goat.minecraft.minecraftnew.subsystems.combat.commands.ToggleHealthBarsCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIController;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.PlayerFeedbackService;
-import goat.minecraft.minecraftnew.subsystems.combat.notification.MonsterHealthBarService;
 import goat.minecraft.minecraftnew.subsystems.combat.FireDamageHandler;
 import goat.minecraft.minecraftnew.subsystems.combat.DeteriorationDamageHandler;
 import goat.minecraft.minecraftnew.subsystems.combat.ZombieReinforcementBlocker;
@@ -47,7 +45,6 @@ public class CombatSubsystemManager implements CommandExecutor {
     private DamageNotificationService notificationService;
     private PlayerFeedbackService feedbackService;
     private HostilityService hostilityService;
-    private MonsterHealthBarService healthBarService;
 
     private FireDamageHandler fireDamageHandler;
     private DeteriorationDamageHandler decayDamageHandler;
@@ -225,7 +222,6 @@ public class CombatSubsystemManager implements CommandExecutor {
         notificationService = new DamageNotificationService(plugin, configuration.getNotificationConfig());
         feedbackService = new PlayerFeedbackService(configuration.getSoundConfig());
         hostilityService = new HostilityService(plugin, configuration.getHostilityConfig());
-        healthBarService = new MonsterHealthBarService(plugin);
         
         logger.fine("Core combat services initialized");
     }
@@ -267,7 +263,6 @@ public class CombatSubsystemManager implements CommandExecutor {
             damageCalculationService,
             notificationService,
             feedbackService,
-            healthBarService,
             configuration
         );
         
@@ -305,10 +300,6 @@ public class CombatSubsystemManager implements CommandExecutor {
             plugin.getCommand("combatreload").setExecutor(new CombatReloadCommand(this));
         }
 
-        if (plugin.getCommand("togglehealthbars") != null) {
-            plugin.getCommand("togglehealthbars").setExecutor(new ToggleHealthBarsCommand(healthBarService));
-        }
-
 
         
         logger.fine("Combat commands registered");
@@ -321,10 +312,6 @@ public class CombatSubsystemManager implements CommandExecutor {
         try {
             if (notificationService != null) {
                 notificationService.cleanup();
-            }
-
-            if (healthBarService != null) {
-                healthBarService.cleanup();
             }
             
             if (hostilityService != null) {
