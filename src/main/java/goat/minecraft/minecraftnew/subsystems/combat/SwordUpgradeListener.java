@@ -16,8 +16,6 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -28,7 +26,6 @@ import static goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycle
  */
 public class SwordUpgradeListener implements Listener {
     private final Random random = new Random();
-    private final Map<UUID, Long> furyCooldown = new HashMap<>();
     private final XPManager xpManager;
 
     public SwordUpgradeListener(MinecraftNew plugin) {
@@ -42,10 +39,6 @@ public class SwordUpgradeListener implements Listener {
         if (weapon == null) return;
         if (!(event.getEntity() instanceof LivingEntity target)) return;
 
-        int lethality = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.LETHALITY);
-        if (lethality > 0) {
-            event.setDamage(event.getDamage() * (1 + lethality * 0.02));
-        }
         int decayLvl = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.ASPECT_OF_DECAY);
         if (decayLvl > 0) {
             int stacks = decayLvl * 2;
@@ -66,31 +59,11 @@ public class SwordUpgradeListener implements Listener {
             }
         }
 
-        int regenLvl = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.LIFESTEAL_REGEN);
-        if (regenLvl > 0 && random.nextDouble() < regenLvl * 0.05) {
-            int pot = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.LIFESTEAL_POTENCY);
-            int dur = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.LIFESTEAL_DURATION);
-            int ticks = (5 + dur * 5) * 20;
-            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, ticks, pot));
-        }
+        // Regeneration upgrades removed
 
-        if (SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.FEED) > 0 && target instanceof Monster) {
-            if (random.nextDouble() < 0.15) {
-                player.setFoodLevel(Math.min(20, player.getFoodLevel() + 1));
-                player.setSaturation(Math.min(20f, player.getSaturation() + 2f));
-                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BURP, 1f, 1f);
-            }
-        }
+        // Feed upgrade removed
 
-        if (SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.FURY) > 0) {
-            if (player.getHealth() <= player.getMaxHealth() / 2) {
-                long last = furyCooldown.getOrDefault(player.getUniqueId(), 0L);
-                if (System.currentTimeMillis() - last > 30_000L) {
-                    target.getWorld().strikeLightning(target.getLocation());
-                    furyCooldown.put(player.getUniqueId(), System.currentTimeMillis());
-                }
-            }
-        }
+        // Fury upgrade removed
     }
     @EventHandler
     public void onSpawn(EntitySpawnEvent e) {
@@ -136,12 +109,7 @@ public class SwordUpgradeListener implements Listener {
         if (weapon == null) return;
         LivingEntity mob = event.getEntity();
 
-        if (mob instanceof Creeper) {
-            int level = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.BETRAYAL);
-            if (level > 0 && random.nextDouble() < level * 0.04) {
-                mob.getWorld().dropItemNaturally(mob.getLocation(), new ItemStack(Material.MUSIC_DISC_11));
-            }
-        }
+        // Betrayal upgrade removed
 
         if (SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.STARLESS_NIGHT) > 0 && mob instanceof Monster) {
             World world = mob.getWorld();

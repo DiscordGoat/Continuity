@@ -281,6 +281,15 @@ public class SkillTreeManager implements Listener {
             case DONT_MINE_AT_NIGHT:
                 int creeperBonus = level * 10;
                 return ChatColor.YELLOW + "+" + creeperBonus + "% " + ChatColor.RED + "Creeper Damage";
+            case ULTIMATUM:
+                double furyChance = level;
+                return ChatColor.YELLOW + "+" + furyChance + "% " + ChatColor.GRAY + "Fury activation chance";
+            case ARMAGEDDON:
+                double armChance = level;
+                return ChatColor.YELLOW + "+" + armChance + "% " + ChatColor.GRAY + "Armageddon chance";
+            case VAMPIRIC_STRIKE:
+                double vampChance = level;
+                return ChatColor.YELLOW + "+" + vampChance + "% " + ChatColor.GRAY + "Soul Orb chance";
           default:
                 return talent.getTechnicalDescription();
         }
