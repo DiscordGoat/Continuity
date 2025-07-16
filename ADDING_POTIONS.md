@@ -13,7 +13,7 @@ Before adding any Potion to the game, verify these key data values from the user
 When asked to add a new potion to the game, Respond with that list of clarifying information to ensure quality output.
 
 1: Create the custom consumption logic found in src/main/java/goat/minecraft/minecraftnew/subsystems/brewing/custompotions.
-You will need information regarding initial duration (if not given, go with 3 minutes). By default, additional potion duration is 10*brewingLevel.
+You will need information regarding initial duration (if not given, go with 3 minutes).
 You will need information regarding the final Potions name (example: "Potion of Fountains"). 
 
 2: Register the new potion's effect listener (if applicable) in the main class. 
