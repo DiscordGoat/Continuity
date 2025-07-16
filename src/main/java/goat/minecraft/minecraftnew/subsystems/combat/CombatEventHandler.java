@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationRes
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.PlayerFeedbackService;
+import goat.minecraft.minecraftnew.subsystems.combat.notification.MonsterHealthBarService;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -29,15 +30,18 @@ public class CombatEventHandler implements Listener {
     private final DamageCalculationService damageCalculationService;
     private final DamageNotificationService notificationService;
     private final PlayerFeedbackService feedbackService;
+    private final MonsterHealthBarService healthBarService;
     private final CombatConfiguration config;
     
     public CombatEventHandler(DamageCalculationService damageCalculationService,
                              DamageNotificationService notificationService,
                              PlayerFeedbackService feedbackService,
+                             MonsterHealthBarService healthBarService,
                              CombatConfiguration config) {
         this.damageCalculationService = damageCalculationService;
         this.notificationService = notificationService;
         this.feedbackService = feedbackService;
+        this.healthBarService = healthBarService;
         this.config = config;
     }
     
@@ -78,6 +82,13 @@ public class CombatEventHandler implements Listener {
             // Show damage notification if enabled and applicable
             if (config.getNotificationConfig().isEnabled() && shouldShowNotification(event)) {
                 notificationService.showDamageIndicator(event.getEntity().getLocation(), result.getFinalDamage());
+            }
+
+            // Show monster health bar
+            if (event.getEntity() instanceof org.bukkit.entity.LivingEntity living
+                    && !(event.getEntity() instanceof Player)) {
+                double predicted = Math.max(0, living.getHealth() - event.getFinalDamage());
+                healthBarService.showHealthBar(living, predicted);
             }
             
         } catch (DamageCalculationService.DamageCalculationException e) {
