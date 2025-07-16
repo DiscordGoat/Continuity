@@ -36,10 +36,8 @@ public class MeleeDamageStrategy implements DamageCalculationStrategy {
         double originalDamage = context.getBaseDamage();
         
         try {
-            int combatLevel = xpManager.getPlayerLevel(player, "Combat");
-            int cappedLevel = Math.min(combatLevel, config.getMaxSkillLevel());
-            
-            double multiplier = 1.0 + (cappedLevel * config.getMeleePerLevel());
+            // Base melee damage no longer scales with the player's combat level
+            double multiplier = 1.0; // placeholder for future adjustments
             double finalDamage = originalDamage * multiplier;
 
             boolean strengthTalent = SkillTreeManager.getInstance() != null &&
@@ -52,11 +50,11 @@ public class MeleeDamageStrategy implements DamageCalculationStrategy {
                 DamageCalculationResult.DamageModifier.multiplicative(
                     "Combat Skill",
                     multiplier,
-                    String.format("Level %d melee bonus", cappedLevel)
+                    "Base melee bonus"
                 );
-            
-            logger.fine(String.format("Applied melee damage bonus: %s (level %d) -> %.1f%% increase", 
-                       player.getName(), cappedLevel, (multiplier - 1.0) * 100));
+
+            logger.fine(String.format("Applied melee damage bonus: %s -> %.1f%% increase",
+                       player.getName(), (multiplier - 1.0) * 100));
             
             DamageCalculationResult result = DamageCalculationResult.withModifier(originalDamage, finalDamage, modifier);
 

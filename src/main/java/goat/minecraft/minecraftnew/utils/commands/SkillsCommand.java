@@ -186,8 +186,7 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 break;
             case "Combat":
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.RED + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.RED + "Damage Multiplier: " + ChatColor.GREEN + String.format("%.2f", (1 + level * 0.03)) + "x"
+                        ChatColor.RED + "Level: " + ChatColor.GREEN + (int) level
                 ));
                 break;
             case "Player":
