@@ -131,9 +131,6 @@ public class Bloodlust implements Listener {
     private void removeBloodlustEffects(Player player) {
         player.removePotionEffect(PotionEffectType.SPEED);
         player.removePotionEffect(PotionEffectType.HASTE);
-        player.removePotionEffect(PotionEffectType.REGENERATION);
-        player.removePotionEffect(PotionEffectType.RESISTANCE);
-        player.removePotionEffect(PotionEffectType.ABSORPTION);
     }
 
     public void cleanup() {

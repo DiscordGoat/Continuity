@@ -10,7 +10,19 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+
 public class SwordTalentDamageStrategy implements DamageCalculationStrategy {
+
+    // all of the sword‐type talents on the Combat tree
+    private static final List<Talent> SWORD_TALENTS = List.of(
+            Talent.WOODEN_SWORD,
+            Talent.STONE_SWORD,
+            Talent.IRON_SWORD,
+            Talent.GOLD_SWORD,
+            Talent.DIAMOND_SWORD,
+            Talent.NETHERITE_SWORD
+    );
 
     @Override
     public DamageCalculationResult calculateDamage(DamageCalculationContext context) {
@@ -18,44 +30,43 @@ public class SwordTalentDamageStrategy implements DamageCalculationStrategy {
             return DamageCalculationResult.noChange(context.getBaseDamage());
         }
 
-        Player player = context.getAttackerPlayer().get();
-        ItemStack weapon = context.getWeapon().get();
-        Material type = weapon.getType();
+        Player player   = context.getAttackerPlayer().get();
+        ItemStack weapon= context.getWeapon().get();
+        Material type   = weapon.getType();
 
-        SkillTreeManager manager = SkillTreeManager.getInstance();
-        if (manager == null) {
+        // only apply to any *_SWORD
+        if (!type.name().endsWith("_SWORD")) {
             return DamageCalculationResult.noChange(context.getBaseDamage());
         }
 
-        Talent talent;
-        switch (type) {
-            case WOODEN_SWORD -> talent = Talent.WOODEN_SWORD;
-            case STONE_SWORD -> talent = Talent.STONE_SWORD;
-            case IRON_SWORD -> talent = Talent.IRON_SWORD;
-            case GOLDEN_SWORD -> talent = Talent.GOLD_SWORD;
-            case DIAMOND_SWORD -> talent = Talent.DIAMOND_SWORD;
-            case NETHERITE_SWORD -> talent = Talent.NETHERITE_SWORD;
-            default -> {
-                return DamageCalculationResult.noChange(context.getBaseDamage());
-            }
-        }
-
-        int level = manager.getTalentLevel(player.getUniqueId(), Skill.COMBAT, talent);
-        if (level <= 0) {
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr == null) {
             return DamageCalculationResult.noChange(context.getBaseDamage());
         }
 
-        double multiplier = 1.0 + (level * 0.08);
-        double finalDamage = context.getBaseDamage() * multiplier;
+        double totalBonus = 0.0;
+        // sum up 8% per level, across all sword talents
+        for (Talent t : SWORD_TALENTS) {
+            int lvl = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, t);
+            totalBonus += lvl * 0.08;
+        }
 
-        DamageCalculationResult.DamageModifier modifier =
+        if (totalBonus <= 0) {
+            return DamageCalculationResult.noChange(context.getBaseDamage());
+        }
+
+        double base   = context.getBaseDamage();
+        double target = base * (1.0 + totalBonus);
+
+        // one aggregated modifier
+        DamageCalculationResult.DamageModifier mod =
                 DamageCalculationResult.DamageModifier.multiplicative(
-                        talent.getName(),
-                        multiplier,
-                        "+" + (level * 8) + "% Damage"
+                        "Sword Talents",
+                        1.0 + totalBonus,
+                        "+" + (int)(totalBonus * 100) + "% Sword Damage"
                 );
 
-        return DamageCalculationResult.withModifier(context.getBaseDamage(), finalDamage, modifier);
+        return DamageCalculationResult.withModifier(base, target, mod);
     }
 
     @Override

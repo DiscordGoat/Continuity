@@ -98,13 +98,16 @@ public class CombatTalentListener implements Listener {
     }
 
     @EventHandler
-    public void onOrbDeath(EntityDeathEvent event) {
+    public void onOrbDeath(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof ArmorStand stand)) return;
         if (!stand.hasMetadata(SOUL_ORB_KEY)) return;
-        Player killer = event.getEntity().getKiller();
-        if (killer != null) {
-            killer.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 40, 254));
+        stand.remove();
+        Entity killer = event.getDamager();
+        if(killer instanceof Player player){
+            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 40, 254));
+            Bukkit.getLogger().info("Activated Devour Orb Event");
         }
+
     }
 
     private void spawnSoulOrb(Location loc, UUID owner) {

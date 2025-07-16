@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.combat.damage.strategies;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.combat.config.CombatConfiguration;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationContext;
