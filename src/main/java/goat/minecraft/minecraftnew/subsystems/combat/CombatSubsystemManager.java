@@ -8,6 +8,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.MonsterLe
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.PowerCatalystDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.RangedDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.CorpseLevelDamageStrategy;
+import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SwordTalentDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.commands.CombatReloadCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIController;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
@@ -233,9 +234,11 @@ public class CombatSubsystemManager implements CommandExecutor {
         if (configuration.getBuffConfig().isSkillDamageScaling()) {
             damageCalculationService.registerStrategy(
                 new MeleeDamageStrategy(configuration.getDamageConfig(), xpManager));
-            
+
             damageCalculationService.registerStrategy(
                 new RangedDamageStrategy(configuration.getDamageConfig(), xpManager));
+
+            damageCalculationService.registerStrategy(new SwordTalentDamageStrategy());
         }
         
         if (configuration.getBuffConfig().isMonsterLevelScaling()) {

@@ -159,6 +159,54 @@ public enum Talent {
             4,
             50,
             Material.GOLD_BLOCK
+    ),
+    WOODEN_SWORD(
+            "Wooden Sword",
+            ChatColor.GRAY + "Train with a wooden blade",
+            ChatColor.RED + "+8% Damage",
+            4,
+            1,
+            Material.WOODEN_SWORD
+    ),
+    STONE_SWORD(
+            "Stone Sword",
+            ChatColor.GRAY + "Master the stone blade",
+            ChatColor.RED + "+8% Damage",
+            4,
+            15,
+            Material.STONE_SWORD
+    ),
+    IRON_SWORD(
+            "Iron Sword",
+            ChatColor.GRAY + "Hone iron sword techniques",
+            ChatColor.RED + "+8% Damage",
+            4,
+            30,
+            Material.IRON_SWORD
+    ),
+    GOLD_SWORD(
+            "Gold Sword",
+            ChatColor.GRAY + "Wield the golden sword with skill",
+            ChatColor.RED + "+8% Damage",
+            4,
+            45,
+            Material.GOLDEN_SWORD
+    ),
+    DIAMOND_SWORD(
+            "Diamond Sword",
+            ChatColor.GRAY + "Harness the power of diamond",
+            ChatColor.RED + "+8% Damage",
+            4,
+            60,
+            Material.DIAMOND_SWORD
+    ),
+    NETHERITE_SWORD(
+            "Netherite Sword",
+            ChatColor.GRAY + "Master the ultimate blade",
+            ChatColor.RED + "+8% Damage",
+            4,
+            75,
+            Material.NETHERITE_SWORD
     );
 
 
