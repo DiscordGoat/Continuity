@@ -36,13 +36,18 @@ public class EnchantedHopperManager implements Listener {
     private static EnchantedHopperManager instance;
     private final JavaPlugin plugin;
     private final NamespacedKey idKey;
+    private final NamespacedKey delayKey;
     private File hopperFile;
     private FileConfiguration hopperConfig;
     private final Map<UUID, UUID> openHoppers = new HashMap<>();
+    private final Map<UUID, Long> lastRun = new HashMap<>();
+
+    private static final long[] DELAY_MS = {500L, 2000L, 30000L, 120000L};
 
     private EnchantedHopperManager(JavaPlugin plugin) {
         this.plugin = plugin;
         idKey = new NamespacedKey(plugin, "hopper_id");
+        delayKey = new NamespacedKey(plugin, "hopper_delay");
         initFile();
         Bukkit.getPluginManager().registerEvents(this, plugin);
         startTask();
@@ -125,10 +130,15 @@ public class EnchantedHopperManager implements Listener {
         PersistentDataContainer container = meta.getPersistentDataContainer();
         String existing = container.get(idKey, PersistentDataType.STRING);
         if (existing != null) {
+            if (!container.has(delayKey, PersistentDataType.INTEGER)) {
+                container.set(delayKey, PersistentDataType.INTEGER, 0);
+                item.setItemMeta(meta);
+            }
             return UUID.fromString(existing);
         }
         UUID id = UUID.randomUUID();
         container.set(idKey, PersistentDataType.STRING, id.toString());
+        container.set(delayKey, PersistentDataType.INTEGER, 0);
         item.setItemMeta(meta);
         return id;
     }
@@ -153,7 +163,7 @@ public class EnchantedHopperManager implements Listener {
                     processPlayer(player);
                 }
             }
-        }.runTaskTimer(plugin, 20L, 20L);
+        }.runTaskTimer(plugin, 10L, 10L);
     }
 
     private void processPlayer(Player player) {
@@ -169,6 +179,8 @@ public class EnchantedHopperManager implements Listener {
             String name = ChatColor.stripColor(meta.getDisplayName());
             if (!name.equals("Enchanted Hopper")) continue;
             UUID id = getOrCreateId(item);
+            int delayIndex = getDelayIndex(item);
+            if (!shouldRun(id, delayIndex)) continue;
             ItemStack containerItem = CustomBundleGUI.getInstance().getBackpackItem(player, slot - 9);
             if (containerItem == null) continue;
             transferItems(player, containerItem, getWhitelist(id));
@@ -226,5 +238,65 @@ public class EnchantedHopperManager implements Listener {
         if (success) {
             fromInv.setAmount(fromInv.getAmount() - 1);
         }
+    }
+
+    private int getDelayIndex(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return 0;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        Integer index = container.get(delayKey, PersistentDataType.INTEGER);
+        if (index == null) {
+            index = 0;
+            container.set(delayKey, PersistentDataType.INTEGER, index);
+            item.setItemMeta(meta);
+        }
+        return index;
+    }
+
+    private boolean shouldRun(UUID id, int index) {
+        long now = System.currentTimeMillis();
+        long last = lastRun.getOrDefault(id, 0L);
+        if (now - last >= DELAY_MS[index]) {
+            lastRun.put(id, now);
+            return true;
+        }
+        return false;
+    }
+
+    public void cycleDelay(Player player, ItemStack item) {
+        UUID id = getOrCreateId(item);
+        int index = getDelayIndex(item);
+        index = (index + 1) % DELAY_MS.length;
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.getPersistentDataContainer().set(delayKey, PersistentDataType.INTEGER, index);
+            item.setItemMeta(meta);
+        }
+        updateLore(item, index);
+        player.updateInventory();
+        player.sendMessage(ChatColor.GREEN + "Hopper delay set to " + formatDelay(index));
+        lastRun.put(id, System.currentTimeMillis());
+    }
+
+    private String formatDelay(int index) {
+        switch (index) {
+            case 0 -> { return "0.5s"; }
+            case 1 -> { return "2s"; }
+            case 2 -> { return "30s"; }
+            case 3 -> { return "120s"; }
+            default -> { return ""; }
+        }
+    }
+
+    private void updateLore(ItemStack item, int index) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.GRAY + "Transfers whitelisted items to container above");
+        lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Configure");
+        lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Change delay");
+        lore.add(ChatColor.GRAY + "Delay: " + ChatColor.WHITE + formatDelay(index));
+        meta.setLore(lore);
+        item.setItemMeta(meta);
     }
 }

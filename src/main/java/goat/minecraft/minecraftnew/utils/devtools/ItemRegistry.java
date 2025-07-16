@@ -1390,7 +1390,9 @@ public class ItemRegistry {
                 ChatColor.YELLOW + "Enchanted Hopper",
                 List.of(
                         ChatColor.GRAY + "Transfers whitelisted items to container above",
-                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Configure"
+                        ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Configure",
+                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Change delay",
+                        ChatColor.GRAY + "Delay: " + ChatColor.WHITE + "0.5s"
                 ),
                 1,
                 false,

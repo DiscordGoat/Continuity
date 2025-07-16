@@ -168,6 +168,9 @@ public class TrinketManager implements Listener {
                 if (event.getClick().isLeftClick()) {
                     EnchantedHopperManager.getInstance().openHopper(player, item);
                     event.setCancelled(true);
+                } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
+                    EnchantedHopperManager.getInstance().cycleDelay(player, item);
+                    event.setCancelled(true);
                 }
             }
         }
