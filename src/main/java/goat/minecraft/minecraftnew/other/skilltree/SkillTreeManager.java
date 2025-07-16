@@ -267,6 +267,14 @@ public class SkillTreeManager implements Listener {
                 int charismaDuration = level * 50;
                 return ChatColor.YELLOW + "+" + charismaDuration + "s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration, "
                         + ChatColor.GOLD + "+5% Discount";
+            case WOODEN_SWORD:
+            case STONE_SWORD:
+            case IRON_SWORD:
+            case GOLD_SWORD:
+            case DIAMOND_SWORD:
+            case NETHERITE_SWORD:
+                int bonus = level * 8;
+                return ChatColor.RED + "+" + bonus + "% Damage";
           default:
                 return talent.getTechnicalDescription();
         }

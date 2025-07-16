@@ -35,6 +35,18 @@ public final class TalentRegistry {
                         Talent.FOUNTAIN_MASTERY,
                         Talent.CHARISMA_MASTERY)
         );
+
+        SKILL_TALENTS.put(
+                Skill.COMBAT,
+                Arrays.asList(
+                        Talent.WOODEN_SWORD,
+                        Talent.STONE_SWORD,
+                        Talent.IRON_SWORD,
+                        Talent.GOLD_SWORD,
+                        Talent.DIAMOND_SWORD,
+                        Talent.NETHERITE_SWORD
+                )
+        );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }
 
