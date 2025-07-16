@@ -252,6 +252,7 @@ public class PotionBrewingSubsystem implements Listener {
                 SkillTreeManager.getInstance().hasTalent(player, Talent.SWIFT_STEP_MASTERY)) {
             if (!ingredients.contains("Pumpkin")) {
                 ingredients.add("Pumpkin");
+
             }
         }
         if (name.equalsIgnoreCase("Potion of Metal Detection") &&
