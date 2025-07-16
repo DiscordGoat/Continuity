@@ -513,9 +513,6 @@ public class XPManager implements CommandExecutor {
     // =================================================
     public void sendSkillLevelUpMessage(Player player, String skill, int newLevel) {
 
-        //==========================
-        // 1) If it's "Player", do special effects
-        //==========================
         if (skill.equalsIgnoreCase("Player")) {
             player.setSaturation(20.0f);
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 1));
@@ -525,118 +522,18 @@ public class XPManager implements CommandExecutor {
             HealthManager.getInstance(plugin).applyAndFill(player);
         }
 
-        //==========================
-        // 2) Build the chat message
-        //==========================
         String borderTop    = ChatColor.DARK_AQUA + "╔═════════════════════╗";
         String borderBottom = ChatColor.DARK_AQUA + "╚═════════════════════╝";
 
         StringBuilder body = new StringBuilder();
-
-        body.append(ChatColor.DARK_AQUA).append("   ❖ ").append(ChatColor.WHITE)
-                .append("Level Up: ").append(ChatColor.AQUA).append("[").append(skill).append("] ")
-                .append(ChatColor.WHITE).append("→ Level ").append(ChatColor.YELLOW).append(newLevel)
-                .append("\n\n");
-
-        // Then skill-specific details
-        switch (skill.toLowerCase()) {
-            case "player":
-                double newMaxHealth = HealthManager.getInstance(plugin).computeMaxHealth(player);
-                int displayHealth = (int) newMaxHealth;
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.GREEN).append("Max Health ")
-                        .append(ChatColor.WHITE).append("is now ")
-                        .append(ChatColor.GREEN).append(displayHealth).append(" HP.\n");
-                break;
-
-
-            case "combat":
-                double damageMult = 1.0 + (0.03 * newLevel);
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.RED).append("Damage Multiplier ")
-                        .append(ChatColor.WHITE).append("is now ")
-                        .append(ChatColor.RED).append(String.format("%.2f", damageMult)).append("x.\n");
-                break;
-
-            case "fishing":
-                double seaChance = (double) newLevel / 2;
-                body.append(ChatColor.WHITE).append("Your base ")
-                        .append(ChatColor.DARK_AQUA).append("Sea Creature Chance ")
-                        .append(ChatColor.YELLOW).append("chance ")
-                        .append(ChatColor.WHITE).append("is now ")
-                        .append(ChatColor.YELLOW).append(seaChance).append("%.\n");
-                break;
-
-            case "farming":
-                int doubleCropChance = newLevel / 2;
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.YELLOW).append("Double Crop Chance ")
-                        .append(ChatColor.WHITE).append("is now ")
-                        .append(ChatColor.YELLOW).append(doubleCropChance).append("%.\n");
-                break;
-
-            case "mining":
-                int doubleDropsChance = newLevel / 2;
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.DARK_GRAY).append("Double Drops Chance ")
-                        .append(ChatColor.WHITE).append("is now ")
-                        .append(ChatColor.YELLOW).append(doubleDropsChance).append("%.\n");
-                break;
-
-            case "forestry":
-                int doubleLogsChance = newLevel;
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.GOLD).append("Double Logs Chance ")
-                        .append(ChatColor.WHITE).append("is now ")
-                        .append(ChatColor.YELLOW).append(doubleLogsChance).append("%.\n");
-                break;
-
-            case "bartering":
-                double discount = newLevel * 0.25;
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.DARK_GREEN).append("Trade Discount ")
-                        .append(ChatColor.WHITE).append("is now ")
-                        .append(ChatColor.YELLOW).append(String.format("%.2f", discount)).append("%.\n");
-                break;
-
-            case "culinary":
-                double additionalSaturation = Math.min(newLevel * 0.05, 20.0);
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.GOLD).append("Extra Saturation ")
-                        .append(ChatColor.WHITE).append("is now +")
-                        .append(ChatColor.GREEN).append(String.format("%.2f", additionalSaturation))
-                        .append(".\n");
-                break;
-
-            case "smithing":
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.DARK_GRAY).append("Repair Amount")
-                        .append(ChatColor.WHITE).append(" is now ")
-                        .append(ChatColor.YELLOW).append("" + (25+newLevel));
-                break;
-            case "brewing":
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.LIGHT_PURPLE).append("Bonus Potion Duration")
-                        .append(ChatColor.WHITE).append(" is now ")
-                        .append(ChatColor.YELLOW).append("" + (newLevel * 10));
-                break;
-            case "taming":
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.LIGHT_PURPLE).append("Bonus Pet XP")
-                        .append(ChatColor.WHITE).append(" is now ")
-                        .append(ChatColor.YELLOW).append("" + (newLevel) + "%");
-                break;
-            case "terraforming":
-                body.append(ChatColor.WHITE).append("Your ")
-                        .append(ChatColor.LIGHT_PURPLE).append("Bonus Durability")
-                        .append(ChatColor.WHITE).append(" is now ")
-                        .append(ChatColor.YELLOW).append("" + (newLevel * 0.25) + "%");
-                break;
-            default:
-                body.append(ChatColor.WHITE).append("Enjoy your new level in ")
-                        .append(skill).append("!\n");
-                break;
-        }
+        body.append(ChatColor.DARK_AQUA).append("   ❖ ")
+                .append(ChatColor.WHITE).append("Level Up: ")
+                .append(ChatColor.AQUA).append("[").append(skill).append("] ")
+                .append(ChatColor.WHITE).append("→ Level ")
+                .append(ChatColor.YELLOW).append(newLevel)
+                .append("\n")
+                .append(ChatColor.GREEN).append("+1 skill point in ")
+                .append(skill).append("!");
 
         player.sendMessage(borderTop);
         player.sendMessage(body.toString().trim());

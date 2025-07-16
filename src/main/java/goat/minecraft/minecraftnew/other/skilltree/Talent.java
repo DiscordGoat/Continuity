@@ -164,7 +164,7 @@ public enum Talent {
             "Wooden Sword",
             ChatColor.GRAY + "Train with a wooden blade",
             ChatColor.RED + "+8% Damage",
-            4,
+            6,
             1,
             Material.WOODEN_SWORD
     ),
@@ -172,7 +172,7 @@ public enum Talent {
             "Stone Sword",
             ChatColor.GRAY + "Master the stone blade",
             ChatColor.RED + "+8% Damage",
-            4,
+            6,
             15,
             Material.STONE_SWORD
     ),
@@ -180,7 +180,7 @@ public enum Talent {
             "Iron Sword",
             ChatColor.GRAY + "Hone iron sword techniques",
             ChatColor.RED + "+8% Damage",
-            4,
+            6,
             30,
             Material.IRON_SWORD
     ),
@@ -188,7 +188,7 @@ public enum Talent {
             "Gold Sword",
             ChatColor.GRAY + "Wield the golden sword with skill",
             ChatColor.RED + "+8% Damage",
-            4,
+            6,
             45,
             Material.GOLDEN_SWORD
     ),
@@ -196,7 +196,7 @@ public enum Talent {
             "Diamond Sword",
             ChatColor.GRAY + "Harness the power of diamond",
             ChatColor.RED + "+8% Damage",
-            4,
+            6,
             60,
             Material.DIAMOND_SWORD
     ),
@@ -204,9 +204,17 @@ public enum Talent {
             "Netherite Sword",
             ChatColor.GRAY + "Master the ultimate blade",
             ChatColor.RED + "+8% Damage",
-            4,
+            6,
             75,
             Material.NETHERITE_SWORD
+    ),
+    BOW_MASTERY(
+            "Bow Mastery",
+            ChatColor.GRAY + "Sharpen your aim",
+            ChatColor.RED + "+8% Arrow Damage",
+            25,
+            10,
+            Material.BOW
     );
 
 

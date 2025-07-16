@@ -275,6 +275,9 @@ public class SkillTreeManager implements Listener {
             case NETHERITE_SWORD:
                 int bonus = level * 8;
                 return ChatColor.RED + "+" + bonus + "% Damage";
+            case BOW_MASTERY:
+                int arrowBonus = level * 8;
+                return ChatColor.RED + "+" + arrowBonus + "% Arrow Damage";
           default:
                 return talent.getTechnicalDescription();
         }

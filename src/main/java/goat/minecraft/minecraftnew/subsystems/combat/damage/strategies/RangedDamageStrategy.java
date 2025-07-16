@@ -44,18 +44,20 @@ public class RangedDamageStrategy implements DamageCalculationStrategy {
         List<DamageCalculationResult.DamageModifier> modifiers = new ArrayList<>();
         
         try {
-            // Apply combat skill bonus
-            int combatLevel = xpManager.getPlayerLevel(shooter, "Combat");
-            int cappedLevel = Math.min(combatLevel, config.getMaxSkillLevel());
-            
-            double skillMultiplier = 1.0 + (cappedLevel * config.getRangedPerLevel());
-            finalDamage *= skillMultiplier;
-            
-            modifiers.add(DamageCalculationResult.DamageModifier.multiplicative(
-                "Ranged Combat Skill", 
-                skillMultiplier, 
-                String.format("Level %d ranged bonus", cappedLevel)
-            ));
+            // Base arrow damage no longer scales with combat level
+            double skillMultiplier = 1.0;
+
+            // Apply Bow Mastery talent bonus
+            if (SkillTreeManager.getInstance() != null) {
+                int bowLevel = SkillTreeManager.getInstance()
+                        .getTalentLevel(shooter.getUniqueId(), Skill.COMBAT, Talent.BOW_MASTERY);
+                if (bowLevel > 0) {
+                    double talentMult = 1.0 + (bowLevel * 0.08);
+                    finalDamage *= talentMult;
+                    modifiers.add(DamageCalculationResult.DamageModifier.multiplicative(
+                            "Bow Mastery", talentMult, "+" + (bowLevel * 8) + "% Arrow Damage"));
+                }
+            }
             
             // Apply Potion of Recurve bonus if active
             if (PotionManager.isActive("Potion of Recurve", shooter)) {
@@ -79,8 +81,8 @@ public class RangedDamageStrategy implements DamageCalculationStrategy {
                 Bukkit.getLogger().info("Lost Legion buff applied");
             }
             
-            logger.fine(String.format("Applied ranged damage bonuses: %s (level %d) -> %.1f total damage", 
-                       shooter.getName(), cappedLevel, finalDamage));
+            logger.fine(String.format("Applied ranged damage bonuses: %s -> %.1f total damage",
+                       shooter.getName(), finalDamage));
             
             return new DamageCalculationResult(originalDamage, finalDamage, modifiers);
             

@@ -5,9 +5,9 @@
 damage:
   multipliers:
     # Combat skill level multiplier for melee attacks (per level)
-    melee_per_level: 0.03
+    melee_per_level: 0.0
     # Combat skill level multiplier for ranged attacks (per level)
-    ranged_per_level: 0.04
+    ranged_per_level: 0.0
     # Monster level damage multiplier (per level)
     monster_per_level: 0.06
     # Maximum skill level to consider for damage calculations
