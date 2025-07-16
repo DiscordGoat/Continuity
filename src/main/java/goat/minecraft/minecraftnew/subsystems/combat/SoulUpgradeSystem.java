@@ -29,7 +29,6 @@ public class SoulUpgradeSystem implements Listener {
     // ----- ENUMERATIONS -----
 
     public enum SwordUpgrade {
-        DIAMOND_ESSENCE("Diamond Essence", "+10% creeper damage per level", Material.DIAMOND, 5, 2),
         LETHALITY("Lethality", "+2% damage per level", Material.NETHERITE_SWORD, 5, 5),
         LIFESTEAL_REGEN("Regeneration", "+5% chance to gain regeneration per level", Material.GHAST_TEAR, 3, 11),
         LIFESTEAL_POTENCY("Potency", "+1 regen potency per level", Material.BLAZE_POWDER, 2, 12),
@@ -92,7 +91,6 @@ public class SoulUpgradeSystem implements Listener {
         // ----- Hit Effects Row -----
         gui.setItem(0, createHeader(Material.DIAMOND_SWORD, ChatColor.GOLD + "⚔ Hit Effects"));
         gui.setItem(1, createColoredPane(Material.ORANGE_STAINED_GLASS_PANE, ""));
-        gui.setItem(SwordUpgrade.DIAMOND_ESSENCE.getSlot(), createUpgradeItem(weapon, SwordUpgrade.DIAMOND_ESSENCE, available));
         gui.setItem(SwordUpgrade.FURY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.FURY, available));
         gui.setItem(SwordUpgrade.BETRAYAL.getSlot(), createUpgradeItem(weapon, SwordUpgrade.BETRAYAL, available));
         gui.setItem(SwordUpgrade.LETHALITY.getSlot(), createUpgradeItem(weapon, SwordUpgrade.LETHALITY, available));
@@ -362,7 +360,6 @@ public class SoulUpgradeSystem implements Listener {
     // ----- SYMBOLS & COLORS -----
     private String getSymbol(String key) {
         switch (key) {
-            case "DIAMOND_ESSENCE": return "♦";
             case "LIFESTEAL_REGEN": return "❤";
             case "LIFESTEAL_POTENCY": return "✚";
             case "LIFESTEAL_DURATION": return "⌛";
@@ -481,7 +478,6 @@ public class SoulUpgradeSystem implements Listener {
 
     private static String getSymbolStatic(String key) {
         return switch (key) {
-            case "DIAMOND_ESSENCE" -> "♦";
             case "LIFESTEAL_REGEN" -> "❤";
             case "LIFESTEAL_POTENCY" -> "✚";
             case "LIFESTEAL_DURATION" -> "⌛";

@@ -278,6 +278,9 @@ public class SkillTreeManager implements Listener {
             case BOW_MASTERY:
                 int arrowBonus = level * 8;
                 return ChatColor.RED + "+" + arrowBonus + "% Arrow Damage";
+            case DONT_MINE_AT_NIGHT:
+                int creeperBonus = level * 10;
+                return ChatColor.YELLOW + "+" + creeperBonus + "% " + ChatColor.RED + "Creeper Damage";
           default:
                 return talent.getTechnicalDescription();
         }
