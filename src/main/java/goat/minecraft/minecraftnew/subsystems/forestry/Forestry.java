@@ -376,21 +376,21 @@ public class Forestry implements Listener {
     }
 
     public double calculateSpiritChance(Player player) {
-        double spiritChance = 0.02;
+        double spiritChance = 0.01;
         ItemStack axe = player.getInventory().getItemInMainHand();
 
         int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
-        spiritChance += effigyYield * 0.005;
+        spiritChance += effigyYield * 0.001;
 
         ForestryPetManager forestryPetManager = MinecraftNew.getInstance().getForestryManager();
 
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SKEPTICISM)) {
-            spiritChance += 0.02;
+            spiritChance += 0.01;
         }
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.CHALLENGE)) {
-            spiritChance += 0.05;
+            spiritChance += 0.02;
         }
         if (BlessingUtils.hasFullSetBonus(player, "Nature's Wrath")) {
             spiritChance += 0.04;
@@ -402,8 +402,8 @@ public class Forestry implements Listener {
 
         CatalystManager catalystManager = CatalystManager.getInstance();
         if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {
-            final double BASE = 0.05;
-            final double PER_TIER = 0.01;
+            final double BASE = 0.01;
+            final double PER_TIER = 0.001;
             Catalyst nearest = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.INSANITY);
             int tier = catalystManager.getCatalystTier(nearest);
             spiritChance += BASE + (tier * PER_TIER);

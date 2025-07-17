@@ -63,7 +63,7 @@ public class BeaconCatalystsGUI implements Listener {
 
         // Catalyst of Flight
         ItemStack flightCatalyst = createCatalystButton(
-            Material.FEATHER,
+            Material.WHITE_WOOL,
             ChatColor.AQUA + "Catalyst of Flight",
             true,
             "Enables creative flight for all",
@@ -96,7 +96,7 @@ public class BeaconCatalystsGUI implements Listener {
 
         // Catalyst of Rejuvenation
         ItemStack rejuvenationCatalyst = createCatalystButton(
-            Material.GHAST_TEAR,
+            Material.RED_WOOL,
             ChatColor.GOLD + "Catalyst of Rejuvenation",
             true,
             "Slowly heals players and repairs",
@@ -109,7 +109,7 @@ public class BeaconCatalystsGUI implements Listener {
         gui.setItem(catalystSlots[3], rejuvenationCatalyst);
 
         // Catalyst of Insanity
-        int insanitySpirit = 5 + tier;
+        double insanitySpirit = (1 + (0.1*tier));
         int insanityDamageReduction = 50 + (tier * 5);
         ItemStack insanityCatalyst = createCatalystButton(
             Material.SOUL_SAND,
@@ -120,8 +120,6 @@ public class BeaconCatalystsGUI implements Listener {
             "players within range.",
             "",
             ChatColor.GOLD + "Total Spirit Chance: " + ChatColor.YELLOW + "+" + insanitySpirit + "%",
-            ChatColor.GOLD + "Total Spirit Damage Reduction: " + ChatColor.YELLOW + "+" + insanityDamageReduction + "%",
-            ChatColor.GRAY + "(Base: +5%/+50% + " + tier + " × 1%/5%)",
             ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
             ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
         );
