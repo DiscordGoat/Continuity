@@ -97,26 +97,6 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Keeps your items on death after login.",
                             ChatColor.BLUE + "On Login: " + ChatColor.GRAY + "Keep inventory enabled for that session."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Master Trader", 3, Material.EMERALD,
-                    Arrays.asList(
-                            ChatColor.GRAY + "5% chance for purchases to be free.",
-                            ChatColor.BLUE + "On Purchase: " + ChatColor.GRAY + "5% chance to cost nothing."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Haggler", 5, Material.EMERALD,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Grants 10% discount on villager trades.",
-                            ChatColor.BLUE + "On Villager Trade: " + ChatColor.GRAY + "Prices reduced by 10%."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Deal", 2, Material.EMERALD_BLOCK,
-                    Arrays.asList(
-                            ChatColor.GRAY + "+25% emeralds when selling items.",
-                            ChatColor.BLUE + "On Sell: " + ChatColor.GRAY + "+25% emerald reward."
-                    )),
-            new Perk(ChatColor.DARK_GRAY + "Master Employer", 3, Material.BELL,
-                    Arrays.asList(
-                            ChatColor.GRAY + "50% chance to halve villager work timers.",
-                            ChatColor.BLUE + "On Workcycle: " + ChatColor.GRAY + "50% chance next timer reduced 50%."
-                    )),
             new Perk(ChatColor.DARK_GRAY + "Icarus", 2, Material.ELYTRA,
                     Arrays.asList(
                             ChatColor.GRAY + "Doubles flight pet distance.",

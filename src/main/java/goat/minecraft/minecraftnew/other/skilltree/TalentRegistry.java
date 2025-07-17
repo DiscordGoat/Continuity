@@ -51,6 +51,16 @@ public final class TalentRegistry {
                         Talent.VAMPIRIC_STRIKE
                 )
         );
+
+        SKILL_TALENTS.put(
+                Skill.BARTERING,
+                Arrays.asList(
+                        Talent.BARTER_DISCOUNT,
+                        Talent.FREE_TRANSACTION,
+                        Talent.SELL_PRICE_BOOST,
+                        Talent.WORK_CYCLE_EFFICIENCY
+                )
+        );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }
 
