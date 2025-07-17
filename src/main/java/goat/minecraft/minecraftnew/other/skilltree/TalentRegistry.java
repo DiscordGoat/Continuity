@@ -52,6 +52,15 @@ public final class TalentRegistry {
                 )
         );
         SKILL_TALENTS.put(
+                Skill.BARTERING,
+                Arrays.asList(
+                        Talent.BARTER_DISCOUNT,
+                        Talent.FREE_TRANSACTION,
+                        Talent.SELL_PRICE_BOOST,
+                        Talent.WORK_CYCLE_EFFICIENCY
+                  )
+          );
+        SKILL_TALENTS.put(
                 Skill.FORESTRY,
                 Arrays.asList(
                         Talent.DOUBLE_LOGS,

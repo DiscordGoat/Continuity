@@ -291,6 +291,18 @@ public class SkillTreeManager implements Listener {
             case VAMPIRIC_STRIKE:
                 double vampChance = level;
                 return ChatColor.YELLOW + "+" + vampChance + "% " + ChatColor.GRAY + "Soul Orb chance";
+            case BARTER_DISCOUNT:
+                double discountPct = level * 4;
+                return ChatColor.YELLOW + "+" + discountPct + "% " + ChatColor.GOLD + "Trade Discount";
+            case FREE_TRANSACTION:
+                double freeChance = level;
+                return ChatColor.YELLOW + "+" + freeChance + "% " + ChatColor.GRAY + "Free purchase chance";
+            case SELL_PRICE_BOOST:
+                double sellBonus = level * 4;
+                return ChatColor.YELLOW + "+" + sellBonus + "% " + ChatColor.GOLD + "Sell Price";
+            case WORK_CYCLE_EFFICIENCY:
+                int reduce = level * 5;
+                return ChatColor.YELLOW + "-" + reduce + "s " + ChatColor.GRAY + "Workcycle time";
             case DOUBLE_LOGS:
                 double dblChance = level * 10;
                 return ChatColor.YELLOW + "+" + dblChance + "% " + ChatColor.GRAY + "Double Log Chance";

@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other.skilltree;
 public enum Skill {
     BREWING("Brewing"),
     COMBAT("Combat"),
+    BARTERING("Bartering"),
     FORESTRY("Forestry"),
     TAMING("Taming"),
     PLAYER("Player"),

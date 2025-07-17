@@ -3,7 +3,6 @@ package goat.minecraft.minecraftnew.subsystems.villagers;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.PlayerTabListUpdater;
-import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
@@ -12,7 +11,6 @@ import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
@@ -1150,10 +1148,12 @@ public class VillagerTradeManager implements Listener {
             finalCost *= (1 - discountFactor);
         }
 
-        // Apply merit perk discount
-        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
-        if (meritManager.hasPerk(player.getUniqueId(), "Haggler")) {
-            finalCost *= 0.9; // 10% discount
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager != null) {
+            int level = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BARTER_DISCOUNT);
+            if (level > 0) {
+                finalCost *= (1 - level * 0.04);
+            }
         }
         if ( activePet != null && activePet.getTrait() == PetTrait.FINANCIAL ) {
             double rawPct    = activePet.getTrait()
@@ -1161,11 +1161,7 @@ public class VillagerTradeManager implements Listener {
             double discount = rawPct / 100.0;                   // 0.08
             finalCost *= (1 - discount);                       // 92% of original
         }
-        // Apply Bartering discount
-        XPManager xpManager = new XPManager(plugin);
-        int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
-        double barteringDiscount = Math.min(0.1, (barteringLevel * 0.001));
-        finalCost *= (1 - barteringDiscount);
+        // No discount from Bartering level
 
         if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
             double discount = 0.20;
@@ -1591,17 +1587,15 @@ public class VillagerTradeManager implements Listener {
             finalCost = Math.floor(finalCost);
         }
 
-        // --- Merit Haggler discount ---
-        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
-        if (meritManager.hasPerk(player.getUniqueId(), "Haggler")) {
-            finalCost *= 0.9; // 10% discount
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager != null) {
+            int level = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BARTER_DISCOUNT);
+            if (level > 0) {
+                finalCost *= (1 - level * 0.04);
+            }
         }
 
-        // --- Bartering discount logic ---
-        XPManager xpManager = new XPManager(plugin);
-        int barteringLevel = xpManager.getPlayerLevel(player, "Bartering");
-        double barteringDiscount = Math.min(0.1, (barteringLevel * 0.0025)); // up to 25% discount
-        finalCost *= (1 - barteringDiscount);
+        // --- Bartering discount logic removed ---
 
         if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
             double discount = 0.20;
@@ -1615,11 +1609,14 @@ public class VillagerTradeManager implements Listener {
         // Ensure at least cost of 1
         int finalCostRounded = Math.max(1, (int) Math.floor(finalCost));
 
-        // --- Master Trader perk: make purchases free ---
+        // --- Free transaction talent ---
         boolean freePurchase = false;
-        if (meritManager.hasPerk(player.getUniqueId(), "Master Trader") && Math.random() < 0.05) {
-            finalCostRounded = 0;
-            freePurchase = true;
+        if (manager != null) {
+            int freeLevel = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.FREE_TRANSACTION);
+            if (freeLevel > 0 && Math.random() < freeLevel * 0.01) {
+                finalCostRounded = 0;
+                freePurchase = true;
+            }
         }
         if (freePurchase) {
             player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_YES, 1.0f, 1.0f);
@@ -1700,9 +1697,10 @@ public class VillagerTradeManager implements Listener {
     private void processSell(Player player, Villager villager, TradeItem tradeItem) {
         XPManager xpManager = new XPManager(plugin);
         int emeraldReward = tradeItem.getEmeraldValue();
-        PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
-        if (merit.hasPerk(player.getUniqueId(), "Deal")) {
-            emeraldReward += (int) Math.floor(emeraldReward * 0.25);
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager != null) {
+            int level = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.SELL_PRICE_BOOST);
+            emeraldReward += (int) Math.floor(emeraldReward * (level * 0.04));
         }
         int quantity = tradeItem.getQuantity();
         ItemStack tradeItemStack = tradeItem.getItem();

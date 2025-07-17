@@ -248,6 +248,38 @@ public enum Talent {
             50,
             Material.GHAST_TEAR
     ),
+    BARTER_DISCOUNT(
+            "Barter Discount",
+            ChatColor.GRAY + "Sharpen your haggling skills",
+            ChatColor.YELLOW + "+4% Discount per level",
+            20,
+            1,
+            Material.EMERALD
+    ),
+    FREE_TRANSACTION(
+            "Free Transaction",
+            ChatColor.GRAY + "Occasionally pay nothing",
+            ChatColor.YELLOW + "1% chance per level for free purchase",
+            10,
+            20,
+            Material.EMERALD_BLOCK
+    ),
+    SELL_PRICE_BOOST(
+            "Sell Price Boost",
+            ChatColor.GRAY + "Villagers pay more",
+            ChatColor.YELLOW + "+4% Sell Price per level",
+            20,
+            1,
+            Material.EMERALD
+    ),
+    WORK_CYCLE_EFFICIENCY(
+            "Work Cycle Efficiency",
+            ChatColor.GRAY + "Reduce villager downtime",
+            ChatColor.YELLOW + "-5s Workcycle per level",
+            20,
+            10,
+            Material.CLOCK
+      ),
     DOUBLE_LOGS(
             "Double Logs",
             ChatColor.GRAY + "Chance for extra logs",
