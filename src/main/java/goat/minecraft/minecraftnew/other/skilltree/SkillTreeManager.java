@@ -290,6 +290,12 @@ public class SkillTreeManager implements Listener {
             case VAMPIRIC_STRIKE:
                 double vampChance = level;
                 return ChatColor.YELLOW + "+" + vampChance + "% " + ChatColor.GRAY + "Soul Orb chance";
+            case CONSERVATIONIST:
+                double duraChance = level;
+                return ChatColor.YELLOW + "+" + duraChance + "% " + ChatColor.GRAY + "durability save chance";
+            case GRAVE_INTUITION:
+                double graveChance = level * 0.001;
+                return ChatColor.YELLOW + "+" + String.format("%.3f", graveChance) + ChatColor.GRAY + " grave chance";
             case BOUNTIFUL_HARVEST:
                 double cropChance = level * 4;
                 return ChatColor.YELLOW + "+" + cropChance + "% " + ChatColor.GRAY + "chance to harvest " + ChatColor.GREEN + "double crops.";

@@ -190,9 +190,14 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 ));
                 break;
             case "Terraforming":
+                int duraLvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
+                        Skill.TERRAFORMING, Talent.CONSERVATIONIST);
+                int graveLvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
+                        Skill.TERRAFORMING, Talent.GRAVE_INTUITION);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.GREEN + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.GREEN + "Unbreaking Chance: " + level * 0.25 // simple descriptor
+                        ChatColor.GREEN + "Durability Save Chance: " + ChatColor.GREEN + duraLvl + "%",
+                        ChatColor.GREEN + "Grave Chance Bonus: " + ChatColor.GREEN + String.format("%.3f", graveLvl * 0.001)
                 ));
                 break;
             case "Combat":
