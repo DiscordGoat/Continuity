@@ -174,11 +174,17 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 break;
 
             case "Mining":
+                int veins = 0;
+                int lungs = 0;
+                if (SkillTreeManager.getInstance() != null) {
+                    veins = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.RICH_VEINS);
+                    lungs = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.DEEP_LUNGS);
+                }
                 double duration = 200 + (level * 4);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.GRAY + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.GRAY + "Bonus Oxygen: +" + ChatColor.GREEN + (4 * level) + " seconds",
-                        ChatColor.GRAY + "Double Drops Chance: " + ChatColor.GREEN + (level / 2) + "%",
+                        ChatColor.GRAY + "Bonus Oxygen: +" + ChatColor.GREEN + (lungs * 20) + " seconds",
+                        ChatColor.GRAY + "Double Drops Chance: " + ChatColor.GREEN + (veins * 4) + "%",
                         ChatColor.GRAY + "Gold Fever: " + ChatColor.GREEN + "Haste " + 1 + " (" + duration / 20 + "s)"
                 ));
                 break;

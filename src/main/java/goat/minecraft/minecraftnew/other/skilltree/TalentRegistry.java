@@ -56,6 +56,12 @@ public final class TalentRegistry {
                 Skill.FISHING,
                 Arrays.asList(
                         Talent.ANGLERS_INSTINCT
+               )
+        );
+                Skill.MINING,
+                Arrays.asList(
+                        Talent.RICH_VEINS,
+                        Talent.DEEP_LUNGS
                 )
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
