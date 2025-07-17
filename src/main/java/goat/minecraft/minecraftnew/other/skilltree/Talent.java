@@ -239,6 +239,30 @@ public enum Talent {
             6,
             50,
             Material.GHAST_TEAR
+    ),
+    SATIATION_MASTERY(
+            "Satiation Mastery",
+            ChatColor.GRAY + "Cooked meals keep you fuller",
+            ChatColor.YELLOW + "+1 " + ChatColor.GRAY + "Saturation per level",
+            5,
+            10,
+            Material.COOKED_BEEF
+    ),
+    FEASTING_CHANCE(
+            "Feasting Chance",
+            ChatColor.GRAY + "Occasionally feel extra nourished",
+            ChatColor.YELLOW + "+4% " + ChatColor.GRAY + "chance for Saturation V",
+            16,
+            1,
+            Material.GOLDEN_CARROT
+    ),
+    MASTER_CHEF(
+            "Master Chef",
+            ChatColor.GRAY + "Expertise yields extra portions",
+            ChatColor.YELLOW + "+4% " + ChatColor.GRAY + "chance to double output",
+            16,
+            20,
+            Material.CAKE
     );
 
 

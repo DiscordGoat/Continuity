@@ -2,6 +2,9 @@ package goat.minecraft.minecraftnew.subsystems.culinary;
 
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -32,6 +35,7 @@ public class CulinarySubsystem implements Listener {
     private static CulinarySubsystem instance;
     // Active recipe sessions keyed by the crafting table location
     private Map<Location, RecipeSession> activeRecipeSessions = new HashMap<>();
+    private final Random random = new Random();
     public List<ItemStack> getAllRecipeItems() {
         List<ItemStack> recipeItems = new ArrayList<>();
 
@@ -352,6 +356,23 @@ public class CulinarySubsystem implements Listener {
         List<String> lore = meta.getLore();
         if (lore == null) {
             lore = List.of();
+        }
+
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager != null) {
+            int satLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY);
+            if (satLevel > 0) {
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.setSaturation(Math.min(player.getSaturation() + satLevel, 20f));
+                    }
+                }.runTaskLater(plugin, 1L);
+            }
+            int feastLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.FEASTING_CHANCE);
+            if (feastLevel > 0 && random.nextDouble() < feastLevel * 0.04) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 200, 4));
+            }
         }
 
         if (consumedItem.getItemMeta().getDisplayName().contains("Raw")) {
@@ -768,6 +789,13 @@ public class CulinarySubsystem implements Listener {
         // Drop final output with Master Chef perk consideration
         ItemStack result = createOutputItem(session.recipe);
         session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result);
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager != null) {
+            int level = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.MASTER_CHEF);
+            if (level > 0 && random.nextDouble() < level * 0.04) {
+                session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
+            }
+        }
         XPManager xpManager = new XPManager(plugin);
         xpManager.addXP(player, "Culinary", session.recipe.getXpReward());
         player.sendMessage(ChatColor.GREEN + "You crafted " + session.recipe.getName() + "! You gained culinary XP.");
