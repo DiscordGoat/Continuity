@@ -25,6 +25,9 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -284,6 +287,10 @@ public class VerdantRelicsSubsystem implements Listener {
             growthDuration = 10 * 1200 * 3; // 30 in-game days
         }
 
+        int talentLevel = SkillTreeManager.getInstance()
+                .getTalentLevel(p.getUniqueId(), Skill.FARMING, Talent.VERDANT_TENDING);
+        int reduction = talentLevel * 150; // 2.5 minutes per level
+        growthDuration = Math.max(growthDuration - reduction, 0);
 
         RelicSession session = new RelicSession(locKey, relicName, growthDuration, growthDuration);
         activeSessions.put(locKey, session);

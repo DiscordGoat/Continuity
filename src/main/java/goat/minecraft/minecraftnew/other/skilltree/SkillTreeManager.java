@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -263,6 +264,9 @@ public class SkillTreeManager implements Listener {
                 int fountainDuration = level * 50;
                 return ChatColor.YELLOW + "+" + fountainDuration + "s " + ChatColor.LIGHT_PURPLE + "Fountains Duration, "
                         + ChatColor.AQUA + "+5% Sea Creature Chance";
+            case ANGLERS_INSTINCT:
+                double seaBonus = level * 0.25;
+                return ChatColor.YELLOW + "+" + seaBonus + "% " + ChatColor.AQUA + "Sea Creature Chance";
             case CHARISMA_MASTERY:
                 int charismaDuration = level * 50;
                 return ChatColor.YELLOW + "+" + charismaDuration + "s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration, "
@@ -299,6 +303,61 @@ public class SkillTreeManager implements Listener {
             case REPAIR_FOUR:
                 int repair4 = level * 4;
                 return ChatColor.GREEN + "+" + repair4 + ChatColor.GRAY + " Repair Amount";
+            case SATIATION_MASTERY:
+                return ChatColor.YELLOW + "+" + level + " " + ChatColor.GRAY + "Saturation on eat";
+            case FEASTING_CHANCE:
+                double feastChance = level * 4;
+                return ChatColor.YELLOW + "+" + feastChance + "% " + ChatColor.GRAY + "chance for Saturation V";
+            case MASTER_CHEF:
+                double chefChance = level * 4;
+                return ChatColor.YELLOW + "+" + chefChance + "% " + ChatColor.GRAY + "chance to double output";
+            case BARTER_DISCOUNT:
+                double discountPct = level * 4;
+                return ChatColor.YELLOW + "+" + discountPct + "% " + ChatColor.GOLD + "Trade Discount";
+            case FREE_TRANSACTION:
+                double freeChance = level;
+                return ChatColor.YELLOW + "+" + freeChance + "% " + ChatColor.GRAY + "Free purchase chance";
+            case SELL_PRICE_BOOST:
+                double sellBonus = level * 4;
+                return ChatColor.YELLOW + "+" + sellBonus + "% " + ChatColor.GOLD + "Sell Price";
+            case WORK_CYCLE_EFFICIENCY:
+                int reduce = level * 5;
+                return ChatColor.YELLOW + "-" + reduce + "s " + ChatColor.GRAY + "Workcycle time";
+            case DOUBLE_LOGS:
+                double dblChance = level * 10;
+                return ChatColor.YELLOW + "+" + dblChance + "% " + ChatColor.GRAY + "Double Log Chance";
+            case FORESTRY_HASTE:
+                double hasteChance = level * 10;
+                return ChatColor.YELLOW + "+" + hasteChance + "% " + ChatColor.GRAY + "Haste chance";
+            case HASTE_POTENCY:
+                return ChatColor.YELLOW + "+" + level + " " + ChatColor.GRAY + "Haste potency";
+            case TREECAP_SPIRIT:
+                double sc = level * 0.1;
+                return ChatColor.YELLOW + "+" + sc + "% " + ChatColor.GRAY + "Spirit Chance";
+            case PET_TRAINER:
+                double xpChance = level * 4;
+                return ChatColor.YELLOW + "+" + xpChance + "% " + ChatColor.GRAY + "Double Pet XP chance";
+            case VITALITY:
+                int extraHealth = level;
+                return ChatColor.GREEN + "+" + extraHealth + " Max Health";
+            case CONSERVATIONIST:
+                double duraChance = level;
+                return ChatColor.YELLOW + "+" + duraChance + "% " + ChatColor.GRAY + "durability save chance";
+            case GRAVE_INTUITION:
+                double graveChance = level * 0.001;
+                return ChatColor.YELLOW + "+" + String.format("%.3f", graveChance) + ChatColor.GRAY + " grave chance";
+            case BOUNTIFUL_HARVEST:
+                double cropChance = level * 4;
+                return ChatColor.YELLOW + "+" + cropChance + "% " + ChatColor.GRAY + "chance to harvest " + ChatColor.GREEN + "double crops.";
+            case VERDANT_TENDING:
+                double minutes = level * 2.5;
+                return ChatColor.YELLOW + "-" + minutes + "m " + ChatColor.GRAY + "Verdant Relic growth time";
+            case RICH_VEINS:
+                double dropChance = level * 4;
+                return ChatColor.YELLOW + "+" + dropChance + "% " + ChatColor.GRAY + "Double Drop Chance";
+            case DEEP_LUNGS:
+                int oxygenBonus = level * 20;
+                return ChatColor.YELLOW + "+" + oxygenBonus + " " + ChatColor.AQUA + "Oxygen Capacity";
           default:
                 return talent.getTechnicalDescription();
         }
@@ -363,6 +422,9 @@ public class SkillTreeManager implements Listener {
         }
         setTalentLevel(player.getUniqueId(), skill, talent, currentLevel + 1);
         player.sendMessage(ChatColor.GREEN + "Upgraded " + talent.getName() + " to " + (currentLevel + 1));
+        if (skill == Skill.PLAYER && talent == Talent.VITALITY) {
+            HealthManager.getInstance(plugin).applyAndFill(player);
+        }
         openSkillTree(player, skill, page);
     }
 }

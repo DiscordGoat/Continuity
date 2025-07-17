@@ -5,9 +5,11 @@ import goat.minecraft.minecraftnew.other.qol.ItemDisplayManager;
 import goat.minecraft.minecraftnew.subsystems.culinary.ShelfManager;
 import goat.minecraft.minecraftnew.subsystems.farming.VerdantRelicsSubsystem;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.block.data.Ageable;
@@ -96,11 +98,11 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
                 // Once we reach zero or below, run the cycle and reset the timer
                 if (ticksUntilNextWorkCycle <= 0) {
-                    runVillagerWorkCycle(); // your existing logic
-                    if (isMasterEmployerActive()) {
-                        ticksUntilNextWorkCycle = WORK_CYCLE_TICKS / 2;
-                    } else {
-                        ticksUntilNextWorkCycle = WORK_CYCLE_TICKS;
+                    runVillagerWorkCycle();
+                    int reduction = getWorkCycleReductionTicks();
+                    ticksUntilNextWorkCycle = WORK_CYCLE_TICKS - reduction;
+                    if (ticksUntilNextWorkCycle < 20) {
+                        ticksUntilNextWorkCycle = 20;
                     }
                 }
             }
@@ -116,16 +118,17 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     }
 
     /**
-     * Checks if any online player has the Master Employer perk.
+     * Calculates work cycle reduction from player talents.
      */
-    private boolean isMasterEmployerActive() {
-        PlayerMeritManager playerData = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
+    private int getWorkCycleReductionTicks() {
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager == null) return 0;
+        int highest = 0;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            if (playerData.hasPerk(player.getUniqueId(), "Master Employer")) {
-                return true;
-            }
+            int level = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.WORK_CYCLE_EFFICIENCY);
+            if (level > highest) highest = level;
         }
-        return false;
+        return highest * 5 * 20;
     }
 
     /**

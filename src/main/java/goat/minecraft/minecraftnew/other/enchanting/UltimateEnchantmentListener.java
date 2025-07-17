@@ -359,20 +359,12 @@ public class UltimateEnchantmentListener implements Listener {
             ItemStack axe = player.getInventory().getItemInMainHand();
             int orchard = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ORCHARD);
             forestry.processPerfectAppleChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"), orchard);
-            forestry.processDoubleDropChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"));
+            forestry.processDoubleDropChance(player, currentBlock);
 
             if (visitedLogs.size() % 4 == 0) {
                 forestry.incrementNotoriety(player, true);
             }
 
-            // 1% chance to summon a Forest Spirit if the block is wood
-
-            ForestSpiritManager spiritMgr = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
-            if (!spiritSpawned) {
-                if (spiritMgr.attemptSpiritSpawn(0.0001, currentBlock.getLocation(), currentBlock, player)) {
-                    spiritSpawned = true;
-                }
-            }
 
             // Check all neighbors within a 1-block radius for more wood
             for (int x = -1; x <= 1; x++) {
@@ -411,6 +403,27 @@ public class UltimateEnchantmentListener implements Listener {
         XPManager xpManager = new XPManager(plugin);
         for (Block woodBlock : visitedLogs) {
             xpManager.addXP(player, "Forestry", 1);
+        }
+
+        Forestry forestry = Forestry.getInstance(MinecraftNew.getInstance());
+        double spiritChance = forestry.calculateSpiritChance(player);
+        ForestSpiritManager spiritMgr = ForestSpiritManager.getInstance(MinecraftNew.getInstance());
+        if (!spiritSpawned) {
+            if (spiritMgr.attemptSpiritSpawn(spiritChance, startBlock.getLocation(), startBlock, player)) {
+                spiritSpawned = true;
+            } else {
+                int remaining = visitedLogs.size() - 1;
+                if (remaining > 0) {
+                    double distChance = spiritChance / remaining;
+                    for (Block log : visitedLogs) {
+                        if (log.equals(startBlock)) continue;
+                        if (spiritMgr.attemptSpiritSpawn(distChance, log.getLocation(), log, player)) {
+                            spiritSpawned = true;
+                            break;
+                        }
+                    }
+                }
+            }
         }
 
         // ---- Finally, break them all gradually! ----

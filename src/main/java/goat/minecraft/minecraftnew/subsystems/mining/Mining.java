@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.mining;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -228,9 +231,13 @@ public class Mining implements Listener {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.DIAMOND, 1));
             }
 
-            // Apply haste effect based on Mining level
-            int miningLevel = xpManager.getPlayerLevel(player, "Mining");
-            double doubleDropChance = (double) miningLevel / 2;
+            // Determine double drop chance from talent
+            int talentLevel = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talentLevel = SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.RICH_VEINS);
+            }
+            double doubleDropChance = talentLevel * 4;
 
             boolean hasDiamondGem = gemManager.getGemsFromItem(tool).contains(MiningGemManager.MiningGem.DIAMOND_GEM);
             double tripleDropChance = hasDiamondGem ? 10 : 0; // 10% chance for triple drops if Diamond Gem is applied
