@@ -248,7 +248,15 @@ public enum Talent {
             50,
             Material.GHAST_TEAR
     ),
-    VITALITY(
+    PET_TRAINER(
+            "Pet Trainer",
+            ChatColor.GRAY + "Sharpen your pet handling skills",
+            ChatColor.YELLOW + "+4% " + ChatColor.GRAY + "Double Pet XP Chance",
+            25,
+            1,
+            Material.BONE
+    ),
+  VITALITY(
             "Vitality",
             ChatColor.GRAY + "Fortify your body to survive longer",
             ChatColor.GREEN + "+1 Max Health per level",

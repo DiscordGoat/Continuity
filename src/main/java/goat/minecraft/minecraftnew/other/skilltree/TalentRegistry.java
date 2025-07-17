@@ -53,6 +53,12 @@ public final class TalentRegistry {
         );
 
         SKILL_TALENTS.put(
+                Skill.TAMING,
+                Arrays.asList(
+                        Talent.PET_TRAINER
+                  )
+          );
+          SKILL_TALENTS.put(
                 Skill.PLAYER,
                 Collections.singletonList(Talent.VITALITY)
           )
