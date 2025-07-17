@@ -35,20 +35,20 @@ public class SpiritChanceCommand implements CommandExecutor {
     }
 
     private void sendSpiritChanceBreakdown(Player player) {
-        double base = 0.02;
+        double base = 0.01;
         ItemStack axe = player.getInventory().getItemInMainHand();
         int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
-        double effigyBonus = effigyYield * 0.005;
+        double effigyBonus = effigyYield * 0.001;
 
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
         double petBonus = 0.0;
         if (activePet != null) {
             if (activePet.hasPerk(PetManager.PetPerk.SKEPTICISM)) {
-                petBonus += 0.02;
+                petBonus += 0.01;
             }
             if (activePet.hasPerk(PetManager.PetPerk.CHALLENGE)) {
-                petBonus += 0.05;
+                petBonus += 0.02;
             }
         }
         double natureBonus = NaturesWrathSetBonus.getSpiritChanceBonus(player);
@@ -59,7 +59,7 @@ public class SpiritChanceCommand implements CommandExecutor {
             Catalyst nearest = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.INSANITY);
             if (nearest != null) {
                 int tier = catalystManager.getCatalystTier(nearest);
-                catalystBonus = 0.05 + (tier * 0.01);
+                catalystBonus = 0.01 + (tier * 0.001);
             }
         }
 
