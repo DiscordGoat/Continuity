@@ -228,9 +228,13 @@ public class Mining implements Listener {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.DIAMOND, 1));
             }
 
-            // Apply haste effect based on Mining level
-            int miningLevel = xpManager.getPlayerLevel(player, "Mining");
-            double doubleDropChance = (double) miningLevel / 2;
+            // Determine double drop chance from talent
+            int talentLevel = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talentLevel = SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.RICH_VEINS);
+            }
+            double doubleDropChance = talentLevel * 4;
 
             boolean hasDiamondGem = gemManager.getGemsFromItem(tool).contains(MiningGemManager.MiningGem.DIAMOND_GEM);
             double tripleDropChance = hasDiamondGem ? 10 : 0; // 10% chance for triple drops if Diamond Gem is applied

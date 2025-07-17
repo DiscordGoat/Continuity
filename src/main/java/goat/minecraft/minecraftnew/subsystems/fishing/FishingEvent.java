@@ -106,8 +106,11 @@ public class FishingEvent implements Listener {
         int fishingLevel = xpManager.getPlayerLevel(player, "Fishing"); // Get player's fishing level
         double seaCreatureChance = 0;
         
-        // Add fishing level bonus
-        seaCreatureChance += fishingLevel / 4.0;
+
+        // Talent: Angler's Instinct grants additional sea creature chance
+        int instinctLevel = SkillTreeManager.getInstance()
+                .getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.ANGLERS_INSTINCT);
+        seaCreatureChance += instinctLevel * 0.25;
 
         // Add "Call of the Void" enchantment bonus
         int callOfTheVoidLevel = CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void");
