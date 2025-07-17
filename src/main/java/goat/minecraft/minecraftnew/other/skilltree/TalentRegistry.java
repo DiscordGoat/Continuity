@@ -23,7 +23,6 @@ public final class TalentRegistry {
                         Talent.TRIPLE_BATCH,
                         Talent.RECURVE_MASTERY,
                         Talent.REJUVENATION,
-                        Talent.STRENGTH_MASTERY,
                         Talent.LIQUID_LUCK_MASTERY,
                         Talent.SOVEREIGNTY_MASTERY,
                         Talent.STRENGTH_MASTERY,
