@@ -51,6 +51,15 @@ public final class TalentRegistry {
                         Talent.VAMPIRIC_STRIKE
                 )
         );
+
+        SKILL_TALENTS.put(
+                Skill.CULINARY,
+                Arrays.asList(
+                        Talent.SATIATION_MASTERY,
+                        Talent.FEASTING_CHANCE,
+                        Talent.MASTER_CHEF
+                  )
+          );
         SKILL_TALENTS.put(
                 Skill.BARTERING,
                 Arrays.asList(
