@@ -53,6 +53,15 @@ public final class TalentRegistry {
         );
 
         SKILL_TALENTS.put(
+                Skill.FORESTRY,
+                Arrays.asList(
+                        Talent.DOUBLE_LOGS,
+                        Talent.FORESTRY_HASTE,
+                        Talent.HASTE_POTENCY,
+                        Talent.TREECAP_SPIRIT
+                  )
+          );
+         SKILL_TALENTS.put(
                 Skill.TAMING,
                 Arrays.asList(
                         Talent.PET_TRAINER

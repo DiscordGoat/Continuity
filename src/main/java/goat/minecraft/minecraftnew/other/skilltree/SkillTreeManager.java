@@ -291,6 +291,17 @@ public class SkillTreeManager implements Listener {
             case VAMPIRIC_STRIKE:
                 double vampChance = level;
                 return ChatColor.YELLOW + "+" + vampChance + "% " + ChatColor.GRAY + "Soul Orb chance";
+            case DOUBLE_LOGS:
+                double dblChance = level * 10;
+                return ChatColor.YELLOW + "+" + dblChance + "% " + ChatColor.GRAY + "Double Log Chance";
+            case FORESTRY_HASTE:
+                double hasteChance = level * 10;
+                return ChatColor.YELLOW + "+" + hasteChance + "% " + ChatColor.GRAY + "Haste chance";
+            case HASTE_POTENCY:
+                return ChatColor.YELLOW + "+" + level + " " + ChatColor.GRAY + "Haste potency";
+            case TREECAP_SPIRIT:
+                double sc = level * 0.1;
+                return ChatColor.YELLOW + "+" + sc + "% " + ChatColor.GRAY + "Spirit Chance";
             case PET_TRAINER:
                 double xpChance = level * 4;
                 return ChatColor.YELLOW + "+" + xpChance + "% " + ChatColor.GRAY + "Double Pet XP chance";

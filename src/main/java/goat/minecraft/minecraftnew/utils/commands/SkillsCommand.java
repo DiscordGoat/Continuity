@@ -215,14 +215,15 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 break;
             case "Forestry":
                 double forestryLevel = level;
-                double doubleDropChance = forestryLevel;
-                double hasteDuration = 200 + (forestryLevel * 5);
-                int spiritSpawnChance = 1;
+                SkillTreeManager stm = SkillTreeManager.getInstance();
+                int dblLevel = stm.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.DOUBLE_LOGS);
+                int hasteLevel = stm.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.FORESTRY_HASTE);
+                int potency = stm.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.HASTE_POTENCY);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) forestryLevel,
-                        ChatColor.DARK_GREEN + "Double Logs Chance: " + ChatColor.GREEN + doubleDropChance + "%",
-                        ChatColor.DARK_GREEN + "Haste Duration: " + ChatColor.GREEN + (hasteDuration / 20) + " seconds",
-                        ChatColor.DARK_GREEN + "Spirit Spawn Chance: " + ChatColor.GREEN + spiritSpawnChance + "%"
+                        ChatColor.DARK_GREEN + "Double Logs Chance: " + ChatColor.GREEN + (dblLevel * 10) + "%",
+                        ChatColor.DARK_GREEN + "Haste Chance: " + ChatColor.GREEN + (hasteLevel * 10) + "%",
+                        ChatColor.DARK_GREEN + "Haste Potency: " + ChatColor.GREEN + potency
                 ));
                 break;
             case "Brewing":
