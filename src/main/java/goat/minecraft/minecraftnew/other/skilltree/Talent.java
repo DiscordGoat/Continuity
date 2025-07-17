@@ -248,6 +248,21 @@ public enum Talent {
             50,
             Material.GHAST_TEAR
     ),
+    BOUNTIFUL_HARVEST(
+            "Bountiful Harvest",
+            ChatColor.GRAY + "Increases chances for extra crops",
+            ChatColor.YELLOW + "+(4*level)% " + ChatColor.GRAY + "chance to harvest " + ChatColor.GREEN + "double crops.",
+            25,
+            1,
+            Material.WHEAT
+    ),
+    VERDANT_TENDING(
+            "Verdant Tending",
+            ChatColor.GRAY + "Expertise with relic cultivation",
+            ChatColor.YELLOW + "-" + ChatColor.WHITE + "(2.5*level)m" + ChatColor.GRAY + " Verdant Relic growth time",
+            10,
+            40,
+            Material.BONE_MEAL
 
     RICH_VEINS(
             "Rich Veins",

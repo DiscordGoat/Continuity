@@ -165,11 +165,12 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 ));
                 break;
             case "Farming":
-                double growthTimeDays = 10 - 5 * ((level - 1) / 99.0);
+                int harvestTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.BOUNTIFUL_HARVEST);
+                int growthTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.VERDANT_TENDING);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.YELLOW + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (level / 2) + "%",
-                        ChatColor.YELLOW + "Growth Time: " + ChatColor.GREEN + String.format("%.1f", growthTimeDays) + " days"
+                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (harvestTalent * 4) + "%",
+                        ChatColor.YELLOW + "Relic Growth Reduction: " + ChatColor.GREEN + String.format("%.1f", growthTalent * 2.5) + " min"
                 ));
                 break;
 

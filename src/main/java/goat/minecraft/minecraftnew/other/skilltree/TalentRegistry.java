@@ -53,11 +53,19 @@ public final class TalentRegistry {
         );
 
         SKILL_TALENTS.put(
+                Skill.FARMING,
+                Arrays.asList(
+                        Talent.BOUNTIFUL_HARVEST,
+                        Talent.VERDANT_TENDING
+                                  )
+        );
+              SKILL_TALENTS.put(
                 Skill.FISHING,
                 Arrays.asList(
                         Talent.ANGLERS_INSTINCT
                )
         );
+              SKILL_TALENTS.put(
                 Skill.MINING,
                 Arrays.asList(
                         Talent.RICH_VEINS,
