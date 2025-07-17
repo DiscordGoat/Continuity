@@ -263,6 +263,9 @@ public class SkillTreeManager implements Listener {
                 int fountainDuration = level * 50;
                 return ChatColor.YELLOW + "+" + fountainDuration + "s " + ChatColor.LIGHT_PURPLE + "Fountains Duration, "
                         + ChatColor.AQUA + "+5% Sea Creature Chance";
+            case ANGLERS_INSTINCT:
+                double seaBonus = level * 0.25;
+                return ChatColor.YELLOW + "+" + seaBonus + "% " + ChatColor.AQUA + "Sea Creature Chance";
             case CHARISMA_MASTERY:
                 int charismaDuration = level * 50;
                 return ChatColor.YELLOW + "+" + charismaDuration + "s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration, "
@@ -293,6 +296,18 @@ public class SkillTreeManager implements Listener {
             case GRAVE_INTUITION:
                 double graveChance = level * 0.001;
                 return ChatColor.YELLOW + "+" + String.format("%.3f", graveChance) + ChatColor.GRAY + " grave chance";
+            case BOUNTIFUL_HARVEST:
+                double cropChance = level * 4;
+                return ChatColor.YELLOW + "+" + cropChance + "% " + ChatColor.GRAY + "chance to harvest " + ChatColor.GREEN + "double crops.";
+            case VERDANT_TENDING:
+                double minutes = level * 2.5;
+                return ChatColor.YELLOW + "-" + minutes + "m " + ChatColor.GRAY + "Verdant Relic growth time";
+            case RICH_VEINS:
+                double dropChance = level * 4;
+                return ChatColor.YELLOW + "+" + dropChance + "% " + ChatColor.GRAY + "Double Drop Chance";
+            case DEEP_LUNGS:
+                int oxygenBonus = level * 20;
+                return ChatColor.YELLOW + "+" + oxygenBonus + " " + ChatColor.AQUA + "Oxygen Capacity";
           default:
                 return talent.getTechnicalDescription();
         }
