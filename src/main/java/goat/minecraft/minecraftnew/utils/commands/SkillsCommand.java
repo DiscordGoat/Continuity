@@ -3,11 +3,9 @@ package goat.minecraft.minecraftnew.utils.commands;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
-import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,14 +13,12 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SkillsCommand implements CommandExecutor, Listener {
@@ -133,116 +129,52 @@ public class SkillsCommand implements CommandExecutor, Listener {
      * Generate dynamic lore for a skill based on its level and XP progress.
      */
     private List<String> getSkillStatLore(Player player, String skill, double level) {
-        List<String> lore;
-        double multiplier = 1 + (level * 0.01); // 1% per level
+        List<String> lore = new ArrayList<>();
+
+        ChatColor color;
         switch (skill) {
             case "Smithing":
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.WHITE + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.WHITE + "Repair Amount: " + (25 + level)
-                ));
+                color = ChatColor.WHITE;
                 break;
             case "Culinary":
-                double additionalSaturation = Math.min(level * 0.05, 20.0);
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.YELLOW + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.YELLOW + "Extra Saturation: " + ChatColor.GREEN + String.format("%.2f", additionalSaturation) + " (Max 5)"
-                ));
+            case "Farming":
+                color = ChatColor.YELLOW;
                 break;
             case "Bartering":
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.BLUE + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.BLUE + "Discount: " + ChatColor.GREEN + (level * 0.25) + "%"
-                ));
-                break;
             case "Fishing":
-                int instinct = SkillTreeManager.getInstance()
-                        .getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.ANGLERS_INSTINCT);
-                double chance = instinct * 0.25;
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.BLUE + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.BLUE + "Sea Creature Chance: " + ChatColor.GREEN + chance + "%"
-                ));
+                color = ChatColor.BLUE;
                 break;
-            case "Farming":
-                int harvestTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.BOUNTIFUL_HARVEST);
-                int growthTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.VERDANT_TENDING);
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.YELLOW + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (harvestTalent * 4) + "%",
-                        ChatColor.YELLOW + "Relic Growth Reduction: " + ChatColor.GREEN + String.format("%.1f", growthTalent * 2.5) + " min"
-                ));
-                break;
-
             case "Mining":
-                int veins = 0;
-                int lungs = 0;
-                if (SkillTreeManager.getInstance() != null) {
-                    veins = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.RICH_VEINS);
-                    lungs = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.DEEP_LUNGS);
-                }
-                double duration = 200 + (level * 4);
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.GRAY + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.GRAY + "Bonus Oxygen: +" + ChatColor.GREEN + (lungs * 20) + " seconds",
-                        ChatColor.GRAY + "Double Drops Chance: " + ChatColor.GREEN + (veins * 4) + "%",
-                        ChatColor.GRAY + "Gold Fever: " + ChatColor.GREEN + "Haste " + 1 + " (" + duration / 20 + "s)"
-                ));
+                color = ChatColor.GRAY;
                 break;
             case "Terraforming":
-                int duraLvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
-                        Skill.TERRAFORMING, Talent.CONSERVATIONIST);
-                int graveLvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
-                        Skill.TERRAFORMING, Talent.GRAVE_INTUITION);
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.GREEN + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.GREEN + "Durability Save Chance: " + ChatColor.GREEN + duraLvl + "%",
-                        ChatColor.GREEN + "Grave Chance Bonus: " + ChatColor.GREEN + String.format("%.3f", graveLvl * 0.001)
-                ));
+                color = ChatColor.GREEN;
                 break;
             case "Combat":
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.RED + "Level: " + ChatColor.GREEN + (int) level
-                ));
+                color = ChatColor.RED;
                 break;
             case "Player":
-                multiplier = Math.min(multiplier, 2.00); // Cap at 2.00x
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.AQUA + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.AQUA + "Health Boost: " + ChatColor.GREEN + String.format("%.2f", multiplier) + "x",
-                        ChatColor.RED + "Max Hostility Tier: " + ChatColor.DARK_RED + xpManager.getTierFromLevel((int) level)
-                ));
+                color = ChatColor.AQUA;
                 break;
             case "Forestry":
-                double forestryLevel = level;
-                SkillTreeManager stm = SkillTreeManager.getInstance();
-                int dblLevel = stm.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.DOUBLE_LOGS);
-                int hasteLevel = stm.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.FORESTRY_HASTE);
-                int potency = stm.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.HASTE_POTENCY);
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) forestryLevel,
-                        ChatColor.DARK_GREEN + "Double Logs Chance: " + ChatColor.GREEN + (dblLevel * 10) + "%",
-                        ChatColor.DARK_GREEN + "Haste Chance: " + ChatColor.GREEN + (hasteLevel * 10) + "%",
-                        ChatColor.DARK_GREEN + "Haste Potency: " + ChatColor.GREEN + potency
-                ));
-                break;
             case "Brewing":
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level
-                ));
-                break;
             case "Taming":
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level
-                ));
+                color = ChatColor.DARK_GREEN;
                 break;
             default:
-                lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.GRAY + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.GRAY + "No stats available."
-                ));
+                color = ChatColor.GRAY;
                 break;
         }
+
+        lore.add(color + "Level: " + ChatColor.GREEN + (int) level);
+
+        Skill enumSkill = Skill.fromDisplay(skill);
+        int points = 0;
+        if (enumSkill != null) {
+            points = SkillTreeManager.getInstance().getAvailableTalentPoints(player, enumSkill);
+        }
+        lore.add(ChatColor.AQUA + "Talent Points: " + ChatColor.GREEN + points);
+
         // Append the progress bar line (shows XP progress: current/needed)
         lore.add(generateProgressBar(player, skill));
         return lore;
