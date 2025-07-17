@@ -156,33 +156,48 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 ));
                 break;
             case "Fishing":
+                int instinct = SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.ANGLERS_INSTINCT);
+                double chance = instinct * 0.25;
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.BLUE + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.BLUE + "Sea Creature Chance: " + ChatColor.GREEN + (level / 4) + "%"
+                        ChatColor.BLUE + "Sea Creature Chance: " + ChatColor.GREEN + chance + "%"
                 ));
                 break;
             case "Farming":
-                double growthTimeDays = 10 - 5 * ((level - 1) / 99.0);
+                int harvestTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.BOUNTIFUL_HARVEST);
+                int growthTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.VERDANT_TENDING);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.YELLOW + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (level / 2) + "%",
-                        ChatColor.YELLOW + "Growth Time: " + ChatColor.GREEN + String.format("%.1f", growthTimeDays) + " days"
+                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (harvestTalent * 4) + "%",
+                        ChatColor.YELLOW + "Relic Growth Reduction: " + ChatColor.GREEN + String.format("%.1f", growthTalent * 2.5) + " min"
                 ));
                 break;
 
             case "Mining":
+                int veins = 0;
+                int lungs = 0;
+                if (SkillTreeManager.getInstance() != null) {
+                    veins = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.RICH_VEINS);
+                    lungs = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.DEEP_LUNGS);
+                }
                 double duration = 200 + (level * 4);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.GRAY + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.GRAY + "Bonus Oxygen: +" + ChatColor.GREEN + (4 * level) + " seconds",
-                        ChatColor.GRAY + "Double Drops Chance: " + ChatColor.GREEN + (level / 2) + "%",
+                        ChatColor.GRAY + "Bonus Oxygen: +" + ChatColor.GREEN + (lungs * 20) + " seconds",
+                        ChatColor.GRAY + "Double Drops Chance: " + ChatColor.GREEN + (veins * 4) + "%",
                         ChatColor.GRAY + "Gold Fever: " + ChatColor.GREEN + "Haste " + 1 + " (" + duration / 20 + "s)"
                 ));
                 break;
             case "Terraforming":
+                int duraLvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
+                        Skill.TERRAFORMING, Talent.CONSERVATIONIST);
+                int graveLvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
+                        Skill.TERRAFORMING, Talent.GRAVE_INTUITION);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.GREEN + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.GREEN + "Unbreaking Chance: " + level * 0.25 // simple descriptor
+                        ChatColor.GREEN + "Durability Save Chance: " + ChatColor.GREEN + duraLvl + "%",
+                        ChatColor.GREEN + "Grave Chance Bonus: " + ChatColor.GREEN + String.format("%.3f", graveLvl * 0.001)
                 ));
                 break;
             case "Combat":
@@ -218,8 +233,7 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 break;
             case "Taming":
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.LIGHT_PURPLE + "Bonus Pet XP: " + (level) + "%"
+                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level
                 ));
                 break;
             default:

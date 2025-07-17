@@ -2,7 +2,9 @@ package goat.minecraft.minecraftnew.other.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
-import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -33,11 +35,14 @@ public class Forge implements Listener {
         Material smeltedType = getSmeltedMaterial(block.getType());
 
 
-        // Additional item drop logic
-        XPManager xpManager = new XPManager(MinecraftNew.getInstance());
-        int miningLevel = xpManager.getPlayerLevel(player, "Mining"); // Assuming mining level is based on player XP level
-        if (random.nextDouble() < (miningLevel / 2.0) / 100.0) {
-            if(getSmeltedMaterial(block.getType()) != null) {
+        // Additional item drop logic based on Mining talent
+        int talentLevel = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talentLevel = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.RICH_VEINS);
+        }
+        if (random.nextDouble() < (talentLevel * 4) / 100.0) {
+            if (getSmeltedMaterial(block.getType()) != null) {
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Objects.requireNonNull(getSmeltedMaterial(block.getType()))));
             }
         }

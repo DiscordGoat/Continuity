@@ -8,6 +8,9 @@ import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -111,9 +114,9 @@ public class FarmingEvent implements Listener {
             // Play harvest sound
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
 
-            // Calculate level/2 chance for double drops
-            int farmingLevel = xpManager.getPlayerLevel(player, "Farming");
-            boolean doubled = random.nextInt(100) < farmingLevel;
+            int talentLevel = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.BOUNTIFUL_HARVEST);
+            boolean doubled = random.nextDouble() < (talentLevel * 0.04);
 
             CatalystManager catalystManager = CatalystManager.getInstance();
             boolean tripled = false;
