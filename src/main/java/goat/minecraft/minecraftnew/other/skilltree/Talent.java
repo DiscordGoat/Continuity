@@ -151,6 +151,14 @@ public enum Talent {
             60,
             Material.DARK_PRISMARINE
     ),
+    ANGLERS_INSTINCT(
+            "Angler's Instinct",
+            ChatColor.GRAY + "Hone your talent for reeling in the unusual",
+            ChatColor.YELLOW + "+0.25% " + ChatColor.AQUA + "Sea Creature Chance per level",
+            25,
+            1,
+            Material.NAUTILUS_SHELL
+    ),
     CHARISMA_MASTERY(
             "Charisma Mastery",
             ChatColor.GRAY + "Add a bribe",

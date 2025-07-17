@@ -3,8 +3,8 @@ package goat.minecraft.minecraftnew.other.skilltree;
 public enum Skill {
     BREWING("Brewing"),
     COMBAT("Combat"),
+    FISHING("Fishing");
     MINING("Mining");
-
     private final String displayName;
 
     Skill(String displayName) {

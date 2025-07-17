@@ -156,9 +156,12 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 ));
                 break;
             case "Fishing":
+                int instinct = SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.ANGLERS_INSTINCT);
+                double chance = instinct * 0.25;
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.BLUE + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.BLUE + "Sea Creature Chance: " + ChatColor.GREEN + (level / 4) + "%"
+                        ChatColor.BLUE + "Sea Creature Chance: " + ChatColor.GREEN + chance + "%"
                 ));
                 break;
             case "Farming":
