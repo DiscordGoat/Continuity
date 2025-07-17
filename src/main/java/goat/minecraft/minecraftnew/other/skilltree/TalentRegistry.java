@@ -48,7 +48,6 @@ public final class TalentRegistry {
                         Talent.BOW_MASTERY,
                         Talent.DONT_MINE_AT_NIGHT,
                         Talent.ULTIMATUM,
-                        Talent.ARMAGEDDON,
                         Talent.VAMPIRIC_STRIKE
                 )
         );

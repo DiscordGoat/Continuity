@@ -3,7 +3,6 @@ package goat.minecraft.minecraftnew.subsystems.mining;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
@@ -486,10 +485,6 @@ public class Mining implements Listener {
             // Create custom gemstone rarity system (separate from ItemRegistry drop rates)
             ItemStack gemstone = getRandomGemstoneByRarity();
             block.getWorld().dropItemNaturally(block.getLocation(), gemstone);
-            PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
-            if (merit.hasPerk(player.getUniqueId(), "Double Gemstones") && random.nextDouble() < 0.5) {
-                block.getWorld().dropItemNaturally(block.getLocation(), gemstone.clone());
-            }
             
             // Play rarity-based sound effect and send discovery message
             String gemstoneName = ChatColor.stripColor(gemstone.getItemMeta().getDisplayName());

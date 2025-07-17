@@ -56,17 +56,10 @@ public class RareCombatDrops implements Listener {
     private Random random = new Random();
 
     /**
-     * Adds a drop to the event while applying the Master Thief perk logic.
-     * If the player has the perk, there is a 50% chance the item amount is doubled.
+     * Adds a drop to the event.
      */
     private void addRareDrop(Player player, EntityDeathEvent event, ItemStack item) {
         ItemStack drop = item.clone();
-        if (playerMeritManager.hasPerk(player.getUniqueId(), "Master Thief") && random.nextBoolean()) {
-            drop.setAmount(2);
-        }
-        if (isSoulItem(drop) && playerMeritManager.hasPerk(player.getUniqueId(), "Reaper")) {
-            drop.setAmount(drop.getAmount() * 2);
-        }
         event.getDrops().add(drop);
     }
 

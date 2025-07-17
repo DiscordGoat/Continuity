@@ -42,10 +42,6 @@ public class SwordUpgradeListener implements Listener {
         int decayLvl = SoulUpgradeSystem.getUpgradeLevel(weapon, SoulUpgradeSystem.SwordUpgrade.ASPECT_OF_DECAY);
         if (decayLvl > 0) {
             int stacks = decayLvl * 2;
-            PlayerMeritManager merit = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
-            if (merit.hasPerk(player.getUniqueId(), "Decay Mastery")) {
-                stacks *= 2;
-            }
             DeteriorationDamageHandler.getInstance().addDeterioration(target, stacks);
         }
         if (target instanceof Creeper) {

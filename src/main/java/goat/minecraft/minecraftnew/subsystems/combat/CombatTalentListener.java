@@ -22,7 +22,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.bukkit.profile.PlayerProfile;
@@ -34,7 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
- * Handles activation of combat talents like Ultimatum, Armageddon and Vampiric Strike.
+ * Handles activation of combat talents like Ultimatum and Vampiric Strike.
  */
 public class CombatTalentListener implements Listener {
 
@@ -67,21 +66,6 @@ public class CombatTalentListener implements Listener {
             }
         }
 
-        int armLevel = manager.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARMAGEDDON);
-        if (armLevel > 0 && random.nextDouble() < armLevel * 0.01) {
-            List<Monster> mobs = new ArrayList<>();
-            for (Entity e : player.getWorld().getNearbyEntities(player.getLocation(), 15, 15, 15)) {
-                if (e instanceof Monster m) mobs.add(m);
-            }
-            if (mobs.size() > 8) {
-                for (Monster mob : mobs) {
-                    if (mob.equals(target)) continue;
-                    Vector vec = mob.getLocation().toVector().subtract(player.getLocation().toVector()).normalize().multiply(1.5);
-                    vec.setY(0.4);
-                    mob.setVelocity(vec);
-                }
-            }
-        }
     }
 
     @EventHandler
