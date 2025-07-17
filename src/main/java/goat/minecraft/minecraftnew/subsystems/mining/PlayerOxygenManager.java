@@ -3,7 +3,9 @@ package goat.minecraft.minecraftnew.subsystems.mining;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.utils.devtools.XPManager; // Remove this if no longer needed anywhere else
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -218,15 +220,18 @@ public class PlayerOxygenManager implements Listener {
      * For now, if Mining level is unavailable, a default is used.
      */
     public int calculateInitialOxygen(Player player) {
-        XPManager xpManager = new XPManager(plugin);
-        int miningLevel = xpManager.getPlayerLevel(player, "Mining");
+        int talentLevel = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talentLevel = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.DEEP_LUNGS);
+        }
         int ventilationBonus = getTotalVentilationEnchantmentLevel(player) * 25;
         int dwellerBonus = 0;
-        if(BlessingUtils.hasFullSetBonus(player, "Dweller")){
+        if (BlessingUtils.hasFullSetBonus(player, "Dweller")) {
             dwellerBonus += 500;
         }
 
-        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (miningLevel * 4) + ventilationBonus + dwellerBonus;
+        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (talentLevel * 20) + ventilationBonus + dwellerBonus;
         return initialOxygen;
     }
 

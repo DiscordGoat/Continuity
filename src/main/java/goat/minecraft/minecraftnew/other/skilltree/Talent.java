@@ -151,6 +151,14 @@ public enum Talent {
             60,
             Material.DARK_PRISMARINE
     ),
+    ANGLERS_INSTINCT(
+            "Angler's Instinct",
+            ChatColor.GRAY + "Hone your talent for reeling in the unusual",
+            ChatColor.YELLOW + "+0.25% " + ChatColor.AQUA + "Sea Creature Chance per level",
+            25,
+            1,
+            Material.NAUTILUS_SHELL
+    ),
     CHARISMA_MASTERY(
             "Charisma Mastery",
             ChatColor.GRAY + "Add a bribe",
@@ -247,6 +255,55 @@ public enum Talent {
             20,
             1,
             Material.APPLE
+     ),
+    CONSERVATIONIST(
+            "Conservationist",
+            ChatColor.GRAY + "Reduce wear on your tools",
+            ChatColor.YELLOW + "+(1*level)% " + ChatColor.GRAY + "durability save chance",
+            25,
+            1,
+            Material.DIAMOND_PICKAXE
+    ),
+    GRAVE_INTUITION(
+            "Grave Intuition",
+            ChatColor.GRAY + "Sense where graves may appear",
+            ChatColor.YELLOW + "+(0.001*level) " + ChatColor.GRAY + "grave chance",
+            10,
+            25,
+            Material.BONE
+    ),
+    BOUNTIFUL_HARVEST(
+            "Bountiful Harvest",
+            ChatColor.GRAY + "Increases chances for extra crops",
+            ChatColor.YELLOW + "+(4*level)% " + ChatColor.GRAY + "chance to harvest " + ChatColor.GREEN + "double crops.",
+            25,
+            1,
+            Material.WHEAT
+    ),
+    VERDANT_TENDING(
+            "Verdant Tending",
+            ChatColor.GRAY + "Expertise with relic cultivation",
+            ChatColor.YELLOW + "-" + ChatColor.WHITE + "(2.5*level)m" + ChatColor.GRAY + " Verdant Relic growth time",
+            10,
+            40,
+            Material.BONE_MEAL
+
+    RICH_VEINS(
+            "Rich Veins",
+            ChatColor.GRAY + "Find extra ore when mining",
+            ChatColor.YELLOW + "+(4*level)% " + ChatColor.GRAY + "Double Drop Chance",
+            25,
+            1,
+            Material.IRON_PICKAXE
+    ),
+
+    DEEP_LUNGS(
+            "Deep Lungs",
+            ChatColor.GRAY + "Increase oxygen capacity underground",
+            ChatColor.YELLOW + "+(20*level) " + ChatColor.AQUA + "Oxygen Capacity",
+            25,
+            10,
+            Material.SCUTE
     );
 
 

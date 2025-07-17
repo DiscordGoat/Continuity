@@ -126,6 +126,8 @@ public class Gravedigging implements Listener {
                 chance += 0.01 * level;
             }
         }
+        int intuition = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_INTUITION);
+        chance += 0.001 * intuition;
         if (isNight(world)) {
             chance = Math.min(1.0, chance * 2);
         }
