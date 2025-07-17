@@ -239,6 +239,22 @@ public enum Talent {
             6,
             50,
             Material.GHAST_TEAR
+    ),
+    CONSERVATIONIST(
+            "Conservationist",
+            ChatColor.GRAY + "Reduce wear on your tools",
+            ChatColor.YELLOW + "+(1*level)% " + ChatColor.GRAY + "durability save chance",
+            25,
+            1,
+            Material.DIAMOND_PICKAXE
+    ),
+    GRAVE_INTUITION(
+            "Grave Intuition",
+            ChatColor.GRAY + "Sense where graves may appear",
+            ChatColor.YELLOW + "+(0.001*level) " + ChatColor.GRAY + "grave chance",
+            10,
+            25,
+            Material.BONE
     );
 
 

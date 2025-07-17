@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.utils.commands;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -179,9 +180,14 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 ));
                 break;
             case "Terraforming":
+                int duraLvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
+                        Skill.TERRAFORMING, Talent.CONSERVATIONIST);
+                int graveLvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
+                        Skill.TERRAFORMING, Talent.GRAVE_INTUITION);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.GREEN + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.GREEN + "Unbreaking Chance: " + level * 0.25 // simple descriptor
+                        ChatColor.GREEN + "Durability Save Chance: " + ChatColor.GREEN + duraLvl + "%",
+                        ChatColor.GREEN + "Grave Chance Bonus: " + ChatColor.GREEN + String.format("%.3f", graveLvl * 0.001)
                 ));
                 break;
             case "Combat":
