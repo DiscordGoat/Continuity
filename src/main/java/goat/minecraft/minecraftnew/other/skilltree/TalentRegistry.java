@@ -53,10 +53,18 @@ public final class TalentRegistry {
         );
 
         SKILL_TALENTS.put(
+                Skill.PLAYER,
+                Collections.singletonList(Talent.VITALITY)
+          )
+          );
+              SKILL_TALENTS.put(
                 Skill.TERRAFORMING,
                 Arrays.asList(
                         Talent.CONSERVATIONIST,
                         Talent.GRAVE_INTUITION
+          )
+          );
+              SKILL_TALENTS.put(
                 Skill.FARMING,
                 Arrays.asList(
                         Talent.BOUNTIFUL_HARVEST,

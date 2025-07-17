@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -290,6 +291,9 @@ public class SkillTreeManager implements Listener {
             case VAMPIRIC_STRIKE:
                 double vampChance = level;
                 return ChatColor.YELLOW + "+" + vampChance + "% " + ChatColor.GRAY + "Soul Orb chance";
+            case VITALITY:
+                int extraHealth = level;
+                return ChatColor.GREEN + "+" + extraHealth + " Max Health";
             case CONSERVATIONIST:
                 double duraChance = level;
                 return ChatColor.YELLOW + "+" + duraChance + "% " + ChatColor.GRAY + "durability save chance";
@@ -372,6 +376,9 @@ public class SkillTreeManager implements Listener {
         }
         setTalentLevel(player.getUniqueId(), skill, talent, currentLevel + 1);
         player.sendMessage(ChatColor.GREEN + "Upgraded " + talent.getName() + " to " + (currentLevel + 1));
+        if (skill == Skill.PLAYER && talent == Talent.VITALITY) {
+            HealthManager.getInstance(plugin).applyAndFill(player);
+        }
         openSkillTree(player, skill, page);
     }
 }
