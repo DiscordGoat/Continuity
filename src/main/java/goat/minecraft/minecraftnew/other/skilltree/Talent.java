@@ -239,6 +239,14 @@ public enum Talent {
             6,
             50,
             Material.GHAST_TEAR
+    ),
+    VITALITY(
+            "Vitality",
+            ChatColor.GRAY + "Fortify your body to survive longer",
+            ChatColor.GREEN + "+1 Max Health per level",
+            20,
+            1,
+            Material.APPLE
     );
 
 
