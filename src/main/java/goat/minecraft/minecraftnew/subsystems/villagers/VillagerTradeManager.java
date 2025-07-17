@@ -1649,7 +1649,7 @@ public class VillagerTradeManager implements Listener {
 
         // Refresh bank account lore so the displayed balance is up-to-date
         TrinketManager.getInstance().refreshBankLore(player);
-
+        XPManager xpManager = new XPManager(MinecraftNew.getInstance());
         // --- Add villager experience ---
         int expGain = 1;
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.PRACTICE)) {

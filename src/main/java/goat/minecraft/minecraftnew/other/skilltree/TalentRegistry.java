@@ -61,6 +61,7 @@ public final class TalentRegistry {
                         Talent.REPAIR_FOUR
                   )
           );
+        SKILL_TALENTS.put(
                 Skill.CULINARY,
                 Arrays.asList(
                         Talent.SATIATION_MASTERY,

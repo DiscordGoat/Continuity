@@ -308,7 +308,7 @@ public enum Talent {
             "Barter Discount",
             ChatColor.GRAY + "Sharpen your haggling skills",
             ChatColor.YELLOW + "+4% Discount per level",
-            20,
+            10,
             1,
             Material.EMERALD
     ),
