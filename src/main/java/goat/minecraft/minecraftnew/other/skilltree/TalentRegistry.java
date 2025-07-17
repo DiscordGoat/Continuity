@@ -11,7 +11,7 @@ public final class TalentRegistry {
     private static final Map<Skill, List<Talent>> SKILL_TALENTS = new HashMap<>();
 
     static {
-        // Currently only the Brewing skill has talents defined.
+        // Register talents for each supported skill.
         SKILL_TALENTS.put(
                 Skill.BREWING,
                 Arrays.asList(
@@ -57,6 +57,19 @@ public final class TalentRegistry {
                 Arrays.asList(
                         Talent.BOUNTIFUL_HARVEST,
                         Talent.VERDANT_TENDING
+                                  )
+        );
+              SKILL_TALENTS.put(
+                Skill.FISHING,
+                Arrays.asList(
+                        Talent.ANGLERS_INSTINCT
+               )
+        );
+              SKILL_TALENTS.put(
+                Skill.MINING,
+                Arrays.asList(
+                        Talent.RICH_VEINS,
+                        Talent.DEEP_LUNGS
                 )
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
