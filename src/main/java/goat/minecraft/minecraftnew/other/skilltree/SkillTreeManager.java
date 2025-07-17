@@ -287,6 +287,12 @@ public class SkillTreeManager implements Listener {
             case VAMPIRIC_STRIKE:
                 double vampChance = level;
                 return ChatColor.YELLOW + "+" + vampChance + "% " + ChatColor.GRAY + "Soul Orb chance";
+            case RICH_VEINS:
+                double dropChance = level * 4;
+                return ChatColor.YELLOW + "+" + dropChance + "% " + ChatColor.GRAY + "Double Drop Chance";
+            case DEEP_LUNGS:
+                int oxygenBonus = level * 20;
+                return ChatColor.YELLOW + "+" + oxygenBonus + " " + ChatColor.AQUA + "Oxygen Capacity";
           default:
                 return talent.getTechnicalDescription();
         }
