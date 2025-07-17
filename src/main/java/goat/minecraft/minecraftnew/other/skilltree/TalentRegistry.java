@@ -51,6 +51,14 @@ public final class TalentRegistry {
                         Talent.VAMPIRIC_STRIKE
                 )
         );
+
+        SKILL_TALENTS.put(
+                Skill.FARMING,
+                Arrays.asList(
+                        Talent.BOUNTIFUL_HARVEST,
+                        Talent.VERDANT_TENDING
+                )
+        );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }
 

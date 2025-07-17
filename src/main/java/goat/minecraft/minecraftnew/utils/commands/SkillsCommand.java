@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.utils.commands;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -161,11 +162,12 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 ));
                 break;
             case "Farming":
-                double growthTimeDays = 10 - 5 * ((level - 1) / 99.0);
+                int harvestTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.BOUNTIFUL_HARVEST);
+                int growthTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.VERDANT_TENDING);
                 lore = new ArrayList<>(Arrays.asList(
                         ChatColor.YELLOW + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (level / 2) + "%",
-                        ChatColor.YELLOW + "Growth Time: " + ChatColor.GREEN + String.format("%.1f", growthTimeDays) + " days"
+                        ChatColor.YELLOW + "Double Crops Chance: " + ChatColor.GREEN + (harvestTalent * 4) + "%",
+                        ChatColor.YELLOW + "Relic Growth Reduction: " + ChatColor.GREEN + String.format("%.1f", growthTalent * 2.5) + " min"
                 ));
                 break;
 
