@@ -239,6 +239,39 @@ public enum Talent {
             6,
             50,
             Material.GHAST_TEAR
+    ),
+
+    DOUBLE_LOGS(
+            "Double Logs",
+            ChatColor.GRAY + "Chance for extra logs",
+            ChatColor.YELLOW + "+10% Double Log Chance.",
+            10,
+            1,
+            Material.OAK_LOG
+    ),
+    FORESTRY_HASTE(
+            "Forestry Haste",
+            ChatColor.GRAY + "Chance to gain Haste while chopping",
+            ChatColor.YELLOW + "+10% Haste chance.",
+            10,
+            20,
+            Material.SUGAR
+    ),
+    HASTE_POTENCY(
+            "Haste Potency",
+            ChatColor.GRAY + "Increase Forestry Haste strength",
+            ChatColor.YELLOW + "+1 Haste level.",
+            4,
+            40,
+            Material.REDSTONE_TORCH
+    ),
+    TREECAP_SPIRIT(
+            "Treecap Spirit",
+            ChatColor.GRAY + "More spirit chance from Treecapitator",
+            ChatColor.YELLOW + "+0.1% Spirit Chance",
+            15,
+            50,
+            Material.SOUL_TORCH
     );
 
 

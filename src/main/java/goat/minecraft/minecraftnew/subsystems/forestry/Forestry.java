@@ -7,6 +7,9 @@ import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.ChatColor;
@@ -356,14 +359,61 @@ public class Forestry implements Listener {
         }
     }
 
-    private void grantHaste(Player player, String skill) {
-        int level = xpManager.getPlayerLevel(player, skill);
-        if (random.nextInt(100) + 1 >= 90) { // 10% chance to grant Haste
-            int hasteLevel = 0; // Haste level increases every 33 levels, max level 2
-            int duration = 100 + (level * 5); // Duration scales with level (in ticks)
-            player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, duration, hasteLevel), true);
+    private void grantHaste(Player player) {
+        int chanceLevel = SkillTreeManager.getInstance()
+                .getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.FORESTRY_HASTE);
+        if (chanceLevel <= 0) return;
+        int roll = random.nextInt(100) + 1;
+        if (roll <= chanceLevel * 10) {
+            int potency = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.HASTE_POTENCY);
+            potency = Math.min(potency, 4);
+            int level = xpManager.getPlayerLevel(player, "Forestry");
+            int duration = 100 + (level * 5);
+            player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, duration, potency), true);
             player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_STEP, 1.0f, 1.0f);
         }
+    }
+
+    public double calculateSpiritChance(Player player) {
+        double spiritChance = 0.02;
+        ItemStack axe = player.getInventory().getItemInMainHand();
+
+        int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
+        spiritChance += effigyYield * 0.005;
+
+        ForestryPetManager forestryPetManager = MinecraftNew.getInstance().getForestryManager();
+
+        PetManager petManager = PetManager.getInstance(plugin);
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SKEPTICISM)) {
+            spiritChance += 0.02;
+        }
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.CHALLENGE)) {
+            spiritChance += 0.05;
+        }
+        if (BlessingUtils.hasFullSetBonus(player, "Nature's Wrath")) {
+            spiritChance += 0.04;
+        }
+        if (petManager.getActivePet(player).getTrait().equals(PetTrait.HAUNTED)) {
+            spiritChance += (petManager.getActivePet(player).getTrait().getValueForRarity(
+                    petManager.getActivePet(player).getTraitRarity()) / 100);
+        }
+
+        CatalystManager catalystManager = CatalystManager.getInstance();
+        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {
+            final double BASE = 0.05;
+            final double PER_TIER = 0.01;
+            Catalyst nearest = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.INSANITY);
+            int tier = catalystManager.getCatalystTier(nearest);
+            spiritChance += BASE + (tier * PER_TIER);
+        }
+
+        int treecapBonus = SkillTreeManager.getInstance()
+                .getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TREECAP_SPIRIT);
+        spiritChance += treecapBonus * 0.001;
+
+        return spiritChance;
     }
 
     @EventHandler
@@ -397,40 +447,11 @@ public class Forestry implements Listener {
             }
 
 
-            // Calculate spirit chance.
-            double spiritChance = 0.0;
-            spiritChance += 0.02;
-
-            int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
-            spiritChance += effigyYield * 0.005; // +0.5% per level
-
-            // Increment forestry count.
             forestryPetManager.incrementForestryCount(player);
 
-            // Adjust spirit chance for pet perks.
-            if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SKEPTICISM)) {
-                spiritChance += 0.02;
-            }
-            if (activePet != null && activePet.hasPerk(PetManager.PetPerk.CHALLENGE)) {
-                spiritChance += 0.05;
-            }
-            if(BlessingUtils.hasFullSetBonus(player, "Nature's Wrath")){
-                spiritChance += 0.04;
-            }
-            if(petManager.getActivePet(player).getTrait().equals(PetTrait.HAUNTED)){
-                spiritChance += (petManager.getActivePet(player).getTrait().getValueForRarity(petManager.getActivePet(player).getTraitRarity()) / 100);
-            }
-            CatalystManager catalystManager = CatalystManager.getInstance();
-            if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {
-                final double BASE_SPIRIT_CHANCE_INCREASE = 0.05; // 5% base increase
-                final double PER_TIER_SPIRIT_INCREASE = 0.01;    // 1% per tier
-                Catalyst nearestInsanityCatalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.INSANITY);
-                int catalystTier = catalystManager.getCatalystTier(nearestInsanityCatalyst);
-                double spiritChanceBonus = BASE_SPIRIT_CHANCE_INCREASE + (catalystTier * PER_TIER_SPIRIT_INCREASE);
-                spiritChance += spiritChanceBonus;
-            }
+            double spiritChance = calculateSpiritChance(player);
 
-            grantHaste(player, "Forestry");
+            grantHaste(player);
 
             // Rare drops.
             if (random.nextInt(2600) + 1 == 1) {
@@ -458,7 +479,7 @@ public class Forestry implements Listener {
             handleYieldUpgrades(player, block, axe);
 
             // Process double drop chance.
-            processDoubleDropChance(player, block, forestryLevel);
+            processDoubleDropChance(player, block);
             // Process perfect apple drop chance.
             int orchard = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ORCHARD);
             processPerfectAppleChance(player, block, forestryLevel, orchard);
@@ -477,10 +498,11 @@ public class Forestry implements Listener {
      * Processes the chance for a double log drop.
      * @param player The player who broke the log.
      * @param block The log block that was broken.
-     * @param forestryLevel The player's forestry level.
      */
-    public void processDoubleDropChance(Player player, Block block, int forestryLevel) {
-        boolean doubled = random.nextInt(100) < forestryLevel;
+    public void processDoubleDropChance(Player player, Block block) {
+        int level = SkillTreeManager.getInstance()
+                .getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.DOUBLE_LOGS);
+        boolean doubled = random.nextInt(100) < level * 10;
 
         CatalystManager catalystManager = CatalystManager.getInstance();
         boolean tripled = false;

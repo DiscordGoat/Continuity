@@ -51,6 +51,16 @@ public final class TalentRegistry {
                         Talent.VAMPIRIC_STRIKE
                 )
         );
+
+        SKILL_TALENTS.put(
+                Skill.FORESTRY,
+                Arrays.asList(
+                        Talent.DOUBLE_LOGS,
+                        Talent.FORESTRY_HASTE,
+                        Talent.HASTE_POTENCY,
+                        Talent.TREECAP_SPIRIT
+                )
+        );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }
 
