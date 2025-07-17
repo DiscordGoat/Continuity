@@ -11,7 +11,7 @@ public final class TalentRegistry {
     private static final Map<Skill, List<Talent>> SKILL_TALENTS = new HashMap<>();
 
     static {
-        // Currently only the Brewing skill has talents defined.
+        // Register talents for each supported skill.
         SKILL_TALENTS.put(
                 Skill.BREWING,
                 Arrays.asList(
@@ -51,7 +51,6 @@ public final class TalentRegistry {
                         Talent.VAMPIRIC_STRIKE
                 )
         );
-
         SKILL_TALENTS.put(
                 Skill.BARTERING,
                 Arrays.asList(
@@ -59,6 +58,53 @@ public final class TalentRegistry {
                         Talent.FREE_TRANSACTION,
                         Talent.SELL_PRICE_BOOST,
                         Talent.WORK_CYCLE_EFFICIENCY
+                  )
+          );
+        SKILL_TALENTS.put(
+                Skill.FORESTRY,
+                Arrays.asList(
+                        Talent.DOUBLE_LOGS,
+                        Talent.FORESTRY_HASTE,
+                        Talent.HASTE_POTENCY,
+                        Talent.TREECAP_SPIRIT
+                  )
+          );
+         SKILL_TALENTS.put(
+                Skill.TAMING,
+                Arrays.asList(
+                        Talent.PET_TRAINER
+                )
+        );
+        SKILL_TALENTS.put(
+                Skill.PLAYER,
+                Collections.singletonList(Talent.VITALITY
+                )
+          );
+              SKILL_TALENTS.put(
+                Skill.TERRAFORMING,
+                Arrays.asList(
+                        Talent.CONSERVATIONIST,
+                        Talent.GRAVE_INTUITION
+          )
+          );
+              SKILL_TALENTS.put(
+                Skill.FARMING,
+                Arrays.asList(
+                        Talent.BOUNTIFUL_HARVEST,
+                        Talent.VERDANT_TENDING
+                                  )
+        );
+              SKILL_TALENTS.put(
+                Skill.FISHING,
+                Arrays.asList(
+                        Talent.ANGLERS_INSTINCT
+               )
+        );
+              SKILL_TALENTS.put(
+                Skill.MINING,
+                Arrays.asList(
+                        Talent.RICH_VEINS,
+                        Talent.DEEP_LUNGS
                 )
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));

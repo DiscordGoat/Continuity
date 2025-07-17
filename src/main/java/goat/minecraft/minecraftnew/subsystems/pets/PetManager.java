@@ -21,6 +21,9 @@ import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitTask;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 
 import java.io.File;
 import java.io.IOException;
@@ -526,11 +529,14 @@ public class PetManager implements Listener {
         Pet activePet = getActivePet(player);
         if (activePet != null) {
             double xpGained = event.getAmount();
-            int tamingLevel = 0;
-            if (xpManager != null) {
-                tamingLevel = xpManager.getPlayerLevel(player, "Taming");
+            double petXP = xpGained;
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            if (mgr != null) {
+                int level = mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.PET_TRAINER);
+                if (level > 0 && Math.random() < level * 0.04) {
+                    petXP *= 2;
+                }
             }
-            double petXP = xpGained * (1.0 + tamingLevel * 0.01);
             int before = activePet.getLevel();
             activePet.addXP(petXP);
             if (xpManager != null) {

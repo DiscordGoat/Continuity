@@ -5,7 +5,9 @@ import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.other.beacon.BeaconPassivesGUI;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
-import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
@@ -39,11 +41,12 @@ public class HealthManager {
     public double computeMaxHealth(Player player) {
         double health = 20.0;
 
-        XPManager xp = MinecraftNew.getInstance().getXPManager();
-        if (xp != null) {
-            int level = xp.getPlayerLevel(player, "Player");
-            health += (level / 10) * 2; // +2 health every 10 levels
+        int talentLevel = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talentLevel = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.VITALITY);
         }
+        health += talentLevel;
 
         if (BeaconPassivesGUI.hasBeaconPassives(player) &&
                 BeaconPassivesGUI.hasPassiveEnabled(player, "mending")) {
