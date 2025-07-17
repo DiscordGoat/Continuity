@@ -51,7 +51,6 @@ public final class TalentRegistry {
                         Talent.VAMPIRIC_STRIKE
                 )
         );
-
         SKILL_TALENTS.put(
                 Skill.FORESTRY,
                 Arrays.asList(
@@ -65,12 +64,12 @@ public final class TalentRegistry {
                 Skill.TAMING,
                 Arrays.asList(
                         Talent.PET_TRAINER
-                  )
-          );
-          SKILL_TALENTS.put(
+                )
+        );
+        SKILL_TALENTS.put(
                 Skill.PLAYER,
-                Collections.singletonList(Talent.VITALITY)
-          )
+                Collections.singletonList(Talent.VITALITY
+                )
           );
               SKILL_TALENTS.put(
                 Skill.TERRAFORMING,

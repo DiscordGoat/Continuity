@@ -327,7 +327,7 @@ public enum Talent {
             10,
             40,
             Material.BONE_MEAL
-
+    ),
     RICH_VEINS(
             "Rich Veins",
             ChatColor.GRAY + "Find extra ore when mining",
@@ -343,7 +343,7 @@ public enum Talent {
             ChatColor.YELLOW + "+(20*level) " + ChatColor.AQUA + "Oxygen Capacity",
             25,
             10,
-            Material.SCUTE
+            Material.TURTLE_SCUTE
     );
 
 
