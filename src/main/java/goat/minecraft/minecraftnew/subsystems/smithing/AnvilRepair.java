@@ -5,6 +5,9 @@ import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.mining.MiningGemManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.other.enchanting.EnchantmentUtils;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -701,8 +704,15 @@ public class AnvilRepair implements Listener {
         // Check if the item is already at full durability
 
         // Determine the repair amount based on the repair material
-        int smithingLevel = xpManager.getPlayerLevel(player, "Smithing");
-        int repairAmount = 25 + smithingLevel; // Just use this calculated repairAmount
+        int repairAmount = 25;
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr != null) {
+            UUID uid = player.getUniqueId();
+            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_ONE);
+            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_TWO) * 2;
+            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_THREE) * 3;
+            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_FOUR) * 4;
+        }
         if(ironWhitelist.contains(repairee.getType())){
             repairAmount = repairAmount + 150;
         }
@@ -1466,6 +1476,27 @@ public class AnvilRepair implements Listener {
                 if (currentDamage > 0) {
                     // Determine the repair amount based on the repair material
                     int repairAmount = calculateRepairAmount(billItem, repaireeItem.getType());
+                    SkillTreeManager mgr = SkillTreeManager.getInstance();
+                    if (mgr != null) {
+                        UUID uid = player.getUniqueId();
+                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_ONE);
+                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_TWO) * 2;
+                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_THREE) * 3;
+                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_FOUR) * 4;
+                    }
+                    List<Material> ironWhitelist = new ArrayList<>();
+                    ironWhitelist.add(Material.IRON_SWORD);
+                    ironWhitelist.add(Material.IRON_PICKAXE);
+                    ironWhitelist.add(Material.IRON_AXE);
+                    ironWhitelist.add(Material.IRON_SHOVEL);
+                    ironWhitelist.add(Material.SHIELD);
+                    ironWhitelist.add(Material.IRON_HELMET);
+                    ironWhitelist.add(Material.IRON_CHESTPLATE);
+                    ironWhitelist.add(Material.IRON_LEGGINGS);
+                    ironWhitelist.add(Material.IRON_BOOTS);
+                    if (ironWhitelist.contains(repaireeItem.getType())) {
+                        repairAmount += 150;
+                    }
 
                     if (repairAmount > 0) {
                         // Create a copy of the item with increased durability

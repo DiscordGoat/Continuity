@@ -291,6 +291,18 @@ public class SkillTreeManager implements Listener {
             case VAMPIRIC_STRIKE:
                 double vampChance = level;
                 return ChatColor.YELLOW + "+" + vampChance + "% " + ChatColor.GRAY + "Soul Orb chance";
+            case REPAIR_ONE:
+                int repair1 = level * 1;
+                return ChatColor.GREEN + "+" + repair1 + ChatColor.GRAY + " Repair Amount";
+            case REPAIR_TWO:
+                int repair2 = level * 2;
+                return ChatColor.GREEN + "+" + repair2 + ChatColor.GRAY + " Repair Amount";
+            case REPAIR_THREE:
+                int repair3 = level * 3;
+                return ChatColor.GREEN + "+" + repair3 + ChatColor.GRAY + " Repair Amount";
+            case REPAIR_FOUR:
+                int repair4 = level * 4;
+                return ChatColor.GREEN + "+" + repair4 + ChatColor.GRAY + " Repair Amount";
             case SATIATION_MASTERY:
                 return ChatColor.YELLOW + "+" + level + " " + ChatColor.GRAY + "Saturation on eat";
             case FEASTING_CHANCE:
