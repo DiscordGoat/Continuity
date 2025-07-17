@@ -65,7 +65,6 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
         double talismanBonus = isReforgedForSeaCreatures(player.getInventory().getItemInMainHand()) ? 5.0 : 0.0;
 
         PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
-        double masterAnglerBonus = meritManager.hasPerk(player.getUniqueId(), "Master Angler") ? 5.0 : 0.0;
 
         double fathmicPenalty = BlessingUtils.hasFullSetBonus(player, "Fathmic Iron") ? -20.0 : 0.0;
 
@@ -99,7 +98,7 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
             }
         }
 
-        double total = base + nauticalBonus + fishingLevelBonus + callOfTheVoidBonus + fountainBonus + fountainMastery + depthBonus + talismanBonus + masterAnglerBonus + fathmicPenalty + sonarBonus + petBonus;
+        double total = base + nauticalBonus + fishingLevelBonus + callOfTheVoidBonus + fountainBonus + fountainMastery + depthBonus + talismanBonus + fathmicPenalty + sonarBonus + petBonus;
 
         player.sendMessage(ChatColor.AQUA + "Sea Creature Chance Breakdown:");
         player.sendMessage(ChatColor.AQUA + "Base SCC: " + ChatColor.YELLOW + "0%");
@@ -112,7 +111,6 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
         }
         player.sendMessage(ChatColor.AQUA + "SCC from Depth Catalyst: " + ChatColor.YELLOW + String.format("%.2f", depthBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from Sea Creature Talisman: " + ChatColor.YELLOW + String.format("%.2f", talismanBonus) + "%");
-        player.sendMessage(ChatColor.AQUA + "SCC from Master Angler Merit: " + ChatColor.YELLOW + String.format("%.2f", masterAnglerBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC Reduction from Fathmic Iron: " + ChatColor.YELLOW + String.format("%.2f", fathmicPenalty) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from Sonor Upgrade: " + ChatColor.YELLOW + String.format("%.2f", sonarBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from Pet Perks: " + ChatColor.YELLOW + String.format("%.2f", petBonus) + "%");

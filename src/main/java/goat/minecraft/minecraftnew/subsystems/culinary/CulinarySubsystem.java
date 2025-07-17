@@ -767,10 +767,6 @@ public class CulinarySubsystem implements Listener {
 
         // Drop final output with Master Chef perk consideration
         ItemStack result = createOutputItem(session.recipe);
-        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
-        if (meritManager.hasPerk(player.getUniqueId(), "Master Chef") && Math.random() < 0.5) {
-            result.setAmount(2);
-        }
         session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result);
         XPManager xpManager = new XPManager(plugin);
         xpManager.addXP(player, "Culinary", session.recipe.getXpReward());

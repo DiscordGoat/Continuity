@@ -706,11 +706,6 @@ public class AnvilRepair implements Listener {
         if(ironWhitelist.contains(repairee.getType())){
             repairAmount = repairAmount + 150;
         }
-        PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
-        if(playerMeritManager.hasPerk(player.getUniqueId(), "Master Smith")){
-            repairAmount = repairAmount + 50;
-            Bukkit.getLogger().info("Master Smith added 50 durability to the repair!");
-        }
         // Determine the type of repair material and set the repair amount accordingly
         if (billItem.getType() == Material.IRON_INGOT) {
             xpManager.addXP(player, "Smithing", repairAmount);

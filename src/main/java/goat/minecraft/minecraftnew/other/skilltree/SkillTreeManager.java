@@ -284,9 +284,6 @@ public class SkillTreeManager implements Listener {
             case ULTIMATUM:
                 double furyChance = level;
                 return ChatColor.YELLOW + "+" + furyChance + "% " + ChatColor.GRAY + "Fury activation chance";
-            case ARMAGEDDON:
-                double armChance = level;
-                return ChatColor.YELLOW + "+" + armChance + "% " + ChatColor.GRAY + "Armageddon chance";
             case VAMPIRIC_STRIKE:
                 double vampChance = level;
                 return ChatColor.YELLOW + "+" + vampChance + "% " + ChatColor.GRAY + "Soul Orb chance";

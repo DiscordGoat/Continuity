@@ -32,9 +32,6 @@ public class Decay implements Listener {
         if (activePet == null || !activePet.hasPerk(PetManager.PetPerk.DECAY)) return;
 
         int stacks = 10;
-        if (meritManager.hasPerk(player.getUniqueId(), "Decay Mastery")) {
-            stacks *= 2;
-        }
         DeteriorationDamageHandler.getInstance().addDeterioration(target, stacks);
     }
 }

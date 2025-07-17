@@ -96,12 +96,7 @@ public class SeaCreatureDeathEvent implements Listener {
 
         // 16% chance to drop a Forbidden Book
         if (random.nextInt(100) < 32) {
-            int amount = 1;
-            PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
-            if (merit.hasPerk(killer.getUniqueId(), "Librarian")) {
-                amount = 2;
-            }
-            for (int i = 0; i < amount; i++) {
+            for (int i = 0; i < 1; i++) {
                 event.getDrops().add(ItemRegistry.getForbiddenBook());
             }
         }
@@ -146,12 +141,7 @@ public class SeaCreatureDeathEvent implements Listener {
                     default -> ItemRegistry.getCommonBait();
                 };
 
-                PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
-                int amount = 1;
-                if (merit.hasPerk(killer.getUniqueId(), "Double Bait") && random.nextDouble() < 0.5) {
-                    amount = 2;
-                }
-                rarityBait.setAmount(amount);
+                rarityBait.setAmount(1);
                 if(random.nextBoolean()) {
                     if (random.nextBoolean()) {
                         event.getDrops().add(rarityBait);

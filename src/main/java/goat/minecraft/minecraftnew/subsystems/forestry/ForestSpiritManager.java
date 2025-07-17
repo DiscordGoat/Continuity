@@ -502,14 +502,7 @@ public class ForestSpiritManager implements Listener {
             int notoriety = Forestry.getInstance().getNotoriety(killer);
             xpManager.addXP(killer, "Forestry", notoriety);
             if (random.nextInt(100) < 16) {
-                int amount = 1;
-                PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
-                if (merit.hasPerk(killer.getUniqueId(), "Librarian")) {
-                    amount = 2;
-                }
-                for (int i = 0; i < amount; i++) {
-                    event.getDrops().add(ItemRegistry.getForbiddenBook());
-                }
+                event.getDrops().add(ItemRegistry.getForbiddenBook());
             }
         }
 
@@ -548,12 +541,7 @@ public class ForestSpiritManager implements Listener {
                 );
                 effigy = list.get(new Random().nextInt(list.size()));
             }
-            int amount = 1;
-            PlayerMeritManager merit = PlayerMeritManager.getInstance(plugin);
-            if (merit.hasPerk(killer.getUniqueId(), "Double Effigies") && new Random().nextDouble() < 0.5) {
-                amount = 2;
-            }
-            for (int i = 0; i < amount; i++) {
+            for (int i = 0; i < 1; i++) {
                 if (random.nextBoolean()) {
                 if (random.nextBoolean()) {
                     event.getDrops().add(effigy.clone());

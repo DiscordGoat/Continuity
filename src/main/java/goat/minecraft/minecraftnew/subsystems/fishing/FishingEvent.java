@@ -139,11 +139,6 @@ public class FishingEvent implements Listener {
             seaCreatureChance += 5; // +4% if the item is reforged
         }
         PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(plugin);
-
-
-        if (playerMeritManager.hasPerk(player.getUniqueId(), "Master Angler")) {
-            seaCreatureChance += 5;
-        }
         if(BlessingUtils.hasFullSetBonus(player, "Fathmic Iron")){
             seaCreatureChance -= 20;
         }

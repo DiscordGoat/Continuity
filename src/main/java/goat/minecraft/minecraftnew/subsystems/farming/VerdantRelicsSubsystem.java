@@ -284,12 +284,6 @@ public class VerdantRelicsSubsystem implements Listener {
             growthDuration = 10 * 1200 * 3; // 30 in-game days
         }
 
-        // Apply Master Botanist perk: reduce growth time by 20%
-        PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
-        if (meritManager.hasPerk(p.getUniqueId(), "Master Botanist")) {
-            growthDuration = (int) (growthDuration * 0.8);
-            Bukkit.getLogger().info("Reduced Verdant Relic Growth Time by 20%. New duration: " + growthDuration);
-        }
 
         RelicSession session = new RelicSession(locKey, relicName, growthDuration, growthDuration);
         activeSessions.put(locKey, session);

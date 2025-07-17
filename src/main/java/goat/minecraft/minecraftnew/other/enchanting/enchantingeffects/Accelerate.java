@@ -28,9 +28,6 @@ public class Accelerate implements Listener {
 
         int level = CustomEnchantmentManager.getEnchantmentLevel(weapon, "Accelerate");
         int stacks = level * 5;
-        if (meritManager.hasPerk(player.getUniqueId(), "Decay Mastery")) {
-            stacks *= 2;
-        }
         DeteriorationDamageHandler.getInstance().addDeterioration(target, stacks);
     }
 }
