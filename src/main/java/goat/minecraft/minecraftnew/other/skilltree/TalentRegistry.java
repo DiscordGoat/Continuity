@@ -51,6 +51,16 @@ public final class TalentRegistry {
                         Talent.VAMPIRIC_STRIKE
                 )
         );
+
+        SKILL_TALENTS.put(
+                Skill.SMITHING,
+                Arrays.asList(
+                        Talent.REPAIR_ONE,
+                        Talent.REPAIR_TWO,
+                        Talent.REPAIR_THREE,
+                        Talent.REPAIR_FOUR
+                )
+        );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));
     }
 

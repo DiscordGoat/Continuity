@@ -239,6 +239,38 @@ public enum Talent {
             6,
             50,
             Material.GHAST_TEAR
+    ),
+    REPAIR_ONE(
+            "Repair Mastery I",
+            ChatColor.GRAY + "Improve basic repair techniques",
+            ChatColor.GREEN + "+(1*level) " + ChatColor.GRAY + "Repair Amount",
+            10,
+            1,
+            Material.ANVIL
+    ),
+    REPAIR_TWO(
+            "Repair Mastery II",
+            ChatColor.GRAY + "Further hone repair skills",
+            ChatColor.GREEN + "+(2*level) " + ChatColor.GRAY + "Repair Amount",
+            10,
+            30,
+            Material.ANVIL
+    ),
+    REPAIR_THREE(
+            "Repair Mastery III",
+            ChatColor.GRAY + "Advanced repair expertise",
+            ChatColor.GREEN + "+(3*level) " + ChatColor.GRAY + "Repair Amount",
+            10,
+            50,
+            Material.ANVIL
+    ),
+    REPAIR_FOUR(
+            "Repair Mastery IV",
+            ChatColor.GRAY + "Masterful repair proficiency",
+            ChatColor.GREEN + "+(4*level) " + ChatColor.GRAY + "Repair Amount",
+            10,
+            70,
+            Material.ANVIL
     );
 
 
