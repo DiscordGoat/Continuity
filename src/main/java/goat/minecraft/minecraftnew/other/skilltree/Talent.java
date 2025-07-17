@@ -239,6 +239,14 @@ public enum Talent {
             6,
             50,
             Material.GHAST_TEAR
+    ),
+    PET_TRAINER(
+            "Pet Trainer",
+            ChatColor.GRAY + "Sharpen your pet handling skills",
+            ChatColor.YELLOW + "+4% " + ChatColor.GRAY + "Double Pet XP Chance",
+            25,
+            1,
+            Material.BONE
     );
 
 

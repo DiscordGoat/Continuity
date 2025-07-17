@@ -216,8 +216,7 @@ public class SkillsCommand implements CommandExecutor, Listener {
                 break;
             case "Taming":
                 lore = new ArrayList<>(Arrays.asList(
-                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level,
-                        ChatColor.LIGHT_PURPLE + "Bonus Pet XP: " + (level) + "%"
+                        ChatColor.DARK_GREEN + "Level: " + ChatColor.GREEN + (int) level
                 ));
                 break;
             default:
