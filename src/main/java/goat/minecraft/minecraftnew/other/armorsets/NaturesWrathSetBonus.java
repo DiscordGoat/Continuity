@@ -101,7 +101,7 @@ public class NaturesWrathSetBonus implements Listener {
     public static double getSpiritChanceBonus(Player player) {
         NaturesWrathSetBonus instance = getInstance();
         if (instance != null && instance.applied.getOrDefault(player.getUniqueId(), false)) {
-            return 0.04; // 4% bonus
+            return 0.004; // 4% bonus
         }
         return 0.0;
     }

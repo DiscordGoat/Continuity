@@ -38,17 +38,17 @@ public class SpiritChanceCommand implements CommandExecutor {
         double base = 0.01;
         ItemStack axe = player.getInventory().getItemInMainHand();
         int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
-        double effigyBonus = effigyYield * 0.001;
+        double effigyBonus = effigyYield * 0.000333;
 
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
         double petBonus = 0.0;
         if (activePet != null) {
             if (activePet.hasPerk(PetManager.PetPerk.SKEPTICISM)) {
-                petBonus += 0.01;
+                petBonus += 0.001;
             }
             if (activePet.hasPerk(PetManager.PetPerk.CHALLENGE)) {
-                petBonus += 0.02;
+                petBonus += 0.002;
             }
         }
         double natureBonus = NaturesWrathSetBonus.getSpiritChanceBonus(player);
@@ -59,14 +59,14 @@ public class SpiritChanceCommand implements CommandExecutor {
             Catalyst nearest = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.INSANITY);
             if (nearest != null) {
                 int tier = catalystManager.getCatalystTier(nearest);
-                catalystBonus = 0.01 + (tier * 0.001);
+                catalystBonus = 0.0005 + (tier * 0.0005);
             }
         }
 
         double total = base + effigyBonus + petBonus + natureBonus + catalystBonus;
 
         player.sendMessage(ChatColor.DARK_AQUA + "Spirit Chance Breakdown:");
-        player.sendMessage(ChatColor.AQUA + "Base SC: " + ChatColor.YELLOW + "2%");
+        player.sendMessage(ChatColor.AQUA + "Base SC: " + ChatColor.YELLOW + "1%");
         player.sendMessage(ChatColor.AQUA + "SC from Effigy Yield Upgrades: " + ChatColor.YELLOW + String.format("%.2f", effigyBonus * 100) + "%");
         player.sendMessage(ChatColor.AQUA + "SC from Pet Perks: " + ChatColor.YELLOW + String.format("%.2f", petBonus * 100) + "%");
         player.sendMessage(ChatColor.AQUA + "SC from Nature's Wrath: " + ChatColor.YELLOW + String.format("%.2f", natureBonus * 100) + "%");

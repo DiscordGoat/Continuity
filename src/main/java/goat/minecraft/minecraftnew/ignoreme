@@ -1,0 +1,85 @@
+Brewing:
+Scaling Stat: Potion Duration
+Scaling Max: +1000s Potion Duration, +1000s Brewtime.
+
+Common:
+Redstone I: +10s Potion Duration, +10s Brewtime. Max level 10
+
+Uncommon:
+Redstone II: +10s Potion Duration, +10s Brewtime. Max level 10
+
+Rare:
+Redstone III: +20s Potion Duration, +20s Brewtime. Max level 10
+
+Epic:
+Redstone IV: +30s Potion Duration, +30s Brewtime. Max level 10
+
+Legendary:
+Redstone V: +30s Potion Duration, +30s Brewtime. Max level 10
+
+
+
+Smithing:
+Scaling Stat: Repair Amount, Repair Quality
+Scaling Max: 75 Repair Amount, +50 Repair Quality
+Base Repair Amount: 25
+Base Repair Quality: 0
+
+Common:
+Repair Amount I: +3 Repair Amount, Max level 3
+Quality Materials I: +1 Repair Quality, Max level 3
+
+Uncommon:
+Repair Amount II: +4 Repair Amount, Max level 3
+Quality Materials II: +2 Repair Quality, Max level 3
+
+Rare:
+Repair Amount III: +5 Repair Amount, Max level 3
+Quality Materials III: +3 Repair Quality, Max level 3
+
+Epic:
+Repair Amount IV: +6 Repair Amount, Max level 3
+Quality Materials IV: +4 Repair Quality, Max level 3
+
+Legendary:
+Repair Amount V: +7 Repair Amount, Max level 3
+Quality Materials V: +5 Repair Quality, Max level 4
+
+
+
+Culinary:
+Scaling Stat: Bonus Saturation
+Scaling Max: +5 Bonus Saturation.
+
+Common:
+Satiation Mastery: +1 Bonus Saturation, Max level 5
+
+Uncommon:
+
+Rare:
+
+Epic:
+
+Legendary:
+
+
+
+Bartering:
+Scaling Stat: Discount
+Scaling Max: 0.25 Discount
+
+Common:
+Haggler I: +0.005 Discount, Max level 3
+
+Uncommon:
+Haggler II: +0.01 Discount, Max level 3
+
+Rare:
+Haggler III: +0.015 Discount, Max level 3
+
+Epic:
+Haggler IV: +0.02 Discount, Max level 3
+
+Legendary:
+Haggler V: +0.025 Discount, Max level 4
+
