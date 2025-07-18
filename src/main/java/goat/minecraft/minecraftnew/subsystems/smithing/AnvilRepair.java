@@ -705,6 +705,7 @@ public class AnvilRepair implements Listener {
 
         // Determine the repair amount based on the repair material
         int repairAmount = 25;
+        float anvilPitch = 1.0f;
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         if (mgr != null) {
             UUID uid = player.getUniqueId();
@@ -718,22 +719,33 @@ public class AnvilRepair implements Listener {
         }
         // Determine the type of repair material and set the repair amount accordingly
         if (billItem.getType() == Material.IRON_INGOT) {
-            xpManager.addXP(player, "Smithing", repairAmount);
+            int quality = getRepairQuality(player);
+            int roll = quality;
+            if (repairAmount > quality) {
+                roll = quality + new Random().nextInt(repairAmount - quality + 1);
+            }
+            repairAmount = roll;
+            xpManager.addXP(player, "Smithing", roll);
+            anvilPitch = getAnvilPitch(roll);
         } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
             repairAmount = 100;
             xpManager.addXP(player, "Smithing", 100.0);
+            anvilPitch = getAnvilPitch(0); // minimal
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shell")){
             repairAmount = 200;
             xpManager.addXP(player, "Smithing", 100.0);
+            anvilPitch = getAnvilPitch(30); // fair
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Deep Shell")){
             repairAmount = 400;
             xpManager.addXP(player, "Smithing", 100.0);
+            anvilPitch = getAnvilPitch(70); // great
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Abyssal Shell")){
             repairAmount = 800;
             xpManager.addXP(player, "Smithing", 100.0);
+            anvilPitch = getAnvilPitch(90); // legendary
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Mithril Chunk") && isDurable(repairee)){
             incrementEnchantment(player, repairee, billItem,Enchantment.UNBREAKING);
 
@@ -1447,7 +1459,7 @@ public class AnvilRepair implements Listener {
             inventory.setItem(13, billItem); // Update the stack size
         }
 
-        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.1f, 1.0f);
+        player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 0.1f, anvilPitch);
 
     }
 
@@ -1576,6 +1588,35 @@ public class AnvilRepair implements Listener {
             default:
                 return 0; // Unsupported materials do not repair
         }
+    }
+
+    /**
+     * Retrieves the player's current Repair Quality. This value represents
+     * the minimum amount of durability restored when using basic repair
+     * materials such as Iron Ingots.
+     *
+     * <p>Currently there are no mechanics to increase this value so it
+     * simply returns {@code 0}.</p>
+     */
+    private int getRepairQuality(Player player) {
+        return 0; // Placeholder for future expansion
+    }
+
+    /**
+     * Determines the anvil sound pitch based on the amount of durability
+     * restored.
+     */
+    private float getAnvilPitch(int amount) {
+        if (amount < 20) {
+            return 2.0f; // minimal repair
+        } else if (amount < 40) {
+            return 1.2f; // fair repair
+        } else if (amount < 60) {
+            return 1.0f; // good repair
+        } else if (amount < 80) {
+            return 0.8f; // great repair
+        }
+        return 0.5f; // legendary repair
     }
 
     /**
