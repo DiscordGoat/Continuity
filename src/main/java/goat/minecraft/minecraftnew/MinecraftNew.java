@@ -53,6 +53,7 @@ import goat.minecraft.minecraftnew.utils.commands.DiscsCommand;
 import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.commands.AuraCommand;
+import goat.minecraft.minecraftnew.utils.commands.ToggleCustomEnchantmentsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
@@ -92,6 +93,7 @@ import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.other.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.other.structureblocks.SetStructureBlockPowerCommand;
 import goat.minecraft.minecraftnew.other.warpgate.WarpGateManager;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentPreferences;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.other.realms.Tropic;
@@ -357,6 +359,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         TrinketManager.init(this);
         StructureBlockManager.init(this);
         //getServer().getPluginManager().registerEvents(new GamblingTable(this), this);
+
+        CustomEnchantmentPreferences.init(this);
+        getServer().getPluginManager().registerEvents(new CustomEnchantmentPreferences(), this);
 
         forestryPetManager = new ForestryPetManager(this);
 
@@ -673,6 +678,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("repairall").setExecutor(new RepairAllCommand());
         getCommand("finishbrews").setExecutor(new FinishBrewsCommand(this));
         getCommand("openvillagertrademenu").setExecutor(new OpenVillagerTradeMenuCommand(this));
+        getCommand("togglecustomenchantments").setExecutor(new ToggleCustomEnchantmentsCommand(this));
 
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
 
@@ -790,6 +796,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (swiftStepMasteryBonus != null) {
             swiftStepMasteryBonus.removeAllBonuses();
         }
+        CustomEnchantmentPreferences.saveAll();
         BeaconPassivesGUI.saveAllPassives();
         if (CatalystManager.getInstance() != null) {
             CatalystManager.getInstance().shutdown();
