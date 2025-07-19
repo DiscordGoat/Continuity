@@ -34,8 +34,7 @@ public class RepairAllCommand implements CommandExecutor {
             }
             ItemMeta meta = item.getItemMeta();
             if (meta instanceof Damageable damageable && damageable.getDamage() > 0) {
-                damageable.setDamage(0);
-                item.setItemMeta(meta);
+                CustomDurabilityManager.getInstance().repairFully(item);
             }
         }
 

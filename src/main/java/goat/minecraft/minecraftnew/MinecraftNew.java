@@ -635,6 +635,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomEnchantmentManager.registerEnchantment("Composter", 5, true);
         CustomEnchantmentManager.registerEnchantment("Piracy", 5, true);
         CustomEnchantmentManager.registerEnchantment("Shear", 5, true);
+        CustomEnchantmentManager.registerEnchantment("Unbreaking", 6, true);
         CustomEnchantmentManager.registerEnchantment("Physical Protection", 4, true);
         CustomEnchantmentManager.registerEnchantment("Alchemy", 4, true);
         CustomEnchantmentManager.registerEnchantment("Aspect of the Journey", 1, true);
