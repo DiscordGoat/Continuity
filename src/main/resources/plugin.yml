@@ -249,3 +249,7 @@ commands:
     description: Applies a reforge to the item in your hand
     usage: /applyreforge <reforgename> <rarity>
     permission: continuity.admin
+  stats:
+    description: Shows your overall player stats
+    usage: /stats
+    default: true
