@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.other.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Creature;
@@ -57,7 +58,7 @@ public class Stun implements Listener {
                 // Notify shooter about the successful stun
                 shooter.sendMessage(ChatColor.AQUA + "Stun effect applied to " + target.getName() + "!");
                 int enchantmentLevel = CustomEnchantmentManager.getEnchantmentLevel(bow, "Stun");
-                shooter.getInventory().getItemInMainHand().setDurability((short) (shooter.getInventory().getItemInMainHand().getDurability() +(1*enchantmentLevel)));
+                CustomDurabilityManager.getInstance().applyDamage(shooter, bow, enchantmentLevel);
             }
         }
     }

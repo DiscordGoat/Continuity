@@ -650,24 +650,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
     }
     private void repairArmor(ItemStack item, int repairAmount) {
-        if (!(item.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable)) {
-            return;
-        }
-
-        // Clone the item to avoid direct modification issues
-        ItemStack modifiedItem = item.clone();
-        org.bukkit.inventory.meta.Damageable damageableMeta = (org.bukkit.inventory.meta.Damageable) modifiedItem.getItemMeta();
-        int currentDamage = damageableMeta.getDamage();
-        int newDamage = Math.max(currentDamage - repairAmount, 0); // Ensure new damage is not below zero
-
-        // Apply new damage value
-        damageableMeta.setDamage(newDamage);
-        modifiedItem.setItemMeta(damageableMeta);
-
-        // Update the original item stack
-        item.setType(modifiedItem.getType());
-        item.setItemMeta(modifiedItem.getItemMeta());
-
+        CustomDurabilityManager.getInstance().repair(item, repairAmount);
     }
 
 
@@ -792,12 +775,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     }
 
     private void repairWeapons(ItemStack item, int repairAmount) {
-        if (item.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable damageable) {
-            int currentDamage = damageable.getDamage();
-            int newDamage = Math.max(currentDamage - repairAmount, 0); // Ensure durability does not exceed maximum
-            damageable.setDamage(newDamage);
-            item.setItemMeta(damageable);
-        }
+        CustomDurabilityManager.getInstance().repair(item, repairAmount);
     }
 
 
@@ -850,12 +828,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     }
 
     private void repairTools(ItemStack item, int repairAmount) {
-        if (item.getItemMeta() instanceof org.bukkit.inventory.meta.Damageable damageable) {
-            int currentDamage = damageable.getDamage();
-            int newDamage = Math.max(currentDamage - repairAmount, 0); // Ensure durability doesn't exceed maximum
-            damageable.setDamage(newDamage);
-            item.setItemMeta(damageable);
-        }
+        CustomDurabilityManager.getInstance().repair(item, repairAmount);
     }
 
     private boolean isTool(ItemStack item) {

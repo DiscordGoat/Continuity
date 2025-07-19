@@ -2468,7 +2468,7 @@ public class ItemRegistry {
                 Material.WHITE_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Common Tool Reforge",
                 Arrays.asList(
-                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.GRAY + "Sturdy -> +100 Max Durability",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
@@ -2483,7 +2483,7 @@ public class ItemRegistry {
                 Material.LIME_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Uncommon Tool Reforge",
                 Arrays.asList(
-                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.GRAY + "Enhanced -> +150 Max Durability",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
@@ -2498,7 +2498,7 @@ public class ItemRegistry {
                 Material.BLUE_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Rare Tool Reforge",
                 Arrays.asList(
-                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.GRAY + "Refined -> +200 Max Durability",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
@@ -2513,7 +2513,7 @@ public class ItemRegistry {
                 Material.MAGENTA_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Epic Tool Reforge",
                 Arrays.asList(
-                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.GRAY + "Superior -> +250 Max Durability",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
@@ -2528,7 +2528,7 @@ public class ItemRegistry {
                 Material.YELLOW_STAINED_GLASS_PANE,
                 ChatColor.YELLOW + "Legendary Tool Reforge",
                 Arrays.asList(
-                        ChatColor.GRAY + "Reforges tools to take less damage",
+                        ChatColor.GRAY + "Masterwork -> +400 Max Durability",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Refines base stats beyond normal levels.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),

@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -72,7 +73,7 @@ public class Feed implements Listener {
             // Send feedback to the player
             player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 5,10);
             int enchantmentLevel = CustomEnchantmentManager.getEnchantmentLevel(weapon, "Feed");
-            player.getInventory().getItemInMainHand().setDurability((short) (player.getInventory().getItemInMainHand().getDurability() +(1*enchantmentLevel)));
+            CustomDurabilityManager.getInstance().applyDamage(player, weapon, enchantmentLevel);
 
         }
     }

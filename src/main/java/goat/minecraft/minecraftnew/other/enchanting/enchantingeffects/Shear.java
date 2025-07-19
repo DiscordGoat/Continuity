@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -220,7 +221,7 @@ public class Shear implements Listener {
             // Send feedback to the player
             player.playSound(player.getLocation(), Sound.ENTITY_SHEEP_SHEAR, 5, 10);
             int enchantmentLevel = CustomEnchantmentManager.getEnchantmentLevel(weapon, "Shear");
-            player.getInventory().getItemInMainHand().setDurability((short) (player.getInventory().getItemInMainHand().getDurability() +(1*enchantmentLevel)));
+            CustomDurabilityManager.getInstance().applyDamage(player, weapon, enchantmentLevel);
 
         }
     }

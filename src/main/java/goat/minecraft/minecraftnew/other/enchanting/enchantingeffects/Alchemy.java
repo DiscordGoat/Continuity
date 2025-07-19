@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -103,7 +104,7 @@ public class Alchemy implements Listener {
 
         // Optionally, send a feedback message to the player
         int enchantmentLevel = CustomEnchantmentManager.getEnchantmentLevel(tool, "Alchemy");
-        player.getInventory().getItemInMainHand().setDurability((short) (player.getInventory().getItemInMainHand().getDurability() +(1*enchantmentLevel)));
+        CustomDurabilityManager.getInstance().applyDamage(player, tool, enchantmentLevel);
 
     }
 

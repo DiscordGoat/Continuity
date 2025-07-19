@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ public class LethalReaction implements Listener {
             fireball.setYield(2.0f + (lethalLevel * 1.0f)); // Base explosion size of 2.0, increasing with level
             fireball.setIsIncendiary(false); // Fireball sets blocks on fire
             fireball.setVelocity(arrow.getVelocity().multiply(0.8)); // Adjust fireball speed
-            shooter.getInventory().getItemInMainHand().setDurability((short) (shooter.getInventory().getItemInMainHand().getDurability() +(1*lethalLevel)));
+            CustomDurabilityManager.getInstance().applyDamage(shooter, crossbow, lethalLevel);
         }
     }
 }

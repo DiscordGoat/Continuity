@@ -7,8 +7,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SetDurabilityCommand implements CommandExecutor {
@@ -61,23 +60,14 @@ public class SetDurabilityCommand implements CommandExecutor {
             return true;
         }
 
-        // Check if the item has durability
-        ItemMeta meta = item.getItemMeta();
-        if (!(meta instanceof Damageable damageable)) {
-            sender.sendMessage(ChatColor.RED + "This item doesn't have durability.");
-            return true;
-        }
-
-        // Set the durability
-        int maxDurability = item.getType().getMaxDurability();
+        // Use CustomDurabilityManager to set durability
+        CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
+        int maxDurability = mgr.getMaxDurability(item);
         if (durability > maxDurability) {
             sender.sendMessage(ChatColor.YELLOW + "Warning: The specified durability exceeds the maximum for this item (" + maxDurability + ").");
             durability = maxDurability;
         }
-
-        // In Minecraft, damage is the inverse of durability (0 damage = full durability)
-        damageable.setDamage(maxDurability - durability);
-        item.setItemMeta(damageable);
+        mgr.setCustomDurability(item, durability, maxDurability);
 
         // Notify both the sender and the target player
         sender.sendMessage(ChatColor.GREEN + "Set durability of " + targetPlayer.getName() + "'s item to " + durability + "/" + maxDurability);
