@@ -287,6 +287,17 @@ public class CustomEnchantmentManager {
         return 0;
     }
 
+    /**
+     * Returns a mapping of all registered enchantments to their max level.
+     */
+    public static Map<String, Integer> getRegisteredEnchantmentMaxLevels() {
+        Map<String, Integer> map = new LinkedHashMap<>();
+        for (CustomEnchantment enchantment : enchantments.values()) {
+            map.put(enchantment.getName(), enchantment.getMaxLevel());
+        }
+        return map;
+    }
+
     private static String formatEnchantment(String name, int level) {
         String numeral = toRomanNumeral(level);
         return ChatColor.GRAY + name + " " + numeral;

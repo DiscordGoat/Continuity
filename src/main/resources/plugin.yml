@@ -163,6 +163,10 @@ commands:
     description: Opens a villager trade menu for testing
     usage: /openVillagerTradeMenu <profession> <tier>
     permission: continuity.admin
+  togglecustomenchantments:
+    description: Toggle your custom enchantments on or off
+    usage: /togglecustomenchantments
+    default: true
   setskilllevel:
     description: Sets a player's skill level
     usage: /setskilllevel <player> <skill> <level>
