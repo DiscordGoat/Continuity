@@ -227,6 +227,53 @@ public class ReforgeManager {
     }
 
     /**
+     * Removes any reforge from the given item.
+     * This clears reforge-related lore, resets the display name color,
+     * removes durability bonuses and sets the tier back to 0.
+     *
+     * @param item The item to strip.
+     * @return The updated ItemStack.
+     */
+    public ItemStack stripReforge(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return item;
+        }
+
+        int currentTier = getReforgeTier(item);
+        if (currentTier <= 0) {
+            return item;
+        }
+
+        ReforgeTier tier = getReforgeTierByTier(currentTier);
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) {
+            meta = plugin.getServer().getItemFactory().getItemMeta(item.getType());
+        }
+
+        // Reset name colouring
+        if (meta.hasDisplayName()) {
+            meta.setDisplayName(ChatColor.stripColor(meta.getDisplayName()));
+        }
+
+        // Remove reforge lore lines
+        List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
+        lore.removeIf(line -> line.contains("Damage Increase:")
+                || line.contains("Damage Reduction:")
+                || line.contains("Chance to repair durability:")
+                || line.contains("Max Durability: +"));
+        meta.setLore(lore);
+        item.setItemMeta(meta);
+
+        if (isTool(item)) {
+            CustomDurabilityManager.getInstance().addMaxDurabilityBonus(item, -tier.getToolDurabilityBonus());
+        }
+
+        setReforgeTier(item, 0);
+        return item;
+    }
+
+    /**
      * Checks if an ItemStack is a sword.
      */
     public boolean isSword(ItemStack item) {

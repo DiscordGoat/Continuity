@@ -237,3 +237,11 @@ commands:
     description: Displays your total Spirit Chance
     usage: /spiritchance
     default: true
+  stripreforge:
+    description: Removes the reforge from the item in your hand
+    usage: /stripreforge
+    permission: continuity.admin
+  applyreforge:
+    description: Applies a reforge to the item in your hand
+    usage: /applyreforge <reforgename> <rarity>
+    permission: continuity.admin

@@ -679,6 +679,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("finishbrews").setExecutor(new FinishBrewsCommand(this));
         getCommand("openvillagertrademenu").setExecutor(new OpenVillagerTradeMenuCommand(this));
         getCommand("togglecustomenchantments").setExecutor(new ToggleCustomEnchantmentsCommand(this));
+        getCommand("stripreforge").setExecutor(new StripReforgeCommand());
+        getCommand("applyreforge").setExecutor(new ApplyReforgeCommand());
 
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
 
