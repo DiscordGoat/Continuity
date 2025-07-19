@@ -20,7 +20,8 @@ import java.util.List;
 
 /**
  * Manages custom durability values for items and intercepts vanilla
- * durability loss events. Unbreaking is intentionally ignored for now.
+ * durability loss events. Handles conversion and bonuses for the custom
+ * Unbreaking enchantment.
  */
 public class CustomDurabilityManager implements Listener {
     private static CustomDurabilityManager instance;
@@ -130,10 +131,25 @@ public class CustomDurabilityManager implements Listener {
     }
 
     /**
+     * Ensures items with the custom Unbreaking enchantment have their
+     * associated durability bonus applied. This allows preexisting
+     * enchanted items to receive the bonus when they first take damage.
+     */
+    private void ensureUnbreakingBonus(ItemStack item) {
+        if (CustomEnchantmentManager.hasEnchantment(item, "Unbreaking")) {
+            int currentBonus = getBonusDurability(item);
+            if (currentBonus < 100) {
+                addMaxDurabilityBonus(item, 100 - currentBonus);
+            }
+        }
+    }
+
+    /**
      * Applies damage using the custom durability system.
      */
     public void applyDamage(Player player, ItemStack item, int amount) {
         convertVanillaUnbreaking(item);
+        ensureUnbreakingBonus(item);
 
         int current = getCurrentDurability(item);
         int max = getMaxDurability(item);
