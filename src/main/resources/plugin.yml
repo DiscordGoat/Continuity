@@ -43,6 +43,11 @@ commands:
     description: Admin command to set the durability of a player's held item
     usage: /setdurability <player> <durability>
     permission: continuity.admin
+
+  setcustomdurability:
+    description: Sets custom durability values on the held item
+    usage: /setcustomdurability <current> <max>
+    permission: continuity.admin
   forceworkcycle:
     description: Forces the villager work cycle timer to 1 second.
     usage: /<command>
