@@ -18,6 +18,7 @@ import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
@@ -1502,17 +1503,10 @@ public class MusicDiscManager implements Listener {
         short maxDurability = material.getMaxDurability();
 
         if (maxDurability > 0) {
-            // Item is damageable
-            short currentDurability = item.getDurability(); // Deprecated but works
-            short newDurability = (short) Math.max(currentDurability - repairAmount, 0);
-
-            // Debug messages
             plugin.getLogger().info("Item: " + material);
-            plugin.getLogger().info("Current Durability (Damage): " + currentDurability);
-            plugin.getLogger().info("Max Durability: " + maxDurability);
-            plugin.getLogger().info("Repairing " + material + " in " + slotInfo + " from damage " + currentDurability + " to " + newDurability);
+            plugin.getLogger().info("Repairing " + material + " in " + slotInfo + " by " + repairAmount + " points.");
 
-            item.setDurability(newDurability); // Deprecated but necessary here
+            CustomDurabilityManager.getInstance().repair(item, repairAmount);
         } else {
             plugin.getLogger().info(material + " in " + slotInfo + " is not damageable.");
         }

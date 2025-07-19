@@ -40,15 +40,14 @@ public class RepairCommand implements CommandExecutor {
         }
 
         Damageable damageable = (Damageable) meta;
-        
+
         if (damageable.getDamage() == 0) {
             player.sendMessage(ChatColor.YELLOW + "This item is already at full durability!");
             return true;
         }
 
-        damageable.setDamage(0);
-        heldItem.setItemMeta(meta);
-        
+        CustomDurabilityManager.getInstance().repairFully(heldItem);
+
         player.sendMessage(ChatColor.GREEN + "✔ Item repaired to full durability!");
         return true;
     }

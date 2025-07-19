@@ -9,6 +9,8 @@ import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.enchantments.Enchantment;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -96,6 +98,8 @@ public class CustomDurabilityManager implements Listener {
      * Applies damage using the custom durability system.
      */
     public void applyDamage(Player player, ItemStack item, int amount) {
+        convertVanillaUnbreaking(item);
+
         int current = getCurrentDurability(item);
         int max = getMaxDurability(item);
         current -= amount;
@@ -104,6 +108,27 @@ public class CustomDurabilityManager implements Listener {
         if (current == 0 && player != null) {
             item.setAmount(0);
         }
+    }
+
+    /**
+     * Repairs the given item by a specific amount.
+     */
+    public void repair(ItemStack item, int amount) {
+        if (item == null || amount <= 0) return;
+        int current = getCurrentDurability(item);
+        int max = getMaxDurability(item);
+        current += amount;
+        if (current > max) current = max;
+        setCustomDurability(item, current, max);
+    }
+
+    /**
+     * Fully repairs the given item to max durability.
+     */
+    public void repairFully(ItemStack item) {
+        if (item == null) return;
+        int max = getMaxDurability(item);
+        setCustomDurability(item, max, max);
     }
 
     @EventHandler
@@ -141,6 +166,21 @@ public class CustomDurabilityManager implements Listener {
                 damageable.setDamage(newDamage);
                 item.setItemMeta(meta);
             }
+        }
+    }
+
+    /**
+     * Converts vanilla Unbreaking enchantments to the custom variant.
+     */
+    private void convertVanillaUnbreaking(ItemStack item) {
+        int level = item.getEnchantmentLevel(Enchantment.UNBREAKING);
+        if (level > 0) {
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.removeEnchant(Enchantment.UNBREAKING);
+                item.setItemMeta(meta);
+            }
+            CustomEnchantmentManager.addEnchantment(item, "Unbreaking", level);
         }
     }
 }

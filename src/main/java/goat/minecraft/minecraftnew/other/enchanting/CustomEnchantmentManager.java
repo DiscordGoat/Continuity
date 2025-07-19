@@ -150,7 +150,7 @@ public class CustomEnchantmentManager {
     }
 
     /**
-     * Applies a custom enchantment to an item. (Non-ultimate usage)
+     * Applies a custom enchantment to an item. (Non-ultimate usage with cost and XP)
      */
     public static ItemStack addEnchantment(Player player, ItemStack billItem, ItemStack item, String enchantmentName, int level) {
         XPManager xpManager = new XPManager(MinecraftNew.getInstance());
@@ -176,6 +176,40 @@ public class CustomEnchantmentManager {
         item.setItemMeta(meta);
         billItem.setAmount(billItem.getAmount() - 1);
         xpManager.addXP(player, "Smithing", 200);
+        return item;
+    }
+
+    /**
+     * Applies a custom enchantment to an item without consuming a bill item or
+     * awarding experience. Used internally for systems that need to modify
+     * enchantments directly.
+     *
+     * @param item            The item to enchant.
+     * @param enchantmentName The custom enchantment name.
+     * @param level           The level to apply.
+     * @return The enchanted item.
+     */
+    public static ItemStack addEnchantment(ItemStack item, String enchantmentName, int level) {
+        CustomEnchantment enchantment = getEnchantment(enchantmentName);
+        if (enchantment == null) return item;
+        if (level < 1 || level > enchantment.getMaxLevel()) {
+            return item;
+        }
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return item;
+
+        List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
+
+        // Remove existing enchantment if present
+        removeEnchantmentLore(lore, enchantment);
+
+        // Add enchantment to lore
+        String enchantmentLine = formatEnchantment(enchantment.getName(), level);
+        lore.add(0, enchantmentLine);
+
+        meta.setLore(lore);
+        item.setItemMeta(meta);
         return item;
     }
 
