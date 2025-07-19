@@ -74,6 +74,7 @@ public class CustomEnchantmentManager {
 
         meta.setLore(lore);
         item.setItemMeta(meta);
+        goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter.formatLore(item);
 
         // 4) Decrement the billItem by 1 if it's not null
         if (billItem != null && billItem.getAmount() > 0) {
@@ -177,6 +178,7 @@ public class CustomEnchantmentManager {
 
         meta.setLore(lore);
         item.setItemMeta(meta);
+        goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter.formatLore(item);
         billItem.setAmount(billItem.getAmount() - 1);
         xpManager.addXP(player, "Smithing", 200);
 
@@ -221,6 +223,7 @@ public class CustomEnchantmentManager {
 
         meta.setLore(lore);
         item.setItemMeta(meta);
+        goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter.formatLore(item);
 
         if ("Unbreaking".equalsIgnoreCase(enchantmentName) && !alreadyHad) {
             CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
@@ -253,6 +256,7 @@ public class CustomEnchantmentManager {
         if (removed) {
             meta.setLore(lore.isEmpty() ? null : lore);
             item.setItemMeta(meta);
+            goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter.formatLore(item);
         }
         return item;
     }

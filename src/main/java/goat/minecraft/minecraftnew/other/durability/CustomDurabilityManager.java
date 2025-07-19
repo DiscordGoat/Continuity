@@ -204,6 +204,7 @@ public class CustomDurabilityManager implements Listener {
         }
         meta.setLore(lore);
         item.setItemMeta(meta);
+        goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter.formatLore(item);
     }
 
     private void updateVanillaDamage(ItemStack item, int current, int max) {
