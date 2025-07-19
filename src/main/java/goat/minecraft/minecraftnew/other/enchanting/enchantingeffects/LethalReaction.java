@@ -23,8 +23,8 @@ public class LethalReaction implements Listener {
         Player shooter = (Player) arrow.getShooter();
         ItemStack crossbow = shooter.getInventory().getItemInMainHand();
 
-        // Check if the crossbow has the "Lethal Reaction" enchantment
-        if (CustomEnchantmentManager.hasEnchantment(crossbow, "Lethal Reaction")) {
+        // Check if the crossbow has the "Lethal Reaction" enchantment and it's enabled
+        if (CustomEnchantmentManager.isEnchantmentActive(shooter, crossbow, "Lethal Reaction")) {
             int lethalLevel = CustomEnchantmentManager.getEnchantmentLevel(crossbow, "Lethal Reaction");
 
             // Cancel the arrow and spawn a fireball instead

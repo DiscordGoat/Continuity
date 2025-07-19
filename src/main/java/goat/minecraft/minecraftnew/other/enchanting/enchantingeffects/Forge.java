@@ -25,6 +25,7 @@ public class Forge implements Listener {
         ItemStack tool = event.getPlayer().getInventory().getItemInMainHand();
         Player player = event.getPlayer();
 
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, tool, "Forge")) return;
         int forgeLevel = CustomEnchantmentManager.getEnchantmentLevel(tool, "Forge");
         if (forgeLevel <= 0) return;
 

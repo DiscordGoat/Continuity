@@ -20,8 +20,8 @@ public class Rappel implements Listener {
         Player player = event.getPlayer();
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
-        // Check if the item has the "Rappel" enchantment
-        if (!CustomEnchantmentManager.hasEnchantment(itemInHand, "Rappel")) {
+        // Check if the item has the "Rappel" enchantment and it's enabled
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, itemInHand, "Rappel")) {
             return;
         }
 

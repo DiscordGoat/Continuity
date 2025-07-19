@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other.enchanting;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentPreferences;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -269,6 +270,21 @@ public class CustomEnchantmentManager {
             }
         }
         return false;
+    }
+
+    /**
+     * Checks if the item has the specified enchantment and that the player has
+     * that enchantment enabled in their preferences.
+     *
+     * @param player          The player owning the item.
+     * @param item            The item to check.
+     * @param enchantmentName The custom enchantment name.
+     * @return true if the item has the enchantment and the player has it enabled.
+     */
+    public static boolean isEnchantmentActive(Player player, ItemStack item, String enchantmentName) {
+        if (player == null || item == null) return false;
+        if (!hasEnchantment(item, enchantmentName)) return false;
+        return CustomEnchantmentPreferences.isEnabled(player, enchantmentName);
     }
 
     public static int getEnchantmentLevel(ItemStack item, String enchantmentName) {

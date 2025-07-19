@@ -17,7 +17,7 @@ public class Velocity implements Listener {
         ItemStack bow = event.getBow();
         if (bow == null || !bow.getType().toString().contains("BOW")) return;
 
-        if (!CustomEnchantmentManager.hasEnchantment(bow, "Velocity")) return;
+        if (!CustomEnchantmentManager.isEnchantmentActive((Player) event.getEntity(), bow, "Velocity")) return;
 
         int level = CustomEnchantmentManager.getEnchantmentLevel(bow, "Velocity");
         if (level < 1) return;
