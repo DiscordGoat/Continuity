@@ -36,6 +36,7 @@ public class ItemLoreFormatter {
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
 
         String power = null;
+        String upgrades = null;
         String bar = null;
         String cap = null;
         String trim = null;
@@ -52,7 +53,9 @@ public class ItemLoreFormatter {
             if (stripped.startsWith("Gemstone Power") || stripped.startsWith("Angler Energy") ||
                     stripped.startsWith("Soul Power") || stripped.startsWith("Spirit Energy")) {
                 power = line;
-            } else if (stripped.startsWith("Power Cap") || stripped.startsWith("Spirit Cap") || stripped.startsWith("Enhanced Power Cap")) {
+            }else if (stripped.contains("Upgrades")) {
+                upgrades = line;
+            } else if (stripped.startsWith("Power Cap") || stripped.startsWith("Spirit Cap") || stripped.startsWith("Enhanced Power Cap") || stripped.startsWith("Soul Cap")) {
                 cap = line;
             } else if (stripped.contains("[") && stripped.contains("|") && stripped.contains("]")) {
                 bar = line;
@@ -65,7 +68,7 @@ public class ItemLoreFormatter {
                 reforge.add(line);
             } else if (stripped.startsWith("Durability:")) {
                 durability = line;
-            } else if (stripped.contains("Blessed")) {
+            } else if (stripped.contains("Full Set Bonus")) {
                 bless = line;
             } else if (isEnchantmentLine(stripped)) {
                 String name = stripped.replaceAll(" [IVXLCDM]+$", "");
@@ -83,11 +86,7 @@ public class ItemLoreFormatter {
         // Keep other lore (like descriptions) before formatted sections
         newLore.addAll(other);
 
-        if (power != null) {
-            newLore.add(power);
-            if (bar != null) newLore.add(bar);
-            if (cap != null) newLore.add(cap);
-        }
+
 
         if (isArmor(item) && trim != null) {
             newLore.add(trim);
@@ -95,11 +94,18 @@ public class ItemLoreFormatter {
 
         newLore.addAll(vanilla);
         newLore.addAll(custom);
+        if (power != null) {
+            newLore.add(power);
+            if (bar != null) newLore.add(bar);
+            if(upgrades != null) newLore.add(upgrades);
+            if (cap != null) newLore.add(cap);
+        }
         newLore.addAll(talismans);
         newLore.addAll(reforge);
         if (isArmor(item) && bless != null) {
             newLore.add(bless);
         }
+
         if (durability != null) {
             newLore.add(durability);
         }

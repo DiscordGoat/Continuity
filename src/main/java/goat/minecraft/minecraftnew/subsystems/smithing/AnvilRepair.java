@@ -1133,6 +1133,13 @@ public class AnvilRepair implements Listener {
 
 
 
+        else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.GOLD + "Masterwork Ingot")&& isDurable(repairee)){
+            CustomDurabilityManager.getInstance().addMaxDurabilityBonus(repairee, 10);
+            CustomDurabilityManager.getInstance().repairFully(repairee);
+
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }
 
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Efficiency Expertise")&& TOOLS.contains(repairee.getType())){
             incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.EFFICIENCY);

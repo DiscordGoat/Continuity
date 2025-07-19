@@ -232,16 +232,15 @@ public class ReforgeManager {
      * removes durability bonuses and sets the tier back to 0.
      *
      * @param item The item to strip.
-     * @return The updated ItemStack.
      */
-    public ItemStack stripReforge(ItemStack item) {
+    public void stripReforge(ItemStack item) {
         if (item == null || item.getType() == Material.AIR) {
-            return item;
+            return;
         }
 
         int currentTier = getReforgeTier(item);
         if (currentTier <= 0) {
-            return item;
+            return;
         }
 
         ReforgeTier tier = getReforgeTierByTier(currentTier);
@@ -270,7 +269,6 @@ public class ReforgeManager {
         }
 
         setReforgeTier(item, 0);
-        return item;
     }
 
     /**
