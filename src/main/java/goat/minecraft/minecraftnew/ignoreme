@@ -83,3 +83,174 @@ Haggler IV: +0.02 Discount, Max level 3
 Legendary:
 Haggler V: +0.025 Discount, Max level 4
 
+
+
+Forestry:
+Scaling Stat: Spirit Chance
+Scaling Max: 0.01 Spirit Chance
+
+Common:
+Spirit Chance I: +0.0002 Spirit Chance, Max level 3
+
+Uncommon:
+Spirit Chance II: +0.0004 Spirit Chance, Max level 3
+
+Rare:
+Spirit Chance III: +0.0006 Spirit Chance, Max level 3
+
+Epic:
+Spirit Chance IV: +0.0008 Spirit Chance, Max level 3
+
+Legendary:
+Spirit Chance V: +0.0010 Spirit Chance, Max level 4
+
+
+Combat:
+Scaling Stat: Arrow Damage Increase
+Scaling Max: +200%
+
+Common:
+Arrow Damage Increase I: +4% Arrow Damage, Max level 3
+
+Uncommon:
+Arrow Damage Increase II: +8% Arrow Damage, Max level 3
+
+Rare:
+Arrow Damage Increase III: +12% Arrow Damage, Max level 3
+
+Epic:
+Arrow Damage Increase IV: +16% Arrow Damage, Max level 3
+
+Legendary:
+Arrow Damage Increase V: +20% Arrow Damage, Max level 4
+
+
+
+
+Taming:
+Scaling Stat: Bonus Pet XP Chance
+Scaling Max: 100% Bonus Pet XP Chance
+
+Common:
+Bonus Pet XP Chance I: +0.02, Max Level 3
+
+Uncommon:
+Bonus Pet XP Chance II: +0.04, Max Level 3
+
+Rare:
+Bonus Pet XP Chance III: +0.06, Max Level 3
+
+Epic:
+Bonus Pet XP Chance IV: +0.08, Max Level 3
+
+Legendary:
+Bonus Pet XP Chance V: +0.1, Max Level 4
+
+Player:
+Scaling Stat: Bonus Health
+Scaling Max: +40 Bonus Health
+
+Common:
+Health I: +1 Bonus Health, Max level 4
+
+Uncommon:
+Health II: +1 Bonus Health, Max level 6
+
+Rare:
+Health III: +1 Bonus Health, Max level 8
+
+Epic:
+Health IV: +1 Bonus Health, Max level 10
+
+Legendary:
+Health V: +1 Bonus Health, Max level 12
+
+
+
+Terraforming:
+Scaling Stat: Grave Chance
+Scaling Max: 0.05
+
+Common:
+Grave Digger I: +0.001 Grave Chance, Max level 3
+
+Uncommon:
+Grave Digger II: +0.0015 Grave Chance, Max level 3
+
+Rare:
+Grave Digger III: +0.002 Grave Chance, Max level 3
+
+Epic:
+Grave Digger IV: +0.0025 Grave Chance, Max level 3
+
+Legendary:
+Grave Digger V: +0.00725 Grave Chance, Max level 4
+
+
+
+Mining:
+Scaling Stat: Oxygen
+Scaling Max: 500
+
+Common:
+Oxygen I: +10 Oxygen, Max level 3
+
+Uncommon:
+Oxygen II: +20 Oxygen, Max level 3
+
+Rare:
+Oxygen III: +30 Oxygen, Max level 3
+
+Epic:
+Oxygen IV: +40 Oxygen, Max level 3
+
+Legendary:
+Oxygen V: +50 Oxygen, Max level 4
+
+
+
+Farming:
+Scaling Stat: Extra Crop Chance
+Scaling Max: 400% (Quadruple Drops)
+
+Common:
+Extra Crop Chance I: +8% per level, Max level 3
+
+Uncommon:
+Extra Crop Chance II: +16% per level, Max level 3
+
+Rare:
+Extra Crop Chance III: +24% per level, Max level 3
+
+Epic:
+Extra Crop Chance IV: +32% per level, Max level 3
+
+Legendary:
+Extra Crop Chance V: +40% per level, Max level 4
+
+
+
+Fishing:
+Scaling Stat: Sea Creature Chance
+Scaling Max: 25%
+
+Common:
+Sea Creature Chance I: +0.5% per level, Max level 3
+
+Uncommon:
+Sea Creature Chance II: +1.0% per level, Max level 3
+
+Rare:
+Sea Creature Chance III: +1.5% per level, Max level 3
+
+Epic:
+Sea Creature Chance IV: +2.0% per level, Max level 3
+
+Legendary:
+Sea Creature Chance V: +2.5% per level, Max level 4
+
+
+
+
+
+
