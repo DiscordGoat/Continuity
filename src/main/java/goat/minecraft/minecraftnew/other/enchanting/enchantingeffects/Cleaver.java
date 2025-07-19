@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -61,7 +62,7 @@ public class Cleaver implements Listener {
                 player.sendMessage(ChatColor.GREEN + "Your " + ChatColor.AQUA + "Cleaver " + feedLevel + ChatColor.GREEN +
                         " enchantment decapitated your enemy!");
                 int enchantmentLevel = CustomEnchantmentManager.getEnchantmentLevel(weapon, "Cleaver");
-                player.getInventory().getItemInMainHand().setDurability((short) (player.getInventory().getItemInMainHand().getDurability() +(2*enchantmentLevel)));
+                CustomDurabilityManager.getInstance().applyDamage(player, weapon, 2 * enchantmentLevel);
 
             }
             if(killed instanceof Skeleton){
@@ -69,7 +70,7 @@ public class Cleaver implements Listener {
                 player.sendMessage(ChatColor.GREEN + "Your " + ChatColor.AQUA + "Cleaver " + feedLevel + ChatColor.GREEN +
                         " enchantment decapitated your enemy!");
                 int enchantmentLevel = CustomEnchantmentManager.getEnchantmentLevel(weapon, "Cleaver");
-                player.getInventory().getItemInMainHand().setDurability((short) (player.getInventory().getItemInMainHand().getDurability() +(1*enchantmentLevel)));
+                CustomDurabilityManager.getInstance().applyDamage(player, weapon, enchantmentLevel);
 
             }
             if(killed instanceof Creeper){
@@ -77,7 +78,7 @@ public class Cleaver implements Listener {
                 player.sendMessage(ChatColor.GREEN + "Your " + ChatColor.AQUA + "Cleaver " + feedLevel + ChatColor.GREEN +
                         " enchantment decapitated your enemy!");
                 int enchantmentLevel = CustomEnchantmentManager.getEnchantmentLevel(weapon, "Cleaver");
-                player.getInventory().getItemInMainHand().setDurability((short) (player.getInventory().getItemInMainHand().getDurability() +(1*enchantmentLevel)));
+                CustomDurabilityManager.getInstance().applyDamage(player, weapon, enchantmentLevel);
 
             }
             if(killed instanceof WitherSkeleton){
@@ -85,7 +86,7 @@ public class Cleaver implements Listener {
                 player.sendMessage(ChatColor.GREEN + "Your " + ChatColor.AQUA + "Cleaver " + feedLevel + ChatColor.GREEN +
                         " enchantment decapitated your enemy!");
                 int enchantmentLevel = CustomEnchantmentManager.getEnchantmentLevel(weapon, "Cleaver");
-                player.getInventory().getItemInMainHand().setDurability((short) (player.getInventory().getItemInMainHand().getDurability() +(1*enchantmentLevel)));
+                CustomDurabilityManager.getInstance().applyDamage(player, weapon, enchantmentLevel);
 
             }
 

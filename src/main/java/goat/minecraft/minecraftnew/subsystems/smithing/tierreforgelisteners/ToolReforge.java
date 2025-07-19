@@ -7,15 +7,12 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Random;
-
 /**
  * Listener class to handle tool durability reduction based on reforge tiers.
  */
 public class ToolReforge implements Listener {
 
     private final ReforgeManager reforgeManager;
-    private final Random random;
 
     /**
      * Constructor to initialize the ReforgeManager.
@@ -24,7 +21,6 @@ public class ToolReforge implements Listener {
      */
     public ToolReforge(ReforgeManager reforgeManager) {
         this.reforgeManager = reforgeManager;
-        this.random = new Random();
     }
 
     /**
@@ -42,25 +38,8 @@ public class ToolReforge implements Listener {
             return;
         }
 
-        // Retrieve the reforge tier from the tool
-        int reforgeTierNumber = reforgeManager.getReforgeTier(tool);
-        ReforgeManager.ReforgeTier tier = reforgeManager.getReforgeTierByTier(reforgeTierNumber);
-
-        if (tier == null || tier.getToolDurabilityChance() == 0) {
-            return; // No durability chance improvement
-        }
-
-        int chance = tier.getToolDurabilityChance();
-
-        // Generate a random number between 1 and 100
-        int roll = random.nextInt(100) + 1;
-
-        if (roll <= chance) {
-            // Prevent durability loss
-            preventDurabilityLoss(tool);
-            // Optional: Notify the player
-        }
-        // Else, durability will decrease normally
+        // Listener retained for backwards compatibility; functionality handled in ReforgeManager
+        return;
     }
 
     /**

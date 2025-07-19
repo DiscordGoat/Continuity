@@ -9,6 +9,7 @@ import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -130,17 +131,11 @@ public class UltimateEnchantmentListener implements Listener {
         // If it's not an ore, consume 1 durability (Hammer usage).
         // (Check if the tool can lose durability)
 
-        if (consumeDurabilityIfNotOre && tool != null && tool.getType().getMaxDurability() > 0) {
-            short currentDamage = tool.getDurability();
-            int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.UNBREAKING); // Get Unbreaking level
-            double chanceToNotUseDurability = unbreakingLevel * 0.15; // 15% chance per level
-            if (Math.random() > chanceToNotUseDurability) { // Spend durability only if random value exceeds the chance
-                tool.setDurability((short) (currentDamage + 1));
-
-                // Optional: If the tool breaks, remove it
-                if (tool.getDurability() >= tool.getType().getMaxDurability()) {
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
-                }
+        if (consumeDurabilityIfNotOre && tool != null) {
+            int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.UNBREAKING);
+            double chanceToNotUseDurability = unbreakingLevel * 0.15;
+            if (Math.random() > chanceToNotUseDurability) {
+                CustomDurabilityManager.getInstance().applyDamage(player, tool, 1);
             }
         }
     }
@@ -170,17 +165,8 @@ public class UltimateEnchantmentListener implements Listener {
                 }
             }
 
-            // Now apply all that durability at once
-            short currentDamage = tool.getDurability();
-            short newDamage = (short) (currentDamage + totalDurabilityUsed);
-            tool.setDurability(newDamage);
-
-            // If the tool breaks, play break sound (and optionally remove the item)
-            if (tool.getDurability() >= tool.getType().getMaxDurability()) {
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1f, 1f);
-                // Optional: remove item from player’s hand
-                // player.getInventory().setItemInMainHand(null);
-            }
+            // Now apply all that durability at once using custom durability
+            CustomDurabilityManager.getInstance().applyDamage(player, tool, totalDurabilityUsed);
         }
 
         // 2) Break the blocks gradually, but SKIP any additional durability usage,
@@ -266,7 +252,7 @@ public class UltimateEnchantmentListener implements Listener {
                         }
 
                         // Break the block if it's not an ore
-                        breakBlock(player, relativeBlock, true);
+                        breakBlock(player, relativeBlock, false);
                         XPManager xpManager = new XPManager(plugin);
                         xpManager.addXP(player, "Mining", 1);
                     }
@@ -430,13 +416,13 @@ public class UltimateEnchantmentListener implements Listener {
         // 1) Break logs with durability usage, because they’re not ores.
         //    We also want them to drop items.
         //    This means "consumeDurabilityIfNotOre=true".
-        breakBlocksGradually(player, new ArrayList<>(visitedLogs), true);
+        breakBlocksGradually(player, new ArrayList<>(visitedLogs), false);
 
         // 2) Break leaves. Typically we do not give XP for leaves, nor skip tool durability,
         //    but you can set it how you like.
         //    For most “treecapitator” tools, you do use durability on leaves.
         //    If you do *not* want that, set consumeDurabilityIfNotOre = false.
-        breakBlocksGradually(player, new ArrayList<>(leavesToBreak), true);
+        breakBlocksGradually(player, new ArrayList<>(leavesToBreak), false);
     }
 
 
@@ -452,15 +438,17 @@ public class UltimateEnchantmentListener implements Listener {
         // Treecapitator branch
         // ---------------------------
         if (player.isSneaking() && hasTreecapEnchant(tool)) {
-            // Check tool durability: if damage is at or above 90% of max, abort enchantment
-            if (tool != null && tool.getType().getMaxDurability() > 0 &&
-                    tool.getDurability() >= tool.getType().getMaxDurability() * 0.9) {
+            CustomDurabilityManager durMgr = CustomDurabilityManager.getInstance();
+            int max = durMgr.getMaxDurability(tool);
+            int current = durMgr.getCurrentDurability(tool);
+            int cost = 25;
+            if (current <= cost) {
                 player.sendMessage(ChatColor.RED + "Your tool is too damaged to use Treecapitator!");
                 return;
             }
-            // If the broken block is wood, cancel normal drop and process connected wood
             if (isWoodBlock(brokenBlock.getType())) {
                 event.setCancelled(true);
+                durMgr.applyDamage(player, tool, cost);
                 breakConnectedWoodAndLeaves(player, brokenBlock);
             }
         }
@@ -482,17 +470,17 @@ public class UltimateEnchantmentListener implements Listener {
 
         // If the player is sneaking (holding Shift) and the tool has "Hammer"
         if (player.isSneaking() && hasHammerEnchant(tool)) {
-            // Check tool durability: if damage is at or above 90% of max, abort enchantment
-            if (tool != null && tool.getType().getMaxDurability() > 0 &&
-                    tool.getDurability() >= tool.getType().getMaxDurability() * 0.9) {
+            CustomDurabilityManager durMgr = CustomDurabilityManager.getInstance();
+            int cost = 4;
+            if (durMgr.getCurrentDurability(tool) <= cost) {
                 player.sendMessage(ChatColor.RED + "Your tool is too damaged to use Hammer enchant!");
                 return;
             }
-            // Break the center block normally (with durability consumption)
-            boolean isOre = false;
-            breakBlock(player, brokenBlock, !isOre);
+            durMgr.applyDamage(player, tool, cost);
 
-            // Determine break orientation and break surrounding 3×3 blocks
+            boolean isOre = false;
+            breakBlock(player, brokenBlock, false);
+
             BlockFace blockFace = event.getBlock().getFace(brokenBlock);
             boolean isVerticalBreak = (blockFace == BlockFace.UP || blockFace == BlockFace.DOWN);
             breakSurroundingBlocks(player, brokenBlock, isVerticalBreak);
