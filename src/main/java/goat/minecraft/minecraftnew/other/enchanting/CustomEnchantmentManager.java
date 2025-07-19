@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.enchanting;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
@@ -165,6 +166,7 @@ public class CustomEnchantmentManager {
 
         List<String> lore = meta.hasLore() ? meta.getLore() : new ArrayList<>();
 
+        boolean alreadyHad = hasEnchantment(item, enchantmentName);
         // Remove existing enchantment if present
         removeEnchantmentLore(lore, enchantment);
 
@@ -176,6 +178,13 @@ public class CustomEnchantmentManager {
         item.setItemMeta(meta);
         billItem.setAmount(billItem.getAmount() - 1);
         xpManager.addXP(player, "Smithing", 200);
+
+        if ("Unbreaking".equalsIgnoreCase(enchantmentName) && !alreadyHad) {
+            CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
+            if (mgr != null) {
+                mgr.addMaxDurabilityBonus(item, 100);
+            }
+        }
         return item;
     }
 
@@ -201,6 +210,7 @@ public class CustomEnchantmentManager {
 
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
 
+        boolean alreadyHad = hasEnchantment(item, enchantmentName);
         // Remove existing enchantment if present
         removeEnchantmentLore(lore, enchantment);
 
@@ -210,6 +220,13 @@ public class CustomEnchantmentManager {
 
         meta.setLore(lore);
         item.setItemMeta(meta);
+
+        if ("Unbreaking".equalsIgnoreCase(enchantmentName) && !alreadyHad) {
+            CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
+            if (mgr != null) {
+                mgr.addMaxDurabilityBonus(item, 100);
+            }
+        }
         return item;
     }
 

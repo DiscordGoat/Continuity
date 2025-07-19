@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.smithing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.subsystems.mining.MiningGemManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.other.enchanting.EnchantmentUtils;
@@ -727,6 +728,11 @@ public class AnvilRepair implements Listener {
             repairAmount = roll;
             xpManager.addXP(player, "Smithing", roll);
             anvilPitch = getAnvilPitch(roll);
+
+            CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
+            if (mgr != null) {
+                mgr.addMaxDurabilityBonus(repairee, 1);
+            }
         } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
             repairAmount = 100;
             xpManager.addXP(player, "Smithing", 100.0);
