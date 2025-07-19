@@ -729,9 +729,9 @@ public class AnvilRepair implements Listener {
             xpManager.addXP(player, "Smithing", roll);
             anvilPitch = getAnvilPitch(roll);
 
-            CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
-            if (mgr != null) {
-                mgr.addMaxDurabilityBonus(repairee, 1);
+            CustomDurabilityManager durMgr = CustomDurabilityManager.getInstance();
+            if (durMgr != null) {
+                durMgr.addMaxDurabilityBonus(repairee, 1);
             }
         } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
             repairAmount = 100;
@@ -1443,19 +1443,8 @@ public class AnvilRepair implements Listener {
         }
 
         // Apply the repair by reducing the damage
-        int newDamage = currentDamage - repairAmount;
-        if (newDamage < 0) {
-            newDamage = 0;
-        }
-
-        // Clone the original item to create a repaired version
-        ItemStack repairedItem = repairee.clone();
-        Damageable repairedMeta = (Damageable) repairedItem.getItemMeta();
-        repairedMeta.setDamage(newDamage);
-        repairedItem.setItemMeta((ItemMeta) repairedMeta);
-
-        // Update the item in slot 10 with the repaired item
-        inventory.setItem(10, repairedItem);
+        CustomDurabilityManager customDurabilityManager = CustomDurabilityManager.getInstance();
+        customDurabilityManager.setCustomDurability(repairee, customDurabilityManager.getCurrentDurability(repairee) + repairAmount, customDurabilityManager.getMaxDurability(repairee));
 
         // Subtract one from the repair material's stack
         billItem.setAmount(billItem.getAmount() - 1);

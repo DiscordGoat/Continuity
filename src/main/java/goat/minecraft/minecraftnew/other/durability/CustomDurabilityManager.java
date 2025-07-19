@@ -137,9 +137,10 @@ public class CustomDurabilityManager implements Listener {
      */
     private void ensureUnbreakingBonus(ItemStack item) {
         if (CustomEnchantmentManager.hasEnchantment(item, "Unbreaking")) {
+            int unbreakingLevel = CustomEnchantmentManager.getEnchantmentLevel(item, "Unbreaking");
             int currentBonus = getBonusDurability(item);
-            if (currentBonus < 100) {
-                addMaxDurabilityBonus(item, 100 - currentBonus);
+            if (currentBonus < 100 * unbreakingLevel) {
+                addMaxDurabilityBonus(item, (100 * unbreakingLevel) - currentBonus);
             }
         }
     }

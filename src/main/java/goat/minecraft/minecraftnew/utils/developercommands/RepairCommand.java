@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
