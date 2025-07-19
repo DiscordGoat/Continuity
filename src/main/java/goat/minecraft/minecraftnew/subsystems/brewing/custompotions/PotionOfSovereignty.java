@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.brewing.custompotions;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -73,7 +74,8 @@ public class PotionOfSovereignty implements Listener {
         if (!(event.getEntity() instanceof Player player)) {
             return;
         }
-        if(PotionManager.isActive("Potion of Sovereignty", player)) {
+        if(PotionManager.isActive("Potion of Sovereignty", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Sovereignty")) {
             UUID uuid = player.getUniqueId();
             if(!activeDeflections.containsKey(uuid)){
                 int maxDeflections = 5;

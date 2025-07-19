@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.fishing;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
@@ -48,7 +49,8 @@ public class TreasureChanceCommand implements CommandExecutor {
             petBonus = activePet.getLevel() * 0.1;
         }
 
-        double potionBonus = PotionManager.isActive("Potion of Liquid Luck", player) ? 20.0 : 0.0;
+        double potionBonus = PotionManager.isActive("Potion of Liquid Luck", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Liquid Luck") ? 20.0 : 0.0;
 
         int piracyLevel = CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Piracy");
         double piracyBonus = piracyLevel;

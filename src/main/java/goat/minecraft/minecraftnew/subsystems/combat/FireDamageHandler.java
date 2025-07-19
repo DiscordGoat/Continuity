@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -88,7 +89,8 @@ public class FireDamageHandler implements Listener {
         int level = player.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.FIRE_ASPECT);
         if (level > 0) {
             int amount = level * 5;
-            if (PotionManager.isActive("Potion of Solar Fury", player)) {
+            if (PotionManager.isActive("Potion of Solar Fury", player)
+                    && PotionEffectPreferences.isEnabled(player, "Potion of Solar Fury")) {
                 amount *= 2;
                 solarFuryTargets.put(target.getUniqueId(), true);
                 sendActionBar(player, ChatColor.GOLD + "Solar Fury: " + ChatColor.RED + "2x" + ChatColor.GOLD + " Fire Level!");

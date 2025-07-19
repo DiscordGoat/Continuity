@@ -167,6 +167,10 @@ commands:
     description: Toggle your custom enchantments on or off
     usage: /togglecustomenchantments
     default: true
+  togglepotioneffects:
+    description: Toggle your custom potion effects on or off
+    usage: /togglepotioneffects
+    default: true
   setskilllevel:
     description: Sets a player's skill level
     usage: /setskilllevel <player> <skill> <level>

@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.subsystems.gravedigging.corpses.CorpseEvent;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -119,7 +120,8 @@ public class Gravedigging implements Listener {
                 chance += activePet.getTrait().getValueForRarity(activePet.getTraitRarity());
             }
         }
-        if (PotionManager.isActive("Potion of Metal Detection", player)) {
+        if (PotionManager.isActive("Potion of Metal Detection", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Metal Detection")) {
             chance += 0.01;
             if (SkillTreeManager.getInstance().hasTalent(player, Talent.METAL_DETECTION_MASTERY)) {
                 int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.METAL_DETECTION_MASTERY);
