@@ -54,6 +54,7 @@ import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.commands.AuraCommand;
 import goat.minecraft.minecraftnew.utils.commands.ToggleCustomEnchantmentsCommand;
+import goat.minecraft.minecraftnew.utils.commands.StatsCommand;
 import goat.minecraft.minecraftnew.utils.commands.TogglePotionEffectsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
@@ -516,6 +517,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         SkillsCommand skillsCommand = new SkillsCommand(xpManager);
         this.getCommand("skills").setExecutor(skillsCommand);
         getServer().getPluginManager().registerEvents(skillsCommand, this);
+        StatsCommand statsCommand = new StatsCommand(this);
+        this.getCommand("stats").setExecutor(statsCommand);
+        getServer().getPluginManager().registerEvents(statsCommand, this);
         new SetSkillLevelCommand(this, xpManager);
 
         SkillTreeManager.init(this);
