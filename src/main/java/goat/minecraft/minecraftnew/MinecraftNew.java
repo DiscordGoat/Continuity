@@ -54,6 +54,7 @@ import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.commands.AuraCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
+import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.developercommands.AddTalentPointCommand;
 import goat.minecraft.minecraftnew.utils.devtools.*;
@@ -85,6 +86,7 @@ import goat.minecraft.minecraftnew.other.armorsets.ThunderforgeSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.LostLegionSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.CountershotSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.StriderSetBonus;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.other.skilltree.SwiftStepMasteryBonus;
 import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.other.structureblocks.GetStructureBlockCommand;
@@ -213,6 +215,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
         new SetDurabilityCommand(this);
+        CustomDurabilityManager.init(this);
+        new SetCustomDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
         PetManager petManager = PetManager.getInstance(this);
         this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));
