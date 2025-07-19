@@ -59,7 +59,12 @@ public class ApplyReforgeCommand implements CommandExecutor {
             return true;
         }
 
-        reforgeManager.applyReforge(item, tier);
+        ItemStack updated = reforgeManager.applyReforge(item, tier);
+        // Re-assign the updated item back to the player's hand to ensure
+        // the new display name and lore are visible immediately.
+        player.getInventory().setItemInMainHand(updated);
+        player.updateInventory();
+
         player.sendMessage(ChatColor.GREEN + "Applied " + args[1].toLowerCase() + " reforge.");
         return true;
     }
