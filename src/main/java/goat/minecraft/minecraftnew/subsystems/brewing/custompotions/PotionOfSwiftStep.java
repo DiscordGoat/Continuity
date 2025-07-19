@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.brewing.custompotions;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
@@ -52,7 +53,8 @@ public class PotionOfSwiftStep implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
 
-        if (PotionManager.isActive("Potion of Swift Step", player)) {
+        if (PotionManager.isActive("Potion of Swift Step", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Swift Step")) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 15 * 20, 1, false, false));
         }
     }

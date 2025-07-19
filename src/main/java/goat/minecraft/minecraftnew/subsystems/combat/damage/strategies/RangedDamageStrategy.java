@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.combat.damage.strategies;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.subsystems.combat.config.CombatConfiguration;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationContext;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationResult;
@@ -61,7 +62,8 @@ public class RangedDamageStrategy implements DamageCalculationStrategy {
             }
             
             // Apply Potion of Recurve bonus if active
-            if (PotionManager.isActive("Potion of Recurve", shooter)) {
+            if (PotionManager.isActive("Potion of Recurve", shooter)
+                    && PotionEffectPreferences.isEnabled(shooter, "Potion of Recurve")) {
                 double potionMultiplier = config.getRecurveDamageBonus();
                 finalDamage *= potionMultiplier;
                 

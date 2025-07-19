@@ -587,7 +587,6 @@ public class ItemRegistry {
                 getVerdantRelicEntropySeed(),
                 getVerdantRelicSunflareSeed(),
                 getVerdantRelicStarlightSeed(),
-                getVerdantRelicTideSeed(),
                 getDinosaurBones(),
                 getVerdantRelicShinyEmeraldSeed()
         );

@@ -12,6 +12,7 @@ import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
 import goat.minecraft.minecraftnew.utils.devtools.Speech;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -333,7 +334,6 @@ public class VillagerTradeManager implements Listener {
         clericPurchases.add(createTradeMap("SOVEREIGNTY", 1, 16, 2)); // Material
         clericPurchases.add(createTradeMap("LIQUID_LUCK", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("FOUNTAINS", 1, 32, 2)); // Material
-        clericPurchases.add(createTradeMap("RIPTIDE", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("SOLAR_FURY", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("NIGHT_VISION", 1, 32, 2)); // Material
         clericPurchases.add(createTradeMap("METAL_DETECTION", 1, 32, 2)); // Material
@@ -707,8 +707,6 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getLiquidLuckRecipePaper();
             case "FOUNTAINS":
                 return ItemRegistry.getFountainsRecipePaper();
-            case "RIPTIDE":
-                return ItemRegistry.getRiptideRecipePaper();
             case "SOLAR_FURY":
                 return ItemRegistry.getSolarFuryRecipePaper();
             case "NIGHT_VISION":
@@ -911,8 +909,6 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getSunflare();
             case "STARLIGHT":
                 return ItemRegistry.getStarlight();
-            case "TIDE":
-                return ItemRegistry.getTide();
             case "SHINY_EMERALD":
                 return ItemRegistry.getShinyEmerald();
             case "DINOSAUR_BONES":
@@ -1163,7 +1159,8 @@ public class VillagerTradeManager implements Listener {
         }
         // No discount from Bartering level
 
-        if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
+        if (PotionManager.isActive("Potion of Charismatic Bartering", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Charismatic Bartering")) {
             double discount = 0.20;
             if (SkillTreeManager.getInstance().hasTalent(player, Talent.CHARISMA_MASTERY)) {
                 int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.CHARISMA_MASTERY);
@@ -1597,7 +1594,8 @@ public class VillagerTradeManager implements Listener {
 
         // --- Bartering discount logic removed ---
 
-        if (PotionManager.isActive("Potion of Charismatic Bartering", player)) {
+        if (PotionManager.isActive("Potion of Charismatic Bartering", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Charismatic Bartering")) {
             double discount = 0.20;
             if (SkillTreeManager.getInstance().hasTalent(player, Talent.CHARISMA_MASTERY)) {
                 int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.CHARISMA_MASTERY);
