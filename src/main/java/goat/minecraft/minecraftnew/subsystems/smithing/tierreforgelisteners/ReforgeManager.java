@@ -161,7 +161,7 @@ public class ReforgeManager {
         } else if (isArmor) {
             lore.add(ChatColor.DARK_GRAY + "Damage Reduction: " + ChatColor.AQUA + targetTier.getArmorDamageReduction() + "%");
         } else if (isTool) {
-            lore.add(ChatColor.DARK_GRAY + "Max Durability: +" + ChatColor.AQUA + "+" + targetTier.getToolDurabilityBonus());
+            lore.add(ChatColor.DARK_GRAY + "Max Durability: " + ChatColor.AQUA + "+" + targetTier.getToolDurabilityBonus());
         } else if (isBow) {
             lore.add(ChatColor.DARK_GRAY + "Damage Increase: " + ChatColor.AQUA + targetTier.getBowDamageIncrease() + "%");
         }
@@ -260,6 +260,7 @@ public class ReforgeManager {
         lore.removeIf(line -> line.contains("Damage Increase:")
                 || line.contains("Damage Reduction:")
                 || line.contains("Chance to repair durability:")
+                || line.contains("Max Durability: ")
                 || line.contains("Max Durability: +"));
         meta.setLore(lore);
         item.setItemMeta(meta);
