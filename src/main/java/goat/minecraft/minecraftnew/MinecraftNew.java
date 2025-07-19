@@ -57,8 +57,6 @@ import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.developercommands.AddTalentPointCommand;
 import goat.minecraft.minecraftnew.utils.devtools.*;
-import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
-import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
 import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
 import goat.minecraft.minecraftnew.other.trinkets.SatchelManager;
@@ -212,9 +210,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         PlayerOxygenManager oxygenManager = new PlayerOxygenManager(this);
         this.getCommand("setplayeroxygen").setExecutor(new SetPlayerOxygenCommand());
 
-        // Initialize custom durability system
-        CustomDurabilityManager durabilityManager = CustomDurabilityManager.init(this);
-        this.getCommand("setcustomdurability").setExecutor(new SetCustomDurabilityCommand(durabilityManager));
+
 
         new SetDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
