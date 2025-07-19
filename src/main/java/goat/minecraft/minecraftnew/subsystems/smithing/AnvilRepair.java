@@ -12,6 +12,7 @@ import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -22,6 +23,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.Damageable;
@@ -640,6 +642,16 @@ public class AnvilRepair implements Listener {
             // Prevent moving items in other slots of the GUI
             if (slot < clickedInventory.getSize()) {
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void formatAfterClick(InventoryClickEvent event) {
+        if (event.getView().getTitle().equals("Anvil Repair")) {
+            ItemStack stack = event.getInventory().getItem(10);
+            if (stack != null) {
+                ItemLoreFormatter.formatLore(stack);
             }
         }
     }
