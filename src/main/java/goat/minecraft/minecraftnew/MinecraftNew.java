@@ -46,6 +46,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
+import goat.minecraft.minecraftnew.subsystems.smithing.MasterworkIngotListener;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
 
@@ -582,6 +583,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new BlessingArmorStandListener(), this);
         getServer().getPluginManager().registerEvents(new BlessedSetAuraListener(this, auraManager), this);
         getServer().getPluginManager().registerEvents(new AnvilRepair(MinecraftNew.getInstance()), this);
+        getServer().getPluginManager().registerEvents(new MasterworkIngotListener(), this);
         getServer().getPluginManager().registerEvents(new InventoryClickListener(), this);
         getServer().getPluginManager().registerEvents(new EpicEnderDragonFight(this), this);
         ForestSpiritManager manager = ForestSpiritManager.getInstance(this);
@@ -611,7 +613,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new WaterLogged(this), this);
 
         getServer().getPluginManager().registerEvents(new Feed(), this);
-        getServer().getPluginManager().registerEvents(new Merit(playerData), this);
+        Masterwork masterwork = new Masterwork();
+        Masterwork.setUpgradeSystemInstance(gemstoneUpgradeSystem);
+        getServer().getPluginManager().registerEvents(masterwork, this);
         getServer().getPluginManager().registerEvents(new Cleaver(), this);
         getServer().getPluginManager().registerEvents(new Forge(), this);
         getServer().getPluginManager().registerEvents(new Shear(), this);
@@ -631,7 +635,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.other.enchanting.enchantingeffects.Velocity(), this);
 
         CustomEnchantmentManager.registerEnchantment("Feed", 3, true);
-        CustomEnchantmentManager.registerEnchantment("Merit", 5, true);
+        CustomEnchantmentManager.registerEnchantment("Masterwork", 5, true);
         CustomEnchantmentManager.registerEnchantment("Cleaver", 5, true);
         CustomEnchantmentManager.registerEnchantment("Call of the Void", 5, true);
         CustomEnchantmentManager.registerEnchantment("Savant", 1, true);

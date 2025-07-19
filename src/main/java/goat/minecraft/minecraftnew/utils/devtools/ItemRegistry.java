@@ -2729,6 +2729,22 @@ public class ItemRegistry {
                 , true
         );
     }
+
+    /** Masterwork ingot used for repairing and empowering equipment. */
+    public static ItemStack getMasterworkIngot() {
+        return createCustomItem(
+                Material.IRON_INGOT,
+                ChatColor.GOLD + "Masterwork Ingot",
+                List.of(
+                        ChatColor.GRAY + "A rare ingot of exceptional quality.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a tool to fully repair it and gain +10 max durability.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
     public static ItemStack getSilkWorm() {
         return createCustomItem(
                 Material.STRING,
