@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.brewing.custompotions;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -53,7 +54,8 @@ public class PotionOfStrength implements Listener {
     public void onPlayerDamage(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player) {
             Player player = (Player) event.getDamager();
-            if (PotionManager.isActive("Potion of Strength", player)) {
+            if (PotionManager.isActive("Potion of Strength", player)
+                    && PotionEffectPreferences.isEnabled(player, "Potion of Strength")) {
                 double extraDamage = event.getDamage() * 0.25;
                 event.setDamage(event.getDamage() + extraDamage);
             }

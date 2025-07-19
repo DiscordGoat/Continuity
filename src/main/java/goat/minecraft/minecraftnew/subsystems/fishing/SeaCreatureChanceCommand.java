@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
@@ -51,7 +52,8 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
         int callOfTheVoidLevel = CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void");
         double callOfTheVoidBonus = callOfTheVoidLevel;
 
-        double fountainBonus = PotionManager.isActive("Potion of Fountains", player) ? 10.0 : 0.0;
+        double fountainBonus = PotionManager.isActive("Potion of Fountains", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Fountains") ? 10.0 : 0.0;
         double fountainMastery = SkillTreeManager.getInstance().hasTalent(player, Talent.FOUNTAIN_MASTERY) ? 5.0 : 0.0;
 
         CatalystManager catalystManager = CatalystManager.getInstance();

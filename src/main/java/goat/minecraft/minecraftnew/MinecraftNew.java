@@ -54,6 +54,7 @@ import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
 import goat.minecraft.minecraftnew.utils.commands.SkillsCommand;
 import goat.minecraft.minecraftnew.utils.commands.AuraCommand;
 import goat.minecraft.minecraftnew.utils.commands.ToggleCustomEnchantmentsCommand;
+import goat.minecraft.minecraftnew.utils.commands.TogglePotionEffectsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
@@ -250,7 +251,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PotionOfOxygenRecovery(), this);
         getServer().getPluginManager().registerEvents(new PotionOfSolarFury(), this);
         getServer().getPluginManager().registerEvents(new PotionOfNightVision(), this);
-        getServer().getPluginManager().registerEvents(new PotionOfRiptide(), this);
         getServer().getPluginManager().registerEvents(new PotionOfCharismaticBartering(), this);
         getServer().getPluginManager().registerEvents(new PotionOfMetalDetection(), this);
 
@@ -362,6 +362,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         CustomEnchantmentPreferences.init(this);
         getServer().getPluginManager().registerEvents(new CustomEnchantmentPreferences(), this);
+        PotionEffectPreferences.init(this);
+        getServer().getPluginManager().registerEvents(new PotionEffectPreferences(), this);
 
         forestryPetManager = new ForestryPetManager(this);
 
@@ -681,6 +683,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("finishbrews").setExecutor(new FinishBrewsCommand(this));
         getCommand("openvillagertrademenu").setExecutor(new OpenVillagerTradeMenuCommand(this));
         getCommand("togglecustomenchantments").setExecutor(new ToggleCustomEnchantmentsCommand(this));
+        getCommand("togglepotioneffects").setExecutor(new TogglePotionEffectsCommand(this));
         getCommand("stripreforge").setExecutor(new StripReforgeCommand());
         getCommand("applyreforge").setExecutor(new ApplyReforgeCommand());
 
@@ -801,6 +804,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             swiftStepMasteryBonus.removeAllBonuses();
         }
         CustomEnchantmentPreferences.saveAll();
+        PotionEffectPreferences.saveAll();
         BeaconPassivesGUI.saveAllPassives();
         if (CatalystManager.getInstance() != null) {
             CatalystManager.getInstance().shutdown();

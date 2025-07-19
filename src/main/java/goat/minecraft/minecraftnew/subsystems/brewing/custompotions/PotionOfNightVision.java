@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.brewing.custompotions;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -44,7 +45,8 @@ public class PotionOfNightVision implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
-        if (PotionManager.isActive("Potion of Night Vision", player)) {
+        if (PotionManager.isActive("Potion of Night Vision", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Night Vision")) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 15 * 20, 0, false, false));
         }
     }

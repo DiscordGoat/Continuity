@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -70,7 +71,8 @@ public class PlayerOxygenManager implements Listener {
     private int recoveryCounter = 0; // Counts seconds for recovery pacing
 
     private int getRecoveryIntervalSeconds(Player player) {
-        if (PotionManager.isActive("Potion of Oxygen Recovery", player)) {
+        if (PotionManager.isActive("Potion of Oxygen Recovery", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Oxygen Recovery")) {
             return 2;
         }
         return RECOVERY_INTERVAL_SECONDS;

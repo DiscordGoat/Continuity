@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.subsystems.combat.HostilityManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
@@ -117,7 +118,8 @@ public class FishingEvent implements Listener {
         int callOfTheVoidLevel = CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void");
         seaCreatureChance += callOfTheVoidLevel;
 
-        if(PotionManager.isActive("Potion of Fountains", player)){
+        if(PotionManager.isActive("Potion of Fountains", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Fountains")){
             seaCreatureChance += 10;
         }
         if(SkillTreeManager.getInstance().hasTalent(player, Talent.FOUNTAIN_MASTERY)){
@@ -514,7 +516,8 @@ public class FishingEvent implements Listener {
         if (petManager.getActivePet(player) != null && petManager.getActivePet(player).hasPerk(PetManager.PetPerk.TREASURE_HUNTER)) {
             treasureChance += (petLevel * 0.0010); // Scale to add 0.45 at pet level 100
         }
-        if(PotionManager.isActive("Potion of Liquid Luck", player)){
+        if(PotionManager.isActive("Potion of Liquid Luck", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Liquid Luck")){
             treasureChance += 0.1;
         }
 
