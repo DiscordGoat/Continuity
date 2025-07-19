@@ -132,6 +132,8 @@ public class UltimateEnchantmentListener implements Listener {
         // (Check if the tool can lose durability)
 
         if (consumeDurabilityIfNotOre && tool != null) {
+            CustomDurabilityManager.getInstance().applyDamage(player, tool, 1);
+
             int unbreakingLevel = tool.getEnchantmentLevel(Enchantment.UNBREAKING);
             double chanceToNotUseDurability = unbreakingLevel * 0.15;
             if (Math.random() > chanceToNotUseDurability) {
