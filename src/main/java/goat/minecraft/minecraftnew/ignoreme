@@ -4,19 +4,32 @@ Scaling Max: +1000s Potion Duration, +1000s Brewtime.
 
 Common:
 Redstone I: +10s Potion Duration, +10s Brewtime. Max level 10
+Optimal Brewing Stand Settings: -5s Brewtime, Max level 10
 
 Uncommon:
 Redstone II: +10s Potion Duration, +10s Brewtime. Max level 10
+Strength Mastery: +200s Strength Duration, Singularity to Potion Recipe, Max level 2
+Recurve Mastery: +200s Recurve Duration, Skeleton Skull to Potion Recipe, Max level 2
+Swift Step Mastery: +200s Swift Step Duration, Sugar to Potion Recipe, Max level 2
+Night Vision Mastery: +200s Night Vision Duration, Spider Eye to Potion Recipe, Max level 2
+Solar Fury Mastery: +200s Solar Fury Duration, Blaze Powder to Potion Recipe, Max level 2
 
 Rare:
 Redstone III: +20s Potion Duration, +20s Brewtime. Max level 10
+Triple Batch Upgrade: +10% Chance to brew 3 Potions, Max level 8
+Sovereignty Mastery: +200s Sovereignty Duration, Diamond to Potion Recipe, Max level 2
 
 Epic:
 Redstone IV: +30s Potion Duration, +30s Brewtime. Max level 10
+Liquid Luck Mastery: +200s Liquid Luck Duration, Enchanted Golden Apple to Potion Recipe, Max level 2
+Fountain Mastery: +200s Fountains Duration, Heart of the Sea to Potion Recipe, Max level 2
+Oxygen Mastery: +200s Oxygen Recovery Duration, Obsidian to Potion Recipe, Max level 2
+Metal Detection Mastery: +200s Metal Detection Duration, Zombie Skull to Potion Recipe, Max level 2
+Charisma Mastery: +200s Charismatic Bartering Duration, Gold Block to Potion Recipe, Max level 2
 
 Legendary:
 Redstone V: +30s Potion Duration, +30s Brewtime. Max level 10
-
+Eternal Elixir: +0.1% Chance to make Potion Duration Infinite, Max level 10
 
 
 Smithing:
