@@ -28,6 +28,7 @@ public class GemstoneUpgradeSystem implements Listener {
         // Row 2: Metalwork (slots 11-16) 
         METALWORK_IRON("Metalwork Iron", "Additional iron drops when mining iron ore", Material.IRON_ORE, 5, 11),
         METALWORK_GOLD("Metalwork Gold", "Additional gold drops when mining gold ore", Material.GOLD_ORE, 5, 12),
+        MASTERWORK("Masterwork", "Improves chance to find Masterwork Ingots", Material.IRON_INGOT, 4, 13),
         
         // Row 3: Utilities (slots 20-25)
         GEMSTONE_YIELD("Gemstone Yield", "Increases gemstone drop chance from eligible ores", Material.EMERALD, 6, 20),
@@ -437,6 +438,7 @@ public class GemstoneUpgradeSystem implements Listener {
             case DIAMOND_YIELD: return "💎"; // Diamond for diamond
             case METALWORK_IRON: return "⚒"; // Hammer for metalwork
             case METALWORK_GOLD: return "⚱"; // Urn for gold
+            case MASTERWORK: return "🛠"; // Hammer and wrench for masterwork
             case GEMSTONE_YIELD: return "✦"; // Four-pointed star for gemstones
             case MINING_XP_BOOST: return "📈"; // Chart for XP boost
             case OXYGEN: return "💨"; // Wind for oxygen
@@ -571,9 +573,10 @@ public class GemstoneUpgradeSystem implements Listener {
         // Glass pane separator at slot 10
         gui.setItem(10, createColoredPane(Material.YELLOW_STAINED_GLASS_PANE, ""));
         
-        // Metalwork upgrades in slots 11-12
+        // Metalwork upgrades in slots 11-13
         gui.setItem(11, createUpgradeItem(UpgradeType.METALWORK_IRON, tool, getUpgradeCost(UpgradeType.METALWORK_IRON), availablePower));
         gui.setItem(12, createUpgradeItem(UpgradeType.METALWORK_GOLD, tool, getUpgradeCost(UpgradeType.METALWORK_GOLD), availablePower));
+        gui.setItem(13, createUpgradeItem(UpgradeType.MASTERWORK, tool, getUpgradeCost(UpgradeType.MASTERWORK), availablePower));
         
         // Row 3: Utilities
         // Category icon at slot 18
