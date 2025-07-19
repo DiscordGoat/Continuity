@@ -27,11 +27,13 @@ public class CustomDurabilityManager implements Listener {
     private final JavaPlugin plugin;
     private final NamespacedKey currentKey;
     private final NamespacedKey maxKey;
+    private final NamespacedKey bonusKey;
 
     private CustomDurabilityManager(JavaPlugin plugin) {
         this.plugin = plugin;
         this.currentKey = new NamespacedKey(plugin, "custom_durability");
         this.maxKey = new NamespacedKey(plugin, "custom_max_durability");
+        this.bonusKey = new NamespacedKey(plugin, "custom_bonus_durability");
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -51,14 +53,16 @@ public class CustomDurabilityManager implements Listener {
     public void setCustomDurability(ItemStack item, int current, int max) {
         if (item == null || max <= 0) return;
         if (current < 0) current = 0;
-        if (current > max) current = max;
 
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
 
+        int bonus = getBonusDurability(item);
+        if (current > max) current = max;
+
         PersistentDataContainer data = meta.getPersistentDataContainer();
         data.set(currentKey, PersistentDataType.INTEGER, current);
-        data.set(maxKey, PersistentDataType.INTEGER, max);
+        data.set(maxKey, PersistentDataType.INTEGER, max - bonus);
         item.setItemMeta(meta);
 
         updateLore(item, current, max);
@@ -89,9 +93,40 @@ public class CustomDurabilityManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return item.getType().getMaxDurability();
         PersistentDataContainer data = meta.getPersistentDataContainer();
-        Integer value = data.get(maxKey, PersistentDataType.INTEGER);
-        if (value != null) return value;
-        return item.getType().getMaxDurability();
+        Integer base = data.get(maxKey, PersistentDataType.INTEGER);
+        int bonus = getBonusDurability(item);
+        int result = (base != null ? base : item.getType().getMaxDurability()) + bonus;
+        return result;
+    }
+
+    /**
+     * Returns the additional max durability applied from bonuses.
+     */
+    public int getBonusDurability(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return 0;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        Integer bonus = data.get(bonusKey, PersistentDataType.INTEGER);
+        return bonus != null ? bonus : 0;
+    }
+
+    /**
+     * Adds bonus max durability to the item and updates lore.
+     */
+    public void addMaxDurabilityBonus(ItemStack item, int amount) {
+        if (item == null || amount == 0) return;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        int bonus = getBonusDurability(item) + amount;
+        data.set(bonusKey, PersistentDataType.INTEGER, bonus);
+        item.setItemMeta(meta);
+
+        int current = getCurrentDurability(item);
+        int max = getMaxDurability(item);
+        if (current > max) current = max;
+        updateLore(item, current, max);
+        updateVanillaDamage(item, current, max);
     }
 
     /**
