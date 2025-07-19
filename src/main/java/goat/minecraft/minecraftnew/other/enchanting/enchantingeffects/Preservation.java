@@ -18,8 +18,8 @@ public class Preservation implements Listener {
         ItemStack item = event.getBrokenItem();
         Player player = event.getPlayer();
 
-        // Only proceed if the item has the "Preservation" enchantment
-        if (!CustomEnchantmentManager.hasEnchantment(item, "Preservation")) return;
+        // Only proceed if the item has the "Preservation" enchantment and it's enabled
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, item, "Preservation")) return;
 
         // Instead of letting the item break, "save" it by resetting its durability.
         item.setDurability((short) (item.getType().getMaxDurability() - 1));

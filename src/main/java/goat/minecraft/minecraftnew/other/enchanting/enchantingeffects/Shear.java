@@ -181,8 +181,8 @@ public class Shear implements Listener {
         Player player = (Player) damagerEntity;
         ItemStack weapon = player.getInventory().getItemInMainHand();
 
-        // Check if the weapon has the "Shear" enchantment
-        if (!CustomEnchantmentManager.hasEnchantment(weapon, "Shear")) {
+        // Check if the weapon has the "Shear" enchantment and it's enabled
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, weapon, "Shear")) {
             return;
         }
 

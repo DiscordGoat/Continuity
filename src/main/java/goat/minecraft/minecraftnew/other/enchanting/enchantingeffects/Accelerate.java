@@ -24,7 +24,7 @@ public class Accelerate implements Listener {
         if (!(event.getEntity() instanceof LivingEntity target)) return;
 
         ItemStack weapon = player.getInventory().getItemInMainHand();
-        if (!CustomEnchantmentManager.hasEnchantment(weapon, "Accelerate")) return;
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, weapon, "Accelerate")) return;
 
         int level = CustomEnchantmentManager.getEnchantmentLevel(weapon, "Accelerate");
         int stacks = level * 5;

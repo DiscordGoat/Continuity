@@ -36,8 +36,8 @@ public class Cleaver implements Listener {
         Player player = (Player) killer;
         ItemStack weapon = player.getInventory().getItemInMainHand();
 
-        // Check if the weapon has the "Feed" enchantment
-        if (!CustomEnchantmentManager.hasEnchantment(weapon, "Cleaver")) {
+        // Check if the weapon has the "Cleaver" enchantment and it's enabled
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, weapon, "Cleaver")) {
             return;
         }
 

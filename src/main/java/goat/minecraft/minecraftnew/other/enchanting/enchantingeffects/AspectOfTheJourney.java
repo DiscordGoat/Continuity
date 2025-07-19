@@ -40,8 +40,8 @@ public class AspectOfTheJourney implements Listener {
 
         ItemStack itemInHand = player.getInventory().getItemInMainHand();
 
-        // Check for the custom enchantment
-        if (!CustomEnchantmentManager.hasEnchantment(itemInHand, "Aspect of the Journey")) {
+        // Check for the custom enchantment and ensure it's enabled
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, itemInHand, "Aspect of the Journey")) {
             return;
         }
 

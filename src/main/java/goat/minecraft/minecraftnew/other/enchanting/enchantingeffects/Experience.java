@@ -24,8 +24,8 @@ public class Experience implements Listener {
 
         ItemStack weapon = killer.getInventory().getItemInMainHand();
 
-        // Check if the weapon has the "Experience" enchantment
-        if (!CustomEnchantmentManager.hasEnchantment(weapon, "Experience")) {
+        // Check if the weapon has the "Experience" enchantment and it's enabled
+        if (!CustomEnchantmentManager.isEnchantmentActive(killer, weapon, "Experience")) {
             return;
         }
 

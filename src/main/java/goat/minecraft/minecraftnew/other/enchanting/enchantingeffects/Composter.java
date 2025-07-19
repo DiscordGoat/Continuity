@@ -49,7 +49,7 @@ public class Composter implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         ItemStack tool = player.getInventory().getItemInMainHand();
-        if (!CustomEnchantmentManager.hasEnchantment(tool, "Composter")) {
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, tool, "Composter")) {
             return;
         }
         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Composter");

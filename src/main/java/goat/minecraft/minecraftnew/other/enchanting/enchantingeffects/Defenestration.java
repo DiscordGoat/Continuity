@@ -28,7 +28,7 @@ public class Defenestration implements Listener {
         if (!(arrow.getShooter() instanceof Player player)) return;
 
         ItemStack bow = player.getInventory().getItemInMainHand();
-        if (!CustomEnchantmentManager.hasEnchantment(bow, "Defenestration")) return;
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, bow, "Defenestration")) return;
 
         Block hit = event.getHitBlock();
         if (hit == null || !isGlass(hit.getType())) return;

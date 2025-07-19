@@ -36,8 +36,8 @@ public class Feed implements Listener {
         Player player = (Player) damagerEntity;
         ItemStack weapon = player.getInventory().getItemInMainHand();
 
-        // Check if the weapon has the "Feed" enchantment
-        if (!CustomEnchantmentManager.hasEnchantment(weapon, "Feed")) {
+        // Check if the weapon has the "Feed" enchantment and it's enabled
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, weapon, "Feed")) {
             return;
         }
 

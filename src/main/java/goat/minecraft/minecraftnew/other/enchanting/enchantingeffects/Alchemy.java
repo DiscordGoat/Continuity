@@ -65,8 +65,8 @@ public class Alchemy implements Listener {
         Player player = event.getPlayer();
         ItemStack tool = player.getInventory().getItemInMainHand();
 
-        // Check if the tool has the "Alchemy" enchantment
-        if (!CustomEnchantmentManager.hasEnchantment(tool, "Alchemy")) {
+        // Check if the tool has the "Alchemy" enchantment and it's enabled
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, tool, "Alchemy")) {
             return;
         }
         if (hasSilkTouch(player)) {

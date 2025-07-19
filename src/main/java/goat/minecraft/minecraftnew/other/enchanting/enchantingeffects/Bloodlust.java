@@ -43,7 +43,7 @@ public class Bloodlust implements Listener {
         if (killer == null) return;
 
         ItemStack weapon = killer.getInventory().getItemInMainHand();
-        if (!CustomEnchantmentManager.hasEnchantment(weapon, "Bloodlust")) return;
+        if (!CustomEnchantmentManager.isEnchantmentActive(killer, weapon, "Bloodlust")) return;
 
         UUID playerId = killer.getUniqueId();
         BloodlustData data = playerBloodlustMap.computeIfAbsent(playerId, k -> new BloodlustData());

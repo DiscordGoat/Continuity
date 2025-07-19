@@ -30,8 +30,8 @@ public class Stun implements Listener {
         Player shooter = (Player) arrow.getShooter();
         ItemStack bow = shooter.getInventory().getItemInMainHand();
 
-        // Check if the bow has the "Stun" enchantment
-        if (CustomEnchantmentManager.hasEnchantment(bow, "Stun")) {
+        // Check if the bow has the "Stun" enchantment and it's enabled
+        if (CustomEnchantmentManager.isEnchantmentActive(shooter, bow, "Stun")) {
             Entity hitEntity = event.getEntity();
             if (hitEntity instanceof LivingEntity) {
                 LivingEntity target = (LivingEntity) hitEntity;

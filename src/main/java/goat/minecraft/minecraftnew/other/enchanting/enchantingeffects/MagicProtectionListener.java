@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.other.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentPreferences;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,6 +33,9 @@ public class MagicProtectionListener implements Listener {
         }
 
         Player player = (Player) event.getEntity();
+        if (!CustomEnchantmentPreferences.isEnabled(player, "Physical Protection")) {
+            return;
+        }
 
         // Only proceed for specific types of damage; you can modify this check as needed
         if (event.getCause() != EntityDamageEvent.DamageCause.ENTITY_ATTACK) {
@@ -55,6 +59,10 @@ public class MagicProtectionListener implements Listener {
             if (CustomEnchantmentManager.hasEnchantment(armorPiece, "Physical Protection")) {
                 armorPieceCount++;
             }
+        }
+
+        if (armorPieceCount == 0) {
+            return;
         }
 
         // Calculate total damage reduction (1% per armor piece)

@@ -23,7 +23,7 @@ public class WaterAspect implements Listener {
         if (player == null) return;
 
         ItemStack weapon = player.getInventory().getItemInMainHand();
-        if (!CustomEnchantmentManager.hasEnchantment(weapon, "Water Aspect")) return;
+        if (!CustomEnchantmentManager.isEnchantmentActive(player, weapon, "Water Aspect")) return;
 
         int level = CustomEnchantmentManager.getEnchantmentLevel(weapon, "Water Aspect");
         if (level < 1) return;
