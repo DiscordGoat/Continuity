@@ -625,7 +625,7 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("MILK_BUCKET", 5, 15, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("EGG", 12, 12, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
-        farmerPurchases.add(createTradeMap("PESTICIDE", 1, 8, 4)); // Level 4 trade
+        farmerPurchases.add(createTradeMap("HONEY_BOTTLE", 1, 8, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5)); // Level 5 trade
 
         defaultConfig.set("FARMER.purchases", farmerPurchases);

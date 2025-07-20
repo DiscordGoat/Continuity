@@ -337,7 +337,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.POTION,
                 "Tropical Smoothie",
-                Arrays.asList("Mango", "Pineapple", "Milk Bucket"),
+                Arrays.asList("Lime", "Pineapple", "Milk Bucket"),
                 500,
                 CustomNutritionManager.FoodGroup.FRUITS,
                 false
@@ -353,9 +353,9 @@ public class CulinarySubsystem implements Listener {
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
-                Material.CHORUS_FRUIT,
+                Material.APPLE,
                 "Exotic Fruit Feast",
-                Arrays.asList("Chorus Fruit", "Melon", "Golden Apple", "Sugar"),
+                Arrays.asList("Golden Carrot", "Melon", "Golden Apple", "Sugar"),
                 1000,
                 CustomNutritionManager.FoodGroup.FRUITS,
                 true
@@ -372,7 +372,7 @@ public class CulinarySubsystem implements Listener {
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
-                Material.COOKIE,
+                Material.BOWL,
                 "Oatmeal",
                 Arrays.asList("Wheat", "Milk Bucket", "Sugar"),
                 500,
@@ -383,7 +383,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.BREAD,
                 "Pasta Bowl",
-                Arrays.asList("Wheat", "Egg", "Tomato"),
+                Arrays.asList("Wheat", "Egg"),
                 500,
                 CustomNutritionManager.FoodGroup.GRAINS,
                 false
@@ -392,7 +392,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.CAKE,
                 "Granola Bar",
-                Arrays.asList("Wheat", "Honey Bottle", "Nuts"),
+                Arrays.asList("Wheat", "Honey Bottle", "Chocolate"),
                 500,
                 CustomNutritionManager.FoodGroup.GRAINS,
                 false
@@ -410,7 +410,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.BREAD,
                 "Hearty Grain Feast",
-                Arrays.asList("Bread", "Pasta Bowl", "Oatmeal", "Butter"),
+                Arrays.asList("Bread", "Wheat", "Oatmeal", "Butter"),
                 1000,
                 CustomNutritionManager.FoodGroup.GRAINS,
                 true
@@ -420,7 +420,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.CARROT,
                 "Garden Salad",
-                Arrays.asList("Carrot", "Beetroot", "Lettuce"),
+                Arrays.asList("Carrot", "Beetroot", "Potato"),
                 500,
                 CustomNutritionManager.FoodGroup.VEGGIES,
                 false
@@ -438,35 +438,17 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.CARROT,
                 "Veggie Stir Fry",
-                Arrays.asList("Carrot", "Potato", "Seaweed"),
+                Arrays.asList("Carrot", "Potato", "Dried Kelp"),
                 500,
                 CustomNutritionManager.FoodGroup.VEGGIES,
                 false
-        ));
-        recipeRegistry.add(new CulinaryRecipe(
-                Material.PAPER,
-                Material.CARROT,
-                "Steamed Greens",
-                Arrays.asList("Broccoli", "Spinach", "Carrot"),
-                500,
-                CustomNutritionManager.FoodGroup.VEGGIES,
-                false
-        ));
-        recipeRegistry.add(new CulinaryRecipe(
-                Material.PAPER,
-                Material.CARROT,
-                "Farmers Feast",
-                Arrays.asList("Garden Salad", "Roasted Veggies", "Baked Potato", "Mushroom"),
-                1000,
-                CustomNutritionManager.FoodGroup.VEGGIES,
-                true
         ));
 
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKIE,
                 "Chocolate Cake",
-                Arrays.asList("Cocoa Beans", "Sugar", "Egg", "Milk Bucket"),
+                Arrays.asList("Cocoa Beans", "Sugar", "Egg", "Milk Bucket", "Wheat", "Chocolate"),
                 500,
                 CustomNutritionManager.FoodGroup.SUGARS,
                 false
@@ -497,15 +479,6 @@ public class CulinarySubsystem implements Listener {
                 500,
                 CustomNutritionManager.FoodGroup.SUGARS,
                 false
-        ));
-        recipeRegistry.add(new CulinaryRecipe(
-                Material.PAPER,
-                Material.CAKE,
-                "Dessert Feast",
-                Arrays.asList("Chocolate Cake", "Cookie", "Ice Cream Cone", "Sugar"),
-                1000,
-                CustomNutritionManager.FoodGroup.SUGARS,
-                true
         ));
     }
 

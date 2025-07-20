@@ -19,6 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
@@ -150,10 +151,10 @@ public class CustomNutritionManager implements Listener {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SATURATION, 40, 0, true, false, false));
         }
         if (map.getOrDefault(FoodGroup.PROTEINS,0) >= 50) {
-            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.INCREASE_DAMAGE, 40, 0, true, false, false));
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.STRENGTH, 40, 0, true, false, false));
         }
         if (map.getOrDefault(FoodGroup.VEGGIES,0) >= 50) {
-            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.DAMAGE_RESISTANCE, 40, 0, true, false, false));
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.RESISTANCE, 40, 0, true, false, false));
         }
         if (map.getOrDefault(FoodGroup.SUGARS,0) >= 50) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SPEED, 40, 0, true, false, false));
@@ -175,7 +176,7 @@ public class CustomNutritionManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if(meta != null){
             meta.setDisplayName(name);
-            meta.setLore(List.of(ChatColor.GRAY + amount + "/100"));
+            meta.setLore(List.of("" + ChatColor.GRAY + amount + "/100"));
             item.setItemMeta(meta);
         }
         return item;
