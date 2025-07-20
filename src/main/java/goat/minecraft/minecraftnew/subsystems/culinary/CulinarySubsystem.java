@@ -785,7 +785,6 @@ public class CulinarySubsystem implements Listener {
         session.ingredientSpinTasks.clear();
         session.ingredientLabelStands.clear();
         session.placedIngredientItems.clear();
-
         session.finalized = true;
 
         int cookTime = session.recipe.getIngredients().size() * 10;
@@ -1040,6 +1039,12 @@ public class CulinarySubsystem implements Listener {
                 session.mainArmorStandUUID = main.getUniqueId();
             }
 
+            session.placedIngredientItems.putAll(placed);
+
+            summonSessionStands(session);
+            if (session.cookTimeRemaining > 0) {
+                resumeCooking(session);
+            }
             activeRecipeSessions.put(key, session);
         }
         logger.info("[CulinarySubsystem] Loaded " + activeRecipeSessions.size() + " cooking session(s).");
