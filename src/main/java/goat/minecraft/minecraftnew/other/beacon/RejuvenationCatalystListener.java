@@ -2,14 +2,9 @@ package goat.minecraft.minecraftnew.other.beacon;
 
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * Handles the effects of the Catalyst of Rejuvenation.
@@ -19,7 +14,6 @@ import java.util.UUID;
 public class RejuvenationCatalystListener {
 
     private final JavaPlugin plugin;
-    private final Map<UUID, Map<Integer, Integer>> repairTargets = new HashMap<>();
 
     public RejuvenationCatalystListener(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -41,8 +35,6 @@ public class RejuvenationCatalystListener {
                             int tier = manager.getCatalystTier(catalyst);
                             applyRejuvenation(player, tier);
                         }
-                    } else {
-                        repairTargets.remove(player.getUniqueId());
                     }
                 }
             }
@@ -65,59 +57,5 @@ public class RejuvenationCatalystListener {
         int currentOxy = oxygenManager.getPlayerOxygen(player);
         int maxOxy = oxygenManager.calculateInitialOxygen(player);
         oxygenManager.setPlayerOxygenLevel(player, Math.min(currentOxy + 1, maxOxy));
-
-        handleDurability(player);
-    }
-
-    private void handleDurability(Player player) {
-        UUID uuid = player.getUniqueId();
-        Map<Integer, Integer> targets = repairTargets.computeIfAbsent(uuid, k -> new HashMap<>());
-
-        for (int slot = 0; slot < player.getInventory().getSize(); slot++) {
-            ItemStack item = player.getInventory().getItem(slot);
-            if (item == null) {
-                targets.remove(slot);
-                continue;
-            }
-            int maxDur = item.getType().getMaxDurability();
-            if (maxDur <= 0) {
-                targets.remove(slot);
-                continue;
-            }
-            if (!(item.getItemMeta() instanceof Damageable)) {
-                targets.remove(slot);
-                continue;
-            }
-
-            Damageable meta = (Damageable) item.getItemMeta();
-            int damage = meta.getDamage();
-            if (damage <= 0) {
-                targets.remove(slot);
-                continue;
-            }
-
-            if (maxDur <= 100) {
-                meta.setDamage(0);
-                item.setItemMeta(meta);
-                targets.remove(slot);
-                continue;
-            }
-
-            int target = targets.computeIfAbsent(slot, s -> damage - (int) Math.floor(damage * 0.25));
-            if (damage < target) {
-                target = damage - (int) Math.floor(damage * 0.25);
-                targets.put(slot, target);
-            }
-            if (damage > target) {
-                meta.setDamage(Math.max(damage - 1, target));
-                item.setItemMeta(meta);
-            } else {
-                targets.remove(slot);
-            }
-        }
-
-        if (targets.isEmpty()) {
-            repairTargets.remove(uuid);
-        }
     }
 }

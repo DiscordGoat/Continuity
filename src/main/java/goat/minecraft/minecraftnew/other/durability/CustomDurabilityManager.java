@@ -1,16 +1,19 @@
 package goat.minecraft.minecraftnew.other.durability;
 
+import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.enchantments.Enchantment;
-import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -154,10 +157,28 @@ public class CustomDurabilityManager implements Listener {
 
         int current = getCurrentDurability(item);
         int max = getMaxDurability(item);
-        current -= amount;
-        if (current < 0) current = 0;
-        setCustomDurability(item, current, max);
-        if (current == 0 && player != null) {
+        int updated = current - amount;
+        if (updated < 0) updated = 0;
+
+        boolean preserved = false;
+        if (updated == 0 && player != null
+                && CustomEnchantmentManager.isEnchantmentActive(player, item, "Preservation")) {
+            preserved = true;
+            updated = Math.max(max - 1, 1);
+        }
+
+        setCustomDurability(item, updated, max);
+
+        if (preserved && player != null) {
+            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+            player.sendMessage(ChatColor.GREEN + "Your " + item.getType().toString() + " was saved from breaking!");
+            removeIfWorn(player, item);
+            if (!addToBackpack(player, item)) {
+                if (!addToEnderChest(player, item)) {
+                    player.getWorld().dropItemNaturally(player.getLocation(), item);
+                }
+            }
+        } else if (updated == 0 && player != null) {
             item.setAmount(0);
         }
     }
@@ -235,5 +256,38 @@ public class CustomDurabilityManager implements Listener {
             }
             CustomEnchantmentManager.addEnchantment(item, "Unbreaking", level);
         }
+    }
+
+    private void removeIfWorn(Player player, ItemStack item) {
+        PlayerInventory inv = player.getInventory();
+        if (inv.getHelmet() != null && inv.getHelmet().equals(item)) {
+            inv.setHelmet(null);
+        } else if (inv.getChestplate() != null && inv.getChestplate().equals(item)) {
+            inv.setChestplate(null);
+        } else if (inv.getLeggings() != null && inv.getLeggings().equals(item)) {
+            inv.setLeggings(null);
+        } else if (inv.getBoots() != null && inv.getBoots().equals(item)) {
+            inv.setBoots(null);
+        }
+    }
+
+    private boolean addToBackpack(Player player, ItemStack item) {
+        ItemStack clone = item.clone();
+        item.setAmount(0);
+        boolean success = CustomBundleGUI.getInstance().addItemToBackpack(player, clone);
+        if (!success) {
+            item.setAmount(1);
+        }
+        return success;
+    }
+
+    private boolean addToEnderChest(Player player, ItemStack item) {
+        ItemStack clone = item.clone();
+        item.setAmount(0);
+        if (player.getEnderChest().addItem(clone).isEmpty()) {
+            return true;
+        }
+        item.setAmount(1);
+        return false;
     }
 }
