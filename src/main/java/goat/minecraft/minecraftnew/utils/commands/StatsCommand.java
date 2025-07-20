@@ -1,8 +1,6 @@
 package goat.minecraft.minecraftnew.utils.commands;
 
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
-import goat.minecraft.minecraftnew.utils.stats.PlayerResistanceManager; // ensure loaded
-import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;

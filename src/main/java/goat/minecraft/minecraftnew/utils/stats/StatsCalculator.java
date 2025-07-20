@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
+import goat.minecraft.minecraftnew.other.resistance.PlayerResistanceManager;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -290,13 +291,13 @@ public class StatsCalculator {
     public double getRepairAmount(Player player) {
         double amount = 25.0; // base
         if (SkillTreeManager.getInstance() != null) {
-            int l1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_MASTERY_I);
+            int l1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_ONE);
             amount += l1 * 1;
-            int l2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_MASTERY_II);
+            int l2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_TWO);
             amount += l2 * 2;
-            int l3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_MASTERY_III);
+            int l3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_THREE);
             amount += l3 * 3;
-            int l4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_MASTERY_IV);
+            int l4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_FOUR);
             amount += l4 * 4;
         }
         return amount;

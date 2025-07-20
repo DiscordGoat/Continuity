@@ -32,7 +32,45 @@ Redstone V: +30s Potion Duration, +30s Brewtime. Max level 10
 Eternal Elixir: +0.1% Chance to make Potion Duration Infinite, Max level 10
 
 
+
 Smithing:
+(Smithing Changes:
+New Anvil button: Reforge.
+Reforge button attempts to reforge the item to the next Tier reforge, provided the previous Tier is present, and the minimum amount of mats are in the billitem slot.
+Reforge attempts cost materials equal to the reforge tier being rolled.
+Base roll success chance is 0%. New Talents are required to increase this chance and decrease the mats count.
+Base mats amount is 64.
+
+mats:
+Common: Requires Cobblestone
+Uncommon: Requires Iron
+Rare: Requires Gold
+Epic: Requires Amethyst
+Legendary: Requires Diamond
+
+clicking the Reforge button checks:
+isSword/Tool/Armor/Bow: else return;
+isNotMaxReforgeTier: else return;
+matsPresent: else return;
+if(roll = success){
+subtract mats
+update reforge
+grant 2000 Smithing xp
+play victory sound and particles
+close inventory
+}else{
+subtract mats
+damage item by 50% its durability
+degrade anvil quality
+close inventory
+}
+Smithing Talents can increase the odds of a successful roll for Reforging, or reducing the Mats Count required.
+example: with no talents, reforging a sword to a sturdy sword (tier 1 reforge) costs 64 cobblestone and has a 0% chance of success.
+the previous reforge smithing items (sold by armorsmiths, weaponsmiths and toolsmiths) will be removed from the trades.
+For Clarification purposes, the Alloy perks can all activate at the same time, if RNG allows, but all are active if purchased. this means that the player has a 30% chance to gain SOME max durability, but only a 6% chance of it being
+a specific amount.
+)
+
 Scaling Stat: Repair Amount, Repair Quality
 Scaling Max: 75 Repair Amount, +50 Repair Quality
 Base Repair Amount: 25
@@ -41,22 +79,42 @@ Base Repair Quality: 0
 Common:
 Repair Amount I: +3 Repair Amount, Max level 3
 Quality Materials I: +1 Repair Quality, Max level 3
+Alloy I: +1.5% Chance to add +1 Max Durability, Max level 4
+Novice Smith: +25% Common Reforge Success Chance, Max level 3
+Scraps I: -3 Mats Cost from any Reforge, Max level 3
+Novice Foundations: -25% Chance of Degrading Anvil when failing a Common Reforge, Max level 4
 
 Uncommon:
 Repair Amount II: +4 Repair Amount, Max level 3
 Quality Materials II: +2 Repair Quality, Max level 3
+Alloy II: +1.5% Chance to add +2 Max Durability, Max level 4
+Apprentice Smith: +25% Uncommon Reforge Success Chance, Max level 3
+Scraps II: -3 Mats Cost from any Reforge, Max level 3
+Apprentice Foundations: -25% Chance of Degrading Anvil when failing an Uncommon Reforge, Max level 4
 
 Rare:
 Repair Amount III: +5 Repair Amount, Max level 3
 Quality Materials III: +3 Repair Quality, Max level 3
+Alloy III: +1.5% Chance to add +3 Max Durability, Max level 4
+Journeyman Smith: +25% Rare Reforge Success Chance, Max level 3
+Scraps III: -3 Mats Cost from any Reforge, Max level 3
+Journeyman Foundations: -25% Chance of Degrading Anvil when failing a Rare Reforge, Max level 4
 
 Epic:
 Repair Amount IV: +6 Repair Amount, Max level 3
 Quality Materials IV: +4 Repair Quality, Max level 3
+Alloy IV: +1.5% Chance to add +4 Max Durability, Max level 4
+Expert Smith: +25% Epic Reforge Success Chance, Max level 3
+Scraps IV: -3 Mats Cost from any Reforge, Max level 3
+Expert Foundations: -25% Chance of Degrading Anvil when failing an Epic Reforge, Max level 4
 
 Legendary:
 Repair Amount V: +7 Repair Amount, Max level 3
 Quality Materials V: +5 Repair Quality, Max level 4
+Alloy V: +0.5% Chance to add +100 Max Durability, Max level 3
+Master Smith: +25% Legendary Reforge Success Chance, Max level 3
+Scraps V: -3 Mats Cost from any Reforge, Max level 3
+Master Foundations: -25% Chance of Degrading Anvil when failing a Legendary Reforge, Max level 4
 
 
 

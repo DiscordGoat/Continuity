@@ -35,13 +35,6 @@ public class PlayerResistanceManager {
         return instance;
     }
 
-    public static PlayerResistanceManager getInstance(JavaPlugin pluginIfAbsent) {
-        if (instance == null) {
-            instance = new PlayerResistanceManager(pluginIfAbsent);
-        }
-        return instance;
-    }
-
     public double computeTotalResistance(Player player) {
         double reduction = 0.0;
 
@@ -57,7 +50,7 @@ public class PlayerResistanceManager {
         }
 
         // Potion effect
-        PotionEffect effect = player.getPotionEffect(PotionEffectType.DAMAGE_RESISTANCE);
+        PotionEffect effect = player.getPotionEffect(PotionEffectType.RESISTANCE);
         if (effect != null) {
             reduction += (effect.getAmplifier() + 1) * 20.0;
         }
