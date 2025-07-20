@@ -29,7 +29,8 @@ Charisma Mastery: +200s Charismatic Bartering Duration, Gold Block to Potion Rec
 
 Legendary:
 Redstone V: +30s Potion Duration, +30s Brewtime. Max level 10
-Eternal Elixir: +0.1% Chance to make Potion Duration Infinite, Max level 10
+Nutrition Mastery: +200s Optimal Eating Duration, Sea Salt added to Potion Recipe, Max level 2
+Eternal Elixir: +0.25% Chance to make Potion Duration Infinite, Max level 8
 
 
 
@@ -123,15 +124,20 @@ Scaling Stat: Bonus Saturation
 Scaling Max: +5 Bonus Saturation.
 
 Common:
-Satiation Mastery: +1 Bonus Saturation, Max level 5
-
+Satiation Mastery I: +1 Bonus Saturation, Max level 1
+Banquet: +1% Chance to grant Saturation Surge from Culinary Delights, Max level 10
 Uncommon:
+Satiation Mastery II: +1 Bonus Saturation, Max level 1
+Portal Pantry: +10% Chance to automatically grab the next needed ingredient from nearby shelves, Max level 10
 
 Rare:
-
+Satiation Mastery III: +1 Bonus Saturation, Max level 1
+Its Raw!:
 Epic:
+Satiation Mastery IV: +1 Bonus Saturation, Max level 1
 
 Legendary:
+Satiation Mastery V: +1 Bonus Saturation, Max level 1
 
 
 

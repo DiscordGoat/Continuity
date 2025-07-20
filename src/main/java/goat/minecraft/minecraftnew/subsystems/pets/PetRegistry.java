@@ -324,7 +324,7 @@ public class PetRegistry {
                 "Reuben",
                 PetManager.Rarity.UNCOMMON,
                 100,
-                Particle.VILLAGER_HAPPY,
+                Particle.HAPPY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.MICROWAVE, PetManager.PetPerk.TRASH_CAN)
         ));
         registry.put("Mooshroom", new PetDefinition(

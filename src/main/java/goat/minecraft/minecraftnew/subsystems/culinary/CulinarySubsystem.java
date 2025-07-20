@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.*;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.block.Action;
@@ -128,28 +129,28 @@ public class CulinarySubsystem implements Listener {
                 Material.HONEY_BOTTLE,
                 "Tidal Shot",
                 Arrays.asList("Rum", "Gunpowder", "Ice"),
-                5000
+                1000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,
                 "Coral Cooler",
                 Arrays.asList("Rum", "Ice", "Prismarine Shard", "Sea Pickle"),
-                5000
+                1000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,
                 "Prismarita",
                 Arrays.asList("Rum", "Lime", "Sugar", "Ice", "Prismarine Shard"),
-                5000
+                1000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,
                 "Kelp Mojito",
                 Arrays.asList("Rum", "Lime", "Sugar", "Ice", "Kelp"),
-                5000
+                1000
         ));
         // (Water Breathing)
         // Bananas Split is bartender-only
@@ -158,21 +159,21 @@ public class CulinarySubsystem implements Listener {
                 Material.MELON_SLICE,  // stand-in for the banana split bowl
                 "Banana Split",
                 Arrays.asList("Banana", "Snowball", "Chocolate", "Milk Bucket"),
-                5000
+                1000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,  // stand-in for the banana split bowl
                 "Pina Colada",
                 Arrays.asList("Milk Bucket", "Rum", "Ice", "Pineapple", "Coconut"),
-                5000
+                1000
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.PUMPKIN_PIE,       // stand-in for the Key Lime Pie slice
                 "Key Lime Pie",
                 Arrays.asList("Lime", "Sugar", "Egg", "Milk Bucket"),
-                5000
+                1000
         ));
 
     }
@@ -221,28 +222,28 @@ public class CulinarySubsystem implements Listener {
                 Material.PUMPKIN_PIE,
                 "Sweet Feast",
                 Arrays.asList("Sugar", "Pumpkin", "Egg", "Wheat"),
-                5000
+                1000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.CARROT,
                 "Vegetarian Feast",
                 Arrays.asList("Carrot", "Potato", "Golden Carrot", "Beetroot"),
-                5000
+                1000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKED_RABBIT,
                 "Meatlovers Feast",
                 Arrays.asList("Cooked Beef", "Cooked Chicken", "Butter", "Sea Salt", "Cooked Mutton", "Cooked Rabbit", "Cooked Porkchop"),
-                5000
+                1000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.DRIED_KELP,
                 "Seafood Feast",
                 Arrays.asList("Dried Kelp Block", "Cod", "Salmon", "Tropical Fish", "Calamari"),
-                5000
+                1000
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
