@@ -320,6 +320,13 @@ public class PetRegistry {
                 Particle.ANGRY_VILLAGER,
                 Arrays.asList(PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.SUPERIOR_ENDURANCE, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.COMPOSTER)
         ));
+        registry.put("Reuben", new PetDefinition(
+                "Reuben",
+                PetManager.Rarity.UNCOMMON,
+                100,
+                Particle.VILLAGER_HAPPY,
+                Arrays.asList(PetManager.PetPerk.MICROWAVE, PetManager.PetPerk.TRASH_CAN)
+        ));
         registry.put("Mooshroom", new PetDefinition(
                 "Mooshroom",
                 PetManager.Rarity.EPIC,
