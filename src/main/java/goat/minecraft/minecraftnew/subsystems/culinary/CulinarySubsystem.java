@@ -294,6 +294,9 @@ public class CulinarySubsystem implements Listener {
             for (BukkitTask t : session.ingredientSpinTasks.values()) {
                 if (t != null) t.cancel();
             }
+            if (session.particleTask != null) {
+                session.particleTask.cancel();
+            }
         }
         saveAllSessions();
         activeRecipeSessions.clear();
@@ -520,7 +523,6 @@ public class CulinarySubsystem implements Listener {
                     activeRecipeSessions.put(locKey, session);
 
                     consumeItem(player, hand, 1);
-                    player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_PLACE, 1.0f, 1.0f);
                     Location mainLoc = tableLoc.clone().add(0.5, 0.7, 0.5);
                     UUID mainStand = spawnInvisibleArmorStand(
                             mainLoc,
@@ -541,6 +543,11 @@ public class CulinarySubsystem implements Listener {
             // -- 2) Placing an ingredient on an ACTIVE recipe session --
             if (activeRecipeSessions.containsKey(locKey)) {
                 RecipeSession session = activeRecipeSessions.get(locKey);
+                if (session.finalized) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + "This recipe is already cooking!");
+                    return;
+                }
                 CulinaryRecipe recipe = session.recipe;
                 // Identify if the held item is a needed ingredient and hasn't been placed yet
                 String ingredientName = matchIngredient(hand, recipe.getIngredients(), session.placedIngredientsStands.keySet());
@@ -590,12 +597,14 @@ public class CulinarySubsystem implements Listener {
         else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (activeRecipeSessions.containsKey(locKey)) {
                 RecipeSession session = activeRecipeSessions.get(locKey);
-                if (session.placedIngredientsStands.size() == session.recipe.getIngredients().size()) {
+                if (session.finalized) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.RED + "This recipe is already cooking!");
+                } else if (session.placedIngredientsStands.size() == session.recipe.getIngredients().size()) {
                     event.setCancelled(true);
                     logger.info("[CulinarySubsystem] Finalizing recipe " + session.recipe.getName());
                     startCooking(session, player);
                     player.getWorld().spawnParticle(Particle.SMOKE, player.getLocation(), 50, 0.5, 0.5, 0.5, 0.1);
-                    player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
                 } else {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "Not all ingredients are placed yet!");
@@ -754,6 +763,7 @@ public class CulinarySubsystem implements Listener {
     }
 
     private void startCooking(RecipeSession session, Player player) {
+        session.finalized = true;
         // Clean up ingredient stands and tasks
         for (UUID u : session.placedIngredientsStands.values()) {
             removeEntityByUUID(u);
@@ -799,6 +809,8 @@ public class CulinarySubsystem implements Listener {
         timer.setCustomName(ChatColor.YELLOW + "" + session.cookTimeRemaining + "s");
         session.timerStandUUID = timer.getUniqueId();
 
+        session.particleTask = startCookingParticles(session.tableLocation);
+
         session.cookTask = new BukkitRunnable() {
             @Override
             public void run() {
@@ -831,6 +843,10 @@ public class CulinarySubsystem implements Listener {
         }
         for (UUID u : session.ingredientLabelStands.values()) {
             removeEntityByUUID(u);
+        }
+
+        if (session.particleTask != null) {
+            session.particleTask.cancel();
         }
 
         removeEntityByUUID(session.timerStandUUID);
@@ -938,6 +954,17 @@ public class CulinarySubsystem implements Listener {
             }
         }.runTaskTimer(plugin, 1, 1);
     }
+
+    private BukkitTask startCookingParticles(Location loc) {
+        return new BukkitRunnable() {
+            @Override
+            public void run() {
+                loc.getWorld().spawnParticle(Particle.CAMPFIRE_COSY_SMOKE,
+                        loc.clone().add(0.5, 1.0, 0.5),
+                        4, 0.2, 0.2, 0.2, 0.01);
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+    }
     public List<ItemStack> getOceanicRecipeItems() {
         List<ItemStack> items = new ArrayList<>();
         for (CulinaryRecipe r : oceanicRecipes) {
@@ -986,6 +1013,7 @@ public class CulinarySubsystem implements Listener {
         for (String key : dataConfig.getKeys(false)) {
             String recipeName = dataConfig.getString(key + ".recipe", null);
             int timeLeft = dataConfig.getInt(key + ".timeLeft", 0);
+            boolean finalized = dataConfig.getBoolean(key + ".finalized", false);
             ConfigurationSection ingSec = dataConfig.getConfigurationSection(key + ".placedIngredients");
             Map<String, ItemStack> placed = new HashMap<>();
             if (ingSec != null) {
@@ -999,9 +1027,14 @@ public class CulinarySubsystem implements Listener {
             Location loc = fromLocKey(key);
             RecipeSession session = new RecipeSession(key, recipe, loc);
             session.cookTimeRemaining = timeLeft;
+            session.finalized = finalized;
             session.placedIngredientItems.putAll(placed);
 
-            summonSessionStands(session);
+            if (session.finalized) {
+                summonCookingStands(session);
+            } else {
+                summonSessionStands(session);
+            }
             if (session.cookTimeRemaining > 0) {
                 resumeCooking(session);
             }
@@ -1018,6 +1051,7 @@ public class CulinarySubsystem implements Listener {
             RecipeSession s = e.getValue();
             dataConfig.set(e.getKey() + ".recipe", s.recipe.getName());
             dataConfig.set(e.getKey() + ".timeLeft", s.cookTimeRemaining);
+            dataConfig.set(e.getKey() + ".finalized", s.finalized);
             for (Map.Entry<String, ItemStack> pi : s.placedIngredientItems.entrySet()) {
                 dataConfig.set(e.getKey() + ".placedIngredients." + pi.getKey(), pi.getValue());
             }
@@ -1040,7 +1074,16 @@ public class CulinarySubsystem implements Listener {
         updateIngredientLabels(session);
     }
 
+    private void summonCookingStands(RecipeSession session) {
+        UUID main = spawnInvisibleArmorStand(session.tableLocation.clone().add(0.5, 0.7, 0.5),
+                ChatColor.GOLD + session.recipe.getName(),
+                Arrays.asList(ChatColor.YELLOW + "Cooking..."),
+                true);
+        session.mainArmorStandUUID = main;
+    }
+
     private void resumeCooking(RecipeSession session) {
+        session.finalized = true;
         Location timerLoc = session.tableLocation.clone().add(0.5, 2.0, 0.5);
         ArmorStand timer = (ArmorStand) timerLoc.getWorld().spawnEntity(timerLoc, EntityType.ARMOR_STAND);
         timer.setInvisible(true);
@@ -1050,6 +1093,8 @@ public class CulinarySubsystem implements Listener {
         timer.setMarker(true);
         timer.setCustomName(ChatColor.YELLOW + "" + session.cookTimeRemaining + "s");
         session.timerStandUUID = timer.getUniqueId();
+
+        session.particleTask = startCookingParticles(session.tableLocation);
 
         session.cookTask = new BukkitRunnable() {
             @Override
@@ -1117,6 +1162,8 @@ public class CulinarySubsystem implements Listener {
         public int cookTimeRemaining = 0;
         public BukkitTask cookTask;
         public UUID timerStandUUID;
+        public BukkitTask particleTask;
+        public boolean finalized = false;
 
         public RecipeSession(String locKey, CulinaryRecipe recipe, Location tableLocation) {
             this.locationKey = locKey;
