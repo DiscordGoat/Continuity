@@ -20,22 +20,31 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.EulerAngle;
 
+import org.bukkit.configuration.file.YamlConfiguration;
+
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import java.util.logging.Logger;
 
 /**
  * CulinarySubsystem
  *
- * Updated as per request:
- * - No persistence through reloads or restarts.
- * - On server restart or reload, any active sessions have their ingredients dropped as items on the table.
+ * Handles displaying and cooking custom recipes on crafting tables.
+ * Active cooking sessions are saved to <code>culinary_sessions.yml</code>
+ * so they persist through reloads and restarts.
  */
 public class CulinarySubsystem implements Listener {
     private JavaPlugin plugin;
     private Logger logger;
     private static CulinarySubsystem instance;
+
+    private final File dataFile;
+    private YamlConfiguration dataConfig;
+    private boolean isEnabled = false;
+
     // Active recipe sessions keyed by the crafting table location
-    private Map<Location, RecipeSession> activeRecipeSessions = new HashMap<>();
+    private final Map<String, RecipeSession> activeRecipeSessions = new HashMap<>();
     private final Random random = new Random();
     public List<ItemStack> getAllRecipeItems() {
         List<ItemStack> recipeItems = new ArrayList<>();
@@ -91,8 +100,20 @@ public class CulinarySubsystem implements Listener {
     public static CulinarySubsystem getInstance(JavaPlugin plugin) {
         if (instance == null) {
             instance = new CulinarySubsystem(plugin);
+            instance.onEnable();
         }
         return instance;
+    }
+
+    public void onEnable() {
+        if (!isEnabled) {
+            loadAllSessions();
+            isEnabled = true;
+        }
+    }
+
+    public void onDisable() {
+        saveAllSessions();
     }
 
     // Recipe registry
@@ -250,79 +271,33 @@ public class CulinarySubsystem implements Listener {
         this.plugin = plugin;
         this.logger = plugin.getLogger();
 
+        dataFile = new File(plugin.getDataFolder(), "culinary_sessions.yml");
+        if (!dataFile.exists()) {
+            try { dataFile.createNewFile(); } catch (IOException ignored) {}
+        }
+        dataConfig = YamlConfiguration.loadConfiguration(dataFile);
+
         Bukkit.getLogger().info("[CulinarySubsystem] Registering events...");
         Bukkit.getPluginManager().registerEvents(this, plugin);
         Bukkit.getLogger().info("[CulinarySubsystem] Events registered.");
     }
 
     /**
-     * Call this method from your main plugin's onDisable() to drop items
-     * and remove all sessions.
+     * Called from the main plugin's onDisable(). Saves all sessions so they can
+     * be restored on the next startup.
      */
     public void finalizeAllSessionsOnShutdown() {
         for (RecipeSession session : activeRecipeSessions.values()) {
-            // Drop the recipe paper again
-            if (session.tableLocation != null && session.tableLocation.getWorld() != null) {
-                ItemStack recipePaper = createRecipeItem(session.recipe);
-                session.tableLocation.getWorld().dropItemNaturally(
-                        session.tableLocation.clone().add(0.5, 1, 0.5), recipePaper);
-            }
-
-            // Drop all placed ingredients as items
-            for (Map.Entry<String, UUID> entry : session.placedIngredientsStands.entrySet()) {
-                UUID standUUID = entry.getValue();
-
-                if (standUUID == null) {
-                    logger.warning("[CulinarySubsystem] Null UUID in placedIngredientsStands. Skipping.");
-                    continue;
-                }
-
-                Entity e = Bukkit.getEntity(standUUID);
-                if (e instanceof ArmorStand) {
-                    ArmorStand ingStand = (ArmorStand) e;
-                    ItemStack inHand = ingStand.getEquipment().getItemInMainHand();
-                    if (inHand != null && inHand.getType() != Material.AIR) {
-                        session.tableLocation.getWorld().dropItemNaturally(
-                                session.tableLocation.clone().add(0.5, 1, 0.5), inHand.clone());
-                    }
-                }
-                removeEntityByUUID(standUUID);
-            }
-
-            // Cancel spin tasks
-            for (BukkitTask task : session.ingredientSpinTasks.values()) {
-                if (task != null) {
-                    task.cancel();
-                }
-            }
             if (session.cookTask != null) {
                 session.cookTask.cancel();
             }
-
-            // Remove main stand
-            if (session.mainArmorStandUUID != null) {
-                removeEntityByUUID(session.mainArmorStandUUID);
-            } else {
-                logger.warning("[CulinarySubsystem] Main armor stand UUID is null for a session.");
-            }
-
-            if (session.timerStandUUID != null) {
-                removeEntityByUUID(session.timerStandUUID);
-            }
-
-            // Remove label stands
-            for (UUID u : session.ingredientLabelStands.values()) {
-                if (u != null) {
-                    removeEntityByUUID(u);
-                } else {
-                    logger.warning("[CulinarySubsystem] Null UUID found in ingredientLabelStands.");
-                }
+            for (BukkitTask t : session.ingredientSpinTasks.values()) {
+                if (t != null) t.cancel();
             }
         }
-
-        // Clear all sessions
+        saveAllSessions();
         activeRecipeSessions.clear();
-        logger.info("[CulinarySubsystem] All sessions finalized and cleared on shutdown/reload.");
+        logger.info("[CulinarySubsystem] Sessions saved and cleared for shutdown.");
     }
 
 
@@ -519,11 +494,12 @@ public class CulinarySubsystem implements Listener {
         Player player = event.getPlayer();
         ItemStack hand = player.getInventory().getItemInMainHand().clone();
         Location tableLoc = event.getClickedBlock().getLocation().clone();
+        String locKey = toLocKey(tableLoc);
 
         if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             // -- 1) Starting a new Recipe Session with a Recipe Paper --
             if (player.getInventory().getItemInMainHand().getType().equals(Material.PAPER)) {
-                if (activeRecipeSessions.containsKey(tableLoc)) {
+                if (activeRecipeSessions.containsKey(locKey)) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "This crafting table is already being used for another recipe!");
                     return;
@@ -540,8 +516,8 @@ public class CulinarySubsystem implements Listener {
                     event.setCancelled(true);
                     logger.info("[CulinarySubsystem] Displaying recipe " + recipe.getName() + " at " + tableLoc);
 
-                    RecipeSession session = new RecipeSession(recipe, tableLoc);
-                    activeRecipeSessions.put(tableLoc, session);
+                    RecipeSession session = new RecipeSession(locKey, recipe, tableLoc);
+                    activeRecipeSessions.put(locKey, session);
 
                     consumeItem(player, hand, 1);
                     player.playSound(player.getLocation(), Sound.BLOCK_BAMBOO_PLACE, 1.0f, 1.0f);
@@ -563,8 +539,8 @@ public class CulinarySubsystem implements Listener {
             }
 
             // -- 2) Placing an ingredient on an ACTIVE recipe session --
-            if (activeRecipeSessions.containsKey(tableLoc)) {
-                RecipeSession session = activeRecipeSessions.get(tableLoc);
+            if (activeRecipeSessions.containsKey(locKey)) {
+                RecipeSession session = activeRecipeSessions.get(locKey);
                 CulinaryRecipe recipe = session.recipe;
                 // Identify if the held item is a needed ingredient and hasn't been placed yet
                 String ingredientName = matchIngredient(hand, recipe.getIngredients(), session.placedIngredientsStands.keySet());
@@ -576,6 +552,9 @@ public class CulinarySubsystem implements Listener {
 
                     UUID standUUID = spawnIngredientAboveTableRandom(tableLoc, hand.getType(), hand);
                     session.placedIngredientsStands.put(ingredientName, standUUID);
+                    ItemStack copy = hand.clone();
+                    copy.setAmount(1);
+                    session.placedIngredientItems.put(ingredientName, copy);
 
                     // Remove this ingredient’s label stand
                     UUID labelStandUUID = session.ingredientLabelStands.get(ingredientName);
@@ -609,8 +588,8 @@ public class CulinarySubsystem implements Listener {
 
         // -- 3) Finalizing the recipe (LEFT_CLICK_BLOCK) remains the same --
         else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
-            if (activeRecipeSessions.containsKey(tableLoc)) {
-                RecipeSession session = activeRecipeSessions.get(tableLoc);
+            if (activeRecipeSessions.containsKey(locKey)) {
+                RecipeSession session = activeRecipeSessions.get(locKey);
                 if (session.placedIngredientsStands.size() == session.recipe.getIngredients().size()) {
                     event.setCancelled(true);
                     logger.info("[CulinarySubsystem] Finalizing recipe " + session.recipe.getName());
@@ -788,13 +767,17 @@ public class CulinarySubsystem implements Listener {
         session.placedIngredientsStands.clear();
         session.ingredientSpinTasks.clear();
         session.ingredientLabelStands.clear();
+        session.placedIngredientItems.clear();
 
         int cookTime = session.recipe.getIngredients().size() * 10;
         if (session.recipe.getName().toLowerCase().contains("feast")) {
             cookTime += 20;
         }
 
-        PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
+        PetManager.Pet pet = null;
+        if (player != null) {
+            pet = PetManager.getInstance(plugin).getActivePet(player);
+        }
         if (pet != null && pet.hasPerk(PetManager.PetPerk.MICROWAVE)) {
             cookTime = (int) Math.ceil(cookTime * 0.5);
         }
@@ -852,12 +835,16 @@ public class CulinarySubsystem implements Listener {
 
         removeEntityByUUID(session.timerStandUUID);
         removeEntityByUUID(session.mainArmorStandUUID);
+        session.placedIngredientItems.clear();
 
         ItemStack result = createOutputItem(session.recipe);
 
         int yield = 1 + random.nextInt(3);
 
-        PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
+        PetManager.Pet pet = null;
+        if (player != null) {
+            pet = PetManager.getInstance(plugin).getActivePet(player);
+        }
         if (pet != null && pet.hasPerk(PetManager.PetPerk.TRASH_CAN)) {
             yield += 2;
         }
@@ -866,22 +853,26 @@ public class CulinarySubsystem implements Listener {
             session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
         }
 
-        SkillTreeManager manager = SkillTreeManager.getInstance();
-        if (manager != null) {
-            int level = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.MASTER_CHEF);
-            if (level > 0 && random.nextDouble() < level * 0.04) {
-                for (int i = 0; i < yield; i++) {
-                    session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
+        if (player != null) {
+            SkillTreeManager manager = SkillTreeManager.getInstance();
+            if (manager != null) {
+                int level = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.MASTER_CHEF);
+                if (level > 0 && random.nextDouble() < level * 0.04) {
+                    for (int i = 0; i < yield; i++) {
+                        session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
+                    }
                 }
             }
-        }
 
-        XPManager xpManager = new XPManager(plugin);
-        xpManager.addXP(player, "Culinary", session.recipe.getXpReward());
-        player.sendMessage(ChatColor.GREEN + "You cooked " + session.recipe.getName() + "! You gained culinary XP.");
+            XPManager xpManager = new XPManager(plugin);
+            xpManager.addXP(player, "Culinary", session.recipe.getXpReward());
+            player.sendMessage(ChatColor.GREEN + "You cooked " + session.recipe.getName() + "! You gained culinary XP.");
+        }
         logger.info("[CulinarySubsystem] finalizeRecipe: Recipe crafted, XP granted.");
 
-        activeRecipeSessions.remove(session.tableLocation);
+        if (session.locationKey != null) {
+            activeRecipeSessions.remove(session.locationKey);
+        }
     }
 
     private UUID spawnInvisibleArmorStand(Location loc, String displayName, List<String> lore, boolean marker) {
@@ -974,6 +965,109 @@ public class CulinarySubsystem implements Listener {
         return null;
     }
 
+    // ------------------------------------------------------------------
+    // Persistence helpers
+    // ------------------------------------------------------------------
+    private String toLocKey(Location loc) {
+        return loc.getWorld().getName() + ":" + loc.getBlockX() + ":" + loc.getBlockY() + ":" + loc.getBlockZ();
+    }
+
+    private Location fromLocKey(String key) {
+        String[] p = key.split(":");
+        World w = Bukkit.getWorld(p[0]);
+        int x = Integer.parseInt(p[1]);
+        int y = Integer.parseInt(p[2]);
+        int z = Integer.parseInt(p[3]);
+        return new Location(w, x, y, z);
+    }
+
+    private void loadAllSessions() {
+        dataConfig = YamlConfiguration.loadConfiguration(dataFile);
+        for (String key : dataConfig.getKeys(false)) {
+            String recipeName = dataConfig.getString(key + ".recipe", null);
+            int timeLeft = dataConfig.getInt(key + ".timeLeft", 0);
+            ConfigurationSection ingSec = dataConfig.getConfigurationSection(key + ".placedIngredients");
+            Map<String, ItemStack> placed = new HashMap<>();
+            if (ingSec != null) {
+                for (String ing : ingSec.getKeys(false)) {
+                    ItemStack it = ingSec.getItemStack(ing);
+                    if (it != null) placed.put(ing, it);
+                }
+            }
+            CulinaryRecipe recipe = getRecipeByName(recipeName);
+            if (recipe == null) continue;
+            Location loc = fromLocKey(key);
+            RecipeSession session = new RecipeSession(key, recipe, loc);
+            session.cookTimeRemaining = timeLeft;
+            session.placedIngredientItems.putAll(placed);
+
+            summonSessionStands(session);
+            if (session.cookTimeRemaining > 0) {
+                resumeCooking(session);
+            }
+            activeRecipeSessions.put(key, session);
+        }
+        logger.info("[CulinarySubsystem] Loaded " + activeRecipeSessions.size() + " cooking session(s).");
+    }
+
+    private void saveAllSessions() {
+        for (String key : dataConfig.getKeys(false)) {
+            dataConfig.set(key, null);
+        }
+        for (Map.Entry<String, RecipeSession> e : activeRecipeSessions.entrySet()) {
+            RecipeSession s = e.getValue();
+            dataConfig.set(e.getKey() + ".recipe", s.recipe.getName());
+            dataConfig.set(e.getKey() + ".timeLeft", s.cookTimeRemaining);
+            for (Map.Entry<String, ItemStack> pi : s.placedIngredientItems.entrySet()) {
+                dataConfig.set(e.getKey() + ".placedIngredients." + pi.getKey(), pi.getValue());
+            }
+        }
+        try { dataConfig.save(dataFile); } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    private void summonSessionStands(RecipeSession session) {
+        UUID main = spawnInvisibleArmorStand(session.tableLocation.clone().add(0.5, 0.7, 0.5),
+                ChatColor.GOLD + session.recipe.getName(),
+                Arrays.asList(ChatColor.YELLOW + "Ingredients:"),
+                true);
+        session.mainArmorStandUUID = main;
+        for (Map.Entry<String, ItemStack> e : session.placedIngredientItems.entrySet()) {
+            UUID stand = spawnIngredientAboveTableRandom(session.tableLocation, e.getValue().getType(), e.getValue());
+            session.placedIngredientsStands.put(e.getKey(), stand);
+            BukkitTask spin = startSpinning(stand);
+            session.ingredientSpinTasks.put(e.getKey(), spin);
+        }
+        updateIngredientLabels(session);
+    }
+
+    private void resumeCooking(RecipeSession session) {
+        Location timerLoc = session.tableLocation.clone().add(0.5, 2.0, 0.5);
+        ArmorStand timer = (ArmorStand) timerLoc.getWorld().spawnEntity(timerLoc, EntityType.ARMOR_STAND);
+        timer.setInvisible(true);
+        timer.setCustomNameVisible(true);
+        timer.setGravity(false);
+        timer.setInvulnerable(true);
+        timer.setMarker(true);
+        timer.setCustomName(ChatColor.YELLOW + "" + session.cookTimeRemaining + "s");
+        session.timerStandUUID = timer.getUniqueId();
+
+        session.cookTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                session.cookTimeRemaining--;
+                Entity ent = Bukkit.getEntity(session.timerStandUUID);
+                if (ent instanceof ArmorStand) {
+                    ((ArmorStand) ent).setCustomName(ChatColor.YELLOW + "" + session.cookTimeRemaining + "s");
+                }
+                if (session.cookTimeRemaining <= 0) {
+                    cancel();
+                    finalizeRecipe(session, null);
+                }
+            }
+        }.runTaskTimer(plugin, 20L, 20L);
+    }
+
+
     private void removeEntityByUUID(UUID uuid) {
         if (uuid == null) return;
         logger.info("[CulinarySubsystem] removeEntityByUUID: Removing entity " + uuid);
@@ -1011,18 +1105,21 @@ public class CulinarySubsystem implements Listener {
     }
 
     public static class RecipeSession {
+        public final String locationKey;
         public CulinaryRecipe recipe;
         public Location tableLocation;
 
         public UUID mainArmorStandUUID;
         public Map<String, UUID> ingredientLabelStands = new HashMap<>();
         public Map<String, UUID> placedIngredientsStands = new HashMap<>();
+        public Map<String, ItemStack> placedIngredientItems = new HashMap<>();
         public Map<String, BukkitTask> ingredientSpinTasks = new HashMap<>();
         public int cookTimeRemaining = 0;
         public BukkitTask cookTask;
         public UUID timerStandUUID;
 
-        public RecipeSession(CulinaryRecipe recipe, Location tableLocation) {
+        public RecipeSession(String locKey, CulinaryRecipe recipe, Location tableLocation) {
+            this.locationKey = locKey;
             this.recipe = recipe;
             this.tableLocation = tableLocation.clone();
         }
