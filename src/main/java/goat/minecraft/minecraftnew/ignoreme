@@ -166,25 +166,35 @@ Scaling Max: 0.25 Discount
 Common:
 Haggler I: +0.005 Discount, Max level 3
 Stonks I: +2% Emerald Gain when selling, Max level 5
-Shut Up And Take My Money: Right click to buy 4 times, Max level 1
+Shut Up And Take My Money: Right click to buy 2 times, Max level 2
+Sweatshop Supervisor: -10s Villager Workcycle Cooldown, Max level 5
+Corporate Benefits: -5d Villager Tier Threshold, Max level 5
 
 Uncommon:
 Haggler II: +0.01 Discount, Max level 3
 Stonks II: +2% Emerald Gain when selling, Max level 5
 Bulk: Purchasing an item reduces its cost by 10% for 20 seconds, Max level 2
+Deadline Dictator: -10s Villager Workcycle Cooldown, Max level 5
+Uniform: +10% Villager Damage Resistance when player is online, Max level 5
 
 Rare:
 Haggler III: +0.015 Discount, Max level 3
 Stonks III: +2% Emerald Gain when selling, Max level 5
-Interest: Sells have a 1% Chance to add 1% more Emeralds to your Bank Account, Max level 5
+Interest: Sells have a 1% Chance to add 1% more Emeralds to your Bank Account, Max level 2
+Taskmaster Tyrant: -10s Villager Workcycle Cooldown, Max level 5
+Overstocked: +2% Chance to buy an item for free, Max level 5
 
 Epic:
 Haggler IV: +0.02 Discount, Max level 3
 Stonks IV: +2% Emerald Gain when selling, Max level 5
+Overtime Overlord: -10s Villager Workcycle Cooldown, Max level 7
+It's Alive!: +20% Chance to fail Transformations into Witches/Zombie Villagers, Max level 5
 
 Legendary:
 Haggler V: +0.025 Discount, Max level 4
 Stonks V: +2% Emerald Gain when selling, Max level 5
+Slave Driver: -10s Villager Workcycle Cooldown, Max level 5
+Billionaire's Discount: +5% Discount, Max level 6
 
 
 
@@ -206,6 +216,7 @@ Spirit Chance IV: +0.0008 Spirit Chance, Max level 3
 
 Legendary:
 Spirit Chance V: +0.0010 Spirit Chance, Max level 4
+
 
 
 Combat:
@@ -248,6 +259,8 @@ Bonus Pet XP Chance IV: +0.08, Max Level 3
 
 Legendary:
 Bonus Pet XP Chance V: +0.1, Max Level 4
+
+
 
 Player:
 Scaling Stat: Bonus Health
