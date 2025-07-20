@@ -530,6 +530,12 @@ public class UltimateEnchantmentListener implements Listener {
         data.lastUsage = System.currentTimeMillis();
         // Every use drops the multiplier by 4%
         data.damageMultiplier = Math.max(data.damageMultiplier - 0.04, 0.0);
+        if (sword.getType().getMaxDurability() > 0) {
+            CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
+            if (mgr != null) {
+                mgr.applyDamage(player, sword, 5);
+            }
+        }
 
         // Remove the sword from the player's inventory.
         player.getInventory().remove(sword);
@@ -562,10 +568,10 @@ public class UltimateEnchantmentListener implements Listener {
             return false;
         }
         if(sword.getType().getMaxDurability() > 0){
-            // Shred only costs 5 durability on activation
-            short dmg = (short)(sword.getDurability() + 2);
-            if(dmg > sword.getType().getMaxDurability()) dmg = sword.getType().getMaxDurability();
-            sword.setDurability(dmg);
+            CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
+            if(mgr != null){
+                mgr.applyDamage(player, sword, 5);
+            }
         }
 
         Location spawnLoc = player.getLocation().add(0, 0.5, 0);
@@ -600,8 +606,11 @@ public class UltimateEnchantmentListener implements Listener {
                         le.setNoDamageTicks(0);
                         // Play a sound when the shred strikes an enemy
                         player.getWorld().playSound(le.getLocation(), Sound.ENTITY_PLAYER_ATTACK_SWEEP, 1.0f, 1.0f);
-                        if(sword.getType().getMaxDurability()>0 && sword.getDurability()>0){
-                            sword.setDurability((short)(sword.getDurability()-1));
+                        if(sword.getType().getMaxDurability()>0){
+                            CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
+                            if(mgr != null){
+                                mgr.applyDamage(player, sword, 1);
+                            }
                         }
                         hit.add(le.getUniqueId());
                     }
@@ -1067,6 +1076,12 @@ public class UltimateEnchantmentListener implements Listener {
                         int combatLevel = xpManager.getPlayerLevel(player, "Combat");
                         double damage = combatLevel;
                         target.damage(damage, player);
+                        if (sword.getType().getMaxDurability() > 0) {
+                            CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
+                            if (mgr != null) {
+                                mgr.applyDamage(player, sword, 1);
+                            }
+                        }
                         // Increase damage multiplier by 4% on a successful melee hit (max 1.0).
                         data.damageMultiplier = Math.min(data.damageMultiplier + 0.04, 1.0);
                         // Display damage dealt in an action bar message.
