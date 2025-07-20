@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.culinary;
 
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.subsystems.culinary.CustomNutritionManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -129,51 +130,65 @@ public class CulinarySubsystem implements Listener {
                 Material.HONEY_BOTTLE,
                 "Tidal Shot",
                 Arrays.asList("Rum", "Gunpowder", "Ice"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.SUGARS,
+                false
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,
                 "Coral Cooler",
                 Arrays.asList("Rum", "Ice", "Prismarine Shard", "Sea Pickle"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                false
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,
                 "Prismarita",
                 Arrays.asList("Rum", "Lime", "Sugar", "Ice", "Prismarine Shard"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.SUGARS,
+                false
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.HONEY_BOTTLE,
                 "Kelp Mojito",
                 Arrays.asList("Rum", "Lime", "Sugar", "Ice", "Kelp"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                false
         ));
         // (Water Breathing)
         // Bananas Split is bartender-only
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
-                Material.MELON_SLICE,  // stand-in for the banana split bowl
+                Material.MELON_SLICE,
                 "Banana Split",
                 Arrays.asList("Banana", "Snowball", "Chocolate", "Milk Bucket"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.SUGARS,
+                false
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
-                Material.HONEY_BOTTLE,  // stand-in for the banana split bowl
+                Material.HONEY_BOTTLE,
                 "Pina Colada",
                 Arrays.asList("Milk Bucket", "Rum", "Ice", "Pineapple", "Coconut"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                false
         ));
         oceanicRecipes.add(new CulinaryRecipe(
                 Material.PAPER,
-                Material.PUMPKIN_PIE,       // stand-in for the Key Lime Pie slice
+                Material.PUMPKIN_PIE,
                 "Key Lime Pie",
                 Arrays.asList("Lime", "Sugar", "Egg", "Milk Bucket"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                false
         ));
 
     }
@@ -184,35 +199,45 @@ public class CulinarySubsystem implements Listener {
                 Material.COOKED_BEEF,
                 "Salted Steak",
                 Arrays.asList("Cooked Beef", "Sea Salt"),
-                500
+                500,
+                CustomNutritionManager.FoodGroup.PROTEINS,
+                false
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKED_CHICKEN,
                 "Chicken Tenders",
                 Arrays.asList("Cooked Chicken", "Bread"),
-                500
+                500,
+                CustomNutritionManager.FoodGroup.PROTEINS,
+                false
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.YELLOW_DYE,
                 "Slice of Cheese",
                 Arrays.asList("Milk Bucket"),
-                500
+                500,
+                CustomNutritionManager.FoodGroup.PROTEINS,
+                false
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.BREAD,
                 "Ham and Cheese Sandwich",
                 Arrays.asList("Slice of Cheese", "Cooked Porkchop", "Bread"),
-                500
+                500,
+                CustomNutritionManager.FoodGroup.GRAINS,
+                false
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.BREAD,
                 "Toast",
                 Arrays.asList("Bread", "Butter"),
-                500
+                500,
+                CustomNutritionManager.FoodGroup.GRAINS,
+                false
         ));
 
 
@@ -222,49 +247,265 @@ public class CulinarySubsystem implements Listener {
                 Material.PUMPKIN_PIE,
                 "Sweet Feast",
                 Arrays.asList("Sugar", "Pumpkin", "Egg", "Wheat"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.SUGARS,
+                true
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.CARROT,
                 "Vegetarian Feast",
                 Arrays.asList("Carrot", "Potato", "Golden Carrot", "Beetroot"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.VEGGIES,
+                true
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKED_RABBIT,
                 "Meatlovers Feast",
                 Arrays.asList("Cooked Beef", "Cooked Chicken", "Butter", "Sea Salt", "Cooked Mutton", "Cooked Rabbit", "Cooked Porkchop"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.PROTEINS,
+                true
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.DRIED_KELP,
                 "Seafood Feast",
                 Arrays.asList("Dried Kelp Block", "Cod", "Salmon", "Tropical Fish", "Calamari"),
-                1000
+                1000,
+                CustomNutritionManager.FoodGroup.PROTEINS,
+                true
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.COOKED_SALMON,
                 "Grilled Salmon",
                 Arrays.asList("Cooked Salmon", "Sea Salt"),
-                500
+                500,
+                CustomNutritionManager.FoodGroup.PROTEINS,
+                false
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.BREAD,
                 "Mushroom Soup",
                 Arrays.asList("Red Mushroom", "Brown Mushroom", "Sea Salt"),
-                500
+                500,
+                CustomNutritionManager.FoodGroup.VEGGIES,
+                false
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.BAKED_POTATO,
                 "Loaded Baked Potato",
                 Arrays.asList("Baked Potato", "Butter", "Slice of Cheese", "Cooked Porkchop"),
-                500
+                500,
+                CustomNutritionManager.FoodGroup.VEGGIES,
+                false
+        ));
+        // Additional recipes to fill food groups
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.APPLE,
+                "Apple Tart",
+                Arrays.asList("Apple", "Sugar", "Wheat"),
+                500,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.MELON_SLICE,
+                "Fruit Salad",
+                Arrays.asList("Melon", "Apple", "Sweet Berries"),
+                500,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.SWEET_BERRIES,
+                "Berry Pie",
+                Arrays.asList("Sweet Berries", "Sugar", "Egg"),
+                500,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.POTION,
+                "Tropical Smoothie",
+                Arrays.asList("Mango", "Pineapple", "Milk Bucket"),
+                500,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.GOLDEN_APPLE,
+                "Fruit Feast",
+                Arrays.asList("Apple", "Melon", "Sweet Berries", "Sugar"),
+                1000,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                true
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.CHORUS_FRUIT,
+                "Exotic Fruit Feast",
+                Arrays.asList("Chorus Fruit", "Melon", "Golden Apple", "Sugar"),
+                1000,
+                CustomNutritionManager.FoodGroup.FRUITS,
+                true
+        ));
+
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.BREAD,
+                "Wheat Bread",
+                Arrays.asList("Wheat", "Butter"),
+                500,
+                CustomNutritionManager.FoodGroup.GRAINS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.COOKIE,
+                "Oatmeal",
+                Arrays.asList("Wheat", "Milk Bucket", "Sugar"),
+                500,
+                CustomNutritionManager.FoodGroup.GRAINS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.BREAD,
+                "Pasta Bowl",
+                Arrays.asList("Wheat", "Egg", "Tomato"),
+                500,
+                CustomNutritionManager.FoodGroup.GRAINS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.CAKE,
+                "Granola Bar",
+                Arrays.asList("Wheat", "Honey Bottle", "Nuts"),
+                500,
+                CustomNutritionManager.FoodGroup.GRAINS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.PUMPKIN_PIE,
+                "Grain Feast",
+                Arrays.asList("Bread", "Wheat", "Sugar", "Egg"),
+                1000,
+                CustomNutritionManager.FoodGroup.GRAINS,
+                true
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.BREAD,
+                "Hearty Grain Feast",
+                Arrays.asList("Bread", "Pasta Bowl", "Oatmeal", "Butter"),
+                1000,
+                CustomNutritionManager.FoodGroup.GRAINS,
+                true
+        ));
+
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.CARROT,
+                "Garden Salad",
+                Arrays.asList("Carrot", "Beetroot", "Lettuce"),
+                500,
+                CustomNutritionManager.FoodGroup.VEGGIES,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.CARROT,
+                "Roasted Veggies",
+                Arrays.asList("Potato", "Carrot", "Beetroot"),
+                500,
+                CustomNutritionManager.FoodGroup.VEGGIES,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.CARROT,
+                "Veggie Stir Fry",
+                Arrays.asList("Carrot", "Potato", "Seaweed"),
+                500,
+                CustomNutritionManager.FoodGroup.VEGGIES,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.CARROT,
+                "Steamed Greens",
+                Arrays.asList("Broccoli", "Spinach", "Carrot"),
+                500,
+                CustomNutritionManager.FoodGroup.VEGGIES,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.CARROT,
+                "Farmers Feast",
+                Arrays.asList("Garden Salad", "Roasted Veggies", "Baked Potato", "Mushroom"),
+                1000,
+                CustomNutritionManager.FoodGroup.VEGGIES,
+                true
+        ));
+
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.COOKIE,
+                "Chocolate Cake",
+                Arrays.asList("Cocoa Beans", "Sugar", "Egg", "Milk Bucket"),
+                500,
+                CustomNutritionManager.FoodGroup.SUGARS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.COOKIE,
+                "Cookie Platter",
+                Arrays.asList("Cookie", "Sugar", "Milk Bucket"),
+                500,
+                CustomNutritionManager.FoodGroup.SUGARS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.COOKIE,
+                "Ice Cream Cone",
+                Arrays.asList("Milk Bucket", "Sugar", "Snowball"),
+                500,
+                CustomNutritionManager.FoodGroup.SUGARS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.APPLE,
+                "Candied Apple",
+                Arrays.asList("Apple", "Sugar"),
+                500,
+                CustomNutritionManager.FoodGroup.SUGARS,
+                false
+        ));
+        recipeRegistry.add(new CulinaryRecipe(
+                Material.PAPER,
+                Material.CAKE,
+                "Dessert Feast",
+                Arrays.asList("Chocolate Cake", "Cookie", "Ice Cream Cone", "Sugar"),
+                1000,
+                CustomNutritionManager.FoodGroup.SUGARS,
+                true
         ));
     }
 
@@ -479,6 +720,20 @@ public class CulinarySubsystem implements Listener {
             default:
                 break;
         }
+        for(String line : lore){
+            String s = ChatColor.stripColor(line);
+            if(s.startsWith("+")){
+                String[] parts = s.split(" ");
+                if(parts.length >= 2){
+                    try {
+                        int amt = Integer.parseInt(parts[0].substring(1));
+                        CustomNutritionManager.FoodGroup g = CustomNutritionManager.FoodGroup.valueOf(parts[1].toUpperCase());
+                        CustomNutritionManager.getInstance().addNutrition(player, g, amt);
+                    } catch (Exception ignored) {}
+                }
+                break;
+            }
+        }
         clampPlayerStats(player);
     }
 
@@ -690,6 +945,18 @@ public class CulinarySubsystem implements Listener {
             lore.add(ChatColor.GRAY + "- " + ing);
         }
         lore.add(ChatColor.DARK_PURPLE + "Culinary Delight");
+        String groupLine = ChatColor.GREEN + "+10";
+        ChatColor color = ChatColor.GREEN;
+        switch (recipe.getGroup()) {
+            case FRUITS -> color = ChatColor.DARK_RED;
+            case GRAINS -> color = ChatColor.GOLD;
+            case PROTEINS -> color = ChatColor.RED;
+            case VEGGIES -> color = ChatColor.GREEN;
+            case SUGARS -> color = ChatColor.LIGHT_PURPLE;
+        }
+        int amt = recipe.isFeast() ? 20 : 10;
+        groupLine = color + "+" + amt + " " + recipe.getGroup().name().substring(0,1) + recipe.getGroup().name().substring(1).toLowerCase();
+        lore.add(groupLine);
         meta.setLore(lore);
         item.setItemMeta(meta);
         return item;
@@ -1134,13 +1401,19 @@ public class CulinarySubsystem implements Listener {
         private final String name;
         private final List<String> ingredients;
         private final int xpReward;
+        private final CustomNutritionManager.FoodGroup group;
+        private final boolean feast;
 
-        public CulinaryRecipe(Material recipeItem, Material outputMaterial, String name, List<String> ingredients, int xpReward) {
+        public CulinaryRecipe(Material recipeItem, Material outputMaterial, String name,
+                              List<String> ingredients, int xpReward,
+                              CustomNutritionManager.FoodGroup group, boolean feast) {
             this.recipeItem = recipeItem;
             this.outputMaterial = outputMaterial;
             this.name = name;
             this.ingredients = ingredients;
             this.xpReward = xpReward;
+            this.group = group;
+            this.feast = feast;
         }
 
         public Material getRecipeItem() { return recipeItem; }
@@ -1148,6 +1421,8 @@ public class CulinarySubsystem implements Listener {
         public String getName() { return name; }
         public List<String> getIngredients() { return ingredients; }
         public int getXpReward() { return xpReward; }
+        public CustomNutritionManager.FoodGroup getGroup() { return group; }
+        public boolean isFeast() { return feast; }
     }
 
     public static class RecipeSession {

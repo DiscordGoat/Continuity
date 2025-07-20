@@ -25,6 +25,8 @@ import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.*;
 import goat.minecraft.minecraftnew.subsystems.villagers.HireVillager;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinaryCauldron;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
+import goat.minecraft.minecraftnew.subsystems.culinary.CustomNutritionManager;
+import goat.minecraft.minecraftnew.subsystems.culinary.NutritionCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.KnightMob;
 import goat.minecraft.minecraftnew.other.enchanting.enchantingeffects.*;
 import goat.minecraft.minecraftnew.subsystems.farming.FarmingEvent;
@@ -254,6 +256,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PotionOfNightVision(), this);
         getServer().getPluginManager().registerEvents(new PotionOfCharismaticBartering(), this);
         getServer().getPluginManager().registerEvents(new PotionOfMetalDetection(), this);
+        getServer().getPluginManager().registerEvents(new PotionOfOptimalEating(), this);
 
 
 
@@ -409,6 +412,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         // Initialize the culinary subsystem
         culinarySubsystem = CulinarySubsystem.getInstance(this);
         new CulinaryCauldron(this);
+        CustomNutritionManager.init(this);
+        getCommand("nutrients").setExecutor(new NutritionCommand());
 
         getLogger().info("MyPlugin has been enabled!");
 

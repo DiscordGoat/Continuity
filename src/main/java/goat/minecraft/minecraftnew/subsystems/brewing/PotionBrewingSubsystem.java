@@ -403,6 +403,14 @@ public class PotionBrewingSubsystem implements Listener {
         recipeRegistry.add(
                 new PotionRecipe("Potion of Metal Detection", metalDetectionIngredients, 60*3, new ItemStack(Material.POTION), metalDetectionColor, metalDetectionLore)
         );
+
+        // Potion of Optimal Eating
+        List<String> optimalEatingIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Enchanted Golden Apple");
+        List<String> optimalEatingLore = Arrays.asList("Prevents nutrition decay", "Base Duration of " + baseDuration);
+        Color optimalEatingColor = Color.fromRGB(255, 215, 0);
+        recipeRegistry.add(
+                new PotionRecipe("Potion of Optimal Eating", optimalEatingIngredients, 60*3, new ItemStack(Material.POTION), optimalEatingColor, optimalEatingLore)
+        );
     }
 
     private PotionRecipe findRecipeByName(String potionName) {

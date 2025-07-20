@@ -806,6 +806,21 @@ public class ItemRegistry {
         );
     }
 
+    public static ItemStack getOptimalEatingRecipePaper() {
+        return createCustomItem(
+                Material.PAPER,
+                ChatColor.LIGHT_PURPLE + "Potion of Optimal Eating Recipe (Potion Recipe)",
+                Arrays.asList(
+                        ChatColor.GRAY + "Brewing instructions for Optimal Eating",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click a Brewing Stand to begin",
+                        ChatColor.DARK_PURPLE + "Potion Recipe"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
 
 
 
