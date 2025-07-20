@@ -690,6 +690,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("togglepotioneffects").setExecutor(new TogglePotionEffectsCommand(this));
         getCommand("stripreforge").setExecutor(new StripReforgeCommand());
         getCommand("applyreforge").setExecutor(new ApplyReforgeCommand());
+        new SetAmountCommand(this);
 
         getServer().getPluginManager().registerEvents(new MusicDiscManager(this), this);
 
