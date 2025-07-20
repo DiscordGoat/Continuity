@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -294,12 +295,19 @@ public class CulinarySubsystem implements Listener {
                     task.cancel();
                 }
             }
+            if (session.cookTask != null) {
+                session.cookTask.cancel();
+            }
 
             // Remove main stand
             if (session.mainArmorStandUUID != null) {
                 removeEntityByUUID(session.mainArmorStandUUID);
             } else {
                 logger.warning("[CulinarySubsystem] Main armor stand UUID is null for a session.");
+            }
+
+            if (session.timerStandUUID != null) {
+                removeEntityByUUID(session.timerStandUUID);
             }
 
             // Remove label stands
@@ -606,7 +614,7 @@ public class CulinarySubsystem implements Listener {
                 if (session.placedIngredientsStands.size() == session.recipe.getIngredients().size()) {
                     event.setCancelled(true);
                     logger.info("[CulinarySubsystem] Finalizing recipe " + session.recipe.getName());
-                    finalizeRecipe(session, player);
+                    startCooking(session, player);
                     player.getWorld().spawnParticle(Particle.SMOKE, player.getLocation(), 50, 0.5, 0.5, 0.5, 0.1);
                     player.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);
                 } else {
@@ -766,39 +774,111 @@ public class CulinarySubsystem implements Listener {
         player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
     }
 
+    private void startCooking(RecipeSession session, Player player) {
+        // Clean up ingredient stands and tasks
+        for (UUID u : session.placedIngredientsStands.values()) {
+            removeEntityByUUID(u);
+        }
+        for (BukkitTask t : session.ingredientSpinTasks.values()) {
+            t.cancel();
+        }
+        for (UUID u : session.ingredientLabelStands.values()) {
+            removeEntityByUUID(u);
+        }
+        session.placedIngredientsStands.clear();
+        session.ingredientSpinTasks.clear();
+        session.ingredientLabelStands.clear();
+
+        int cookTime = session.recipe.getIngredients().size() * 10;
+        if (session.recipe.getName().toLowerCase().contains("feast")) {
+            cookTime += 20;
+        }
+
+        PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
+        if (pet != null && pet.hasPerk(PetManager.PetPerk.MICROWAVE)) {
+            cookTime = (int) Math.ceil(cookTime * 0.5);
+        }
+
+        session.cookTimeRemaining = cookTime;
+
+        ArmorStand mainStand = (ArmorStand) Bukkit.getEntity(session.mainArmorStandUUID);
+        if (mainStand != null) {
+            mainStand.setCustomName(ChatColor.GOLD + session.recipe.getName());
+        }
+
+        Location timerLoc = session.tableLocation.clone().add(0.5, 2.0, 0.5);
+        ArmorStand timer = (ArmorStand) timerLoc.getWorld().spawnEntity(timerLoc, EntityType.ARMOR_STAND);
+        timer.setInvisible(true);
+        timer.setCustomNameVisible(true);
+        timer.setGravity(false);
+        timer.setInvulnerable(true);
+        timer.setMarker(true);
+        timer.setCustomName(ChatColor.YELLOW + "" + session.cookTimeRemaining + "s");
+        session.timerStandUUID = timer.getUniqueId();
+
+        session.cookTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                session.cookTimeRemaining--;
+                Entity ent = Bukkit.getEntity(session.timerStandUUID);
+                if (ent instanceof ArmorStand) {
+                    ((ArmorStand) ent).setCustomName(ChatColor.YELLOW + "" + session.cookTimeRemaining + "s");
+                }
+                if (session.cookTimeRemaining <= 0) {
+                    cancel();
+                    finalizeRecipe(session, player);
+                }
+            }
+        }.runTaskTimer(plugin, 20L, 20L);
+    }
+
     private void finalizeRecipe(RecipeSession session, Player player) {
         logger.info("[CulinarySubsystem] finalizeRecipe: " + session.recipe.getName() + " at " + session.tableLocation);
 
-        // Remove placed ingredients
-        for (Map.Entry<String, UUID> entry : session.placedIngredientsStands.entrySet()) {
-            UUID standUUID = entry.getValue();
-            removeEntityByUUID(standUUID);
+        if (session.cookTask != null) {
+            session.cookTask.cancel();
         }
 
-        // Cancel spin tasks
         for (BukkitTask task : session.ingredientSpinTasks.values()) {
             task.cancel();
         }
 
-        // Remove stands
-        removeEntityByUUID(session.mainArmorStandUUID);
+        for (UUID u : session.placedIngredientsStands.values()) {
+            removeEntityByUUID(u);
+        }
         for (UUID u : session.ingredientLabelStands.values()) {
             removeEntityByUUID(u);
         }
 
-        // Drop final output with Master Chef perk consideration
+        removeEntityByUUID(session.timerStandUUID);
+        removeEntityByUUID(session.mainArmorStandUUID);
+
         ItemStack result = createOutputItem(session.recipe);
-        session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result);
+
+        int yield = 1 + random.nextInt(3);
+
+        PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
+        if (pet != null && pet.hasPerk(PetManager.PetPerk.TRASH_CAN)) {
+            yield += 2;
+        }
+
+        for (int i = 0; i < yield; i++) {
+            session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
+        }
+
         SkillTreeManager manager = SkillTreeManager.getInstance();
         if (manager != null) {
             int level = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.MASTER_CHEF);
             if (level > 0 && random.nextDouble() < level * 0.04) {
-                session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
+                for (int i = 0; i < yield; i++) {
+                    session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
+                }
             }
         }
+
         XPManager xpManager = new XPManager(plugin);
         xpManager.addXP(player, "Culinary", session.recipe.getXpReward());
-        player.sendMessage(ChatColor.GREEN + "You crafted " + session.recipe.getName() + "! You gained culinary XP.");
+        player.sendMessage(ChatColor.GREEN + "You cooked " + session.recipe.getName() + "! You gained culinary XP.");
         logger.info("[CulinarySubsystem] finalizeRecipe: Recipe crafted, XP granted.");
 
         activeRecipeSessions.remove(session.tableLocation);
@@ -938,6 +1018,9 @@ public class CulinarySubsystem implements Listener {
         public Map<String, UUID> ingredientLabelStands = new HashMap<>();
         public Map<String, UUID> placedIngredientsStands = new HashMap<>();
         public Map<String, BukkitTask> ingredientSpinTasks = new HashMap<>();
+        public int cookTimeRemaining = 0;
+        public BukkitTask cookTask;
+        public UUID timerStandUUID;
 
         public RecipeSession(CulinaryRecipe recipe, Location tableLocation) {
             this.recipe = recipe;

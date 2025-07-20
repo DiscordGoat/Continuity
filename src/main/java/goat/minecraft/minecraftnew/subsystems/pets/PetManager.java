@@ -127,6 +127,7 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Witch", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvN2U3MWE2ZWIzMDNhYjdlNmY3MGVkNTRkZjkxNDZhODBlYWRmMzk2NDE3Y2VlOTQ5NTc3M2ZmYmViZmFkODg3YyJ9fX0=");
         //mutations
         PET_TEXTURES.put("diver", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTc4MzBjMWQ4Mjg0NWM5MWI4MzQyOWY5ZGM1OTczMTc4NDE1MzhlMTRkNGZiZWQ2MWFlMWEzYjBlYjdjY2QifX19");
+        PET_TEXTURES.put("Reuben", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZTMyMGNmZDNiYjMyYmU1ZDk1NWY2Nzc1Y2Y3ZWJiNmJmYmNiMDVkMzk4YTg3YTRiMWEyYmVhYmJkMTVhNTcwOCJ9fX0=");
         PET_TEXTURES.put("Ghost", "");
     }
 
@@ -855,6 +856,10 @@ public class PetManager implements Listener {
                 return "Reduces brew time by " + ChatColor.YELLOW + level/2 + "%" + ChatColor.GRAY + ".";
             case EXPERIMENTATION:
                 return "Potions last " + ChatColor.YELLOW + (3 * level) + "s" + ChatColor.GRAY + " longer.";
+            case MICROWAVE:
+                return ChatColor.GRAY + "Reduces cooking time by 50%.";
+            case TRASH_CAN:
+                return ChatColor.GRAY + "Increases Delight yield by +2.";
             case MEMORY:
                 return ChatColor.GRAY + "+0.01 " + ChatColor.AQUA + "Grave Chance";
             case HAUNTING:
@@ -1288,6 +1293,8 @@ public class PetManager implements Listener {
         ENDLESS_WARP("Endless Warp", ChatColor.GOLD + ""),
         SPLASH_POTION("Splash Potion", ChatColor.GOLD + ""),
         EXPERIMENTATION("Experimentation", ChatColor.GOLD + ""),
+        MICROWAVE("Microwave", ChatColor.GOLD + "Reduces cooking time by 50%"),
+        TRASH_CAN("Trash Can, Not Can't", ChatColor.GOLD + "Increases Delight Yield by +2."),
         MEMORY("Memory", ChatColor.GOLD + "+0.01 " + ChatColor.AQUA + "Grave Chance"),
         HAUNTING("Haunting", ChatColor.GOLD + "+0.02 " + ChatColor.AQUA + "Grave Chance"),
         SCREAM("Scream", ChatColor.GOLD + "+0.04 " + ChatColor.AQUA + "Grave Chance"),
