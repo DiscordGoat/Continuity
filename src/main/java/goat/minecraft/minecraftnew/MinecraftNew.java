@@ -50,6 +50,7 @@ import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
+import goat.minecraft.minecraftnew.subsystems.villagers.MarketTrendManager;
 
 import goat.minecraft.minecraftnew.utils.commands.DiscsCommand;
 import goat.minecraft.minecraftnew.utils.commands.MeritCommand;
@@ -398,6 +399,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         autoComposter = new AutoComposter(this);
         VillagerWorkCycleManager.getInstance(this);
+        MarketTrendManager.getInstance(this);
 
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
@@ -744,8 +746,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
 
-        Speech speech = new Speech(this);
-        speech.removeAllSpeech();
 
         MusicDiscManager musicDiscManager = new MusicDiscManager(this);
         musicDiscManager.resetHostilityLevelsOnDisable();
