@@ -7,9 +7,12 @@ import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
+import goat.minecraft.minecraftnew.subsystems.villagers.MarketTrendManager;
+import goat.minecraft.minecraftnew.subsystems.villagers.VillagerChatLines;
+import goat.minecraft.minecraftnew.subsystems.villagers.WorkCycleMessages;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
-import goat.minecraft.minecraftnew.utils.devtools.Speech;
+import goat.minecraft.minecraftnew.utils.devtools.VillagerNameRepository;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
@@ -1103,8 +1106,7 @@ public class VillagerTradeManager implements Listener {
                 if(player.isSneaking()){
                     return;
                 }
-                Speech speech = new Speech(plugin);
-                speech.createText(villager.getLocation(), "If you had 4 emeralds and crouched, you could hire me to work at your base!", 3);
+                player.sendMessage("If you had 4 emeralds and crouched, you could hire me to work at your base!");
                 return;
             }
             playerVillagerMap.put(player, villager); // Store the villager in the map with the player
@@ -1167,6 +1169,12 @@ public class VillagerTradeManager implements Listener {
                 discount += 0.05 * level;
             }
             finalCost *= (1 - discount);
+        }
+
+        // Apply global market trend
+        MarketTrendManager trendManager = MarketTrendManager.getInstance();
+        if (trendManager != null) {
+            finalCost *= trendManager.getTrendMultiplier();
         }
 
         return Math.max(1, (int) Math.floor(finalCost));
@@ -1307,6 +1315,17 @@ public class VillagerTradeManager implements Listener {
         addVillagerPetButton(player, tradeGUI);
 
         player.openInventory(tradeGUI);
+
+        String rawName = ChatColor.stripColor(villager.getCustomName() == null ? "Villager" : villager.getCustomName());
+        boolean isTroll = VillagerNameRepository.isTrollName(rawName);
+        player.sendMessage(ChatColor.GRAY + "<" + rawName + "> " +
+                VillagerChatLines.getOpenLine(rawName, isTroll));
+        if (Math.random() < 0.10) {
+            String req = WorkCycleMessages.getRequirement(profession);
+            if (req != null) {
+                player.sendMessage(ChatColor.GRAY + "<" + rawName + "> " + req);
+            }
+        }
     }
 
 
@@ -1420,8 +1439,20 @@ public class VillagerTradeManager implements Listener {
                 }
 
                 Villager stored = playerVillagerMap.get(player);
-                if (stored != null && stored.hasMetadata("tempTradeVillager")) {
-                    stored.remove();
+                if (stored != null) {
+                    String rawName = ChatColor.stripColor(stored.getCustomName() == null ? "Villager" : stored.getCustomName());
+                    boolean isTroll = VillagerNameRepository.isTrollName(rawName);
+                    player.sendMessage(ChatColor.GRAY + "<" + rawName + "> " +
+                            VillagerChatLines.getCloseLine(rawName, isTroll));
+                    if (Math.random() < 0.10) {
+                        String req = WorkCycleMessages.getRequirement(stored.getProfession());
+                        if (req != null) {
+                            player.sendMessage(ChatColor.GRAY + "<" + rawName + "> " + req);
+                        }
+                    }
+                    if (stored.hasMetadata("tempTradeVillager")) {
+                        stored.remove();
+                    }
                     playerVillagerMap.remove(player);
                 }
 
