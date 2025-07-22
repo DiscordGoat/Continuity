@@ -868,7 +868,7 @@ public class UltimateEnchantmentListener implements Listener {
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.ENDLESS_WARP)) {
-            return Integer.MAX_VALUE;
+            return 100;
         }
         List<Long> list = getWarpChargeList(player);
         long now = System.currentTimeMillis();

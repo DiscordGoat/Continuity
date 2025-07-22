@@ -204,40 +204,36 @@ Scaling Max: 0.01 Spirit Chance
 
 Common:
 Spirit Chance I: +0.0002 Spirit Chance, Max level 3
+Timber I: +4% Double Logs Chance, Max level 5
+Leverage I: +2% Haste Chance, Max level 6
+Forest Frenzy: +10s Haste Duration, Max level 6
 
 Uncommon:
 Spirit Chance II: +0.0004 Spirit Chance, Max level 3
+Timber II: +4% Double Logs Chance, Max level 5
+Leverage II: +2% Haste Chance, Max level 6
+Photosynthesis: +1 Health when using Treecapitator, Max level 6
 
 Rare:
 Spirit Chance III: +0.0006 Spirit Chance, Max level 3
+Timber III: +4% Double Logs Chance, Max level 5
+Leverage III: +2% Haste Chance, Max level 4
+100 Acre Woods: +1% Chance to gain a Honey Bottle when chopping trees, Max level 5
+Spectral Armor: -10% Spirit Damage, Max level 3
 
 Epic:
 Spirit Chance IV: +0.0008 Spirit Chance, Max level 3
+Timber IV: +4% Double Logs Chance, Max level 5
+Leverage IV: +2% Haste Chance, Max level 6
+Deforestation: +1 Potency of Haste, Max level 3
+HeadHunter: +10% Damage to Spirits, Max level 3
 
 Legendary:
 Spirit Chance V: +0.0010 Spirit Chance, Max level 4
-
-
-
-Combat:
-Scaling Stat: Arrow Damage Increase
-Scaling Max: +200%
-
-Common:
-Arrow Damage Increase I: +4% Arrow Damage, Max level 3
-
-Uncommon:
-Arrow Damage Increase II: +8% Arrow Damage, Max level 3
-
-Rare:
-Arrow Damage Increase III: +12% Arrow Damage, Max level 3
-
-Epic:
-Arrow Damage Increase IV: +16% Arrow Damage, Max level 3
-
-Legendary:
-Arrow Damage Increase V: +20% Arrow Damage, Max level 4
-
+Timber V: +4% Double Logs Chance, Max level 5
+Leverage V: +2% Haste Chance, Max level 4
+Ancient Confusion: -10 Spirit Level, Max level 5
+Redemption: +50% Chance to Replant a sapling nearby, Max level 2
 
 
 
@@ -246,20 +242,50 @@ Scaling Stat: Bonus Pet XP Chance
 Scaling Max: 100% Bonus Pet XP Chance
 
 Common:
-Bonus Pet XP Chance I: +0.02, Max Level 3
+Bonus Pet XP I: +0.02, Max Level 3
+Lullaby: Increases range by 50%, Max level 1
+Flight: Increases Flight Distance by 0.1 KM, max level 5
+Digging Claws: Double Haste Duration, Max level 1
+Devour: Double Food Gains, Max level 1
+Angler: Increases Bonus Sea Creature Chance by 50%, Max level 2
+Leap: +50% chance to remove Hunger cost, Max level 2
+Lumberjack: Increases Bonus Log Yield by +1, Max level 5
 
 Uncommon:
-Bonus Pet XP Chance II: +0.04, Max Level 3
+Bonus Pet XP II: +0.04, Max Level 3
+Antidote: Remove cooldown, Max level 1
+Green Thumb: Reduces cooldown by 25%, Max level 4
+Collector: Increases range by 50%, Max level 1
+Walking Fortress: Increase Damage Reduction by 10%, Max level 2
+Shotcalling: Increase Bonus Arrow Damage by 5%, Max level 4
+Speed Boost: Increase Bonus Walk Speed by 10%, Max level 5
 
 Rare:
-Bonus Pet XP Chance III: +0.06, Max Level 3
+Bonus Pet XP III: +0.06, Max Level 3
+Waterlogged: Reduces cooldown of Oxygen Recovery by 1s, Max level 1
+Endless Warp: Increases bonus Warp stacks by 100, Max level 1
+Decay: +5 stacks of Deteriorate, Max level 5
+Aspect Of Frost: Double Slow Duration, Max level 1
+Practice: Increases Bonus Bartering XP by 5%, Max level 9
 
 Epic:
-Bonus Pet XP Chance IV: +0.08, Max Level 3
+Bonus Pet XP IV: +0.08, Max Level 3
+Secret Legion: Removes Hunger Cost of Legionnaires, Max level 1
+Blacklung: Removes Oxygen loss in the Overworld, Max level 1
+Comfortable: Doubles Absorption Duration and Health, Max level 1
+Splash Potion: Further Reduce Brewtime by 10%, Max level 5
+Experimentation: Further Increase Potion Duration by 5%, Max level 8
+Revenant: Reduce Resurrection time by 1m, Max level 1
 
 Legendary:
-Bonus Pet XP Chance V: +0.1, Max Level 4
-
+Bonus Pet XP V: +0.1, Max Level 4
+Compact Stone: Reduces the Stone needed by 50%, Max level 1
+Groot: Reduces the Wood needed by 50%, Max level 1
+Composter: Reduces the dirt needed by 50%, Max level 1
+Elite: Increase Bonus Damage by 10%, Max level 2
+Haggle: Increase Discount by 5%, Max level 1
+Quirky: Increases the Effect of Traits by 10%, Max level 5
+Natural Selection: Removes the lowest Rarity from the pool, Max level 5 (scales, level 1 removes common traits, 2 uncommon, 3 rare, 4 epic, 5 legendary. at max level, the only rarity Trait you can obtain is Mythic)
 
 
 Player:
@@ -268,6 +294,17 @@ Scaling Max: +40 Bonus Health
 
 Common:
 Health I: +1 Bonus Health, Max level 4
+Study Brewing: +1 Brewing Talent, Max level 100
+Study Smithing: +1 Smithing Talent, Max level 100
+Study Culinary: +1 Culinary Talent, Max level 100
+Study Bartering: +1 Bartering Talent, Max level 100
+Study Forestry: +1 Forestry Talent, Max level 100
+Study Taming: +1 Taming Talent, Max level 100
+Study Combat: +1 Combat Talent, Max level 100
+Study Terraforming: +1 Terraforming Talent, Max level 100
+Study Mining: +1 Mining Talent, Max level 100
+Study Farming: +1 Farming Talent, Max level 100
+Study Fishing: +1 Fishing Talent, Max level 100
 
 Uncommon:
 Health II: +1 Bonus Health, Max level 6
@@ -280,6 +317,32 @@ Health IV: +1 Bonus Health, Max level 10
 
 Legendary:
 Health V: +1 Bonus Health, Max level 12
+
+
+
+Combat:
+Scaling Stat: Arrow Damage Increase
+Scaling Max: +200%
+
+Common:
+Arrow Damage Increase I: +4% Arrow Damage, Max level 3
+Sword Damage I: +4% Sword Damage, Max level 5
+
+Uncommon:
+Arrow Damage Increase II: +8% Arrow Damage, Max level 3
+Sword Damage II: +4% Sword Damage, Max level 5
+
+Rare:
+Arrow Damage Increase III: +12% Arrow Damage, Max level 3
+Sword Damage III: +4% Sword Damage, Max level 5
+
+Epic:
+Arrow Damage Increase IV: +16% Arrow Damage, Max level 3
+Sword Damage IV: +4% Sword Damage, Max level 5
+
+Legendary:
+Arrow Damage Increase V: +20% Arrow Damage, Max level 4
+Sword Damage V: +4% Sword Damage, Max level 5
 
 
 

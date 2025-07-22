@@ -851,7 +851,7 @@ public class PetManager implements Listener {
                 double flameDamage = 3.0 + (level * 0.08);
                 return "Creates " + ChatColor.RED + "explosive fire bursts " + ChatColor.GRAY + "while moving that deal " + ChatColor.RED + String.format("%.1f", flameDamage) + " damage " + ChatColor.GRAY + "to monsters within " + ChatColor.YELLOW + "8 blocks" + ChatColor.GRAY + ". Distance reduces damage.";
             case ENDLESS_WARP:
-                return ChatColor.DARK_PURPLE + "Grants infinite Warp charges for the Warp enchant.";
+                return ChatColor.DARK_PURPLE + "Grants +100 stacks of Warp for the Warp enchant.";
             case SPLASH_POTION:
                 return "Reduces brew time by " + ChatColor.YELLOW + level/2 + "%" + ChatColor.GRAY + ".";
             case EXPERIMENTATION:
@@ -1219,7 +1219,7 @@ public class PetManager implements Listener {
 
             // Calculate the XP required for the next level
             // Each level requires 2 more XP than the previous level
-            return baseXP + (level - 1) * 8;
+            return baseXP + (level - 1) * 14;
         }
     }
 

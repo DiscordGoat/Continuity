@@ -808,16 +808,15 @@ public class SpawnMonsters implements Listener {
 
     private String getColorForLevel(int level) {
         if (level <= 20) return ChatColor.GRAY.toString();
+        else if (level <= 20) return ChatColor.WHITE.toString();
         else if (level <= 40) return ChatColor.GREEN.toString();
-        else if (level <= 60) return ChatColor.AQUA.toString();
-        else if (level <= 80) return ChatColor.LIGHT_PURPLE.toString();
-        else if (level <= 100) return ChatColor.GOLD.toString();
-        else if (level <= 120) return ChatColor.BLUE.toString();
-        else if (level <= 150) return ChatColor.RED.toString();
-        else if (level <= 200) return ChatColor.DARK_RED.toString();
-        else if (level <= 250) return ChatColor.DARK_PURPLE.toString();
-        else if (level <= 280) return ChatColor.BLACK.toString();
-        else return ChatColor.WHITE.toString();
+        else if (level <= 60) return ChatColor.BLUE.toString();
+        else if (level <= 100) return ChatColor.DARK_PURPLE.toString();
+        else if (level <= 150) return ChatColor.GOLD.toString();
+        else if (level <= 200) return ChatColor.AQUA.toString();
+        else if (level <= 250) return ChatColor.DARK_RED.toString();
+        else if (level <= 300) return ChatColor.BLACK.toString();
+        else return ChatColor.BLACK.toString();
     }
 
     private String formatMobType(String mobType) {
