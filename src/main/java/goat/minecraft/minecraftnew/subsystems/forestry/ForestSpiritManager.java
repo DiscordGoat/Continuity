@@ -137,12 +137,6 @@ public class ForestSpiritManager implements Listener {
         int tier = getSpiritTier(player);
         int level = getSpiritLevelForTier(tier);
 
-        ItemStack axe = player.getInventory().getItemInMainHand();
-        int confusion = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ANCIENT_CONFUSION);
-        if (confusion > 0) {
-            level = Math.max(1, level - confusion * 10);
-        }
-
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         World world = loc.getWorld();
         if (world == null) return;
@@ -440,13 +434,7 @@ public class ForestSpiritManager implements Listener {
 
         if (entity.hasMetadata("forestSpirit") && damager instanceof Player) {
             Player player = (Player) damager;
-            ItemStack axe = player.getInventory().getItemInMainHand();
-            int headhunter = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.HEADHUNTER);
-            int confusion = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ANCIENT_CONFUSION);
-
-            if (headhunter > 0) {
-                event.setDamage(event.getDamage() * (2 + headhunter * 0.10));
-            }
+            // Apply minor knock sound when damaging a spirit
 
             World world = entity.getWorld();
             Location loc = entity.getLocation();
@@ -455,7 +443,6 @@ public class ForestSpiritManager implements Listener {
 
         if (damager.hasMetadata("forestSpirit") && entity instanceof Player) {
             Player player = (Player) entity;
-            ItemStack axe = player.getInventory().getItemInMainHand();
             CatalystManager catalystManager = CatalystManager.getInstance();
             if (catalystManager == null) {
                 return;
@@ -478,10 +465,6 @@ public class ForestSpiritManager implements Listener {
             // Calculate spirit chance bonus: 5% + (tier * 1%)
             double damageReduction = BASE_DAMAGE_REDUCTION + (catalystTier * PER_TIER_BONUS);
             event.setDamage(event.getDamage() * (1 - damageReduction));
-            int spectral = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.SPECTRAL_ARMOR);
-            if (spectral > 0) {
-                event.setDamage(event.getDamage() * (1 - spectral * 0.10));
-            }
         }
     }
 
