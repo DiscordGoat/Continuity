@@ -87,11 +87,6 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Grants arrows when holding a bow with none left.",
                             ChatColor.BLUE + "On Out Of Arrows While Bow Equipped: " + ChatColor.GRAY + "Gives one arrow."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Rebreather", 2, Material.TURTLE_HELMET,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Regenerates breath underwater below Y=50.",
-                            ChatColor.BLUE + "When Underwater Below Y=50: " + ChatColor.GRAY + "+1 Oxygen every 3s."
-                    )),
             new Perk(ChatColor.DARK_GRAY + "Keepinventory", 3, Material.CHEST,
                     Arrays.asList(
                             ChatColor.GRAY + "Keeps your items on death after login.",
