@@ -270,7 +270,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new QuickSwap(this, playerData), this);
         getServer().getPluginManager().registerEvents(new Restock(this, playerData), this);
         getServer().getPluginManager().registerEvents(new Unlooting(this, playerData), this);
-        getServer().getPluginManager().registerEvents(new Rebreather(this, playerData), this);
         getServer().getPluginManager().registerEvents(new Keepinventory(this, playerData), this);
 
         doubleEnderchest = new DoubleEnderchest(this, playerData);
