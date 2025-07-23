@@ -43,10 +43,7 @@ public class EffigyUpgradeSystem implements Listener {
         PAYOUT("Payout", "Sells stacks of logs for emeralds", Material.EMERALD, 4, 24),
         ORCHARD("Orchard", "Higher perfect apple droprate", Material.APPLE, 4, 29),
         GOLDEN_APPLE("Golden Apple", "Chance to drop enchanted apple", Material.ENCHANTED_GOLDEN_APPLE, 3, 30),
-        TRESPASSER("Trespasser", "+3 notoriety per level", Material.BARRIER, 6, 31),
-        HEADHUNTER("Headhunter", "+10% damage to forest spirits", Material.IRON_AXE, 5, 32),
-        SPECTRAL_ARMOR("Spectral Armor", "Damage reduction from spirits", Material.CHAINMAIL_CHESTPLATE, 5, 33),
-        ANCIENT_CONFUSION("Ancient Confusion", "Lowers spirit level", Material.FERMENTED_SPIDER_EYE, 4, 34);
+        TRESPASSER("Trespasser", "+3 notoriety per level", Material.BARRIER, 6, 31);
 
         private final String displayName;
         private final String description;
@@ -110,8 +107,7 @@ public class EffigyUpgradeSystem implements Listener {
         // Misc upgrades
         gui.setItem(27, createHeader(Material.GOLDEN_AXE, ChatColor.GOLD + "✨ Special"));
         for (UpgradeType t : Arrays.asList(UpgradeType.ORCHARD, UpgradeType.GOLDEN_APPLE,
-                UpgradeType.TRESPASSER, UpgradeType.HEADHUNTER,
-                UpgradeType.SPECTRAL_ARMOR, UpgradeType.ANCIENT_CONFUSION)) {
+                UpgradeType.TRESPASSER)) {
             gui.setItem(t.getSlot(), createUpgradeItem(t, axe, getUpgradeCost(t), available));
         }
 
@@ -263,7 +259,6 @@ public class EffigyUpgradeSystem implements Listener {
 
     private int getUpgradeCost(UpgradeType type) {
         switch (type) {
-            case ANCIENT_CONFUSION:
             case FEED:
             case OAK_YIELD:
             case SPRUCE_YIELD:
@@ -464,9 +459,6 @@ public class EffigyUpgradeSystem implements Listener {
             case ORCHARD: return "🍎";
             case GOLDEN_APPLE: return "🏆";
             case TRESPASSER: return "☠";
-            case HEADHUNTER: return "🗡";
-            case SPECTRAL_ARMOR: return "🛡";
-            case ANCIENT_CONFUSION: return "❓";
             default: return "⬡";
         }
     }

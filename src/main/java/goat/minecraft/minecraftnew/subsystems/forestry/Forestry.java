@@ -538,7 +538,7 @@ public class Forestry implements Listener {
      * @param forestryLevel The player's forestry level.
      */
     public void processPerfectAppleChance(Player player, Block block, int forestryLevel, int orchardLevel) {
-        double chance = forestryLevel * 0.01 + orchardLevel * 1.0;
+        double chance = forestryLevel * 0.01 + orchardLevel * 0.1;
         if (random.nextDouble() * 100 < chance) {
             final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
             new BukkitRunnable() {
