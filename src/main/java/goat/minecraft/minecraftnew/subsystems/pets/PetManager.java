@@ -694,7 +694,7 @@ public class PetManager implements Listener {
                 int requiredMaterials = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
                 return ChatColor.GRAY + "Compacts " + requiredMaterials + " stone into " + ChatColor.DARK_BLUE + "Compact Stone" + ChatColor.GRAY + " every ore break.";
             case WATERLOGGED:
-                return ChatColor.GRAY + "Grants infinite " + ChatColor.AQUA + "Water Breathing.";
+                return ChatColor.GRAY + "Grants Breath " + ChatColor.AQUA + "Regeneration below Y=44.";
             case ASPECT_OF_THE_END:
                 return ChatColor.BLUE + "Right Click: " + ChatColor.DARK_PURPLE + "Warp forward.";
             case BLAZE:

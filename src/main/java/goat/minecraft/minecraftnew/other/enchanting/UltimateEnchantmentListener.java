@@ -846,6 +846,9 @@ public class UltimateEnchantmentListener implements Listener {
         if(BlessingUtils.hasFullSetBonus(player, "Duskblood")){
             DEFAULT_WARP_CHARGES += 60;
         }
+        if(PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player).hasPerk(PetManager.PetPerk.ENDLESS_WARP)){
+            DEFAULT_WARP_CHARGES += 100;
+        }
         return DEFAULT_WARP_CHARGES + lvl * 5;
     }
 
@@ -864,29 +867,7 @@ public class UltimateEnchantmentListener implements Listener {
         return list;
     }
 
-    private int getAvailableWarpCharges(Player player) {
-        PetManager petManager = PetManager.getInstance(plugin);
-        PetManager.Pet activePet = petManager.getActivePet(player);
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.ENDLESS_WARP)) {
-            return 100;
-        }
-        List<Long> list = getWarpChargeList(player);
-        long now = System.currentTimeMillis();
-        int count = 0;
-        for (long t : list) {
-            if (t <= now) {
-                count++;
-            }
-        }
-        return count;
-    }
-
     private boolean consumeWarpCharge(Player player) {
-        PetManager petManager = PetManager.getInstance(plugin);
-        PetManager.Pet activePet = petManager.getActivePet(player);
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.ENDLESS_WARP)) {
-            return true;
-        }
         List<Long> list = getWarpChargeList(player);
         long now = System.currentTimeMillis();
         for (int i = list.size() - 1; i >= 0; i--) {
