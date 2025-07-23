@@ -16,6 +16,8 @@ public class Antidote implements Listener {
 
     private final PetManager petManager;
     private final JavaPlugin plugin;
+    private final Map<UUID, Long> lastCureTime = new HashMap<>();
+    private static final long ANTIDOTE_COOLDOWN = 60 * 1000; // 1 minute cooldown
 
     private static final List<PotionEffectType> NEGATIVE_EFFECTS = List.of(
             PotionEffectType.BLINDNESS,
@@ -41,6 +43,7 @@ public class Antidote implements Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
+                long currentTime = System.currentTimeMillis();
                 for (Player player : plugin.getServer().getOnlinePlayers()) {
                     // Check if the player has an active pet with the Antidote perk
                     PetManager.Pet activePet = petManager.getActivePet(player);
@@ -48,13 +51,21 @@ public class Antidote implements Listener {
                         continue;
                     }
 
-                    removeAllNegativePotionEffects(player);
+                    UUID playerId = player.getUniqueId();
+                    long lastCure = lastCureTime.getOrDefault(playerId, 0L);
+                    if (currentTime - lastCure < ANTIDOTE_COOLDOWN) {
+                        continue; // Cooldown hasn't expired
+                    }
+
+                    if (removeAllNegativePotionEffects(player)) {
+                        lastCureTime.put(playerId, currentTime); // Set cooldown
+                    }
                 }
             }
         }.runTaskTimer(plugin, 0L, 20L); // Initial delay 0, repeat every 20 ticks (1 second)
     }
 
-    private void removeAllNegativePotionEffects(Player player) {
+    private boolean removeAllNegativePotionEffects(Player player) {
         // Collect active negative potion effects
         List<PotionEffect> activeNegativeEffects = player.getActivePotionEffects().stream()
                 .filter(effect -> NEGATIVE_EFFECTS.contains(effect.getType()))
@@ -62,7 +73,7 @@ public class Antidote implements Listener {
 
         // If there are no negative effects, exit
         if (activeNegativeEffects.isEmpty()) {
-            return;
+            return false;
         }
 
         // Remove all negative effects
@@ -76,5 +87,6 @@ public class Antidote implements Listener {
         if (removedAny) {
             player.playSound(player.getLocation(), Sound.ENTITY_WANDERING_TRADER_DRINK_MILK, 1.0F, 1.0F);
         }
+        return removedAny;
     }
 }
