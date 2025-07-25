@@ -132,6 +132,13 @@ public class StatsCalculator {
         if (pet != null && pet.getTrait() == PetTrait.PARANORMAL) {
             chance += pet.getTrait().getValueForRarity(pet.getTraitRarity());
         }
+        CatalystManager cm = CatalystManager.getInstance();
+        if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.DEATH)) {
+            Catalyst cat = cm.findNearestCatalyst(player.getLocation(), CatalystType.DEATH);
+            if (cat != null) {
+                chance += 0.01 + (cm.getCatalystTier(cat) * 0.001);
+            }
+        }
         return chance * 100.0;
     }
 

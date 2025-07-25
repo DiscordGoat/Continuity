@@ -27,6 +27,9 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -130,6 +133,15 @@ public class Gravedigging implements Listener {
         }
         int intuition = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_INTUITION);
         chance += 0.001 * intuition;
+
+        CatalystManager catalystManager = CatalystManager.getInstance();
+        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.DEATH)) {
+            Catalyst cat = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.DEATH);
+            if (cat != null) {
+                int tier = catalystManager.getCatalystTier(cat);
+                chance += 0.01 + (tier * 0.001);
+            }
+        }
         if (isNight(world)) {
             chance = Math.min(1.0, chance * 2);
         }

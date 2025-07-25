@@ -146,6 +146,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private StriderSetBonus striderSetBonus;
     private SwiftStepMasteryBonus swiftStepMasteryBonus;
     private RejuvenationCatalystListener rejuvenationCatalystListener;
+    private DeathCatalystListener deathCatalystListener;
 
 
 
@@ -312,6 +313,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         // Initialize catalyst manager for beacon charm catalysts
         CatalystManager.initialize(this);
         rejuvenationCatalystListener = new RejuvenationCatalystListener(this);
+        deathCatalystListener = new DeathCatalystListener(this);
 
 
 
