@@ -14,14 +14,13 @@ import java.util.List;
 
 public class SwordTalentDamageStrategy implements DamageCalculationStrategy {
 
-    // all of the sword‐type talents on the Combat tree
+    // all sword damage talents on the Combat tree
     private static final List<Talent> SWORD_TALENTS = List.of(
-            Talent.WOODEN_SWORD,
-            Talent.STONE_SWORD,
-            Talent.IRON_SWORD,
-            Talent.GOLD_SWORD,
-            Talent.DIAMOND_SWORD,
-            Talent.NETHERITE_SWORD
+            Talent.SWORD_DAMAGE_I,
+            Talent.SWORD_DAMAGE_II,
+            Talent.SWORD_DAMAGE_III,
+            Talent.SWORD_DAMAGE_IV,
+            Talent.SWORD_DAMAGE_V
     );
 
     @Override
@@ -45,10 +44,10 @@ public class SwordTalentDamageStrategy implements DamageCalculationStrategy {
         }
 
         double totalBonus = 0.0;
-        // sum up 8% per level, across all sword talents
+        // sum up 4% per level across all sword damage talents
         for (Talent t : SWORD_TALENTS) {
             int lvl = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, t);
-            totalBonus += lvl * 0.08;
+            totalBonus += lvl * 0.04;
         }
 
         if (totalBonus <= 0) {

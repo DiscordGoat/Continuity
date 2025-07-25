@@ -70,10 +70,13 @@ public class StatsCalculator {
     public double getArrowDamageIncrease(Player player) {
         double bonus = 0.0;
         if (SkillTreeManager.getInstance() != null) {
-            int bowLevel = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.BOW_MASTERY);
-            bonus += bowLevel * 8.0;
-            if (SkillTreeManager.getInstance().hasTalent(player, Talent.RECURVE_MASTERY)) {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            bonus += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_I) * 4.0;
+            bonus += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_II) * 8.0;
+            bonus += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_III) * 12.0;
+            bonus += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_IV) * 16.0;
+            bonus += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_V) * 20.0;
+            if (mgr.hasTalent(player, Talent.RECURVE_MASTERY)) {
                 bonus += 5.0;
             }
         }
