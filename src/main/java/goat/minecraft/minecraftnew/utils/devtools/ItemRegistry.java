@@ -1756,20 +1756,6 @@ public class ItemRegistry {
         );
     }
 
-    public static ItemStack getWeaponsmithEnchant() {
-        return createCustomItem(
-                Material.RED_DYE,
-                ChatColor.YELLOW + "Lethal Tempo",
-                Arrays.asList(
-                        ChatColor.GRAY + "Max level of 5",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Adds 1 Level of Bloodlust to items.",
-                        ChatColor.DARK_PURPLE + "Smithing Item"
-                ),
-                1,
-                false,
-                true
-        );
-    }
 
     public static ItemStack getArmorsmithReforge() {
         return createCustomItem(

@@ -1022,10 +1022,6 @@ public class AnvilRepair implements Listener {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
 
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Lethal Tempo")&& isSword(repairee)){
-            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Bloodlust", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Bloodlust") +1);
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
-
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Composter")&& isShovel(repairee)){
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Composter", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Composter") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);

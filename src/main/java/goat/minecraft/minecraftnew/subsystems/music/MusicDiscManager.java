@@ -1041,7 +1041,6 @@ public class MusicDiscManager implements Listener {
         auctionItems.add(new AuctionItem(ItemRegistry.getExperienceArtifact(), 32));
         auctionItems.add(new AuctionItem(ItemRegistry.getLeatherworkerArtifact(), 64));
         auctionItems.add(new AuctionItem(ItemRegistry.getRandomArmorTrim(), 16));
-        auctionItems.add(new AuctionItem(ItemRegistry.getWeaponsmithEnchant(), 32));
         auctionItems.add(new AuctionItem(ItemRegistry.getToolsmithEfficiency(), 32));
         auctionItems.add(new AuctionItem(ItemRegistry.getToolsmithUnbreaking(), 32));
         auctionItems.add(new AuctionItem(ItemRegistry.getWeaponsmithSharpness(), 32));

@@ -18,7 +18,7 @@ Forestry:
 Forestry level is determined by the lorax
 chopping down the trees pleases the lorax
 1 forestry skill point + 1 stack of Deforestation
-(Deforestation is a bloodlust perk that grants haste 1 and speed 1 per level. it has a (ForestryLevel/100)
+(Deforestation is a combat buff perk that grants haste 1 and speed 1 per level. it has a (ForestryLevel/100)
 chance of activating for 5 seconds)
 45 perks = +1 Deforestation for 1(*forestry_Level) seconds.
 5 Abilities =
@@ -38,13 +38,13 @@ Bountiful Harvest
 
 Combat:
 Combat level is determined by kills.
-1 combat skill point + activate bloodlust for 1(*combat_level) seconds per level
-(Bloodlust is a passive combat skill that activates on hitting. It stacks and resets timer per hit and by default adds haste 1)
+1 combat skill point + activate a short combat buff for 1(*combat_level) seconds per level
+(This buff is a passive combat skill that activates on hitting. It stacks and resets timer per hit and by default adds haste 1)
 50 levels, 5 abilities, 45 perks:
-45 perks = +1 bloodlust stack per hit
+45 perks = +1 combat buff stack per hit
 5 abilities =
-10 = bloodlust regeneration 1
-20 = bloodlust speed 1
+10 = combat buff regeneration 1
+20 = combat buff speed 1
 30 = resistance 1
 40 = all effects are set to 2
 50 = stun chance (slowness 5, weakness 5): 15% on hit

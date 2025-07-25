@@ -634,7 +634,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new AspectOfTheJourney(), this);
         getServer().getPluginManager().registerEvents(new Stun(), this);
         getServer().getPluginManager().registerEvents(new LethalReaction(), this);
-        getServer().getPluginManager().registerEvents(new Bloodlust(this), this);
         getServer().getPluginManager().registerEvents(new Rappel(), this);
         getServer().getPluginManager().registerEvents(new Preservation(), this);
         getServer().getPluginManager().registerEvents(new WaterAspect(), this);
@@ -660,7 +659,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomEnchantmentManager.registerEnchantment("Aspect of the Journey", 1, true);
         CustomEnchantmentManager.registerEnchantment("Stun", 5, true);
         CustomEnchantmentManager.registerEnchantment("Lethal Reaction", 10, true);
-        CustomEnchantmentManager.registerEnchantment("Bloodlust", 5, true);
         CustomEnchantmentManager.registerEnchantment("Experience", 5, true);
         CustomEnchantmentManager.registerEnchantment("Rappel", 1, true);
         CustomEnchantmentManager.registerEnchantment("Preservation", 1, true);
