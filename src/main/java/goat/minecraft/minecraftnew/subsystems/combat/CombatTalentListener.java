@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.subsystems.combat.BloodlustManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -66,6 +67,10 @@ public class CombatTalentListener implements Listener {
             }
         }
 
+        BloodlustManager bl = BloodlustManager.getInstance();
+        if (bl != null) {
+            bl.onHit(player);
+        }
     }
 
     @EventHandler
@@ -80,14 +85,9 @@ public class CombatTalentListener implements Listener {
             spawnSoulOrb(mob.getLocation(), killer.getUniqueId());
         }
 
-        if (manager.hasTalent(killer, Talent.BLOODLUST)) {
-            int dur = 100; // 5s
-            int extra = 0;
-            extra += manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_I) * 80;
-            extra += manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_II) * 80;
-            extra += manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_III) * 80;
-            extra += manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_IV) * 80;
-            killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, dur + extra, 0));
+        BloodlustManager bl = BloodlustManager.getInstance();
+        if (bl != null) {
+            bl.addKill(killer);
         }
     }
 
