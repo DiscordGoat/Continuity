@@ -53,7 +53,7 @@ public class CombatTalentListener implements Listener {
         int ultLevel = manager.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ULTIMATUM);
         if (ultLevel > 0) {
             long last = ultimatumCooldown.getOrDefault(player.getUniqueId(), 0L);
-            if (System.currentTimeMillis() - last >= 20_000L && random.nextDouble() < ultLevel * 0.01) {
+            if (System.currentTimeMillis() - last >= 20_000L && random.nextDouble() < ultLevel * 0.0025) {
                 Location loc = player.getLocation();
                 for (Entity e : player.getWorld().getNearbyEntities(loc, 25, 25, 25)) {
                     if (e instanceof Monster mob) {
@@ -78,6 +78,16 @@ public class CombatTalentListener implements Listener {
         int level = manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.VAMPIRIC_STRIKE);
         if (level > 0 && random.nextDouble() < level * 0.01) {
             spawnSoulOrb(mob.getLocation(), killer.getUniqueId());
+        }
+
+        if (manager.hasTalent(killer, Talent.BLOODLUST)) {
+            int dur = 100; // 5s
+            int extra = 0;
+            extra += manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_I) * 80;
+            extra += manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_II) * 80;
+            extra += manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_III) * 80;
+            extra += manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_IV) * 80;
+            killer.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, dur + extra, 0));
         }
     }
 
