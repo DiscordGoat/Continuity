@@ -27,8 +27,8 @@ public class BloodlustListener implements Listener {
 
     @EventHandler
     public void onHit(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player player) {
-            manager.handleHit(player);
+        if (event.getDamager() instanceof Player player && event.getEntity() instanceof org.bukkit.entity.LivingEntity target) {
+            manager.handleHit(player, target);
         }
     }
 }
