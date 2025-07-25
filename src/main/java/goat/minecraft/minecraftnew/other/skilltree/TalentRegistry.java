@@ -38,16 +38,33 @@ public final class TalentRegistry {
         SKILL_TALENTS.put(
                 Skill.COMBAT,
                 Arrays.asList(
-                        Talent.WOODEN_SWORD,
-                        Talent.STONE_SWORD,
-                        Talent.IRON_SWORD,
-                        Talent.GOLD_SWORD,
-                        Talent.DIAMOND_SWORD,
-                        Talent.NETHERITE_SWORD,
-                        Talent.BOW_MASTERY,
+                        Talent.ARROW_DAMAGE_INCREASE_I,
+                        Talent.SWORD_DAMAGE_I,
+                        Talent.VAMPIRIC_STRIKE,
+                        Talent.BLOODLUST,
+                        Talent.BLOODLUST_DURATION_I,
+
+                        Talent.ARROW_DAMAGE_INCREASE_II,
+                        Talent.SWORD_DAMAGE_II,
+                        Talent.BLOODLUST_DURATION_II,
+                        Talent.RETRIBUTION,
+                        Talent.VENGEANCE,
+
+                        Talent.ARROW_DAMAGE_INCREASE_III,
+                        Talent.SWORD_DAMAGE_III,
                         Talent.DONT_MINE_AT_NIGHT,
+                        Talent.HELLBENT,
+
+                        Talent.ARROW_DAMAGE_INCREASE_IV,
+                        Talent.SWORD_DAMAGE_IV,
+                        Talent.BLOODLUST_DURATION_III,
+                        Talent.ANTAGONIZE,
+
+                        Talent.ARROW_DAMAGE_INCREASE_V,
+                        Talent.SWORD_DAMAGE_V,
                         Talent.ULTIMATUM,
-                        Talent.VAMPIRIC_STRIKE
+                        Talent.REVENANT,
+                        Talent.BLOODLUST_DURATION_IV
                 )
         );
 

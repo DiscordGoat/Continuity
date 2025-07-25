@@ -168,85 +168,189 @@ public enum Talent {
             50,
             Material.GOLD_BLOCK
     ),
-    WOODEN_SWORD(
-            "Wooden Sword",
-            ChatColor.GRAY + "Train with a wooden blade",
-            ChatColor.RED + "+8% Damage",
-            6,
+    ARROW_DAMAGE_INCREASE_I(
+            "Arrow Damage Increase I",
+            ChatColor.GRAY + "Improve your aim",
+            ChatColor.RED + "+4% Arrow Damage",
+            3,
             1,
-            Material.WOODEN_SWORD
-    ),
-    STONE_SWORD(
-            "Stone Sword",
-            ChatColor.GRAY + "Master the stone blade",
-            ChatColor.RED + "+8% Damage",
-            6,
-            20,
-            Material.STONE_SWORD
-    ),
-    IRON_SWORD(
-            "Iron Sword",
-            ChatColor.GRAY + "Hone iron sword techniques",
-            ChatColor.RED + "+8% Damage",
-            6,
-            40,
-            Material.IRON_SWORD
-    ),
-    GOLD_SWORD(
-            "Gold Sword",
-            ChatColor.GRAY + "Wield the golden sword with skill",
-            ChatColor.RED + "+8% Damage",
-            6,
-            60,
-            Material.GOLDEN_SWORD
-    ),
-    DIAMOND_SWORD(
-            "Diamond Sword",
-            ChatColor.GRAY + "Harness the power of diamond",
-            ChatColor.RED + "+8% Damage",
-            6,
-            80,
-            Material.DIAMOND_SWORD
-    ),
-    NETHERITE_SWORD(
-            "Netherite Sword",
-            ChatColor.GRAY + "Master the ultimate blade",
-            ChatColor.RED + "+8% Damage",
-            6,
-            90,
-            Material.NETHERITE_SWORD
-    ),
-    BOW_MASTERY(
-            "Bow Mastery",
-            ChatColor.GRAY + "Sharpen your aim",
-            ChatColor.RED + "+8% Arrow Damage",
-            25,
-            10,
             Material.BOW
     ),
-    DONT_MINE_AT_NIGHT(
-            "Don't Mine at Night",
-            ChatColor.GRAY + "Creepers beware of seasoned fighters",
-            ChatColor.YELLOW + "+(10*level)% " + ChatColor.RED + "Creeper Damage",
-            6,
-            50,
-            Material.TNT
-    ),
-    ULTIMATUM(
-            "Ultimatum",
-            ChatColor.GRAY + "Occasionally unleash devastating fury",
-            ChatColor.YELLOW + "1% chance per level to trigger Fury",
-            2,
-            50,
-            Material.LIGHTNING_ROD
+    SWORD_DAMAGE_I(
+            "Sword Damage I",
+            ChatColor.GRAY + "Sharpen basic sword skills",
+            ChatColor.RED + "+4% Sword Damage",
+            5,
+            1,
+            Material.WOODEN_SWORD
     ),
     VAMPIRIC_STRIKE(
             "Vampiric Strike",
             ChatColor.GRAY + "Harvest souls for brief vitality",
             ChatColor.YELLOW + "1% chance per level to spawn a Soul Orb",
             6,
-            50,
+            1,
             Material.GHAST_TEAR
+    ),
+    BLOODLUST(
+            "Bloodlust",
+            ChatColor.GRAY + "Gain frenzy on monster kills",
+            ChatColor.YELLOW + "Activates Bloodlust for 5s on kill",
+            1,
+            1,
+            Material.RED_DYE
+    ),
+    BLOODLUST_DURATION_I(
+            "Bloodlust Duration I",
+            ChatColor.GRAY + "Extend Bloodlust",
+            ChatColor.YELLOW + "+4s Bloodlust duration",
+            5,
+            1,
+            Material.CLOCK
+    ),
+    ARROW_DAMAGE_INCREASE_II(
+            "Arrow Damage Increase II",
+            ChatColor.GRAY + "Hone your bowmanship",
+            ChatColor.RED + "+8% Arrow Damage",
+            3,
+            20,
+            Material.BOW
+    ),
+    SWORD_DAMAGE_II(
+            "Sword Damage II",
+            ChatColor.GRAY + "Improve sword technique",
+            ChatColor.RED + "+4% Sword Damage",
+            5,
+            20,
+            Material.STONE_SWORD
+    ),
+    BLOODLUST_DURATION_II(
+            "Bloodlust Duration II",
+            ChatColor.GRAY + "Further extend Bloodlust",
+            ChatColor.YELLOW + "+4s Bloodlust duration",
+            5,
+            20,
+            Material.CLOCK
+    ),
+    RETRIBUTION(
+            "Retribution",
+            ChatColor.GRAY + "Gain stacks from hits",
+            ChatColor.YELLOW + "+1% chance to gain 10 stacks",
+            5,
+            20,
+            Material.IRON_SWORD
+    ),
+    VENGEANCE(
+            "Vengeance",
+            ChatColor.GRAY + "Prolong your frenzy",
+            ChatColor.YELLOW + "+1% chance to gain 20s duration",
+            2,
+            20,
+            Material.PAPER
+    ),
+    ARROW_DAMAGE_INCREASE_III(
+            "Arrow Damage Increase III",
+            ChatColor.GRAY + "Expert bow handling",
+            ChatColor.RED + "+12% Arrow Damage",
+            3,
+            40,
+            Material.BOW
+    ),
+    SWORD_DAMAGE_III(
+            "Sword Damage III",
+            ChatColor.GRAY + "Advanced swordplay",
+            ChatColor.RED + "+4% Sword Damage",
+            5,
+            40,
+            Material.IRON_SWORD
+    ),
+    DONT_MINE_AT_NIGHT(
+            "Don't Mine at Night",
+            ChatColor.GRAY + "Creepers beware of seasoned fighters",
+            ChatColor.YELLOW + "+10% Damage to Creepers",
+            6,
+            40,
+            Material.TNT
+    ),
+    HELLBENT(
+            "Hellbent",
+            ChatColor.GRAY + "Fight harder when wounded",
+            ChatColor.YELLOW + "+25% Damage below (10*level)% health",
+            6,
+            40,
+            Material.NETHER_BRICK
+    ),
+    ARROW_DAMAGE_INCREASE_IV(
+            "Arrow Damage Increase IV",
+            ChatColor.GRAY + "Masterful archery",
+            ChatColor.RED + "+16% Arrow Damage",
+            3,
+            60,
+            Material.BOW
+    ),
+    SWORD_DAMAGE_IV(
+            "Sword Damage IV",
+            ChatColor.GRAY + "Expert sword mastery",
+            ChatColor.RED + "+4% Sword Damage",
+            5,
+            60,
+            Material.DIAMOND_SWORD
+    ),
+    BLOODLUST_DURATION_III(
+            "Bloodlust Duration III",
+            ChatColor.GRAY + "Greatly extend Bloodlust",
+            ChatColor.YELLOW + "+4s Bloodlust duration",
+            5,
+            60,
+            Material.CLOCK
+    ),
+    ANTAGONIZE(
+            "Antagonize",
+            ChatColor.GRAY + "Delay incoming damage",
+            ChatColor.YELLOW + "Damage taken over (level)s",
+            7,
+            60,
+            Material.SHIELD
+    ),
+    ARROW_DAMAGE_INCREASE_V(
+            "Arrow Damage Increase V",
+            ChatColor.GRAY + "Legendary archery skill",
+            ChatColor.RED + "+20% Arrow Damage",
+            4,
+            80,
+            Material.BOW
+    ),
+    SWORD_DAMAGE_V(
+            "Sword Damage V",
+            ChatColor.GRAY + "Unmatched sword mastery",
+            ChatColor.RED + "+4% Sword Damage",
+            5,
+            80,
+            Material.NETHERITE_SWORD
+    ),
+    ULTIMATUM(
+            "Ultimatum",
+            ChatColor.GRAY + "Occasionally unleash devastating fury",
+            ChatColor.YELLOW + "+0.25% Fury chance per level",
+            5,
+            80,
+            Material.LIGHTNING_ROD
+    ),
+    REVENANT(
+            "Revenant",
+            ChatColor.GRAY + "Rise again fueled by frenzy",
+            ChatColor.YELLOW + "Dying with 100 stacks triggers Fury",
+            1,
+            80,
+            Material.TOTEM_OF_UNDYING
+    ),
+    BLOODLUST_DURATION_IV(
+            "Bloodlust Duration IV",
+            ChatColor.GRAY + "Maximum Bloodlust extension",
+            ChatColor.YELLOW + "+4s Bloodlust duration",
+            5,
+            80,
+            Material.CLOCK
     ),
     REPAIR_ONE(
             "Repair Mastery I",

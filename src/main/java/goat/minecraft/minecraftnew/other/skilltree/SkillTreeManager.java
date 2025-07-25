@@ -271,23 +271,28 @@ public class SkillTreeManager implements Listener {
                 int charismaDuration = level * 50;
                 return ChatColor.YELLOW + "+" + charismaDuration + "s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration, "
                         + ChatColor.GOLD + "+5% Discount";
-            case WOODEN_SWORD:
-            case STONE_SWORD:
-            case IRON_SWORD:
-            case GOLD_SWORD:
-            case DIAMOND_SWORD:
-            case NETHERITE_SWORD:
-                int bonus = level * 8;
-                return ChatColor.RED + "+" + bonus + "% Damage";
-            case BOW_MASTERY:
-                int arrowBonus = level * 8;
-                return ChatColor.RED + "+" + arrowBonus + "% Arrow Damage";
+            case ARROW_DAMAGE_INCREASE_I:
+                return ChatColor.RED + "+" + (level * 4) + "% Arrow Damage";
+            case SWORD_DAMAGE_I:
+            case SWORD_DAMAGE_II:
+            case SWORD_DAMAGE_III:
+            case SWORD_DAMAGE_IV:
+            case SWORD_DAMAGE_V:
+                return ChatColor.RED + "+" + (level * 4) + "% Sword Damage";
+            case ARROW_DAMAGE_INCREASE_II:
+                return ChatColor.RED + "+" + (level * 8) + "% Arrow Damage";
+            case ARROW_DAMAGE_INCREASE_III:
+                return ChatColor.RED + "+" + (level * 12) + "% Arrow Damage";
+            case ARROW_DAMAGE_INCREASE_IV:
+                return ChatColor.RED + "+" + (level * 16) + "% Arrow Damage";
+            case ARROW_DAMAGE_INCREASE_V:
+                return ChatColor.RED + "+" + (level * 20) + "% Arrow Damage";
             case DONT_MINE_AT_NIGHT:
                 int creeperBonus = level * 10;
                 return ChatColor.YELLOW + "+" + creeperBonus + "% " + ChatColor.RED + "Creeper Damage";
             case ULTIMATUM:
-                double furyChance = level;
-                return ChatColor.YELLOW + "+" + furyChance + "% " + ChatColor.GRAY + "Fury activation chance";
+                double furyChance = level * 0.25;
+                return ChatColor.YELLOW + "+" + furyChance + "% " + ChatColor.GRAY + "Fury chance";
             case VAMPIRIC_STRIKE:
                 double vampChance = level;
                 return ChatColor.YELLOW + "+" + vampChance + "% " + ChatColor.GRAY + "Soul Orb chance";

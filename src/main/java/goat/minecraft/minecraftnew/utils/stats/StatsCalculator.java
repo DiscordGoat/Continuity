@@ -47,6 +47,13 @@ public class StatsCalculator {
                 SkillTreeManager.getInstance().hasTalent(player, Talent.STRENGTH_MASTERY)) {
             bonus += 5.0;
         }
+        if (SkillTreeManager.getInstance() != null) {
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_I) * 4.0;
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_II) * 4.0;
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_III) * 4.0;
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_IV) * 4.0;
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_V) * 4.0;
+        }
         // Weapon reforge bonus
         ReforgeManager rm = new ReforgeManager();
         ItemStack weapon = player.getInventory().getItemInMainHand();
@@ -70,9 +77,11 @@ public class StatsCalculator {
     public double getArrowDamageIncrease(Player player) {
         double bonus = 0.0;
         if (SkillTreeManager.getInstance() != null) {
-            int bowLevel = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.BOW_MASTERY);
-            bonus += bowLevel * 8.0;
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_I) * 4.0;
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_II) * 8.0;
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_III) * 12.0;
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_IV) * 16.0;
+            bonus += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_V) * 20.0;
             if (SkillTreeManager.getInstance().hasTalent(player, Talent.RECURVE_MASTERY)) {
                 bonus += 5.0;
             }
