@@ -323,27 +323,45 @@ Health V: +1 Bonus Health, Max level 12
 Combat:
 Scaling Stat: Arrow Damage Increase
 Scaling Max: +200%
+Bloodlust: Shadow Warp stacks (infinite warp), Speed, Haste, Reduced NoTickDamage window, No regeneration. Health is fixed at its current value until the bloodlust ends.
+Bloodlust uses a Stack system. max stacks is 100. 1 kill equates to 2 stacks. when Bloodlust duration expires, Bloodlust Stacks are set to 0.
+Bloodlust 1-10: +20% Movement speed. Noregen: False, NoTickDamage window: 100% (so, the nodamagetick window is unmodified, health regen is also unmodified. only a speed boost at <10 stacks)
+Bloodlust 10-20: +25% Movement speed. Noregen: False, NoTickDamage window: 90% (reduced nodamagetick window by 10%, allowing the player to attack the monster faster without it being invulnerable)
+Bloodlust 20-30: +25% Movement speed, Haste 1. Noregen: False, NoTickDamage window: 75%
+Bloodlust 30-40: +30% Movement speed, Haste 2. Noregen: True, NoTickDamage window: 60%
+Bloodlust 40-50: +30% Movement speed, Haste 3. Noregen: True, NoTickDamage window: 50%
+Bloodlust 50-60: +35% Movement speed, Haste 4. Noregen: True, Notickdamage window: 40%
+Bloodlust 60-70: +40% Movement speed, haste 5, Noregen: True. Notickdamage window: 30%. Shadow Warp Enabled from this threshold onwards, allowing for infinite Warp Usage.
+Bloodlust 70-80: +40% Movement speed, haste 5, 1% Lifesteal on hits. Noregen: True (except for lifesteal), notickdamage window: 20%.
+Bloodlust 80-90: +50% Movement speed, haste 6, 1% Lifesteal on hits, Noregen: True, Notickdamage window 10%
+Bloodlust 90-99: +50% Movement speed, haste 7, 1.5% Lifesteal on hits, noregen: True, notickdamage window: 0%
+Bloodlust 100: 2% Fury Enabled. +60% Movement Speed, haste 7, 2% Lifesteal on hits: Noregen: True, Notickdamage window: 0
 
 Common:
 Arrow Damage Increase I: +4% Arrow Damage, Max level 3
 Sword Damage I: +4% Sword Damage, Max level 5
+Vampiric Strike: +1% Chance to summon a Soul Orb after a kill, Max level 6
+Bloodlust: Activates Bloodlust for 5s on killing a monster, Max level 1
 
 Uncommon:
 Arrow Damage Increase II: +8% Arrow Damage, Max level 3
 Sword Damage II: +4% Sword Damage, Max level 5
+Bloodlust Duration I: Increases Bloodlust Duration by 4s, Max level 5
 
 Rare:
 Arrow Damage Increase III: +12% Arrow Damage, Max level 3
 Sword Damage III: +4% Sword Damage, Max level 5
+Don't Mine At Night: +10% Damage to Creepers, Max level 6
 
 Epic:
 Arrow Damage Increase IV: +16% Arrow Damage, Max level 3
 Sword Damage IV: +4% Sword Damage, Max level 5
+Bloodlust Duration II: Increases Bloodlust Duration by 4s, Max level 5
 
 Legendary:
 Arrow Damage Increase V: +20% Arrow Damage, Max level 4
 Sword Damage V: +4% Sword Damage, Max level 5
-
+Ultimatum: +0.25% Fury Chance, Max level 5
 
 
 Terraforming:
