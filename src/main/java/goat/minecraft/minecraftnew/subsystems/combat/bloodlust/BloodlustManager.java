@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -63,7 +64,7 @@ public class BloodlustManager {
     /**
      * Chance based stack and duration bonuses from Retribution and Vengeance.
      */
-    public void handleHit(Player player) {
+    public void handleHit(Player player, LivingEntity target) {
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         if (mgr == null) return;
 
@@ -75,6 +76,11 @@ public class BloodlustManager {
         int vengeanceLvl = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.VENGEANCE);
         if (vengeanceLvl > 0 && ThreadLocalRandom.current().nextDouble() < vengeanceLvl / 100.0) {
             startOrExtend(player, 20);
+        }
+
+        BloodlustData data = dataMap.get(player.getUniqueId());
+        if (data != null) {
+            data.applyNoDamageModifier(target);
         }
     }
 
@@ -95,6 +101,47 @@ public class BloodlustManager {
         private BossBar bar;
         private BukkitRunnable task;
 
+        private void updateBar() {
+            if (bar != null) {
+                bar.setProgress(Math.min(1.0, stacks / 100.0));
+                bar.setTitle(ChatColor.DARK_RED + Integer.toString(timeLeft) + "s");
+            }
+        }
+
+        void applyNoDamageModifier(LivingEntity target) {
+            if (timeLeft <= 0) {
+                return;
+            }
+            double factor = getNoDamageFactor();
+            int maxTicks = target.getMaximumNoDamageTicks();
+            int newTicks = (int) Math.round(maxTicks * factor);
+            Bukkit.getScheduler().runTask(plugin, () -> target.setNoDamageTicks(newTicks));
+        }
+
+        private double getNoDamageFactor() {
+            if (stacks >= 90) {
+                return 0.0;
+            } else if (stacks >= 80) {
+                return 0.1;
+            } else if (stacks >= 70) {
+                return 0.2;
+            } else if (stacks >= 60) {
+                return 0.3;
+            } else if (stacks >= 50) {
+                return 0.4;
+            } else if (stacks >= 40) {
+                return 0.5;
+            } else if (stacks >= 30) {
+                return 0.6;
+            } else if (stacks >= 20) {
+                return 0.75;
+            } else if (stacks >= 10) {
+                return 0.9;
+            } else {
+                return 1.0;
+            }
+        }
+
         BloodlustData(Player player) {
             this.player = player;
         }
@@ -102,12 +149,13 @@ public class BloodlustManager {
         void addStacks(int amount) {
             stacks = Math.min(stacks + amount, 100);
             updateEffects();
+            updateBar();
         }
 
         void startOrExtend(int seconds) {
             timeLeft = Math.min(timeLeft + seconds, 300); // cap at 5min
             if (bar == null) {
-                bar = Bukkit.createBossBar(ChatColor.DARK_RED + "Bloodlust", BarColor.RED, BarStyle.SEGMENTED_20);
+                bar = Bukkit.createBossBar("", BarColor.RED, BarStyle.SEGMENTED_20);
                 bar.addPlayer(player);
             }
             if (task == null) {
@@ -119,12 +167,13 @@ public class BloodlustManager {
                             return;
                         }
                         timeLeft--;
-                        bar.setProgress(Math.min(1.0, timeLeft / 100.0));
+                        updateBar();
                     }
                 };
                 task.runTaskTimer(plugin, 20, 20);
             }
             updateEffects();
+            updateBar();
         }
 
         private void stop() {
@@ -148,7 +197,7 @@ public class BloodlustManager {
                 return;
             }
             if (bar != null) {
-                bar.setProgress(Math.min(1.0, timeLeft / 100.0));
+                updateBar();
             }
             int speedAmplifier = 0;
             int hasteAmplifier = -1;
