@@ -173,7 +173,7 @@ public enum Talent {
             ChatColor.GRAY + "Improve basic archery form",
             ChatColor.RED + "+4% Arrow Damage",
             3,
-            10,
+            1,
             Material.ARROW
     ),
     SWORD_DAMAGE_I(
@@ -181,7 +181,7 @@ public enum Talent {
             ChatColor.GRAY + "Sharpen your striking technique",
             ChatColor.RED + "+4% Sword Damage",
             5,
-            10,
+            1,
             Material.WOODEN_SWORD
     ),
     VAMPIRIC_STRIKE(
@@ -189,7 +189,7 @@ public enum Talent {
             ChatColor.GRAY + "Harvest souls for brief vitality",
             ChatColor.YELLOW + "1% chance per level to spawn a Soul Orb",
             6,
-            10,
+            1,
             Material.GHAST_TEAR
     ),
     BLOODLUST(
@@ -197,7 +197,7 @@ public enum Talent {
             ChatColor.GRAY + "Killing feeds your frenzy",
             ChatColor.RED + "Activates Bloodlust for 5s on kill",
             1,
-            10,
+            1,
             Material.NETHER_STAR
     ),
     BLOODLUST_DURATION_I(
@@ -205,7 +205,7 @@ public enum Talent {
             ChatColor.GRAY + "Channel your rage for longer",
             ChatColor.YELLOW + "+4s Bloodlust Duration",
             5,
-            10,
+            1,
             Material.CLOCK
     ),
     ARROW_DAMAGE_INCREASE_II(
@@ -213,7 +213,7 @@ public enum Talent {
             ChatColor.GRAY + "Greater focus when aiming",
             ChatColor.RED + "+8% Arrow Damage",
             3,
-            30,
+            20,
             Material.SPECTRAL_ARROW
     ),
     SWORD_DAMAGE_II(
@@ -221,7 +221,7 @@ public enum Talent {
             ChatColor.GRAY + "Refined swordplay",
             ChatColor.RED + "+4% Sword Damage",
             5,
-            30,
+            20,
             Material.STONE_SWORD
     ),
     BLOODLUST_DURATION_II(
@@ -229,7 +229,7 @@ public enum Talent {
             ChatColor.GRAY + "Maintain fury even longer",
             ChatColor.YELLOW + "+4s Bloodlust Duration",
             5,
-            30,
+            20,
             Material.CLOCK
     ),
     RETRIBUTION(
@@ -237,7 +237,7 @@ public enum Talent {
             ChatColor.GRAY + "Striking fuels your frenzy",
             ChatColor.YELLOW + "+1% chance to gain +10 Bloodlust Stacks",
             5,
-            30,
+            20,
             Material.SHIELD
     ),
     VENGEANCE(
@@ -245,7 +245,7 @@ public enum Talent {
             ChatColor.GRAY + "Hits may extend your rampage",
             ChatColor.YELLOW + "+1% chance to gain +20s Bloodlust Duration",
             2,
-            30,
+            20,
             Material.ENDER_EYE
     ),
     ARROW_DAMAGE_INCREASE_III(
@@ -253,7 +253,7 @@ public enum Talent {
             ChatColor.GRAY + "Masterful archery techniques",
             ChatColor.RED + "+12% Arrow Damage",
             3,
-            50,
+            40,
             Material.TIPPED_ARROW
     ),
     SWORD_DAMAGE_III(
@@ -261,7 +261,7 @@ public enum Talent {
             ChatColor.GRAY + "Polish your edge",
             ChatColor.RED + "+4% Sword Damage",
             5,
-            50,
+            40,
             Material.IRON_SWORD
     ),
     DONT_MINE_AT_NIGHT(
@@ -269,7 +269,7 @@ public enum Talent {
             ChatColor.GRAY + "Creepers beware of seasoned fighters",
             ChatColor.YELLOW + "+(10*level)% " + ChatColor.RED + "Creeper Damage",
             6,
-            50,
+            40,
             Material.TNT
     ),
     HELLBENT(
@@ -277,7 +277,7 @@ public enum Talent {
             ChatColor.GRAY + "Fight harder when near death",
             ChatColor.RED + "+25% Damage below (10*level)% health",
             6,
-            50,
+            40,
             Material.TOTEM_OF_UNDYING
     ),
     ARROW_DAMAGE_INCREASE_IV(
@@ -285,7 +285,7 @@ public enum Talent {
             ChatColor.GRAY + "Expert precision",
             ChatColor.RED + "+16% Arrow Damage",
             3,
-            70,
+            60,
             Material.BOW
     ),
     SWORD_DAMAGE_IV(
@@ -293,7 +293,7 @@ public enum Talent {
             ChatColor.GRAY + "Deadly technique",
             ChatColor.RED + "+4% Sword Damage",
             5,
-            70,
+            60,
             Material.DIAMOND_SWORD
     ),
     BLOODLUST_DURATION_III(
@@ -301,7 +301,7 @@ public enum Talent {
             ChatColor.GRAY + "Fury knows no bounds",
             ChatColor.YELLOW + "+4s Bloodlust Duration",
             5,
-            70,
+            60,
             Material.CLOCK
     ),
     ANTAGONIZE(
@@ -309,7 +309,7 @@ public enum Talent {
             ChatColor.GRAY + "Delay the pain you feel",
             ChatColor.YELLOW + "Damage taken spread over (1*level)s",
             7,
-            70,
+            60,
             Material.IRON_CHESTPLATE
     ),
     ARROW_DAMAGE_INCREASE_V(
@@ -317,7 +317,7 @@ public enum Talent {
             ChatColor.GRAY + "Legendary archery prowess",
             ChatColor.RED + "+20% Arrow Damage",
             4,
-            90,
+            80,
             Material.CROSSBOW
     ),
     SWORD_DAMAGE_V(
@@ -325,7 +325,7 @@ public enum Talent {
             ChatColor.GRAY + "Unmatched sword mastery",
             ChatColor.RED + "+4% Sword Damage",
             5,
-            90,
+            80,
             Material.NETHERITE_SWORD
     ),
     ULTIMATUM(
@@ -333,7 +333,7 @@ public enum Talent {
             ChatColor.GRAY + "Occasionally unleash devastating fury",
             ChatColor.YELLOW + "+0.25% Fury Chance",
             5,
-            90,
+            80,
             Material.LIGHTNING_ROD
     ),
     REVENANT(
@@ -341,7 +341,7 @@ public enum Talent {
             ChatColor.GRAY + "Death cannot quell your rage",
             ChatColor.YELLOW + "Dying with 100 Bloodlust Stacks triggers Fury",
             1,
-            90,
+            80,
             Material.SKELETON_SKULL
     ),
     BLOODLUST_DURATION_IV(
@@ -349,7 +349,7 @@ public enum Talent {
             ChatColor.GRAY + "Transcendent ferocity",
             ChatColor.YELLOW + "+4s Bloodlust Duration",
             5,
-            90,
+            80,
             Material.CLOCK
     ),
     REPAIR_ONE(

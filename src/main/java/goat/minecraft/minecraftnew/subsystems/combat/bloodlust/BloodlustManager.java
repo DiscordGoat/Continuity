@@ -10,6 +10,11 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -21,61 +26,63 @@ import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
- * Simple bloodlust system that tracks stacks and duration per player.
- * <p>
- * This is a lightweight implementation meant to demonstrate how bloodlust
- * could hook into the talent system. The effect values roughly follow the
- * design document but are not fully featured.
+ * Refactored bloodlust system with:
+ *  • Natural‐regen freeze (player‐based, via event cancellation)
+ *  • Kill‑activated lifesteal
+ *  • Fury on fatal damage at 100 stacks
  */
-public class BloodlustManager {
+public class BloodlustManager implements Listener {
 
     private final JavaPlugin plugin;
     private final Map<UUID, BloodlustData> dataMap = new HashMap<>();
 
     public BloodlustManager(JavaPlugin plugin) {
         this.plugin = plugin;
+        // register for events
+        plugin.getServer()
+                .getPluginManager()
+                .registerEvents(this, plugin);
     }
 
-    /**
-     * Adds stacks when a monster is killed. Also starts bloodlust if the
-     * player has the Bloodlust talent.
-     */
+    /** On monster kill: +2 stacks, +5s (capped), then lifesteal. */
     public void handleKill(Player player) {
         SkillTreeManager mgr = SkillTreeManager.getInstance();
-        if (mgr == null) return;
+        if (mgr == null || !mgr.hasTalent(player, Talent.BLOODLUST)) return;
 
-        int baseDuration = 0;
-        if (mgr.hasTalent(player, Talent.BLOODLUST)) {
-            baseDuration = 5;
-        }
+        BloodlustData data = dataMap.computeIfAbsent(player.getUniqueId(),
+                k -> new BloodlustData(player));
+        data.addStacks(1);
 
-        // Bonus duration from talents
-        baseDuration += 4 * mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_I);
-        baseDuration += 4 * mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_II);
-        baseDuration += 4 * mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_III);
-        baseDuration += 4 * mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_IV);
+        int maxDur = calculateMaxDuration(player.getUniqueId());
+        data.startOrExtend(7, maxDur);
 
-        if (baseDuration > 0) {
-            addStacks(player, 2);
-            startOrExtend(player, baseDuration);
-        }
+        data.applyKillLifesteal();
     }
 
-    /**
-     * Chance based stack and duration bonuses from Retribution and Vengeance.
-     */
+    /** On hit: chance‑based extra stacks or duration, plus reduced invuln ticks. */
     public void handleHit(Player player, LivingEntity target) {
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         if (mgr == null) return;
 
-        int retributionLvl = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.RETRIBUTION);
-        if (retributionLvl > 0 && ThreadLocalRandom.current().nextDouble() < retributionLvl / 100.0) {
-            addStacks(player, 10);
+        int retribution = mgr.getTalentLevel(player.getUniqueId(),
+                Skill.COMBAT,
+                Talent.RETRIBUTION);
+        if (retribution > 0 &&
+                ThreadLocalRandom.current().nextDouble() < retribution / 100.0) {
+            dataMap.computeIfAbsent(player.getUniqueId(),
+                            k -> new BloodlustData(player))
+                    .addStacks(10);
         }
 
-        int vengeanceLvl = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.VENGEANCE);
-        if (vengeanceLvl > 0 && ThreadLocalRandom.current().nextDouble() < vengeanceLvl / 100.0) {
-            startOrExtend(player, 20);
+        int vengeance = mgr.getTalentLevel(player.getUniqueId(),
+                Skill.COMBAT,
+                Talent.VENGEANCE);
+        if (vengeance > 0 &&
+                ThreadLocalRandom.current().nextDouble() < vengeance / 100.0) {
+            int maxDur = calculateMaxDuration(player.getUniqueId());
+            dataMap.computeIfAbsent(player.getUniqueId(),
+                            k -> new BloodlustData(player))
+                    .startOrExtend(20, maxDur);
         }
 
         BloodlustData data = dataMap.get(player.getUniqueId());
@@ -84,14 +91,47 @@ public class BloodlustManager {
         }
     }
 
-    private void addStacks(Player player, int amount) {
-        BloodlustData data = dataMap.computeIfAbsent(player.getUniqueId(), k -> new BloodlustData(player));
-        data.addStacks(amount);
+    /** Prevent death & trigger Fury if stacks == 100. */
+    @EventHandler
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        BloodlustData data = dataMap.get(player.getUniqueId());
+        if (data == null || data.timeLeft <= 0) return;
+
+        double after = player.getHealth() - event.getFinalDamage();
+        if (after <= 0 && data.stacks >= 100) {
+            // Fury: cancel kill, heal, clear stacks, lightning AOE
+            event.setCancelled(true);
+            player.setHealth(player.getMaxHealth());
+            data.triggerFury();
+        }
     }
 
-    private void startOrExtend(Player player, int seconds) {
-        BloodlustData data = dataMap.computeIfAbsent(player.getUniqueId(), k -> new BloodlustData(player));
-        data.startOrExtend(seconds);
+    /** Cancel any natural or satiated regen while bloodlust is active. */
+    @EventHandler
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+        if (!(event.getEntity() instanceof Player)) return;
+        Player player = (Player) event.getEntity();
+        BloodlustData data = dataMap.get(player.getUniqueId());
+        if (data == null || data.timeLeft <= 0) return;
+
+        RegainReason reason = event.getRegainReason();
+        if (reason == RegainReason.REGEN || reason == RegainReason.SATIATED) {
+            event.setCancelled(true);
+        }
+    }
+
+    /** 30s base + 4s per duration‑upgrade level. */
+    private int calculateMaxDuration(UUID playerId) {
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr == null) return 30;
+        int levels =
+                mgr.getTalentLevel(playerId, Skill.COMBAT, Talent.BLOODLUST_DURATION_I) +
+                        mgr.getTalentLevel(playerId, Skill.COMBAT, Talent.BLOODLUST_DURATION_II) +
+                        mgr.getTalentLevel(playerId, Skill.COMBAT, Talent.BLOODLUST_DURATION_III) +
+                        mgr.getTalentLevel(playerId, Skill.COMBAT, Talent.BLOODLUST_DURATION_IV);
+        return 30 + 4 * levels;
     }
 
     private class BloodlustData {
@@ -100,47 +140,6 @@ public class BloodlustManager {
         private int timeLeft = 0;
         private BossBar bar;
         private BukkitRunnable task;
-
-        private void updateBar() {
-            if (bar != null) {
-                bar.setProgress(Math.min(1.0, stacks / 100.0));
-                bar.setTitle(ChatColor.DARK_RED + Integer.toString(timeLeft) + "s");
-            }
-        }
-
-        void applyNoDamageModifier(LivingEntity target) {
-            if (timeLeft <= 0) {
-                return;
-            }
-            double factor = getNoDamageFactor();
-            int maxTicks = target.getMaximumNoDamageTicks();
-            int newTicks = (int) Math.round(maxTicks * factor);
-            Bukkit.getScheduler().runTask(plugin, () -> target.setNoDamageTicks(newTicks));
-        }
-
-        private double getNoDamageFactor() {
-            if (stacks >= 90) {
-                return 0.0;
-            } else if (stacks >= 80) {
-                return 0.1;
-            } else if (stacks >= 70) {
-                return 0.2;
-            } else if (stacks >= 60) {
-                return 0.3;
-            } else if (stacks >= 50) {
-                return 0.4;
-            } else if (stacks >= 40) {
-                return 0.5;
-            } else if (stacks >= 30) {
-                return 0.6;
-            } else if (stacks >= 20) {
-                return 0.75;
-            } else if (stacks >= 10) {
-                return 0.9;
-            } else {
-                return 1.0;
-            }
-        }
 
         BloodlustData(Player player) {
             this.player = player;
@@ -152,13 +151,14 @@ public class BloodlustManager {
             updateBar();
         }
 
-        void startOrExtend(int seconds) {
-            timeLeft = Math.min(timeLeft + seconds, 300); // cap at 5min
-            if (bar == null) {
+        void startOrExtend(int secondsToAdd, int maxDuration) {
+            boolean first = (bar == null);
+            timeLeft = Math.min(timeLeft + secondsToAdd, maxDuration);
+
+            if (first) {
                 bar = Bukkit.createBossBar("", BarColor.RED, BarStyle.SEGMENTED_20);
                 bar.addPlayer(player);
-            }
-            if (task == null) {
+
                 task = new BukkitRunnable() {
                     @Override
                     public void run() {
@@ -172,8 +172,99 @@ public class BloodlustManager {
                 };
                 task.runTaskTimer(plugin, 20, 20);
             }
+
             updateEffects();
             updateBar();
+        }
+
+        void applyNoDamageModifier(LivingEntity target) {
+            if (timeLeft <= 0) return;
+            double factor = getNoDamageFactor();
+            int maxTicks = target.getMaximumNoDamageTicks();
+            int newTicks = (int) Math.round(maxTicks * factor);
+            Bukkit.getScheduler()
+                    .runTask(plugin,
+                            () -> target.setNoDamageTicks(newTicks));
+        }
+
+        /** Heal % of max health on each kill, at certain thresholds. */
+        void applyKillLifesteal() {
+            double pct = 0;
+            if      (stacks >= 100) pct = 0.02;
+            else if (stacks >= 90)  pct = 0.015;
+            else if (stacks >= 80)  pct = 0.01;
+            else if (stacks >= 70)  pct = 0.01;
+
+            if (pct > 0) {
+                double heal = player.getMaxHealth() * pct;
+                player.setHealth(Math.min(player.getHealth() + heal,
+                        player.getMaxHealth()));
+            }
+        }
+
+        /** Clear stacks and strike all nearby mobs when Fury triggers. */
+        void triggerFury() {
+            stop();
+            player.getWorld()
+                    .getNearbyEntities(player.getLocation(), 25, 25, 25)
+                    .stream()
+                    .filter(e -> e instanceof LivingEntity && !(e instanceof Player))
+                    .forEach(e -> {
+                        LivingEntity mob = (LivingEntity) e;
+                        mob.getWorld().strikeLightningEffect(mob.getLocation());
+                        mob.damage(100, player);
+                    });
+        }
+
+        private double getNoDamageFactor() {
+            if      (stacks >= 90) return 0.0;
+            else if (stacks >= 80) return 0.1;
+            else if (stacks >= 70) return 0.2;
+            else if (stacks >= 60) return 0.3;
+            else if (stacks >= 50) return 0.4;
+            else if (stacks >= 40) return 0.5;
+            else if (stacks >= 30) return 0.6;
+            else if (stacks >= 20) return 0.75;
+            else if (stacks >= 10) return 0.9;
+            else                   return 1.0;
+        }
+
+        private void updateEffects() {
+            if (timeLeft <= 0) {
+                stop();
+                return;
+            }
+
+            int speedAmp = -1, hasteAmp = -1;
+            if      (stacks >= 90) { speedAmp = 2; hasteAmp = 6; }
+            else if (stacks >= 80) { speedAmp = 1; hasteAmp = 5; }
+            else if (stacks >= 60) { speedAmp = 1; hasteAmp = 4; }
+            else if (stacks >= 40) { speedAmp = 0; hasteAmp = 3; }
+            else if (stacks >= 20) { speedAmp = 0; hasteAmp = 1; }
+
+            if (speedAmp >= 0) {
+                player.addPotionEffect(new PotionEffect(
+                        PotionEffectType.SPEED,
+                        timeLeft * 20,
+                        speedAmp,
+                        true, false, true
+                ));
+            }
+            if (hasteAmp >= 0) {
+                player.addPotionEffect(new PotionEffect(
+                        PotionEffectType.HASTE,
+                        timeLeft * 20,
+                        hasteAmp,
+                        true, false, true
+                ));
+            }
+        }
+
+        private void updateBar() {
+            if (bar != null) {
+                bar.setProgress(Math.min(1.0, stacks / 100.0));
+                bar.setTitle(""+ChatColor.DARK_RED + timeLeft + "s");
+            }
         }
 
         private void stop() {
@@ -188,41 +279,7 @@ public class BloodlustManager {
             stacks = 0;
             timeLeft = 0;
             player.removePotionEffect(PotionEffectType.SPEED);
-            player.removePotionEffect(PotionEffectType.FAST_DIGGING);
-        }
-
-        private void updateEffects() {
-            if (timeLeft <= 0) {
-                stop();
-                return;
-            }
-            if (bar != null) {
-                updateBar();
-            }
-            int speedAmplifier = 0;
-            int hasteAmplifier = -1;
-            if (stacks >= 90) {
-                speedAmplifier = 2;
-                hasteAmplifier = 6;
-            } else if (stacks >= 80) {
-                speedAmplifier = 1;
-                hasteAmplifier = 5;
-            } else if (stacks >= 60) {
-                speedAmplifier = 1;
-                hasteAmplifier = 4;
-            } else if (stacks >= 40) {
-                speedAmplifier = 0;
-                hasteAmplifier = 3;
-            } else if (stacks >= 20) {
-                speedAmplifier = 0;
-                hasteAmplifier = 1;
-            }
-            if (speedAmplifier >= 0) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, timeLeft * 20, speedAmplifier, true, false, true));
-            }
-            if (hasteAmplifier >= 0) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, timeLeft * 20, hasteAmplifier, true, false, true));
-            }
+            player.removePotionEffect(PotionEffectType.HASTE);
         }
     }
 }
