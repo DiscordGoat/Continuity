@@ -560,6 +560,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SwordUpgradeListener(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.CombatTalentListener(), this);
+        goat.minecraft.minecraftnew.subsystems.combat.BloodlustManager.init(this);
 
         // Effigy upgrade system for forestry axes
         goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem effigyUpgradeSystem = new goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem(this);
@@ -764,6 +765,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (combatSubsystemManager != null) {
             combatSubsystemManager.shutdown();
         }
+        goat.minecraft.minecraftnew.subsystems.combat.BloodlustManager.shutdown();
 
         if (beaconPassiveEffects != null) {
             beaconPassiveEffects.removeAllPassiveEffects();
