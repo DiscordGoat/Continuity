@@ -32,7 +32,7 @@ public class BeaconCatalystsGUI implements Listener {
         Inventory gui = Bukkit.createInventory(null, 45, guiTitle); // 5 rows for catalysts + navigation
 
         // Create catalyst selection buttons (2x4 grid in center)
-        int[] catalystSlots = {11, 12, 13, 20, 21, 22};
+        int[] catalystSlots = {11, 12, 13, 20, 21, 22, 29};
         
         // Get the current held beacon instead of relying on constructor parameter
         ItemStack heldBeacon = getHeldBeacon(player);
@@ -144,6 +144,22 @@ public class BeaconCatalystsGUI implements Listener {
             ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
         );
         gui.setItem(catalystSlots[5], prosperityCatalyst);
+
+        // Catalyst of Death
+        ItemStack deathCatalyst = createCatalystButton(
+            Material.WITHER_SKELETON_SKULL,
+            ChatColor.DARK_GRAY + "Catalyst of Death",
+            true,
+            "Increases grave chance for",
+            "nearby players and grants",
+            "Haste V while active.",
+            "",
+            ChatColor.GOLD + "Base Grave Chance: " + ChatColor.YELLOW + "+1%",
+            ChatColor.GRAY + "(+0.1% per tier)",
+            ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
+            ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
+        );
+        gui.setItem(catalystSlots[6], deathCatalyst);
 
 
         // Fill empty slots
@@ -280,6 +296,15 @@ public class BeaconCatalystsGUI implements Listener {
                 player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.2f);
                 if (BeaconManager.updateBeaconInInventory(player, "Catalyst of Insanity")) {
                     player.sendMessage(ChatColor.GREEN + "Selected: " + ChatColor.DARK_PURPLE + "Catalyst of Insanity");
+                } else {
+                    player.sendMessage(ChatColor.RED + "Could not find beacon in inventory!");
+                }
+                break;
+
+            case "Catalyst of Death":
+                player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 1.0f, 1.2f);
+                if (BeaconManager.updateBeaconInInventory(player, "Catalyst of Death")) {
+                    player.sendMessage(ChatColor.GREEN + "Selected: " + ChatColor.DARK_GRAY + "Catalyst of Death");
                 } else {
                     player.sendMessage(ChatColor.RED + "Could not find beacon in inventory!");
                 }

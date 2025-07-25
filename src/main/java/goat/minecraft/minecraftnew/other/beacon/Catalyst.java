@@ -101,6 +101,8 @@ public class Catalyst {
                 location.getWorld().spawnParticle(type.getParticle(), effectLoc, 8, 0.3, 0.3, 0.3, 0.02);
             } else if (type == CatalystType.INSANITY) {
                 location.getWorld().spawnParticle(type.getParticle(), effectLoc, 12, 0.5, 0.5, 0.5, 0.03);
+            } else if (type == CatalystType.DEATH) {
+                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 10, 0.3, 0.3, 0.3, 0.02);
             }
         }
         
