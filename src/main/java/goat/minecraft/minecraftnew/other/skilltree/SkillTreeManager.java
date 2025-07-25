@@ -308,8 +308,8 @@ public class SkillTreeManager implements Listener {
             case RETRIBUTION:
                 return ChatColor.YELLOW + "+" + level + "% chance for +10 Bloodlust Stacks";
             case VENGEANCE:
-                int seconds = level * 20;
-                return ChatColor.YELLOW + "+" + level + "% chance for +" + seconds + "s Bloodlust";
+                int secondsBL = level * 20;
+                return ChatColor.YELLOW + "+" + level + "% chance for +" + secondsBL + "s Bloodlust";
             case ANTAGONIZE:
                 return ChatColor.YELLOW + "Damage received over " + level + "s";
             case ULTIMATUM:
