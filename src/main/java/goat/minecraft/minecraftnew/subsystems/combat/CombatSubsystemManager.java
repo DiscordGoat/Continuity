@@ -14,6 +14,8 @@ import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIContr
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.PlayerFeedbackService;
+import goat.minecraft.minecraftnew.subsystems.combat.bloodlust.BloodlustListener;
+import goat.minecraft.minecraftnew.subsystems.combat.bloodlust.BloodlustManager;
 import goat.minecraft.minecraftnew.subsystems.combat.FireDamageHandler;
 import goat.minecraft.minecraftnew.subsystems.combat.DeteriorationDamageHandler;
 import goat.minecraft.minecraftnew.subsystems.combat.ZombieReinforcementBlocker;
@@ -49,7 +51,8 @@ public class CombatSubsystemManager implements CommandExecutor {
     private FireDamageHandler fireDamageHandler;
     private DeteriorationDamageHandler decayDamageHandler;
     private ZombieReinforcementBlocker reinforcementBlocker;
-    
+    private BloodlustManager bloodlustManager;
+
     // Controllers and handlers
     private CombatEventHandler eventHandler;
     private HostilityGUIController hostilityGUIController;
@@ -274,6 +277,7 @@ public class CombatSubsystemManager implements CommandExecutor {
         fireDamageHandler = new FireDamageHandler(plugin, notificationService);
         decayDamageHandler = DeteriorationDamageHandler.getInstance(plugin, notificationService);
         reinforcementBlocker = new ZombieReinforcementBlocker();
+        bloodlustManager = new BloodlustManager(plugin);
 
         logger.fine("Combat controllers and handlers initialized");
     }
@@ -287,6 +291,9 @@ public class CombatSubsystemManager implements CommandExecutor {
         Bukkit.getPluginManager().registerEvents(fireDamageHandler, plugin);
         Bukkit.getPluginManager().registerEvents(decayDamageHandler, plugin);
         Bukkit.getPluginManager().registerEvents(reinforcementBlocker, plugin);
+        if (bloodlustManager != null) {
+            Bukkit.getPluginManager().registerEvents(new BloodlustListener(bloodlustManager), plugin);
+        }
         // Register blood moon assault listener
         logger.fine("Combat event listeners registered");
     }
