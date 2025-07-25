@@ -61,7 +61,7 @@ public class TerrorOfTheDeep implements Listener {
                 Bukkit.getLogger().info("Detected SEA_CREATURE: " + creatureName);
 
 
-                // Apply Bloodlust effects
+                // Apply combat effects
                 player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1.0f, 1.0f);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 20*petLevel, 1)); // Haste II
                 player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 20*petLevel, 1)); // Strength II

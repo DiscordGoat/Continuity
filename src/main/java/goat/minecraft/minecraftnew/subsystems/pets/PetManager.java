@@ -785,7 +785,7 @@ public class PetManager implements Listener {
                 int heartBonus = 10;
                 return "Grants " + ChatColor.AQUA + heartBonus + "% Sea Creature Chance.";
             case TERROR_OF_THE_DEEP:
-                return "Grants you " + ChatColor.RED + "Bloodlust " + ChatColor.GRAY + "when you strike a " + ChatColor.AQUA + "Sea Creature" + ChatColor.GRAY + " for " + level + " seconds.";
+                return "Grants you a combat buff when you strike a " + ChatColor.AQUA + "Sea Creature" + ChatColor.GRAY + " for " + level + " seconds.";
             case TREASURE_HUNTER:
                 return ChatColor.AQUA + "Bonus Treasure Chance: " + ChatColor.GOLD + (level * 0.1) + "%";
             case PRACTICE:
@@ -1253,7 +1253,7 @@ public class PetManager implements Listener {
         TREASURE_HUNTER("Treasure Hunter","Triples Treasure Chance while fishing."),
         BAIT("Bait","Gains 1 Sea Creature Chance per 10 Lvls."),
         STRONG_SWIMMER("Strong Swimmer","Activates Dolphins Grace in water."),
-        TERROR_OF_THE_DEEP("Terror Of The Deep","Activates bloodlust when hitting Sea Creatures."),
+        TERROR_OF_THE_DEEP("Terror Of The Deep","Grants a combat buff when hitting Sea Creatures."),
         HEART_OF_THE_SEA("Heart Of The Sea","+10 Sea Creature Chance."),
         GREEN_THUMB("Green Thumb","Increases tick speed while equipped."),
         HAGGLE("Haggle","Provides up to 25% discount on villager transactions."),
