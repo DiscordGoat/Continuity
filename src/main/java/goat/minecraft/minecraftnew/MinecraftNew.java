@@ -560,6 +560,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SwordUpgradeListener(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.CombatTalentListener(), this);
+        // Bloodlust system handles kill streak buffs and boss bar display
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.BloodlustSystem(this), this);
 
         // Effigy upgrade system for forestry axes
         goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem effigyUpgradeSystem = new goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem(this);
