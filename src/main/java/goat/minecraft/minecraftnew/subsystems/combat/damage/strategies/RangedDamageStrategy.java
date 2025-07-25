@@ -49,15 +49,20 @@ public class RangedDamageStrategy implements DamageCalculationStrategy {
             // Base arrow damage no longer scales with combat level
             double skillMultiplier = 1.0;
 
-            // Apply Bow Mastery talent bonus
+            // Apply Arrow Damage Increase talents
             if (SkillTreeManager.getInstance() != null) {
-                int bowLevel = SkillTreeManager.getInstance()
-                        .getTalentLevel(shooter.getUniqueId(), Skill.COMBAT, Talent.BOW_MASTERY);
-                if (bowLevel > 0) {
-                    double talentMult = 1.0 + (bowLevel * 0.08);
-                    finalDamage *= talentMult;
+                SkillTreeManager mgr = SkillTreeManager.getInstance();
+                double bonus = 0.0;
+                bonus += mgr.getTalentLevel(shooter.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_I) * 0.04;
+                bonus += mgr.getTalentLevel(shooter.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_II) * 0.08;
+                bonus += mgr.getTalentLevel(shooter.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_III) * 0.12;
+                bonus += mgr.getTalentLevel(shooter.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_IV) * 0.16;
+                bonus += mgr.getTalentLevel(shooter.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_V) * 0.20;
+                if (bonus > 0) {
+                    double mult = 1.0 + bonus;
+                    finalDamage *= mult;
                     modifiers.add(DamageCalculationResult.DamageModifier.multiplicative(
-                            "Bow Mastery", talentMult, "+" + (bowLevel * 8) + "% Arrow Damage"));
+                            "Arrow Damage Talents", mult, "+" + (int)(bonus*100) + "% Arrow Damage"));
                 }
             }
             

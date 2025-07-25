@@ -78,6 +78,7 @@ import goat.minecraft.minecraftnew.other.trinkets.EnchantedHopperManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.other.auras.AuraManager;
 import goat.minecraft.minecraftnew.other.armorsets.FlowManager;
+import goat.minecraft.minecraftnew.subsystems.combat.BloodlustManager;
 import goat.minecraft.minecraftnew.other.armorsets.MonolithSetBonus;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
 import goat.minecraft.minecraftnew.other.armorsets.DuskbloodSetBonus;
@@ -329,6 +330,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("previewparticle").setExecutor(new PreviewParticleCommand(this));
         getCommand("previewflow").setExecutor(new PreviewFlowCommand(this));
         FlowManager.getInstance(this);
+        BloodlustManager.getInstance(this);
         getCommand("flowdebug").setExecutor(new FlowDebugCommand(flowManager));
         getCommand("debugplayer").setExecutor(new DebugPlayerCommand(this));
         auraManager = new AuraManager(this);

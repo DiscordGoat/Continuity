@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
@@ -17,11 +18,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.attribute.Attribute;
+import goat.minecraft.minecraftnew.subsystems.combat.BloodlustManager;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.bukkit.profile.PlayerProfile;
@@ -66,6 +70,34 @@ public class CombatTalentListener implements Listener {
             }
         }
 
+        // Retribution talent: chance to gain stacks on hit
+        int retLvl = manager.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.RETRIBUTION);
+        if (retLvl > 0 && random.nextDouble() < retLvl * 0.01) {
+            BloodlustManager.getInstance(MinecraftNew.getInstance()).addStacks(player, 10);
+        }
+
+        // Vengeance talent: chance to gain bloodlust duration on hit
+        int venLvl = manager.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.VENGEANCE);
+        if (venLvl > 0 && random.nextDouble() < venLvl * 0.01) {
+            BloodlustManager.getInstance(MinecraftNew.getInstance()).addDuration(player, 20);
+        }
+
+        // Lifesteal while bloodlust stacks are high
+        int stacks = BloodlustManager.getInstance(MinecraftNew.getInstance()).getStacks(player);
+        double steal = 0.0;
+        if (stacks >= 70 && stacks < 90) {
+            steal = 0.01;
+        } else if (stacks < 100) {
+            steal = 0.015;
+        } else if (stacks >= 100) {
+            steal = 0.02;
+        }
+        if (steal > 0) {
+            double heal = event.getDamage() * steal;
+            double max = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+            player.setHealth(Math.min(max, player.getHealth() + heal));
+        }
+
     }
 
     @EventHandler
@@ -78,6 +110,18 @@ public class CombatTalentListener implements Listener {
         int level = manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.VAMPIRIC_STRIKE);
         if (level > 0 && random.nextDouble() < level * 0.01) {
             spawnSoulOrb(mob.getLocation(), killer.getUniqueId());
+        }
+
+        // Activate Bloodlust on kill if player has the talent
+        if (manager.hasTalent(killer, Talent.BLOODLUST)) {
+            int duration = 5
+                    + manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_I) * 4
+                    + manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_II) * 4
+                    + manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_III) * 4
+                    + manager.getTalentLevel(killer.getUniqueId(), Skill.COMBAT, Talent.BLOODLUST_DURATION_IV) * 4;
+            BloodlustManager mgr = BloodlustManager.getInstance(MinecraftNew.getInstance());
+            mgr.addStacks(killer, 2);
+            mgr.addDuration(killer, duration);
         }
     }
 
@@ -92,6 +136,20 @@ public class CombatTalentListener implements Listener {
             Bukkit.getLogger().info("Activated Devour Orb Event");
         }
 
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager == null) return;
+        BloodlustManager bl = BloodlustManager.getInstance(MinecraftNew.getInstance());
+        int stacks = bl.getStacks(player);
+        if (stacks >= 100 && manager.hasTalent(player, Talent.REVENANT)) {
+            // Trigger Fury effect placeholder
+            player.sendMessage(ChatColor.DARK_RED + "Fury unleashed!");
+        }
+        bl.clear(player);
     }
 
     private void spawnSoulOrb(Location loc, UUID owner) {
