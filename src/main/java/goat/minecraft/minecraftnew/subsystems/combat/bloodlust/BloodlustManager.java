@@ -91,13 +91,17 @@ public class BloodlustManager implements Listener {
         }
     }
 
-    /** Prevent death & trigger Fury if stacks == 100. */
+    /** Prevent death & trigger Fury if stacks == 100 and the player has the
+     *  Revenant talent. */
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player)) return;
         Player player = (Player) event.getEntity();
         BloodlustData data = dataMap.get(player.getUniqueId());
         if (data == null || data.timeLeft <= 0) return;
+
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr == null || !mgr.hasTalent(player, Talent.REVENANT)) return;
 
         double after = player.getHealth() - event.getFinalDamage();
         if (after <= 0 && data.stacks >= 100) {
