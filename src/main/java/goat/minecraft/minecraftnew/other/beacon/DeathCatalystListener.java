@@ -43,6 +43,6 @@ public class DeathCatalystListener {
 
     private void applyEffects(Player player) {
         // amplifier 4 -> Haste V
-        player.addPotionEffect(new PotionEffect(PotionEffectType.FAST_DIGGING, 40, 4, true, false));
+        player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 40, 4, true, false));
     }
 }

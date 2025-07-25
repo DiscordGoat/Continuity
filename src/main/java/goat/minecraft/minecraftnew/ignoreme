@@ -284,7 +284,7 @@ Groot: Reduces the Wood needed by 50%, Max level 1
 Composter: Reduces the dirt needed by 50%, Max level 1
 Elite: Increase Bonus Damage by 10%, Max level 2
 Haggle: Increase Discount by 5%, Max level 1
-Quirky: Increases the Effect of Traits by 10%, Max level 5
+Quirky: Increases the Effect of Traits by 20%, Max level 5
 Natural Selection: Removes the lowest Rarity from the pool, Max level 5 (scales, level 1 removes common traits, 2 uncommon, 3 rare, 4 epic, 5 legendary. at max level, the only rarity Trait you can obtain is Mythic)
 
 
@@ -355,8 +355,10 @@ Vengeance: +1% Chance to Gain +20s Bloodlust Duration on hits, Max level 2
 Rare:
 Arrow Damage Increase III: +12% Arrow Damage, Max level 3
 Sword Damage III: +4% Sword Damage, Max level 5
-Don't Mine At Night: +10% Damage to Creepers, Max level 6
-Hellbent: Increase Damage by 25% when below (10*level)% Health, Max level 6
+Don't Mine At Night: +10% Damage to Creepers, Max level 4
+Hellbent: Increase Damage by 25% when below (10*level)% Health, Max level 5
+Blood Moon: Rewinds time by (1*level)s per kill, Max level 3
+
 
 Epic:
 Arrow Damage Increase IV: +16% Arrow Damage, Max level 3
@@ -372,24 +374,47 @@ Revenant: Dying with 100 Stacks of Bloodlust triggers Fury and removes all Blood
 Bloodlust Duration IV: Increases Bloodlust Duration by 4s, Max level 5
 
 
+
 Terraforming:
+Corpses and Legendary Corpses arent the same thing. as such, damage to corpses does not apply to legendary corpses, as legendary corpses are the cause of death of all the non legendary corpses. thats why they dont have 'corpse' in their name.
 Scaling Stat: Grave Chance
 Scaling Max: 0.05
 
 Common:
 Grave Digger I: +0.001 Grave Chance, Max level 3
+Post-Mortem Complications I: +5% Damage to Corpses, Max level 5
+Prospekt: +50 Max Durability to Shovels and Pickaxes, Max level 4
+Graveyard I: +2.5% Chance for Digging a Grave to spawn another Grave, Max level 2
+X Marks The Spot: Spawns a Grave every 512 / (level * 0.1 + 1) broken blocks, Max level 6
 
 Uncommon:
 Grave Digger II: +0.0015 Grave Chance, Max level 3
+Post-Mortem Complications II: +5% Damage to Corpses, Max level 5
+Graveyard II: +2.5% Chance for Digging a Grave to spawn another Grave, Max level 2
+Necrotic I: +5% Damage Reduction from Corpses, Max level 5
+Mass Grave: Increases Corpse Chance by 10%, Max level 5
 
 Rare:
 Grave Digger III: +0.002 Grave Chance, Max level 3
+Post-Mortem Complications III: +5% Damage to Corpses, Max level 5
+Graveyard III: +2.5% Chance for Digging a Grave to spawn another Grave, Max level 2
+Necrotic II: +5% Damage Reduction from Corpses, Max level 5
+Double Trouble: +1% Chance to spawn 2 Corpses, Max level 5
 
 Epic:
 Grave Digger IV: +0.0025 Grave Chance, Max level 3
+Post-Mortem Complications IV: +5% Damage to Corpses, Max level 5
+Graveyard IV: +2.5% Chance for Digging a Grave to spawn another Grave, Max level 2
+Necrotic III: +5% Damage Reduction from Corpses, Max level 5
+Alive Tombstone: +20% Chance for Graves to spawn with Indicators (indicators are particle lines going up from the grave), Max level 5
+
 
 Legendary:
 Grave Digger V: +0.00725 Grave Chance, Max level 4
+Post-Mortem Complications V: +5% Damage to Corpses, Max level 5
+Graveyard V: +2.5% Chance for Digging a Grave to spawn another Grave, Max level 2
+Necrotic IV: +5% Damage Reduction from Corpses, Max level 5
+Murder Mystery: +50% Damage to Mass Murderers (legendary Corpses), Max level 4
 
 
 
