@@ -135,7 +135,7 @@ public class BloodlustManager implements Listener {
                         mgr.getTalentLevel(playerId, Skill.COMBAT, Talent.BLOODLUST_DURATION_II) +
                         mgr.getTalentLevel(playerId, Skill.COMBAT, Talent.BLOODLUST_DURATION_III) +
                         mgr.getTalentLevel(playerId, Skill.COMBAT, Talent.BLOODLUST_DURATION_IV);
-        return 30 + 4 * levels;
+        return 30 + levels;
     }
 
     private class BloodlustData {

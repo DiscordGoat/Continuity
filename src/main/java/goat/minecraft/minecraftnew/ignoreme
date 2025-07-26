@@ -343,12 +343,12 @@ Arrow Damage Increase I: +4% Arrow Damage, Max level 3
 Sword Damage I: +4% Sword Damage, Max level 5
 Vampiric Strike: +1% Chance to summon a Soul Orb after a kill, Max level 6
 Bloodlust: Activates Bloodlust for 5s on killing a monster, Max level 1
-Bloodlust Duration I: Increases Bloodlust Duration by 4s, Max level 5
+Bloodlust Duration I: Increases Bloodlust Duration by 1s, Max level 5
 
 Uncommon:
 Arrow Damage Increase II: +8% Arrow Damage, Max level 3
 Sword Damage II: +4% Sword Damage, Max level 5
-Bloodlust Duration II: Increases Bloodlust Duration by 4s, Max level 5
+Bloodlust Duration II: Increases Bloodlust Duration by 1s, Max level 5
 Retribution: +1% Chance to Gain +10 Bloodlust Stacks on hits, Max level 5
 Vengeance: +1% Chance to Gain +20s Bloodlust Duration on hits, Max level 2
 
@@ -363,7 +363,7 @@ Blood Moon: Rewinds time by (1*level)s per kill, Max level 3
 Epic:
 Arrow Damage Increase IV: +16% Arrow Damage, Max level 3
 Sword Damage IV: +4% Sword Damage, Max level 5
-Bloodlust Duration III: Increases Bloodlust Duration by 4s, Max level 5
+Bloodlust Duration III: Increases Bloodlust Duration by 1s, Max level 5
 Antagonize: All taken Damage is received gradually over the course of (1*level)s (health modification, no damage tick), Max level 7
 
 Legendary:
@@ -371,7 +371,7 @@ Arrow Damage Increase V: +20% Arrow Damage, Max level 4
 Sword Damage V: +4% Sword Damage, Max level 5
 Ultimatum: +0.25% Fury Chance, Max level 5
 Revenant: Dying with 100 Stacks of Bloodlust triggers Fury and removes all Bloodlust Stacks, Max level 1
-Bloodlust Duration IV: Increases Bloodlust Duration by 4s, Max level 5
+Bloodlust Duration IV: Increases Bloodlust Duration by 1s, Max level 5
 
 
 
