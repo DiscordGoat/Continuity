@@ -97,13 +97,12 @@ public class CustomNutritionManager implements Listener {
                 for (UUID uuid : new HashSet<>(nutrition.keySet())) {
                     Player player = Bukkit.getPlayer(uuid);
                     if (player == null || !player.isOnline()) continue;
-                    if (AFKDetector.isPlayerAFK(player)) continue;
                     if (PotionManager.isActive("Potion of Optimal Eating", player)
                             && PotionEffectPreferences.isEnabled(player, "Potion of Optimal Eating")) {
                         continue;
                     }
                     int counter = decayCounters.getOrDefault(uuid, 0) + 1;
-                    if (counter >= 600) { // 10 minutes
+                    if (counter >= 300) { // 10 minutes
                         Map<FoodGroup, Integer> map = nutrition.get(uuid);
                         for (FoodGroup g : FoodGroup.values()) {
                             int v = map.getOrDefault(g,0);
