@@ -27,6 +27,7 @@ public class ResourcePackListener implements Listener {
                 PACK_URL,    // String url
                 PACK_HASH,   // byte[] sha1
                 prompt,      // String prompt
+
                 true         // boolean forced
         );
     }
