@@ -28,15 +28,22 @@ public class SpeedBoost implements Listener {
     private void adjustWalkSpeed(Player player) {
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // If the player has an active pet with the SPEED_BOOST perk
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SPEED_BOOST)) {
-            int petLevel = activePet.getLevel();
-            float bonusSpeed = DEFAULT_WALK_SPEED + (DEFAULT_WALK_SPEED * petLevel * 0.004f); // Add 0.5% per level
-            player.setWalkSpeed(Math.min(bonusSpeed, MAX_WALK_SPEED)); // Cap walk speed at 0.4
-        } else {
-            // Reset to default speed
-            player.setWalkSpeed(DEFAULT_WALK_SPEED);
+        float speed = DEFAULT_WALK_SPEED;
+        if (activePet != null) {
+            // Apply Fast trait bonus first
+            if (activePet.getTrait() == goat.minecraft.minecraftnew.subsystems.pets.PetTrait.FAST) {
+                double bonusPercent = activePet.getTrait().getValueForRarity(activePet.getTraitRarity());
+                speed *= (1.0 + bonusPercent / 100.0);
+            }
+
+            // Apply Speed Boost perk bonus if present
+            if (activePet.hasPerk(PetManager.PetPerk.SPEED_BOOST)) {
+                int petLevel = activePet.getLevel();
+                speed += DEFAULT_WALK_SPEED * petLevel * 0.004f; // Add 0.5% per level of the pet
+            }
         }
+
+        player.setWalkSpeed(Math.min(speed, MAX_WALK_SPEED));
     }
 
     /**
