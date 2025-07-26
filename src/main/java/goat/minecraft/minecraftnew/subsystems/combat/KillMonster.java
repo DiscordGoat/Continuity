@@ -116,21 +116,17 @@ public class KillMonster implements Listener {
                 } else {
                     allowNormalDrops = random.nextInt(100) < 20;
                 }
-                if (!allowNormalDrops && entity instanceof Zombie zombie) {
-                    ItemStack main = zombie.getEquipment().getItemInMainHand();
-                    if (main != null && main.getType() != Material.AIR && !main.getType().name().endsWith("_SWORD")) {
-                        zombie.getWorld().dropItemNaturally(zombie.getLocation(), main.clone());
-                    }
-                    ItemStack off = zombie.getEquipment().getItemInOffHand();
-                    if (off != null && off.getType() != Material.AIR && !off.getType().name().endsWith("_SWORD")) {
-                        zombie.getWorld().dropItemNaturally(zombie.getLocation(), off.clone());
-                    }
-                }
                 if (allowNormalDrops) {
-                    return; // Allow normal drops
-                } else {
-                    e.getDrops().clear();
+                    // Remove vanilla weapon drops
+                    e.getDrops().removeIf(item ->
+                            item.getType() == Material.IRON_SHOVEL ||
+                            item.getType() == Material.IRON_SWORD ||
+                            item.getType() == Material.BOW);
+                    return; // Allow other normal drops
                 }
+
+                // No normal drops allowed
+                e.getDrops().clear();
             }
         }
     }

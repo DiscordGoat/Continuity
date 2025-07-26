@@ -276,9 +276,15 @@ public class SpawnMonsters implements Listener {
 
     //weapon mutation
     public void equipRandomWeapon(LivingEntity entity) {
+        EntityEquipment equipment = entity.getEquipment();
+        if (entity instanceof Zombie) {
+            // Zombies always wield an iron sword
+            equipment.setItemInMainHand(new ItemStack(Material.IRON_SWORD));
+            return;
+        }
+
         Random random = new Random();
         Material weaponMaterial = random.nextBoolean() ? Material.IRON_SWORD : Material.IRON_SHOVEL;
-        EntityEquipment equipment = entity.getEquipment();
         equipment.setItemInMainHand(new ItemStack(weaponMaterial));
     }
 

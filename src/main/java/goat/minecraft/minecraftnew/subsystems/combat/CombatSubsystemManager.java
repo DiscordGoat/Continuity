@@ -9,6 +9,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.PowerCata
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.RangedDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.CorpseLevelDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SwordTalentDamageStrategy;
+import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SpiderDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.commands.CombatReloadCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIController;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
@@ -249,6 +250,7 @@ public class CombatSubsystemManager implements CommandExecutor {
                 new MonsterLevelDamageStrategy(configuration.getDamageConfig()));
             damageCalculationService.registerStrategy(
                 new CorpseLevelDamageStrategy(configuration.getDamageConfig()));
+            damageCalculationService.registerStrategy(new SpiderDamageStrategy());
         }
         
         // Register catalyst damage strategies (always enabled)
