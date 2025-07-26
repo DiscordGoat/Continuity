@@ -330,6 +330,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
         getCommand("previewparticle").setExecutor(new PreviewParticleCommand(this));
         getCommand("previewflow").setExecutor(new PreviewFlowCommand(this));
+        new RedVignetteCommand(this);
         FlowManager.getInstance(this);
         getCommand("flowdebug").setExecutor(new FlowDebugCommand(flowManager));
         getCommand("debugplayer").setExecutor(new DebugPlayerCommand(this));
