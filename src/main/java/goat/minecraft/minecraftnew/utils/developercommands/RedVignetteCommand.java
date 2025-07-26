@@ -45,14 +45,15 @@ public class RedVignetteCommand implements CommandExecutor {
 
         WorldBorder border = Bukkit.createWorldBorder();
         border.setCenter(player.getLocation());
-        border.setSize(1.0);
+        border.setSize(10);
+        border.setWarningDistance(5);
         player.setWorldBorder(border);
 
         int finalDuration = durationTicks;
         new BukkitRunnable() {
             @Override
             public void run() {
-                player.resetWorldBorder();
+                player.setWorldBorder(null);
             }
         }.runTaskLater(plugin, finalDuration);
         player.sendMessage(ChatColor.GRAY + "Red vignette applied for " + (finalDuration / 20) + "s.");

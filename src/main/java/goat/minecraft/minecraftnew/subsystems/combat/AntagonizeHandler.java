@@ -15,8 +15,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Handles the Antagonize combat talent which delays incoming damage
- * and applies it gradually over time.
+ * Handles the Antagonize combat talent:
+ *  - lets armor take its durability hits
+ *  - gives the player absorption equal to the damage, nullifying it instantly
+ *  - then re‐applies the damage gradually over time
  */
 public class AntagonizeHandler implements Listener {
 
@@ -28,21 +30,39 @@ public class AntagonizeHandler implements Listener {
         this.plugin = plugin;
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
+
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         if (mgr == null) return;
+
         int level = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ANTAGONIZE);
         if (level <= 0) return;
 
-        double damage = event.getFinalDamage();
-        event.setCancelled(true);
+        // capture the damage that *was* applied (armor durability has already been handled)
+        double damageDealt = event.getFinalDamage();
 
+        // schedule the gradual re‐damage
         UUID id = player.getUniqueId();
         damageMap.computeIfAbsent(id, k -> new ArrayList<>())
-                 .add(new DelayedDamage(damage, level * 20));
+                .add(new DelayedDamage(damageDealt, level * 20));
         startTask(player);
+
+        // immediately heal + give absorption hearts equal to that damage
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!player.isOnline() || player.isDead()) return;
+
+                // heal back what was just taken
+                double healedHealth = Math.min(player.getMaxHealth(), player.getHealth() + damageDealt);
+                player.setHealth(healedHealth);
+
+                // grant absorption hearts
+                player.setAbsorptionAmount(player.getAbsorptionAmount() + damageDealt);
+            }
+        }.runTask(plugin);
     }
 
     private void startTask(Player player) {
@@ -58,11 +78,11 @@ public class AntagonizeHandler implements Listener {
                     return;
                 }
 
-                double total = 0.0;
+                double totalThisTick = 0.0;
                 for (Iterator<DelayedDamage> it = list.iterator(); it.hasNext(); ) {
                     DelayedDamage dd = it.next();
                     double portion = dd.remaining / dd.ticksLeft;
-                    total += portion;
+                    totalThisTick += portion;
                     dd.remaining -= portion;
                     dd.ticksLeft--;
                     if (dd.ticksLeft <= 0 || dd.remaining <= 0) {
@@ -70,8 +90,8 @@ public class AntagonizeHandler implements Listener {
                     }
                 }
 
-                if (total > 0.0) {
-                    double newHealth = Math.max(0.0, player.getHealth() - total);
+                if (totalThisTick > 0.0) {
+                    double newHealth = Math.max(0.0, player.getHealth() - totalThisTick);
                     player.setHealth(newHealth);
                 }
             }
@@ -90,6 +110,7 @@ public class AntagonizeHandler implements Listener {
     private static class DelayedDamage {
         double remaining;
         int ticksLeft;
+
         DelayedDamage(double damage, int ticks) {
             this.remaining = damage;
             this.ticksLeft = ticks;

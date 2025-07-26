@@ -741,10 +741,6 @@ public class AnvilRepair implements Listener {
             xpManager.addXP(player, "Smithing", roll);
             anvilPitch = getAnvilPitch(roll);
 
-            CustomDurabilityManager durMgr = CustomDurabilityManager.getInstance();
-            if (durMgr != null) {
-                durMgr.addMaxDurabilityBonus(repairee, 1);
-            }
         } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
             repairAmount = 100;
             xpManager.addXP(player, "Smithing", 100.0);

@@ -424,19 +424,37 @@ Scaling Max: 500
 
 Common:
 Oxygen I: +10 Oxygen, Max level 3
+Lapis Yield: +2 Lapis per Ore, Max level 4
+Oxygen Efficiency I: -1% Oxygen Depletion Rate, Max level 5
+Adrenaline: Removes Slowness from Minor Hypoxia, Max level 1
+Rest: Sleeping Recovers 5% Max Oxygen, Max level 7
 
 Uncommon:
 Oxygen II: +20 Oxygen, Max level 3
+Iron Yield: +1 Iron per Ore, Max level 4
+Oxygen Efficiency II: -1% Oxygen Depletion Rate, Max level 5
+Ancient Debris: +0.10% Chance to drop a Masterwork Ingot from Iron Ore, Max level 5
 
 Rare:
 Oxygen III: +30 Oxygen, Max level 3
+Gold Yield: +1 Gold per Ore, Max level 4
+Oxygen Efficiency III: -1% Oxygen Depletion Rate, Max level 5
+Gold Fever: Removes Mining Fatigue from Moderate Hypoxia, Max level 1
+Magnet: Dropped items within (1*level) blocks are collected every (10-level)s, Max level 7
 
 Epic:
 Oxygen IV: +40 Oxygen, Max level 3
+Redstone Yield: +2 Redstone per Ore, Max level 4
+Oxygen Efficiency IV: -1% Oxygen Depletion Rate, Max level 5
+Oxygen Reserve: -5% Oxygen Depletion Rate below 50% Oxygen, Max level 4
+Coal Yield: +1 Coal per Ore, Max level 4
 
 Legendary:
 Oxygen V: +50 Oxygen, Max level 4
-
+Diamond Yield: +1 Diamond per Ore, Max level 4
+Oxygen Efficiency V: -1% Oxygen Depletion Rate, Max level 5
+Wake Up The Statues: Reduces Mining Fatigue Potency from Severe Hypoxia by 1, Max level 1
+Heart Of The Mountain: Adds +100 Max Durability to Pickaxes, Max level 6
 
 
 Farming:

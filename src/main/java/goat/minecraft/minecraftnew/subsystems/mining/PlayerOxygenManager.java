@@ -459,15 +459,15 @@ public class PlayerOxygenManager implements Listener {
         lastHypoxiaStage.put(id, stage);
 
         if (stage <= 50) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 0, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 40, 0, false, false, false));
         } else {
-            player.removePotionEffect(PotionEffectType.SLOW);
+            player.removePotionEffect(PotionEffectType.SLOWNESS);
         }
         if (stage <= 25) {
             int amp = (stage == 0) ? 3 : 0;
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 40, amp, false, false, false));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 40, amp, false, false, false));
         } else {
-            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+            player.removePotionEffect(PotionEffectType.MINING_FATIGUE);
         }
     }
 
