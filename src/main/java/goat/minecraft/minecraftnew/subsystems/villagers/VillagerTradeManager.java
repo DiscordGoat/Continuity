@@ -626,6 +626,7 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("EGG", 12, 12, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("HONEY_BOTTLE", 1, 8, 4)); // Level 4 trade
+        farmerPurchases.add(createTradeMap("IRRIGATION", 1, 32, 4)); // Custom item
         farmerPurchases.add(createTradeMap("SNIFFER_EGG", 1, 64, 5)); // Level 5 trade
 
         defaultConfig.set("FARMER.purchases", farmerPurchases);
@@ -729,6 +730,8 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getFarmerEnchant();
             case "AUTO_COMPOSTER":
                 return ItemRegistry.getAutoComposter();
+            case "IRRIGATION":
+                return ItemRegistry.getIrrigation();
             case "ORGANIC_SOIL":
                 return ItemRegistry.getOrganicSoil();
             case "COOKBOOK":
