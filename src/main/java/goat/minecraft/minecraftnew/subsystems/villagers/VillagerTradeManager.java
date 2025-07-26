@@ -646,6 +646,7 @@ public class VillagerTradeManager implements Listener {
         farmerSells.add(createTradeMap("PUMPKIN", 8, 1, 3)); // Level 3 trade
         farmerSells.add(createTradeMap("BROWN_MUSHROOM", 1, 1, 4)); // Level 4 trade
         farmerSells.add(createTradeMap("RED_MUSHROOM", 1, 1, 4)); // Level 4 trade
+        farmerSells.add(createTradeMap("HARVEST_MOON", 1, 256, 5)); // Ultimate enchant item
 
         defaultConfig.set("FARMER.sells", farmerSells);
 
@@ -1076,6 +1077,10 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getEvisceration();
             case "REVENANT":
                 return ItemRegistry.getRevenant();
+            case "HARVEST_MOON":
+                return ItemRegistry.getHarvestMoon();
+            case "FERTILIZER":
+                return ItemRegistry.getFertilizer();
             default:
                 plugin.getLogger().warning("Unknown custom item ID: " + identifier);
                 return null;

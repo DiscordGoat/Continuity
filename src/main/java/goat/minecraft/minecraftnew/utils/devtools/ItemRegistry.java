@@ -1001,6 +1001,16 @@ public class ItemRegistry {
                 ), 1, false, true);
     }
 
+    public static ItemStack getHarvestMoon() {
+        return createCustomItem(
+                Material.IRON_HOE,
+                ChatColor.YELLOW + "Harvest Moon",
+                Arrays.asList(
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Applies Scythe.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+    }
+
     public static ItemStack getRandomUltimateSmithingItem() {
         ItemStack[] items = {
                 getLawOfGravity(),
@@ -1008,7 +1018,8 @@ public class ItemRegistry {
                 getDraupnir(),
                 getQuantumPhysics(),
                 getEvisceration(),
-                getRevenant()
+                getRevenant(),
+                getHarvestMoon()
         };
         return items[new java.util.Random().nextInt(items.length)];
     }
@@ -3486,6 +3497,21 @@ public class ItemRegistry {
                 Arrays.asList(
                         ChatColor.GRAY + "Hydrates nearby soil and crops.",
                         ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click tilled soil to water and grow crops.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getFertilizer() {
+        return createCustomItem(
+                Material.BONE_MEAL,
+                ChatColor.YELLOW + "Fertilizer",
+                Arrays.asList(
+                        ChatColor.GRAY + "Grows connected crops by one stage.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click soil or crops to fertilize.",
                         ChatColor.DARK_PURPLE + "Artifact"
                 ),
                 1,
