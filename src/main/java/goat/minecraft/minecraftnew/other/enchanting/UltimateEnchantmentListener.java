@@ -310,9 +310,10 @@ public class UltimateEnchantmentListener implements Listener {
                 if (x == 0 && z == 0) continue;
                 Block relative = centerBlock.getRelative(x, 0, z);
                 if (isCropMaterial(relative.getType())) {
+                    Material cropType = relative.getType();
                     breakBlock(player, relative, true);
                     XPManager xpManager = new XPManager(plugin);
-                    CropCountManager.getInstance(MinecraftNew.getInstance()).increment(player, relative.getType());
+                    CropCountManager.getInstance(MinecraftNew.getInstance()).increment(player, cropType);
                     xpManager.addXP(player, "Farming", 1);
                 }
             }
@@ -508,7 +509,7 @@ public class UltimateEnchantmentListener implements Listener {
 
         if(player.isSneaking() && hasScytheEnchant(tool)) {
             CustomDurabilityManager durMgr = CustomDurabilityManager.getInstance();
-            int cost = 9;
+            int cost = 1;
             if(durMgr.getCurrentDurability(tool) <= cost) {
                 player.sendMessage(ChatColor.RED + "Your tool is too damaged to use Scythe enchant!");
                 return;
@@ -516,8 +517,10 @@ public class UltimateEnchantmentListener implements Listener {
             if(isCropMaterial(brokenBlock.getType())) {
                 event.setCancelled(true);
                 durMgr.applyDamage(player, tool, cost);
+                Material cropType = brokenBlock.getType();
                 breakBlock(player, brokenBlock, true);
                 CropCountManager.getInstance(MinecraftNew.getInstance()).increment(player, brokenBlock.getType());
+                CropCountManager.getInstance(MinecraftNew.getInstance()).increment(player, cropType);
                 breakScytheArea(player, brokenBlock);
                 if(Math.random() < 0.01) {
                     brokenBlock.getWorld().dropItemNaturally(brokenBlock.getLocation(), ItemRegistry.getFertilizer());
