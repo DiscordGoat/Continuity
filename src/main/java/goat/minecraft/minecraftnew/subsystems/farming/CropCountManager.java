@@ -72,6 +72,7 @@ public class CropCountManager {
         save();
         handleRewards(player, crop, c, total);
 
+
     }
 
     private void handleRewards(Player player, Material crop, int cropCount, int total) {
