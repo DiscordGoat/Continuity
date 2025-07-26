@@ -384,22 +384,17 @@ public class RightClickArtifacts implements Listener {
                     return;
                 }
 
-                // Initialize BFS structures
+                // Gather FARMLAND blocks using BFS
                 Queue<Block> queue = new LinkedList<>();
                 Set<Block> visited = new HashSet<>();
-                int plantedCount = 0;
+                List<Block> farmlandBlocks = new ArrayList<>();
 
                 queue.add(clickedBlock);
                 visited.add(clickedBlock);
 
-                while (!queue.isEmpty() && plantedCount < 1000) {
+                while (!queue.isEmpty() && farmlandBlocks.size() < 256) {
                     Block current = queue.poll();
-
-                    // Plant the specified seed on the current FARMLAND block
-                    boolean planted = plantSeed(current, seederType.getCropMaterial());
-                    if (planted) {
-                        plantedCount++;
-                    }
+                    farmlandBlocks.add(current);
 
                     // Iterate over adjacent blocks (North, South, East, West)
                     for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
@@ -410,6 +405,14 @@ public class RightClickArtifacts implements Listener {
                             queue.add(adjacent);
                             visited.add(adjacent);
                         }
+                    }
+                }
+
+                int plantedCount = 0;
+                // Plant from farthest to nearest
+                for (int i = farmlandBlocks.size() - 1; i >= 0; i--) {
+                    if (plantSeed(farmlandBlocks.get(i), seederType.getCropMaterial())) {
+                        plantedCount++;
                     }
                 }
 
