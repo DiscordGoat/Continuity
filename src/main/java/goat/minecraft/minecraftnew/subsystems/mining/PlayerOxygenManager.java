@@ -21,6 +21,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.*;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +42,11 @@ public class PlayerOxygenManager implements Listener {
 
     // Data structure for tracking player-placed blocks
     private final Map<UUID, Set<Location>> playerPlacedBlocks = new HashMap<>();
+    // Hypoxia tracking
+    private final Map<UUID, Integer> lastHypoxiaStage = new HashMap<>();
+    private final Map<UUID, BukkitTask> heartbeatTasks = new HashMap<>();
+    private final Map<UUID, BukkitTask> breathTasks = new HashMap<>();
+
 
     // Define banned block types when oxygen is 0
     private static final Set<Material> BANNED_BLOCKS = new HashSet<>(Arrays.asList(
@@ -214,6 +220,7 @@ public class PlayerOxygenManager implements Listener {
                     playerOxygenLevels.put(uuid, currentOxygen);
                 }
             }
+        handleHypoxiaEffects(player, currentOxygen, initialOxygen);
         }
     }
 
@@ -333,6 +340,137 @@ public class PlayerOxygenManager implements Listener {
     public void applyDarknessEffect(Player player) {
         player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 80, 0, false, false, false));
     }
+
+    private void cancelHypoxiaTasks(UUID id) {
+        BukkitTask hb = heartbeatTasks.remove(id);
+        if (hb != null) {
+            hb.cancel();
+        }
+        BukkitTask br = breathTasks.remove(id);
+        if (br != null) {
+            br.cancel();
+        }
+    }
+
+    private void triggerStage50(Player player) {
+        player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1F, 1F);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 40, 0, false, false, false));
+    }
+
+    private void triggerStage25(Player player) {
+        player.addPotionEffect(new PotionEffect(PotionEffectType.DARKNESS, 200, 0, false, false, false));
+        UUID id = player.getUniqueId();
+        BukkitTask task = new BukkitRunnable() {
+            int count = 0;
+            @Override
+            public void run() {
+                if (!player.isOnline() || count >= 3) {
+                    cancel();
+                    heartbeatTasks.remove(id);
+                    return;
+                }
+                player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1F, 1F);
+                count++;
+            }
+        }.runTaskTimer(plugin, 0L, 66L);
+        heartbeatTasks.put(id, task);
+    }
+
+    private void triggerStage5(Player player) {
+        UUID id = player.getUniqueId();
+        BukkitTask hb = new BukkitRunnable() {
+            int count = 0;
+            @Override
+            public void run() {
+                if (!player.isOnline() || count >= 5) {
+                    cancel();
+                    heartbeatTasks.remove(id);
+                    return;
+                }
+                player.playSound(player.getLocation(), Sound.ENTITY_WARDEN_HEARTBEAT, 1F, 1F);
+                count++;
+            }
+        }.runTaskTimer(plugin, 0L, 120L);
+        heartbeatTasks.put(id, hb);
+
+        BukkitTask breath = new BukkitRunnable() {
+            final int[] schedule = {0, 1, 2, 5, 10, 15, 35, 55, 75};
+            int sec = 0;
+            int index = 0;
+            @Override
+            public void run() {
+                if (!player.isOnline()) {
+                    cancel();
+                    breathTasks.remove(id);
+                    return;
+                }
+                if (index < schedule.length && sec >= schedule[index]) {
+                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 0.5F, 1.0F);
+                    index++;
+                    if (index >= schedule.length) {
+                        cancel();
+                        breathTasks.remove(id);
+                        return;
+                    }
+                }
+                sec++;
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+        breathTasks.put(id, breath);
+    }
+
+    private void triggerStage0(Player player) {
+        // Intensified mining fatigue handled in handleHypoxiaEffects
+    }
+
+    private void handleHypoxiaEffects(Player player, int currentOxygen, int initialOxygen) {
+        UUID id = player.getUniqueId();
+        double percent = (currentOxygen * 100.0) / initialOxygen;
+        int stage = 100;
+        if (currentOxygen <= 0) {
+            stage = 0;
+        } else if (percent <= 5.0) {
+            stage = 5;
+        } else if (percent <= 25.0) {
+            stage = 25;
+        } else if (percent <= 50.0) {
+            stage = 50;
+        }
+        int prev = lastHypoxiaStage.getOrDefault(id, 100);
+        if (stage < prev) {
+            cancelHypoxiaTasks(id);
+            switch(stage) {
+                case 50:
+                    triggerStage50(player);
+                    break;
+                case 25:
+                    triggerStage25(player);
+                    break;
+                case 5:
+                    triggerStage5(player);
+                    break;
+                case 0:
+                    triggerStage0(player);
+                    break;
+            }
+        } else if (stage > prev) {
+            cancelHypoxiaTasks(id);
+        }
+        lastHypoxiaStage.put(id, stage);
+
+        if (stage <= 50) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 0, false, false, false));
+        } else {
+            player.removePotionEffect(PotionEffectType.SLOW);
+        }
+        if (stage <= 25) {
+            int amp = (stage == 0) ? 3 : 0;
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 40, amp, false, false, false));
+        } else {
+            player.removePotionEffect(PotionEffectType.SLOW_DIGGING);
+        }
+    }
+
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
