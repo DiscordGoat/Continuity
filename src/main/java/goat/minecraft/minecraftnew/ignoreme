@@ -505,21 +505,43 @@ Hivemind: +25% Festival Bees Duration , Max level 4
 Fishing:
 Scaling Stat: Sea Creature Chance
 Scaling Max: 25%
+Golden Fish is the FastEat item of fishing, identical in functionality to the perfect apple of forestry, but unlike that one, the golden fish grants 100 absorption hearts with infinite duration.
 
 Common:
 Sea Creature Chance I: +0.5% per level, Max level 3
+Durability: +100 Fishing Rod Max Durability, Max level 5
+Exosuit I: +2% Damage Reduction from Sea Creatures, Max level 5
+Monumental: +1% Chance to Fish up a Sponge, Max level 5
+Snack That Smiles Back I: +0.25% Chance to Fish up a Golden Fish, Max level 2
 
 Uncommon:
 Sea Creature Chance II: +1.0% per level, Max level 3
+When It Rains It Pours: +5% Chance to Extend Rain Duration when killing a Sea Creature, Max level 5
+Exosuit II: +2% Damage Reduction from Sea Creatures, Max level 5
+Lost Library: +1% Chance to Fish up an Enchanted Book, Max level 5
+Snack That Smiles Back II: +0.25% Chance to Fish up a Golden Fish, Max level 2
+
 
 Rare:
 Sea Creature Chance III: +1.5% per level, Max level 3
+Motherlode: +5% Chance to Fish up Double Treasure Chests, Max level 5
+Exosuit III: +2% Damage Reduction from Sea Creatures, Max level 5
+Maw Of The Void: +1% Sea Creature Chance for 10s after killing a Sea Creature, Max level 5
+Snack That Smiles Back III: +0.25% Chance to Fish up a Golden Fish, Max level 2
 
 Epic:
 Sea Creature Chance IV: +2.0% per level, Max level 3
+Treasury: +1% Treasure Chance, Max level 5
+Exosuit IV: +2% Damage Reduction from Sea Creatures, Max level 5
+Bioluminescence: +1% Chance to Repair Armor by 10% when killing Sea Creatures, Max level 5
+Snack That Smiles Back IV: +0.25% Chance to Fish up a Golden Fish, Max level 2
 
 Legendary:
 Sea Creature Chance V: +2.5% per level, Max level 4
+Exosuit V: +2% Damage Reduction from Sea Creatures, Max level 5
+Sunken Ruins: +1% Chance to Fish up 64 Compact Stone, Max level 5
+Abyssal Strike: +20% Chance that killing a Sea Creature Grants Double Drops, Max level 5
+Snack That Smiles Back V: +0.25% Chance to Fish up a Golden Fish, Max level 1
 
 
 
