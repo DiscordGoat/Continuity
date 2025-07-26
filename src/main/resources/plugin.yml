@@ -265,3 +265,7 @@ commands:
     description: Shows a red vignette overlay using the world border
     usage: /redvignette [seconds]
     permission: continuity.admin
+  glowingores:
+    description: Highlights nearby ores with a colored glow
+    usage: /glowingores <seconds>
+    permission: continuity.admin
