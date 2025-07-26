@@ -68,6 +68,13 @@ public class UltimateEnchantingSystem implements Listener {
             Material.DIAMOND_SHOVEL, Material.NETHERITE_SHOVEL
     );
 
+    // Subset of hoes for the Scythe ultimate enchantment
+    public static final Set<Material> HOES = EnumSet.of(
+            Material.WOODEN_HOE, Material.STONE_HOE,
+            Material.IRON_HOE, Material.GOLDEN_HOE,
+            Material.DIAMOND_HOE, Material.NETHERITE_HOE
+    );
+
     // Define a set for armor pieces
     public static final Set<Material> ARMOR = EnumSet.of(
             Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS,
@@ -96,6 +103,7 @@ public class UltimateEnchantingSystem implements Listener {
         registerEnchantmentForType("Ultimate: Hammer", 1, false, TOOLS.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Treecapitator", 1, false, TOOLS.toArray(new Material[0]));
         registerEnchantmentForType("Ultimate: Mulch", 1, false, SHOVELS.toArray(new Material[0]));
+        registerEnchantmentForType("Ultimate: Scythe", 1, false, HOES.toArray(new Material[0]));
     }
 
     /**

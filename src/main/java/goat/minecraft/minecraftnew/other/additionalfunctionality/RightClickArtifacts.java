@@ -429,6 +429,56 @@ public class RightClickArtifacts implements Listener {
                     clickedBlock.getWorld().spawnParticle(Particle.SPLASH, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
                     return;
                 }
+
+                if (displayName.equals(ChatColor.YELLOW + "Fertilizer")) {
+                    Block clickedBlock = e.getClickedBlock();
+                    if(clickedBlock == null) return;
+                    Block soil = clickedBlock.getType() == Material.FARMLAND ? clickedBlock :
+                            clickedBlock.getRelative(BlockFace.DOWN);
+                    if (soil.getType() != Material.FARMLAND) {
+                        player.sendMessage(ChatColor.RED + "You must right-click soil or crops on soil to use the Fertilizer.");
+                        return;
+                    }
+
+                    Queue<Block> queue = new LinkedList<>();
+                    Set<Block> visited = new HashSet<>();
+                    List<Block> farmlandBlocks = new ArrayList<>();
+
+                    queue.add(soil);
+                    visited.add(soil);
+
+                    while(!queue.isEmpty()) {
+                        Block current = queue.poll();
+                        farmlandBlocks.add(current);
+                        for(BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
+                            Block adj = current.getRelative(face);
+                            if(adj.getType() == Material.FARMLAND && visited.add(adj)) {
+                                queue.add(adj);
+                            }
+                        }
+                    }
+
+                    int grown = 0;
+                    for(Block farmland : farmlandBlocks) {
+                        Block cropBlock = farmland.getRelative(BlockFace.UP);
+                        if(cropBlock.getBlockData() instanceof Ageable crop) {
+                            Material mat = cropBlock.getType();
+                            if(mat == Material.WHEAT || mat == Material.CARROTS || mat == Material.POTATOES || mat == Material.BEETROOTS) {
+                                if(crop.getAge() < crop.getMaximumAge()) {
+                                    crop.setAge(Math.min(crop.getAge() + 1, crop.getMaximumAge()));
+                                    cropBlock.setBlockData(crop);
+                                    grown++;
+                                }
+                            }
+                        }
+                    }
+
+                    player.playSound(player.getLocation(), Sound.ITEM_BONE_MEAL_USE, 1.0f, 1.0f);
+                    decrementItemAmount(itemInHand, player);
+                    player.sendMessage(ChatColor.GREEN + "Fertilized " + grown + " crops!");
+                    clickedBlock.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, clickedBlock.getLocation().add(0.5,1,0.5), 50,0.5,0.5,0.5,0.05);
+                    return;
+                }
                 SeederType seederType = SeederType.fromDisplayName(displayName);
                 if (seederType == null) {
                     return; // The item is not a recognized seeder
