@@ -117,12 +117,35 @@ public final class TalentRegistry {
                         Talent.GRAVE_INTUITION
           )
           );
-              SKILL_TALENTS.put(
+        SKILL_TALENTS.put(
                 Skill.FARMING,
                 Arrays.asList(
-                        Talent.BOUNTIFUL_HARVEST,
-                        Talent.VERDANT_TENDING
-                                  )
+                        Talent.EXTRA_CROP_CHANCE_I,
+                        Talent.FOR_THE_STREETS,
+                        Talent.REAPER_I,
+                        Talent.FAST_FARMER,
+                        Talent.HARVEST_FESTIVAL,
+                        Talent.EXTRA_CROP_CHANCE_II,
+                        Talent.UNRIVALED,
+                        Talent.REAPER_II,
+                        Talent.HYDRO_FARMER,
+                        Talent.FESTIVAL_BEES_I,
+                        Talent.EXTRA_CROP_CHANCE_III,
+                        Talent.REAPER_III,
+                        Talent.HALLOWEEN,
+                        Talent.FESTIVAL_BEE_DURATION_I,
+                        Talent.FESTIVAL_BEES_II,
+                        Talent.EXTRA_CROP_CHANCE_IV,
+                        Talent.REAPER_IV,
+                        Talent.FERTILIZER_EFFICIENCY,
+                        Talent.FESTIVAL_BEE_DURATION_II,
+                        Talent.FESTIVAL_BEES_III,
+                        Talent.EXTRA_CROP_CHANCE_V,
+                        Talent.REAPER_V,
+                        Talent.FESTIVAL_BEES_IV,
+                        Talent.SWARM,
+                        Talent.HIVEMIND
+                )
         );
               SKILL_TALENTS.put(
                 Skill.FISHING,

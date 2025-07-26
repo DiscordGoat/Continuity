@@ -18,6 +18,7 @@ import goat.minecraft.minecraftnew.other.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.farming.VerdantRelicsSubsystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
+import goat.minecraft.minecraftnew.subsystems.farming.FestivalBeeManager;
 
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.*;
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.WitherPetGrantListener;
@@ -94,6 +95,7 @@ import goat.minecraft.minecraftnew.other.armorsets.CountershotSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.StriderSetBonus;
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.other.skilltree.SwiftStepMasteryBonus;
+import goat.minecraft.minecraftnew.other.skilltree.FastFarmerBonus;
 import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.other.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.other.structureblocks.SetStructureBlockPowerCommand;
@@ -145,6 +147,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private CountershotSetBonus countershotSetBonus;
     private StriderSetBonus striderSetBonus;
     private SwiftStepMasteryBonus swiftStepMasteryBonus;
+    private FastFarmerBonus fastFarmerBonus;
     private RejuvenationCatalystListener rejuvenationCatalystListener;
     private DeathCatalystListener deathCatalystListener;
 
@@ -310,6 +313,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         countershotSetBonus = new CountershotSetBonus(this);
         striderSetBonus = new StriderSetBonus(this);
         swiftStepMasteryBonus = new SwiftStepMasteryBonus(this);
+        fastFarmerBonus = new FastFarmerBonus(this);
         // Initialize catalyst manager for beacon charm catalysts
         CatalystManager.initialize(this);
         rejuvenationCatalystListener = new RejuvenationCatalystListener(this);
@@ -590,6 +594,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         
         getServer().getPluginManager().registerEvents(new PlayerLevel(MinecraftNew.getInstance(), xpManager), MinecraftNew.getInstance());
 
+        FestivalBeeManager.getInstance(this);
         getServer().getPluginManager().registerEvents(new FarmingEvent(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new SeaCreatureDeathEvent(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.gravedigging.corpses.CorpseDeathEvent(), this);

@@ -297,6 +297,28 @@ public class StatsCalculator {
         return chance;
     }
 
+    /** Extra crop chance from new farming talents and catalysts. */
+    public double getExtraCropChance(Player player) {
+        double chance = 0.0;
+        if (SkillTreeManager.getInstance() != null) {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            chance += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.EXTRA_CROP_CHANCE_I) * 8.0;
+            chance += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.EXTRA_CROP_CHANCE_II) * 16.0;
+            chance += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.EXTRA_CROP_CHANCE_III) * 24.0;
+            chance += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.EXTRA_CROP_CHANCE_IV) * 32.0;
+            chance += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.EXTRA_CROP_CHANCE_V) * 40.0;
+        }
+        CatalystManager cm = CatalystManager.getInstance();
+        if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
+            Catalyst cat = cm.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);
+            if (cat != null) {
+                int t = cm.getCatalystTier(cat);
+                chance = Math.max(chance, 40 + t * 10);
+            }
+        }
+        return chance;
+    }
+
     /** Repair amount from smithing talents. */
     public double getRepairAmount(Player player) {
         double amount = 25.0; // base

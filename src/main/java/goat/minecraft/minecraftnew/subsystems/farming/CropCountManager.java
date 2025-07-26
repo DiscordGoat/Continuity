@@ -11,6 +11,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.Sound;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 
 import java.io.File;
 import java.io.IOException;
@@ -76,7 +79,18 @@ public class CropCountManager {
 
     private void handleRewards(Player player, Material crop, int cropCount, int total) {
         checkPetThresholds(player, total);
-        if (cropCount % 500 == 0) {
+        int reduction = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_I);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_II);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_III);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_IV);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_V);
+        }
+        int requirement = (int) Math.ceil(500 * (1 - reduction / 100.0));
+        if (requirement < 1) requirement = 1;
+        if (cropCount % requirement == 0) {
             switch (crop) {
                 case WHEAT, WHEAT_SEEDS:
                     Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(), ItemRegistry.getWheatSeeder());

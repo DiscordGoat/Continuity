@@ -4,12 +4,14 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
+import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.subsystems.farming.FestivalBeeManager;
 import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import goat.minecraft.minecraftnew.other.skilltree.Skill;
-import goat.minecraft.minecraftnew.other.skilltree.Talent;
-import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -58,6 +60,31 @@ public class FarmingEvent implements Listener {
         }
     }
 
+    // Tilling larger area with For The Streets talent
+    @EventHandler
+    public void onTill(org.bukkit.event.player.PlayerInteractEvent event) {
+        if (event.getAction() != org.bukkit.event.block.Action.RIGHT_CLICK_BLOCK) return;
+        Block block = event.getClickedBlock();
+        if (block == null) return;
+        Material mat = block.getType();
+        if (mat != Material.DIRT && mat != Material.GRASS_BLOCK && mat != Material.COARSE_DIRT && mat != Material.ROOTED_DIRT) return;
+        ItemStack tool = event.getItem();
+        if (tool == null || !tool.getType().name().endsWith("_HOE")) return;
+        Player player = event.getPlayer();
+        int lvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FOR_THE_STREETS);
+        if (lvl > 0 && random.nextDouble() < lvl * 0.20) {
+            for (int dx = -4; dx <= 4; dx++) {
+                for (int dz = -4; dz <= 4; dz++) {
+                    Block b = block.getRelative(dx, 0, dz);
+                    Material t = b.getType();
+                    if (t == Material.DIRT || t == Material.GRASS_BLOCK || t == Material.COARSE_DIRT || t == Material.ROOTED_DIRT) {
+                        b.setType(Material.FARMLAND);
+                    }
+                }
+            }
+        }
+    }
+
     @EventHandler
     public void onCropHarvest(BlockBreakEvent e) {
         Block block = e.getBlock();
@@ -100,33 +127,68 @@ public class FarmingEvent implements Listener {
                 CropCountManager.getInstance(plugin).increment(player, blockType);
             }
 
-            int talentLevel = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.BOUNTIFUL_HARVEST);
-            boolean doubled = random.nextDouble() < (talentLevel * 0.04);
-
-            CatalystManager catalystManager = CatalystManager.getInstance();
-            boolean tripled = false;
-            if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
-                Catalyst catalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);
-                if (catalyst != null) {
-                    int tier = catalystManager.getCatalystTier(catalyst);
-                    double chance = 0.40 + (tier * 0.10);
-                    chance = Math.min(chance, 1.0);
-                    tripled = random.nextDouble() < chance;
-                }
+            StatsCalculator calc = new StatsCalculator(plugin);
+            double chance = calc.getExtraCropChance(player);
+            int extra = 0;
+            while (chance >= 100.0) {
+                extra++;
+                chance -= 100.0;
             }
-
-            if (doubled || tripled) {
+            if (random.nextDouble() < chance / 100.0) extra++;
+            if (extra > 0) {
                 Collection<ItemStack> drops = block.getDrops();
                 for (ItemStack drop : drops) {
-                    ItemStack extra = drop.clone();
-                    extra.setAmount(tripled ? drop.getAmount() * 2 : drop.getAmount());
-                    Objects.requireNonNull(e.getBlock().getLocation().getWorld()).dropItem(e.getBlock().getLocation(), extra);
+                    ItemStack extraDrop = drop.clone();
+                    extraDrop.setAmount(drop.getAmount() * extra);
+                    Objects.requireNonNull(e.getBlock().getLocation().getWorld()).dropItem(e.getBlock().getLocation(), extraDrop);
                 }
                 player.playSound(player.getLocation(), Sound.BLOCK_ROOTED_DIRT_PLACE, 1.0f, 1.0f);
-
-
             }
+
+            // Harvest Festival haste buff
+            int hf = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.HARVEST_FESTIVAL);
+            if (hf > 0 && random.nextDouble() < hf * 0.5) {
+                player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.FAST_DIGGING, 100, 1));
+            }
+
+            // Unrivaled - grow nearby crops
+            int un = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.UNRIVALED);
+            if (un > 0 && random.nextDouble() < un * 0.01) {
+                for (int dx = -3; dx <= 3; dx++) {
+                    for (int dz = -3; dz <= 3; dz++) {
+                        if (dx == 0 && dz == 0) continue;
+                        Block b = block.getRelative(dx, 0, dz);
+                        if (b.getBlockData() instanceof Ageable age) {
+                            if (age.getAge() < age.getMaximumAge()) {
+                                age.setAge(Math.min(age.getAge() + 1, age.getMaximumAge()));
+                                b.setBlockData(age);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Festival Bees spawn
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            double beeChance =
+                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_I) * 0.25 +
+                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_II) * 0.25 +
+                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_III) * 0.25 +
+                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_IV) * 0.25;
+            beeChance /= 100.0;
+            if (random.nextDouble() < beeChance) {
+                int dur = 30
+                        + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEE_DURATION_I) * 10
+                        + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEE_DURATION_II) * 10;
+                double multi = 1 + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.HIVEMIND) * 0.25;
+                dur = (int) (dur * multi);
+                FestivalBeeManager.getInstance(plugin).spawnFestivalBee(block.getLocation(), dur);
+                int swarm = mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.SWARM);
+                if (swarm > 0 && random.nextDouble() < swarm * 0.10) {
+                    FestivalBeeManager.getInstance(plugin).spawnFestivalBee(block.getLocation(), dur);
+                }
+            }
+
             handleRareItemDrop(block, player, blockType);
         }
     }
