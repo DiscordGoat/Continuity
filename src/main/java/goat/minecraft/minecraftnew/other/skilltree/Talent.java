@@ -568,8 +568,8 @@ public enum Talent {
     ),
     FAST_FARMER(
             "Fast Farmer",
-            ChatColor.GRAY + "Move faster on farmland",
-            ChatColor.YELLOW + "+(20*level)% " + ChatColor.GRAY + "Speed on soil",
+            ChatColor.GRAY + "Move faster when holding an axe or hoe",
+            ChatColor.YELLOW + "+(20*level)% " + ChatColor.GRAY + "Speed while holding tools",
             5,
             1,
             Material.LEATHER_BOOTS

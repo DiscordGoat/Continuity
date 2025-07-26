@@ -40,8 +40,9 @@ public class FastFarmerBonus implements Listener {
     private void checkPlayer(Player player) {
         int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FAST_FARMER);
         UUID id = player.getUniqueId();
-        boolean onSoil = player.getLocation().getBlock().getType() == Material.FARMLAND;
-        if (level > 0 && onSoil) {
+        boolean holdingTool = isAxeOrHoe(player.getInventory().getItemInMainHand().getType()) ||
+                isAxeOrHoe(player.getInventory().getItemInOffHand().getType());
+        if (level > 0 && holdingTool) {
             baseSpeed.putIfAbsent(id, player.getWalkSpeed());
             float newSpeed = baseSpeed.get(id) * (1.0f + 0.20f * level);
             player.setWalkSpeed(Math.min(newSpeed, 1.0f));
@@ -49,6 +50,12 @@ public class FastFarmerBonus implements Listener {
             player.setWalkSpeed(baseSpeed.get(id));
             baseSpeed.remove(id);
         }
+    }
+
+    private boolean isAxeOrHoe(Material material) {
+        if (material == null || material == Material.AIR) return false;
+        String name = material.name();
+        return name.endsWith("_AXE") || name.endsWith("_HOE");
     }
 
     public void removeAll() {
