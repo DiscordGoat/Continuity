@@ -13,6 +13,7 @@ import org.bukkit.Sound;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 public class CropCountManager {
     private static CropCountManager instance;
@@ -48,7 +49,7 @@ public class CropCountManager {
 
     private String key(Material mat) {
         switch (mat) {
-            case WHEAT: return "wheat";
+            case WHEAT_SEEDS: return "wheat";
             case CARROTS: return "carrots";
             case POTATOES: return "potatoes";
             case BEETROOTS: return "beetroots";
@@ -75,29 +76,29 @@ public class CropCountManager {
         checkPetThresholds(player, total);
         if (cropCount % 500 == 0) {
             switch (crop) {
-                case WHEAT:
-                    player.getInventory().addItem(ItemRegistry.getWheatSeeder());
+                case WHEAT, WHEAT_SEEDS:
+                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(), ItemRegistry.getWheatSeeder());
                     break;
                 case CARROTS:
-                    player.getInventory().addItem(ItemRegistry.getCarrotSeeder());
+                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getCarrotSeeder());
                     break;
                 case POTATOES:
-                    player.getInventory().addItem(ItemRegistry.getPotatoSeeder());
+                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getPotatoSeeder());
                     break;
                 case BEETROOTS:
-                    player.getInventory().addItem(ItemRegistry.getBeetrootSeeder());
+                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getBeetrootSeeder());
                     break;
                 case PUMPKIN:
-                    player.getInventory().addItem(ItemRegistry.getJackOLantern());
+                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getJackOLantern());
                     break;
                 case MELON:
-                    player.getInventory().addItem(ItemRegistry.getWatermelon());
+                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getWatermelon());
                     break;
                 default:
                     break;
             }
             xpManager.addXP(player, "Farming", 100);
-            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
         }
     }
 
@@ -150,6 +151,5 @@ public class CropCountManager {
             default:
                 break;
         }
-        player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 1.0f);
     }
 }

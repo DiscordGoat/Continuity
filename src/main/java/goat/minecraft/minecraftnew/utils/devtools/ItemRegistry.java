@@ -4550,7 +4550,7 @@ public class ItemRegistry {
     /** Smithing item that improves melon harvests. */
     public static ItemStack getWatermelon() {
         return createCustomItem(
-                Material.MELON,
+                Material.BAMBOO_BLOCK,
                 ChatColor.YELLOW + "Watermelon",
                 Arrays.asList(
                         ChatColor.GRAY + "Adds one level of Clean Cut.",

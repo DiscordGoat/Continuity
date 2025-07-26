@@ -88,13 +88,13 @@ public class FarmingEvent implements Listener {
 
             // Award Farming XP
             int xp = cropXP.get(blockType);
-            ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawn(block.getLocation(), ExperienceOrb.class);
+            ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawn(player.getLocation(), ExperienceOrb.class);
             orb.setExperience(2);
             xpManager.addXP(player, "Farming", xp);
             // Play harvest sound
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
 
-            if (blockType == Material.CARROTS || blockType == Material.POTATOES ||
+            if (blockType == Material.WHEAT || blockType == Material.WHEAT_SEEDS || blockType == Material.CARROTS || blockType == Material.POTATOES ||
                     blockType == Material.BEETROOTS || blockType == Material.PUMPKIN ||
                     blockType == Material.MELON || blockType == Material.COCOA) {
                 CropCountManager.getInstance(plugin).increment(player, blockType);
