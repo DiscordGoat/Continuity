@@ -529,7 +529,9 @@ public class RightClickArtifacts implements Listener {
                     return;
                 }
 
-                // Gather FARMLAND blocks using BFS
+                // Gather FARMLAND blocks using BFS. We traverse through all
+                // connected farmland blocks but only record those without crops
+                // on top so we don't waste the limit on already-planted blocks.
                 Queue<Block> queue = new LinkedList<>();
                 Set<Block> visited = new HashSet<>();
                 List<Block> farmlandBlocks = new ArrayList<>();
@@ -539,7 +541,11 @@ public class RightClickArtifacts implements Listener {
 
                 while (!queue.isEmpty() && farmlandBlocks.size() < 256) {
                     Block current = queue.poll();
-                    farmlandBlocks.add(current);
+
+                    // Only add farmland that doesn't already have a crop
+                    if (current.getRelative(BlockFace.UP).getType() == Material.AIR) {
+                        farmlandBlocks.add(current);
+                    }
 
                     // Iterate over adjacent blocks (North, South, East, West)
                     for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
