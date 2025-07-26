@@ -476,7 +476,7 @@ public class RightClickArtifacts implements Listener {
                     player.playSound(player.getLocation(), Sound.ITEM_BONE_MEAL_USE, 1.0f, 1.0f);
                     decrementItemAmount(itemInHand, player);
                     player.sendMessage(ChatColor.GREEN + "Fertilized " + grown + " crops!");
-                    clickedBlock.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, clickedBlock.getLocation().add(0.5,1,0.5), 50,0.5,0.5,0.5,0.05);
+                    clickedBlock.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, clickedBlock.getLocation().add(0.5,1,0.5), 50,0.5,0.5,0.5,0.05);
                     return;
                 }
                 SeederType seederType = SeederType.fromDisplayName(displayName);
