@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class ResourcePackListener implements Listener {
 
     private static final String PACK_URL      =
-            "https://discordgoat.github.io/Continuity/pack.zip";
+            "https://discordgoat.github.io/Continuity/continuity.zip";
     private static final String PACK_HASH_HEX =
             "af6d37f184891449a9c21943cbceb545991feb5d";
     private static final byte[] PACK_HASH     =
