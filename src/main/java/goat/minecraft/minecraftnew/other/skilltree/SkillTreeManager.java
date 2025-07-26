@@ -394,7 +394,7 @@ public class SkillTreeManager implements Listener {
             case REAPER_I:
                 return ChatColor.YELLOW + "-" + level + "% " + ChatColor.GRAY + "Harvest requirement";
             case FAST_FARMER:
-                return ChatColor.YELLOW + "+" + (level * 20) + "% " + ChatColor.GRAY + "Speed on soil";
+                return ChatColor.YELLOW + "Speed " + level + ChatColor.GRAY + " on crop break";
             case HARVEST_FESTIVAL:
                 return ChatColor.YELLOW + "+" + (level * 50) + "% " + ChatColor.GRAY + "Haste II chance";
             case EXTRA_CROP_CHANCE_II:
