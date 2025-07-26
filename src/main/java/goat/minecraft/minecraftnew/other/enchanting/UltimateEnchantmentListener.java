@@ -312,7 +312,7 @@ public class UltimateEnchantmentListener implements Listener {
                 if (isCropMaterial(relative.getType())) {
                     breakBlock(player, relative, true);
                     XPManager xpManager = new XPManager(plugin);
-                    CropCountManager.getInstance(MinecraftNew.getInstance()).increment(player, centerBlock.getType());
+                    CropCountManager.getInstance(MinecraftNew.getInstance()).increment(player, relative.getType());
                     xpManager.addXP(player, "Farming", 1);
                 }
             }
@@ -517,6 +517,7 @@ public class UltimateEnchantmentListener implements Listener {
                 event.setCancelled(true);
                 durMgr.applyDamage(player, tool, cost);
                 breakBlock(player, brokenBlock, true);
+                CropCountManager.getInstance(MinecraftNew.getInstance()).increment(player, brokenBlock.getType());
                 breakScytheArea(player, brokenBlock);
                 if(Math.random() < 0.01) {
                     brokenBlock.getWorld().dropItemNaturally(brokenBlock.getLocation(), ItemRegistry.getFertilizer());
