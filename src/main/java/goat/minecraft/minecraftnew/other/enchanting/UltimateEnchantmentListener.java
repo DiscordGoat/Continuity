@@ -9,6 +9,7 @@ import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -33,6 +34,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.Location;
 import org.bukkit.entity.Monster;
+import org.bukkit.block.data.Ageable;
 
 import java.util.*;
 
@@ -97,6 +99,13 @@ public class UltimateEnchantmentListener implements Listener {
         return item.getItemMeta() != null && item.getItemMeta().hasLore()
                 && item.getItemMeta().getLore().stream()
                 .anyMatch(l -> l.toLowerCase().contains("mulch"));
+    }
+
+    private boolean hasScytheEnchant(ItemStack item) {
+        if (item == null) return false;
+        return item.getItemMeta() != null && item.getItemMeta().hasLore()
+                && item.getItemMeta().getLore().stream()
+                .anyMatch(l -> l.toLowerCase().contains("scythe"));
     }
 
     /**
@@ -312,6 +321,36 @@ public class UltimateEnchantmentListener implements Listener {
                 material == Material.SAND || material == Material.GRAVEL;
     }
 
+    private boolean isScytheCrop(Material material) {
+        return material == Material.WHEAT || material == Material.CARROTS ||
+                material == Material.POTATOES || material == Material.BEETROOTS;
+    }
+
+    private void breakScytheArea(Player player, Block center) {
+        int range = 4;
+        for (int x = -range; x <= range; x++) {
+            for (int z = -range; z <= range; z++) {
+                Block farmland = center.getRelative(x, 0, z);
+                if (farmland.getType() == Material.FARMLAND) {
+                    Block crop = farmland.getRelative(BlockFace.UP);
+                    if (isScytheCrop(crop.getType()) && crop.getBlockData() instanceof Ageable age) {
+                        if (age.getAge() == age.getMaximumAge()) {
+                            breakBlock(player, crop, false);
+                        }
+                    }
+                } else if (isScytheCrop(farmland.getType()) && farmland.getBlockData() instanceof Ageable age) {
+                    if (age.getAge() == age.getMaximumAge()) {
+                        breakBlock(player, farmland, false);
+                    }
+                }
+            }
+        }
+
+        if (Math.random() < 0.005) {
+            center.getWorld().dropItemNaturally(center.getLocation(), ItemRegistry.getFertilizer());
+        }
+    }
+
     /**
      * Treecapitator logic: BFS to break connected logs and nearby leaves.
      */
@@ -467,6 +506,18 @@ public class UltimateEnchantmentListener implements Listener {
                 BlockFace face = player.getFacing();
                 breakMulchArea(player, brokenBlock, face);
             }
+            return;
+        }
+
+        if (player.isSneaking() && hasScytheEnchant(tool)) {
+            CustomDurabilityManager durMgr = CustomDurabilityManager.getInstance();
+            int cost = 8;
+            if (durMgr.getCurrentDurability(tool) <= cost) {
+                player.sendMessage(ChatColor.RED + "Your tool is too damaged to use Scythe enchant!");
+                return;
+            }
+            durMgr.applyDamage(player, tool, cost);
+            breakScytheArea(player, brokenBlock);
             return;
         }
 

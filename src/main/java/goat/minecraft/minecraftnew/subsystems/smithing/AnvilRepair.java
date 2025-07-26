@@ -240,6 +240,13 @@ public class AnvilRepair implements Listener {
         return item.getType().toString().toUpperCase().endsWith("SHOVEL");
     }
 
+    public boolean isHoe(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false;
+        }
+        return item.getType().toString().toUpperCase().endsWith("HOE");
+    }
+
     public boolean isBow(ItemStack item) {
         if (item == null || item.getType() == Material.AIR) {
             return false; // Check for null or empty items
@@ -1060,6 +1067,10 @@ public class AnvilRepair implements Listener {
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Revenant") && MELEE.contains(repairee.getType())){
             CustomEnchantmentManager.addUltimateEnchantment(player, billItem, repairee, "Ultimate: Loyal", 1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Scythe") && isHoe(repairee)){
+            CustomEnchantmentManager.addUltimateEnchantment(player, billItem, repairee, "Ultimate: Scythe", 1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }

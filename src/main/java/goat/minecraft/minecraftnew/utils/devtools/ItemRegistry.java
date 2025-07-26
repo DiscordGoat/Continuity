@@ -1001,6 +1001,26 @@ public class ItemRegistry {
                 ), 1, false, true);
     }
 
+    public static ItemStack getScytheSmithingItem() {
+        return createCustomItem(
+                Material.DIAMOND_HOE,
+                ChatColor.YELLOW + "Scythe",
+                Arrays.asList(
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Applies Scythe.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ), 1, false, true);
+    }
+
+    public static ItemStack getFertilizer() {
+        return createCustomItem(
+                Material.BONE_MEAL,
+                ChatColor.YELLOW + "Fertilizer",
+                Arrays.asList(
+                        ChatColor.GRAY + "Use: " + ChatColor.GRAY + "Grow adjacent crops.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ), 1, false, true);
+    }
+
     public static ItemStack getRandomUltimateSmithingItem() {
         ItemStack[] items = {
                 getLawOfGravity(),
@@ -1008,7 +1028,8 @@ public class ItemRegistry {
                 getDraupnir(),
                 getQuantumPhysics(),
                 getEvisceration(),
-                getRevenant()
+                getRevenant(),
+                getScytheSmithingItem()
         };
         return items[new java.util.Random().nextInt(items.length)];
     }
