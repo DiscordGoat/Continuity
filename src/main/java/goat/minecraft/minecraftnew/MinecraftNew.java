@@ -331,6 +331,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("previewparticle").setExecutor(new PreviewParticleCommand(this));
         getCommand("previewflow").setExecutor(new PreviewFlowCommand(this));
         new RedVignetteCommand(this);
+        new GlowingOresCommand(this);
         FlowManager.getInstance(this);
         getCommand("flowdebug").setExecutor(new FlowDebugCommand(flowManager));
         getCommand("debugplayer").setExecutor(new DebugPlayerCommand(this));
