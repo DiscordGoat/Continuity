@@ -15,6 +15,7 @@ public class ResourcePackListener implements Listener {
     private static final byte[] PACK_HASH     =
             hexStringToByteArray(PACK_HASH_HEX);
 
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
