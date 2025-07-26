@@ -193,6 +193,7 @@ public class FarmingEvent implements Listener {
                 player.sendMessage(ChatColor.GOLD + "A Festival Bee has spawned!");
                 long after = countFestivalBees(world);
 
+
                 if (before == 0 && after > 0) {
                     Bukkit.getOnlinePlayers().forEach(p ->
                             p.playSound(
