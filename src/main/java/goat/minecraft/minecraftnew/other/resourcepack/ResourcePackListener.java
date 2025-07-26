@@ -11,7 +11,7 @@ public class ResourcePackListener implements Listener {
     private static final String PACK_URL      =
             "https://discordgoat.github.io/Continuity/Continuity.zip";
     private static final String PACK_HASH_HEX =
-            "885850f6e55c1fbc053822247ebbb713eccc6e7d";
+            "8b458451688135de7b7dfd4b88733cd9d36c545d";
     private static final byte[] PACK_HASH     =
             hexStringToByteArray(PACK_HASH_HEX);
 
