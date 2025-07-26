@@ -417,6 +417,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         new CulinaryCauldron(this);
         CustomNutritionManager.init(this);
         getCommand("nutrients").setExecutor(new NutritionCommand());
+        getCommand("redvignette").setExecutor(new RedVignetteCommand(this));
 
         getLogger().info("MyPlugin has been enabled!");
 
