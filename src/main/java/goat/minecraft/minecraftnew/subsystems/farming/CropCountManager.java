@@ -64,6 +64,7 @@ public class CropCountManager {
         String k = key(crop);
         if (k == null) return;
         String uuid = player.getUniqueId().toString();
+
         int c = config.getInt(uuid + "." + k, 0) + 1;
         config.set(uuid + "." + k, c);
         int total = config.getInt(uuid + ".cropsHarvested", 0) + 1;
