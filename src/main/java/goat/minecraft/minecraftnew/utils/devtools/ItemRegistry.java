@@ -3479,6 +3479,21 @@ public class ItemRegistry {
         return item;
     }
 
+    public static ItemStack getIrrigation() {
+        return createCustomItem(
+                Material.WATER_BUCKET,
+                ChatColor.YELLOW + "Irrigation",
+                Arrays.asList(
+                        ChatColor.GRAY + "Hydrates nearby soil and crops.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Right-click tilled soil to water and grow crops.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getAbyssalInk() {
         return createCustomItem(
                 Material.BLACK_DYE,

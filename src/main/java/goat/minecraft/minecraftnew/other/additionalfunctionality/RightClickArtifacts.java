@@ -15,6 +15,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.type.Farmland;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -367,64 +368,118 @@ public class RightClickArtifacts implements Listener {
                 }
 
                 String displayName = meta.getDisplayName();
-                SeederType seederType = SeederType.fromDisplayName(displayName);
-                if (seederType == null) {
-                    return; // The item is not a recognized seeder
-                }
 
-                // Get the clicked block
-                Block clickedBlock = e.getClickedBlock();
-                if (clickedBlock == null) {
-                    return;
-                }
+                if (displayName.equals(ChatColor.YELLOW + "Irrigation")) {
+                    Block clickedBlock = e.getClickedBlock();
+                    if (clickedBlock == null || clickedBlock.getType() != Material.FARMLAND) {
+                        player.sendMessage(ChatColor.RED + "You must right-click tilled soil to use the Irrigation.");
+                        return;
+                    }
 
-                // Check if the clicked block is FARMLAND
-                if (clickedBlock.getType() != Material.FARMLAND) {
-                    player.sendMessage(ChatColor.RED + "You must right-click on tilled soil to use the " + seederType.name().replace("_", "") + ".");
-                    return;
-                }
+                    Queue<Block> queue = new LinkedList<>();
+                    Set<Block> visited = new HashSet<>();
+                    List<Block> farmlandBlocks = new ArrayList<>();
 
-                // Gather FARMLAND blocks using BFS
-                Queue<Block> queue = new LinkedList<>();
-                Set<Block> visited = new HashSet<>();
-                List<Block> farmlandBlocks = new ArrayList<>();
+                    queue.add(clickedBlock);
+                    visited.add(clickedBlock);
 
-                queue.add(clickedBlock);
-                visited.add(clickedBlock);
-
-                while (!queue.isEmpty() && farmlandBlocks.size() < 256) {
-                    Block current = queue.poll();
-                    farmlandBlocks.add(current);
-
-                    // Iterate over adjacent blocks (North, South, East, West)
-                    for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
-                        Block adjacent = current.getRelative(face);
-
-                        // Check if the adjacent block is FARMLAND and not yet visited
-                        if (adjacent.getType() == Material.FARMLAND && !visited.contains(adjacent)) {
-                            queue.add(adjacent);
-                            visited.add(adjacent);
+                    while (!queue.isEmpty() && farmlandBlocks.size() < 256) {
+                        Block current = queue.poll();
+                        farmlandBlocks.add(current);
+                        for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
+                            Block adjacent = current.getRelative(face);
+                            if (adjacent.getType() == Material.FARMLAND && !visited.contains(adjacent)) {
+                                queue.add(adjacent);
+                                visited.add(adjacent);
+                            }
                         }
                     }
-                }
 
-                int plantedCount = 0;
-                // Plant from farthest to nearest
-                for (int i = farmlandBlocks.size() - 1; i >= 0; i--) {
-                    if (plantSeed(farmlandBlocks.get(i), seederType.getCropMaterial())) {
-                        plantedCount++;
+                    for (Block farmland : farmlandBlocks) {
+                        if (farmland.getBlockData() instanceof Farmland land) {
+                            land.setMoisture(land.getMaximumMoisture());
+                            farmland.setBlockData(land);
+                        }
+                        Block cropBlock = farmland.getRelative(BlockFace.UP);
+                        if (cropBlock.getBlockData() instanceof Ageable crop) {
+                            if (crop.getAge() < crop.getMaximumAge()) {
+                                crop.setAge(crop.getAge() + 1);
+                                cropBlock.setBlockData(crop);
+                            }
+                        }
                     }
+
+                    List<Block> copy = new ArrayList<>(farmlandBlocks);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            for (Block farmland : copy) {
+                                Block cropBlock = farmland.getRelative(BlockFace.UP);
+                                if (cropBlock.getBlockData() instanceof Ageable crop) {
+                                    if (crop.getAge() < crop.getMaximumAge()) {
+                                        crop.setAge(Math.min(crop.getAge() + 1, crop.getMaximumAge()));
+                                        cropBlock.setBlockData(crop);
+                                    }
+                                }
+                            }
+                        }
+                    }.runTaskLater(plugin, 1200L);
+
+                    player.playSound(player.getLocation(), Sound.ITEM_BUCKET_EMPTY, 1.0f, 1.0f);
+                    decrementItemAmount(itemInHand, player);
+                    player.sendMessage(ChatColor.GREEN + "Irrigated " + farmlandBlocks.size() + " farmland blocks!");
+                    clickedBlock.getWorld().spawnParticle(Particle.WATER_SPLASH, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
+                    return;
                 }
 
-                // Provide feedback to the player
-                player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_BREAK, 1.0f, 1.0f);
-                decrementItemAmount(itemInHand, player);
-                player.sendMessage(ChatColor.GREEN + "Seeds planted on " + plantedCount + " blocks!");
+                SeederType seederType = SeederType.fromDisplayName(displayName);
+                if (seederType != null) {
+                    Block clickedBlock = e.getClickedBlock();
+                    if (clickedBlock == null) {
+                        return;
+                    }
+                    if (clickedBlock.getType() != Material.FARMLAND) {
+                        player.sendMessage(ChatColor.RED + "You must right-click tilled soil to use the " + seederType.name().replace("_", "") + ".");
+                        return;
+                    }
 
-                // Optional: Display particles at the clicked location
-                clickedBlock.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
+                    Queue<Block> queue = new LinkedList<>();
+                    Set<Block> visited = new HashSet<>();
+                    List<Block> farmlandBlocks = new ArrayList<>();
 
-            }
+                    queue.add(clickedBlock);
+                    visited.add(clickedBlock);
+
+                    while (!queue.isEmpty() && farmlandBlocks.size() < 256) {
+                        Block current = queue.poll();
+                        farmlandBlocks.add(current);
+
+                        for (BlockFace face : new BlockFace[]{BlockFace.NORTH, BlockFace.SOUTH, BlockFace.EAST, BlockFace.WEST}) {
+                            Block adjacent = current.getRelative(face);
+                            if (adjacent.getType() == Material.FARMLAND && !visited.contains(adjacent)) {
+                                queue.add(adjacent);
+                                visited.add(adjacent);
+                            }
+                        }
+                    }
+
+                    int plantedCount = 0;
+                    for (int i = farmlandBlocks.size() - 1; i >= 0; i--) {
+                        if (plantSeed(farmlandBlocks.get(i), seederType.getCropMaterial())) {
+                            plantedCount++;
+                        }
+                    }
+
+                    player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_LEAVES_BREAK, 1.0f, 1.0f);
+                    decrementItemAmount(itemInHand, player);
+                    player.sendMessage(ChatColor.GREEN + "Seeds planted on " + plantedCount + " blocks!");
+                    clickedBlock.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
+                    return;
+                }
+
+                if (!itemInHand.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Jackhammer")) {
+                    return; // Not a seeder or jackhammer
+                }
             if (itemInHand.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Jackhammer")) {
                 Block clickedBlock = e.getClickedBlock();
                 if (clickedBlock == null) {
