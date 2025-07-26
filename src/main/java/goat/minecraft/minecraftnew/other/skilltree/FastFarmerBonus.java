@@ -2,67 +2,52 @@ package goat.minecraft.minecraftnew.other.skilltree;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.EnumSet;
+import java.util.Set;
 
 public class FastFarmerBonus implements Listener {
     private final JavaPlugin plugin;
-    private final Map<UUID, Float> baseSpeed = new HashMap<>();
+    private static final Set<Material> CROPS = EnumSet.of(
+            Material.WHEAT,
+            Material.NETHER_WART,
+            Material.POTATOES,
+            Material.CARROTS,
+            Material.CARROT,
+            Material.BEETROOTS,
+            Material.MELON,
+            Material.PUMPKIN
+    );
 
     public FastFarmerBonus(JavaPlugin plugin) {
         this.plugin = plugin;
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                checkPlayer(p);
-            }
-        }, 1L);
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        Bukkit.getScheduler().runTaskLater(plugin, () -> checkPlayer(e.getPlayer()), 1L);
-    }
+    public void onCropBreak(BlockBreakEvent event) {
+        Player player = event.getPlayer();
+        Block block = event.getBlock();
+        Material type = block.getType();
 
-    @EventHandler
-    public void onMove(PlayerMoveEvent e) {
-        checkPlayer(e.getPlayer());
-    }
+        if (!CROPS.contains(type)) return;
 
-    private void checkPlayer(Player player) {
+        if (block.getBlockData() instanceof Ageable age && age.getAge() != age.getMaximumAge()) {
+            return;
+        }
+
         int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FAST_FARMER);
-        UUID id = player.getUniqueId();
-        boolean holdingTool = isAxeOrHoe(player.getInventory().getItemInMainHand().getType()) ||
-                isAxeOrHoe(player.getInventory().getItemInOffHand().getType());
-        if (level > 0 && holdingTool) {
-            baseSpeed.putIfAbsent(id, player.getWalkSpeed());
-            float newSpeed = baseSpeed.get(id) * (1.0f + 0.20f * level);
-            player.setWalkSpeed(Math.min(newSpeed, 1.0f));
-        } else if (baseSpeed.containsKey(id)) {
-            player.setWalkSpeed(baseSpeed.get(id));
-            baseSpeed.remove(id);
+        if (level > 0) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, level - 1));
         }
-    }
-
-    private boolean isAxeOrHoe(Material material) {
-        if (material == null || material == Material.AIR) return false;
-        String name = material.name();
-        return name.endsWith("_AXE") || name.endsWith("_HOE");
-    }
-
-    public void removeAll() {
-        for (Map.Entry<UUID, Float> en : baseSpeed.entrySet()) {
-            Player p = Bukkit.getPlayer(en.getKey());
-            if (p != null) p.setWalkSpeed(en.getValue());
-        }
-        baseSpeed.clear();
     }
 }
