@@ -70,6 +70,7 @@ public class CropCountManager {
         config.set(uuid + ".cropsHarvested", total);
         save();
         handleRewards(player, crop, c, total);
+
     }
 
     private void handleRewards(Player player, Material crop, int cropCount, int total) {
