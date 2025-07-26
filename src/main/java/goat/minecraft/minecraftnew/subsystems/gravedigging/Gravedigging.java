@@ -93,7 +93,7 @@ public class Gravedigging implements Listener {
         // Only surface blocks
         int highest = world.getHighestBlockYAt(loc);
         if (loc.getBlockY() < highest) return;
-
+        if(loc.getBlock().getType().equals(Material.DIRT) || loc.getBlock().getType().equals(Material.GRASS_BLOCK)) return;
         // Calculate chance
         double chance = BASE_CHANCE;
         ItemStack tool = player.getInventory().getItemInMainHand();

@@ -460,22 +460,45 @@ Heart Of The Mountain: Adds +100 Max Durability to Pickaxes, Max level 6
 Farming:
 Scaling Stat: Extra Crop Chance
 Scaling Max: 400% (Quadruple Drops)
+Festival Bees are temporary bees (removed on startup) that spawn 5 blocks above the ground. each active bee in the world increases tick speed by 100. also, at sunset, if a festival bee is alive, it will freeze time, preventing nightfall
+before the player is done harvesting. if its past sunset, festival bees will slowly rewind time back to sunset before freezing it again. if its daytime, time will be accelerated to sunset.
+Festival Bees are named "Festival Bee: <Duration>" with the Duration decrementing every second, and
+if less than 1, the bee is removed and the tickrate is restored. on startup, all entities with "Festival Bee: " in their name will be removed, and the tickrate will be set to 3
 
 Common:
 Extra Crop Chance I: +8% per level, Max level 3
 For The Streets: +20% Chance to till a 9x9 area, Max level 5
+Reaper I: -1% Crop Count Requirement for Harvest Rewards, Max level 5
+Fast Farmer: +20% Movement Speed on Soil, Max level 5
+Harvest Festival: +50% Chance to Gain +5s of Haste II when breaking Crops, Max level 2
 
 Uncommon:
 Extra Crop Chance II: +16% per level, Max level 3
+Unrivaled: +1% Chance to Grow nearby Crops when Harvesting, Max level 5
+Reaper II: -1% Crop Count Requirement for Harvest Rewards, Max level 5
+Hydro Farmer: Adds a 20% Chance for Irrigation Artifacts to grow Crops even more, Max level 5
+Festival Bees I: +0.25% Chance for Harvesting to spawn a Festival Bee for 30s, Max level 2
 
 Rare:
 Extra Crop Chance III: +24% per level, Max level 3
+Reaper III: -1% Crop Count Requirement for Harvest Rewards, Max level 5
+Halloween: -1 Durability Cost from the Scythe Ultimate Enchantment, Max level 5
+Festival Bee Duration I: +10s Festival Bee Duration, Max level 5
+Festival Bees II: +0.25% Chance for Harvesting to spawn a Festival Bee for 30s, Max level 2
 
 Epic:
 Extra Crop Chance IV: +32% per level, Max level 3
+Reaper IV: -1% Crop Count Requirement for Harvest Rewards, Max level 5
+Fertilizer Efficiency: +20% Chance to gain Double Growth from Fertilizer, Max level 5
+Festival Bee Duration II: +10s Festival Bee Duration, Max level 5
+Festival Bees III: +0.25% Chance for Harvesting to spawn a Festival Bee for 30s, Max level 2
 
 Legendary:
 Extra Crop Chance V: +40% per level, Max level 4
+Reaper V: -1% Crop Count Requirement for Harvest Rewards, Max level 5
+Festival Bees IV: +0.25% Chance for Harvesting to spawn a Festival Bee for 30s, Max level 2
+Swarm: +10% Chance to spawn Double Festival Bees, Max level 5
+Hivemind: +25% Festival Bees Duration , Max level 4
 
 
 
