@@ -343,6 +343,7 @@ public class CulinarySubsystem implements Listener {
                 CustomNutritionManager.FoodGroup.FRUITS,
                 false
         ));
+
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
                 Material.GOLDEN_APPLE,
