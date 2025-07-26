@@ -374,7 +374,7 @@ public class CulinarySubsystem implements Listener {
         ));
         recipeRegistry.add(new CulinaryRecipe(
                 Material.PAPER,
-                Material.MUSHROOM_STEW,
+                Material.BOWL,
                 "Oatmeal",
                 Arrays.asList("Wheat", "Milk Bucket", "Sugar"),
                 500,
@@ -412,7 +412,7 @@ public class CulinarySubsystem implements Listener {
                 Material.PAPER,
                 Material.BREAD,
                 "Hearty Grain Feast",
-                Arrays.asList("Bread", "Wheat", "Oatmeal", "Butter"),
+                Arrays.asList("Bread", "Wheat", "Oatmeal (Culinary)", "Butter"),
                 1000,
                 CustomNutritionManager.FoodGroup.GRAINS,
                 true
