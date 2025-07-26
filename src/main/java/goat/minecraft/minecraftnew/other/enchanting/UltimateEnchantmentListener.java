@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other.enchanting;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem;
+import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
@@ -303,7 +304,7 @@ public class UltimateEnchantmentListener implements Listener {
      * Break a 9x9 area for the Scythe enchantment.
      */
     private void breakScytheArea(Player player, Block centerBlock) {
-        int range = 4;
+        int range = 3;
         for (int x = -range; x <= range; x++) {
             for (int z = -range; z <= range; z++) {
                 if (x == 0 && z == 0) continue;
@@ -311,6 +312,7 @@ public class UltimateEnchantmentListener implements Listener {
                 if (isCropMaterial(relative.getType())) {
                     breakBlock(player, relative, true);
                     XPManager xpManager = new XPManager(plugin);
+                    CropCountManager.getInstance(MinecraftNew.getInstance()).increment(player, centerBlock.getType());
                     xpManager.addXP(player, "Farming", 1);
                 }
             }
@@ -506,7 +508,7 @@ public class UltimateEnchantmentListener implements Listener {
 
         if(player.isSneaking() && hasScytheEnchant(tool)) {
             CustomDurabilityManager durMgr = CustomDurabilityManager.getInstance();
-            int cost = 16;
+            int cost = 9;
             if(durMgr.getCurrentDurability(tool) <= cost) {
                 player.sendMessage(ChatColor.RED + "Your tool is too damaged to use Scythe enchant!");
                 return;
@@ -516,7 +518,7 @@ public class UltimateEnchantmentListener implements Listener {
                 durMgr.applyDamage(player, tool, cost);
                 breakBlock(player, brokenBlock, true);
                 breakScytheArea(player, brokenBlock);
-                if(Math.random() < 0.005) {
+                if(Math.random() < 0.01) {
                     brokenBlock.getWorld().dropItemNaturally(brokenBlock.getLocation(), ItemRegistry.getFertilizer());
                 }
             }
