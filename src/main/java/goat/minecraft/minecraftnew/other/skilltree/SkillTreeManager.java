@@ -387,7 +387,57 @@ public class SkillTreeManager implements Listener {
             case DEEP_LUNGS:
                 int oxygenBonus = level * 20;
                 return ChatColor.YELLOW + "+" + oxygenBonus + " " + ChatColor.AQUA + "Oxygen Capacity";
-          default:
+            case EXTRA_CROP_CHANCE_I:
+                return ChatColor.YELLOW + "+" + (level * 8) + "% " + ChatColor.GRAY + "Extra Crop Chance";
+            case FOR_THE_STREETS:
+                return ChatColor.YELLOW + "+" + (level * 20) + "% " + ChatColor.GRAY + "till 9x9 area chance";
+            case REAPER_I:
+                return ChatColor.YELLOW + "-" + level + "% " + ChatColor.GRAY + "Harvest requirement";
+            case FAST_FARMER:
+                return ChatColor.YELLOW + "+" + (level * 20) + "% " + ChatColor.GRAY + "Speed on soil";
+            case HARVEST_FESTIVAL:
+                return ChatColor.YELLOW + "+" + (level * 50) + "% " + ChatColor.GRAY + "Haste II chance";
+            case EXTRA_CROP_CHANCE_II:
+                return ChatColor.YELLOW + "+" + (level * 16) + "% " + ChatColor.GRAY + "Extra Crop Chance";
+            case UNRIVALED:
+                return ChatColor.YELLOW + "+" + level + "% " + ChatColor.GRAY + "grow nearby crops";
+            case REAPER_II:
+                return ChatColor.YELLOW + "-" + level + "% " + ChatColor.GRAY + "Harvest requirement";
+            case HYDRO_FARMER:
+                return ChatColor.YELLOW + "+" + (level * 20) + "% " + ChatColor.GRAY + "extra irrigation growth";
+            case FESTIVAL_BEES_I:
+                return ChatColor.YELLOW + "+" + (level * 0.25) + "% " + ChatColor.GRAY + "Festival Bee chance";
+            case EXTRA_CROP_CHANCE_III:
+                return ChatColor.YELLOW + "+" + (level * 24) + "% " + ChatColor.GRAY + "Extra Crop Chance";
+            case REAPER_III:
+                return ChatColor.YELLOW + "-" + level + "% " + ChatColor.GRAY + "Harvest requirement";
+            case HALLOWEEN:
+                return ChatColor.YELLOW + "-" + level + " " + ChatColor.GRAY + "Scythe durability";
+            case FESTIVAL_BEE_DURATION_I:
+                return ChatColor.YELLOW + "+" + (level * 10) + "s Festival Bee Duration";
+            case FESTIVAL_BEES_II:
+                return ChatColor.YELLOW + "+" + (level * 0.25) + "% " + ChatColor.GRAY + "Festival Bee chance";
+            case EXTRA_CROP_CHANCE_IV:
+                return ChatColor.YELLOW + "+" + (level * 32) + "% " + ChatColor.GRAY + "Extra Crop Chance";
+            case REAPER_IV:
+                return ChatColor.YELLOW + "-" + level + "% " + ChatColor.GRAY + "Harvest requirement";
+            case FERTILIZER_EFFICIENCY:
+                return ChatColor.YELLOW + "+" + (level * 20) + "% " + ChatColor.GRAY + "double growth chance";
+            case FESTIVAL_BEE_DURATION_II:
+                return ChatColor.YELLOW + "+" + (level * 10) + "s Festival Bee Duration";
+            case FESTIVAL_BEES_III:
+                return ChatColor.YELLOW + "+" + (level * 0.25) + "% " + ChatColor.GRAY + "Festival Bee chance";
+            case EXTRA_CROP_CHANCE_V:
+                return ChatColor.YELLOW + "+" + (level * 40) + "% " + ChatColor.GRAY + "Extra Crop Chance";
+            case REAPER_V:
+                return ChatColor.YELLOW + "-" + level + "% " + ChatColor.GRAY + "Harvest requirement";
+            case FESTIVAL_BEES_IV:
+                return ChatColor.YELLOW + "+" + (level * 0.25) + "% " + ChatColor.GRAY + "Festival Bee chance";
+            case SWARM:
+                return ChatColor.YELLOW + "+" + (level * 10) + "% " + ChatColor.GRAY + "double bee chance";
+            case HIVEMIND:
+                return ChatColor.YELLOW + "+" + (level * 25) + "% " + ChatColor.GRAY + "Festival Bee Duration";
+            default:
                 return talent.getTechnicalDescription();
         }
     }

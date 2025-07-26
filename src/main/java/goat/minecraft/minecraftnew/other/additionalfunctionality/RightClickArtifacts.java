@@ -36,6 +36,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 import org.bukkit.plugin.Plugin;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 
 import java.util.*;
 
@@ -407,6 +410,20 @@ public class RightClickArtifacts implements Listener {
                         }
                     }
 
+                    // Hydro Farmer talent extra growth chance
+                    int hydro = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.HYDRO_FARMER);
+                    if (hydro > 0 && Math.random() < hydro * 0.20) {
+                        for (Block farmland : farmlandBlocks) {
+                            Block cropBlock = farmland.getRelative(BlockFace.UP);
+                            if (cropBlock.getBlockData() instanceof Ageable crop) {
+                                if (crop.getAge() < crop.getMaximumAge()) {
+                                    crop.setAge(Math.min(crop.getAge() + 1, crop.getMaximumAge()));
+                                    cropBlock.setBlockData(crop);
+                                }
+                            }
+                        }
+                    }
+
                     List<Block> copy = new ArrayList<>(farmlandBlocks);
                     new BukkitRunnable() {
                         @Override
@@ -468,6 +485,22 @@ public class RightClickArtifacts implements Listener {
                                     crop.setAge(Math.min(crop.getAge() + 1, crop.getMaximumAge()));
                                     cropBlock.setBlockData(crop);
                                     grown++;
+                                }
+                            }
+                        }
+                    }
+
+                    int fert = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FERTILIZER_EFFICIENCY);
+                    if (fert > 0 && Math.random() < fert * 0.20) {
+                        for(Block farmland : farmlandBlocks) {
+                            Block cropBlock = farmland.getRelative(BlockFace.UP);
+                            if(cropBlock.getBlockData() instanceof Ageable crop) {
+                                Material mat = cropBlock.getType();
+                                if(mat == Material.WHEAT || mat == Material.CARROTS || mat == Material.POTATOES || mat == Material.BEETROOTS) {
+                                    if(crop.getAge() < crop.getMaximumAge()) {
+                                        crop.setAge(Math.min(crop.getAge() + 1, crop.getMaximumAge()));
+                                        cropBlock.setBlockData(crop);
+                                    }
                                 }
                             }
                         }

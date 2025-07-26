@@ -536,6 +536,215 @@ public enum Talent {
             25,
             10,
             Material.TURTLE_SCUTE
+    ),
+
+    // =============================================================
+    // Farming Talents
+    // =============================================================
+
+    EXTRA_CROP_CHANCE_I(
+            "Extra Crop Chance I",
+            ChatColor.GRAY + "Increases crop yield",
+            ChatColor.YELLOW + "+(8*level)% " + ChatColor.GRAY + "Extra Crop Chance",
+            3,
+            1,
+            Material.WHEAT_SEEDS
+    ),
+    FOR_THE_STREETS(
+            "For The Streets",
+            ChatColor.GRAY + "Chance to till a 9x9 area",
+            ChatColor.YELLOW + "+(20*level)% " + ChatColor.GRAY + "till 9x9 area chance",
+            5,
+            1,
+            Material.IRON_HOE
+    ),
+    REAPER_I(
+            "Reaper I",
+            ChatColor.GRAY + "Reduce harvest requirement",
+            ChatColor.YELLOW + "-(1*level)% " + ChatColor.GRAY + "Harvest requirement",
+            5,
+            1,
+            Material.WITHER_ROSE
+    ),
+    FAST_FARMER(
+            "Fast Farmer",
+            ChatColor.GRAY + "Move faster on farmland",
+            ChatColor.YELLOW + "+(20*level)% " + ChatColor.GRAY + "Speed on soil",
+            5,
+            1,
+            Material.LEATHER_BOOTS
+    ),
+    HARVEST_FESTIVAL(
+            "Harvest Festival",
+            ChatColor.GRAY + "Chance for 5s of Haste II when harvesting",
+            ChatColor.YELLOW + "+(50*level)% " + ChatColor.GRAY + "Haste II chance",
+            2,
+            1,
+            Material.HONEY_BOTTLE
+    ),
+
+    EXTRA_CROP_CHANCE_II(
+            "Extra Crop Chance II",
+            ChatColor.GRAY + "Further increases crop yield",
+            ChatColor.YELLOW + "+(16*level)% " + ChatColor.GRAY + "Extra Crop Chance",
+            3,
+            20,
+            Material.POTATO
+    ),
+    UNRIVALED(
+            "Unrivaled",
+            ChatColor.GRAY + "Grow nearby crops when harvesting",
+            ChatColor.YELLOW + "+(1*level)% " + ChatColor.GRAY + "grow nearby crops",
+            5,
+            20,
+            Material.BONE_MEAL
+    ),
+    REAPER_II(
+            "Reaper II",
+            ChatColor.GRAY + "Reduce harvest requirement",
+            ChatColor.YELLOW + "-(1*level)% " + ChatColor.GRAY + "Harvest requirement",
+            5,
+            20,
+            Material.WITHER_ROSE
+    ),
+    HYDRO_FARMER(
+            "Hydro Farmer",
+            ChatColor.GRAY + "Irrigation grows crops more",
+            ChatColor.YELLOW + "+(20*level)% " + ChatColor.GRAY + "extra irrigation growth",
+            5,
+            20,
+            Material.WATER_BUCKET
+    ),
+    FESTIVAL_BEES_I(
+            "Festival Bees I",
+            ChatColor.GRAY + "Chance to spawn Festival Bee",
+            ChatColor.YELLOW + "+(0.25*level)% " + ChatColor.GRAY + "Festival Bee chance",
+            2,
+            20,
+            Material.BEEHIVE
+    ),
+
+    EXTRA_CROP_CHANCE_III(
+            "Extra Crop Chance III",
+            ChatColor.GRAY + "Greatly increases crop yield",
+            ChatColor.YELLOW + "+(24*level)% " + ChatColor.GRAY + "Extra Crop Chance",
+            3,
+            40,
+            Material.CARROT
+    ),
+    REAPER_III(
+            "Reaper III",
+            ChatColor.GRAY + "Reduce harvest requirement",
+            ChatColor.YELLOW + "-(1*level)% " + ChatColor.GRAY + "Harvest requirement",
+            5,
+            40,
+            Material.WITHER_ROSE
+    ),
+    HALLOWEEN(
+            "Halloween",
+            ChatColor.GRAY + "Reduce Scythe durability cost",
+            ChatColor.YELLOW + "-" + "(1*level)" + ChatColor.GRAY + " Scythe durability",
+            5,
+            40,
+            Material.PUMPKIN
+    ),
+    FESTIVAL_BEE_DURATION_I(
+            "Festival Bee Duration I",
+            ChatColor.GRAY + "Longer Festival Bees",
+            ChatColor.YELLOW + "+(10*level)s Festival Bee Duration",
+            5,
+            40,
+            Material.CLOCK
+    ),
+    FESTIVAL_BEES_II(
+            "Festival Bees II",
+            ChatColor.GRAY + "Chance to spawn Festival Bee",
+            ChatColor.YELLOW + "+(0.25*level)% " + ChatColor.GRAY + "Festival Bee chance",
+            2,
+            40,
+            Material.HONEYCOMB
+    ),
+
+    EXTRA_CROP_CHANCE_IV(
+            "Extra Crop Chance IV",
+            ChatColor.GRAY + "Massively increases crop yield",
+            ChatColor.YELLOW + "+(32*level)% " + ChatColor.GRAY + "Extra Crop Chance",
+            3,
+            60,
+            Material.BEETROOT
+    ),
+    REAPER_IV(
+            "Reaper IV",
+            ChatColor.GRAY + "Reduce harvest requirement",
+            ChatColor.YELLOW + "-(1*level)% " + ChatColor.GRAY + "Harvest requirement",
+            5,
+            60,
+            Material.GOLDEN_HOE
+    ),
+    FERTILIZER_EFFICIENCY(
+            "Fertilizer Efficiency",
+            ChatColor.GRAY + "Chance for double fertilizer growth",
+            ChatColor.YELLOW + "+(20*level)% " + ChatColor.GRAY + "double growth chance",
+            5,
+            60,
+            Material.BONE_MEAL
+    ),
+    FESTIVAL_BEE_DURATION_II(
+            "Festival Bee Duration II",
+            ChatColor.GRAY + "Even longer Festival Bees",
+            ChatColor.YELLOW + "+(10*level)s Festival Bee Duration",
+            5,
+            60,
+            Material.CLOCK
+    ),
+    FESTIVAL_BEES_III(
+            "Festival Bees III",
+            ChatColor.GRAY + "Chance to spawn Festival Bee",
+            ChatColor.YELLOW + "+(0.25*level)% " + ChatColor.GRAY + "Festival Bee chance",
+            2,
+            60,
+            Material.HONEY_BLOCK
+    ),
+
+    EXTRA_CROP_CHANCE_V(
+            "Extra Crop Chance V",
+            ChatColor.GRAY + "Ultimate crop yield",
+            ChatColor.YELLOW + "+(40*level)% " + ChatColor.GRAY + "Extra Crop Chance",
+            4,
+            80,
+            Material.NETHERITE_HOE
+    ),
+    REAPER_V(
+            "Reaper V",
+            ChatColor.GRAY + "Reduce harvest requirement",
+            ChatColor.YELLOW + "-(1*level)% " + ChatColor.GRAY + "Harvest requirement",
+            5,
+            80,
+            Material.NETHER_STAR
+    ),
+    FESTIVAL_BEES_IV(
+            "Festival Bees IV",
+            ChatColor.GRAY + "Chance to spawn Festival Bee",
+            ChatColor.YELLOW + "+(0.25*level)% " + ChatColor.GRAY + "Festival Bee chance",
+            2,
+            80,
+            Material.BEE_NEST
+    ),
+    SWARM(
+            "Swarm",
+            ChatColor.GRAY + "Chance to spawn double Festival Bees",
+            ChatColor.YELLOW + "+(10*level)% " + ChatColor.GRAY + "double bee chance",
+            5,
+            80,
+            Material.HONEYCOMB_BLOCK
+    ),
+    HIVEMIND(
+            "Hivemind",
+            ChatColor.GRAY + "Festival Bees last longer",
+            ChatColor.YELLOW + "+(25*level)% " + ChatColor.GRAY + "Festival Bee Duration",
+            4,
+            80,
+            Material.BEE_SPAWN_EGG
     );
 
 
