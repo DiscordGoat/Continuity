@@ -261,3 +261,7 @@ commands:
     description: View your nutrition levels
     usage: /nutrients
     default: true
+  redvignette:
+    description: Shows a red vignette overlay using the world border
+    usage: /redvignette [seconds]
+    permission: continuity.admin
