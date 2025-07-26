@@ -101,6 +101,10 @@ commands:
     description: Gives a predefined custom item to the player.
     usage: /givecustomitem <customitem>
     permission: givecustomitem.use
+  i:
+    description: Gives a predefined custom item to the player.
+    usage: /i <item_name> [amount]
+    permission: continuity.admin
   villager:
     description: Summon a villager with no AI
   xp:

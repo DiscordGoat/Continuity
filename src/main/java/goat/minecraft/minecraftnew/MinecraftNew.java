@@ -495,6 +495,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.other.qol.FastAscend(), this);
 
         this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
+        this.getCommand("i").setExecutor(new ItemCommand());
 
 
         getCommand("testskill").setExecutor(new TestSkillMessageCommand(xpManager));
