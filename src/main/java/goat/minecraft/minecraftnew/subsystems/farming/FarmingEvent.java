@@ -1,11 +1,10 @@
 package goat.minecraft.minecraftnew.subsystems.farming;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
+import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
@@ -28,25 +27,8 @@ import org.bukkit.metadata.FixedMetadataValue;
 import java.util.*;
 
 public class FarmingEvent implements Listener {
-    private static final Set<Material> RARE_DROP_CROPS = EnumSet.of(
-            Material.CARROTS,
-            Material.POTATOES,
-            Material.WHEAT,
-            Material.BEETROOTS
-    );
+    private static final Set<Material> RARE_DROP_CROPS = EnumSet.noneOf(Material.class);
     // Define rarity probabilities
-    private static final double COMMON_CHANCE = 1.0;       // 1%
-    private static final double UNCOMMON_CHANCE = 0.5;     // 0.5%
-    private static final double RARE_CHANCE = 0.25;        // 0.25%
-    private static final double EPIC_CHANCE = 0.125;       // 0.125%
-    private static final double LEGENDARY_CHANCE = 0.01;   // 0.01%
-
-    // Total chance to grant a pet
-    private static final double TOTAL_PET_CHANCE = COMMON_CHANCE
-            + UNCOMMON_CHANCE
-            + RARE_CHANCE
-            + EPIC_CHANCE
-            + LEGENDARY_CHANCE; // 1.885%
 
     MinecraftNew plugin = MinecraftNew.getInstance();
     public XPManager xpManager = new XPManager(plugin);
@@ -66,8 +48,6 @@ public class FarmingEvent implements Listener {
         cropXP.put(Material.PUMPKIN, 6);
     }
 
-    PetManager petManager = PetManager.getInstance(plugin);
-    PetGrantingManager petGrantingManager = new PetGrantingManager(petManager);
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
@@ -114,6 +94,12 @@ public class FarmingEvent implements Listener {
             // Play harvest sound
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
 
+            if (blockType == Material.CARROTS || blockType == Material.POTATOES ||
+                    blockType == Material.BEETROOTS || blockType == Material.PUMPKIN ||
+                    blockType == Material.MELON || blockType == Material.COCOA) {
+                CropCountManager.getInstance(plugin).increment(player, blockType);
+            }
+
             int talentLevel = SkillTreeManager.getInstance()
                     .getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.BOUNTIFUL_HARVEST);
             boolean doubled = random.nextDouble() < (talentLevel * 0.04);
@@ -138,7 +124,6 @@ public class FarmingEvent implements Listener {
                     Objects.requireNonNull(e.getBlock().getLocation().getWorld()).dropItem(e.getBlock().getLocation(), extra);
                 }
                 player.playSound(player.getLocation(), Sound.BLOCK_ROOTED_DIRT_PLACE, 1.0f, 1.0f);
-                petGrantingManager.attemptGrantPet(player);
 
 
             }
@@ -177,89 +162,4 @@ public class FarmingEvent implements Listener {
         }
     }
 
-    public class PetGrantingManager {
-        private Random random = new Random();
-        private PetManager petManager; // Assume this is initialized elsewhere
-
-        public PetGrantingManager(PetManager petManager) {
-            this.petManager = petManager;
-        }
-
-        /**
-         * Attempts to grant a pet to the target player based on predefined rarity probabilities.
-         *
-         * @param targetPlayer The player to whom the pet will be granted.
-         */
-        public void attemptGrantPet(Player targetPlayer) {
-            double roll = random.nextDouble() * 100; // Generates a number between 0.0 and 100.0
-
-            if (roll <= TOTAL_PET_CHANCE) {
-                // Determine which rarity to grant
-                double cumulative = 0.0;
-
-                cumulative += LEGENDARY_CHANCE;
-                if (roll <= cumulative) {
-                    grantPet(targetPlayer, PetManager.Rarity.LEGENDARY);
-                    return;
-                }
-
-                cumulative += EPIC_CHANCE;
-                if (roll <= cumulative) {
-                    grantPet(targetPlayer, PetManager.Rarity.EPIC);
-                    return;
-                }
-
-                cumulative += RARE_CHANCE;
-                if (roll <= cumulative) {
-                    grantPet(targetPlayer, PetManager.Rarity.RARE);
-                    return;
-                }
-
-                cumulative += UNCOMMON_CHANCE;
-                if (roll <= cumulative) {
-                    grantPet(targetPlayer, PetManager.Rarity.UNCOMMON);
-                    return;
-                }
-
-                cumulative += COMMON_CHANCE;
-                if (roll <= cumulative) {
-                    grantPet(targetPlayer, PetManager.Rarity.COMMON);
-                    return;
-                }
-            }
-            // No pet granted
-        }
-
-        /**
-         * Grants a pet of the specified rarity to the player.
-         *
-         * @param player The player to receive the pet.
-         * @param rarity The rarity of the pet.
-         */
-        private void grantPet(Player player, PetManager.Rarity rarity) {
-            PetRegistry petRegistry = new PetRegistry();
-            switch (rarity) {
-                case COMMON:
-                    petRegistry.addPetByName(player, "Squirrel");
-                    break;
-                case UNCOMMON:
-                    petRegistry.addPetByName(player, "Sheep");
-                    break;
-                case RARE:
-                    petRegistry.addPetByName(player, "Cow");
-                    break;
-                case EPIC:
-                    petRegistry.addPetByName(player, "Mooshroom");
-                    break;
-                case LEGENDARY:
-                    petRegistry.addPetByName(player, "Pig");
-                    break;
-                default:
-                    break;
-            }
-            // Optionally, you can add sounds or messages to notify the player
-            player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 1.0f);
-
-        }
-    }
 }

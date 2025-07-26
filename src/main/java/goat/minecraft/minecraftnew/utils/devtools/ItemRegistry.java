@@ -4531,6 +4531,36 @@ public class ItemRegistry {
                 ChatColor.DARK_PURPLE + "Smithing Item"
         ), 1, false, true);
     }
+
+    /** Smithing item that improves pumpkin harvests. */
+    public static ItemStack getJackOLantern() {
+        return createCustomItem(
+                Material.JACK_O_LANTERN,
+                ChatColor.YELLOW + "Jack o' Lantern",
+                Arrays.asList(
+                        ChatColor.GRAY + "Adds one level of Gourd.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Smithing item that improves melon harvests. */
+    public static ItemStack getWatermelon() {
+        return createCustomItem(
+                Material.MELON,
+                ChatColor.YELLOW + "Watermelon",
+                Arrays.asList(
+                        ChatColor.GRAY + "Adds one level of Clean Cut.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
     /** Provides the Structure Block Charm for building assistance. */
     public static ItemStack getStructureBlockCharm() {
         StructureBlockManager manager = StructureBlockManager.getInstance();
