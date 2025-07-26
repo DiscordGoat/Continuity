@@ -129,15 +129,15 @@ public class AutoComposter {
         // 4) For each eligible crop, see how many conversions we can do
         for (Material crop : AUTO_COMPOSTER_ELIGIBLE_CROPS) {
             int playerCropCount = playerCropCounts.getOrDefault(crop, 0);
+            int weight = (crop == Material.PUMPKIN || crop == Material.MELON) ? 8 : 1;
 
-            if (playerCropCount >= requiredMaterialsOrganic) {
-                // Number of times we can convert to organic soil
-                int conversions = playerCropCount / requiredMaterialsOrganic;
+            int effective = playerCropCount * weight;
+            if (effective >= requiredMaterialsOrganic) {
+                int conversions = effective / requiredMaterialsOrganic;
+                int effectiveUsed = conversions * requiredMaterialsOrganic;
+                int itemsToRemove = (int) Math.ceil(effectiveUsed / (double) weight);
 
-                // Remove the used crops
-                subtractCrops(player, crop, requiredMaterialsOrganic * conversions);
-
-                // Give player the organic soil
+                subtractCrops(player, crop, itemsToRemove);
                 addOrganicSoil(player, conversions);
             }
         }
