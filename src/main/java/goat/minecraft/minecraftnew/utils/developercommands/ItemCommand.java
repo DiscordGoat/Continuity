@@ -1,16 +1,17 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 
-import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.Locale;
 
 /**
- * Developer command that gives a custom item by name.
+ * Developer command that gives a vanilla Minecraft item by name.
  * Usage: /i <item name> [amount]
  */
 public class ItemCommand implements CommandExecutor {
@@ -32,43 +33,45 @@ public class ItemCommand implements CommandExecutor {
             return true;
         }
 
+        // Parse amount (if provided) and item name
         int amount = 1;
         String itemName;
-
-        // If the last argument is a number, treat it as the amount
         try {
             if (args.length > 1) {
-                amount = Integer.parseInt(args[args.length - 1]);
-                if (amount <= 0) {
+                int possibleAmount = Integer.parseInt(args[args.length - 1]);
+                if (possibleAmount > 0) {
+                    amount = possibleAmount;
+                    // join all but last arg as the name
+                    String[] nameParts = new String[args.length - 1];
+                    System.arraycopy(args, 0, nameParts, 0, args.length - 1);
+                    itemName = String.join("_", nameParts);
+                } else {
                     player.sendMessage(ChatColor.RED + "Amount must be a positive number.");
                     return true;
                 }
-                String[] nameParts = new String[args.length - 1];
-                System.arraycopy(args, 0, nameParts, 0, args.length - 1);
-                itemName = String.join("_", nameParts);
             } else {
                 itemName = String.join("_", args);
             }
         } catch (NumberFormatException e) {
-            // Amount wasn't provided; treat all args as part of the name
+            // last arg wasn't a number, treat all args as name
             itemName = String.join("_", args);
-            amount = 1;
         }
 
-        ItemStack customItem = ItemRegistry.getItemByName(itemName);
-        if (customItem == null) {
-            player.sendMessage(ChatColor.RED + "Item not found: " + itemName.replace("_", " "));
+        // Lookup vanilla Material (case-insensitive)
+        Material material = Material.matchMaterial(itemName.toUpperCase(Locale.ROOT));
+        if (material == null || material == Material.AIR) {
+            player.sendMessage(ChatColor.RED + "Minecraft item not found: " + itemName.replace("_", " "));
             return true;
         }
 
-        customItem.setAmount(amount);
-        ItemMeta meta = customItem.getItemMeta();
-        player.getInventory().addItem(customItem);
+        // Give the item
+        ItemStack stack = new ItemStack(material, amount);
+        player.getInventory().addItem(stack);
 
-        if (meta != null) {
-            player.sendMessage(ChatColor.GREEN + "You have received: " + meta.getDisplayName()
-                    + ChatColor.GREEN + " (x" + amount + ")");
-        }
+        // Feedback
+        player.sendMessage(ChatColor.GREEN + "You have received: "
+                + ChatColor.WHITE + material.name().toLowerCase().replace('_',' ')
+                + ChatColor.GREEN + " (x" + amount + ")");
         return true;
     }
 }
