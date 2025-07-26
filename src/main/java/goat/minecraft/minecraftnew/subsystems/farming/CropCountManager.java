@@ -115,7 +115,7 @@ public class CropCountManager {
             }
             xpManager.addXP(player, "Farming", 100);
             player.sendMessage(ChatColor.LIGHT_PURPLE + "Harvest Reward!");
-            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+            player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 2.0f);
         }
     }
 

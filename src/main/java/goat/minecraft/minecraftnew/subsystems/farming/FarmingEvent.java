@@ -12,19 +12,20 @@ import goat.minecraft.minecraftnew.subsystems.farming.FestivalBeeManager;
 import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
@@ -148,7 +149,7 @@ public class FarmingEvent implements Listener {
             // Harvest Festival haste buff
             int hf = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.HARVEST_FESTIVAL);
             if (hf > 0 && random.nextDouble() < hf * 0.5) {
-                player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.FAST_DIGGING, 100, 1));
+                player.addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.HASTE, 100, 1));
             }
 
             // Unrivaled - grow nearby crops
@@ -182,15 +183,60 @@ public class FarmingEvent implements Listener {
                         + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEE_DURATION_II) * 10;
                 double multi = 1 + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.HIVEMIND) * 0.25;
                 dur = (int) (dur * multi);
+                World world = player.getWorld();
+                long before = countFestivalBees(world);
                 FestivalBeeManager.getInstance(plugin).spawnFestivalBee(block.getLocation(), dur);
                 int swarm = mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.SWARM);
                 if (swarm > 0 && random.nextDouble() < swarm * 0.10) {
                     FestivalBeeManager.getInstance(plugin).spawnFestivalBee(block.getLocation(), dur);
                 }
+                player.sendMessage(ChatColor.GOLD + "A Festival Bee has spawned!");
+                long after = countFestivalBees(world);
+
+                if (before == 0 && after > 0) {
+                    Bukkit.getOnlinePlayers().forEach(p ->
+                            p.playSound(
+                                    p.getLocation(),
+                                    "custom.harvest_ballad",
+                                    SoundCategory.AMBIENT,
+                                    1.0f, 1.0f
+                            )
+                    );
+                }
+
+                player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 0.5f);
+
             }
 
             handleRareItemDrop(block, player, blockType);
         }
+    }
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent e) {
+        Entity dead = e.getEntity();
+        String name = dead.getCustomName();
+        if (name != null && name.contains(ChatColor.GOLD + "Festival")) {
+            World world = dead.getWorld();
+            // Delay one tick to let the entity actually disappear
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                if (countFestivalBees(world) == 0) {
+                    // no more bees → stop the music
+                    stopAllHarvestBallads();
+                }
+            });
+        }
+    }
+    private void stopAllHarvestBallads() {
+        Bukkit.getOnlinePlayers().forEach(Player::stopAllSounds);
+    }
+    private long countFestivalBees(World world) {
+        return world.getEntities().stream()
+                .filter(e -> {
+                    String name = e.getCustomName();
+                    return name != null
+                            && name.contains(ChatColor.GOLD + "Festival");
+                })
+                .count();
     }
     /**
      * Handles the rare item drop for eligible crops with a 1/400 chance.

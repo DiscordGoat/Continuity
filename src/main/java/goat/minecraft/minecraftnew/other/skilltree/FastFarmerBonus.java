@@ -47,7 +47,7 @@ public class FastFarmerBonus implements Listener {
 
         int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FAST_FARMER);
         if (level > 0) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 100, level - 1));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 10, level - 1));
         }
     }
 }

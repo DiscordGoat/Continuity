@@ -177,7 +177,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
-
+        Bukkit.getOnlinePlayers().forEach(p ->
+                p.stopAllSounds());
         removeAllCitizenEntities();
 
         HealthManager.getInstance(this).startup();
@@ -751,7 +752,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             verdantRelicsSubsystem.onDisable();
         }
 
-
+        Bukkit.getOnlinePlayers().forEach(p ->
+                p.stopAllSounds());
 
 
         MusicDiscManager musicDiscManager = new MusicDiscManager(this);

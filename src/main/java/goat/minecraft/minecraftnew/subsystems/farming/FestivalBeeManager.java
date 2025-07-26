@@ -1,11 +1,13 @@
 package goat.minecraft.minecraftnew.subsystems.farming;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.*;
 import org.bukkit.entity.Bee;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -13,6 +15,7 @@ public class FestivalBeeManager {
     private static FestivalBeeManager instance;
     private final JavaPlugin plugin;
     private final Map<UUID, Integer> bees = new HashMap<>();
+    private final Map<World, BukkitTask> timelapseTasks = new HashMap<>();
 
     private FestivalBeeManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -61,8 +64,13 @@ public class FestivalBeeManager {
         while (it.hasNext()) {
             Map.Entry<UUID, Integer> en = it.next();
             Entity e = null;
-            for (World w : Bukkit.getWorlds()) {
-                e = w.getEntity(en.getKey());
+            for (World world : Bukkit.getWorlds()) {
+                for (Entity entity : world.getEntities()) {
+                    if (entity.getUniqueId().equals(en.getKey())) {
+                        e = entity;
+                        break;
+                    }
+                }
                 if (e != null) break;
             }
             if (e == null || e.isDead()) {
@@ -82,16 +90,60 @@ public class FestivalBeeManager {
             updateRules(world);
         }
     }
+    private void startSunsetTimelapse(World world, long targetTime, int durationTicks) {
+        long startTime = world.getTime();
+        // compute forward delta (handles wrapping past 24000)
+        long delta = ((targetTime - startTime) % 24000 + 24000) % 24000;
+
+        // amount to advance each tick
+        double step = delta / (double) durationTicks;
+        // accumulator holds our “precise” time
+        final double[] acc = { startTime };
+
+        BukkitTask task = new BukkitRunnable() {
+            int ticks = 0;
+            @Override
+            public void run() {
+                ticks++;
+                acc[0] += step;
+                long newTime = (long) acc[0] % 24000;
+                world.setTime(newTime);
+
+                if (ticks >= durationTicks) {
+                    // snap to exact targetTime & finish
+                    world.setTime(targetTime);
+                    this.cancel();
+                    timelapseTasks.remove(world);
+                }
+            }
+        }.runTaskTimer(MinecraftNew.getInstance(), 0L, 1L);
+
+        timelapseTasks.put(world, task);
+    }
 
     private void updateRules(World world) {
         int count = bees.size();
+
+        // adjust tick speed always
+        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3 + count * 50);
+
         if (count > 0) {
-            world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3 + count * 100);
+            // Disable natural day/night
             world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-            world.setTime(12000);
+
+            // Only start a new timelapse if one isn't already running
+            if (!timelapseTasks.containsKey(world)) {
+                startSunsetTimelapse(world, 12000L, 600); // 200 ticks = 10s
+            }
+
         } else {
-            world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3);
+            // No bees: restore
             world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+
+            // Cancel any running timelapse
+            BukkitTask task = timelapseTasks.remove(world);
+            if (task != null) task.cancel();
         }
     }
+
 }
