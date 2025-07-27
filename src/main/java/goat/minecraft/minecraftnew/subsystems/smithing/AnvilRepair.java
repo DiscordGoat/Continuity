@@ -1523,6 +1523,15 @@ public class AnvilRepair implements Listener {
                         repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_IV) * 6;
                         repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_V) * 7;
                     }
+                    if (billItem.getType() == Material.IRON_INGOT) {
+                        StatsCalculator statsCalculator = new StatsCalculator(MinecraftNew.getInstance());
+                        double quality = statsCalculator.getRepairQuality(player);
+                        double roll = quality;
+                        if (repairAmount > quality) {
+                            roll = quality + new Random().nextDouble(repairAmount - quality + 1);
+                        }
+                        repairAmount = (int) roll;
+                    }
                     List<Material> ironWhitelist = new ArrayList<>();
                     ironWhitelist.add(Material.IRON_SWORD);
                     ironWhitelist.add(Material.IRON_PICKAXE);
@@ -1622,11 +1631,12 @@ public class AnvilRepair implements Listener {
      * the minimum amount of durability restored when using basic repair
      * materials such as Iron Ingots.
      *
-     * <p>Currently there are no mechanics to increase this value so it
-     * simply returns {@code 0}.</p>
+     * <p>The value is determined by the player's invested Repair Quality
+     * talents via {@link StatsCalculator}.</p>
      */
     private int getRepairQuality(Player player) {
-        return 0; // Placeholder for future expansion
+        StatsCalculator calculator = new StatsCalculator(MinecraftNew.getInstance());
+        return (int) calculator.getRepairQuality(player);
     }
 
     /**
