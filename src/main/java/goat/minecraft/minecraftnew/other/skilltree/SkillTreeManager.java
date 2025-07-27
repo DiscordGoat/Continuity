@@ -231,9 +231,6 @@ public class SkillTreeManager implements Listener {
             case RECURVE_MASTERY:
                 int recurveDuration = level * 200;
                 return ChatColor.YELLOW + "+" + recurveDuration + "s " + ChatColor.LIGHT_PURPLE + "Recurve Duration";
-            case REJUVENATION:
-                int bonusTime = level * 50;
-                return ChatColor.YELLOW + "+" + bonusTime + "s " + ChatColor.GREEN + "Bonus Health" + ChatColor.GRAY + " and " + ChatColor.GREEN + "Health Surge";
             case SOVEREIGNTY_MASTERY:
                 int sovDuration = level * 200;
                 return ChatColor.YELLOW + "+" + sovDuration + "s " + ChatColor.LIGHT_PURPLE + "Sovereignty Duration";

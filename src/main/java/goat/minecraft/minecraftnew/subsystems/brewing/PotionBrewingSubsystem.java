@@ -218,12 +218,6 @@ public class PotionBrewingSubsystem implements Listener {
 
         java.util.List<String> ingredients = new java.util.ArrayList<>(base.getRequiredIngredients());
 
-        if (SkillTreeManager.getInstance().hasTalent(player, Talent.REJUVENATION)) {
-            if (!ingredients.contains("Golden Apple")) {
-                ingredients.add("Golden Apple");
-            }
-        }
-
         if (name.equalsIgnoreCase("Potion of Recurve") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.RECURVE_MASTERY)) {
             if (!ingredients.contains("Skeleton Skull")) {

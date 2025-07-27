@@ -14,7 +14,7 @@ public enum Talent {
             ChatColor.GRAY + "Catches the excess potion in a glass bottle",
             ChatColor.YELLOW + "+10% " + ChatColor.GRAY + "Chance to brew 3 Potions.",
             8,
-            50,
+            40,
             Material.CAULDRON
     ),
     OPTIMAL_CONFIGURATION(
@@ -46,7 +46,7 @@ public enum Talent {
             ChatColor.GRAY + "Allows Potions to steep for even longer",
             ChatColor.YELLOW + "+20s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+20s " + ChatColor.GOLD + "Brew Time.",
             10,
-            50,
+            40,
             Material.REDSTONE_TORCH
     ),
     REDSTONE_FOUR(
@@ -62,23 +62,15 @@ public enum Talent {
             ChatColor.GRAY + "Add a Skeleton Skull",
             ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Recurve Duration",
             2,
-            25,
+            20,
             Material.BOW
-    ),
-    REJUVENATION(
-            "Rejuvenation",
-            ChatColor.GRAY + "Add a Golden Apple",
-            ChatColor.YELLOW + "+50s " + ChatColor.GREEN + "Bonus Health " + ChatColor.GRAY + "and " + ChatColor.GREEN + "Potion Surge",
-            4,
-            45,
-            Material.GHAST_TEAR
     ),
     SOVEREIGNTY_MASTERY(
             "Sovereignty Mastery",
             ChatColor.GRAY + "Add a diamond",
             ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Sovereignty Duration",
             2,
-            50,
+            40,
             Material.PRISMARINE_SHARD
     ),
     STRENGTH_MASTERY(
@@ -86,7 +78,7 @@ public enum Talent {
             ChatColor.GRAY + "Add a Singularity",
             ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Strength Duration",
             2,
-            25,
+            20,
             Material.DIAMOND_SWORD
     ),
     LIQUID_LUCK_MASTERY(
@@ -110,7 +102,7 @@ public enum Talent {
             ChatColor.GRAY + "Add Sugar for a pep in your step",
             ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Swift Step Duration",
             2,
-            35,
+            20,
             Material.FEATHER
     ),
     METAL_DETECTION_MASTERY(
@@ -126,7 +118,7 @@ public enum Talent {
             ChatColor.GRAY + "Add a Spider eye",
             ChatColor.YELLOW + "+200s " + ChatColor.AQUA + "Night Vision Duration",
             2,
-            30,
+            20,
             Material.SPIDER_EYE
       ),
     SOLAR_FURY_MASTERY(
@@ -134,7 +126,7 @@ public enum Talent {
             ChatColor.GRAY + "Add Blaze Powder",
             ChatColor.YELLOW + "+200s " + ChatColor.GOLD + "Solar Fury Duration",
             2,
-            35,
+            20,
             Material.FIRE_CHARGE
     ),
     FOUNTAIN_MASTERY(
