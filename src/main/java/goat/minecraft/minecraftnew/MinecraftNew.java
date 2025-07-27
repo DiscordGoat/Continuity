@@ -63,6 +63,7 @@ import goat.minecraft.minecraftnew.utils.commands.StatsCommand;
 import goat.minecraft.minecraftnew.utils.commands.TogglePotionEffectsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
+import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.developercommands.AddTalentPointCommand;
 import goat.minecraft.minecraftnew.utils.devtools.*;
@@ -178,6 +179,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+        // Initialize stats calculator singleton
+        StatsCalculator.getInstance(this);
         getServer().getPluginManager()
                 .registerEvents(new ResourcePackListener(), this);
 

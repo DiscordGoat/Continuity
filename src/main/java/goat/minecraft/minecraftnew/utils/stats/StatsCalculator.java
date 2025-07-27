@@ -28,10 +28,33 @@ import org.bukkit.plugin.java.JavaPlugin;
  */
 public class StatsCalculator {
 
+    private static StatsCalculator instance;
     private final JavaPlugin plugin;
 
-    public StatsCalculator(JavaPlugin plugin) {
+    private StatsCalculator(JavaPlugin plugin) {
         this.plugin = plugin;
+    }
+
+    /**
+     * Initialize the calculator singleton.
+     * Subsequent calls simply return the existing instance.
+     */
+    public static synchronized StatsCalculator getInstance(JavaPlugin plugin) {
+        if (instance == null) {
+            instance = new StatsCalculator(plugin);
+        }
+        return instance;
+    }
+
+    /**
+     * Get the already initialised instance.
+     * @throws IllegalStateException if init has not yet been called
+     */
+    public static StatsCalculator getInstance() {
+        if (instance == null) {
+            throw new IllegalStateException("StatsCalculator not initialised");
+        }
+        return instance;
     }
 
     /** Calculate max health using HealthManager. */
