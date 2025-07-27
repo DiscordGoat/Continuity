@@ -313,20 +313,27 @@ public class StatsCalculator {
     public double getRepairAmount(Player player) {
         double amount = 25.0; // base
         if (SkillTreeManager.getInstance() != null) {
-            int l1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_ONE);
-            amount += l1 * 1;
-            int l2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_TWO);
-            amount += l2 * 2;
-            int l3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_THREE);
-            amount += l3 * 3;
-            int l4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_FOUR);
-            amount += l4 * 4;
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_AMOUNT_I) * 3;
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_AMOUNT_II) * 4;
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_AMOUNT_III) * 5;
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_AMOUNT_IV) * 6;
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.REPAIR_AMOUNT_V) * 7;
         }
         return amount;
     }
 
-    /** Repair quality stat not yet implemented, returns zero. */
+    /** Repair quality from smithing talents. */
     public double getRepairQuality(Player player) {
-        return 0.0;
+        double quality = 0.0;
+        if (SkillTreeManager.getInstance() != null) {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.QUALITY_MATERIALS_I) * 1;
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.QUALITY_MATERIALS_II) * 2;
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.QUALITY_MATERIALS_III) * 3;
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.QUALITY_MATERIALS_IV) * 4;
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.QUALITY_MATERIALS_V) * 5;
+        }
+        return quality;
     }
 }

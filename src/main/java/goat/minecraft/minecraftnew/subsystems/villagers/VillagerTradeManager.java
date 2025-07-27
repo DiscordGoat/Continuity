@@ -210,17 +210,12 @@ public class VillagerTradeManager implements Listener {
         weaponsmithPurchases.add(createTradeMap("IRON_INGOT", 1, 4, 1));    // item, quantity, emeralds, level, experience
         weaponsmithPurchases.add(createTradeMap("COAL", 4, 2, 1));
 
-        weaponsmithPurchases.add(createTradeMap("UNCOMMON_SWORD_REFORGE", 1, 64, 2)); // ItemRegistry.getUncommonSwordReforge()
 
         weaponsmithPurchases.add(createTradeMap("BELL", 1, 63, 3));
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_REFORGE", 1, 64, 3)); // ItemRegistry.getWeaponsmithReforge()
-        weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_REFORGE_TWO", 1, 128, 3)); // ItemRegistry.getWeaponsmithReforgeTwo()
 
-        weaponsmithPurchases.add(createTradeMap("RARE_SWORD_REFORGE", 1, 128, 3)); // ItemRegistry.getRareSwordReforge()
         weaponsmithPurchases.add(createTradeMap("WATER_ASPECT_ENCHANT", 1, 128, 3)); // ItemRegistry.getRareSwordReforge()
 
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SHARPNESS", 1, 64, 4)); // ItemRegistry.getWeaponsmithSharpness()
-        weaponsmithPurchases.add(createTradeMap("EPIC_SWORD_REFORGE", 1, 256, 4)); // ItemRegistry.getEpicSwordReforge()
 
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SWEEPING_EDGE", 1, 63, 4)); // ItemRegistry.getWeaponsmithSweepingEdge()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_LOOTING", 1, 64, 4)); // ItemRegistry.getWeaponsmithLooting()
@@ -229,7 +224,6 @@ public class VillagerTradeManager implements Listener {
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SMITE", 1, 64, 4)); // ItemRegistry.getWeaponsmithSmite()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_BANE_OF_ARTHROPODS", 1, 64, 4)); // ItemRegistry.getWeaponsmithBaneofAnthropods()
 
-        weaponsmithPurchases.add(createTradeMap("LEGENDARY_SWORD_REFORGE", 1, 512, 5)); // ItemRegistry.getLegendarySwordReforge()
         weaponsmithPurchases.add(createTradeMap("BLUE_LANTERN", 1, 512, 5)); // Custom Item
 
         defaultConfig.set("WEAPONSMITH.purchases", weaponsmithPurchases);
@@ -439,22 +433,16 @@ public class VillagerTradeManager implements Listener {
 
         toolsmithPurchases.add(createTradeMap("SHIELD", 1, 10, 2)); // Material
         toolsmithPurchases.add(createTradeMap("CAULDRON", 1, 5, 2)); // Material
-        toolsmithPurchases.add(createTradeMap("UNCOMMON_TOOL_REFORGE", 1, 8, 2)); // Custom Item
 
-        toolsmithPurchases.add(createTradeMap("TOOLSMITH_REFORGE", 1, 64, 3)); // Custom Item
-
-        toolsmithPurchases.add(createTradeMap("RARE_TOOL_REFORGE", 1, 16, 3)); // Custom Item
 
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_EFFICIENCY", 1, 64, 4)); // Custom Item
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_UNBREAKING", 1, 64, 4)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("EPIC_TOOL_REFORGE", 1, 32, 4)); // Custom Item
 
         toolsmithPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT", 1, 64, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("TOOLSMITH_ENCHANT_TWO", 1, 128, 3)); // Custom Item
         toolsmithPurchases.add(createTradeMap("LYNCH_ENCHANT", 1, 64, 4)); // Custom Item
         toolsmithPurchases.add(createTradeMap("UNBREAKABLE_SHEARS", 1, 128, 3)); // Custom Item
-        toolsmithPurchases.add(createTradeMap("LEGENDARY_TOOL_REFORGE", 1, 64, 5)); // Custom Item
         toolsmithPurchases.add(createTradeMap("POWER_CRYSTAL", 1, 512, 5)); // Custom Item
         toolsmithPurchases.add(createTradeMap("COMPOSTER_ENCHANT", 1, 32, 3)); // Custom Item
 
@@ -478,13 +466,10 @@ public class VillagerTradeManager implements Listener {
         armorerPurchases.add(createTradeMap("CONTINGENCY", 1, 64, 1)); // Custom Item
 
         armorerPurchases.add(createTradeMap("ANVIL", 1, 24, 2)); // Material
-        armorerPurchases.add(createTradeMap("UNCOMMON_ARMOR_REFORGE", 1, 16, 2)); // Custom Item
 
         armorerPurchases.add(createTradeMap("GOLD_ORE", 4, 6, 3)); // Material
-        armorerPurchases.add(createTradeMap("RARE_ARMOR_REFORGE", 1, 32, 3)); // Custom Item
 
         armorerPurchases.add(createTradeMap("NETHERITE_UPGRADE_SMITHING_TEMPLATE", 2, 32, 2)); // Material
-        armorerPurchases.add(createTradeMap("EPIC_ARMOR_REFORGE", 1, 64, 4)); // Custom Item
 
         armorerPurchases.add(createTradeMap("RANDOM_ARMOR_TRIM", 1, 64, 4)); // Custom Item
         armorerPurchases.add(createTradeMap("ARMOR_SMITH_PROTECTION", 1, 64, 4)); // Custom Item
@@ -494,9 +479,6 @@ public class VillagerTradeManager implements Listener {
         armorerPurchases.add(createTradeMap("ARMORER_ENCHANT", 1, 16, 4)); // Custom Item
         armorerPurchases.add(createTradeMap("BLESSING_ARTIFACT", 1, 64, 4)); // Custom Item
 
-        armorerPurchases.add(createTradeMap("LEGENDARY_ARMOR_REFORGE", 1, 128, 5)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE", 1, 32, 5)); // Custom Item
-        armorerPurchases.add(createTradeMap("ARMORSMITH_REFORGE_TWO", 1, 64, 5)); // Custom Item
 
         armorerPurchases.add(createTradeMap("ANCIENT_DEBRIS", 1, 64, 5)); // Material
 
@@ -548,7 +530,6 @@ public class VillagerTradeManager implements Listener {
         fishermanPurchases.add(createTradeMap("LAPIS_LAZULI", 4, 8, 2)); // Material
         fishermanPurchases.add(createTradeMap("SHALLOW_SHELL", 1, 8, 2)); // Custom Item
         fishermanPurchases.add(createTradeMap("SHELL", 1, 12, 3)); // Custom Item
-        fishermanPurchases.add(createTradeMap("FISHERMAN_REFORGE", 1, 64, 3)); // Custom Item
         fishermanPurchases.add(createTradeMap("PEARL_OF_THE_DEEP", 1, 512, 3)); // Custom Item
         fishermanPurchases.add(createTradeMap("CAMPFIRE", 2, 12, 3)); // Material
         fishermanPurchases.add(createTradeMap("DEEP_SHELL", 1, 24, 4)); // Custom Item

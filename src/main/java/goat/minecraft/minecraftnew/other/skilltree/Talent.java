@@ -361,38 +361,251 @@ public enum Talent {
             80,
             Material.CLOCK
     ),
-    REPAIR_ONE(
-            "Repair Mastery I",
+    // Smithing rework talents
+    REPAIR_AMOUNT_I(
+            "Repair Amount I",
             ChatColor.GRAY + "Improve basic repair techniques",
-            ChatColor.GREEN + "+(1*level) " + ChatColor.GRAY + "Repair Amount",
-            10,
+            ChatColor.GREEN + "+3 Repair Amount",
+            3,
             1,
             Material.ANVIL
     ),
-    REPAIR_TWO(
-            "Repair Mastery II",
-            ChatColor.GRAY + "Further hone repair skills",
-            ChatColor.GREEN + "+(2*level) " + ChatColor.GRAY + "Repair Amount",
-            10,
-            30,
+    QUALITY_MATERIALS_I(
+            "Quality Materials I",
+            ChatColor.GRAY + "Use better components",
+            ChatColor.GREEN + "+1 Repair Quality",
+            3,
+            1,
+            Material.IRON_INGOT
+    ),
+    ALLOY_I(
+            "Alloy I",
+            ChatColor.GRAY + "Chance to improve durability",
+            ChatColor.YELLOW + "+1.5% Chance for +1 Max Durability",
+            4,
+            1,
+            Material.COPPER_INGOT
+    ),
+    NOVICE_SMITH(
+            "Novice Smith",
+            ChatColor.GRAY + "Practice basic reforging",
+            ChatColor.YELLOW + "+25% Common Reforge Chance",
+            3,
+            1,
+            Material.STONE_PICKAXE
+    ),
+    SCRAPS_I(
+            "Scraps I",
+            ChatColor.GRAY + "Reuse leftover materials",
+            ChatColor.YELLOW + "-3 Reforge Mats",
+            3,
+            1,
+            Material.COBBLESTONE
+    ),
+    NOVICE_FOUNDATIONS(
+            "Novice Foundations",
+            ChatColor.GRAY + "Protect your anvil",
+            ChatColor.YELLOW + "-25% Anvil Degrade Chance",
+            4,
+            1,
+            Material.STONE_BRICKS
+    ),
+
+    REPAIR_AMOUNT_II(
+            "Repair Amount II",
+            ChatColor.GRAY + "Refine repair methods",
+            ChatColor.GREEN + "+4 Repair Amount",
+            3,
+            20,
             Material.ANVIL
     ),
-    REPAIR_THREE(
-            "Repair Mastery III",
-            ChatColor.GRAY + "Advanced repair expertise",
-            ChatColor.GREEN + "+(3*level) " + ChatColor.GRAY + "Repair Amount",
-            10,
-            50,
+    QUALITY_MATERIALS_II(
+            "Quality Materials II",
+            ChatColor.GRAY + "Stronger alloys",
+            ChatColor.GREEN + "+2 Repair Quality",
+            3,
+            20,
+            Material.IRON_BLOCK
+    ),
+    ALLOY_II(
+            "Alloy II",
+            ChatColor.GRAY + "Chance to add durability",
+            ChatColor.YELLOW + "+1.5% Chance for +2 Max Durability",
+            4,
+            20,
+            Material.GOLD_INGOT
+    ),
+    APPRENTICE_SMITH(
+            "Apprentice Smith",
+            ChatColor.GRAY + "Improved reforging",
+            ChatColor.YELLOW + "+25% Uncommon Reforge Chance",
+            3,
+            20,
+            Material.IRON_PICKAXE
+    ),
+    SCRAPS_II(
+            "Scraps II",
+            ChatColor.GRAY + "Reduce material waste",
+            ChatColor.YELLOW + "-3 Reforge Mats",
+            3,
+            20,
+            Material.IRON_NUGGET
+    ),
+    APPRENTICE_FOUNDATIONS(
+            "Apprentice Foundations",
+            ChatColor.GRAY + "Reinforce anvils",
+            ChatColor.YELLOW + "-25% Anvil Degrade Chance",
+            4,
+            20,
+            Material.IRON_BLOCK
+    ),
+
+    REPAIR_AMOUNT_III(
+            "Repair Amount III",
+            ChatColor.GRAY + "Skilled repair work",
+            ChatColor.GREEN + "+5 Repair Amount",
+            3,
+            40,
             Material.ANVIL
     ),
-    REPAIR_FOUR(
-            "Repair Mastery IV",
-            ChatColor.GRAY + "Masterful repair proficiency",
-            ChatColor.GREEN + "+(4*level) " + ChatColor.GRAY + "Repair Amount",
-            10,
-            70,
+    QUALITY_MATERIALS_III(
+            "Quality Materials III",
+            ChatColor.GRAY + "Expert material handling",
+            ChatColor.GREEN + "+3 Repair Quality",
+            3,
+            40,
+            Material.GOLD_INGOT
+    ),
+    ALLOY_III(
+            "Alloy III",
+            ChatColor.GRAY + "Superior alloys",
+            ChatColor.YELLOW + "+1.5% Chance for +3 Max Durability",
+            4,
+            40,
+            Material.GOLD_BLOCK
+    ),
+    JOURNEYMAN_SMITH(
+            "Journeyman Smith",
+            ChatColor.GRAY + "Reliable reforging",
+            ChatColor.YELLOW + "+25% Rare Reforge Chance",
+            3,
+            40,
+            Material.GOLDEN_PICKAXE
+    ),
+    SCRAPS_III(
+            "Scraps III",
+            ChatColor.GRAY + "Efficient recycling",
+            ChatColor.YELLOW + "-3 Reforge Mats",
+            3,
+            40,
+            Material.GOLD_NUGGET
+    ),
+    JOURNEYMAN_FOUNDATIONS(
+            "Journeyman Foundations",
+            ChatColor.GRAY + "Stabilise anvils",
+            ChatColor.YELLOW + "-25% Anvil Degrade Chance",
+            4,
+            40,
+            Material.GOLD_BLOCK
+    ),
+
+    REPAIR_AMOUNT_IV(
+            "Repair Amount IV",
+            ChatColor.GRAY + "Expert repair work",
+            ChatColor.GREEN + "+6 Repair Amount",
+            3,
+            60,
             Material.ANVIL
-      ),
+    ),
+    QUALITY_MATERIALS_IV(
+            "Quality Materials IV",
+            ChatColor.GRAY + "Masterwork materials",
+            ChatColor.GREEN + "+4 Repair Quality",
+            3,
+            60,
+            Material.DIAMOND
+    ),
+    ALLOY_IV(
+            "Alloy IV",
+            ChatColor.GRAY + "Rare alloys",
+            ChatColor.YELLOW + "+1.5% Chance for +4 Max Durability",
+            4,
+            60,
+            Material.AMETHYST_SHARD
+    ),
+    EXPERT_SMITH(
+            "Expert Smith",
+            ChatColor.GRAY + "Advanced reforging",
+            ChatColor.YELLOW + "+25% Epic Reforge Chance",
+            3,
+            60,
+            Material.DIAMOND_PICKAXE
+    ),
+    SCRAPS_IV(
+            "Scraps IV",
+            ChatColor.GRAY + "Minimal waste",
+            ChatColor.YELLOW + "-3 Reforge Mats",
+            3,
+            60,
+            Material.DIAMOND
+    ),
+    EXPERT_FOUNDATIONS(
+            "Expert Foundations",
+            ChatColor.GRAY + "Fortified anvils",
+            ChatColor.YELLOW + "-25% Anvil Degrade Chance",
+            4,
+            60,
+            Material.DIAMOND_BLOCK
+    ),
+
+    REPAIR_AMOUNT_V(
+            "Repair Amount V",
+            ChatColor.GRAY + "Legendary repair mastery",
+            ChatColor.GREEN + "+7 Repair Amount",
+            3,
+            80,
+            Material.NETHERITE_INGOT
+    ),
+    QUALITY_MATERIALS_V(
+            "Quality Materials V",
+            ChatColor.GRAY + "Flawless materials",
+            ChatColor.GREEN + "+5 Repair Quality",
+            4,
+            80,
+            Material.NETHERITE_BLOCK
+    ),
+    ALLOY_V(
+            "Alloy V",
+            ChatColor.GRAY + "Miraculous alloys",
+            ChatColor.YELLOW + "+0.5% Chance for +100 Max Durability",
+            3,
+            80,
+            Material.NETHERITE_SCRAP
+    ),
+    MASTER_SMITH(
+            "Master Smith",
+            ChatColor.GRAY + "Perfect reforging",
+            ChatColor.YELLOW + "+25% Legendary Reforge Chance",
+            3,
+            80,
+            Material.NETHERITE_PICKAXE
+    ),
+    SCRAPS_V(
+            "Scraps V",
+            ChatColor.GRAY + "Zero waste",
+            ChatColor.YELLOW + "-3 Reforge Mats",
+            3,
+            80,
+            Material.NETHERITE_SCRAP
+    ),
+    MASTER_FOUNDATIONS(
+            "Master Foundations",
+            ChatColor.GRAY + "Ultimate anvil care",
+            ChatColor.YELLOW + "-25% Anvil Degrade Chance",
+            4,
+            80,
+            Material.NETHERITE_BLOCK
+    ),
     SATIATION_MASTERY(
             "Satiation Mastery",
             ChatColor.GRAY + "Cooked meals keep you fuller",
