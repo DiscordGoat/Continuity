@@ -431,6 +431,7 @@ Lapis Yield: +2 Lapis per Ore, Max level 4
 Oxygen Efficiency I: -1% Oxygen Depletion Rate, Max level 5
 Adrenaline: Removes Slowness from Minor Hypoxia, Max level 1
 Rest: Sleeping Recovers 5% Max Oxygen, Max level 7
+Bubbles: +1% Chance to spawn an Oxygen Bubble when mining an ore. Popping this orb grants Oxygen, Max level 5
 
 Uncommon:
 Oxygen II: +20 Oxygen, Max level 3
