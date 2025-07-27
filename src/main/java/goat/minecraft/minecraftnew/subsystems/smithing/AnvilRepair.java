@@ -1753,15 +1753,34 @@ public class AnvilRepair implements Listener {
         }
 
         double chance = 0.0;
+        double degradeChance = 100.0; // chance for the anvil to take damage
         if (mgr != null) {
             UUID uid = player.getUniqueId();
             switch (next) {
-                case TIER_1 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.NOVICE_SMITH) * 25;
-                case TIER_2 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.APPRENTICE_SMITH) * 25;
-                case TIER_3 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.JOURNEYMAN_SMITH) * 25;
-                case TIER_4 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.EXPERT_SMITH) * 25;
-                case TIER_5 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.MASTER_SMITH) * 25;
+                case TIER_1 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.NOVICE_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.NOVICE_FOUNDATIONS) * 25;
+                }
+                case TIER_2 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.APPRENTICE_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.APPRENTICE_FOUNDATIONS) * 25;
+                }
+                case TIER_3 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.JOURNEYMAN_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.JOURNEYMAN_FOUNDATIONS) * 25;
+                }
+                case TIER_4 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.EXPERT_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.EXPERT_FOUNDATIONS) * 25;
+                }
+                case TIER_5 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.MASTER_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.MASTER_FOUNDATIONS) * 25;
+                }
             }
+        }
+        if (degradeChance < 0) {
+            degradeChance = 0;
         }
 
         mats.setAmount(mats.getAmount() - matsCount);
@@ -1774,7 +1793,7 @@ public class AnvilRepair implements Listener {
             int maxD = CustomDurabilityManager.getInstance().getMaxDurability(item);
             CustomDurabilityManager.getInstance().applyDamage(player, item, maxD / 2);
             Block anvilBlock = getNearestAnvil(player, 5);
-            if (anvilBlock != null) {
+            if (anvilBlock != null && Math.random() * 100 < degradeChance) {
                 switch (anvilBlock.getType()) {
                     case ANVIL -> anvilBlock.setType(Material.CHIPPED_ANVIL);
                     case CHIPPED_ANVIL -> anvilBlock.setType(Material.DAMAGED_ANVIL);
