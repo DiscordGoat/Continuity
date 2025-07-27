@@ -1475,7 +1475,40 @@ public class AnvilRepair implements Listener {
 
         // Apply the repair by reducing the damage
         CustomDurabilityManager customDurabilityManager = CustomDurabilityManager.getInstance();
-        customDurabilityManager.setCustomDurability(repairee, customDurabilityManager.getCurrentDurability(repairee) + repairAmount, customDurabilityManager.getMaxDurability(repairee));
+        customDurabilityManager.setCustomDurability(repairee,
+                customDurabilityManager.getCurrentDurability(repairee) + repairAmount,
+                customDurabilityManager.getMaxDurability(repairee));
+
+        // Alloy talents: chance to grant extra max durability on repair
+        if (mgr != null && isDurable(repairee)) {
+            UUID uid = player.getUniqueId();
+            Random rng = new Random();
+
+            int level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_I);
+            if (rng.nextDouble() < (level * 1.5) / 100.0) {
+                customDurabilityManager.addMaxDurabilityBonus(repairee, 1);
+            }
+
+            level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_II);
+            if (rng.nextDouble() < (level * 1.5) / 100.0) {
+                customDurabilityManager.addMaxDurabilityBonus(repairee, 2);
+            }
+
+            level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_III);
+            if (rng.nextDouble() < (level * 1.5) / 100.0) {
+                customDurabilityManager.addMaxDurabilityBonus(repairee, 3);
+            }
+
+            level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_IV);
+            if (rng.nextDouble() < (level * 1.5) / 100.0) {
+                customDurabilityManager.addMaxDurabilityBonus(repairee, 4);
+            }
+
+            level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_V);
+            if (rng.nextDouble() < (level * 0.5) / 100.0) {
+                customDurabilityManager.addMaxDurabilityBonus(repairee, 100);
+            }
+        }
 
         // Subtract one from the repair material's stack
         billItem.setAmount(billItem.getAmount() - 1);
