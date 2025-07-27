@@ -27,7 +27,7 @@ public class PotionOfCharismaticBartering implements Listener {
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
                 int duration = (60 * 3);
                 if (SkillTreeManager.getInstance().hasTalent(player, Talent.CHARISMA_MASTERY)) {
-                    int bonus = 50 * SkillTreeManager.getInstance()
+                    int bonus = 200 * SkillTreeManager.getInstance()
                             .getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.CHARISMA_MASTERY);
                     duration += bonus;
                 }

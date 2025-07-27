@@ -35,7 +35,7 @@ public class PotionOfSwiftStep implements Listener {
                 XPManager xpManager = new XPManager(MinecraftNew.getInstance());
                 int duration = (60 * 3); // Custom scaling
                 if (SkillTreeManager.getInstance().hasTalent(player, Talent.SWIFT_STEP_MASTERY)) {
-                    int bonus = 50 * SkillTreeManager.getInstance()
+                    int bonus = 200 * SkillTreeManager.getInstance()
                             .getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.SWIFT_STEP_MASTERY);
                     duration += bonus;
                 }

@@ -25,7 +25,7 @@ public class PotionOfLiquidLuck implements Listener {
                 Player player = event.getPlayer();
                 if(goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
                         .hasTalent(player, goat.minecraft.minecraftnew.other.skilltree.Talent.LIQUID_LUCK_MASTERY)) {
-                    int bonus = 50 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
+                    int bonus = 200 * goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager.getInstance()
                             .getTalentLevel(player.getUniqueId(), goat.minecraft.minecraftnew.other.skilltree.Skill.BREWING,
                                     goat.minecraft.minecraftnew.other.skilltree.Talent.LIQUID_LUCK_MASTERY);
                     duration += bonus;

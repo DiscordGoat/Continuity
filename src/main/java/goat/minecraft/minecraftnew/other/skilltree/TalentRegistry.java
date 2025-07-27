@@ -16,23 +16,25 @@ public final class TalentRegistry {
                 Skill.BREWING,
                 Arrays.asList(
                         Talent.REDSTONE_ONE,
-                        Talent.REDSTONE_TWO,
-                        Talent.REDSTONE_THREE,
-                        Talent.REDSTONE_FOUR,
                         Talent.OPTIMAL_CONFIGURATION,
-                        Talent.TRIPLE_BATCH,
-                        Talent.RECURVE_MASTERY,
-                        Talent.REJUVENATION,
-                        Talent.LIQUID_LUCK_MASTERY,
-                        Talent.SOVEREIGNTY_MASTERY,
+                        Talent.REDSTONE_TWO,
                         Talent.STRENGTH_MASTERY,
-                        Talent.OXYGEN_MASTERY,
+                        Talent.RECURVE_MASTERY,
                         Talent.SWIFT_STEP_MASTERY,
-                        Talent.METAL_DETECTION_MASTERY,
                         Talent.NIGHT_VISION_MASTERY,
                         Talent.SOLAR_FURY_MASTERY,
+                        Talent.REDSTONE_THREE,
+                        Talent.TRIPLE_BATCH,
+                        Talent.SOVEREIGNTY_MASTERY,
+                        Talent.REDSTONE_FOUR,
+                        Talent.LIQUID_LUCK_MASTERY,
                         Talent.FOUNTAIN_MASTERY,
-                        Talent.CHARISMA_MASTERY)
+                        Talent.OXYGEN_MASTERY,
+                        Talent.METAL_DETECTION_MASTERY,
+                        Talent.CHARISMA_MASTERY,
+                        Talent.REDSTONE_FIVE,
+                        Talent.NUTRITION_MASTERY,
+                        Talent.ETERNAL_ELIXIR)
         );
 
         SKILL_TALENTS.put(

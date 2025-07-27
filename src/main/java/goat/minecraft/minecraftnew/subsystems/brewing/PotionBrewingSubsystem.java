@@ -232,8 +232,8 @@ public class PotionBrewingSubsystem implements Listener {
         }
         if (name.equalsIgnoreCase("Potion of Liquid Luck") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.LIQUID_LUCK_MASTERY)) {
-            if (!ingredients.contains("Gold Block")) {
-                ingredients.add("Gold Block");
+            if (!ingredients.contains("Enchanted Golden Apple")) {
+                ingredients.add("Enchanted Golden Apple");
             }
         }
         if (name.equalsIgnoreCase("Potion of Charismatic Bartering") &&
@@ -250,15 +250,14 @@ public class PotionBrewingSubsystem implements Listener {
         }
         if (name.equalsIgnoreCase("Potion of Swift Step") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.SWIFT_STEP_MASTERY)) {
-            if (!ingredients.contains("Pumpkin")) {
-                ingredients.add("Pumpkin");
-
+            if (!ingredients.contains("Sugar")) {
+                ingredients.add("Sugar");
             }
         }
         if (name.equalsIgnoreCase("Potion of Metal Detection") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.METAL_DETECTION_MASTERY)) {
-            if (!ingredients.contains("Diamond")) {
-                ingredients.add("Diamond");
+            if (!ingredients.contains("Zombie Skull")) {
+                ingredients.add("Zombie Skull");
             }
         }
         if (name.equalsIgnoreCase("Potion of Night Vision") &&
@@ -269,8 +268,8 @@ public class PotionBrewingSubsystem implements Listener {
         }
         if (name.equalsIgnoreCase("Potion of Solar Fury") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.SOLAR_FURY_MASTERY)) {
-            if (!ingredients.contains("Blaze Rod")) {
-                ingredients.add("Blaze Rod");
+            if (!ingredients.contains("Blaze Powder")) {
+                ingredients.add("Blaze Powder");
             }
         }
 
@@ -294,8 +293,15 @@ public class PotionBrewingSubsystem implements Listener {
         }
         if (base != null && name.equalsIgnoreCase("Potion of Sovereignty") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.SOVEREIGNTY_MASTERY)) {
-            if (!ingredients.contains("Ender Pearl")) {
-                ingredients.add("Ender Pearl");
+            if (!ingredients.contains("Diamond")) {
+                ingredients.add("Diamond");
+            }
+            return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
+        }
+        if (base != null && name.equalsIgnoreCase("Potion of Optimal Eating") &&
+                SkillTreeManager.getInstance().hasTalent(player, Talent.NUTRITION_MASTERY)) {
+            if (!ingredients.contains("Sea Salt")) {
+                ingredients.add("Sea Salt");
             }
             return new PotionRecipe(base.getName(), ingredients, base.getBrewTime(), base.getOutputItem(), base.getFinalColor(), base.getEffectLore());
         }
@@ -405,7 +411,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // Potion of Optimal Eating
-        List<String> optimalEatingIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Enchanted Golden Apple");
+        List<String> optimalEatingIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Enchanted Golden Apple", "Sea Salt");
         List<String> optimalEatingLore = Arrays.asList("Prevents nutrition decay", "Base Duration of " + baseDuration);
         Color optimalEatingColor = Color.fromRGB(255, 215, 0);
         recipeRegistry.add(
@@ -836,7 +842,7 @@ public class PotionBrewingSubsystem implements Listener {
                 // build final potion
                 ItemStack finalPotion = buildFinalPotion();
                 if(SkillTreeManager.getInstance().hasTalent(getNearestPlayer(standLoc), Talent.TRIPLE_BATCH)) {
-                    double chance = (SkillTreeManager.getInstance().getTalentLevel(getNearestPlayer(standLoc).getUniqueId(), Skill.BREWING, Talent.TRIPLE_BATCH) * 5) / 100.0;   // 0.0–0.50
+                    double chance = (SkillTreeManager.getInstance().getTalentLevel(getNearestPlayer(standLoc).getUniqueId(), Skill.BREWING, Talent.TRIPLE_BATCH) * 10) / 100.0;   // 0.0–0.80
                     if (Math.random() < chance) {
                         Item dropped = w.dropItem(standLoc, finalPotion);
                         Item dropped2 = w.dropItem(standLoc, finalPotion);
