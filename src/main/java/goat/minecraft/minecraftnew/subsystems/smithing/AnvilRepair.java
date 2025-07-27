@@ -98,6 +98,8 @@ public class AnvilRepair implements Listener {
                 anvilInventories.put(player.getUniqueId(), anvilInventory);
             }
 
+            updateReforgeButtonLore(anvilInventory, player);
+
             // Open the custom anvil inventory for the player
             player.openInventory(anvilInventory);
         }
@@ -115,6 +117,7 @@ public class AnvilRepair implements Listener {
             anvilInventory = loadInventory(player.getUniqueId());
             anvilInventories.put(player.getUniqueId(), anvilInventory);
         }
+        updateReforgeButtonLore(anvilInventory, player);
         player.openInventory(anvilInventory);
     }
 
@@ -130,7 +133,10 @@ public class AnvilRepair implements Listener {
         // Define GUI panes and items for decoration and instructions
         ItemStack blackPane = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, "");
         ItemStack resultPane = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair");
-        ItemStack reforgePane = createGuiItem(Material.GOLD_INGOT, ChatColor.GOLD + "Reforge");
+        // Default reforge button with placeholder lore
+        List<String> reforgeLore = new ArrayList<>();
+        reforgeLore.add(ChatColor.GRAY + "Place item to view cost");
+        ItemStack reforgePane = createGuiItem(Material.GOLD_INGOT, ChatColor.GOLD + "Reforge", reforgeLore);
         // Create lore for the "Sharpen" button
         List<String> sharpnessLore = new ArrayList<>();
         sharpnessLore.add(ChatColor.GRAY + "+1 Sharpness Level");
@@ -197,6 +203,74 @@ public class AnvilRepair implements Listener {
             item.setItemMeta(meta);
         }
         return item;
+    }
+
+    /**
+     * Creates a GUI item with custom lore lines.
+     */
+    private ItemStack createGuiItem(Material material, String name, List<String> lore) {
+        ItemStack item = new ItemStack(material);
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(name);
+            meta.setLore(lore != null ? lore : Collections.singletonList(ChatColor.GRAY + ""));
+            item.setItemMeta(meta);
+        }
+        return item;
+    }
+
+    /**
+     * Updates the lore on the reforge button to display required materials.
+     */
+    private void updateReforgeButtonLore(Inventory inventory, Player player) {
+        ItemStack button = inventory.getItem(16);
+        if (button == null) return;
+        ItemMeta meta = button.getItemMeta();
+        if (meta == null) return;
+
+        ItemStack repairee = inventory.getItem(10);
+        List<String> lore = new ArrayList<>();
+        if (repairee == null || repairee.getType() == Material.AIR) {
+            lore.add(ChatColor.GRAY + "Place item to view cost");
+        } else {
+            ReforgeManager.ReforgeTier current = reforgeManager.getReforgeTierByTier(reforgeManager.getReforgeTier(repairee));
+            if (current.getTier() >= 5) {
+                lore.add(ChatColor.RED + "Max tier reached");
+            } else {
+                ReforgeManager.ReforgeTier next = reforgeManager.getReforgeTierByTier(current.getTier() + 1);
+                Material needed = Material.COBBLESTONE;
+                switch (next) {
+                    case TIER_2 -> needed = Material.IRON_INGOT;
+                    case TIER_3 -> needed = Material.GOLD_INGOT;
+                    case TIER_4 -> needed = Material.AMETHYST_SHARD;
+                    case TIER_5 -> needed = Material.DIAMOND;
+                }
+                int matsCount = 64;
+                SkillTreeManager mgr = SkillTreeManager.getInstance();
+                if (mgr != null) {
+                    UUID uid = player.getUniqueId();
+                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_I) * 3;
+                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_II) * 3;
+                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_III) * 3;
+                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_IV) * 3;
+                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_V) * 3;
+                }
+                lore.add(ChatColor.GRAY + "Next: " + next.getColor() + next.name());
+                lore.add(ChatColor.GRAY + "Cost: " + matsCount + " " + formatMaterial(needed));
+            }
+        }
+        meta.setLore(lore);
+        button.setItemMeta(meta);
+    }
+
+    private String formatMaterial(Material mat) {
+        String name = mat.toString().toLowerCase().replace('_', ' ');
+        String[] parts = name.split(" ");
+        for (int i = 0; i < parts.length; i++) {
+            if (parts[i].isEmpty()) continue;
+            parts[i] = Character.toUpperCase(parts[i].charAt(0)) + parts[i].substring(1);
+        }
+        return String.join(" ", parts);
     }
 
 //    public boolean isArmor(ItemStack item) {
@@ -667,6 +741,16 @@ public class AnvilRepair implements Listener {
             if (stack != null) {
                 ItemLoreFormatter.formatLore(stack);
             }
+            Player player = (Player) event.getWhoClicked();
+            updateReforgeButtonLore(event.getInventory(), player);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onInventoryDragUpdate(InventoryDragEvent event) {
+        if (event.getView().getTitle().equals("Anvil Repair")) {
+            Player player = (Player) event.getWhoClicked();
+            updateReforgeButtonLore(event.getInventory(), player);
         }
     }
 
