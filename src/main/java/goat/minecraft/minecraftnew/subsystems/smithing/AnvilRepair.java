@@ -129,6 +129,7 @@ public class AnvilRepair implements Listener {
         // Define GUI panes and items for decoration and instructions
         ItemStack blackPane = createGuiItem(Material.BLACK_STAINED_GLASS_PANE, "");
         ItemStack resultPane = createGuiItem(Material.GREEN_STAINED_GLASS_PANE, ChatColor.GREEN + "Click to repair");
+        ItemStack reforgePane = createGuiItem(Material.GOLD_INGOT, ChatColor.GOLD + "Reforge");
         // Create lore for the "Sharpen" button
         List<String> sharpnessLore = new ArrayList<>();
         sharpnessLore.add(ChatColor.GRAY + "+1 Sharpness Level");
@@ -142,6 +143,7 @@ public class AnvilRepair implements Listener {
         // Place specific GUI items and interactive slots
         anvilInventory.setItem(10, null); // Slot for the item to repair
         anvilInventory.setItem(15, resultPane); // Slot for the repair material
+        anvilInventory.setItem(16, reforgePane); // Reforge button
         anvilInventory.setItem(13, null); // Output slot with "Click to repair" pane
         return anvilInventory;
     }
@@ -149,13 +151,10 @@ public class AnvilRepair implements Listener {
         // Consume the required resources
         inventory.removeItem(new ItemStack(material, materialCount));
 
-        // Damage the item by 50% of max durability
-        if (repairee != null && repairee.getItemMeta() instanceof Damageable) {
-            Damageable damageable = (Damageable) repairee.getItemMeta();
-            int maxDurability = repairee.getType().getMaxDurability();
-            int currentDamage = damageable.getDamage();
-            damageable.setDamage(Math.min(currentDamage + maxDurability / 2, maxDurability - 1));
-            repairee.setItemMeta((ItemMeta) damageable);
+        // Damage the item by 50% of max durability using the custom durability system
+        if (repairee != null) {
+            int maxDurability = CustomDurabilityManager.getInstance().getMaxDurability(repairee);
+            CustomDurabilityManager.getInstance().applyDamage(player, repairee, maxDurability / 2);
         }
 
         // Downgrade the anvil
@@ -647,6 +646,12 @@ public class AnvilRepair implements Listener {
                 return;
             }
 
+            if (slot == 16) {
+                event.setCancelled(true);
+                attemptReforge(event.getInventory(), player);
+                return;
+            }
+
             // Prevent moving items in other slots of the GUI
             if (slot < clickedInventory.getSize()) {
                 event.setCancelled(true);
@@ -730,10 +735,11 @@ public class AnvilRepair implements Listener {
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         if (mgr != null) {
             UUID uid = player.getUniqueId();
-            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_ONE);
-            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_TWO) * 2;
-            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_THREE) * 3;
-            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_FOUR) * 4;
+            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_I) * 3;
+            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_II) * 4;
+            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_III) * 5;
+            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_IV) * 6;
+            repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_V) * 7;
         }
         if(ironWhitelist.contains(repairee.getType())){
             repairAmount = repairAmount + 150;
@@ -1509,10 +1515,11 @@ public class AnvilRepair implements Listener {
                     SkillTreeManager mgr = SkillTreeManager.getInstance();
                     if (mgr != null) {
                         UUID uid = player.getUniqueId();
-                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_ONE);
-                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_TWO) * 2;
-                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_THREE) * 3;
-                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_FOUR) * 4;
+                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_I) * 3;
+                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_II) * 4;
+                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_III) * 5;
+                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_IV) * 6;
+                        repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_V) * 7;
                     }
                     List<Material> ironWhitelist = new ArrayList<>();
                     ironWhitelist.add(Material.IRON_SWORD);
@@ -1662,6 +1669,76 @@ public class AnvilRepair implements Listener {
             anvilInventories.put(player.getUniqueId(), inventory);
             saveInventory(player.getUniqueId(), inventory);
         }
+    }
+
+    private void attemptReforge(Inventory inventory, Player player) {
+        ItemStack item = inventory.getItem(10);
+        ItemStack mats = inventory.getItem(13);
+        if (item == null || mats == null) return;
+
+        ReforgeManager.ReforgeTier current = reforgeManager.getReforgeTierByTier(reforgeManager.getReforgeTier(item));
+        if (current.getTier() >= 5) {
+            player.sendMessage(ChatColor.RED + "Item already at max tier!");
+            return;
+        }
+        ReforgeManager.ReforgeTier next = reforgeManager.getReforgeTierByTier(current.getTier() + 1);
+
+        Material needed = Material.COBBLESTONE;
+        switch (next) {
+            case TIER_2 -> needed = Material.IRON_INGOT;
+            case TIER_3 -> needed = Material.GOLD_INGOT;
+            case TIER_4 -> needed = Material.AMETHYST_SHARD;
+            case TIER_5 -> needed = Material.DIAMOND;
+        }
+
+        int matsCount = 64;
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr != null) {
+            UUID uid = player.getUniqueId();
+            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_I) * 3;
+            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_II) * 3;
+            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_III) * 3;
+            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_IV) * 3;
+            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_V) * 3;
+        }
+
+        if (mats.getType() != needed || mats.getAmount() < matsCount) {
+            player.sendMessage(ChatColor.RED + "Not enough materials");
+            return;
+        }
+
+        double chance = 0.0;
+        if (mgr != null) {
+            UUID uid = player.getUniqueId();
+            switch (next) {
+                case TIER_1 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.NOVICE_SMITH) * 25;
+                case TIER_2 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.APPRENTICE_SMITH) * 25;
+                case TIER_3 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.JOURNEYMAN_SMITH) * 25;
+                case TIER_4 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.EXPERT_SMITH) * 25;
+                case TIER_5 -> chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.MASTER_SMITH) * 25;
+            }
+        }
+
+        mats.setAmount(mats.getAmount() - matsCount);
+
+        if (Math.random() * 100 < chance) {
+            reforgeManager.applyReforge(item, next);
+            xpManager.addXP(player, "Smithing", 2000.0);
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+        } else {
+            int maxD = CustomDurabilityManager.getInstance().getMaxDurability(item);
+            CustomDurabilityManager.getInstance().applyDamage(player, item, maxD / 2);
+            Block anvilBlock = getNearestAnvil(player, 5);
+            if (anvilBlock != null) {
+                switch (anvilBlock.getType()) {
+                    case ANVIL -> anvilBlock.setType(Material.CHIPPED_ANVIL);
+                    case CHIPPED_ANVIL -> anvilBlock.setType(Material.DAMAGED_ANVIL);
+                    case DAMAGED_ANVIL -> anvilBlock.setType(Material.AIR);
+                }
+            }
+        }
+
+        player.closeInventory();
     }
 
     /**
