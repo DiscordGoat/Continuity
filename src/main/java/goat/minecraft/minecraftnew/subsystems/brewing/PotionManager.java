@@ -52,24 +52,35 @@ public class PotionManager {
             duration += 3 * pet.getLevel();
         }
         if(SkillTreeManager.getInstance().hasTalent(player, Talent.REDSTONE_ONE)){
-            int redstoneBuff = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_ONE));
+            int redstoneBuff = (10*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_ONE));
             Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
             duration += redstoneBuff;
         }
         if(SkillTreeManager.getInstance().hasTalent(player, Talent.REDSTONE_TWO)){
-            int redstoneBuff = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_TWO));
+            int redstoneBuff = (10*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_TWO));
             Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
             duration += redstoneBuff;
         }
         if(SkillTreeManager.getInstance().hasTalent(player, Talent.REDSTONE_THREE)){
-            int redstoneBuff = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_THREE));
+            int redstoneBuff = (20*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_THREE));
             Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
             duration += redstoneBuff;
         }
         if(SkillTreeManager.getInstance().hasTalent(player, Talent.REDSTONE_FOUR)){
-            int redstoneBuff = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_FOUR));
+            int redstoneBuff = (30*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_FOUR));
             Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
             duration += redstoneBuff;
+        }
+        if(SkillTreeManager.getInstance().hasTalent(player, Talent.REDSTONE_FIVE)){
+            int redstoneBuff = (30*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_FIVE));
+            Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");
+            duration += redstoneBuff;
+        }
+        if(SkillTreeManager.getInstance().hasTalent(player, Talent.ETERNAL_ELIXIR)){
+            double chance = (SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.ETERNAL_ELIXIR) * 0.25) / 100.0;
+            if(Math.random() < chance){
+                duration = Integer.MAX_VALUE;
+            }
         }
         if (SkillTreeManager.getInstance().hasTalent(player, Talent.REJUVENATION)) {
             int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REJUVENATION);

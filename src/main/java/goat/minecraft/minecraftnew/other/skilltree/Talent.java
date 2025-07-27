@@ -12,15 +12,15 @@ public enum Talent {
     TRIPLE_BATCH(
             "Triple Batch Upgrade",
             ChatColor.GRAY + "Catches the excess potion in a glass bottle",
-            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "Chance to brew 3 Potions.",
-            10,
+            ChatColor.YELLOW + "+10% " + ChatColor.GRAY + "Chance to brew 3 Potions.",
+            8,
             50,
             Material.CAULDRON
     ),
     OPTIMAL_CONFIGURATION(
             "Optimal Brewing Stand Settings",
             ChatColor.GRAY + "Installs an ad-blocker to prevent wasted time",
-            ChatColor.YELLOW + "-4s " + ChatColor.GOLD + "Brew Time.",
+            ChatColor.YELLOW + "-5s " + ChatColor.GOLD + "Brew Time.",
             10,
             1,
             Material.BREWING_STAND
@@ -28,7 +28,7 @@ public enum Talent {
     REDSTONE_ONE(
             "Redstone I",
             ChatColor.GRAY + "Allows Potions to steep for longer",
-            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+4s " + ChatColor.GOLD + "Brew Time.",
+            ChatColor.YELLOW + "+10s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+10s " + ChatColor.GOLD + "Brew Time.",
             10,
             1,
             Material.REDSTONE
@@ -36,33 +36,32 @@ public enum Talent {
     REDSTONE_TWO(
             "Redstone II",
             ChatColor.GRAY + "Allows Potions to steep for even longer",
-            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+4s " + ChatColor.GOLD + "Brew Time.",
+            ChatColor.YELLOW + "+10s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+10s " + ChatColor.GOLD + "Brew Time.",
             10,
-                    20,
+            20,
             Material.REDSTONE_BLOCK
     ),
     REDSTONE_THREE(
             "Redstone III",
             ChatColor.GRAY + "Allows Potions to steep for even longer",
-            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+4s " + ChatColor.GOLD + "Brew Time.",
+            ChatColor.YELLOW + "+20s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+20s " + ChatColor.GOLD + "Brew Time.",
             10,
-            60,
+            50,
             Material.REDSTONE_TORCH
     ),
     REDSTONE_FOUR(
             "Redstone IV",
             ChatColor.GRAY + "Allows Potions to steep for even longer",
-            ChatColor.YELLOW + "+4s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+4s " + ChatColor.GOLD + "Brew Time.",
+            ChatColor.YELLOW + "+30s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+30s " + ChatColor.GOLD + "Brew Time.",
             10,
-            80,
+            60,
             Material.REDSTONE_ORE
     ),
     RECURVE_MASTERY(
             "Recurve Mastery",
             ChatColor.GRAY + "Add a Skeleton Skull",
-            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Recurve Duration, "
-                    + ChatColor.RED + "+5% Arrow Damage",
-            4,
+            ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Recurve Duration",
+            2,
             25,
             Material.BOW
     ),
@@ -76,78 +75,73 @@ public enum Talent {
     ),
     SOVEREIGNTY_MASTERY(
             "Sovereignty Mastery",
-            ChatColor.GRAY + "Add an ender pearl",
-            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Sovereignty Duration, "
-                    + ChatColor.RED + "+5 Deflection Stacks",
-            4,
-            60,
+            ChatColor.GRAY + "Add a diamond",
+            ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Sovereignty Duration",
+            2,
+            50,
             Material.PRISMARINE_SHARD
     ),
     STRENGTH_MASTERY(
             "Strength Mastery",
             ChatColor.GRAY + "Add a Singularity",
-            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Strength Duration, "
-                    + ChatColor.RED + "+5% Damage",
-            4,
+            ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Strength Duration",
+            2,
             25,
             Material.DIAMOND_SWORD
     ),
     LIQUID_LUCK_MASTERY(
             "Liquid Luck Mastery",
             ChatColor.GRAY + "Add a Golden Ingot",
-            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Liquid Luck Duration",
-            4,
+            ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Liquid Luck Duration",
+            2,
             60,
             Material.HONEY_BOTTLE
     ),
     OXYGEN_MASTERY(
             "Oxygen Mastery",
             ChatColor.GRAY + "Add an obsidian block",
-            ChatColor.YELLOW + "+50s " + ChatColor.AQUA + "Oxygen Recovery Duration",
-            4,
-            45,
+            ChatColor.YELLOW + "+200s " + ChatColor.AQUA + "Oxygen Recovery Duration",
+            2,
+            60,
             Material.GLASS_BOTTLE
     ),
     SWIFT_STEP_MASTERY(
             "Swift Step Mastery",
-            ChatColor.GRAY + "Add a Pumpkin for added sugar",
-            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Swift Step Duration, "
-                    + ChatColor.AQUA + "+5% Speed",
-            4,
+            ChatColor.GRAY + "Add Sugar for a pep in your step",
+            ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Swift Step Duration",
+            2,
             35,
             Material.FEATHER
     ),
     METAL_DETECTION_MASTERY(
             "Metal Detection Mastery",
-            ChatColor.GRAY + "Add a diamond",
-            ChatColor.YELLOW + "+(50*level)s " + ChatColor.LIGHT_PURPLE + "Metal Detection Duration, "
-                    + ChatColor.YELLOW + "+(0.01*level) " + ChatColor.GRAY + "grave chance",
-            4,
-            55,
+            ChatColor.GRAY + "Add a Zombie Skull",
+            ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Metal Detection Duration",
+            2,
+            60,
             Material.ZOMBIE_HEAD
 ),
     NIGHT_VISION_MASTERY(
             "Night Vision Mastery",
             ChatColor.GRAY + "Add a Spider eye",
-            ChatColor.YELLOW + "+50s " + ChatColor.AQUA + "Night Vision Duration",
-            4,
-            40,
+            ChatColor.YELLOW + "+200s " + ChatColor.AQUA + "Night Vision Duration",
+            2,
+            30,
             Material.SPIDER_EYE
       ),
     SOLAR_FURY_MASTERY(
             "Solar Fury Mastery",
-            ChatColor.GRAY + "Add a blaze rod",
-            ChatColor.YELLOW + "+50s " + ChatColor.GOLD + "Solar Fury Duration",
-            4,
-            75,
+            ChatColor.GRAY + "Add Blaze Powder",
+            ChatColor.YELLOW + "+200s " + ChatColor.GOLD + "Solar Fury Duration",
+            2,
+            35,
             Material.FIRE_CHARGE
     ),
     FOUNTAIN_MASTERY(
             "Fountain Mastery",
             ChatColor.GRAY + "Add a heart of the sea",
-            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Fountains Duration, "
-                    + ChatColor.AQUA + "+5% Sea Creature Chance",
-            4,
+            ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Fountains Duration",
+            2,
             60,
             Material.DARK_PRISMARINE
     ),
@@ -162,11 +156,34 @@ public enum Talent {
     CHARISMA_MASTERY(
             "Charisma Mastery",
             ChatColor.GRAY + "Add a bribe",
-            ChatColor.YELLOW + "+50s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration, "
-                    + ChatColor.GOLD + "+5% Discount",
-            4,
-            50,
+            ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration",
+            2,
+            60,
             Material.GOLD_BLOCK
+    ),
+    REDSTONE_FIVE(
+            "Redstone V",
+            ChatColor.GRAY + "Allows Potions to steep for absurdly long",
+            ChatColor.YELLOW + "+30s " + ChatColor.LIGHT_PURPLE + "Potion Duration, " + ChatColor.GOLD + "+30s " + ChatColor.GOLD + "Brew Time.",
+            10,
+            80,
+            Material.REDSTONE_ORE
+    ),
+    NUTRITION_MASTERY(
+            "Nutrition Mastery",
+            ChatColor.GRAY + "Add Sea Salt to the recipe",
+            ChatColor.YELLOW + "+200s " + ChatColor.LIGHT_PURPLE + "Optimal Eating Duration",
+            2,
+            80,
+            Material.DRIED_KELP
+    ),
+    ETERNAL_ELIXIR(
+            "Eternal Elixir",
+            ChatColor.GRAY + "Potions may last forever",
+            ChatColor.YELLOW + "+0.25% " + ChatColor.GRAY + "Chance for infinite duration",
+            8,
+            80,
+            Material.TOTEM_OF_UNDYING
     ),
     ARROW_DAMAGE_INCREASE_I(
             "Arrow Damage Increase I",

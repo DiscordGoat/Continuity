@@ -1159,10 +1159,6 @@ public class VillagerTradeManager implements Listener {
         if (PotionManager.isActive("Potion of Charismatic Bartering", player)
                 && PotionEffectPreferences.isEnabled(player, "Potion of Charismatic Bartering")) {
             double discount = 0.20;
-            if (SkillTreeManager.getInstance().hasTalent(player, Talent.CHARISMA_MASTERY)) {
-                int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.CHARISMA_MASTERY);
-                discount += 0.05 * level;
-            }
             finalCost *= (1 - discount);
         }
 
@@ -1623,10 +1619,6 @@ public class VillagerTradeManager implements Listener {
         if (PotionManager.isActive("Potion of Charismatic Bartering", player)
                 && PotionEffectPreferences.isEnabled(player, "Potion of Charismatic Bartering")) {
             double discount = 0.20;
-            if (SkillTreeManager.getInstance().hasTalent(player, Talent.CHARISMA_MASTERY)) {
-                int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.CHARISMA_MASTERY);
-                discount += 0.05 * level;
-            }
             finalCost *= (1 - discount);
         }
 

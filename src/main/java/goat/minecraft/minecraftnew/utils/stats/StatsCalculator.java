@@ -42,11 +42,7 @@ public class StatsCalculator {
     /** Approximate melee damage increase percent from reforges, talents and catalysts. */
     public double getDamageIncrease(Player player) {
         double bonus = 0.0;
-        // Strength mastery talent
-        if (SkillTreeManager.getInstance() != null &&
-                SkillTreeManager.getInstance().hasTalent(player, Talent.STRENGTH_MASTERY)) {
-            bonus += 5.0;
-        }
+        // Strength mastery no longer grants direct damage bonus
         // Weapon reforge bonus
         ReforgeManager rm = new ReforgeManager();
         ItemStack weapon = player.getInventory().getItemInMainHand();
@@ -76,9 +72,6 @@ public class StatsCalculator {
             bonus += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_III) * 12.0;
             bonus += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_IV) * 16.0;
             bonus += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.ARROW_DAMAGE_INCREASE_V) * 20.0;
-            if (mgr.hasTalent(player, Talent.RECURVE_MASTERY)) {
-                bonus += 5.0;
-            }
         }
         if (CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void") > 0) {
             bonus += CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void");
@@ -216,9 +209,6 @@ public class StatsCalculator {
         if (SkillTreeManager.getInstance() != null) {
             int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BARTER_DISCOUNT);
             discount += level * 4.0;
-            if (SkillTreeManager.getInstance().hasTalent(player, Talent.CHARISMA_MASTERY)) {
-                discount += 5.0;
-            }
         }
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
         if (pet != null && pet.getTrait() == PetTrait.FINANCIAL) {

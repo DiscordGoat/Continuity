@@ -211,66 +211,68 @@ public class SkillTreeManager implements Listener {
     private String getDynamicTechnicalDescription(Talent talent, int level) {
         switch (talent) {
             case TRIPLE_BATCH:
-                double chance = level * 5;
+                double chance = level * 10;
                 return ChatColor.YELLOW + "+" + chance + "% " + ChatColor.GRAY + "Chance to brew 3 Potions.";
             case OPTIMAL_CONFIGURATION:
-                int reduction = level * 4;
+                int reduction = level * 5;
                 return ChatColor.YELLOW + "-" + reduction + "s " + ChatColor.GOLD + "Brew Time.";
             case REDSTONE_ONE:
             case REDSTONE_TWO:
             case REDSTONE_THREE:
             case REDSTONE_FOUR:
-                int seconds = level * 4;
+            case REDSTONE_FIVE:
+                int seconds = switch (talent) {
+                    case REDSTONE_THREE -> level * 20;
+                    case REDSTONE_FOUR, REDSTONE_FIVE -> level * 30;
+                    default -> level * 10;
+                };
                 return ChatColor.YELLOW + "+" + seconds + "s " + ChatColor.LIGHT_PURPLE + "Potion Duration, "
                         + ChatColor.GOLD + "+" + seconds + "s " + ChatColor.GOLD + "Brew Time.";
             case RECURVE_MASTERY:
-                int recurveDuration = level * 50;
-                return ChatColor.YELLOW + "+" + recurveDuration + "s " + ChatColor.LIGHT_PURPLE + "Recurve Duration, "
-                        + ChatColor.RED + "+5% Arrow Damage";
+                int recurveDuration = level * 200;
+                return ChatColor.YELLOW + "+" + recurveDuration + "s " + ChatColor.LIGHT_PURPLE + "Recurve Duration";
             case REJUVENATION:
                 int bonusTime = level * 50;
                 return ChatColor.YELLOW + "+" + bonusTime + "s " + ChatColor.GREEN + "Bonus Health" + ChatColor.GRAY + " and " + ChatColor.GREEN + "Health Surge";
             case SOVEREIGNTY_MASTERY:
-                int sovDuration = level * 50;
-                int deflect = level * 5;
-                return ChatColor.YELLOW + "+" + sovDuration + "s " + ChatColor.LIGHT_PURPLE + "Sovereignty Duration, "
-                        + ChatColor.RED + "+" + deflect + " Deflection Stacks";
+                int sovDuration = level * 200;
+                return ChatColor.YELLOW + "+" + sovDuration + "s " + ChatColor.LIGHT_PURPLE + "Sovereignty Duration";
             case STRENGTH_MASTERY:
-                int strengthDuration = level * 50;
-                return ChatColor.YELLOW + "+" + strengthDuration + "s " + ChatColor.LIGHT_PURPLE + "Strength Duration, "
-                        + ChatColor.RED + "+5% Damage";
+                int strengthDuration = level * 200;
+                return ChatColor.YELLOW + "+" + strengthDuration + "s " + ChatColor.LIGHT_PURPLE + "Strength Duration";
             case LIQUID_LUCK_MASTERY:
-                int luckDuration = level * 50;
+                int luckDuration = level * 200;
                 return ChatColor.YELLOW + "+" + luckDuration + "s " + ChatColor.LIGHT_PURPLE + "Liquid Luck Duration";
             case OXYGEN_MASTERY:
-                int oxygenDuration = level * 50;
+                int oxygenDuration = level * 200;
                 return ChatColor.YELLOW + "+" + oxygenDuration + "s " + ChatColor.AQUA + "Oxygen Recovery Duration";
             case SWIFT_STEP_MASTERY:
-                int swiftDuration = level * 50;
-                return ChatColor.YELLOW + "+" + swiftDuration + "s " + ChatColor.LIGHT_PURPLE + "Swift Step Duration, "
-                        + ChatColor.AQUA + "+5% Speed";
+                int swiftDuration = level * 200;
+                return ChatColor.YELLOW + "+" + swiftDuration + "s " + ChatColor.LIGHT_PURPLE + "Swift Step Duration";
             case METAL_DETECTION_MASTERY:
-                int metalDuration = level * 50;
-                double graveBonus = level * 0.01;
-                return ChatColor.YELLOW + "+" + metalDuration + "s " + ChatColor.LIGHT_PURPLE + "Metal Detection Duration, "
-                        + ChatColor.YELLOW + "+" + graveBonus + ChatColor.GRAY + " grave chance";
+                int metalDuration = level * 200;
+                return ChatColor.YELLOW + "+" + metalDuration + "s " + ChatColor.LIGHT_PURPLE + "Metal Detection Duration";
             case NIGHT_VISION_MASTERY:
-                int nvDuration = level * 50;
+                int nvDuration = level * 200;
                 return ChatColor.YELLOW + "+" + nvDuration + "s " + ChatColor.AQUA + "Night Vision Duration";
             case SOLAR_FURY_MASTERY:
-                int solarDuration = level * 50;
+                int solarDuration = level * 200;
                 return ChatColor.YELLOW + "+" + solarDuration + "s " + ChatColor.GOLD + "Solar Fury Duration";
             case FOUNTAIN_MASTERY:
-                int fountainDuration = level * 50;
-                return ChatColor.YELLOW + "+" + fountainDuration + "s " + ChatColor.LIGHT_PURPLE + "Fountains Duration, "
-                        + ChatColor.AQUA + "+5% Sea Creature Chance";
+                int fountainDuration = level * 200;
+                return ChatColor.YELLOW + "+" + fountainDuration + "s " + ChatColor.LIGHT_PURPLE + "Fountains Duration";
             case ANGLERS_INSTINCT:
                 double seaBonus = level * 0.25;
                 return ChatColor.YELLOW + "+" + seaBonus + "% " + ChatColor.AQUA + "Sea Creature Chance";
             case CHARISMA_MASTERY:
-                int charismaDuration = level * 50;
-                return ChatColor.YELLOW + "+" + charismaDuration + "s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration, "
-                        + ChatColor.GOLD + "+5% Discount";
+                int charismaDuration = level * 200;
+                return ChatColor.YELLOW + "+" + charismaDuration + "s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration";
+            case NUTRITION_MASTERY:
+                int nutritionDuration = level * 200;
+                return ChatColor.YELLOW + "+" + nutritionDuration + "s " + ChatColor.LIGHT_PURPLE + "Optimal Eating Duration";
+            case ETERNAL_ELIXIR:
+                double infiniteChance = level * 0.25;
+                return ChatColor.YELLOW + "+" + infiniteChance + "% " + ChatColor.GRAY + "Chance for infinite duration";
             case SWORD_DAMAGE_I:
             case SWORD_DAMAGE_II:
             case SWORD_DAMAGE_III:

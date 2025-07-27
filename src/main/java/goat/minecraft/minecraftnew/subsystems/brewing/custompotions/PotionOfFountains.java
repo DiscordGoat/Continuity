@@ -24,7 +24,7 @@ public class PotionOfFountains implements Listener {
             if (displayName.equals("Potion of Fountains")) {
                 Player player = event.getPlayer();
                 if (SkillTreeManager.getInstance().hasTalent(player, Talent.FOUNTAIN_MASTERY)) {
-                    int bonus = 50 * SkillTreeManager.getInstance()
+                    int bonus = 200 * SkillTreeManager.getInstance()
                             .getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.FOUNTAIN_MASTERY);
                     duration += bonus;
                 }
