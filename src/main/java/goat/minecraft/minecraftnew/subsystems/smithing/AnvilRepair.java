@@ -747,7 +747,7 @@ public class AnvilRepair implements Listener {
         }
         // Determine the type of repair material and set the repair amount accordingly
         if (billItem.getType() == Material.IRON_INGOT) {
-            StatsCalculator statsCalculator = new StatsCalculator(MinecraftNew.getInstance());
+            StatsCalculator statsCalculator = StatsCalculator.getInstance(MinecraftNew.getInstance());
             double quality = statsCalculator.getRepairQuality(player);
             double roll = quality;
             if (repairAmount > quality) {

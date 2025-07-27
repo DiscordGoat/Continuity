@@ -128,7 +128,7 @@ public class FarmingEvent implements Listener {
                 CropCountManager.getInstance(plugin).increment(player, blockType);
             }
 
-            StatsCalculator calc = new StatsCalculator(plugin);
+            StatsCalculator calc = StatsCalculator.getInstance(plugin);
             double chance = calc.getExtraCropChance(player);
             int extra = 0;
             while (chance >= 100.0) {
