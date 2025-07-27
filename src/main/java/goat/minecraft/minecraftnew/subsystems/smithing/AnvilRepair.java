@@ -1876,6 +1876,10 @@ public class AnvilRepair implements Listener {
         } else {
             int maxD = CustomDurabilityManager.getInstance().getMaxDurability(item);
             CustomDurabilityManager.getInstance().applyDamage(player, item, maxD / 2);
+            // Provide feedback for the failed reforge attempt
+            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+            player.getWorld().spawnParticle(Particle.SMOKE, player.getLocation().add(0, 1, 0),
+                    20, 0.5, 0.5, 0.5, 0.05);
             Block anvilBlock = getNearestAnvil(player, 5);
             if (anvilBlock != null && Math.random() * 100 < degradeChance) {
                 switch (anvilBlock.getType()) {
