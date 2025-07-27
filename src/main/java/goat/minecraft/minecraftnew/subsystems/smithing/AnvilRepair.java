@@ -13,6 +13,7 @@ import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter;
+import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -746,14 +747,15 @@ public class AnvilRepair implements Listener {
         }
         // Determine the type of repair material and set the repair amount accordingly
         if (billItem.getType() == Material.IRON_INGOT) {
-            int quality = getRepairQuality(player);
-            int roll = quality;
+            StatsCalculator statsCalculator = new StatsCalculator(MinecraftNew.getInstance());
+            double quality = statsCalculator.getRepairQuality(player);
+            double roll = quality;
             if (repairAmount > quality) {
-                roll = quality + new Random().nextInt(repairAmount - quality + 1);
+                roll = quality + new Random().nextDouble(repairAmount - quality + 1);
             }
-            repairAmount = roll;
+            repairAmount = (int) roll;
             xpManager.addXP(player, "Smithing", roll);
-            anvilPitch = getAnvilPitch(roll);
+            anvilPitch = getAnvilPitch((int) roll);
 
         } else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Shallow Shell")){
             repairAmount = 100;
