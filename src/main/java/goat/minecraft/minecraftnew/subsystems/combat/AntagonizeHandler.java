@@ -4,10 +4,13 @@ import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Monster;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -33,6 +36,11 @@ public class AntagonizeHandler implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent event) {
         if (!(event.getEntity() instanceof Player player)) return;
+
+        // Only trigger when damage was caused by a monster
+        if (!(event instanceof EntityDamageByEntityEvent byEntity) || !isMonsterDamage(byEntity)) {
+            return;
+        }
 
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         if (mgr == null) return;
@@ -105,6 +113,20 @@ public class AntagonizeHandler implements Listener {
 
         tasks.put(id, task);
         task.runTaskTimer(plugin, 1L, 1L);
+    }
+
+    /**
+     * Determines if damage came from a monster attacker or its projectile.
+     */
+    private boolean isMonsterDamage(EntityDamageByEntityEvent event) {
+        var damager = event.getDamager();
+        if (damager instanceof Monster) {
+            return true;
+        }
+        if (damager instanceof Projectile projectile && projectile.getShooter() instanceof Monster) {
+            return true;
+        }
+        return false;
     }
 
     private static class DelayedDamage {
