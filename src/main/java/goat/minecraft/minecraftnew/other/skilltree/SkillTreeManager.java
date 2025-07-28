@@ -510,8 +510,8 @@ public class SkillTreeManager implements Listener {
                 double honeyChance = level * 1;
                 return ChatColor.YELLOW + "+" + honeyChance + "% Honey Bottle Chance";
             case SPECTRAL_ARMOR:
-                double reduction = level * 10;
-                return ChatColor.YELLOW + "-" + reduction + "% Spirit Damage";
+                double spiritReduction = level * 10;
+                return ChatColor.YELLOW + "-" + spiritReduction + "% Spirit Damage";
             case DEFORESTATION:
                 return ChatColor.YELLOW + "+" + level + " Potency of Haste";
             case HEADHUNTER:

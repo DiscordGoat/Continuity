@@ -467,6 +467,12 @@ public class UltimateEnchantmentListener implements Listener {
         //    For most “treecapitator” tools, you do use durability on leaves.
         //    If you do *not* want that, set consumeDurabilityIfNotOre = false.
         breakBlocksGradually(player, new ArrayList<>(leavesToBreak), false);
+        if(SkillTreeManager.getInstance().hasTalent(player, Talent.PHOTOSYNTHESIS)){
+            int photosynthesisLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.PHOTOSYNTHESIS);
+            if(player.getHealth() < player.getMaxHealth()){
+                player.setHealth(player.getHealth() + photosynthesisLevel);
+            }
+        }
     }
 
 

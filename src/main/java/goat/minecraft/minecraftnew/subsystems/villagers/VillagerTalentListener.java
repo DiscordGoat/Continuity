@@ -37,7 +37,7 @@ public class VillagerTalentListener implements Listener {
     @EventHandler
     public void onVillagerTransform(EntityTransformEvent event) {
         if (event.getEntityType() != EntityType.VILLAGER) return;
-        if (event.getTransformedEntityType() != EntityType.ZOMBIE_VILLAGER && event.getTransformedEntityType() != EntityType.WITCH)
+        if (event.getTransformedEntity().getType() != EntityType.ZOMBIE_VILLAGER && event.getTransformedEntity().getType() != EntityType.WITCH)
             return;
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         if (mgr == null) return;

@@ -494,8 +494,6 @@ public class Forestry implements Listener {
             // Process honey bottle chance from 100 Acre Woods talent.
             processHoneyBottleChance(player, block);
 
-            int goldenApple = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.GOLDEN_APPLE);
-            processNotchAppleChance(player, block, goldenApple);
 
             // (Additional spirit spawning logic could be added here.)
             ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(plugin);
