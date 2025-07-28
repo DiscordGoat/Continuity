@@ -248,9 +248,25 @@ public final class TalentRegistry {
         );
         SKILL_TALENTS.put(
                 Skill.PLAYER,
-                Collections.singletonList(Talent.VITALITY
+                Arrays.asList(
+                        Talent.HEALTH_I,
+                        Talent.STUDY_BREWING,
+                        Talent.STUDY_SMITHING,
+                        Talent.STUDY_CULINARY,
+                        Talent.STUDY_BARTERING,
+                        Talent.STUDY_FORESTRY,
+                        Talent.STUDY_TAMING,
+                        Talent.STUDY_COMBAT,
+                        Talent.STUDY_TERRAFORMING,
+                        Talent.STUDY_MINING,
+                        Talent.STUDY_FARMING,
+                        Talent.STUDY_FISHING,
+                        Talent.HEALTH_II,
+                        Talent.HEALTH_III,
+                        Talent.HEALTH_IV,
+                        Talent.HEALTH_V
                 )
-          );
+        );
               SKILL_TALENTS.put(
                 Skill.TERRAFORMING,
                 Arrays.asList(
