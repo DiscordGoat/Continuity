@@ -19,6 +19,7 @@ import goat.minecraft.minecraftnew.other.enchanting.*;
 import goat.minecraft.minecraftnew.subsystems.farming.VerdantRelicsSubsystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.SaplingManager;
 import goat.minecraft.minecraftnew.subsystems.farming.FestivalBeeManager;
 
 import goat.minecraft.minecraftnew.subsystems.pets.petdrops.*;
@@ -131,6 +132,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private UltimateEnchantingSystem ultimateEnchantmentManager;
     private EngineerVillagerManager engineerVillagerManager;
     private ForestryPetManager forestryPetManager;
+    private SaplingManager saplingManager;
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
     private WarpGateManager warpGateManager;
@@ -621,6 +623,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         Forestry forestry = Forestry.getInstance(this);
         forestry.init(this);
 
+        saplingManager = SaplingManager.getInstance(this);
+        new SetSaplingCooldownCommand(this, saplingManager);
+
 
         getServer().getPluginManager().registerEvents(new ContinuityBoardManager(), this);
         getServer().getPluginManager().registerEvents(new SeaCreatureRegistry(), this);
@@ -754,6 +759,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         if (verdantRelicsSubsystem != null) {
             verdantRelicsSubsystem.onDisable();
+        }
+        if (saplingManager != null) {
+            saplingManager.shutdown();
         }
 
         Bukkit.getOnlinePlayers().forEach(p ->

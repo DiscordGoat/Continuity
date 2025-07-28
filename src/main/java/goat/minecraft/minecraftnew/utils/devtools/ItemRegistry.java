@@ -4261,6 +4261,119 @@ public class ItemRegistry {
         );
     }
 
+    // ===== SUPER SAPLINGS =====
+    public static ItemStack getSuperOakSapling() {
+        return createCustomItem(
+                Material.OAK_SAPLING,
+                ChatColor.GOLD + "Super Oak Sapling",
+                Arrays.asList(
+                        ChatColor.GRAY + "Plant to spawn an orchard of saplings.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getSuperBirchSapling() {
+        return createCustomItem(
+                Material.BIRCH_SAPLING,
+                ChatColor.GOLD + "Super Birch Sapling",
+                Arrays.asList(
+                        ChatColor.GRAY + "Plant to spawn an orchard of saplings.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getSuperSpruceSapling() {
+        return createCustomItem(
+                Material.SPRUCE_SAPLING,
+                ChatColor.GOLD + "Super Spruce Sapling",
+                Arrays.asList(
+                        ChatColor.GRAY + "Plant to spawn an orchard of saplings.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getSuperJungleSapling() {
+        return createCustomItem(
+                Material.JUNGLE_SAPLING,
+                ChatColor.GOLD + "Super Jungle Sapling",
+                Arrays.asList(
+                        ChatColor.GRAY + "Plant to spawn an orchard of saplings.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getSuperAcaciaSapling() {
+        return createCustomItem(
+                Material.ACACIA_SAPLING,
+                ChatColor.GOLD + "Super Acacia Sapling",
+                Arrays.asList(
+                        ChatColor.GRAY + "Plant to spawn an orchard of saplings.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getSuperDarkOakSapling() {
+        return createCustomItem(
+                Material.DARK_OAK_SAPLING,
+                ChatColor.GOLD + "Super Dark Oak Sapling",
+                Arrays.asList(
+                        ChatColor.GRAY + "Plant to spawn an orchard of saplings.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getSuperMangroveSapling() {
+        return createCustomItem(
+                Material.MANGROVE_PROPAGULE,
+                ChatColor.GOLD + "Super Mangrove Sapling",
+                Arrays.asList(
+                        ChatColor.GRAY + "Plant to spawn an orchard of saplings.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    public static ItemStack getSuperCherrySapling() {
+        return createCustomItem(
+                Material.CHERRY_SAPLING,
+                ChatColor.GOLD + "Super Cherry Sapling",
+                Arrays.asList(
+                        ChatColor.GRAY + "Plant to spawn an orchard of saplings.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     // ===== COMBAT SOUL ITEMS =====
 
     // COMMON (+1 Soul Power)

@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.SaplingManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -50,6 +51,8 @@ public class PlayerTabListUpdater {
         // Pull the countdown from your manager
         int secondsLeft = VillagerWorkCycleManager.getInstance(plugin).getSecondsUntilNextWorkCycle();
         String formattedTime = formatSecondsToMMSS(secondsLeft);
+        int saplingSec = SaplingManager.getInstance(plugin).getCooldownSecondsRemaining();
+        String saplingTime = formatSecondsToDDMMSS(saplingSec);
 
         String header = ChatColor.GOLD + "Welcome, " + player.getName() + "!";
         String footer = ChatColor.AQUA + "Player XP: " + playerXP
@@ -64,6 +67,7 @@ public class PlayerTabListUpdater {
 
         // Add your villager work cycle countdown in the footer
         footer += "\n" + ChatColor.YELLOW + "Next Villager Work Cycle: " + ChatColor.WHITE + formattedTime;
+        footer += "\n" + ChatColor.GREEN + "Sapling Growth: " + ChatColor.WHITE + saplingTime;
 
         // New segment: Active Potion Effects
         Map<String, Integer> effects = PotionManager.getActiveEffects(player);
@@ -84,5 +88,12 @@ public class PlayerTabListUpdater {
         int minutes = totalSeconds / 60;
         int seconds = totalSeconds % 60;
         return minutes + ":" + (seconds < 10 ? "0" + seconds : seconds);
+    }
+
+    private String formatSecondsToDDMMSS(int totalSeconds) {
+        int days = totalSeconds / 86400;
+        int minutes = (totalSeconds % 86400) / 60;
+        int seconds = totalSeconds % 60;
+        return days + "d:" + String.format("%02d:%02d", minutes, seconds);
     }
 }
