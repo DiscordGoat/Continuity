@@ -25,6 +25,7 @@ import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.EulerAngle;
 
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
@@ -809,14 +810,19 @@ public class CulinarySubsystem implements Listener {
                     RecipeSession session = new RecipeSession(locKey, recipe, tableLoc);
                     activeRecipeSessions.put(locKey, session);
 
-                    consumeItem(player, hand, 1);
-                    if (SkillTreeManager.getInstance() != null) {
-                        int ck = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CHEFS_KISS);
-                        if (ck > 0 && Math.random() < ck * 0.20) {
-                            player.getInventory().addItem(hand.clone());
-                            player.sendMessage(ChatColor.GREEN + "Your recipe paper was preserved!");
-                        }
+                    SkillTreeManager stm = SkillTreeManager.getInstance();
+                    int ck = (stm != null)
+                            ? stm.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CHEFS_KISS)
+                            : 0;
+
+                    boolean preserve = ck > 0 && Math.random() < ck * 0.20;
+                    if (preserve) {
+                        player.sendMessage(ChatColor.GREEN + "Your recipe paper was preserved!");
+                    } else {
+                        consumeItem(player, hand, 1);
                     }
+
+
                     Location mainLoc = tableLoc.clone().add(0.5, 0.7, 0.5);
                     UUID mainStand = spawnInvisibleArmorStand(
                             mainLoc,
