@@ -1188,8 +1188,8 @@ public enum Talent {
     ),
     REDEMPTION(
             "Redemption",
-            ChatColor.GRAY + "Chance to automatically replant saplings",
-            ChatColor.GREEN + "+50% Sapling Replant Chance",
+            ChatColor.GRAY + "Greater chance for Super Saplings",
+            ChatColor.GREEN + "Improved Treecapitator rewards",
             2,
             80,
             Material.OAK_SAPLING

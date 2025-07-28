@@ -454,7 +454,7 @@ public class UltimateEnchantmentListener implements Listener {
         }
 
         SaplingManager.getInstance(MinecraftNew.getInstance())
-                .maybeDropSuperSapling(startBlock.getType(), startBlock.getLocation());
+                .maybeDropSuperSapling(startBlock.getType(), startBlock.getLocation(), player);
 
         // ---- Finally, break them all gradually! ----
         // 1) Break logs with durability usage, because they’re not ores.

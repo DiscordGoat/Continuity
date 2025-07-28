@@ -243,9 +243,17 @@ public class SaplingManager implements Listener {
         };
     }
 
-    public void maybeDropSuperSapling(Material log, Location loc) {
+    public void maybeDropSuperSapling(Material log, Location loc, Player player) {
         if (log == Material.CRIMSON_STEM || log == Material.WARPED_STEM) return;
-        if (Math.random() < 0.01) {
+
+        double chance = 0.01;
+        if (player != null) {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            int level = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.REDEMPTION);
+            chance *= (1 + level); // level 1 -> 2x, level 2 -> 3x
+        }
+
+        if (Math.random() < chance) {
             ItemStack drop = getSuperSaplingForLog(log);
             if (drop != null) {
                 loc.getWorld().dropItemNaturally(loc, drop);
