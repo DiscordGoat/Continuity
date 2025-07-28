@@ -1358,6 +1358,199 @@ public enum Talent {
     ),
 
     // =============================================================
+    // Mining Talents
+    // =============================================================
+
+    OXYGEN_I(
+            "Oxygen I",
+            ChatColor.GRAY + "Increase your oxygen reserves",
+            ChatColor.YELLOW + "+10 Oxygen",
+            4,
+            1,
+            Material.GLASS_BOTTLE
+    ),
+    OXYGEN_EFFICIENCY_I(
+            "Oxygen Efficiency I",
+            ChatColor.GRAY + "Reduce oxygen consumption",
+            ChatColor.YELLOW + "-1% Oxygen Depletion Rate",
+            5,
+            1,
+            Material.PAPER
+    ),
+    REST(
+            "Rest",
+            ChatColor.GRAY + "Sleeping restores oxygen",
+            ChatColor.YELLOW + "+5% Max Oxygen on sleep",
+            5,
+            1,
+            Material.RED_BED
+    ),
+    BUBBLES_I(
+            "Bubbles I",
+            ChatColor.GRAY + "Chance to spawn oxygen bubbles",
+            ChatColor.YELLOW + "+1% Bubble spawn chance",
+            5,
+            1,
+            Material.SLIME_BALL
+    ),
+
+    OXYGEN_II(
+            "Oxygen II",
+            ChatColor.GRAY + "Further increase your oxygen reserves",
+            ChatColor.YELLOW + "+20 Oxygen",
+            6,
+            20,
+            Material.GLASS_BOTTLE
+    ),
+    OXYGEN_EFFICIENCY_II(
+            "Oxygen Efficiency II",
+            ChatColor.GRAY + "Reduce oxygen consumption",
+            ChatColor.YELLOW + "-1% Oxygen Depletion Rate",
+            5,
+            20,
+            Material.PAPER
+    ),
+    ANCIENT_DEBRIS(
+            "Ancient Debris",
+            ChatColor.GRAY + "Chance for masterwork ingots",
+            ChatColor.YELLOW + "+0.10% Masterwork Ingot Chance",
+            4,
+            20,
+            Material.ANCIENT_DEBRIS
+    ),
+    BUBBLES_II(
+            "Bubbles II",
+            ChatColor.GRAY + "Chance to spawn oxygen bubbles",
+            ChatColor.YELLOW + "+1% Bubble spawn chance",
+            5,
+            20,
+            Material.SLIME_BALL
+    ),
+
+    OXYGEN_III(
+            "Oxygen III",
+            ChatColor.GRAY + "Greatly increase your oxygen reserves",
+            ChatColor.YELLOW + "+30 Oxygen",
+            8,
+            40,
+            Material.GLASS_BOTTLE
+    ),
+    BIG_BUBBLES_I(
+            "Big Bubbles I",
+            ChatColor.GRAY + "Bubbles restore more oxygen",
+            ChatColor.YELLOW + "+10 Oxygen from bubbles",
+            5,
+            40,
+            Material.SLIME_BLOCK
+    ),
+    OXYGEN_EFFICIENCY_III(
+            "Oxygen Efficiency III",
+            ChatColor.GRAY + "Reduce oxygen consumption",
+            ChatColor.YELLOW + "-1% Oxygen Depletion Rate",
+            5,
+            40,
+            Material.PAPER
+    ),
+    GOLD_FEVER(
+            "Gold Fever",
+            ChatColor.GRAY + "Ignore fatigue at moderate hypoxia",
+            ChatColor.YELLOW + "Removes Mining Fatigue from Moderate Hypoxia",
+            2,
+            40,
+            Material.GOLD_INGOT
+    ),
+    MAGNET(
+            "Magnet",
+            ChatColor.GRAY + "Attract dropped items",
+            ChatColor.YELLOW + "Items within (1*level) blocks collected every (10-level)s",
+            4,
+            40,
+            Material.IRON_INGOT
+    ),
+
+    OXYGEN_IV(
+            "Oxygen IV",
+            ChatColor.GRAY + "Massively increase your oxygen reserves",
+            ChatColor.YELLOW + "+40 Oxygen",
+            10,
+            60,
+            Material.GLASS_BOTTLE
+    ),
+    BIG_BUBBLES_II(
+            "Big Bubbles II",
+            ChatColor.GRAY + "Bubbles restore even more oxygen",
+            ChatColor.YELLOW + "+10 Oxygen from bubbles",
+            5,
+            60,
+            Material.SLIME_BLOCK
+    ),
+    OXYGEN_EFFICIENCY_IV(
+            "Oxygen Efficiency IV",
+            ChatColor.GRAY + "Reduce oxygen consumption",
+            ChatColor.YELLOW + "-1% Oxygen Depletion Rate",
+            5,
+            60,
+            Material.PAPER
+    ),
+    OXYGEN_RESERVE(
+            "Oxygen Reserve",
+            ChatColor.GRAY + "Conserve oxygen when low",
+            ChatColor.YELLOW + "-5% Depletion Rate below 50% Oxygen",
+            4,
+            60,
+            Material.BEACON
+    ),
+    COAL_YIELD(
+            "Coal Yield",
+            ChatColor.GRAY + "Mine extra coal",
+            ChatColor.YELLOW + "+1 Coal per Ore",
+            4,
+            60,
+            Material.COAL
+    ),
+
+    OXYGEN_V(
+            "Oxygen V",
+            ChatColor.GRAY + "Maximize your oxygen reserves",
+            ChatColor.YELLOW + "+50 Oxygen",
+            12,
+            80,
+            Material.GLASS_BOTTLE
+    ),
+    BIG_BUBBLES_III(
+            "Big Bubbles III",
+            ChatColor.GRAY + "Bubbles restore the most oxygen",
+            ChatColor.YELLOW + "+10 Oxygen from bubbles",
+            5,
+            80,
+            Material.SLIME_BLOCK
+    ),
+    OXYGEN_EFFICIENCY_V(
+            "Oxygen Efficiency V",
+            ChatColor.GRAY + "Reduce oxygen consumption",
+            ChatColor.YELLOW + "-1% Oxygen Depletion Rate",
+            5,
+            80,
+            Material.PAPER
+    ),
+    WAKE_UP_THE_STATUES(
+            "Wake Up The Statues",
+            ChatColor.GRAY + "Lessen severe fatigue",
+            ChatColor.YELLOW + "Reduce Severe Hypoxia fatigue by 1",
+            2,
+            80,
+            Material.STONE_PICKAXE
+    ),
+    HEART_OF_THE_MOUNTAIN(
+            "Heart Of The Mountain",
+            ChatColor.GRAY + "Strengthen your pickaxe",
+            ChatColor.YELLOW + "+100 Max Durability to Pickaxes",
+            4,
+            80,
+            Material.DIAMOND_PICKAXE
+    ),
+
+    // =============================================================
     // Terraforming Talents
     // =============================================================
 
