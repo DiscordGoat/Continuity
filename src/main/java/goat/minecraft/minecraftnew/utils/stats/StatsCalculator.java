@@ -146,8 +146,16 @@ public class StatsCalculator {
     public double getGraveChance(Player player) {
         double chance = 0.0;
         if (SkillTreeManager.getInstance() != null) {
-            int lvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_INTUITION);
-            chance += lvl * 0.001;
+            int g1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_I);
+            int g2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_II);
+            int g3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_III);
+            int g4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_IV);
+            int g5 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_V);
+            chance += g1 * 0.001;
+            chance += g2 * 0.0015;
+            chance += g3 * 0.002;
+            chance += g4 * 0.0025;
+            chance += g5 * 0.00725;
         }
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
         if (pet != null && pet.getTrait() == PetTrait.PARANORMAL) {

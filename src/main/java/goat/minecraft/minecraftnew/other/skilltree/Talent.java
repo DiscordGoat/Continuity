@@ -1323,22 +1323,6 @@ public enum Talent {
             80,
             Material.APPLE
     ),
-    CONSERVATIONIST(
-            "Conservationist",
-            ChatColor.GRAY + "Reduce wear on your tools",
-            ChatColor.YELLOW + "+(1*level)% " + ChatColor.GRAY + "durability save chance",
-            25,
-            1,
-            Material.DIAMOND_PICKAXE
-    ),
-    GRAVE_INTUITION(
-            "Grave Intuition",
-            ChatColor.GRAY + "Sense where graves may appear",
-            ChatColor.YELLOW + "+(0.001*level) " + ChatColor.GRAY + "grave chance",
-            10,
-            25,
-            Material.BONE
-    ),
     BOUNTIFUL_HARVEST(
             "Bountiful Harvest",
             ChatColor.GRAY + "Increases chances for extra crops",
@@ -1371,6 +1355,215 @@ public enum Talent {
             25,
             10,
             Material.TURTLE_SCUTE
+    ),
+
+    // =============================================================
+    // Terraforming Talents
+    // =============================================================
+
+    GRAVE_DIGGER_I(
+            "Grave Digger I",
+            ChatColor.GRAY + "Unearth the dead with ease",
+            ChatColor.YELLOW + "+0.001 " + ChatColor.GRAY + "grave chance per level",
+            3,
+            1,
+            Material.IRON_SHOVEL
+    ),
+    POST_MORTEM_COMPLICATIONS_I(
+            "Post-Mortem Complications I",
+            ChatColor.GRAY + "Exploit corpse weaknesses",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "damage to corpses",
+            5,
+            1,
+            Material.ROTTEN_FLESH
+    ),
+    PROSPEKT(
+            "Prospekt",
+            ChatColor.GRAY + "Improve your excavation tools",
+            ChatColor.YELLOW + "+50 " + ChatColor.GRAY + "Max Durability",
+            4,
+            1,
+            Material.DIAMOND_PICKAXE
+    ),
+    GRAVEYARD_I(
+            "Graveyard I",
+            ChatColor.GRAY + "Chain grave digging",
+            ChatColor.YELLOW + "+2.5% " + ChatColor.GRAY + "chance for another grave",
+            2,
+            1,
+            Material.GRAVEL
+    ),
+    X_MARKS_THE_SPOT(
+            "X Marks The Spot",
+            ChatColor.GRAY + "Graves appear as you mine",
+            ChatColor.YELLOW + "1 every " + ChatColor.GRAY + "512/(level*0.1+1) blocks",
+            6,
+            1,
+            Material.MAP
+    ),
+
+    GRAVE_DIGGER_II(
+            "Grave Digger II",
+            ChatColor.GRAY + "Further mastery of grave digging",
+            ChatColor.YELLOW + "+0.0015 " + ChatColor.GRAY + "grave chance per level",
+            3,
+            20,
+            Material.IRON_SHOVEL
+    ),
+    POST_MORTEM_COMPLICATIONS_II(
+            "Post-Mortem Complications II",
+            ChatColor.GRAY + "Greater damage to corpses",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "damage to corpses",
+            5,
+            20,
+            Material.ROTTEN_FLESH
+    ),
+    GRAVEYARD_II(
+            "Graveyard II",
+            ChatColor.GRAY + "Improved chain digging",
+            ChatColor.YELLOW + "+2.5% " + ChatColor.GRAY + "chance for another grave",
+            2,
+            20,
+            Material.GRAVEL
+    ),
+    NECROTIC_I(
+            "Necrotic I",
+            ChatColor.GRAY + "Resist corpse attacks",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "damage reduction from corpses",
+            5,
+            20,
+            Material.BONE
+    ),
+    MASS_GRAVE(
+            "Mass Grave",
+            ChatColor.GRAY + "Increase corpse spawning",
+            ChatColor.YELLOW + "+10% " + ChatColor.GRAY + "corpse chance",
+            5,
+            20,
+            Material.ZOMBIE_HEAD
+    ),
+
+    GRAVE_DIGGER_III(
+            "Grave Digger III",
+            ChatColor.GRAY + "Dig graves with expertise",
+            ChatColor.YELLOW + "+0.002 " + ChatColor.GRAY + "grave chance per level",
+            3,
+            40,
+            Material.IRON_SHOVEL
+    ),
+    POST_MORTEM_COMPLICATIONS_III(
+            "Post-Mortem Complications III",
+            ChatColor.GRAY + "Even greater corpse damage",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "damage to corpses",
+            5,
+            40,
+            Material.ROTTEN_FLESH
+    ),
+    GRAVEYARD_III(
+            "Graveyard III",
+            ChatColor.GRAY + "Further chain digging",
+            ChatColor.YELLOW + "+2.5% " + ChatColor.GRAY + "chance for another grave",
+            2,
+            40,
+            Material.GRAVEL
+    ),
+    NECROTIC_II(
+            "Necrotic II",
+            ChatColor.GRAY + "More resistance to corpses",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "damage reduction from corpses",
+            5,
+            40,
+            Material.BONE
+    ),
+    DOUBLE_TROUBLE(
+            "Double Trouble",
+            ChatColor.GRAY + "Occasionally dig two corpses",
+            ChatColor.YELLOW + "+1% " + ChatColor.GRAY + "chance to spawn two corpses",
+            5,
+            40,
+            Material.SKELETON_SKULL
+    ),
+
+    GRAVE_DIGGER_IV(
+            "Grave Digger IV",
+            ChatColor.GRAY + "Masterful grave digging",
+            ChatColor.YELLOW + "+0.0025 " + ChatColor.GRAY + "grave chance per level",
+            3,
+            60,
+            Material.DIAMOND_SHOVEL
+    ),
+    POST_MORTEM_COMPLICATIONS_IV(
+            "Post-Mortem Complications IV",
+            ChatColor.GRAY + "Expert at corpse slaying",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "damage to corpses",
+            5,
+            60,
+            Material.ROTTEN_FLESH
+    ),
+    GRAVEYARD_IV(
+            "Graveyard IV",
+            ChatColor.GRAY + "Efficient chain digging",
+            ChatColor.YELLOW + "+2.5% " + ChatColor.GRAY + "chance for another grave",
+            2,
+            60,
+            Material.GRAVEL
+    ),
+    NECROTIC_III(
+            "Necrotic III",
+            ChatColor.GRAY + "Significant resistance to corpses",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "damage reduction from corpses",
+            5,
+            60,
+            Material.BONE
+    ),
+    ALIVE_TOMBSTONE(
+            "Alive Tombstone",
+            ChatColor.GRAY + "Graves spawn with eerie indicators",
+            ChatColor.YELLOW + "+20% " + ChatColor.GRAY + "indicator chance",
+            5,
+            60,
+            Material.END_CRYSTAL
+    ),
+
+    GRAVE_DIGGER_V(
+            "Grave Digger V",
+            ChatColor.GRAY + "Peak grave digging skill",
+            ChatColor.YELLOW + "+0.00725 " + ChatColor.GRAY + "grave chance per level",
+            4,
+            80,
+            Material.NETHERITE_SHOVEL
+    ),
+    POST_MORTEM_COMPLICATIONS_V(
+            "Post-Mortem Complications V",
+            ChatColor.GRAY + "Maximum damage to corpses",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "damage to corpses",
+            5,
+            80,
+            Material.ROTTEN_FLESH
+    ),
+    GRAVEYARD_V(
+            "Graveyard V",
+            ChatColor.GRAY + "Unrivaled chain digging",
+            ChatColor.YELLOW + "+2.5% " + ChatColor.GRAY + "chance for another grave",
+            2,
+            80,
+            Material.GRAVEL
+    ),
+    NECROTIC_IV(
+            "Necrotic IV",
+            ChatColor.GRAY + "Ultimate resistance to corpses",
+            ChatColor.YELLOW + "+5% " + ChatColor.GRAY + "damage reduction from corpses",
+            5,
+            80,
+            Material.BONE
+    ),
+    MURDER_MYSTERY(
+            "Murder Mystery",
+            ChatColor.GRAY + "Specialized against mass murderers",
+            ChatColor.YELLOW + "+50% " + ChatColor.GRAY + "damage to Mass Murderers",
+            4,
+            80,
+            Material.GOLDEN_SWORD
     ),
 
     // =============================================================

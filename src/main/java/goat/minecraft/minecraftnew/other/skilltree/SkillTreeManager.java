@@ -570,12 +570,57 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + level + " Farming Talent Point";
             case STUDY_FISHING:
                 return ChatColor.YELLOW + "+" + level + " Fishing Talent Point";
-            case CONSERVATIONIST:
-                double duraChance = level;
-                return ChatColor.YELLOW + "+" + duraChance + "% " + ChatColor.GRAY + "durability save chance";
-            case GRAVE_INTUITION:
-                double graveChance = level * 0.001;
-                return ChatColor.YELLOW + "+" + String.format("%.3f", graveChance) + ChatColor.GRAY + " grave chance";
+            case GRAVE_DIGGER_I:
+                return ChatColor.YELLOW + "+" + String.format("%.3f", level * 0.001) + ChatColor.GRAY + " grave chance";
+            case POST_MORTEM_COMPLICATIONS_I:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% " + ChatColor.GRAY + "damage to corpses";
+            case PROSPEKT:
+                return ChatColor.YELLOW + "+" + (level * 50) + " Max Durability";
+            case GRAVEYARD_I:
+                return ChatColor.YELLOW + "+" + (level * 2.5) + "% " + ChatColor.GRAY + "chance for another grave";
+            case X_MARKS_THE_SPOT:
+                double blocks = 512 / (level * 0.1 + 1);
+                return ChatColor.YELLOW + "1 every " + String.format("%.1f", blocks) + ChatColor.GRAY + " blocks";
+            case GRAVE_DIGGER_II:
+                return ChatColor.YELLOW + "+" + String.format("%.4f", level * 0.0015) + ChatColor.GRAY + " grave chance";
+            case POST_MORTEM_COMPLICATIONS_II:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% " + ChatColor.GRAY + "damage to corpses";
+            case GRAVEYARD_II:
+                return ChatColor.YELLOW + "+" + (level * 2.5) + "% " + ChatColor.GRAY + "chance for another grave";
+            case NECROTIC_I:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Damage Reduction from Corpses";
+            case MASS_GRAVE:
+                return ChatColor.YELLOW + "+" + (level * 10) + "% " + ChatColor.GRAY + "corpse chance";
+            case GRAVE_DIGGER_III:
+                return ChatColor.YELLOW + "+" + String.format("%.3f", level * 0.002) + ChatColor.GRAY + " grave chance";
+            case POST_MORTEM_COMPLICATIONS_III:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% " + ChatColor.GRAY + "damage to corpses";
+            case GRAVEYARD_III:
+                return ChatColor.YELLOW + "+" + (level * 2.5) + "% " + ChatColor.GRAY + "chance for another grave";
+            case NECROTIC_II:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Damage Reduction from Corpses";
+            case DOUBLE_TROUBLE:
+                return ChatColor.YELLOW + "+" + (level) + "% " + ChatColor.GRAY + "chance to spawn two corpses";
+            case GRAVE_DIGGER_IV:
+                return ChatColor.YELLOW + "+" + String.format("%.4f", level * 0.0025) + ChatColor.GRAY + " grave chance";
+            case POST_MORTEM_COMPLICATIONS_IV:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% " + ChatColor.GRAY + "damage to corpses";
+            case GRAVEYARD_IV:
+                return ChatColor.YELLOW + "+" + (level * 2.5) + "% " + ChatColor.GRAY + "chance for another grave";
+            case NECROTIC_III:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Damage Reduction from Corpses";
+            case ALIVE_TOMBSTONE:
+                return ChatColor.YELLOW + "+" + (level * 20) + "% " + ChatColor.GRAY + "indicator chance";
+            case GRAVE_DIGGER_V:
+                return ChatColor.YELLOW + "+" + String.format("%.5f", level * 0.00725) + ChatColor.GRAY + " grave chance";
+            case POST_MORTEM_COMPLICATIONS_V:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% " + ChatColor.GRAY + "damage to corpses";
+            case GRAVEYARD_V:
+                return ChatColor.YELLOW + "+" + (level * 2.5) + "% " + ChatColor.GRAY + "chance for another grave";
+            case NECROTIC_IV:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Damage Reduction from Corpses";
+            case MURDER_MYSTERY:
+                return ChatColor.YELLOW + "+" + (level * 50) + "% " + ChatColor.GRAY + "damage to Mass Murderers";
             case BOUNTIFUL_HARVEST:
                 double cropChance = level * 4;
                 return ChatColor.YELLOW + "+" + cropChance + "% " + ChatColor.GRAY + "chance to harvest " + ChatColor.GREEN + "double crops.";

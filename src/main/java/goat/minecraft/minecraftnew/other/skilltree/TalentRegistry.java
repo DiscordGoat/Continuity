@@ -266,13 +266,36 @@ public final class TalentRegistry {
                         Talent.HEALTH_V
                 )
         );
-              SKILL_TALENTS.put(
+        SKILL_TALENTS.put(
                 Skill.TERRAFORMING,
                 Arrays.asList(
-                        Talent.CONSERVATIONIST,
-                        Talent.GRAVE_INTUITION
-          )
-          );
+                        Talent.GRAVE_DIGGER_I,
+                        Talent.POST_MORTEM_COMPLICATIONS_I,
+                        Talent.PROSPEKT,
+                        Talent.GRAVEYARD_I,
+                        Talent.X_MARKS_THE_SPOT,
+                        Talent.GRAVE_DIGGER_II,
+                        Talent.POST_MORTEM_COMPLICATIONS_II,
+                        Talent.GRAVEYARD_II,
+                        Talent.NECROTIC_I,
+                        Talent.MASS_GRAVE,
+                        Talent.GRAVE_DIGGER_III,
+                        Talent.POST_MORTEM_COMPLICATIONS_III,
+                        Talent.GRAVEYARD_III,
+                        Talent.NECROTIC_II,
+                        Talent.DOUBLE_TROUBLE,
+                        Talent.GRAVE_DIGGER_IV,
+                        Talent.POST_MORTEM_COMPLICATIONS_IV,
+                        Talent.GRAVEYARD_IV,
+                        Talent.NECROTIC_III,
+                        Talent.ALIVE_TOMBSTONE,
+                        Talent.GRAVE_DIGGER_V,
+                        Talent.POST_MORTEM_COMPLICATIONS_V,
+                        Talent.GRAVEYARD_V,
+                        Talent.NECROTIC_IV,
+                        Talent.MURDER_MYSTERY
+                )
+        );
         SKILL_TALENTS.put(
                 Skill.FARMING,
                 Arrays.asList(
