@@ -4,6 +4,9 @@ import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
@@ -55,7 +58,11 @@ public class Flight implements Listener {
 
         // Calculate the maximum flight distance based on player's level
         int petLevel = activePet != null ? activePet.getLevel() : 0;
-        double maxFlightDistanceKm = calculateMaxFlightDistance(player, petLevel);
+        int flightTalent = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            flightTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
+        }
+        double maxFlightDistanceKm = calculateMaxFlightDistance(player, petLevel + (flightTalent * 10));
 
         // Calculate remaining flight distance
         double flownDistanceKm = dailyFlightTracker.getOrDefault(playerId, 0.0);
@@ -82,7 +89,7 @@ public class Flight implements Listener {
         }
 
         // Enable flight if the player has the perk and hasn't exceeded the limit
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.FLIGHT)) {
+        if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.FLIGHT)) || flightTalent > 0) {
             enableFlight(player);
         } else {
             disableFlight(player);
@@ -98,6 +105,11 @@ public class Flight implements Listener {
     private double calculateMaxFlightDistance(Player player, int level) {
         // Flight distance scales linearly with level from 0.0 km to 1.0 km at level 100
         double distance = MAX_FLIGHT_DISTANCE_AT_LEVEL_100 * (level / 100.0);
+        int talentLevel = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
+        }
+        distance += talentLevel * 0.1; // each talent level adds 0.1km
         if (meritManager.hasPerk(player.getUniqueId(), "Icarus")) {
             distance *= 2;
         }

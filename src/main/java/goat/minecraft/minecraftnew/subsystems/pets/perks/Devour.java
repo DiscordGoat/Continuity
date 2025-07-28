@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
@@ -29,13 +32,20 @@ public class Devour implements Listener {
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // Check if the player has the DEVOUR perk
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.DEVOUR)) {
+        int talent = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.DEVOUR);
+        }
+
+        // Check if the player has the DEVOUR perk or talent
+        if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.DEVOUR)) || talent > 0) {
             // Check if the damaged entity is a living entity
             if (event.getEntity() instanceof LivingEntity) {
-                // Add 1 hunger point to the player's food level, capping at 20
-                player.setFoodLevel(Math.min(player.getFoodLevel() + 1, 20));
-                player.setSaturation(Math.min(player.getSaturation() + 1, 20));
+                int amount = 1;
+                if (talent > 0) amount *= 2; // talent doubles the food gains
+                // Add hunger points to the player's food level
+                player.setFoodLevel(Math.min(player.getFoodLevel() + amount, 20));
+                player.setSaturation(Math.min(player.getSaturation() + amount, 20));
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 5, 100);
             }
         }

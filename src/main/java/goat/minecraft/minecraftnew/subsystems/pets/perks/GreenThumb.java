@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -40,17 +43,24 @@ public class GreenThumb implements Listener {
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
 
+        int talent = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.GREEN_THUMB);
+        }
+        long cooldown = (long) (GROWTH_COOLDOWN * (1 - talent * 0.25));
+
         // Check cooldown for crop growth
         if (lastGrowthTime.containsKey(playerId) &&
-                currentTime - lastGrowthTime.get(playerId) < GROWTH_COOLDOWN) {
+                currentTime - lastGrowthTime.get(playerId) < cooldown) {
             return; // Growth cooldown hasn't passed
         }
 
         // Check if player has the Green Thumb perk or unique trait
         PetManager.Pet activePet = petManager.getActivePet(player);
-        if (activePet != null && (activePet.hasPerk(PetManager.PetPerk.GREEN_THUMB)
-                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.GREEN_THUMB))) {
-            int radius = 10 + activePet.getLevel();
+        if ((activePet != null && (activePet.hasPerk(PetManager.PetPerk.GREEN_THUMB)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.GREEN_THUMB))) || talent > 0) {
+            int petLevel = activePet != null ? activePet.getLevel() : 0;
+            int radius = 10 + petLevel;
             growCropsAroundPlayer(player, radius);
             player.sendMessage(ChatColor.YELLOW + "Your pet naturally grows nearby crops!");
             lastGrowthTime.put(playerId, currentTime); // Update growth time

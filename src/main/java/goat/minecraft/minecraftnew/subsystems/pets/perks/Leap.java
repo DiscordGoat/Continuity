@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,10 +32,14 @@ public class Leap implements Listener {
         if (event.isSneaking()) {
             PetManager petManager = PetManager.getInstance(plugin);
             PetManager.Pet activePet = petManager.getActivePet(player);
+            int talent = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.LEAP);
+            }
 
             // Perform leap if conditions are met
-            if (activePet != null && activePet.hasPerk(PetManager.PetPerk.LEAP) && player.isOnGround()) {
-                performLeap(player, activePet);
+            if (((activePet != null && activePet.hasPerk(PetManager.PetPerk.LEAP)) || talent > 0) && player.isOnGround()) {
+                performLeap(player, activePet, talent);
             }
         }
     }
@@ -43,7 +50,7 @@ public class Leap implements Listener {
      * @param player   The player executing the leap.
      * @param activePet The player's active pet.
      */
-    public static void performLeap(Player player, PetManager.Pet activePet) {
+    public static void performLeap(Player player, PetManager.Pet activePet, int talentLevel) {
         // Get the player's current velocity
         Vector direction = player.getLocation().getDirection();
 
@@ -52,8 +59,11 @@ public class Leap implements Listener {
         player.setVelocity(leapBoost);
 
         // Deduct saturation based on pet level
-        int petLevel = activePet.getLevel();
+        int petLevel = activePet != null ? activePet.getLevel() : 0;
         int saturationCost = calculateSaturationCost(petLevel);
+        if (talentLevel > 0 && Math.random() < talentLevel * 0.5) {
+            saturationCost = 0; // chance to remove hunger cost
+        }
 
         float currentSaturation = player.getSaturation();
         player.setSaturation(Math.max(0, currentSaturation - saturationCost));

@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,12 +30,16 @@ public class ShotCalling implements Listener {
                 // Get the player's active pet
                 PetManager petManager = PetManager.getInstance(plugin);
                 PetManager.Pet activePet = petManager.getActivePet(player);
-                // Check if the player has an active pet with the SHOTCALLING perk
-                if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SHOTCALLING)) {
-                    int petLevel = activePet.getLevel();
+                int talent = 0;
+                if (SkillTreeManager.getInstance() != null) {
+                    talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.SHOTCALLING);
+                }
+                // Check if the player has an active pet with the SHOTCALLING perk or the talent
+                if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.SHOTCALLING)) || talent > 0) {
+                    int petLevel = activePet != null ? activePet.getLevel() : 0;
 
                     // Calculate damage multiplier based on pet level
-                    double damageMultiplier = 1 + (petLevel * 0.005);
+                    double damageMultiplier = 1 + (petLevel * 0.005) + (talent * 0.05);
 
                     // Apply damage multiplier to the event
                     event.setDamage(event.getDamage() * damageMultiplier);

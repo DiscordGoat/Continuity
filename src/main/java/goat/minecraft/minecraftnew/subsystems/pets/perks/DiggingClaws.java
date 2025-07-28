@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -26,12 +29,19 @@ public class DiggingClaws implements Listener {
         // Get the player's active pet
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // Check if the player has the DIGGING_CLAWS perk
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.DIGGING_CLAWS)) {
-            int petLevel = activePet.getLevel();
+        // Check if the player has the DIGGING_CLAWS perk or talent
+        int talent = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.DIGGING_CLAWS);
+        }
+        if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.DIGGING_CLAWS)) || talent > 0) {
+            int petLevel = activePet != null ? activePet.getLevel() : 0;
 
             // Calculate the duration of the Haste effect
-            int duration = 20 * (5 + petLevel); // 5 seconds + 1 second per pet level
+            int duration = 20 * (5 + petLevel);
+            if (talent > 0) {
+                duration *= 2; // talent doubles duration
+            }
 
             // Apply Haste II effect
             player.addPotionEffect(new PotionEffect(

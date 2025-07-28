@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -47,8 +50,13 @@ public class Lumberjack implements Listener {
         }
 
         PetManager.Pet activePet = petManager.getActivePet(player);
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.LUMBERJACK)) {
-            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), 2));
+        int talent = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.LUMBERJACK);
+        }
+        if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.LUMBERJACK)) || talent > 0) {
+            int extra = 2 + talent; // +1 log per talent level
+            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extra));
         }
     }
 }
