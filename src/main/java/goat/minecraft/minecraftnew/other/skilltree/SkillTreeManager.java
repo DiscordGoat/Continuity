@@ -612,6 +612,85 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 10) + "% " + ChatColor.GRAY + "double bee chance";
             case HIVEMIND:
                 return ChatColor.YELLOW + "+" + (level * 25) + "% " + ChatColor.GRAY + "Festival Bee Duration";
+            // =============================
+            // Taming Talents
+            // =============================
+            case BONUS_PET_XP_I:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% " + ChatColor.GRAY + "Bonus Pet XP Chance";
+            case LULLABY:
+                return ChatColor.YELLOW + "+" + (level * 50) + "% Range";
+            case FLIGHT:
+                return ChatColor.YELLOW + "+" + (level * 0.1) + "km " + ChatColor.GRAY + "Flight Distance";
+            case DIGGING_CLAWS:
+                return ChatColor.YELLOW + "Double Haste Duration";
+            case DEVOUR:
+                return ChatColor.GREEN + "Double Food Gains";
+            case ANGLER:
+                return ChatColor.YELLOW + "+" + (level * 50) + "% " + ChatColor.AQUA + "Bonus Sea Creature Chance";
+            case LEAP:
+                return ChatColor.YELLOW + "+" + (level * 50) + "% " + ChatColor.GRAY + "Hungerless Leap Chance";
+            case LUMBERJACK:
+                return ChatColor.YELLOW + "+" + level + " Bonus Logs";
+
+            case BONUS_PET_XP_II:
+                return ChatColor.YELLOW + "+" + (level * 4) + "% " + ChatColor.GRAY + "Bonus Pet XP Chance";
+            case ANTIDOTE:
+                return ChatColor.YELLOW + "Removes cooldown";
+            case GREEN_THUMB:
+                return ChatColor.YELLOW + "-" + (level * 25) + "% Cooldown";
+            case COLLECTOR:
+                return ChatColor.YELLOW + "+" + (level * 50) + "% Range";
+            case WALKING_FORTRESS:
+                return ChatColor.YELLOW + "+" + (level * 10) + "% Damage Reduction";
+            case SHOTCALLING:
+                return ChatColor.RED + "+" + (level * 5) + "% Arrow Damage";
+            case SPEED_BOOST:
+                return ChatColor.YELLOW + "+" + (level * 10) + "% Walk Speed";
+
+            case BONUS_PET_XP_III:
+                return ChatColor.YELLOW + "+" + (level * 6) + "% " + ChatColor.GRAY + "Bonus Pet XP Chance";
+            case WATERLOGGED:
+                return ChatColor.YELLOW + "-" + level + "s Oxygen Recovery Cooldown";
+            case ENDLESS_WARP:
+                return ChatColor.YELLOW + "+" + (level * 100) + " Bonus Warp Stacks";
+            case DECAY:
+                return ChatColor.DARK_GRAY + "+" + (level * 5) + " Deteriorate Stacks";
+            case ASPECT_OF_FROST:
+                return ChatColor.YELLOW + "Double Slow Duration";
+            case PRACTICE:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Bartering XP";
+
+            case BONUS_PET_XP_IV:
+                return ChatColor.YELLOW + "+" + (level * 8) + "% " + ChatColor.GRAY + "Bonus Pet XP Chance";
+            case SECRET_LEGION:
+                return ChatColor.YELLOW + "No Hunger Cost";
+            case BLACKLUNG:
+                return ChatColor.YELLOW + "No Overworld Oxygen Loss";
+            case COMFORTABLE:
+                return ChatColor.YELLOW + "Double Absorption Duration & Health";
+            case SPLASH_POTION:
+                return ChatColor.YELLOW + "-" + (level * 10) + "% Brewtime";
+            case EXPERIMENTATION:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Potion Duration";
+            case REVENANT:
+                return ChatColor.YELLOW + "-" + level + "m Resurrection Time";
+
+            case BONUS_PET_XP_V:
+                return ChatColor.YELLOW + "+" + (level * 10) + "% " + ChatColor.GRAY + "Bonus Pet XP Chance";
+            case COMPACT_STONE:
+                return ChatColor.YELLOW + "-50% Stone Needed";
+            case GROOT:
+                return ChatColor.YELLOW + "-50% Wood Needed";
+            case COMPOSTER:
+                return ChatColor.YELLOW + "-50% Dirt Needed";
+            case ELITE:
+                return ChatColor.RED + "+" + (level * 10) + "% Damage";
+            case HAGGLE:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Discount";
+            case QUIRKY:
+                return ChatColor.YELLOW + "+" + (level * 20) + "% Trait Effect";
+            case NATURAL_SELECTION:
+                return ChatColor.YELLOW + "Removes lowest rarity";
             default:
                 return talent.getTechnicalDescription();
         }
