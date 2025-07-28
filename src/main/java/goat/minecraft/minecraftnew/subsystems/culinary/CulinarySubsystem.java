@@ -562,13 +562,24 @@ public class CulinarySubsystem implements Listener {
         }
 
         SkillTreeManager manager = SkillTreeManager.getInstance();
+        int sweetLevel = 0, grainLevel = 0, proteinLevel = 0, veggieLevel = 0, sugarLevel = 0;
+        int refundLevel = 0, pantryLevel = 0, goldenLevel = 0, satLevel = 0;
         if (manager != null) {
-            int satLevel = 0;
             satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_I);
             satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_II);
             satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_III);
             satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_IV);
             satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_V);
+
+            sweetLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SWEET_TOOTH);
+            goldenLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.GOLDEN_APPLE);
+            grainLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.GRAINS_GAINS);
+            proteinLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.AXE_BODY_SPRAY);
+            refundLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.I_DO_NOT_NEED_A_SNACK);
+            veggieLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.RABBIT);
+            pantryLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.PANTRY_OF_PLENTY);
+            sugarLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CAVITY);
+
             if (satLevel > 0) {
                 int finalSatLevel = satLevel;
                 new BukkitRunnable() {
@@ -578,6 +589,10 @@ public class CulinarySubsystem implements Listener {
                     }
                 }.runTaskLater(plugin, 1L);
             }
+        }
+
+        if (goldenLevel > 0) {
+            player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, goldenLevel * 60, 0));
         }
 
         if (consumedItem.getItemMeta().getDisplayName().contains("Raw")) {
@@ -698,20 +713,56 @@ public class CulinarySubsystem implements Listener {
             default:
                 break;
         }
+        boolean isCulinaryDelight = false;
         for(String line : lore){
             String s = ChatColor.stripColor(line);
+            if(s.equalsIgnoreCase("Culinary Delight")) {
+                isCulinaryDelight = true;
+            }
             if(s.startsWith("+")){
                 String[] parts = s.split(" ");
                 if(parts.length >= 2){
                     try {
                         int amt = Integer.parseInt(parts[0].substring(1));
                         CustomNutritionManager.FoodGroup g = CustomNutritionManager.FoodGroup.valueOf(parts[1].toUpperCase());
-                        CustomNutritionManager.getInstance().addNutrition(player, g, amt);
+                        double mult = 1.0;
+                        switch (g) {
+                            case FRUITS -> mult += sweetLevel * 0.10;
+                            case GRAINS -> mult += grainLevel * 0.10;
+                            case PROTEINS -> mult += proteinLevel * 0.10;
+                            case VEGGIES -> mult += veggieLevel * 0.10;
+                            case SUGARS -> mult += sugarLevel * 0.10;
+                        }
+                        int finalAmt = (int) Math.round(amt * mult);
+                        CustomNutritionManager.getInstance().addNutrition(player, g, finalAmt);
                     } catch (Exception ignored) {}
                 }
-                break;
+                // don't break to allow detecting Culinary Delight flag
             }
         }
+
+        if (pantryLevel > 0 && isCulinaryDelight) {
+            double chance = pantryLevel * 0.04;
+            if (Math.random() < chance) {
+                player.setSaturation(Math.min(player.getSaturation() + 20, 20f));
+                player.sendMessage(ChatColor.GREEN + "Your meal left you completely satisfied!");
+            }
+        }
+
+        if (refundLevel > 0) {
+            double chance = refundLevel * 0.05;
+            if (Math.random() < chance) {
+                ItemStack refund = consumedItem.clone();
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        player.getInventory().addItem(refund);
+                        player.sendMessage(ChatColor.GREEN + "You kept your snack!");
+                    }
+                }.runTaskLater(plugin, 1L);
+            }
+        }
+
         clampPlayerStats(player);
     }
 
@@ -757,6 +808,13 @@ public class CulinarySubsystem implements Listener {
                     activeRecipeSessions.put(locKey, session);
 
                     consumeItem(player, hand, 1);
+                    if (SkillTreeManager.getInstance() != null) {
+                        int ck = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CHEFS_KISS);
+                        if (ck > 0 && Math.random() < ck * 0.20) {
+                            player.getInventory().addItem(hand.clone());
+                            player.sendMessage(ChatColor.GREEN + "Your recipe paper was preserved!");
+                        }
+                    }
                     Location mainLoc = tableLoc.clone().add(0.5, 0.7, 0.5);
                     UUID mainStand = spawnInvisibleArmorStand(
                             mainLoc,
@@ -1028,6 +1086,21 @@ public class CulinarySubsystem implements Listener {
         int cookTime = session.recipe.getIngredients().size() * 10;
         if (session.recipe.getName().toLowerCase().contains("feast")) {
             cookTime += 20;
+        }
+
+        if (player != null) {
+            SkillTreeManager manager = SkillTreeManager.getInstance();
+            if (manager != null) {
+                int lunch = 0;
+                lunch += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.LUNCH_RUSH_I);
+                lunch += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.LUNCH_RUSH_II);
+                lunch += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.LUNCH_RUSH_III);
+                lunch += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.LUNCH_RUSH_IV);
+                lunch += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.LUNCH_RUSH_V);
+                if (lunch > 0) {
+                    cookTime = (int) Math.ceil(cookTime * (1 - 0.04 * lunch));
+                }
+            }
         }
 
         PetManager.Pet pet = null;
