@@ -457,4 +457,40 @@ public class ShelfManager implements Listener {
     public Map<String, UUID> getDisplayStands() {
         return new HashMap<>(displayStands);
     }
+
+    /**
+     * Remove a single item from the given shelf key and update its display.
+     *
+     * @param locKey location key of the shelf
+     * @return the removed ItemStack or null if shelf empty
+     */
+    public ItemStack takeOneItem(String locKey) {
+        ItemStack stored = shelfContents.get(locKey);
+        if (stored == null || stored.getAmount() <= 0) {
+            return null;
+        }
+
+        boolean last = stored.getAmount() == 1;
+        ItemStack output = stored.clone();
+        output.setAmount(1);
+
+        stored.setAmount(stored.getAmount() - 1);
+        if (last) {
+            shelfContents.put(locKey, null);
+        } else {
+            shelfContents.put(locKey, stored);
+        }
+
+        // update display armor stand
+        UUID standId = displayStands.get(locKey);
+        if (standId != null) {
+            Entity ent = Bukkit.getEntity(standId);
+            if (ent instanceof ArmorStand as) {
+                ItemStack remaining = shelfContents.get(locKey);
+                as.getEquipment().setHelmet(remaining != null ? remaining.clone() : null);
+            }
+        }
+
+        return output;
+    }
 }

@@ -7,6 +7,8 @@ import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.culinary.ShelfManager;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.*;
@@ -827,6 +829,8 @@ public class CulinarySubsystem implements Listener {
 // Instead of manually spawning label stands one by one, just call:
                     updateIngredientLabels(session);
 
+                    attemptPortalPantry(player, session);
+
                     player.sendMessage(ChatColor.GREEN + "Recipe " + recipe.getName() + " displayed! Right-click with ingredients to place them, left-click to finalize.");
                     return;
                 }
@@ -1059,6 +1063,56 @@ public class CulinarySubsystem implements Listener {
         }
 
         return null; // No match found
+    }
+
+    /**
+     * Attempts to fetch an ingredient from nearby shelves when the Portal Pantry
+     * talent triggers.
+     */
+    private void attemptPortalPantry(Player player, RecipeSession session) {
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager == null) return;
+        int level = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.PORTAL_PANTRY);
+        if (level <= 0) return;
+
+        double chance = level * 0.20;
+        if (Math.random() >= chance) return;
+
+        if (!(plugin instanceof MinecraftNew main)) return;
+        ShelfManager shelfManager = main.getShelfManager();
+        if (shelfManager == null) return;
+
+        Map<String, ItemStack> shelves = shelfManager.getShelfContents();
+
+        for (String needed : session.recipe.getIngredients()) {
+            if (session.placedIngredientsStands.containsKey(needed)) continue;
+
+            for (Map.Entry<String, ItemStack> entry : shelves.entrySet()) {
+                ItemStack stack = entry.getValue();
+                if (stack == null || stack.getType() == Material.AIR) continue;
+
+                if (matchIngredient(stack, Collections.singletonList(needed), Collections.emptySet()) != null) {
+                    Location shelfLoc = shelfManager.fromLocKey(entry.getKey());
+                    if (!shelfLoc.getWorld().equals(player.getWorld()) || shelfLoc.distance(player.getLocation()) > 10)
+                        continue;
+
+                    ItemStack removed = shelfManager.takeOneItem(entry.getKey());
+                    if (removed == null) continue;
+
+                    Location spawnLoc = shelfLoc.clone().add(0.5, 0.5, 0.5);
+                    World world = spawnLoc.getWorld();
+                    if (world == null) return;
+
+                    world.spawnParticle(Particle.CLOUD, spawnLoc, 8, 0.2, 0.2, 0.2, 0.05);
+                    world.playSound(spawnLoc, Sound.ENTITY_ITEM_PICKUP, 0.5f, 1.3f);
+                    Item dropped = world.dropItem(spawnLoc, removed);
+                    dropped.setPickupDelay(0);
+                    Vector toPlayer = player.getEyeLocation().toVector().subtract(spawnLoc.toVector()).normalize();
+                    dropped.setVelocity(toPlayer.multiply(0.6));
+                    return; // only grab one ingredient
+                }
+            }
+        }
     }
 
 
