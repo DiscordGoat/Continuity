@@ -11,6 +11,12 @@ import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -21,6 +27,7 @@ import org.bukkit.entity.Skeleton;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -136,6 +143,15 @@ public class ForestSpiritManager implements Listener {
     public void spawnSpirit(String spiritName, Location loc, Block block, Player player) {
         int tier = getSpiritTier(player);
         int level = getSpiritLevelForTier(tier);
+
+        // Apply Ancient Confusion talent reduction
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr != null) {
+            int confusion = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.ANCIENT_CONFUSION);
+            if (confusion > 0) {
+                level = Math.max(1, level - (confusion * 10));
+            }
+        }
 
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         World world = loc.getWorld();
@@ -426,22 +442,42 @@ public class ForestSpiritManager implements Listener {
                 material == Material.WARPED_WART_BLOCK;
     }
 
+    // Helper check for forest spirit entities.
+    private boolean isForestSpirit(Entity entity) {
+        if (entity.hasMetadata("forestSpirit")) {
+            return true;
+        }
+        if (entity instanceof Skeleton && entity.getCustomName() != null) {
+            String stripped = ChatColor.stripColor(entity.getCustomName());
+            return stripped.contains("Spirit");
+        }
+        return false;
+    }
+
     // Event handler: handle combat interactions with forest spirits.
     @EventHandler
     public void onForestSpiritHit(EntityDamageByEntityEvent event) {
         Entity entity = event.getEntity();
         Entity damager = event.getDamager();
 
-        if (entity.hasMetadata("forestSpirit") && damager instanceof Player) {
-            Player player = (Player) damager;
-            // Apply minor knock sound when damaging a spirit
-
+        // Player attacking a spirit
+        if (damager instanceof Player player && isForestSpirit(entity)) {
             World world = entity.getWorld();
             Location loc = entity.getLocation();
             world.playSound(loc, Sound.BLOCK_BAMBOO_HIT, 100.0f, 1.0f);
+
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            if (mgr != null) {
+                int level = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.HEADHUNTER);
+                if (level > 0) {
+                    double multiplier = 1.0 + (level * 0.10);
+                    event.setDamage(event.getDamage() * multiplier);
+                }
+            }
         }
 
-        if (damager.hasMetadata("forestSpirit") && entity instanceof Player) {
+        // Spirit attacking a player
+        if (isForestSpirit(damager) && entity instanceof Player) {
             Player player = (Player) entity;
             CatalystManager catalystManager = CatalystManager.getInstance();
             if (catalystManager == null) {

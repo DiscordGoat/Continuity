@@ -36,6 +36,7 @@ public class SaplingManager implements Listener {
     private BukkitRunnable timerTask;
 
     private static final int DEFAULT_COOLDOWN = 30 * 24 * 60 * 60; // 30 days
+    private static final int SECONDS_IN_DAY = 24 * 60 * 60;
 
     private SaplingManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -125,7 +126,9 @@ public class SaplingManager implements Listener {
             loc.getWorld().generateTree(loc, type);
         }
         saplingLocations.clear();
-        cooldownSeconds = DEFAULT_COOLDOWN;
+        int bonusDays = getRegrowthBonusFromOnlinePlayers();
+        cooldownSeconds = DEFAULT_COOLDOWN - bonusDays * SECONDS_IN_DAY;
+        if (cooldownSeconds < 0) cooldownSeconds = 0;
         saveData();
     }
 
@@ -256,6 +259,29 @@ public class SaplingManager implements Listener {
                 loc.getWorld().dropItemNaturally(loc, drop);
             }
         }
+    }
+
+    /**
+     * Reduce the current cooldown by the specified number of days.
+     */
+    public void reduceCooldownDays(int days) {
+        if (days <= 0) return;
+        setCooldownSecondsRemaining(Math.max(0, cooldownSeconds - days * SECONDS_IN_DAY));
+    }
+
+    /**
+     * Calculate active Regrowth bonuses from online players.
+     */
+    private int getRegrowthBonusFromOnlinePlayers() {
+        int bonus = 0;
+        SkillTreeManager stm = SkillTreeManager.getInstance();
+        if (stm == null) return 0;
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            bonus += stm.getTalentLevel(p.getUniqueId(), Skill.FORESTRY, Talent.REGROWTH_I);
+            bonus += stm.getTalentLevel(p.getUniqueId(), Skill.FORESTRY, Talent.REGROWTH_II);
+            bonus += stm.getTalentLevel(p.getUniqueId(), Skill.FORESTRY, Talent.REGROWTH_III);
+        }
+        return bonus;
     }
 
     public void shutdown() {

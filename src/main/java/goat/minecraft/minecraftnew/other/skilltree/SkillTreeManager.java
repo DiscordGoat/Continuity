@@ -18,6 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.SaplingManager;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -677,6 +678,10 @@ public class SkillTreeManager implements Listener {
         player.sendMessage(ChatColor.GREEN + "Upgraded " + talent.getName() + " to " + (currentLevel + 1));
         if (skill == Skill.PLAYER && talent == Talent.VITALITY) {
             HealthManager.getInstance(plugin).applyAndFill(player);
+        }
+        if (skill == Skill.FORESTRY &&
+                (talent == Talent.REGROWTH_I || talent == Talent.REGROWTH_II || talent == Talent.REGROWTH_III)) {
+            SaplingManager.getInstance(plugin).reduceCooldownDays(1);
         }
         openSkillTree(player, skill, page);
     }
