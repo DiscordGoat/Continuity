@@ -1202,14 +1202,134 @@ public enum Talent {
             1,
             Material.BONE
     ),
-  VITALITY(
-            "Vitality",
-            ChatColor.GRAY + "Fortify your body to survive longer",
-            ChatColor.GREEN + "+1 Max Health per level",
-            20,
+    HEALTH_I(
+            "Health I",
+            ChatColor.GRAY + "Fortify your body for survival",
+            ChatColor.GREEN + "+1 Bonus Health",
+            4,
             1,
             Material.APPLE
-     ),
+    ),
+    STUDY_BREWING(
+            "Study Brewing",
+            ChatColor.GRAY + "Learn the art of brewing",
+            ChatColor.YELLOW + "+1 Brewing Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_SMITHING(
+            "Study Smithing",
+            ChatColor.GRAY + "Learn the art of smithing",
+            ChatColor.YELLOW + "+1 Smithing Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_CULINARY(
+            "Study Culinary",
+            ChatColor.GRAY + "Learn culinary secrets",
+            ChatColor.YELLOW + "+1 Culinary Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_BARTERING(
+            "Study Bartering",
+            ChatColor.GRAY + "Master the art of bartering",
+            ChatColor.YELLOW + "+1 Bartering Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_FORESTRY(
+            "Study Forestry",
+            ChatColor.GRAY + "Learn to manage forests",
+            ChatColor.YELLOW + "+1 Forestry Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_TAMING(
+            "Study Taming",
+            ChatColor.GRAY + "Improve your taming skills",
+            ChatColor.YELLOW + "+1 Taming Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_COMBAT(
+            "Study Combat",
+            ChatColor.GRAY + "Train in combat techniques",
+            ChatColor.YELLOW + "+1 Combat Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_TERRAFORMING(
+            "Study Terraforming",
+            ChatColor.GRAY + "Learn efficient terraforming",
+            ChatColor.YELLOW + "+1 Terraforming Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_MINING(
+            "Study Mining",
+            ChatColor.GRAY + "Improve your mining technique",
+            ChatColor.YELLOW + "+1 Mining Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_FARMING(
+            "Study Farming",
+            ChatColor.GRAY + "Learn optimal farming methods",
+            ChatColor.YELLOW + "+1 Farming Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    STUDY_FISHING(
+            "Study Fishing",
+            ChatColor.GRAY + "Master angling skills",
+            ChatColor.YELLOW + "+1 Fishing Talent Point",
+            100,
+            1,
+            Material.BOOK
+    ),
+    HEALTH_II(
+            "Health II",
+            ChatColor.GRAY + "Increase your vitality",
+            ChatColor.GREEN + "+1 Bonus Health",
+            6,
+            20,
+            Material.APPLE
+    ),
+    HEALTH_III(
+            "Health III",
+            ChatColor.GRAY + "Further increase vitality",
+            ChatColor.GREEN + "+1 Bonus Health",
+            8,
+            40,
+            Material.APPLE
+    ),
+    HEALTH_IV(
+            "Health IV",
+            ChatColor.GRAY + "Empower your life force",
+            ChatColor.GREEN + "+1 Bonus Health",
+            10,
+            60,
+            Material.APPLE
+    ),
+    HEALTH_V(
+            "Health V",
+            ChatColor.GRAY + "Attain peak endurance",
+            ChatColor.GREEN + "+1 Bonus Health",
+            12,
+            80,
+            Material.APPLE
+    ),
     CONSERVATIONIST(
             "Conservationist",
             ChatColor.GRAY + "Reduce wear on your tools",

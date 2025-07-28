@@ -43,8 +43,16 @@ public class HealthManager {
 
         int talentLevel = 0;
         if (SkillTreeManager.getInstance() != null) {
-            talentLevel = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.VITALITY);
+            talentLevel += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_I);
+            talentLevel += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_II);
+            talentLevel += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_III);
+            talentLevel += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_IV);
+            talentLevel += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_V);
         }
         health += talentLevel;
 
