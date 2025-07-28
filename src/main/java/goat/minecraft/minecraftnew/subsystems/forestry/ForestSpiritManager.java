@@ -11,6 +11,9 @@ import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
@@ -140,6 +143,15 @@ public class ForestSpiritManager implements Listener {
     public void spawnSpirit(String spiritName, Location loc, Block block, Player player) {
         int tier = getSpiritTier(player);
         int level = getSpiritLevelForTier(tier);
+
+        // Apply Ancient Confusion talent reduction
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr != null) {
+            int confusion = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.ANCIENT_CONFUSION);
+            if (confusion > 0) {
+                level = Math.max(1, level - (confusion * 10));
+            }
+        }
 
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         World world = loc.getWorld();
