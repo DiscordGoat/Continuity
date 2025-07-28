@@ -578,10 +578,6 @@ public class CulinarySubsystem implements Listener {
                     }
                 }.runTaskLater(plugin, 1L);
             }
-            int feastLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.FEASTING_CHANCE);
-            if (feastLevel > 0 && random.nextDouble() < feastLevel * 0.04) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 200, 4));
-            }
         }
 
         if (consumedItem.getItemMeta().getDisplayName().contains("Raw")) {

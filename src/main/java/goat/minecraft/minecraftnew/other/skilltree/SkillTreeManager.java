@@ -427,14 +427,6 @@ public class SkillTreeManager implements Listener {
             case PANTRY_OF_PLENTY:
                 double satChance = level * 4;
                 return ChatColor.YELLOW + "+" + satChance + "% Chance to gain 20 Saturation when eating Culinary Delights";
-            case SATIATION_MASTERY:
-                return ChatColor.YELLOW + "+" + level + " " + ChatColor.GRAY + "Saturation on eat";
-            case FEASTING_CHANCE:
-                double feastChance = level * 4;
-                return ChatColor.YELLOW + "+" + feastChance + "% " + ChatColor.GRAY + "chance for Saturation V";
-            case MASTER_CHEF:
-                double chefChance = level * 4;
-                return ChatColor.YELLOW + "+" + chefChance + "% " + ChatColor.GRAY + "chance to double output";
             case BARTER_DISCOUNT:
                 double discountPct = level * 4;
                 return ChatColor.YELLOW + "+" + discountPct + "% " + ChatColor.GOLD + "Trade Discount";

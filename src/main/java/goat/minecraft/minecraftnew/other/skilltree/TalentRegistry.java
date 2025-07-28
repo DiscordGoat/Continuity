@@ -132,9 +132,7 @@ public final class TalentRegistry {
                         Talent.CUTTING_BOARD_V,
                         Talent.LUNCH_RUSH_V,
                         Talent.CAVITY,
-                        Talent.CHEFS_KISS,
-                        Talent.FEASTING_CHANCE,
-                        Talent.MASTER_CHEF
+                        Talent.CHEFS_KISS
                 )
         );
         SKILL_TALENTS.put(
