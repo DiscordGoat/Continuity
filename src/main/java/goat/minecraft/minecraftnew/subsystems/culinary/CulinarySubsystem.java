@@ -570,10 +570,11 @@ public class CulinarySubsystem implements Listener {
             satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_IV);
             satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_V);
             if (satLevel > 0) {
+                int finalSatLevel = satLevel;
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        player.setSaturation(Math.min(player.getSaturation() + satLevel, 20f));
+                        player.setSaturation(Math.min(player.getSaturation() + finalSatLevel, 20f));
                     }
                 }.runTaskLater(plugin, 1L);
             }

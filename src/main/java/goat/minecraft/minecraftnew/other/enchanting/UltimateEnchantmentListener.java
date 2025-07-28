@@ -2,6 +2,9 @@ package goat.minecraft.minecraftnew.other.enchanting;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
@@ -517,6 +520,10 @@ public class UltimateEnchantmentListener implements Listener {
             if(isCropMaterial(brokenBlock.getType())) {
                 event.setCancelled(true);
                 durMgr.applyDamage(player, tool, cost);
+                if(SkillTreeManager.getInstance().hasTalent(player, Talent.HALLOWEEN)){
+                    int talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.HALLOWEEN);
+                    durMgr.repair(player.getInventory().getItemInMainHand(), talentLevel);
+                }
                 Material cropType = brokenBlock.getType();
                 breakBlock(player, brokenBlock, true);
                 CropCountManager.getInstance(MinecraftNew.getInstance()).increment(player, brokenBlock.getType());
