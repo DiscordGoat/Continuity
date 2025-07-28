@@ -329,7 +329,36 @@ public final class TalentRegistry {
               SKILL_TALENTS.put(
                 Skill.FISHING,
                 Arrays.asList(
-                        Talent.ANGLERS_INSTINCT
+                        Talent.ANGLERS_INSTINCT,
+                        Talent.SEA_CREATURE_CHANCE_I,
+                        Talent.DURABILITY,
+                        Talent.EXOSUIT_I,
+                        Talent.MONUMENTAL,
+                        Talent.SNACK_THAT_SMILES_BACK_I,
+
+                        Talent.SEA_CREATURE_CHANCE_II,
+                        Talent.WHEN_IT_RAINS_IT_POURS,
+                        Talent.EXOSUIT_II,
+                        Talent.LOST_LIBRARY,
+                        Talent.SNACK_THAT_SMILES_BACK_II,
+
+                        Talent.SEA_CREATURE_CHANCE_III,
+                        Talent.MOTHERLODE,
+                        Talent.EXOSUIT_III,
+                        Talent.MAW_OF_THE_VOID,
+                        Talent.SNACK_THAT_SMILES_BACK_III,
+
+                        Talent.SEA_CREATURE_CHANCE_IV,
+                        Talent.TREASURY,
+                        Talent.EXOSUIT_IV,
+                        Talent.BIOLUMINESCENCE,
+                        Talent.SNACK_THAT_SMILES_BACK_IV,
+
+                        Talent.SEA_CREATURE_CHANCE_V,
+                        Talent.EXOSUIT_V,
+                        Talent.SUNKEN_RUINS,
+                        Talent.ABYSSAL_STRIKE,
+                        Talent.SNACK_THAT_SMILES_BACK_V
                )
         );
         SKILL_TALENTS.put(

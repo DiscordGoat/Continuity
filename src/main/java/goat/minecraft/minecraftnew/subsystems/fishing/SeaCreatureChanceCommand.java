@@ -47,7 +47,12 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
         double base = 0.0;
         int instinctLevel = SkillTreeManager.getInstance()
                 .getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.ANGLERS_INSTINCT);
-        double talentBonus = instinctLevel * 0.25;
+        int scc1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_I);
+        int scc2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_II);
+        int scc3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_III);
+        int scc4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_IV);
+        int scc5 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_V);
+        double talentBonus = instinctLevel * 0.25 + scc1 * 0.5 + scc2 * 1.0 + scc3 * 1.5 + scc4 * 2.0 + scc5 * 2.5;
 
         int callOfTheVoidLevel = CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void");
         double callOfTheVoidBonus = callOfTheVoidLevel;
@@ -106,7 +111,7 @@ public class SeaCreatureChanceCommand implements CommandExecutor {
 
         player.sendMessage(ChatColor.AQUA + "Sea Creature Chance Breakdown:");
         player.sendMessage(ChatColor.AQUA + "Base SCC: " + ChatColor.YELLOW + "0%");
-        player.sendMessage(ChatColor.AQUA + "SCC from Angler's Instinct: " + ChatColor.YELLOW + String.format("%.2f", talentBonus) + "%");
+        player.sendMessage(ChatColor.AQUA + "SCC from Fishing Talents: " + ChatColor.YELLOW + String.format("%.2f", talentBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from COTV: " + ChatColor.YELLOW + String.format("%.2f", callOfTheVoidBonus) + "%");
         player.sendMessage(ChatColor.AQUA + "SCC from Potion of Fountains: " + ChatColor.YELLOW + String.format("%.2f", fountainBonus) + "%");
         if(fountainMastery > 0){

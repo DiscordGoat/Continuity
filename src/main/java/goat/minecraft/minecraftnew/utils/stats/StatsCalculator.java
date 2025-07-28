@@ -181,7 +181,17 @@ public class StatsCalculator {
         double total = 0.0;
         int instinctLevel = SkillTreeManager.getInstance()
                 .getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.ANGLERS_INSTINCT);
+        int scc1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_I);
+        int scc2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_II);
+        int scc3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_III);
+        int scc4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_IV);
+        int scc5 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_V);
         total += instinctLevel * 0.25;
+        total += scc1 * 0.5;
+        total += scc2 * 1.0;
+        total += scc3 * 1.5;
+        total += scc4 * 2.0;
+        total += scc5 * 2.5;
         if (CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void") > 0) {
             total += CustomEnchantmentManager.getEnchantmentLevel(player.getInventory().getItemInMainHand(), "Call of the Void");
         }
