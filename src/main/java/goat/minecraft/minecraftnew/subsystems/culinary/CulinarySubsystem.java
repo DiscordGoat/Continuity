@@ -563,7 +563,12 @@ public class CulinarySubsystem implements Listener {
 
         SkillTreeManager manager = SkillTreeManager.getInstance();
         if (manager != null) {
-            int satLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY);
+            int satLevel = 0;
+            satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_I);
+            satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_II);
+            satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_III);
+            satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_IV);
+            satLevel += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.SATIATION_MASTERY_V);
             if (satLevel > 0) {
                 new BukkitRunnable() {
                     @Override
@@ -1115,7 +1120,12 @@ public class CulinarySubsystem implements Listener {
         if (player != null) {
             SkillTreeManager manager = SkillTreeManager.getInstance();
             if (manager != null) {
-                int level = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.MASTER_CHEF);
+                int level = 0;
+                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_I);
+                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_II);
+                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_III);
+                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_IV);
+                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_V);
                 if (level > 0 && random.nextDouble() < level * 0.04) {
                     for (int i = 0; i < yield; i++) {
                         session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());

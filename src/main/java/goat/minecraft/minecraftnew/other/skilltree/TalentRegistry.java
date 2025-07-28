@@ -108,11 +108,35 @@ public final class TalentRegistry {
         SKILL_TALENTS.put(
                 Skill.CULINARY,
                 Arrays.asList(
-                        Talent.SATIATION_MASTERY,
+                        Talent.SATIATION_MASTERY_I,
+                        Talent.CUTTING_BOARD_I,
+                        Talent.LUNCH_RUSH_I,
+                        Talent.SWEET_TOOTH,
+                        Talent.GOLDEN_APPLE,
+                        Talent.SATIATION_MASTERY_II,
+                        Talent.CUTTING_BOARD_II,
+                        Talent.LUNCH_RUSH_II,
+                        Talent.GRAINS_GAINS,
+                        Talent.PORTAL_PANTRY,
+                        Talent.SATIATION_MASTERY_III,
+                        Talent.CUTTING_BOARD_III,
+                        Talent.LUNCH_RUSH_III,
+                        Talent.AXE_BODY_SPRAY,
+                        Talent.I_DO_NOT_NEED_A_SNACK,
+                        Talent.SATIATION_MASTERY_IV,
+                        Talent.CUTTING_BOARD_IV,
+                        Talent.LUNCH_RUSH_IV,
+                        Talent.RABBIT,
+                        Talent.PANTRY_OF_PLENTY,
+                        Talent.SATIATION_MASTERY_V,
+                        Talent.CUTTING_BOARD_V,
+                        Talent.LUNCH_RUSH_V,
+                        Talent.CAVITY,
+                        Talent.CHEFS_KISS,
                         Talent.FEASTING_CHANCE,
                         Talent.MASTER_CHEF
-                  )
-          );
+                )
+        );
         SKILL_TALENTS.put(
                 Skill.BARTERING,
                 Arrays.asList(

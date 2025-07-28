@@ -606,6 +606,213 @@ public enum Talent {
             80,
             Material.NETHERITE_BLOCK
     ),
+    // =============================================================
+    // Culinary Talents
+    // =============================================================
+    SATIATION_MASTERY_I(
+            "Satiation Mastery I",
+            ChatColor.GRAY + "Cooked meals keep you fuller",
+            ChatColor.YELLOW + "+1 Bonus Saturation",
+            1,
+            1,
+            Material.COOKED_BEEF
+    ),
+    CUTTING_BOARD_I(
+            "Cutting Board I",
+            ChatColor.GRAY + "Hone your knife skills",
+            ChatColor.YELLOW + "+4% Chance For Double Culinary Yield",
+            5,
+            1,
+            Material.STONECUTTER
+    ),
+    LUNCH_RUSH_I(
+            "Lunch Rush I",
+            ChatColor.GRAY + "Serve dishes faster",
+            ChatColor.YELLOW + "-4% Cook time",
+            5,
+            1,
+            Material.FURNACE
+    ),
+    SWEET_TOOTH(
+            "Sweet Tooth",
+            ChatColor.GRAY + "Fruits taste even sweeter",
+            ChatColor.YELLOW + "+10% Fruits Gains",
+            4,
+            1,
+            Material.SWEET_BERRIES
+    ),
+    GOLDEN_APPLE(
+            "Golden Apple",
+            ChatColor.GRAY + "Healthy snacks for heroes",
+            ChatColor.YELLOW + "+3s Regeneration I when eating",
+            5,
+            1,
+            Material.GOLDEN_APPLE
+    ),
+
+    SATIATION_MASTERY_II(
+            "Satiation Mastery II",
+            ChatColor.GRAY + "Cooked meals keep you fuller",
+            ChatColor.YELLOW + "+1 Bonus Saturation",
+            1,
+            20,
+            Material.COOKED_BEEF
+    ),
+    CUTTING_BOARD_II(
+            "Cutting Board II",
+            ChatColor.GRAY + "Hone your knife skills",
+            ChatColor.YELLOW + "+4% Chance For Double Culinary Yield",
+            5,
+            20,
+            Material.STONECUTTER
+    ),
+    LUNCH_RUSH_II(
+            "Lunch Rush II",
+            ChatColor.GRAY + "Serve dishes faster",
+            ChatColor.YELLOW + "-4% Cook time",
+            5,
+            20,
+            Material.FURNACE
+    ),
+    GRAINS_GAINS(
+            "Grains Gains",
+            ChatColor.GRAY + "Breads fill your belly",
+            ChatColor.YELLOW + "+10% Grains Gains",
+            4,
+            20,
+            Material.BREAD
+    ),
+    PORTAL_PANTRY(
+            "Portal Pantry",
+            ChatColor.GRAY + "Grab ingredients from afar",
+            ChatColor.YELLOW + "+20% Chance to automatically grab ingredient",
+            5,
+            20,
+            Material.ENDER_CHEST
+    ),
+
+    SATIATION_MASTERY_III(
+            "Satiation Mastery III",
+            ChatColor.GRAY + "Cooked meals keep you fuller",
+            ChatColor.YELLOW + "+1 Bonus Saturation",
+            1,
+            40,
+            Material.COOKED_BEEF
+    ),
+    CUTTING_BOARD_III(
+            "Cutting Board III",
+            ChatColor.GRAY + "Hone your knife skills",
+            ChatColor.YELLOW + "+4% Chance For Double Culinary Yield",
+            5,
+            40,
+            Material.STONECUTTER
+    ),
+    LUNCH_RUSH_III(
+            "Lunch Rush III",
+            ChatColor.GRAY + "Serve dishes faster",
+            ChatColor.YELLOW + "-4% Cook time",
+            5,
+            40,
+            Material.FURNACE
+    ),
+    AXE_BODY_SPRAY(
+            "Axe Body Spray",
+            ChatColor.GRAY + "Protein-packed musk",
+            ChatColor.YELLOW + "+10% Protein Gains",
+            4,
+            40,
+            Material.IRON_AXE
+    ),
+    I_DO_NOT_NEED_A_SNACK(
+            "I Do Not Need A Snack",
+            ChatColor.GRAY + "Save your provisions",
+            ChatColor.YELLOW + "+5% Chance to Refund eaten items",
+            5,
+            40,
+            Material.BOWL
+    ),
+
+    SATIATION_MASTERY_IV(
+            "Satiation Mastery IV",
+            ChatColor.GRAY + "Cooked meals keep you fuller",
+            ChatColor.YELLOW + "+1 Bonus Saturation",
+            1,
+            60,
+            Material.COOKED_BEEF
+    ),
+    CUTTING_BOARD_IV(
+            "Cutting Board IV",
+            ChatColor.GRAY + "Hone your knife skills",
+            ChatColor.YELLOW + "+4% Chance For Double Culinary Yield",
+            5,
+            60,
+            Material.STONECUTTER
+    ),
+    LUNCH_RUSH_IV(
+            "Lunch Rush IV",
+            ChatColor.GRAY + "Serve dishes faster",
+            ChatColor.YELLOW + "-4% Cook time",
+            5,
+            60,
+            Material.FURNACE
+    ),
+    RABBIT(
+            "Rabbit",
+            ChatColor.GRAY + "Veggies fuel your bounce",
+            ChatColor.YELLOW + "+10% Veggie Gains",
+            4,
+            60,
+            Material.CARROT
+    ),
+    PANTRY_OF_PLENTY(
+            "Pantry of Plenty",
+            ChatColor.GRAY + "Stocked for any feast",
+            ChatColor.YELLOW + "+4% Chance to gain 20 Saturation when eating Culinary Delights",
+            5,
+            60,
+            Material.CHEST
+    ),
+
+    SATIATION_MASTERY_V(
+            "Satiation Mastery V",
+            ChatColor.GRAY + "Cooked meals keep you fuller",
+            ChatColor.YELLOW + "+1 Bonus Saturation",
+            1,
+            80,
+            Material.COOKED_BEEF
+    ),
+    CUTTING_BOARD_V(
+            "Cutting Board V",
+            ChatColor.GRAY + "Hone your knife skills",
+            ChatColor.YELLOW + "+4% Chance For Double Culinary Yield",
+            5,
+            80,
+            Material.STONECUTTER
+    ),
+    LUNCH_RUSH_V(
+            "Lunch Rush V",
+            ChatColor.GRAY + "Serve dishes faster",
+            ChatColor.YELLOW + "-4% Cook time",
+            5,
+            80,
+            Material.FURNACE
+    ),
+    CAVITY(
+            "Cavity",
+            ChatColor.GRAY + "Sugar rush supreme",
+            ChatColor.YELLOW + "+10% Sugar Gains",
+            4,
+            80,
+            Material.SUGAR
+    ),
+    CHEFS_KISS(
+            "Chef's Kiss",
+            ChatColor.GRAY + "Perfection in every recipe",
+            ChatColor.YELLOW + "+20% Chance to Refund Recipe Papers",
+            5,
+            80,
+            Material.PAPER
+    ),
     SATIATION_MASTERY(
             "Satiation Mastery",
             ChatColor.GRAY + "Cooked meals keep you fuller",
