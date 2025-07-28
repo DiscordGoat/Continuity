@@ -538,9 +538,6 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.DARK_GRAY + "-" + lost + " Spirit Level";
             case REDEMPTION:
                 return ChatColor.GREEN + "x" + (level + 1) + " Super Sapling Chance";
-            case PET_TRAINER:
-                double xpChance = level * 4;
-                return ChatColor.YELLOW + "+" + xpChance + "% " + ChatColor.GRAY + "Double Pet XP chance";
             case HEALTH_I:
             case HEALTH_II:
             case HEALTH_III:
@@ -698,9 +695,6 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "-" + (level * 10) + "% Brewtime";
             case EXPERIMENTATION:
                 return ChatColor.YELLOW + "+" + (level * 5) + "% Potion Duration";
-            case REVENANT:
-                return ChatColor.YELLOW + "-" + level + "m Resurrection Time";
-
             case BONUS_PET_XP_V:
                 return ChatColor.YELLOW + "+" + (level * 10) + "% " + ChatColor.GRAY + "Bonus Pet XP Chance";
             case COMPACT_STONE:
