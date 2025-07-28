@@ -3,8 +3,6 @@ package goat.minecraft.minecraftnew.other.enchanting;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem;
-import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.fishing.BaitApplicationSystem;
 import goat.minecraft.minecraftnew.subsystems.fishing.FishingUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.combat.SoulApplicationSystem;
@@ -165,9 +163,7 @@ public class UltimateEnchantingSystem implements Listener {
         // Place icons for up to 8 ultimate enchants in specific slots
 
 
-        if (isEffigyAxe(heldItem.getType())) {
-            inv.setItem(53, createEffigyUpgradeButton(heldItem));
-        } else if (isSoulWeapon(heldItem.getType())) {
+        if (isSoulWeapon(heldItem.getType())) {
             inv.setItem(53, createSoulUpgradeButton(heldItem));
         } else if (isFishingRod(heldItem.getType())) {
             inv.setItem(53, createAnglerUpgradeButton(heldItem));
@@ -288,25 +284,6 @@ public class UltimateEnchantingSystem implements Listener {
     /**
      * Creates an effigy upgrade button for Spirit Energy axes.
      */
-    private ItemStack createEffigyUpgradeButton(ItemStack axe) {
-        ItemStack button = new ItemStack(Material.SOUL_TORCH);
-        ItemMeta meta = button.getItemMeta();
-        if (meta != null) {
-            meta.setDisplayName(ChatColor.AQUA + "Effigy Upgrades");
-            List<String> lore = new ArrayList<>();
-            int energy = EffigyApplicationSystem.getAxeSpiritEnergy(axe);
-            if (energy > 0) {
-                lore.add(ChatColor.GRAY + "Spirit Energy: " + ChatColor.WHITE + energy + "%");
-                lore.add(ChatColor.YELLOW + "Click to open upgrade tree!");
-            } else {
-                lore.add(ChatColor.RED + "No Spirit Energy detected.");
-                lore.add(ChatColor.GRAY + "Apply effigies to this axe first.");
-            }
-            meta.setLore(lore);
-            button.setItemMeta(meta);
-        }
-        return button;
-    }
 
     /**
      * Creates an angler upgrade button for fishing rods.
@@ -362,13 +339,6 @@ public class UltimateEnchantingSystem implements Listener {
          material == Material.NETHERITE_PICKAXE ||
                material == Material.DIAMOND_SHOVEL || material == Material.DIAMOND_HOE ||
                material == Material.DIAMOND_SWORD;
-    }
-
-    /**
-     * Returns true if the material is a diamond or netherite axe.
-     */
-    private boolean isEffigyAxe(Material material) {
-        return material == Material.DIAMOND_AXE || material == Material.NETHERITE_AXE;
     }
 
     /**
@@ -494,14 +464,6 @@ public class UltimateEnchantingSystem implements Listener {
 
         // Handle Upgrade Button Click (slot 53)
         if (event.getSlot() == 53) {
-            if (clickedItem.getType() == Material.SOUL_TORCH && isEffigyAxe(handItem.getType())) {
-                if (EffigyApplicationSystem.getAxeSpiritEnergy(handItem) > 0) {
-                    EffigyUpgradeSystem effigyUpgradeSystem =
-                            new EffigyUpgradeSystem(MinecraftNew.getInstance());
-                    effigyUpgradeSystem.openUpgradeGUI(player, handItem);
-                }
-                return;
-            }
             if (clickedItem.getType() == Material.DIAMOND_SWORD && isSoulWeapon(handItem.getType())) {
                 SoulUpgradeSystem upgradeSystem = new SoulUpgradeSystem(MinecraftNew.getInstance());
                 upgradeSystem.openUpgradeGUI(player, handItem);

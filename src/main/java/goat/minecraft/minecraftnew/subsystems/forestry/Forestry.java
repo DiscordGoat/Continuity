@@ -385,7 +385,7 @@ public class Forestry implements Listener {
         double spiritChance = 0.01;
         ItemStack axe = player.getInventory().getItemInMainHand();
 
-        int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
+        int effigyYield = 0;
         spiritChance += effigyYield * 0.001;
 
         ForestryPetManager forestryPetManager = MinecraftNew.getInstance().getForestryManager();
@@ -441,8 +441,8 @@ public class Forestry implements Listener {
         if (LOG_MATERIALS.contains(blockType) && !block.hasMetadata("placed")) {
             ItemStack axe = player.getInventory().getItemInMainHand();
 
-            int trespasser = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.TRESPASSER);
-            int fakeNews   = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.FAKE_NEWS);
+            int trespasser = 0;
+            int fakeNews   = 0;
 
 // cap at level 5
             fakeNews = Math.min(fakeNews, 5);
@@ -479,7 +479,7 @@ public class Forestry implements Listener {
             // Award XP based on log type.
             int xpAmount = NETHER_LOG_MATERIALS.contains(blockType) ? 10 : 5;
             xpManager.addXP(player, "Forestry", xpAmount);
-            int xpBoost = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.FORESTRY_XP);
+            int xpBoost = 0;
             if (xpBoost > 0) {
                 xpManager.addXP(player, "Forestry", xpBoost * 5);
             }
@@ -492,10 +492,11 @@ public class Forestry implements Listener {
             // Process double drop chance.
             processDoubleDropChance(player, block);
             // Process perfect apple drop chance.
-            int orchard = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ORCHARD);
+            SkillTreeManager mgrTalents = SkillTreeManager.getInstance();
+            int orchard = mgrTalents.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.ORCHARD);
             processPerfectAppleChance(player, block, forestryLevel, orchard);
 
-            int goldenApple = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.GOLDEN_APPLE);
+            int goldenApple = mgrTalents.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.PERFECT_ORCHARD);
             processNotchAppleChance(player, block, goldenApple);
 
             // (Additional spirit spawning logic could be added here.)
@@ -554,7 +555,7 @@ public class Forestry implements Listener {
      * @param forestryLevel The player's forestry level.
      */
     public void processPerfectAppleChance(Player player, Block block, int forestryLevel, int orchardLevel) {
-        double chance = forestryLevel * 0.01 + orchardLevel * 0.1;
+        double chance = forestryLevel * 0.01 + orchardLevel;
         if (random.nextDouble() * 100 < chance) {
             final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
             new BukkitRunnable() {
@@ -571,7 +572,7 @@ public class Forestry implements Listener {
 
     public void processNotchAppleChance(Player player, Block block, int goldenLevel) {
         if (goldenLevel <= 0) return;
-        double chance = goldenLevel * 0.5;
+        double chance = goldenLevel;
         if (random.nextDouble() * 100 < chance) {
             Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
             dropLocation.getWorld().dropItemNaturally(dropLocation, new ItemStack(Material.ENCHANTED_GOLDEN_APPLE));
@@ -580,29 +581,11 @@ public class Forestry implements Listener {
     }
 
     private void handleFeedEffect(Player player, ItemStack axe) {
-        int level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.FEED);
-        if (level > 0) {
-            double chance = level * 5.0;
-            if (random.nextDouble() * 100 < chance) {
-                player.setFoodLevel(20);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 200, 0, false));
-                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BURP, 1.0f, 1.0f);
-            }
-        }
+        // perk functionality removed
     }
 
     private void handlePayout(Player player, ItemStack axe) {
-        int level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.PAYOUT);
-        if (level > 0) {
-            double chance = level * 2.0;
-            if (random.nextDouble() * 100 < chance) {
-                if (removeLogStack(player)) {
-                    ItemStack emeralds = new ItemStack(Material.EMERALD, 8);
-                    player.getInventory().addItem(emeralds);
-                    player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.5f);
-                }
-            }
-        }
+        // perk functionality removed
     }
 
     private boolean removeLogStack(Player player) {
@@ -622,38 +605,7 @@ public class Forestry implements Listener {
     }
 
     private void handleYieldUpgrades(Player player, Block block, ItemStack axe) {
-        Material type = block.getType();
-        Material dropMat = type;
-        int level = 0;
-        if (type == Material.OAK_LOG || type == Material.STRIPPED_OAK_LOG) {
-            level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.OAK_YIELD);
-            dropMat = Material.OAK_LOG;
-        } else if (type == Material.SPRUCE_LOG || type == Material.STRIPPED_SPRUCE_LOG) {
-            level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.SPRUCE_YIELD);
-            dropMat = Material.SPRUCE_LOG;
-        } else if (type == Material.BIRCH_LOG || type == Material.STRIPPED_BIRCH_LOG) {
-            level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.BIRCH_YIELD);
-            dropMat = Material.BIRCH_LOG;
-        } else if (type == Material.JUNGLE_LOG || type == Material.STRIPPED_JUNGLE_LOG) {
-            level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.JUNGLE_YIELD);
-            dropMat = Material.JUNGLE_LOG;
-        } else if (type == Material.ACACIA_LOG || type == Material.STRIPPED_ACACIA_LOG) {
-            level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ACACIA_YIELD);
-            dropMat = Material.ACACIA_LOG;
-        } else if (type == Material.DARK_OAK_LOG || type == Material.STRIPPED_DARK_OAK_LOG) {
-            level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.DARK_OAK_YIELD);
-            dropMat = Material.DARK_OAK_LOG;
-        } else if (type == Material.CRIMSON_STEM || type == Material.STRIPPED_CRIMSON_STEM) {
-            level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.CRIMSON_YIELD);
-            dropMat = Material.CRIMSON_STEM;
-        } else if (type == Material.WARPED_STEM || type == Material.STRIPPED_WARPED_STEM) {
-            level = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.WARPED_YIELD);
-            dropMat = Material.WARPED_STEM;
-        }
-
-        if (level > 0) {
-            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(dropMat, level - 1));
-        }
+        // perk functionality removed
     }
 
     @EventHandler
