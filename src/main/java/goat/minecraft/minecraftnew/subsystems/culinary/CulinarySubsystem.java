@@ -593,6 +593,7 @@ public class CulinarySubsystem implements Listener {
             player.sendMessage(ChatColor.GREEN + "You're cooked.");
         }
 
+
         boolean hasSeasoning = false;
         for (String line : lore) {
             if (ChatColor.stripColor(line).toLowerCase().contains("sea salt")) {
