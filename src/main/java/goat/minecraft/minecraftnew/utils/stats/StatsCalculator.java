@@ -286,11 +286,8 @@ public class StatsCalculator {
     public double getDoubleLogChance(Player player) {
         double chance = 0.0;
         if (SkillTreeManager.getInstance() != null) {
-            chance += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_I) * 4.0;
-            chance += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_II) * 4.0;
-            chance += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_III) * 4.0;
-            chance += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_IV) * 4.0;
-            chance += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_V) * 4.0;
+            chance += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_I) * 20.0;
         }
         CatalystManager cm = CatalystManager.getInstance();
         if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {

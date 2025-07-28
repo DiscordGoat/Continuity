@@ -385,10 +385,8 @@ public class UltimateEnchantmentListener implements Listener {
             ForestryPetManager forestryPetManager = MinecraftNew.getInstance().getForestryManager();
             forestryPetManager.incrementForestryCount(player);
             ItemStack axe = player.getInventory().getItemInMainHand();
-            int orchard = 0;
-            forestry.processPerfectAppleChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"), orchard);
             forestry.processHoneyBottleChance(player, currentBlock);
-            forestry.processDoubleDropChance(player, currentBlock);
+            forestry.processExtraLogDrops(player, currentBlock);
 
             if (visitedLogs.size() % 4 == 0) {
                 forestry.incrementNotoriety(player, true);
