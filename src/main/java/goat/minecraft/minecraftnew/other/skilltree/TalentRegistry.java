@@ -332,9 +332,37 @@ public final class TalentRegistry {
                         Talent.ANGLERS_INSTINCT
                )
         );
-              SKILL_TALENTS.put(
+        SKILL_TALENTS.put(
                 Skill.MINING,
                 Arrays.asList(
+                        Talent.OXYGEN_I,
+                        Talent.OXYGEN_EFFICIENCY_I,
+                        Talent.REST,
+                        Talent.BUBBLES_I,
+
+                        Talent.OXYGEN_II,
+                        Talent.OXYGEN_EFFICIENCY_II,
+                        Talent.ANCIENT_DEBRIS,
+                        Talent.BUBBLES_II,
+
+                        Talent.OXYGEN_III,
+                        Talent.BIG_BUBBLES_I,
+                        Talent.OXYGEN_EFFICIENCY_III,
+                        Talent.GOLD_FEVER,
+                        Talent.MAGNET,
+
+                        Talent.OXYGEN_IV,
+                        Talent.BIG_BUBBLES_II,
+                        Talent.OXYGEN_EFFICIENCY_IV,
+                        Talent.OXYGEN_RESERVE,
+                        Talent.COAL_YIELD,
+
+                        Talent.OXYGEN_V,
+                        Talent.BIG_BUBBLES_III,
+                        Talent.OXYGEN_EFFICIENCY_V,
+                        Talent.WAKE_UP_THE_STATUES,
+                        Talent.HEART_OF_THE_MOUNTAIN,
+
                         Talent.RICH_VEINS,
                         Talent.DEEP_LUNGS
                 )

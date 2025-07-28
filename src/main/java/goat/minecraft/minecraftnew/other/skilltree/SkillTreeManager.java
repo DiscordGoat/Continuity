@@ -630,6 +630,52 @@ public class SkillTreeManager implements Listener {
             case DEEP_LUNGS:
                 int oxygenBonus = level * 20;
                 return ChatColor.YELLOW + "+" + oxygenBonus + " " + ChatColor.AQUA + "Oxygen Capacity";
+            case OXYGEN_I:
+                return ChatColor.YELLOW + "+" + (level * 10) + " " + ChatColor.AQUA + "Oxygen";
+            case OXYGEN_EFFICIENCY_I:
+                return ChatColor.YELLOW + "-" + level + "% Oxygen Depletion Rate";
+            case REST:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Max Oxygen on sleep";
+            case BUBBLES_I:
+                return ChatColor.YELLOW + "+" + level + "% Bubble spawn chance";
+            case OXYGEN_II:
+                return ChatColor.YELLOW + "+" + (level * 20) + " " + ChatColor.AQUA + "Oxygen";
+            case OXYGEN_EFFICIENCY_II:
+                return ChatColor.YELLOW + "-" + level + "% Oxygen Depletion Rate";
+            case ANCIENT_DEBRIS:
+                return ChatColor.YELLOW + "+" + (level * 0.10) + "% Masterwork Ingot Chance";
+            case BUBBLES_II:
+                return ChatColor.YELLOW + "+" + level + "% Bubble spawn chance";
+            case OXYGEN_III:
+                return ChatColor.YELLOW + "+" + (level * 30) + " " + ChatColor.AQUA + "Oxygen";
+            case BIG_BUBBLES_I:
+                return ChatColor.YELLOW + "+" + (level * 10) + " Oxygen from bubbles";
+            case OXYGEN_EFFICIENCY_III:
+                return ChatColor.YELLOW + "-" + level + "% Oxygen Depletion Rate";
+            case GOLD_FEVER:
+                return ChatColor.YELLOW + "Removes Mining Fatigue from Moderate Hypoxia";
+            case MAGNET:
+                return ChatColor.YELLOW + "Items within " + level + " blocks collected every " + (10 - level) + "s";
+            case OXYGEN_IV:
+                return ChatColor.YELLOW + "+" + (level * 40) + " " + ChatColor.AQUA + "Oxygen";
+            case BIG_BUBBLES_II:
+                return ChatColor.YELLOW + "+" + (level * 10) + " Oxygen from bubbles";
+            case OXYGEN_EFFICIENCY_IV:
+                return ChatColor.YELLOW + "-" + level + "% Oxygen Depletion Rate";
+            case OXYGEN_RESERVE:
+                return ChatColor.YELLOW + "-" + (level * 5) + "% Depletion Rate below 50% Oxygen";
+            case COAL_YIELD:
+                return ChatColor.YELLOW + "+" + level + " Coal per Ore";
+            case OXYGEN_V:
+                return ChatColor.YELLOW + "+" + (level * 50) + " " + ChatColor.AQUA + "Oxygen";
+            case BIG_BUBBLES_III:
+                return ChatColor.YELLOW + "+" + (level * 10) + " Oxygen from bubbles";
+            case OXYGEN_EFFICIENCY_V:
+                return ChatColor.YELLOW + "-" + level + "% Oxygen Depletion Rate";
+            case WAKE_UP_THE_STATUES:
+                return ChatColor.YELLOW + "Reduce Severe Hypoxia fatigue by 1";
+            case HEART_OF_THE_MOUNTAIN:
+                return ChatColor.YELLOW + "+" + (level * 100) + " Max Durability to Pickaxes";
             case EXTRA_CROP_CHANCE_I:
                 return ChatColor.YELLOW + "+" + (level * 8) + "% " + ChatColor.GRAY + "Extra Crop Chance";
             case FOR_THE_STREETS:
