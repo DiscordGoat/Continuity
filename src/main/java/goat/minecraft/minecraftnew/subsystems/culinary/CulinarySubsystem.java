@@ -831,8 +831,6 @@ public class CulinarySubsystem implements Listener {
                             true
                     );
                     session.mainArmorStandUUID = mainStand;
-
-// Instead of manually spawning label stands one by one, just call:
                     updateIngredientLabels(session);
 
                     attemptPortalPantry(player, session);
@@ -876,7 +874,7 @@ public class CulinarySubsystem implements Listener {
 
                     // Re-lay out the remaining ingredient labels with NO gaps:
                     updateIngredientLabels(session);
-
+                    attemptPortalPantry(player, session);
                     // Check if all ingredients are now placed
                     if (session.placedIngredientsStands.size() == session.recipe.getIngredients().size()) {
                         // All placed! Update the main armor stand's name to "[LEFT CLICK] To Combine!"
@@ -1076,51 +1074,121 @@ public class CulinarySubsystem implements Listener {
      * talent triggers.
      */
     private void attemptPortalPantry(Player player, RecipeSession session) {
+        // Entry log
+        plugin.getLogger().info("[PortalPantry] attemptPortalPantry called for player " + player.getName());
+
         SkillTreeManager manager = SkillTreeManager.getInstance();
-        if (manager == null) return;
+        if (manager == null) {
+            plugin.getLogger().warning("[PortalPantry] SkillTreeManager is null – aborting.");
+            return;
+        }
+        plugin.getLogger().info("[PortalPantry] SkillTreeManager found.");
+
         int level = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.PORTAL_PANTRY);
-        if (level <= 0) return;
+        plugin.getLogger().info("[PortalPantry] Player talent level: " + level);
+        if (level <= 0) {
+            plugin.getLogger().info("[PortalPantry] Level ≤ 0 – no pantry portal talent, exiting.");
+            return;
+        }
 
         double chance = level * 0.20;
-        if (Math.random() >= chance) return;
+        plugin.getLogger().info(String.format("[PortalPantry] Computed chance: %.2f", chance));
+        double roll = Math.random();
+        plugin.getLogger().info(String.format("[PortalPantry] Roll: %.2f", roll));
+        if (roll >= chance) {
+            plugin.getLogger().info("[PortalPantry] Random check failed – exiting.");
+            return;
+        }
+        plugin.getLogger().info("[PortalPantry] Random check succeeded.");
 
-        if (!(plugin instanceof MinecraftNew main)) return;
+        if (!(plugin instanceof MinecraftNew main)) {
+            plugin.getLogger().warning("[PortalPantry] Plugin is not an instance of MinecraftNew – aborting.");
+            return;
+        }
+        plugin.getLogger().info("[PortalPantry] Plugin cast to MinecraftNew OK.");
+
         ShelfManager shelfManager = main.getShelfManager();
-        if (shelfManager == null) return;
+        if (shelfManager == null) {
+            plugin.getLogger().warning("[PortalPantry] ShelfManager is null – aborting.");
+            return;
+        }
+        plugin.getLogger().info("[PortalPantry] ShelfManager found.");
 
         Map<String, ItemStack> shelves = shelfManager.getShelfContents();
+        plugin.getLogger().info("[PortalPantry] Shelf contents size: " + shelves.size());
 
+        // Loop through each needed ingredient
         for (String needed : session.recipe.getIngredients()) {
-            if (session.placedIngredientsStands.containsKey(needed)) continue;
+            plugin.getLogger().info("[PortalPantry] Checking ingredient: " + needed);
+            if (session.placedIngredientsStands.containsKey(needed)) {
+                plugin.getLogger().info("[PortalPantry] Already placed ingredient '" + needed + "' – skipping.");
+                continue;
+            }
 
+            boolean found = false;
             for (Map.Entry<String, ItemStack> entry : shelves.entrySet()) {
+                String key = entry.getKey();
                 ItemStack stack = entry.getValue();
-                if (stack == null || stack.getType() == Material.AIR) continue;
+                plugin.getLogger().info("[PortalPantry] Inspecting shelf key=" + key + ", item=" + (stack == null ? "null" : stack.getType()));
+
+                if (stack == null || stack.getType() == Material.AIR) {
+                    plugin.getLogger().info("[PortalPantry] Empty or AIR – skipping.");
+                    continue;
+                }
 
                 if (matchIngredient(stack, Collections.singletonList(needed), Collections.emptySet()) != null) {
-                    Location shelfLoc = shelfManager.fromLocKey(entry.getKey());
-                    if (!shelfLoc.getWorld().equals(player.getWorld()) || shelfLoc.distance(player.getLocation()) > 10)
-                        continue;
+                    plugin.getLogger().info("[PortalPantry] matchIngredient succeeded for '" + needed + "' on shelf " + key);
 
-                    ItemStack removed = shelfManager.takeOneItem(entry.getKey());
-                    if (removed == null) continue;
+                    Location shelfLoc = shelfManager.fromLocKey(key);
+                    if (!shelfLoc.getWorld().equals(player.getWorld())) {
+                        plugin.getLogger().info("[PortalPantry] Shelf world mismatch – skipping.");
+                        continue;
+                    }
+                    if (shelfLoc.distance(player.getLocation()) > 10) {
+                        plugin.getLogger().info("[PortalPantry] Shelf too far (" + shelfLoc.distance(player.getLocation()) + " blocks) – skipping.");
+                        continue;
+                    }
+                    plugin.getLogger().info("[PortalPantry] Shelf within range.");
+
+                    ItemStack removed = shelfManager.takeOneItem(key);
+                    if (removed == null) {
+                        plugin.getLogger().warning("[PortalPantry] takeOneItem returned null – unexpected, skipping.");
+                        continue;
+                    }
+                    plugin.getLogger().info("[PortalPantry] Removed one item: " + removed.getType());
 
                     Location spawnLoc = shelfLoc.clone().add(0.5, 0.5, 0.5);
                     World world = spawnLoc.getWorld();
-                    if (world == null) return;
+                    if (world == null) {
+                        plugin.getLogger().severe("[PortalPantry] spawnLoc.getWorld() is null – cannot spawn, aborting.");
+                        return;
+                    }
 
+                    plugin.getLogger().info("[PortalPantry] Spawning effects at " + spawnLoc);
                     world.spawnParticle(Particle.CLOUD, spawnLoc, 8, 0.2, 0.2, 0.2, 0.05);
                     world.playSound(spawnLoc, Sound.ENTITY_ITEM_PICKUP, 0.5f, 1.3f);
+
                     Item dropped = world.dropItem(spawnLoc, removed);
                     dropped.setPickupDelay(0);
                     Vector toPlayer = player.getEyeLocation().toVector().subtract(spawnLoc.toVector()).normalize();
                     dropped.setVelocity(toPlayer.multiply(0.6));
-                    return; // only grab one ingredient
+                    plugin.getLogger().info("[PortalPantry] Dropped item with velocity towards player.");
+
+                    // Successfully grabbed one ingredient, so exit
+                    plugin.getLogger().info("[PortalPantry] Successfully portaled pantry item – returning.");
+                    return;
+                } else {
+                    plugin.getLogger().fine("[PortalPantry] matchIngredient failed for '" + needed + "' on shelf " + key);
                 }
             }
-        }
-    }
 
+            if (!found) {
+                plugin.getLogger().info("[PortalPantry] No matching shelf entry for ingredient '" + needed + "'.");
+            }
+        }
+
+        plugin.getLogger().info("[PortalPantry] Completed loop without grabbing anything.");
+    }
 
     private void consumeItem(Player player, ItemStack item, int amount) {
         player.getInventory().getItemInMainHand().setAmount(player.getInventory().getItemInMainHand().getAmount() - 1);
