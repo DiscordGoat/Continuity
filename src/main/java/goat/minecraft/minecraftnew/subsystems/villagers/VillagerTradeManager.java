@@ -1138,6 +1138,7 @@ public class VillagerTradeManager implements Listener {
             discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_IV) * 0.02;
             discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_V) * 0.025;
             discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BILLIONAIRE_DISCOUNT) * 0.05;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.HAGGLE) * 0.05;
             finalCost *= (1 - discount);
 
             // Bulk discount if applicable
@@ -1720,6 +1721,12 @@ public class VillagerTradeManager implements Listener {
                 activePet.hasPerk(PetManager.PetPerk.PRACTICE)) {
             barterXP *= 3;
         }
+        int practiceLvl = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            practiceLvl = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.PRACTICE);
+        }
+        barterXP += Math.floor(barterXP * (practiceLvl * 0.05));
         xpManager.addXP(player, "Bartering", barterXP);
 
         if (manager != null) {
@@ -1788,6 +1795,12 @@ public class VillagerTradeManager implements Listener {
                     activePet.hasPerk(PetManager.PetPerk.PRACTICE)) {
                 barterXP *= 3;
             }
+            int practiceLvl = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                practiceLvl = SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.PRACTICE);
+            }
+            barterXP += Math.floor(barterXP * (practiceLvl * 0.05));
             xpManager.addXP(player, "Bartering", barterXP);
 
             if (manager != null) {

@@ -923,6 +923,11 @@ public class UltimateEnchantmentListener implements Listener {
         if(PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player).hasPerk(PetManager.PetPerk.ENDLESS_WARP)){
             DEFAULT_WARP_CHARGES += 100;
         }
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if(mgr != null){
+            int talent = mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ENDLESS_WARP);
+            DEFAULT_WARP_CHARGES += talent * 100;
+        }
         return DEFAULT_WARP_CHARGES + lvl * 5;
     }
 

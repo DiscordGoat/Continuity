@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -98,8 +101,15 @@ public class SecretLegion implements Listener {
             playerDamageCount.put(playerUUID, 1);
         }
 
-        // Consume some saturation as a cost
-        player.setSaturation(Math.max(0, player.getSaturation() - 1));
+        int talent = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talent = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.SECRET_LEGION);
+        }
+        if (talent == 0) {
+            // Consume some saturation as a cost
+            player.setSaturation(Math.max(0, player.getSaturation() - 1));
+        }
     }
 
     /**

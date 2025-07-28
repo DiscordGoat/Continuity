@@ -3,6 +3,9 @@ package goat.minecraft.minecraftnew.subsystems.pets.perks;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -122,6 +125,13 @@ public class AutoComposter {
                 256 - (level - 1) * (256 - 64) / 99,
                 64
         );
+        if (SkillTreeManager.getInstance() != null) {
+            int lvl = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.COMPOSTER);
+            if (lvl > 0) {
+                requiredMaterialsOrganic = requiredMaterialsOrganic / 2;
+            }
+        }
 
         // 3) Count how many of each eligible crop the player holds
         Map<Material, Integer> playerCropCounts = getPlayerCropCounts(player);

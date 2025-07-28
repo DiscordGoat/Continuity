@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -35,16 +38,28 @@ public class Comfortable implements Listener {
             // Calculate absorption hearts (0.2 per level, cap at 20)
             int absorptionLevel = (int) Math.min(20, petLevel * 0.05);
 
+            int duration = 2400; // 2 minutes
+            int talent = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talent = SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.COMFORTABLE);
+            }
+            if (talent > 0) {
+                absorptionLevel *= 2;
+                duration *= 2;
+            }
+
             // Apply the absorption effect
             player.addPotionEffect(new PotionEffect(
                     PotionEffectType.ABSORPTION,
-                    2400, // Duration: 2 minutes (2400 ticks)
-                    absorptionLevel - 1, // Amplifier: 0-based (level - 1)
-                    true, // Ambient
-                    false // Particles
+                    duration,
+                    Math.max(0, absorptionLevel - 1),
+                    true,
+                    false
             ));
 
             // Notify the player
-            player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 5, 100);        }
+            player.playSound(player.getLocation(), Sound.BLOCK_BEACON_POWER_SELECT, 5, 100);
+        }
     }
 }

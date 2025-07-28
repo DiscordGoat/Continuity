@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.LivingEntity;
@@ -38,6 +41,12 @@ public class Blizzard implements Listener {
             if (event.getEntity() instanceof LivingEntity target) {
                 // Apply the slowness effect
                 int effectDuration = Math.max(petLevel * 20, 40); // Minimum duration of 2 seconds
+                int talent = 0;
+                if (SkillTreeManager.getInstance() != null) {
+                    talent = SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ASPECT_OF_FROST);
+                }
+                if (talent > 0) effectDuration *= 2;
                 target.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, effectDuration, 1));
 
                 // Notify the player (optional)

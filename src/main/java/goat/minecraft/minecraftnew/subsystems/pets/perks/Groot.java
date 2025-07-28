@@ -3,6 +3,9 @@ package goat.minecraft.minecraftnew.subsystems.pets.perks;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -58,6 +61,13 @@ public class Groot implements Listener {
                 : 1;
 
         int requiredMaterials = Math.max(256 - (petLevel - 1) * (256 - 64) / 99, 64);
+        if (SkillTreeManager.getInstance() != null) {
+            int lvl = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.GROOT);
+            if (lvl > 0) {
+                requiredMaterials = requiredMaterials / 2;
+            }
+        }
 
         int totalWoodCount = 0;
         for (Material material : woodMaterials) {

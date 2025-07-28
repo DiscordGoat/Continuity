@@ -99,6 +99,13 @@ public class Mining implements Listener {
 
             // Calculate the required amount of materials based on pet level
             int requiredMaterials = Math.max(256 - (petLevel - 1) * (256 - 64) / 99, 64);
+            if (SkillTreeManager.getInstance() != null) {
+                int lvl = SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.COMPACT_STONE);
+                if (lvl > 0) {
+                    requiredMaterials = requiredMaterials / 2;
+                }
+            }
 
             // Count total stone-based blocks in the player's inventory
             int totalStoneCount = 0;
