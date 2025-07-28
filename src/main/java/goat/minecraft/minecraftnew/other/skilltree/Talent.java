@@ -1467,6 +1467,303 @@ public enum Talent {
             4,
             80,
             Material.BEE_SPAWN_EGG
+    ),
+
+    // =============================================================
+    // Taming Talents
+    // =============================================================
+
+    BONUS_PET_XP_I(
+            "Bonus Pet XP I",
+            ChatColor.GRAY + "Increase pet training efficiency",
+            ChatColor.YELLOW + "+0.02 Bonus Pet XP Chance",
+            3,
+            1,
+            Material.EXPERIENCE_BOTTLE
+    ),
+    LULLABY(
+            "Lullaby",
+            ChatColor.GRAY + "Soothe creatures from farther away",
+            ChatColor.YELLOW + "+50% Range",
+            1,
+            1,
+            Material.MUSIC_DISC_CAT
+    ),
+    FLIGHT(
+            "Flight",
+            ChatColor.GRAY + "Improve pet flight distance",
+            ChatColor.YELLOW + "+0.1km Flight Distance",
+            5,
+            1,
+            Material.ELYTRA
+    ),
+    DIGGING_CLAWS(
+            "Digging Claws",
+            ChatColor.GRAY + "Greatly extends haste effects",
+            ChatColor.YELLOW + "Double Haste Duration",
+            1,
+            1,
+            Material.IRON_SHOVEL
+    ),
+    DEVOUR(
+            "Devour",
+            ChatColor.GRAY + "Gain more food from combat",
+            ChatColor.GREEN + "Double Food Gains",
+            1,
+            1,
+            Material.COOKED_BEEF
+    ),
+    ANGLER(
+            "Angler",
+            ChatColor.GRAY + "Hook rarer sea creatures",
+            ChatColor.YELLOW + "+50% Bonus Sea Creature Chance",
+            2,
+            1,
+            Material.FISHING_ROD
+    ),
+    LEAP(
+            "Leap",
+            ChatColor.GRAY + "Occasionally leap without hunger",
+            ChatColor.YELLOW + "+50% Hungerless Leap Chance",
+            2,
+            1,
+            Material.RABBIT_FOOT
+    ),
+    LUMBERJACK(
+            "Lumberjack",
+            ChatColor.GRAY + "Chop additional logs",
+            ChatColor.YELLOW + "+1 Bonus Log Yield",
+            5,
+            1,
+            Material.IRON_AXE
+    ),
+
+    BONUS_PET_XP_II(
+            "Bonus Pet XP II",
+            ChatColor.GRAY + "Further increase pet training",
+            ChatColor.YELLOW + "+0.04 Bonus Pet XP Chance",
+            3,
+            20,
+            Material.EXPERIENCE_BOTTLE
+    ),
+    ANTIDOTE(
+            "Antidote",
+            ChatColor.GRAY + "Cleanse harmful effects instantly",
+            ChatColor.YELLOW + "Remove cooldown",
+            1,
+            20,
+            Material.MILK_BUCKET
+    ),
+    GREEN_THUMB(
+            "Green Thumb",
+            ChatColor.GRAY + "Tend crops more frequently",
+            ChatColor.YELLOW + "-25% Cooldown",
+            4,
+            20,
+            Material.WHEAT_SEEDS
+    ),
+    COLLECTOR(
+            "Collector",
+            ChatColor.GRAY + "Gather items from farther away",
+            ChatColor.YELLOW + "+50% Range",
+            1,
+            20,
+            Material.HOPPER
+    ),
+    WALKING_FORTRESS(
+            "Walking Fortress",
+            ChatColor.GRAY + "Bolster your defenses",
+            ChatColor.YELLOW + "+10% Damage Reduction",
+            2,
+            20,
+            Material.SHIELD
+    ),
+    SHOTCALLING(
+            "Shotcalling",
+            ChatColor.GRAY + "Coordinate deadlier volleys",
+            ChatColor.RED + "+5% Bonus Arrow Damage",
+            4,
+            20,
+            Material.CROSSBOW
+    ),
+    SPEED_BOOST(
+            "Speed Boost",
+            ChatColor.GRAY + "Move quicker alongside pets",
+            ChatColor.YELLOW + "+10% Walk Speed",
+            5,
+            20,
+            Material.SUGAR
+    ),
+
+    BONUS_PET_XP_III(
+            "Bonus Pet XP III",
+            ChatColor.GRAY + "Accelerate pet experience gain",
+            ChatColor.YELLOW + "+0.06 Bonus Pet XP Chance",
+            3,
+            40,
+            Material.EXPERIENCE_BOTTLE
+    ),
+    WATERLOGGED(
+            "Waterlogged",
+            ChatColor.GRAY + "Recover oxygen more often",
+            ChatColor.YELLOW + "-1s Oxygen Recovery Cooldown",
+            1,
+            40,
+            Material.KELP
+    ),
+    ENDLESS_WARP(
+            "Endless Warp",
+            ChatColor.GRAY + "Carry additional warp energy",
+            ChatColor.YELLOW + "+100 Bonus Warp Stacks",
+            1,
+            40,
+            Material.ENDER_PEARL
+    ),
+    DECAY(
+            "Decay",
+            ChatColor.GRAY + "Inflict lingering deterioration",
+            ChatColor.DARK_GRAY + "+5 Deteriorate Stacks",
+            5,
+            40,
+            Material.ROTTEN_FLESH
+    ),
+    ASPECT_OF_FROST(
+            "Aspect Of Frost",
+            ChatColor.GRAY + "Freeze foes in place",
+            ChatColor.YELLOW + "Double Slow Duration",
+            1,
+            40,
+            Material.ICE
+    ),
+    PRACTICE(
+            "Practice",
+            ChatColor.GRAY + "Bargain more effectively",
+            ChatColor.YELLOW + "+5% Bartering XP",
+            9,
+            40,
+            Material.BOOK
+    ),
+
+    BONUS_PET_XP_IV(
+            "Bonus Pet XP IV",
+            ChatColor.GRAY + "Master pet experience gains",
+            ChatColor.YELLOW + "+0.08 Bonus Pet XP Chance",
+            3,
+            60,
+            Material.EXPERIENCE_BOTTLE
+    ),
+    SECRET_LEGION(
+            "Secret Legion",
+            ChatColor.GRAY + "Legionnaires cost no hunger",
+            ChatColor.YELLOW + "No Hunger Cost",
+            1,
+            60,
+            Material.TOTEM_OF_UNDYING
+    ),
+    BLACKLUNG(
+            "Blacklung",
+            ChatColor.GRAY + "Breathe freely underground",
+            ChatColor.YELLOW + "No Overworld Oxygen Loss",
+            1,
+            60,
+            Material.COAL
+    ),
+    COMFORTABLE(
+            "Comfortable",
+            ChatColor.GRAY + "Longer lasting absorption",
+            ChatColor.YELLOW + "Double Absorption Duration and Health",
+            1,
+            60,
+            Material.RED_BED
+    ),
+    SPLASH_POTION(
+            "Splash Potion",
+            ChatColor.GRAY + "Brew faster splash potions",
+            ChatColor.YELLOW + "-10% Brewtime",
+            5,
+            60,
+            Material.SPLASH_POTION
+    ),
+    EXPERIMENTATION(
+            "Experimentation",
+            ChatColor.GRAY + "Improve potion potency",
+            ChatColor.YELLOW + "+5% Potion Duration",
+            8,
+            60,
+            Material.ENCHANTING_TABLE
+    ),
+    REVENANT(
+            "Revenant",
+            ChatColor.GRAY + "Rise again more quickly",
+            ChatColor.YELLOW + "-1m Resurrection Time",
+            1,
+            60,
+            Material.TOTEM_OF_UNDYING
+    ),
+
+    BONUS_PET_XP_V(
+            "Bonus Pet XP V",
+            ChatColor.GRAY + "Ultimate pet expertise",
+            ChatColor.YELLOW + "+0.1 Bonus Pet XP Chance",
+            4,
+            80,
+            Material.EXPERIENCE_BOTTLE
+    ),
+    COMPACT_STONE(
+            "Compact Stone",
+            ChatColor.GRAY + "Reduce stone requirements",
+            ChatColor.YELLOW + "-50% Stone Needed",
+            1,
+            80,
+            Material.STONE
+    ),
+    GROOT(
+            "Groot",
+            ChatColor.GRAY + "Reduce wood requirements",
+            ChatColor.YELLOW + "-50% Wood Needed",
+            1,
+            80,
+            Material.OAK_LOG
+    ),
+    COMPOSTER(
+            "Composter",
+            ChatColor.GRAY + "Reduce dirt requirements",
+            ChatColor.YELLOW + "-50% Dirt Needed",
+            1,
+            80,
+            Material.COMPOSTER
+    ),
+    ELITE(
+            "Elite",
+            ChatColor.GRAY + "Train pets for greater damage",
+            ChatColor.RED + "+10% Damage",
+            2,
+            80,
+            Material.DIAMOND_SWORD
+    ),
+    HAGGLE(
+            "Haggle",
+            ChatColor.GRAY + "Secure better trades",
+            ChatColor.YELLOW + "+5% Discount",
+            1,
+            80,
+            Material.EMERALD
+    ),
+    QUIRKY(
+            "Quirky",
+            ChatColor.GRAY + "Traits become more potent",
+            ChatColor.YELLOW + "+20% Trait Effect",
+            5,
+            80,
+            Material.BOOK
+    ),
+    NATURAL_SELECTION(
+            "Natural Selection",
+            ChatColor.GRAY + "Cull lesser traits from the pool",
+            ChatColor.YELLOW + "Removes lowest rarity",
+            5,
+            80,
+            Material.NETHER_STAR
     );
 
 

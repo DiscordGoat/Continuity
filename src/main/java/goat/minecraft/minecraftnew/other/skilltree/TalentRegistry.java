@@ -200,10 +200,50 @@ public final class TalentRegistry {
                         Talent.REDEMPTION
                 )
         );
-         SKILL_TALENTS.put(
+        SKILL_TALENTS.put(
                 Skill.TAMING,
                 Arrays.asList(
-                        Talent.PET_TRAINER
+                        Talent.PET_TRAINER,
+                        Talent.BONUS_PET_XP_I,
+                        Talent.LULLABY,
+                        Talent.FLIGHT,
+                        Talent.DIGGING_CLAWS,
+                        Talent.DEVOUR,
+                        Talent.ANGLER,
+                        Talent.LEAP,
+                        Talent.LUMBERJACK,
+
+                        Talent.BONUS_PET_XP_II,
+                        Talent.ANTIDOTE,
+                        Talent.GREEN_THUMB,
+                        Talent.COLLECTOR,
+                        Talent.WALKING_FORTRESS,
+                        Talent.SHOTCALLING,
+                        Talent.SPEED_BOOST,
+
+                        Talent.BONUS_PET_XP_III,
+                        Talent.WATERLOGGED,
+                        Talent.ENDLESS_WARP,
+                        Talent.DECAY,
+                        Talent.ASPECT_OF_FROST,
+                        Talent.PRACTICE,
+
+                        Talent.BONUS_PET_XP_IV,
+                        Talent.SECRET_LEGION,
+                        Talent.BLACKLUNG,
+                        Talent.COMFORTABLE,
+                        Talent.SPLASH_POTION,
+                        Talent.EXPERIMENTATION,
+                        Talent.REVENANT,
+
+                        Talent.BONUS_PET_XP_V,
+                        Talent.COMPACT_STONE,
+                        Talent.GROOT,
+                        Talent.COMPOSTER,
+                        Talent.ELITE,
+                        Talent.HAGGLE,
+                        Talent.QUIRKY,
+                        Talent.NATURAL_SELECTION
                 )
         );
         SKILL_TALENTS.put(
