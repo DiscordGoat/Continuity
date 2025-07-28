@@ -220,19 +220,32 @@ public class PetManager implements Listener {
     /**
      * Randomly selects a TraitRarity using the weight defined in {@link TraitRarity#getWeight()}.
      */
-    private TraitRarity getRandomRarityWeighted() {
+    private TraitRarity getRandomRarityWeighted(Player player) {
+        int level = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            level = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.NATURAL_SELECTION);
+        }
+
+        List<TraitRarity> pool = new ArrayList<>(Arrays.asList(TraitRarity.values()));
+        if (level >= 1) pool.remove(TraitRarity.COMMON);
+        if (level >= 2) pool.remove(TraitRarity.UNCOMMON);
+        if (level >= 3) pool.remove(TraitRarity.RARE);
+        if (level >= 4) pool.remove(TraitRarity.EPIC);
+        if (level >= 5) pool.remove(TraitRarity.LEGENDARY);
+
         double total = 0;
-        for (TraitRarity r : TraitRarity.values()) {
+        for (TraitRarity r : pool) {
             total += r.getWeight();
         }
         double rand = Math.random() * total;
-        for (TraitRarity r : TraitRarity.values()) {
+        for (TraitRarity r : pool) {
             rand -= r.getWeight();
             if (rand <= 0) {
                 return r;
             }
         }
-        return TraitRarity.COMMON;
+        return TraitRarity.MYTHIC;
     }
 
     /**
@@ -923,7 +936,7 @@ public class PetManager implements Listener {
                         player.setLevel(player.getLevel() - 1);
                         // Rerolling a trait removes any current unique trait
                         pet.setUniqueTrait(null);
-                        TraitRarity rarity = getRandomRarityWeighted();
+                        TraitRarity rarity = getRandomRarityWeighted(player);
                         if (rarity == TraitRarity.UNIQUE) {
                             UniqueTrait uTrait = UNIQUE_PERKS[new Random().nextInt(UNIQUE_PERKS.length)];
                             pet.setUniqueTrait(uTrait);

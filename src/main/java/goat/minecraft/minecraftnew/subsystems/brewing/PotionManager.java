@@ -51,6 +51,11 @@ public class PotionManager {
         if(pet != null && pet.hasPerk(PetManager.PetPerk.EXPERIMENTATION)){
             duration += 3 * pet.getLevel();
         }
+        if(SkillTreeManager.getInstance() != null){
+            int lvl = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.EXPERIMENTATION);
+            duration += duration * (lvl * 0.05);
+        }
         if(SkillTreeManager.getInstance().hasTalent(player, Talent.REDSTONE_ONE)){
             int redstoneBuff = (10*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_ONE));
             Bukkit.getLogger().info("Potion Duration extended by " + redstoneBuff + "s from " + duration + "s");

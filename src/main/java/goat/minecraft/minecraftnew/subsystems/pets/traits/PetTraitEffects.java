@@ -4,6 +4,9 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import org.bukkit.Sound;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -48,6 +51,11 @@ public class PetTraitEffects implements Listener {
         PetManager.Pet active = petManager.getActivePet(player);
         if (active != null && active.getTrait() == PetTrait.FAST) {
             double bonusPercent = active.getTrait().getValueForRarity(active.getTraitRarity());
+            if (SkillTreeManager.getInstance() != null) {
+                int q = SkillTreeManager.getInstance()
+                        .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                bonusPercent *= (1 + q * 0.20);
+            }
             UUID id = player.getUniqueId();
             float base = baseSpeed.computeIfAbsent(id, k -> player.getWalkSpeed());
             float newSpeed = (float) (base * (1.0 + bonusPercent / 100.0));

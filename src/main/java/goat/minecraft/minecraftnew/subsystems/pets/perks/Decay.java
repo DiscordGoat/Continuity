@@ -3,6 +3,9 @@ package goat.minecraft.minecraftnew.subsystems.pets.perks;
 import goat.minecraft.minecraftnew.subsystems.combat.DeteriorationDamageHandler;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,9 +32,18 @@ public class Decay implements Listener {
         if (!(event.getEntity() instanceof LivingEntity target)) return;
 
         PetManager.Pet activePet = petManager.getActivePet(player);
-        if (activePet == null || !activePet.hasPerk(PetManager.PetPerk.DECAY)) return;
 
-        int stacks = 10;
-        DeteriorationDamageHandler.getInstance().addDeterioration(target, stacks);
+        int stacks = 0;
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.DECAY)) {
+            stacks += 10;
+        }
+        if (SkillTreeManager.getInstance() != null) {
+            int level = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.DECAY);
+            stacks += level * 5;
+        }
+        if (stacks > 0) {
+            DeteriorationDamageHandler.getInstance().addDeterioration(target, stacks);
+        }
     }
 }

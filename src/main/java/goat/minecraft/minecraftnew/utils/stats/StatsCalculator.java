@@ -113,7 +113,12 @@ public class StatsCalculator {
         if (PetManager.getInstance(plugin).getActivePet(player) != null &&
                 PetManager.getInstance(plugin).getActivePet(player).getTrait() == PetTrait.PRECISE) {
             TraitRarity rarity = PetManager.getInstance(plugin).getActivePet(player).getTraitRarity();
-            bonus += PetTrait.PRECISE.getValueForRarity(rarity);
+            double val = PetTrait.PRECISE.getValueForRarity(rarity);
+            if (SkillTreeManager.getInstance() != null) {
+                int q = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                val *= (1 + q * 0.20);
+            }
+            bonus += val;
         }
         return bonus;
     }
@@ -146,7 +151,12 @@ public class StatsCalculator {
         }
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
         if (pet != null && pet.getTrait() == PetTrait.PARANORMAL) {
-            chance += pet.getTrait().getValueForRarity(pet.getTraitRarity());
+            double val = pet.getTrait().getValueForRarity(pet.getTraitRarity());
+            if (SkillTreeManager.getInstance() != null) {
+                int q = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                val *= (1 + q * 0.20);
+            }
+            chance += val;
         }
         CatalystManager cm = CatalystManager.getInstance();
         if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.DEATH)) {
@@ -172,7 +182,13 @@ public class StatsCalculator {
             if (p.hasPerk(PetManager.PetPerk.ANGLER)) total += 5;
             if (p.hasPerk(PetManager.PetPerk.HEART_OF_THE_SEA)) total += 10;
             if (p.getTrait() == PetTrait.NAUTICAL) {
-                total += p.getTrait().getValueForRarity(p.getTraitRarity());
+                double val = p.getTrait().getValueForRarity(p.getTraitRarity());
+                if (SkillTreeManager.getInstance() != null) {
+                    int q = SkillTreeManager.getInstance()
+                            .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                    val *= (1 + q * 0.20);
+                }
+                total += val;
             }
         }
         CatalystManager cm = CatalystManager.getInstance();
@@ -195,7 +211,12 @@ public class StatsCalculator {
             chance += pet.getLevel() * 0.1;
         }
         if (pet != null && pet.getTrait() == PetTrait.TREASURED) {
-            chance += pet.getTrait().getValueForRarity(pet.getTraitRarity());
+            double val = pet.getTrait().getValueForRarity(pet.getTraitRarity());
+            if (SkillTreeManager.getInstance() != null) {
+                int q = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                val *= (1 + q * 0.20);
+            }
+            chance += val;
         }
         CatalystManager cm = CatalystManager.getInstance();
         if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.DEPTH)) {
@@ -214,7 +235,12 @@ public class StatsCalculator {
         chance += upgrade * 0.000333;
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
         if (pet != null && pet.getTrait() == PetTrait.HAUNTED) {
-            chance += pet.getTrait().getValueForRarity(pet.getTraitRarity()) / 100.0;
+            double val = pet.getTrait().getValueForRarity(pet.getTraitRarity()) / 100.0;
+            if (SkillTreeManager.getInstance() != null) {
+                int q = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                val *= (1 + q * 0.20);
+            }
+            chance += val;
         }
         CatalystManager cm = CatalystManager.getInstance();
         if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.INSANITY)) {
@@ -240,10 +266,16 @@ public class StatsCalculator {
             discount += level * 0.5;
             int billionaire = mgr.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BILLIONAIRE_DISCOUNT);
             discount += billionaire * 5.0;
+            discount += mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.HAGGLE) * 5.0;
         }
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
         if (pet != null && pet.getTrait() == PetTrait.FINANCIAL) {
-            discount += pet.getTrait().getValueForRarity(pet.getTraitRarity());
+            double val = pet.getTrait().getValueForRarity(pet.getTraitRarity());
+            if (SkillTreeManager.getInstance() != null) {
+                int q = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                val *= (1 + q * 0.20);
+            }
+            discount += val;
         }
         return discount;
     }
@@ -260,6 +292,11 @@ public class StatsCalculator {
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
         if (pet != null && pet.hasPerk(PetManager.PetPerk.SPLASH_POTION)) {
             reduction += pet.getLevel() / 2.0;
+        }
+        if (SkillTreeManager.getInstance() != null) {
+            int lvl = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.SPLASH_POTION);
+            reduction += lvl * 10.0;
         }
         return reduction;
     }

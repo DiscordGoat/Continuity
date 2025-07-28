@@ -665,6 +665,11 @@ public class PotionBrewingSubsystem implements Listener {
                         double reduction = pet.getLevel() / 200.0;
                         brewTimeRemaining = (int) Math.ceil(brewTimeRemaining * (1 - reduction));
                     }
+                    if (SkillTreeManager.getInstance() != null) {
+                        int lvl = SkillTreeManager.getInstance()
+                                .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.SPLASH_POTION);
+                        brewTimeRemaining = (int) Math.ceil(brewTimeRemaining * (1 - lvl * 0.10));
+                    }
                 }
             }
             spawnTimerArmorStand();

@@ -268,7 +268,7 @@ public class PlayerOxygenManager implements Listener {
             return 1;
         } else if (world.getEnvironment() == World.Environment.NORMAL) {
             if (hasBlacklung) {
-                return 1;
+                return 0;
             }
             if (y < 44) {
                 return 1;
