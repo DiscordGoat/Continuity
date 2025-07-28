@@ -383,6 +383,50 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "-" + (level * 3) + " Reforge Mats";
             case MASTER_FOUNDATIONS:
                 return ChatColor.YELLOW + "-" + (level * 25) + "% Anvil Degrade Chance";
+            case SATIATION_MASTERY_I:
+            case SATIATION_MASTERY_II:
+            case SATIATION_MASTERY_III:
+            case SATIATION_MASTERY_IV:
+            case SATIATION_MASTERY_V:
+                return ChatColor.YELLOW + "+" + level + " Bonus Saturation";
+            case CUTTING_BOARD_I:
+            case CUTTING_BOARD_II:
+            case CUTTING_BOARD_III:
+            case CUTTING_BOARD_IV:
+            case CUTTING_BOARD_V:
+                double cutChance = level * 4;
+                return ChatColor.YELLOW + "+" + cutChance + "% Chance For Double Culinary Yield";
+            case LUNCH_RUSH_I:
+            case LUNCH_RUSH_II:
+            case LUNCH_RUSH_III:
+            case LUNCH_RUSH_IV:
+            case LUNCH_RUSH_V:
+                double rushReduce = level * 4;
+                return ChatColor.YELLOW + "-" + rushReduce + "% Cook time";
+            case SWEET_TOOTH:
+                double fruitBonus = level * 10;
+                return ChatColor.YELLOW + "+" + fruitBonus + "% Fruits Gains";
+            case GOLDEN_APPLE:
+                int regen = level * 3;
+                return ChatColor.YELLOW + "+" + regen + "s Regeneration I when eating";
+            case GRAINS_GAINS:
+                double grainBonus = level * 10;
+                return ChatColor.YELLOW + "+" + grainBonus + "% Grains Gains";
+            case PORTAL_PANTRY:
+                double pantryChance = level * 20;
+                return ChatColor.YELLOW + "+" + pantryChance + "% Chance to automatically grab ingredient";
+            case AXE_BODY_SPRAY:
+                double proteinBonus = level * 10;
+                return ChatColor.YELLOW + "+" + proteinBonus + "% Protein Gains";
+            case I_DO_NOT_NEED_A_SNACK:
+                double refundChance = level * 5;
+                return ChatColor.YELLOW + "+" + refundChance + "% Chance to Refund eaten items";
+            case RABBIT:
+                double veggieBonus = level * 10;
+                return ChatColor.YELLOW + "+" + veggieBonus + "% Veggie Gains";
+            case PANTRY_OF_PLENTY:
+                double satChance = level * 4;
+                return ChatColor.YELLOW + "+" + satChance + "% Chance to gain 20 Saturation when eating Culinary Delights";
             case SATIATION_MASTERY:
                 return ChatColor.YELLOW + "+" + level + " " + ChatColor.GRAY + "Saturation on eat";
             case FEASTING_CHANCE:
