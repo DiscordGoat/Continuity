@@ -495,8 +495,11 @@ public class Forestry implements Listener {
             SkillTreeManager mgrTalents = SkillTreeManager.getInstance();
             int orchard = mgrTalents.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.ORCHARD);
             processPerfectAppleChance(player, block, forestryLevel, orchard);
-
             int goldenApple = mgrTalents.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.PERFECT_ORCHARD);
+            // Process honey bottle chance from 100 Acre Woods talent.
+            processHoneyBottleChance(player, block);
+
+            int goldenApple = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.GOLDEN_APPLE);
             processNotchAppleChance(player, block, goldenApple);
 
             // (Additional spirit spawning logic could be added here.)
@@ -577,6 +580,25 @@ public class Forestry implements Listener {
             Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
             dropLocation.getWorld().dropItemNaturally(dropLocation, new ItemStack(Material.ENCHANTED_GOLDEN_APPLE));
             dropLocation.getWorld().playSound(dropLocation, Sound.ENTITY_ITEM_PICKUP, 0.8f, 1.2f);
+        }
+    }
+
+    public void processHoneyBottleChance(Player player, Block block) {
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        int level = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.ONE_HUNDRED_ACRE_WOODS);
+        if (level <= 0) return;
+
+        double chance = level * 1.0; // 1% per level
+        if (random.nextDouble() * 100 < chance) {
+            final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    dropLocation.getWorld().dropItemNaturally(dropLocation, new ItemStack(Material.HONEY_BOTTLE));
+                    dropLocation.getWorld().playSound(dropLocation, Sound.ITEM_BOTTLE_FILL, 0.8f, 1.0f);
+                    dropLocation.getWorld().spawnParticle(Particle.FALLING_HONEY, dropLocation, 5, 0.3, 0.3, 0.3, 0.01);
+                }
+            }.runTaskLater(plugin, 1L);
         }
     }
 

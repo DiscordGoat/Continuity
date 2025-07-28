@@ -386,6 +386,7 @@ public class UltimateEnchantmentListener implements Listener {
             ItemStack axe = player.getInventory().getItemInMainHand();
             int orchard = 0;
             forestry.processPerfectAppleChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"), orchard);
+            forestry.processHoneyBottleChance(player, currentBlock);
             forestry.processDoubleDropChance(player, currentBlock);
 
             if (visitedLogs.size() % 4 == 0) {
