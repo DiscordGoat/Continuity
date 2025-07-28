@@ -170,12 +170,31 @@ public final class TalentRegistry {
         SKILL_TALENTS.put(
                 Skill.FORESTRY,
                 Arrays.asList(
-                        Talent.DOUBLE_LOGS,
-                        Talent.FORESTRY_HASTE,
-                        Talent.HASTE_POTENCY,
-                        Talent.TREECAP_SPIRIT
-                  )
-          );
+                        Talent.SPIRIT_CHANCE_I,
+                        Talent.TIMBER_I,
+                        Talent.LEVERAGE_I,
+                        Talent.FOREST_FRENZY,
+                        Talent.SPIRIT_CHANCE_II,
+                        Talent.TIMBER_II,
+                        Talent.LEVERAGE_II,
+                        Talent.PHOTOSYNTHESIS,
+                        Talent.SPIRIT_CHANCE_III,
+                        Talent.TIMBER_III,
+                        Talent.LEVERAGE_III,
+                        Talent.ONE_HUNDRED_ACRE_WOODS,
+                        Talent.SPECTRAL_ARMOR,
+                        Talent.SPIRIT_CHANCE_IV,
+                        Talent.TIMBER_IV,
+                        Talent.LEVERAGE_IV,
+                        Talent.DEFORESTATION,
+                        Talent.HEADHUNTER,
+                        Talent.SPIRIT_CHANCE_V,
+                        Talent.TIMBER_V,
+                        Talent.LEVERAGE_V,
+                        Talent.ANCIENT_CONFUSION,
+                        Talent.REDEMPTION
+                )
+        );
          SKILL_TALENTS.put(
                 Skill.TAMING,
                 Arrays.asList(

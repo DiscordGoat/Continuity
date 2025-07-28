@@ -360,16 +360,22 @@ public class Forestry implements Listener {
     }
 
     private void grantHaste(Player player) {
-        int chanceLevel = SkillTreeManager.getInstance()
-                .getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.FORESTRY_HASTE);
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        int chanceLevel = 0;
+        chanceLevel += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.LEVERAGE_I);
+        chanceLevel += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.LEVERAGE_II);
+        chanceLevel += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.LEVERAGE_III);
+        chanceLevel += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.LEVERAGE_IV);
+        chanceLevel += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.LEVERAGE_V);
         if (chanceLevel <= 0) return;
         int roll = random.nextInt(100) + 1;
-        if (roll <= chanceLevel * 10) {
-            int potency = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.HASTE_POTENCY);
+        if (roll <= chanceLevel * 2) {
+            int potency = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.DEFORESTATION);
             potency = Math.min(potency, 4);
             int level = xpManager.getPlayerLevel(player, "Forestry");
             int duration = 100 + (level * 5);
+            int frenzy = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.FOREST_FRENZY);
+            duration += frenzy * 200;
             player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, duration, potency), true);
             player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_STEP, 1.0f, 1.0f);
         }
@@ -409,9 +415,14 @@ public class Forestry implements Listener {
             spiritChance += BASE + (tier * PER_TIER);
         }
 
-        int treecapBonus = SkillTreeManager.getInstance()
-                .getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TREECAP_SPIRIT);
-        spiritChance += treecapBonus * 0.001;
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        int scTotal = 0;
+        scTotal += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.SPIRIT_CHANCE_I) * 2;
+        scTotal += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.SPIRIT_CHANCE_II) * 4;
+        scTotal += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.SPIRIT_CHANCE_III) * 6;
+        scTotal += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.SPIRIT_CHANCE_IV) * 8;
+        scTotal += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.SPIRIT_CHANCE_V) * 10;
+        spiritChance += scTotal / 10000.0;
 
         return spiritChance;
     }
@@ -500,9 +511,14 @@ public class Forestry implements Listener {
      * @param block The log block that was broken.
      */
     public void processDoubleDropChance(Player player, Block block) {
-        int level = SkillTreeManager.getInstance()
-                .getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.DOUBLE_LOGS);
-        boolean doubled = random.nextInt(100) < level * 10;
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        int level = 0;
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_I);
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_II);
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_III);
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_IV);
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_V);
+        boolean doubled = random.nextInt(100) < level * 4;
 
         CatalystManager catalystManager = CatalystManager.getInstance();
         boolean tripled = false;

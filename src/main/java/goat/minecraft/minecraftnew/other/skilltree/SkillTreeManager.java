@@ -483,17 +483,58 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "-" + (level * 10) + "s Workcycle Cooldown";
             case BILLIONAIRE_DISCOUNT:
                 return ChatColor.YELLOW + "+" + (level * 5) + "% Discount";
-            case DOUBLE_LOGS:
-                double dblChance = level * 10;
-                return ChatColor.YELLOW + "+" + dblChance + "% " + ChatColor.GRAY + "Double Log Chance";
-            case FORESTRY_HASTE:
-                double hasteChance = level * 10;
-                return ChatColor.YELLOW + "+" + hasteChance + "% " + ChatColor.GRAY + "Haste chance";
-            case HASTE_POTENCY:
-                return ChatColor.YELLOW + "+" + level + " " + ChatColor.GRAY + "Haste potency";
-            case TREECAP_SPIRIT:
-                double sc = level * 0.1;
-                return ChatColor.YELLOW + "+" + sc + "% " + ChatColor.GRAY + "Spirit Chance";
+            case TIMBER_I:
+            case TIMBER_II:
+            case TIMBER_III:
+            case TIMBER_IV:
+            case TIMBER_V:
+                double dblChance = level * 4;
+                return ChatColor.YELLOW + "+" + dblChance + "% " + ChatColor.GRAY + "Double Logs Chance";
+            case LEVERAGE_I:
+            case LEVERAGE_II:
+            case LEVERAGE_III:
+            case LEVERAGE_IV:
+            case LEVERAGE_V:
+                double hasteChance = level * 2;
+                return ChatColor.YELLOW + "+" + hasteChance + "% " + ChatColor.GRAY + "Haste Chance";
+            case FOREST_FRENZY:
+                int frenzyDur = level * 10;
+                return ChatColor.YELLOW + "+" + frenzyDur + "s Haste Duration";
+            case PHOTOSYNTHESIS:
+                int heal = level;
+                return ChatColor.GREEN + "+" + heal + " Health on Treecapitator use";
+            case ONE_HUNDRED_ACRE_WOODS:
+                double honeyChance = level * 1;
+                return ChatColor.YELLOW + "+" + honeyChance + "% Honey Bottle Chance";
+            case SPECTRAL_ARMOR:
+                double reduction = level * 10;
+                return ChatColor.YELLOW + "-" + reduction + "% Spirit Damage";
+            case DEFORESTATION:
+                return ChatColor.YELLOW + "+" + level + " Potency of Haste";
+            case HEADHUNTER:
+                double dmg = level * 10;
+                return ChatColor.RED + "+" + dmg + "% Damage to Spirits";
+            case SPIRIT_CHANCE_I:
+                double sc1 = level * 0.02;
+                return ChatColor.YELLOW + "+" + sc1 + "% " + ChatColor.GRAY + "Spirit Chance";
+            case SPIRIT_CHANCE_II:
+                double sc2 = level * 0.04;
+                return ChatColor.YELLOW + "+" + sc2 + "% " + ChatColor.GRAY + "Spirit Chance";
+            case SPIRIT_CHANCE_III:
+                double sc3 = level * 0.06;
+                return ChatColor.YELLOW + "+" + sc3 + "% " + ChatColor.GRAY + "Spirit Chance";
+            case SPIRIT_CHANCE_IV:
+                double sc4 = level * 0.08;
+                return ChatColor.YELLOW + "+" + sc4 + "% " + ChatColor.GRAY + "Spirit Chance";
+            case SPIRIT_CHANCE_V:
+                double sc5 = level * 0.10;
+                return ChatColor.YELLOW + "+" + sc5 + "% " + ChatColor.GRAY + "Spirit Chance";
+            case ANCIENT_CONFUSION:
+                int lost = level * 10;
+                return ChatColor.DARK_GRAY + "-" + lost + " Spirit Level";
+            case REDEMPTION:
+                double replant = level * 50;
+                return ChatColor.GREEN + "+" + replant + "% Sapling Replant Chance";
             case PET_TRAINER:
                 double xpChance = level * 4;
                 return ChatColor.YELLOW + "+" + xpChance + "% " + ChatColor.GRAY + "Double Pet XP chance";

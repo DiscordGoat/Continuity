@@ -1002,37 +1002,189 @@ public enum Talent {
             80,
             Material.DIAMOND
     ),
-    DOUBLE_LOGS(
-            "Double Logs",
+    SPIRIT_CHANCE_I(
+            "Spirit Chance I",
+            ChatColor.GRAY + "Increase chance to encounter spirits",
+            ChatColor.YELLOW + "+0.0002 Spirit Chance",
+            3,
+            1,
+            Material.SOUL_TORCH
+    ),
+    TIMBER_I(
+            "Timber I",
             ChatColor.GRAY + "Chance for extra logs",
-            ChatColor.YELLOW + "+10% Double Log Chance.",
-            10,
+            ChatColor.YELLOW + "+4% Double Logs Chance",
+            5,
             1,
             Material.OAK_LOG
     ),
-    FORESTRY_HASTE(
-            "Forestry Haste",
+    LEVERAGE_I(
+            "Leverage I",
             ChatColor.GRAY + "Chance to gain Haste while chopping",
-            ChatColor.YELLOW + "+10% Haste chance.",
-            10,
+            ChatColor.YELLOW + "+2% Haste Chance",
+            6,
+            1,
+            Material.SUGAR
+    ),
+    FOREST_FRENZY(
+            "Forest Frenzy",
+            ChatColor.GRAY + "Extends Forestry Haste duration",
+            ChatColor.YELLOW + "+10s Haste Duration",
+            6,
+            1,
+            Material.REDSTONE_TORCH
+    ),
+    SPIRIT_CHANCE_II(
+            "Spirit Chance II",
+            ChatColor.GRAY + "Increase chance to encounter spirits",
+            ChatColor.YELLOW + "+0.0004 Spirit Chance",
+            3,
+            20,
+            Material.SOUL_TORCH
+    ),
+    TIMBER_II(
+            "Timber II",
+            ChatColor.GRAY + "Chance for extra logs",
+            ChatColor.YELLOW + "+4% Double Logs Chance",
+            5,
+            20,
+            Material.OAK_LOG
+    ),
+    LEVERAGE_II(
+            "Leverage II",
+            ChatColor.GRAY + "Chance to gain Haste while chopping",
+            ChatColor.YELLOW + "+2% Haste Chance",
+            6,
             20,
             Material.SUGAR
     ),
-    HASTE_POTENCY(
-            "Haste Potency",
-            ChatColor.GRAY + "Increase Forestry Haste strength",
-            ChatColor.YELLOW + "+1 Haste level.",
+    PHOTOSYNTHESIS(
+            "Photosynthesis",
+            ChatColor.GRAY + "Recover health when using Treecapitator",
+            ChatColor.GREEN + "+1 Health on Treecapitator use",
+            6,
+            20,
+            Material.SUNFLOWER
+    ),
+    SPIRIT_CHANCE_III(
+            "Spirit Chance III",
+            ChatColor.GRAY + "Increase chance to encounter spirits",
+            ChatColor.YELLOW + "+0.0006 Spirit Chance",
+            3,
+            40,
+            Material.SOUL_TORCH
+    ),
+    TIMBER_III(
+            "Timber III",
+            ChatColor.GRAY + "Chance for extra logs",
+            ChatColor.YELLOW + "+4% Double Logs Chance",
+            5,
+            40,
+            Material.OAK_LOG
+    ),
+    LEVERAGE_III(
+            "Leverage III",
+            ChatColor.GRAY + "Chance to gain Haste while chopping",
+            ChatColor.YELLOW + "+2% Haste Chance",
             4,
             40,
-            Material.REDSTONE_TORCH
+            Material.SUGAR
     ),
-    TREECAP_SPIRIT(
-            "Treecap Spirit",
-            ChatColor.GRAY + "More spirit chance from Treecapitator",
-            ChatColor.YELLOW + "+0.1% Spirit Chance",
-            15,
-            50,
+    ONE_HUNDRED_ACRE_WOODS(
+            "100 Acre Woods",
+            ChatColor.GRAY + "Chance to gain a Honey Bottle when chopping",
+            ChatColor.YELLOW + "+1% Honey Bottle Chance",
+            5,
+            40,
+            Material.HONEY_BOTTLE
+    ),
+    SPECTRAL_ARMOR(
+            "Spectral Armor",
+            ChatColor.GRAY + "Reduced spirit damage taken",
+            ChatColor.YELLOW + "-10% Spirit Damage",
+            3,
+            40,
+            Material.LEATHER_CHESTPLATE
+    ),
+    SPIRIT_CHANCE_IV(
+            "Spirit Chance IV",
+            ChatColor.GRAY + "Increase chance to encounter spirits",
+            ChatColor.YELLOW + "+0.0008 Spirit Chance",
+            3,
+            60,
             Material.SOUL_TORCH
+    ),
+    TIMBER_IV(
+            "Timber IV",
+            ChatColor.GRAY + "Chance for extra logs",
+            ChatColor.YELLOW + "+4% Double Logs Chance",
+            5,
+            60,
+            Material.OAK_LOG
+    ),
+    LEVERAGE_IV(
+            "Leverage IV",
+            ChatColor.GRAY + "Chance to gain Haste while chopping",
+            ChatColor.YELLOW + "+2% Haste Chance",
+            6,
+            60,
+            Material.SUGAR
+    ),
+    DEFORESTATION(
+            "Deforestation",
+            ChatColor.GRAY + "Increase Forestry Haste potency",
+            ChatColor.YELLOW + "+1 Potency of Haste",
+            3,
+            60,
+            Material.DIAMOND_AXE
+    ),
+    HEADHUNTER(
+            "HeadHunter",
+            ChatColor.GRAY + "Deal more damage to spirits",
+            ChatColor.RED + "+10% Damage to Spirits",
+            3,
+            60,
+            Material.BOW
+    ),
+    SPIRIT_CHANCE_V(
+            "Spirit Chance V",
+            ChatColor.GRAY + "Increase chance to encounter spirits",
+            ChatColor.YELLOW + "+0.0010 Spirit Chance",
+            4,
+            80,
+            Material.SOUL_TORCH
+    ),
+    TIMBER_V(
+            "Timber V",
+            ChatColor.GRAY + "Chance for extra logs",
+            ChatColor.YELLOW + "+4% Double Logs Chance",
+            5,
+            80,
+            Material.OAK_LOG
+    ),
+    LEVERAGE_V(
+            "Leverage V",
+            ChatColor.GRAY + "Chance to gain Haste while chopping",
+            ChatColor.YELLOW + "+2% Haste Chance",
+            4,
+            80,
+            Material.SUGAR
+    ),
+    ANCIENT_CONFUSION(
+            "Ancient Confusion",
+            ChatColor.GRAY + "Lose spirit levels when chopping",
+            ChatColor.DARK_GRAY + "-10 Spirit Level",
+            5,
+            80,
+            Material.ROTTEN_FLESH
+    ),
+    REDEMPTION(
+            "Redemption",
+            ChatColor.GRAY + "Chance to automatically replant saplings",
+            ChatColor.GREEN + "+50% Sapling Replant Chance",
+            2,
+            80,
+            Material.OAK_SAPLING
     ),
     PET_TRAINER(
             "Pet Trainer",
