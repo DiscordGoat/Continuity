@@ -404,7 +404,7 @@ public enum Talent {
     ),
     NOVICE_FOUNDATIONS(
             "Novice Foundations",
-            ChatColor.GRAY + "Protect your anvil",
+            ChatColor.GRAY + "Protect your anvil from Failed Common Reforges",
             ChatColor.YELLOW + "-25% Anvil Degrade Chance",
             4,
             1,
@@ -453,7 +453,7 @@ public enum Talent {
     ),
     APPRENTICE_FOUNDATIONS(
             "Apprentice Foundations",
-            ChatColor.GRAY + "Reinforce anvils",
+            ChatColor.GRAY + "Protects your Anvil from Failed Uncommon Reforges",
             ChatColor.YELLOW + "-25% Anvil Degrade Chance",
             4,
             20,
@@ -502,7 +502,7 @@ public enum Talent {
     ),
     JOURNEYMAN_FOUNDATIONS(
             "Journeyman Foundations",
-            ChatColor.GRAY + "Stabilise anvils",
+            ChatColor.GRAY + "Protect your Anvil from Failed Rare Reforges",
             ChatColor.YELLOW + "-25% Anvil Degrade Chance",
             4,
             40,
@@ -551,7 +551,7 @@ public enum Talent {
     ),
     EXPERT_FOUNDATIONS(
             "Expert Foundations",
-            ChatColor.GRAY + "Fortified anvils",
+            ChatColor.GRAY + "Protect your Anvil from Failed Epic Reforges",
             ChatColor.YELLOW + "-25% Anvil Degrade Chance",
             4,
             60,
@@ -600,7 +600,7 @@ public enum Talent {
     ),
     MASTER_FOUNDATIONS(
             "Master Foundations",
-            ChatColor.GRAY + "Ultimate anvil care",
+            ChatColor.GRAY + "Protect your Anvil from Failed Legendary Reforges",
             ChatColor.YELLOW + "-25% Anvil Degrade Chance",
             4,
             80,

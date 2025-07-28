@@ -102,7 +102,7 @@ public class CustomNutritionManager implements Listener {
                         continue;
                     }
                     int counter = decayCounters.getOrDefault(uuid, 0) + 1;
-                    if (counter >= 300) { // 10 minutes
+                    if (counter >= 60) { // 1 minutes
                         Map<FoodGroup, Integer> map = nutrition.get(uuid);
                         for (FoodGroup g : FoodGroup.values()) {
                             int v = map.getOrDefault(g,0);

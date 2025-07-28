@@ -2744,7 +2744,7 @@ public class ItemRegistry {
     /** Masterwork ingot used for repairing and empowering equipment. */
     public static ItemStack getMasterworkIngot() {
         return createCustomItem(
-                Material.IRON_INGOT,
+                Material.GOLD_INGOT,
                 ChatColor.GOLD + "Masterwork Ingot",
                 List.of(
                         ChatColor.GRAY + "A rare ingot of exceptional quality.",

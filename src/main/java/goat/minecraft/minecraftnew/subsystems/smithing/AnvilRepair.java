@@ -1641,7 +1641,7 @@ public class AnvilRepair implements Listener {
                         repairAmount += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.REPAIR_AMOUNT_V) * 7;
                     }
                     if (billItem.getType() == Material.IRON_INGOT) {
-                        StatsCalculator statsCalculator = new StatsCalculator(MinecraftNew.getInstance());
+                        StatsCalculator statsCalculator = StatsCalculator.getInstance(MinecraftNew.getInstance());
                         double quality = statsCalculator.getRepairQuality(player);
                         double roll = quality;
                         if (repairAmount > quality) {
@@ -1752,7 +1752,7 @@ public class AnvilRepair implements Listener {
      * talents via {@link StatsCalculator}.</p>
      */
     private int getRepairQuality(Player player) {
-        StatsCalculator calculator = new StatsCalculator(MinecraftNew.getInstance());
+        StatsCalculator calculator = StatsCalculator.getInstance(MinecraftNew.getInstance());
         return (int) calculator.getRepairQuality(player);
     }
 
