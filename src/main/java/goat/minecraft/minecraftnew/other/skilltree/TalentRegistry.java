@@ -203,7 +203,6 @@ public final class TalentRegistry {
         SKILL_TALENTS.put(
                 Skill.TAMING,
                 Arrays.asList(
-                        Talent.PET_TRAINER,
                         Talent.BONUS_PET_XP_I,
                         Talent.LULLABY,
                         Talent.FLIGHT,

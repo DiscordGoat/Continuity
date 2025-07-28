@@ -112,7 +112,7 @@ public enum Talent {
             2,
             60,
             Material.ZOMBIE_HEAD
-),
+    ),
     NIGHT_VISION_MASTERY(
             "Night Vision Mastery",
             ChatColor.GRAY + "Add a Spider eye",
@@ -120,7 +120,7 @@ public enum Talent {
             2,
             20,
             Material.SPIDER_EYE
-      ),
+    ),
     SOLAR_FURY_MASTERY(
             "Solar Fury Mastery",
             ChatColor.GRAY + "Add Blaze Powder",
@@ -1194,14 +1194,7 @@ public enum Talent {
             80,
             Material.OAK_SAPLING
     ),
-    PET_TRAINER(
-            "Pet Trainer",
-            ChatColor.GRAY + "Sharpen your pet handling skills",
-            ChatColor.YELLOW + "+4% " + ChatColor.GRAY + "Double Pet XP Chance",
-            25,
-            1,
-            Material.BONE
-    ),
+
     HEALTH_I(
             "Health I",
             ChatColor.GRAY + "Fortify your body for survival",
@@ -1812,14 +1805,7 @@ public enum Talent {
             60,
             Material.ENCHANTING_TABLE
     ),
-    REVENANT(
-            "Revenant",
-            ChatColor.GRAY + "Rise again more quickly",
-            ChatColor.YELLOW + "-1m Resurrection Time",
-            1,
-            60,
-            Material.TOTEM_OF_UNDYING
-    ),
+
 
     BONUS_PET_XP_V(
             "Bonus Pet XP V",

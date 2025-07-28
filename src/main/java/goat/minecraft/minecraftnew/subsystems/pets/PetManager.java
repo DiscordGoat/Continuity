@@ -534,8 +534,6 @@ public class PetManager implements Listener {
             SkillTreeManager mgr = SkillTreeManager.getInstance();
             if (mgr != null) {
                 double chance = 0.0;
-                int level = mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.PET_TRAINER);
-                chance += level * 0.04;
                 chance += mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.BONUS_PET_XP_I) * 0.02;
                 chance += mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.BONUS_PET_XP_II) * 0.04;
                 chance += mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.BONUS_PET_XP_III) * 0.06;
