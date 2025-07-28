@@ -285,6 +285,14 @@ public class VillagerTradeManager implements Listener {
         fletcherSells.add(createTradeMap("FEATHER", 8, 1, 1));
         fletcherSells.add(createTradeMap("ARROW", 16, 1, 1));
         fletcherSells.add(createTradeMap("COMPACT_WOOD", 1, 2, 3));
+        fletcherSells.add(createTradeMap("SUPER_OAK_SAPLING", 1, 32, 3));
+        fletcherSells.add(createTradeMap("SUPER_BIRCH_SAPLING", 1, 32, 3));
+        fletcherSells.add(createTradeMap("SUPER_SPRUCE_SAPLING", 1, 32, 3));
+        fletcherSells.add(createTradeMap("SUPER_JUNGLE_SAPLING", 1, 32, 3));
+        fletcherSells.add(createTradeMap("SUPER_ACACIA_SAPLING", 1, 32, 3));
+        fletcherSells.add(createTradeMap("SUPER_DARK_OAK_SAPLING", 1, 32, 3));
+        fletcherSells.add(createTradeMap("SUPER_MANGROVE_SAPLING", 1, 32, 3));
+        fletcherSells.add(createTradeMap("SUPER_CHERRY_SAPLING", 1, 32, 3));
         fletcherSells.add(createTradeMap("SECRETS_OF_INFINITY", 1, 128, 1)); // Custom item
         fletcherSells.add(createTradeMap("THE_LAW_OF_GRAVITY", 1, 256, 5));
 

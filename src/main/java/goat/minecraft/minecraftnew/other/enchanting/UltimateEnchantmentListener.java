@@ -11,6 +11,7 @@ import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
+import goat.minecraft.minecraftnew.subsystems.forestry.SaplingManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
@@ -454,6 +455,9 @@ public class UltimateEnchantmentListener implements Listener {
                 }
             }
         }
+
+        SaplingManager.getInstance(MinecraftNew.getInstance())
+                .maybeDropSuperSapling(startBlock.getType(), startBlock.getLocation());
 
         // ---- Finally, break them all gradually! ----
         // 1) Break logs with durability usage, because they’re not ores.
