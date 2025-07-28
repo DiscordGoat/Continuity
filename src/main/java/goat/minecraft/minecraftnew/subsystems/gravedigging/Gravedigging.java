@@ -131,8 +131,16 @@ public class Gravedigging implements Listener {
                 chance += 0.01 * level;
             }
         }
-        int intuition = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_INTUITION);
-        chance += 0.001 * intuition;
+        int gd1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_I);
+        int gd2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_II);
+        int gd3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_III);
+        int gd4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_IV);
+        int gd5 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_V);
+        chance += 0.001 * gd1;
+        chance += 0.0015 * gd2;
+        chance += 0.002 * gd3;
+        chance += 0.0025 * gd4;
+        chance += 0.00725 * gd5;
 
         CatalystManager catalystManager = CatalystManager.getInstance();
         if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.DEATH)) {

@@ -17,7 +17,7 @@ public class TerraformingDurability implements Listener {
     public void onItemDamage(PlayerItemDamageEvent event) {
         Player player = event.getPlayer();
         int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
-                Skill.TERRAFORMING, Talent.CONSERVATIONIST);
+                Skill.TERRAFORMING, Talent.PROSPEKT);
         double chance = level * 0.01; // 1% per talent level
 
         if (Math.random() < chance) {
