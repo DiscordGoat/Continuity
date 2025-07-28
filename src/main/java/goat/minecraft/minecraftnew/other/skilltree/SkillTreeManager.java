@@ -536,8 +536,7 @@ public class SkillTreeManager implements Listener {
                 int lost = level * 10;
                 return ChatColor.DARK_GRAY + "-" + lost + " Spirit Level";
             case REDEMPTION:
-                double replant = level * 50;
-                return ChatColor.GREEN + "+" + replant + "% Sapling Replant Chance";
+                return ChatColor.GREEN + "x" + (level + 1) + " Super Sapling Chance";
             case PET_TRAINER:
                 double xpChance = level * 4;
                 return ChatColor.YELLOW + "+" + xpChance + "% " + ChatColor.GRAY + "Double Pet XP chance";
