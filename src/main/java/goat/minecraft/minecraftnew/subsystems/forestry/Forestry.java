@@ -493,24 +493,14 @@ public class Forestry implements Listener {
             processDoubleDropChance(player, block);
             // Process perfect apple drop chance.
             SkillTreeManager mgrTalents = SkillTreeManager.getInstance();
-            int orchard = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ORCHARD);
+            int orchard = mgrTalents.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.ORCHARD);
             processPerfectAppleChance(player, block, forestryLevel, orchard);
+            int goldenApple = mgrTalents.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.PERFECT_ORCHARD);
             // Process honey bottle chance from 100 Acre Woods talent.
             processHoneyBottleChance(player, block);
 
             int goldenApple = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.GOLDEN_APPLE);
             processNotchAppleChance(player, block, goldenApple);
-
-            int regrowth = 0;
-            regrowth += mgrTalents.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.REGROWTH_I);
-            regrowth += mgrTalents.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.REGROWTH_II);
-            regrowth += mgrTalents.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.REGROWTH_III);
-            if (regrowth > 0) {
-                SaplingManager sm = SaplingManager.getInstance();
-                int current = sm.getCooldownSecondsRemaining();
-                int reduction = regrowth * 86400;
-                sm.setCooldownSecondsRemaining(Math.max(0, current - reduction));
-            }
 
             // (Additional spirit spawning logic could be added here.)
             ForestSpiritManager forestSpiritManager = ForestSpiritManager.getInstance(plugin);
@@ -526,40 +516,34 @@ public class Forestry implements Listener {
      */
     public void processDoubleDropChance(Player player, Block block) {
         SkillTreeManager mgr = SkillTreeManager.getInstance();
-        int levelDouble = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_I);
-        int levelTriple = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_II);
-        int levelQuad   = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_III);
-
-        int extra = 0;
-        if (random.nextInt(100) < levelQuad * 20) {
-            extra = 3;
-        } else if (random.nextInt(100) < levelTriple * 20) {
-            extra = 2;
-        } else if (random.nextInt(100) < levelDouble * 20) {
-            extra = 1;
-        }
+        int level = 0;
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_I);
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_II);
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_III);
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_IV);
+        level += mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.TIMBER_V);
+        boolean doubled = random.nextInt(100) < level * 4;
 
         CatalystManager catalystManager = CatalystManager.getInstance();
-        if (extra < 3 && catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
+        boolean tripled = false;
+        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
             Catalyst catalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);
             if (catalyst != null) {
                 int tier = catalystManager.getCatalystTier(catalyst);
                 double chance = 0.40 + (tier * 0.10);
                 chance = Math.min(chance, 1.0);
-                if (random.nextDouble() < chance) {
-                    extra = Math.max(extra, 2);
-                }
+                tripled = random.nextDouble() < chance;
             }
         }
 
-        if (extra > 0) {
+        if (doubled || tripled) {
             final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
             final Material logType = block.getType();
-            final int amount = extra;
+            final int extra = tripled ? 2 : 1;
             new BukkitRunnable() {
                 @Override
                 public void run() {
-                    dropLocation.getWorld().dropItemNaturally(dropLocation, new ItemStack(logType, amount));
+                    dropLocation.getWorld().dropItemNaturally(dropLocation, new ItemStack(logType, extra));
                     dropLocation.getWorld().playSound(dropLocation, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 0.3f, 1.0f);
                     dropLocation.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, dropLocation, 5, 0.3, 0.3, 0.3, 0);
                 }

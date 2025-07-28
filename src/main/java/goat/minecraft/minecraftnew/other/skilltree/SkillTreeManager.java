@@ -484,14 +484,12 @@ public class SkillTreeManager implements Listener {
             case BILLIONAIRE_DISCOUNT:
                 return ChatColor.YELLOW + "+" + (level * 5) + "% Discount";
             case TIMBER_I:
-                double dblChance = level * 20;
-                return ChatColor.YELLOW + "+" + dblChance + "% " + ChatColor.GRAY + "Double Logs Chance";
             case TIMBER_II:
-                double triChance = level * 20;
-                return ChatColor.YELLOW + "+" + triChance + "% " + ChatColor.GRAY + "Triple Logs Chance";
             case TIMBER_III:
-                double quadChance = level * 20;
-                return ChatColor.YELLOW + "+" + quadChance + "% " + ChatColor.GRAY + "Quadruple Logs Chance";
+            case TIMBER_IV:
+            case TIMBER_V:
+                double dblChance = level * 4;
+                return ChatColor.YELLOW + "+" + dblChance + "% " + ChatColor.GRAY + "Double Logs Chance";
             case LEVERAGE_I:
             case LEVERAGE_II:
             case LEVERAGE_III:
