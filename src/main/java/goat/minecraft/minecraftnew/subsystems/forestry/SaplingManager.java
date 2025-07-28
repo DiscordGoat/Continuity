@@ -1,9 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.forestry;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.other.skilltree.Skill;
-import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
-import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -125,21 +122,8 @@ public class SaplingManager implements Listener {
             loc.getWorld().generateTree(loc, type);
         }
         saplingLocations.clear();
-        cooldownSeconds = Math.max(0, DEFAULT_COOLDOWN - calculateRegrowthReduction());
+        cooldownSeconds = DEFAULT_COOLDOWN;
         saveData();
-    }
-
-    private int calculateRegrowthReduction() {
-        int highest = 0;
-        SkillTreeManager mgr = SkillTreeManager.getInstance();
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            int level = 0;
-            level += mgr.getTalentLevel(p.getUniqueId(), Skill.FORESTRY, Talent.REGROWTH_I);
-            level += mgr.getTalentLevel(p.getUniqueId(), Skill.FORESTRY, Talent.REGROWTH_II);
-            level += mgr.getTalentLevel(p.getUniqueId(), Skill.FORESTRY, Talent.REGROWTH_III);
-            if (level > highest) highest = level;
-        }
-        return highest * 86400;
     }
 
     private void addSapling(Location loc) {

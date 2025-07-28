@@ -1013,7 +1013,7 @@ public enum Talent {
     TIMBER_I(
             "Timber I",
             ChatColor.GRAY + "Chance for extra logs",
-            ChatColor.YELLOW + "+20% Double Logs Chance",
+            ChatColor.YELLOW + "+4% Double Logs Chance",
             5,
             1,
             Material.OAK_LOG
@@ -1034,14 +1034,6 @@ public enum Talent {
             1,
             Material.REDSTONE_TORCH
     ),
-    REGROWTH_I(
-            "Regrowth I",
-            ChatColor.GRAY + "Accelerate sapling recovery",
-            ChatColor.GREEN + "-1d Sapling Growth Cooldown",
-            5,
-            1,
-            Material.BONE_MEAL
-    ),
     SPIRIT_CHANCE_II(
             "Spirit Chance II",
             ChatColor.GRAY + "Increase chance to encounter spirits",
@@ -1052,8 +1044,8 @@ public enum Talent {
     ),
     TIMBER_II(
             "Timber II",
-            ChatColor.GRAY + "Chance for even more logs",
-            ChatColor.YELLOW + "+20% Triple Logs Chance",
+            ChatColor.GRAY + "Chance for extra logs",
+            ChatColor.YELLOW + "+4% Double Logs Chance",
             5,
             20,
             Material.OAK_LOG
@@ -1074,14 +1066,6 @@ public enum Talent {
             20,
             Material.SUNFLOWER
     ),
-    REGROWTH_II(
-            "Regrowth II",
-            ChatColor.GRAY + "Accelerate sapling recovery",
-            ChatColor.GREEN + "-1d Sapling Growth Cooldown",
-            5,
-            20,
-            Material.BONE_MEAL
-    ),
     SPIRIT_CHANCE_III(
             "Spirit Chance III",
             ChatColor.GRAY + "Increase chance to encounter spirits",
@@ -1092,8 +1076,8 @@ public enum Talent {
     ),
     TIMBER_III(
             "Timber III",
-            ChatColor.GRAY + "Chance for vast quantities of logs",
-            ChatColor.YELLOW + "+20% Quadruple Logs Chance",
+            ChatColor.GRAY + "Chance for extra logs",
+            ChatColor.YELLOW + "+4% Double Logs Chance",
             5,
             40,
             Material.OAK_LOG
@@ -1122,6 +1106,14 @@ public enum Talent {
             40,
             Material.LEATHER_CHESTPLATE
     ),
+    ORCHARD(
+            "Orchard",
+            ChatColor.GRAY + "Increase perfect apple drop rate",
+            ChatColor.YELLOW + "+1% Perfect Apple Drop Chance",
+            5,
+            40,
+            Material.APPLE
+    ),
     SPIRIT_CHANCE_IV(
             "Spirit Chance IV",
             ChatColor.GRAY + "Increase chance to encounter spirits",
@@ -1129,6 +1121,14 @@ public enum Talent {
             3,
             60,
             Material.SOUL_TORCH
+    ),
+    TIMBER_IV(
+            "Timber IV",
+            ChatColor.GRAY + "Chance for extra logs",
+            ChatColor.YELLOW + "+4% Double Logs Chance",
+            5,
+            60,
+            Material.OAK_LOG
     ),
     LEVERAGE_IV(
             "Leverage IV",
@@ -1154,13 +1154,13 @@ public enum Talent {
             60,
             Material.BOW
     ),
-    REGROWTH_III(
-            "Regrowth III",
-            ChatColor.GRAY + "Accelerate sapling recovery",
-            ChatColor.GREEN + "-1d Sapling Growth Cooldown",
+    PERFECT_ORCHARD(
+            "Perfect Orchard",
+            ChatColor.GRAY + "Increase notch apple drop rate",
+            ChatColor.YELLOW + "+1% Notch Apple Drop Chance",
             5,
             60,
-            Material.BONE_MEAL
+            Material.ENCHANTED_GOLDEN_APPLE
     ),
     SPIRIT_CHANCE_V(
             "Spirit Chance V",
@@ -1169,6 +1169,14 @@ public enum Talent {
             4,
             80,
             Material.SOUL_TORCH
+    ),
+    TIMBER_V(
+            "Timber V",
+            ChatColor.GRAY + "Chance for extra logs",
+            ChatColor.YELLOW + "+4% Double Logs Chance",
+            5,
+            80,
+            Material.OAK_LOG
     ),
     LEVERAGE_V(
             "Leverage V",
