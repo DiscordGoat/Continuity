@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -27,6 +30,10 @@ public class SpeedBoost implements Listener {
      */
     private void adjustWalkSpeed(Player player) {
         PetManager.Pet activePet = petManager.getActivePet(player);
+        int talent = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.SPEED_BOOST);
+        }
 
         float speed = DEFAULT_WALK_SPEED;
         if (activePet != null) {
@@ -37,9 +44,10 @@ public class SpeedBoost implements Listener {
             }
 
             // Apply Speed Boost perk bonus if present
-            if (activePet.hasPerk(PetManager.PetPerk.SPEED_BOOST)) {
+            if (activePet.hasPerk(PetManager.PetPerk.SPEED_BOOST) || talent > 0) {
                 int petLevel = activePet.getLevel();
                 speed += DEFAULT_WALK_SPEED * petLevel * 0.004f; // Add 0.5% per level of the pet
+                speed *= (1 + talent * 0.10);
             }
         }
 

@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -47,13 +50,18 @@ public class Antidote implements Listener {
                 for (Player player : plugin.getServer().getOnlinePlayers()) {
                     // Check if the player has an active pet with the Antidote perk
                     PetManager.Pet activePet = petManager.getActivePet(player);
+                    int talent = 0;
+                    if (SkillTreeManager.getInstance() != null) {
+                        talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ANTIDOTE);
+                    }
                     if (activePet == null || !activePet.hasPerk(PetManager.PetPerk.ANTIDOTE)) {
-                        continue;
+                        if (talent <= 0) continue;
                     }
 
                     UUID playerId = player.getUniqueId();
                     long lastCure = lastCureTime.getOrDefault(playerId, 0L);
-                    if (currentTime - lastCure < ANTIDOTE_COOLDOWN) {
+                    long cooldown = talent > 0 ? 0 : ANTIDOTE_COOLDOWN;
+                    if (currentTime - lastCure < cooldown) {
                         continue; // Cooldown hasn't expired
                     }
 

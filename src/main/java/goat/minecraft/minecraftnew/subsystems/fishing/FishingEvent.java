@@ -157,8 +157,14 @@ public class FishingEvent implements Listener {
         PetManager.Pet activePet = petManager.getActivePet(player);
         if (activePet != null) {
 
-            if (activePet.hasPerk(PetManager.PetPerk.ANGLER)) {
-                int anglerBonus = 5; // Scales up to +5% at level 100
+            int anglerTalent = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                anglerTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ANGLER);
+            }
+
+            if (activePet.hasPerk(PetManager.PetPerk.ANGLER) || anglerTalent > 0) {
+                int anglerBonus = 5; // base bonus
+                anglerBonus *= (1 + anglerTalent * 0.5); // talent increases bonus by 50% per level
                 seaCreatureChance += anglerBonus;
             }
 

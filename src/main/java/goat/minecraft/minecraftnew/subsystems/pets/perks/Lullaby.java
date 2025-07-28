@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Monster;
@@ -32,14 +35,23 @@ public class Lullaby implements Listener {
         for (Player player : world.getPlayers()) {
             // Get the player's active pet
             PetManager.Pet activePet = petManager.getActivePet(player);
-            if (activePet == null || !(activePet.hasPerk(PetManager.PetPerk.LULLABY)
-                    || activePet.hasUniqueTraitPerk(PetManager.PetPerk.LULLABY))) {
+            boolean hasPerk = activePet != null && (activePet.hasPerk(PetManager.PetPerk.LULLABY)
+                    || activePet.hasUniqueTraitPerk(PetManager.PetPerk.LULLABY));
+
+            int petLevel = activePet != null ? activePet.getLevel() : 0;
+
+            int talentLevel = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.LULLABY);
+            }
+
+            if (!hasPerk && talentLevel <= 0) {
                 continue;
             }
 
-            // Calculate the radius based on the pet's level
-            int petLevel = activePet.getLevel();
+            // Calculate the radius based on the pet's level and talent level
             double radius = 40 + (4 * petLevel);
+            radius *= 1 + (talentLevel * 0.5);
 
             // Check if the monster spawn location is within the radius
             if (player.getLocation().distanceSquared(spawnLocation) <= radius * radius) {

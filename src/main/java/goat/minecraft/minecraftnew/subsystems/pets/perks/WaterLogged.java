@@ -1,6 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -60,7 +63,13 @@ public class WaterLogged implements Listener {
         UUID id = player.getUniqueId();
         long now = System.currentTimeMillis();
         long last = lastGrantTime.getOrDefault(id, 0L);
-        if (now - last < GRANT_INTERVAL_MS) {
+
+        int talent = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.WATERLOGGED);
+        }
+        long interval = GRANT_INTERVAL_MS - (talent * 1000L);
+        if (now - last < interval) {
             return;
         }
 
