@@ -99,6 +99,7 @@ import goat.minecraft.minecraftnew.other.armorsets.StriderSetBonus;
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.other.skilltree.SwiftStepMasteryBonus;
 import goat.minecraft.minecraftnew.other.skilltree.FastFarmerBonus;
+import goat.minecraft.minecraftnew.other.skilltree.SpectralArmorBonus;
 import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.other.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.other.structureblocks.SetStructureBlockPowerCommand;
@@ -152,6 +153,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private StriderSetBonus striderSetBonus;
     private SwiftStepMasteryBonus swiftStepMasteryBonus;
     private FastFarmerBonus fastFarmerBonus;
+    private SpectralArmorBonus spectralArmorBonus;
     private RejuvenationCatalystListener rejuvenationCatalystListener;
     private DeathCatalystListener deathCatalystListener;
 
@@ -324,6 +326,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         striderSetBonus = new StriderSetBonus(this);
         swiftStepMasteryBonus = new SwiftStepMasteryBonus(this);
         fastFarmerBonus = new FastFarmerBonus(this);
+        spectralArmorBonus = new SpectralArmorBonus(this);
         // Initialize catalyst manager for beacon charm catalysts
         CatalystManager.initialize(this);
         rejuvenationCatalystListener = new RejuvenationCatalystListener(this);
