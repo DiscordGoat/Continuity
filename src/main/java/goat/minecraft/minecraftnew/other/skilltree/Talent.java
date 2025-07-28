@@ -1202,134 +1202,14 @@ public enum Talent {
             1,
             Material.BONE
     ),
-    HEALTH_I(
-            "Health I",
-            ChatColor.GRAY + "Bolster your vitality slightly",
-            ChatColor.GREEN + "+1 Bonus Health",
-            4,
-            1,
-            Material.APPLE
-    ),
-    STUDY_BREWING(
-            "Study Brewing",
-            ChatColor.GRAY + "Dedicate time to potion research",
-            ChatColor.YELLOW + "+1 Brewing Talent",
-            100,
-            1,
-            Material.BREWING_STAND
-    ),
-    STUDY_SMITHING(
-            "Study Smithing",
-            ChatColor.GRAY + "Practice superior metalwork",
-            ChatColor.YELLOW + "+1 Smithing Talent",
-            100,
-            1,
-            Material.ANVIL
-    ),
-    STUDY_CULINARY(
-            "Study Culinary",
-            ChatColor.GRAY + "Experiment with new recipes",
-            ChatColor.YELLOW + "+1 Culinary Talent",
-            100,
-            1,
-            Material.COOKED_BEEF
-    ),
-    STUDY_BARTERING(
-            "Study Bartering",
-            ChatColor.GRAY + "Learn the art of the deal",
-            ChatColor.YELLOW + "+1 Bartering Talent",
-            100,
-            1,
-            Material.EMERALD
-    ),
-    STUDY_FORESTRY(
-            "Study Forestry",
-            ChatColor.GRAY + "Understand the ways of the woods",
-            ChatColor.YELLOW + "+1 Forestry Talent",
-            100,
-            1,
-            Material.OAK_SAPLING
-    ),
-    STUDY_TAMING(
-            "Study Taming",
-            ChatColor.GRAY + "Improve animal handling",
-            ChatColor.YELLOW + "+1 Taming Talent",
-            100,
-            1,
-            Material.BONE
-    ),
-    STUDY_COMBAT(
-            "Study Combat",
-            ChatColor.GRAY + "Train in advanced combat",
-            ChatColor.YELLOW + "+1 Combat Talent",
-            100,
-            1,
-            Material.IRON_SWORD
-    ),
-    STUDY_TERRAFORMING(
-            "Study Terraforming",
-            ChatColor.GRAY + "Survey the lands with purpose",
-            ChatColor.YELLOW + "+1 Terraforming Talent",
-            100,
-            1,
-            Material.DIRT
-    ),
-    STUDY_MINING(
-            "Study Mining",
-            ChatColor.GRAY + "Hone excavation techniques",
-            ChatColor.YELLOW + "+1 Mining Talent",
-            100,
-            1,
-            Material.IRON_PICKAXE
-    ),
-    STUDY_FARMING(
-            "Study Farming",
-            ChatColor.GRAY + "Master the secrets of crops",
-            ChatColor.YELLOW + "+1 Farming Talent",
-            100,
-            1,
-            Material.WHEAT
-    ),
-    STUDY_FISHING(
-            "Study Fishing",
-            ChatColor.GRAY + "Learn to reel in the big ones",
-            ChatColor.YELLOW + "+1 Fishing Talent",
-            100,
-            1,
-            Material.FISHING_ROD
-    ),
-    HEALTH_II(
-            "Health II",
-            ChatColor.GRAY + "Further enhance your vitality",
-            ChatColor.GREEN + "+1 Bonus Health",
-            6,
+  VITALITY(
+            "Vitality",
+            ChatColor.GRAY + "Fortify your body to survive longer",
+            ChatColor.GREEN + "+1 Max Health per level",
             20,
+            1,
             Material.APPLE
-    ),
-    HEALTH_III(
-            "Health III",
-            ChatColor.GRAY + "Push your limits for more health",
-            ChatColor.GREEN + "+1 Bonus Health",
-            8,
-            40,
-            Material.APPLE
-    ),
-    HEALTH_IV(
-            "Health IV",
-            ChatColor.GRAY + "Achieve remarkable endurance",
-            ChatColor.GREEN + "+1 Bonus Health",
-            10,
-            60,
-            Material.APPLE
-    ),
-    HEALTH_V(
-            "Health V",
-            ChatColor.GRAY + "Reach peak physical condition",
-            ChatColor.GREEN + "+1 Bonus Health",
-            12,
-            80,
-            Material.APPLE
-    ),
+     ),
     CONSERVATIONIST(
             "Conservationist",
             ChatColor.GRAY + "Reduce wear on your tools",
