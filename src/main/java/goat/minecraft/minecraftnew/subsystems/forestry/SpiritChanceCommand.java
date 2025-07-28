@@ -37,8 +37,7 @@ public class SpiritChanceCommand implements CommandExecutor {
     private void sendSpiritChanceBreakdown(Player player) {
         double base = 0.01;
         ItemStack axe = player.getInventory().getItemInMainHand();
-        int effigyYield = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.EFFIGY_YIELD);
-        double effigyBonus = effigyYield * 0.000333;
+        double effigyBonus = 0.0;
 
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);

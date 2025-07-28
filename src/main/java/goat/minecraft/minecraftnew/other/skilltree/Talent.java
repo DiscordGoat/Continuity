@@ -1106,6 +1106,14 @@ public enum Talent {
             40,
             Material.LEATHER_CHESTPLATE
     ),
+    ORCHARD(
+            "Orchard",
+            ChatColor.GRAY + "Increase perfect apple drop rate",
+            ChatColor.YELLOW + "+1% Perfect Apple Drop Chance",
+            5,
+            40,
+            Material.APPLE
+    ),
     SPIRIT_CHANCE_IV(
             "Spirit Chance IV",
             ChatColor.GRAY + "Increase chance to encounter spirits",
@@ -1145,6 +1153,14 @@ public enum Talent {
             3,
             60,
             Material.BOW
+    ),
+    PERFECT_ORCHARD(
+            "Perfect Orchard",
+            ChatColor.GRAY + "Increase notch apple drop rate",
+            ChatColor.YELLOW + "+1% Notch Apple Drop Chance",
+            5,
+            60,
+            Material.ENCHANTED_GOLDEN_APPLE
     ),
     SPIRIT_CHANCE_V(
             "Spirit Chance V",

@@ -7,7 +7,6 @@ import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
-import goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
@@ -385,7 +384,7 @@ public class UltimateEnchantmentListener implements Listener {
             ForestryPetManager forestryPetManager = MinecraftNew.getInstance().getForestryManager();
             forestryPetManager.incrementForestryCount(player);
             ItemStack axe = player.getInventory().getItemInMainHand();
-            int orchard = EffigyUpgradeSystem.getUpgradeLevel(axe, EffigyUpgradeSystem.UpgradeType.ORCHARD);
+            int orchard = 0;
             forestry.processPerfectAppleChance(player, currentBlock, xpManager.getPlayerLevel(player, "Forestry"), orchard);
             forestry.processHoneyBottleChance(player, currentBlock);
             forestry.processDoubleDropChance(player, currentBlock);

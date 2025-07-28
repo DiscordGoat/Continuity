@@ -560,7 +560,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         Gravedigging gravedigging = new Gravedigging(this);
         gravedigging.startup();
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.GemstoneApplicationSystem(this), this);
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.forestry.EffigyApplicationSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.fishing.BaitApplicationSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.fishing.PearlOfTheDeepSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.fishing.FishingUpgradeSystem(this), this);
@@ -571,7 +570,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.PowerCrystalSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.CompactStoneSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.forestry.CompactWoodSystem(this), this);
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.forestry.EntBarkSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SoulApplicationSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.BlueLanternSystem(this), this);
         // Register Soul upgrade system for weapons with Soul Power
@@ -580,9 +578,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.CombatTalentListener(), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.AntagonizeHandler(this), this);
 
-        // Effigy upgrade system for forestry axes
-        goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem effigyUpgradeSystem = new goat.minecraft.minecraftnew.subsystems.forestry.EffigyUpgradeSystem(this);
-        getServer().getPluginManager().registerEvents(effigyUpgradeSystem, this);
 
         // Register all gemstone upgrade listeners
         goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.YieldUpgradeListener yieldUpgradeListener = new goat.minecraft.minecraftnew.subsystems.mining.gemstoneupgrades.YieldUpgradeListener(this);
