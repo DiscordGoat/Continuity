@@ -138,12 +138,35 @@ public final class TalentRegistry {
         SKILL_TALENTS.put(
                 Skill.BARTERING,
                 Arrays.asList(
-                        Talent.BARTER_DISCOUNT,
-                        Talent.FREE_TRANSACTION,
-                        Talent.SELL_PRICE_BOOST,
-                        Talent.WORK_CYCLE_EFFICIENCY
-                  )
-          );
+                        Talent.HAGGLER_I,
+                        Talent.STONKS_I,
+                        Talent.SHUT_UP_AND_TAKE_MY_MONEY,
+                        Talent.SWEATSHOP_SUPERVISOR,
+                        Talent.CORPORATE_BENEFITS,
+
+                        Talent.HAGGLER_II,
+                        Talent.STONKS_II,
+                        Talent.BULK,
+                        Talent.DEADLINE_DICTATOR,
+                        Talent.UNIFORM,
+
+                        Talent.HAGGLER_III,
+                        Talent.STONKS_III,
+                        Talent.INTEREST,
+                        Talent.TASKMASTER_TYRANT,
+                        Talent.OVERSTOCKED,
+
+                        Talent.HAGGLER_IV,
+                        Talent.STONKS_IV,
+                        Talent.OVERTIME_OVERLORD,
+                        Talent.ITS_ALIVE,
+
+                        Talent.HAGGLER_V,
+                        Talent.STONKS_V,
+                        Talent.SLAVE_DRIVER,
+                        Talent.BILLIONAIRE_DISCOUNT
+                )
+        );
         SKILL_TALENTS.put(
                 Skill.FORESTRY,
                 Arrays.asList(

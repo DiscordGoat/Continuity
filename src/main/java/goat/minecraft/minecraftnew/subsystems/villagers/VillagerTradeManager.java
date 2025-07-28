@@ -56,6 +56,8 @@ public class VillagerTradeManager implements Listener {
     private final Map<String, List<TradeItem>> bartenderPurchaseWhitelist = new HashMap<>();
     private final Map<String, List<TradeItem>> bartenderSellWhitelist     = new HashMap<>();
 
+    private final Map<UUID, Map<String, BulkInfo>> bulkDiscounts = new HashMap<>();
+
 
     // Max villager level
     private static final int MAX_VILLAGER_LEVEL = 5;
@@ -1096,7 +1098,7 @@ public class VillagerTradeManager implements Listener {
 
         }
     }
-    public int calculateDiscountedPrice(Player player, int basePrice) {
+    public int calculateDiscountedPrice(Player player, int basePrice, ItemStack item) {
         PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
         PetManager.Pet activePet = petManager.getActivePet(player);
 
@@ -1124,9 +1126,25 @@ public class VillagerTradeManager implements Listener {
 
         SkillTreeManager manager = SkillTreeManager.getInstance();
         if (manager != null) {
-            int level = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BARTER_DISCOUNT);
-            if (level > 0) {
-                finalCost *= (1 - level * 0.04);
+            double discount = 0.0;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_I) * 0.005;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_II) * 0.01;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_III) * 0.015;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_IV) * 0.02;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_V) * 0.025;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BILLIONAIRE_DISCOUNT) * 0.05;
+            finalCost *= (1 - discount);
+
+            // Bulk discount if applicable
+            Map<String, BulkInfo> active = bulkDiscounts.get(player.getUniqueId());
+            if (active != null) {
+                String key = getItemKey(item);
+                BulkInfo info = active.get(key);
+                if (info != null && info.expireTime > System.currentTimeMillis()) {
+                    finalCost *= (1 - info.discount);
+                } else if (info != null) {
+                    active.remove(key);
+                }
             }
         }
         if ( activePet != null && activePet.getTrait() == PetTrait.FINANCIAL ) {
@@ -1181,20 +1199,25 @@ public class VillagerTradeManager implements Listener {
         Villager.Profession profession = villager.getProfession();
         PlayerTabListUpdater playerTabListUpdater = new PlayerTabListUpdater(MinecraftNew.getInstance(), new XPManager(MinecraftNew.getInstance()));
         int daysPlayed = playerTabListUpdater.getDaysPlayed(player);
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        int offset = 0;
+        if (mgr != null) {
+            offset = mgr.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.CORPORATE_BENEFITS) * 5;
+        }
 
         // Determine villager level based on days played:
         // day 20 = level 1, day 40 = level 2, day 60 = level 3, day 80 = level 4, day 100 = level 5
         int villagerLevel;
-        if (daysPlayed >= 160) {
+        if (daysPlayed >= 160 - offset) {
             villagerLevel = 5;
             villager.setVillagerLevel(5);
-        } else if (daysPlayed >= 120) {
+        } else if (daysPlayed >= 120 - offset) {
             villagerLevel = 4;
             villager.setVillagerLevel(4);
-        } else if (daysPlayed >= 80) {
+        } else if (daysPlayed >= 80 - offset) {
             villagerLevel = 3;
             villager.setVillagerLevel(3);
-        } else if (daysPlayed >= 40) {
+        } else if (daysPlayed >= 40 - offset) {
             villagerLevel = 2;
             villager.setVillagerLevel(2);
         } else {
@@ -1232,7 +1255,7 @@ public class VillagerTradeManager implements Listener {
 
                     // Calculate prices
                     int basePrice = tradeItem.getEmeraldValue();
-                    int finalPrice = calculateDiscountedPrice(player, basePrice);
+                    int finalPrice = calculateDiscountedPrice(player, basePrice, tradeItem.getItem());
 
                     lore.add(ChatColor.RED + "Original Price: " + basePrice + " emerald(s)");
                     lore.add(ChatColor.GREEN + "Discounted Price: " + finalPrice + " emerald(s)");
@@ -1488,7 +1511,14 @@ public class VillagerTradeManager implements Listener {
                     if (purchaseIndex < purchases.size()) {
                         TradeItem tradeItem = purchases.get(purchaseIndex);
                         if (villagerLevel >= tradeItem.getRequiredLevel()) {
-                            processPurchase(player, villager, tradeItem);
+                            int times = 1;
+                            if (event.getClick().isRightClick()) {
+                                SkillTreeManager mgr = SkillTreeManager.getInstance();
+                                if (mgr != null && mgr.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.SHUT_UP_AND_TAKE_MY_MONEY) > 0) {
+                                    times = 2;
+                                }
+                            }
+                            processPurchase(player, villager, tradeItem, times);
                         }
                     }
                 } else if (column >= 5) {
@@ -1558,9 +1588,9 @@ public class VillagerTradeManager implements Listener {
     /**
      * Processes a purchase (player buys item from villager).
      */
-    public void processPurchase(Player player, Villager villager, TradeItem tradeItem) {
-        int emeraldCost = tradeItem.getEmeraldValue();
-        int quantity = tradeItem.getQuantity();
+    public void processPurchase(Player player, Villager villager, TradeItem tradeItem, int times) {
+        int emeraldCost = tradeItem.getEmeraldValue() * times;
+        int quantity = tradeItem.getQuantity() * times;
 
         // --- Pet HAGGLE perk logic ---
         PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
@@ -1589,9 +1619,24 @@ public class VillagerTradeManager implements Listener {
 
         SkillTreeManager manager = SkillTreeManager.getInstance();
         if (manager != null) {
-            int level = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BARTER_DISCOUNT);
-            if (level > 0) {
-                finalCost *= (1 - level * 0.04);
+            double discount = 0.0;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_I) * 0.005;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_II) * 0.01;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_III) * 0.015;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_IV) * 0.02;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_V) * 0.025;
+            discount += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BILLIONAIRE_DISCOUNT) * 0.05;
+            finalCost *= (1 - discount);
+
+            Map<String, BulkInfo> active = bulkDiscounts.get(player.getUniqueId());
+            if (active != null) {
+                String key = getItemKey(tradeItem.getItem());
+                BulkInfo info = active.get(key);
+                if (info != null && info.expireTime > System.currentTimeMillis()) {
+                    finalCost *= (1 - info.discount);
+                } else if (info != null) {
+                    active.remove(key);
+                }
             }
         }
 
@@ -1609,8 +1654,8 @@ public class VillagerTradeManager implements Listener {
         // --- Free transaction talent ---
         boolean freePurchase = false;
         if (manager != null) {
-            int freeLevel = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.FREE_TRANSACTION);
-            if (freeLevel > 0 && Math.random() < freeLevel * 0.01) {
+            int freeLevel = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.OVERSTOCKED);
+            if (freeLevel > 0 && Math.random() < freeLevel * 0.02) {
                 finalCostRounded = 0;
                 freePurchase = true;
             }
@@ -1671,6 +1716,18 @@ public class VillagerTradeManager implements Listener {
             barterXP *= 3;
         }
         xpManager.addXP(player, "Bartering", barterXP);
+
+        if (manager != null) {
+            int bulkLevel = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BULK);
+            if (bulkLevel > 0) {
+                Map<String, BulkInfo> active = bulkDiscounts.computeIfAbsent(player.getUniqueId(), k -> new HashMap<>());
+                String key = getItemKey(tradeItem.getItem());
+                BulkInfo info = new BulkInfo();
+                info.discount = bulkLevel * 0.10;
+                info.expireTime = System.currentTimeMillis() + 20000; // 20s
+                active.put(key, info);
+            }
+        }
     }
 
     /**
@@ -1696,8 +1753,13 @@ public class VillagerTradeManager implements Listener {
         int emeraldReward = tradeItem.getEmeraldValue();
         SkillTreeManager manager = SkillTreeManager.getInstance();
         if (manager != null) {
-            int level = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.SELL_PRICE_BOOST);
-            emeraldReward += (int) Math.floor(emeraldReward * (level * 0.04));
+            int level = 0;
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.STONKS_I);
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.STONKS_II);
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.STONKS_III);
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.STONKS_IV);
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.STONKS_V);
+            emeraldReward += (int) Math.floor(emeraldReward * (level * 0.02));
         }
         int quantity = tradeItem.getQuantity();
         ItemStack tradeItemStack = tradeItem.getItem();
@@ -1722,6 +1784,16 @@ public class VillagerTradeManager implements Listener {
                 barterXP *= 3;
             }
             xpManager.addXP(player, "Bartering", barterXP);
+
+            if (manager != null) {
+                int interest = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.INTEREST);
+                if (interest > 0 && Math.random() < interest * 0.01) {
+                    int bonus = (int)Math.floor(BankAccountManager.getInstance().getBalance(player.getUniqueId()) * 0.01);
+                    BankAccountManager.getInstance().addEmeralds(player.getUniqueId(), bonus);
+                    TrinketManager.getInstance().refreshBankLore(player);
+                    player.sendMessage(ChatColor.GOLD + "Interest payout: " + bonus + " emeralds!");
+                }
+            }
 
         } else {
             // Not enough valid items were removed
@@ -2024,5 +2096,18 @@ public class VillagerTradeManager implements Listener {
             return requiredLevel;
         }
 
+    }
+
+    private static class BulkInfo {
+        double discount;
+        long expireTime;
+    }
+
+    private String getItemKey(ItemStack item) {
+        String name = "";
+        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+            name = item.getItemMeta().getDisplayName();
+        }
+        return item.getType().toString() + "|" + name;
     }
 }

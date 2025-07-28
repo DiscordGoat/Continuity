@@ -415,6 +415,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         autoComposter = new AutoComposter(this);
         VillagerWorkCycleManager.getInstance(this);
         MarketTrendManager.getInstance(this);
+        new goat.minecraft.minecraftnew.subsystems.villagers.VillagerTalentListener();
 
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();

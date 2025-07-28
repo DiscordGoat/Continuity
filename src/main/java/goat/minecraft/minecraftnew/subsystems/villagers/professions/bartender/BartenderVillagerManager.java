@@ -105,7 +105,7 @@ public class BartenderVillagerManager implements Listener {
                 int base = ti.getEmeraldValue();
                 int price = VillagerTradeManager
                         .getInstance((JavaPlugin)MinecraftNew.getInstance())
-                        .calculateDiscountedPrice(player, base);
+                        .calculateDiscountedPrice(player, base, ti.getItem());
 
                 m.setLore(List.of(
                         ChatColor.RED   + "Original Price: "   + base   + " emerald(s)",
@@ -187,7 +187,7 @@ public class BartenderVillagerManager implements Listener {
                 TradeItem ti = bartenderTrades.get(purchaseIndex);
                 // delegate to your VillagerTradeManager helper:
                 VillagerTradeManager.getInstance((JavaPlugin)MinecraftNew.getInstance())
-                        .processPurchase(p, v, ti);
+                        .processPurchase(p, v, ti, 1);
                 p.closeInventory();
             }
         }

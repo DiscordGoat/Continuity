@@ -433,18 +433,56 @@ public class SkillTreeManager implements Listener {
             case CHEFS_KISS:
                 double recipeRefund = level * 20;
                 return ChatColor.YELLOW + "+" + recipeRefund + "% Chance to Refund Recipe Papers";
-            case BARTER_DISCOUNT:
-                double discountPct = level * 4;
-                return ChatColor.YELLOW + "+" + discountPct + "% " + ChatColor.GOLD + "Trade Discount";
-            case FREE_TRANSACTION:
-                double freeChance = level;
-                return ChatColor.YELLOW + "+" + freeChance + "% " + ChatColor.GRAY + "Free purchase chance";
-            case SELL_PRICE_BOOST:
-                double sellBonus = level * 4;
-                return ChatColor.YELLOW + "+" + sellBonus + "% " + ChatColor.GOLD + "Sell Price";
-            case WORK_CYCLE_EFFICIENCY:
-                int reduce = level * 5;
-                return ChatColor.YELLOW + "-" + reduce + "s " + ChatColor.GRAY + "Workcycle time";
+            case HAGGLER_I:
+                return ChatColor.YELLOW + "+" + (level * 0.005) + " Discount";
+            case STONKS_I:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Emerald Gain when selling";
+            case SHUT_UP_AND_TAKE_MY_MONEY:
+                return ChatColor.YELLOW + "Right click purchases 2x";
+            case SWEATSHOP_SUPERVISOR:
+                return ChatColor.YELLOW + "-" + (level * 10) + "s Workcycle Cooldown";
+            case CORPORATE_BENEFITS:
+                return ChatColor.YELLOW + "-" + (level * 5) + "d Villager Tier Threshold";
+
+            case HAGGLER_II:
+                return ChatColor.YELLOW + "+" + (level * 0.01) + " Discount";
+            case STONKS_II:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Emerald Gain when selling";
+            case BULK:
+                return ChatColor.YELLOW + "-" + (level * 10) + "% cost for 20s";
+            case DEADLINE_DICTATOR:
+                return ChatColor.YELLOW + "-" + (level * 10) + "s Workcycle Cooldown";
+            case UNIFORM:
+                return ChatColor.YELLOW + "+" + (level * 10) + "% Villager Damage Resistance";
+
+            case HAGGLER_III:
+                return ChatColor.YELLOW + "+" + (level * 0.015) + " Discount";
+            case STONKS_III:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Emerald Gain when selling";
+            case INTEREST:
+                return ChatColor.YELLOW + "+" + (level) + "% chance for 1% bank interest";
+            case TASKMASTER_TYRANT:
+                return ChatColor.YELLOW + "-" + (level * 10) + "s Workcycle Cooldown";
+            case OVERSTOCKED:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Free purchase chance";
+
+            case HAGGLER_IV:
+                return ChatColor.YELLOW + "+" + (level * 0.02) + " Discount";
+            case STONKS_IV:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Emerald Gain when selling";
+            case OVERTIME_OVERLORD:
+                return ChatColor.YELLOW + "-" + (level * 10) + "s Workcycle Cooldown";
+            case ITS_ALIVE:
+                return ChatColor.YELLOW + "+" + (level * 20) + "% Transformation failure";
+
+            case HAGGLER_V:
+                return ChatColor.YELLOW + "+" + (level * 0.025) + " Discount";
+            case STONKS_V:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Emerald Gain when selling";
+            case SLAVE_DRIVER:
+                return ChatColor.YELLOW + "-" + (level * 10) + "s Workcycle Cooldown";
+            case BILLIONAIRE_DISCOUNT:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Discount";
             case DOUBLE_LOGS:
                 double dblChance = level * 10;
                 return ChatColor.YELLOW + "+" + dblChance + "% " + ChatColor.GRAY + "Double Log Chance";
