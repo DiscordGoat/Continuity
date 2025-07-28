@@ -174,24 +174,27 @@ public final class TalentRegistry {
                         Talent.TIMBER_I,
                         Talent.LEVERAGE_I,
                         Talent.FOREST_FRENZY,
+                        Talent.REGROWTH_I,
+
                         Talent.SPIRIT_CHANCE_II,
-                        Talent.TIMBER_II,
                         Talent.LEVERAGE_II,
                         Talent.PHOTOSYNTHESIS,
+                        Talent.REGROWTH_II,
+
                         Talent.SPIRIT_CHANCE_III,
-                        Talent.TIMBER_III,
+                        Talent.TIMBER_II,
                         Talent.LEVERAGE_III,
                         Talent.ONE_HUNDRED_ACRE_WOODS,
                         Talent.SPECTRAL_ARMOR,
-                        Talent.ORCHARD,
+
                         Talent.SPIRIT_CHANCE_IV,
-                        Talent.TIMBER_IV,
                         Talent.LEVERAGE_IV,
                         Talent.DEFORESTATION,
                         Talent.HEADHUNTER,
-                        Talent.PERFECT_ORCHARD,
+                        Talent.REGROWTH_III,
+
                         Talent.SPIRIT_CHANCE_V,
-                        Talent.TIMBER_V,
+                        Talent.TIMBER_III,
                         Talent.LEVERAGE_V,
                         Talent.ANCIENT_CONFUSION,
                         Talent.REDEMPTION
