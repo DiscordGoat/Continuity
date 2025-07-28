@@ -70,6 +70,10 @@ public class BankAccountManager {
         setBalance(id, bal + amount);
     }
 
+    public void addEmeralds(UUID id, int amount) {
+        addBalance(id, amount);
+    }
+
     public int depositAll(Player player) {
         int total = 0;
         Inventory inv = player.getInventory();

@@ -125,10 +125,15 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         if (manager == null) return 0;
         int highest = 0;
         for (Player player : Bukkit.getOnlinePlayers()) {
-            int level = manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.WORK_CYCLE_EFFICIENCY);
-            if (level > highest) highest = level;
+            int total = 0;
+            total += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.SWEATSHOP_SUPERVISOR);
+            total += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.DEADLINE_DICTATOR);
+            total += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.TASKMASTER_TYRANT);
+            total += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.OVERTIME_OVERLORD);
+            total += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.SLAVE_DRIVER);
+            if (total > highest) highest = total;
         }
-        return highest * 5 * 20;
+        return highest * 10 * 20;
     }
 
     /**

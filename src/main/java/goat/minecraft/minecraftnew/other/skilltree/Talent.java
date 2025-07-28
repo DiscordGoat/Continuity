@@ -814,38 +814,194 @@ public enum Talent {
             Material.PAPER
     ),
 
-    BARTER_DISCOUNT(
-            "Barter Discount",
-            ChatColor.GRAY + "Sharpen your haggling skills",
-            ChatColor.YELLOW + "+4% Discount per level",
-            10,
+    HAGGLER_I(
+            "Haggler I",
+            ChatColor.GRAY + "Basic bargaining tactics",
+            ChatColor.YELLOW + "+0.005 Discount",
+            3,
             1,
             Material.EMERALD
     ),
-    FREE_TRANSACTION(
-            "Free Transaction",
-            ChatColor.GRAY + "Occasionally pay nothing",
-            ChatColor.YELLOW + "1% chance per level for free purchase",
-            10,
+    STONKS_I(
+            "Stonks I",
+            ChatColor.GRAY + "Slightly better resale value",
+            ChatColor.YELLOW + "+2% Emerald Gain when selling",
+            5,
+            1,
+            Material.EMERALD
+    ),
+    SHUT_UP_AND_TAKE_MY_MONEY(
+            "Shut Up And Take My Money",
+            ChatColor.GRAY + "Right click to buy twice",
+            ChatColor.YELLOW + "Right click to purchase 2x",
+            2,
+            1,
+            Material.GOLD_INGOT
+    ),
+    SWEATSHOP_SUPERVISOR(
+            "Sweatshop Supervisor",
+            ChatColor.GRAY + "Reduce villager workcycle cooldown",
+            ChatColor.YELLOW + "-10s Villager Workcycle Cooldown",
+            5,
+            1,
+            Material.CLOCK
+    ),
+    CORPORATE_BENEFITS(
+            "Corporate Benefits",
+            ChatColor.GRAY + "Villagers rank up sooner",
+            ChatColor.YELLOW + "-5d Villager Tier Threshold",
+            5,
+            1,
+            Material.GOLD_NUGGET
+    ),
+
+    HAGGLER_II(
+            "Haggler II",
+            ChatColor.GRAY + "Improved bartering tactics",
+            ChatColor.YELLOW + "+0.01 Discount",
+            3,
             20,
+            Material.EMERALD
+    ),
+    STONKS_II(
+            "Stonks II",
+            ChatColor.GRAY + "Better resale value",
+            ChatColor.YELLOW + "+2% Emerald Gain when selling",
+            5,
+            20,
+            Material.EMERALD
+    ),
+    BULK(
+            "Bulk",
+            ChatColor.GRAY + "Buying reduces future cost",
+            ChatColor.YELLOW + "10% cost reduction for 20s",
+            2,
+            20,
+            Material.CHEST
+    ),
+    DEADLINE_DICTATOR(
+            "Deadline Dictator",
+            ChatColor.GRAY + "Further reduce workcycle cooldown",
+            ChatColor.YELLOW + "-10s Villager Workcycle Cooldown",
+            5,
+            20,
+            Material.CLOCK
+    ),
+    UNIFORM(
+            "Uniform",
+            ChatColor.GRAY + "Protect villagers while online",
+            ChatColor.YELLOW + "+10% Villager Damage Resistance",
+            5,
+            20,
+            Material.LEATHER_CHESTPLATE
+    ),
+
+    HAGGLER_III(
+            "Haggler III",
+            ChatColor.GRAY + "Advanced haggling techniques",
+            ChatColor.YELLOW + "+0.015 Discount",
+            3,
+            40,
+            Material.EMERALD
+    ),
+    STONKS_III(
+            "Stonks III",
+            ChatColor.GRAY + "Even better resale value",
+            ChatColor.YELLOW + "+2% Emerald Gain when selling",
+            5,
+            40,
+            Material.EMERALD
+    ),
+    INTEREST(
+            "Interest",
+            ChatColor.GRAY + "Occasional bank bonus",
+            ChatColor.YELLOW + "1% chance to add 1% more Emeralds to Bank",
+            2,
+            40,
             Material.EMERALD_BLOCK
     ),
-    SELL_PRICE_BOOST(
-            "Sell Price Boost",
-            ChatColor.GRAY + "Villagers pay more",
-            ChatColor.YELLOW + "+4% Sell Price per level",
-            20,
-            1,
+    TASKMASTER_TYRANT(
+            "Taskmaster Tyrant",
+            ChatColor.GRAY + "Further reduce workcycle cooldown",
+            ChatColor.YELLOW + "-10s Villager Workcycle Cooldown",
+            5,
+            40,
+            Material.CLOCK
+    ),
+    OVERSTOCKED(
+            "Overstocked",
+            ChatColor.GRAY + "Chance to buy for free",
+            ChatColor.YELLOW + "+2% Chance to buy an item for free",
+            5,
+            40,
+            Material.CHEST_MINECART
+    ),
+
+    HAGGLER_IV(
+            "Haggler IV",
+            ChatColor.GRAY + "Master negotiator",
+            ChatColor.YELLOW + "+0.02 Discount",
+            3,
+            60,
             Material.EMERALD
     ),
-    WORK_CYCLE_EFFICIENCY(
-            "Work Cycle Efficiency",
-            ChatColor.GRAY + "Reduce villager downtime",
-            ChatColor.YELLOW + "-5s Workcycle per level",
-            20,
-            10,
+    STONKS_IV(
+            "Stonks IV",
+            ChatColor.GRAY + "Excellent resale value",
+            ChatColor.YELLOW + "+2% Emerald Gain when selling",
+            5,
+            60,
+            Material.EMERALD
+    ),
+    OVERTIME_OVERLORD(
+            "Overtime Overlord",
+            ChatColor.GRAY + "Greatly reduce workcycle cooldown",
+            ChatColor.YELLOW + "-10s Villager Workcycle Cooldown",
+            7,
+            60,
             Material.CLOCK
-      ),
+    ),
+    ITS_ALIVE(
+            "It's Alive!",
+            ChatColor.GRAY + "Prevent villager mutations",
+            ChatColor.YELLOW + "+20% Chance to fail transformations",
+            5,
+            60,
+            Material.LIGHTNING_ROD
+    ),
+
+    HAGGLER_V(
+            "Haggler V",
+            ChatColor.GRAY + "Legendary bargainer",
+            ChatColor.YELLOW + "+0.025 Discount",
+            4,
+            80,
+            Material.EMERALD
+    ),
+    STONKS_V(
+            "Stonks V",
+            ChatColor.GRAY + "Best resale value",
+            ChatColor.YELLOW + "+2% Emerald Gain when selling",
+            5,
+            80,
+            Material.EMERALD
+    ),
+    SLAVE_DRIVER(
+            "Slave Driver",
+            ChatColor.GRAY + "Maximum workcycle reduction",
+            ChatColor.YELLOW + "-10s Villager Workcycle Cooldown",
+            5,
+            80,
+            Material.CLOCK
+    ),
+    BILLIONAIRE_DISCOUNT(
+            "Billionaire's Discount",
+            ChatColor.GRAY + "Massive trade discounts",
+            ChatColor.YELLOW + "+5% Discount",
+            6,
+            80,
+            Material.DIAMOND
+    ),
     DOUBLE_LOGS(
             "Double Logs",
             ChatColor.GRAY + "Chance for extra logs",

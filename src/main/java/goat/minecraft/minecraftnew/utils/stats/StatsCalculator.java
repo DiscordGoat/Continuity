@@ -230,8 +230,16 @@ public class StatsCalculator {
     public double getDiscount(Player player) {
         double discount = 0.0;
         if (SkillTreeManager.getInstance() != null) {
-            int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BARTER_DISCOUNT);
-            discount += level * 4.0;
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            int level = 0;
+            level += mgr.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_I) * 1; // each 0.5%
+            level += mgr.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_II) * 2; // 1%
+            level += mgr.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_III) * 3; // 1.5%
+            level += mgr.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_IV) * 4; // 2%
+            level += mgr.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.HAGGLER_V) * 5; // 2.5%
+            discount += level * 0.5;
+            int billionaire = mgr.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.BILLIONAIRE_DISCOUNT);
+            discount += billionaire * 5.0;
         }
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
         if (pet != null && pet.getTrait() == PetTrait.FINANCIAL) {
