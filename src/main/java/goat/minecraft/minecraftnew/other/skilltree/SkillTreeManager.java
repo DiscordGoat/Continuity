@@ -541,9 +541,35 @@ public class SkillTreeManager implements Listener {
             case PET_TRAINER:
                 double xpChance = level * 4;
                 return ChatColor.YELLOW + "+" + xpChance + "% " + ChatColor.GRAY + "Double Pet XP chance";
-            case VITALITY:
+            case HEALTH_I:
+            case HEALTH_II:
+            case HEALTH_III:
+            case HEALTH_IV:
+            case HEALTH_V:
                 int extraHealth = level;
-                return ChatColor.GREEN + "+" + extraHealth + " Max Health";
+                return ChatColor.GREEN + "+" + extraHealth + " Bonus Health";
+            case STUDY_BREWING:
+                return ChatColor.YELLOW + "+" + level + " Brewing Talent";
+            case STUDY_SMITHING:
+                return ChatColor.YELLOW + "+" + level + " Smithing Talent";
+            case STUDY_CULINARY:
+                return ChatColor.YELLOW + "+" + level + " Culinary Talent";
+            case STUDY_BARTERING:
+                return ChatColor.YELLOW + "+" + level + " Bartering Talent";
+            case STUDY_FORESTRY:
+                return ChatColor.YELLOW + "+" + level + " Forestry Talent";
+            case STUDY_TAMING:
+                return ChatColor.YELLOW + "+" + level + " Taming Talent";
+            case STUDY_COMBAT:
+                return ChatColor.YELLOW + "+" + level + " Combat Talent";
+            case STUDY_TERRAFORMING:
+                return ChatColor.YELLOW + "+" + level + " Terraforming Talent";
+            case STUDY_MINING:
+                return ChatColor.YELLOW + "+" + level + " Mining Talent";
+            case STUDY_FARMING:
+                return ChatColor.YELLOW + "+" + level + " Farming Talent";
+            case STUDY_FISHING:
+                return ChatColor.YELLOW + "+" + level + " Fishing Talent";
             case CONSERVATIONIST:
                 double duraChance = level;
                 return ChatColor.YELLOW + "+" + duraChance + "% " + ChatColor.GRAY + "durability save chance";
@@ -755,8 +781,34 @@ public class SkillTreeManager implements Listener {
         }
         setTalentLevel(player.getUniqueId(), skill, talent, currentLevel + 1);
         player.sendMessage(ChatColor.GREEN + "Upgraded " + talent.getName() + " to " + (currentLevel + 1));
-        if (skill == Skill.PLAYER && talent == Talent.VITALITY) {
-            HealthManager.getInstance(plugin).applyAndFill(player);
+        if (skill == Skill.PLAYER) {
+            if (talent == Talent.HEALTH_I || talent == Talent.HEALTH_II ||
+                    talent == Talent.HEALTH_III || talent == Talent.HEALTH_IV ||
+                    talent == Talent.HEALTH_V) {
+                HealthManager.getInstance(plugin).applyAndFill(player);
+            } else if (talent == Talent.STUDY_BREWING) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.BREWING, 1);
+            } else if (talent == Talent.STUDY_SMITHING) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.SMITHING, 1);
+            } else if (talent == Talent.STUDY_CULINARY) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.CULINARY, 1);
+            } else if (talent == Talent.STUDY_BARTERING) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.BARTERING, 1);
+            } else if (talent == Talent.STUDY_FORESTRY) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.FORESTRY, 1);
+            } else if (talent == Talent.STUDY_TAMING) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.TAMING, 1);
+            } else if (talent == Talent.STUDY_COMBAT) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.COMBAT, 1);
+            } else if (talent == Talent.STUDY_TERRAFORMING) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.TERRAFORMING, 1);
+            } else if (talent == Talent.STUDY_MINING) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.MINING, 1);
+            } else if (talent == Talent.STUDY_FARMING) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.FARMING, 1);
+            } else if (talent == Talent.STUDY_FISHING) {
+                addExtraTalentPoints(player.getUniqueId(), Skill.FISHING, 1);
+            }
         }
         if (skill == Skill.FORESTRY &&
                 (talent == Talent.REGROWTH_I || talent == Talent.REGROWTH_II || talent == Talent.REGROWTH_III)) {

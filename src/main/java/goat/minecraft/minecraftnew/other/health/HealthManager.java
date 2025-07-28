@@ -41,12 +41,20 @@ public class HealthManager {
     public double computeMaxHealth(Player player) {
         double health = 20.0;
 
-        int talentLevel = 0;
+        int bonus = 0;
         if (SkillTreeManager.getInstance() != null) {
-            talentLevel = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.VITALITY);
+            bonus += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_I);
+            bonus += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_II);
+            bonus += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_III);
+            bonus += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_IV);
+            bonus += SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_V);
         }
-        health += talentLevel;
+        health += bonus;
 
         if (BeaconPassivesGUI.hasBeaconPassives(player) &&
                 BeaconPassivesGUI.hasPassiveEnabled(player, "mending")) {
