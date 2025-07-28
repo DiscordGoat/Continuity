@@ -145,6 +145,206 @@ public enum Talent {
             1,
             Material.NAUTILUS_SHELL
     ),
+    SEA_CREATURE_CHANCE_I(
+            "Sea Creature Chance I",
+            ChatColor.GRAY + "Improve your knack for luring creatures",
+            ChatColor.YELLOW + "+(0.5*level)% " + ChatColor.AQUA + "Sea Creature Chance",
+            3,
+            1,
+            Material.PRISMARINE_SHARD
+    ),
+    DURABILITY(
+            "Durability",
+            ChatColor.GRAY + "Reinforce your fishing rod",
+            ChatColor.YELLOW + "+(100*level) Fishing Rod Max Durability",
+            5,
+            1,
+            Material.FISHING_ROD
+    ),
+    EXOSUIT_I(
+            "Exosuit I",
+            ChatColor.GRAY + "Deflect sea creature attacks",
+            ChatColor.YELLOW + "+(2*level)% Damage Reduction from Sea Creatures",
+            5,
+            1,
+            Material.CHAINMAIL_CHESTPLATE
+    ),
+    MONUMENTAL(
+            "Monumental",
+            ChatColor.GRAY + "Discover ancient sponges",
+            ChatColor.YELLOW + "+(1*level)% Chance to Fish up a Sponge",
+            5,
+            1,
+            Material.SPONGE
+    ),
+    SNACK_THAT_SMILES_BACK_I(
+            "Snack That Smiles Back I",
+            ChatColor.GRAY + "Reel in a friendly treat",
+            ChatColor.YELLOW + "+(0.25*level)% Chance to Fish up a Golden Fish",
+            2,
+            1,
+            Material.GOLDEN_CARROT
+    ),
+    SEA_CREATURE_CHANCE_II(
+            "Sea Creature Chance II",
+            ChatColor.GRAY + "Further tempt deep dwellers",
+            ChatColor.YELLOW + "+(1.0*level)% " + ChatColor.AQUA + "Sea Creature Chance",
+            3,
+            20,
+            Material.PRISMARINE_SHARD
+    ),
+    WHEN_IT_RAINS_IT_POURS(
+            "When It Rains It Pours",
+            ChatColor.GRAY + "Rain fuels your fishing fervor",
+            ChatColor.YELLOW + "+(5*level)% Chance to Extend Rain Duration when killing a Sea Creature",
+            5,
+            20,
+            Material.WATER_BUCKET
+    ),
+    EXOSUIT_II(
+            "Exosuit II",
+            ChatColor.GRAY + "Stronger protection from the deep",
+            ChatColor.YELLOW + "+(2*level)% Damage Reduction from Sea Creatures",
+            5,
+            20,
+            Material.CHAINMAIL_CHESTPLATE
+    ),
+    LOST_LIBRARY(
+            "Lost Library",
+            ChatColor.GRAY + "Dredge up forgotten knowledge",
+            ChatColor.YELLOW + "+(1*level)% Chance to Fish up an Enchanted Book",
+            5,
+            20,
+            Material.ENCHANTED_BOOK
+    ),
+    SNACK_THAT_SMILES_BACK_II(
+            "Snack That Smiles Back II",
+            ChatColor.GRAY + "Reel in a friendly treat",
+            ChatColor.YELLOW + "+(0.25*level)% Chance to Fish up a Golden Fish",
+            2,
+            20,
+            Material.GOLDEN_CARROT
+    ),
+    SEA_CREATURE_CHANCE_III(
+            "Sea Creature Chance III",
+            ChatColor.GRAY + "Master the ocean's call",
+            ChatColor.YELLOW + "+(1.5*level)% " + ChatColor.AQUA + "Sea Creature Chance",
+            3,
+            40,
+            Material.PRISMARINE_SHARD
+    ),
+    MOTHERLODE(
+            "Motherlode",
+            ChatColor.GRAY + "Treasure chests abound",
+            ChatColor.YELLOW + "+(5*level)% Chance to Fish up Double Treasure Chests",
+            5,
+            40,
+            Material.CHEST
+    ),
+    EXOSUIT_III(
+            "Exosuit III",
+            ChatColor.GRAY + "Hardened against the abyss",
+            ChatColor.YELLOW + "+(2*level)% Damage Reduction from Sea Creatures",
+            5,
+            40,
+            Material.CHAINMAIL_CHESTPLATE
+    ),
+    MAW_OF_THE_VOID(
+            "Maw Of The Void",
+            ChatColor.GRAY + "Slaying stirs lurking horrors",
+            ChatColor.YELLOW + "+(1*level)% Sea Creature Chance for 10s after killing a Sea Creature",
+            5,
+            40,
+            Material.PUFFERFISH
+    ),
+    SNACK_THAT_SMILES_BACK_III(
+            "Snack That Smiles Back III",
+            ChatColor.GRAY + "Reel in a friendly treat",
+            ChatColor.YELLOW + "+(0.25*level)% Chance to Fish up a Golden Fish",
+            2,
+            40,
+            Material.GOLDEN_CARROT
+    ),
+    SEA_CREATURE_CHANCE_IV(
+            "Sea Creature Chance IV",
+            ChatColor.GRAY + "Summon the rarest beasts",
+            ChatColor.YELLOW + "+(2.0*level)% " + ChatColor.AQUA + "Sea Creature Chance",
+            3,
+            60,
+            Material.PRISMARINE_SHARD
+    ),
+    TREASURY(
+            "Treasury",
+            ChatColor.GRAY + "Grow your haul of riches",
+            ChatColor.YELLOW + "+(1*level)% Treasure Chance",
+            5,
+            60,
+            Material.EMERALD
+    ),
+    EXOSUIT_IV(
+            "Exosuit IV",
+            ChatColor.GRAY + "Defenses rival deep leviathans",
+            ChatColor.YELLOW + "+(2*level)% Damage Reduction from Sea Creatures",
+            5,
+            60,
+            Material.CHAINMAIL_CHESTPLATE
+    ),
+    BIOLUMINESCENCE(
+            "Bioluminescence",
+            ChatColor.GRAY + "Armor mends with each victory",
+            ChatColor.YELLOW + "+(1*level)% Chance to Repair Armor by 10% when killing Sea Creatures",
+            5,
+            60,
+            Material.SEA_LANTERN
+    ),
+    SNACK_THAT_SMILES_BACK_IV(
+            "Snack That Smiles Back IV",
+            ChatColor.GRAY + "Reel in a friendly treat",
+            ChatColor.YELLOW + "+(0.25*level)% Chance to Fish up a Golden Fish",
+            2,
+            60,
+            Material.GOLDEN_CARROT
+    ),
+    SEA_CREATURE_CHANCE_V(
+            "Sea Creature Chance V",
+            ChatColor.GRAY + "Command the ocean's bounty",
+            ChatColor.YELLOW + "+(2.5*level)% " + ChatColor.AQUA + "Sea Creature Chance",
+            4,
+            80,
+            Material.PRISMARINE_SHARD
+    ),
+    EXOSUIT_V(
+            "Exosuit V",
+            ChatColor.GRAY + "Near-impenetrable protection",
+            ChatColor.YELLOW + "+(2*level)% Damage Reduction from Sea Creatures",
+            5,
+            80,
+            Material.CHAINMAIL_CHESTPLATE
+    ),
+    SUNKEN_RUINS(
+            "Sunken Ruins",
+            ChatColor.GRAY + "Recover ancient building blocks",
+            ChatColor.YELLOW + "+(1*level)% Chance to Fish up 64 Compact Stone",
+            5,
+            80,
+            Material.PRISMARINE_BRICKS
+    ),
+    ABYSSAL_STRIKE(
+            "Abyssal Strike",
+            ChatColor.GRAY + "Sea creatures yield bountiful spoils",
+            ChatColor.YELLOW + "+(20*level)% Chance that killing a Sea Creature Grants Double Drops",
+            5,
+            80,
+            Material.NETHERITE_SWORD
+    ),
+    SNACK_THAT_SMILES_BACK_V(
+            "Snack That Smiles Back V",
+            ChatColor.GRAY + "Reel in a friendly treat",
+            ChatColor.YELLOW + "+(0.25*level)% Chance to Fish up a Golden Fish",
+            1,
+            80,
+            Material.GOLDEN_CARROT
+    ),
     CHARISMA_MASTERY(
             "Charisma Mastery",
             ChatColor.GRAY + "Add a bribe",

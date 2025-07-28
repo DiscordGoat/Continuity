@@ -262,6 +262,56 @@ public class SkillTreeManager implements Listener {
             case ANGLERS_INSTINCT:
                 double seaBonus = level * 0.25;
                 return ChatColor.YELLOW + "+" + seaBonus + "% " + ChatColor.AQUA + "Sea Creature Chance";
+            case SEA_CREATURE_CHANCE_I:
+                return ChatColor.YELLOW + "+" + (level * 0.5) + "% " + ChatColor.AQUA + "Sea Creature Chance";
+            case DURABILITY:
+                return ChatColor.YELLOW + "+" + (level * 100) + " Fishing Rod Max Durability";
+            case EXOSUIT_I:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Damage Reduction from Sea Creatures";
+            case MONUMENTAL:
+                return ChatColor.YELLOW + "+" + (level) + "% Chance to Fish up a Sponge";
+            case SNACK_THAT_SMILES_BACK_I:
+                return ChatColor.YELLOW + "+" + (level * 0.25) + "% Chance to Fish up a Golden Fish";
+            case SEA_CREATURE_CHANCE_II:
+                return ChatColor.YELLOW + "+" + (level * 1.0) + "% " + ChatColor.AQUA + "Sea Creature Chance";
+            case WHEN_IT_RAINS_IT_POURS:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Chance to Extend Rain Duration on kill";
+            case EXOSUIT_II:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Damage Reduction from Sea Creatures";
+            case LOST_LIBRARY:
+                return ChatColor.YELLOW + "+" + (level) + "% Chance to Fish up an Enchanted Book";
+            case SNACK_THAT_SMILES_BACK_II:
+                return ChatColor.YELLOW + "+" + (level * 0.25) + "% Chance to Fish up a Golden Fish";
+            case SEA_CREATURE_CHANCE_III:
+                return ChatColor.YELLOW + "+" + (level * 1.5) + "% " + ChatColor.AQUA + "Sea Creature Chance";
+            case MOTHERLODE:
+                return ChatColor.YELLOW + "+" + (level * 5) + "% Chance to Fish up Double Treasure Chests";
+            case EXOSUIT_III:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Damage Reduction from Sea Creatures";
+            case MAW_OF_THE_VOID:
+                return ChatColor.YELLOW + "+" + (level) + "% Sea Creature Chance for 10s after kill";
+            case SNACK_THAT_SMILES_BACK_III:
+                return ChatColor.YELLOW + "+" + (level * 0.25) + "% Chance to Fish up a Golden Fish";
+            case SEA_CREATURE_CHANCE_IV:
+                return ChatColor.YELLOW + "+" + (level * 2.0) + "% " + ChatColor.AQUA + "Sea Creature Chance";
+            case TREASURY:
+                return ChatColor.YELLOW + "+" + (level) + "% Treasure Chance";
+            case EXOSUIT_IV:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Damage Reduction from Sea Creatures";
+            case BIOLUMINESCENCE:
+                return ChatColor.YELLOW + "+" + (level) + "% Chance to Repair Armor by 10% on kill";
+            case SNACK_THAT_SMILES_BACK_IV:
+                return ChatColor.YELLOW + "+" + (level * 0.25) + "% Chance to Fish up a Golden Fish";
+            case SEA_CREATURE_CHANCE_V:
+                return ChatColor.YELLOW + "+" + (level * 2.5) + "% " + ChatColor.AQUA + "Sea Creature Chance";
+            case EXOSUIT_V:
+                return ChatColor.YELLOW + "+" + (level * 2) + "% Damage Reduction from Sea Creatures";
+            case SUNKEN_RUINS:
+                return ChatColor.YELLOW + "+" + (level) + "% Chance to Fish up 64 Compact Stone";
+            case ABYSSAL_STRIKE:
+                return ChatColor.YELLOW + "+" + (level * 20) + "% Chance for Double Drops";
+            case SNACK_THAT_SMILES_BACK_V:
+                return ChatColor.YELLOW + "+" + (level * 0.25) + "% Chance to Fish up a Golden Fish";
             case CHARISMA_MASTERY:
                 int charismaDuration = level * 200;
                 return ChatColor.YELLOW + "+" + charismaDuration + "s " + ChatColor.LIGHT_PURPLE + "Charismatic Bartering Duration";
