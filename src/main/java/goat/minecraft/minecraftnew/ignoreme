@@ -207,33 +207,34 @@ Scaling Max: 0.01 Spirit Chance
 
 Common:
 Spirit Chance I: +0.0002 Spirit Chance, Max level 3
-Timber I: +4% Double Logs Chance, Max level 5
-Leverage I: +2% Haste Chance, Max level 6
-Forest Frenzy: +10s Haste Duration, Max level 6
+Timber I: +20% Double Logs Chance, Max level 5
+Leverage I: +2% Haste Chance, Max level 5
+Forest Frenzy: +10s Haste Duration, Max level 2
+Regrowth I: -1d Sapling Growth Cooldown, Max level 5
 
 Uncommon:
 Spirit Chance II: +0.0004 Spirit Chance, Max level 3
-Timber II: +4% Double Logs Chance, Max level 5
 Leverage II: +2% Haste Chance, Max level 6
 Photosynthesis: +1 Health when using Treecapitator, Max level 6
+Regrowth II: -1d Sapling Growth Cooldown, Max level 5
 
 Rare:
 Spirit Chance III: +0.0006 Spirit Chance, Max level 3
-Timber III: +4% Double Logs Chance, Max level 5
+Timber II: +20% Triple Logs Chance, Max level 5
 Leverage III: +2% Haste Chance, Max level 4
 100 Acre Woods: +1% Chance to gain a Honey Bottle when chopping trees, Max level 5
 Spectral Armor: -10% Spirit Damage, Max level 3
 
 Epic:
 Spirit Chance IV: +0.0008 Spirit Chance, Max level 3
-Timber IV: +4% Double Logs Chance, Max level 5
 Leverage IV: +2% Haste Chance, Max level 6
 Deforestation: +1 Potency of Haste, Max level 3
 HeadHunter: +10% Damage to Spirits, Max level 3
+Regrowth III: -1d Sapling Growth Cooldown, Max level 5
 
 Legendary:
 Spirit Chance V: +0.0010 Spirit Chance, Max level 4
-Timber V: +4% Double Logs Chance, Max level 5
+Timber III: +20% Quadruple Logs Chance, Max level 5
 Leverage V: +2% Haste Chance, Max level 4
 Ancient Confusion: -10 Spirit Level, Max level 5
 Redemption: +50% Chance to Replant a sapling nearby, Max level 2
