@@ -167,10 +167,6 @@ commands:
     description: Sets sapling cooldown seconds remaining
     usage: /setsaplingcooldownsecondsremaining <seconds>
     permission: continuity.admin
-  setreforgeseconds:
-    description: Sets reforge timer duration for all reforges
-    usage: /setreforgeseconds <seconds>
-    permission: continuity.admin
   openvillagertrademenu:
     description: Opens a villager trade menu for testing
     usage: /openVillagerTradeMenu <profession> <tier>
