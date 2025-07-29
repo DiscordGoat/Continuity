@@ -12,6 +12,7 @@ import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -50,6 +51,12 @@ public class Forestry implements Listener {
 
     // Notoriety map tracks each player's current forestry notoriety.
     private Map<UUID, Integer> notorietyMap = new HashMap<>();
+
+    // Track last time a player reduced notoriety via sleeping
+    private final Map<UUID, Long> lastSleepTime = new HashMap<>();
+
+    // 10 minute cooldown for sleep notoriety reduction
+    private static final long SLEEP_COOLDOWN = 10 * 60 * 1000L;
 
     // Set of log materials that can grant forestry XP
     private static final Set<Material> LOG_MATERIALS = new HashSet<>(Arrays.asList(
@@ -277,7 +284,20 @@ public class Forestry implements Listener {
      * and saves the updated value.
      */
     private void startNotorietyDecayTask() {
-        // Decay task disabled; notoriety is now adjusted via events.
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    if (AFKDetector.isPlayerAFK(player)) {
+                        continue;
+                    }
+                    int current = getNotoriety(player);
+                    if (current > 0) {
+                        decreaseNotoriety(player, 1, false);
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 120L); // Every 6 seconds
     }
 
     /**
@@ -642,7 +662,16 @@ public class Forestry implements Listener {
     @EventHandler
     public void onPlayerBedEnter(PlayerBedEnterEvent event) {
         Player player = event.getPlayer();
-        halveNotoriety(player);
+        UUID id = player.getUniqueId();
+        long currentTime = System.currentTimeMillis();
+        long lastSleep = lastSleepTime.getOrDefault(id, 0L);
+        if (currentTime - lastSleep < SLEEP_COOLDOWN) {
+            long secondsLeft = (SLEEP_COOLDOWN - (currentTime - lastSleep)) / 1000;
+            player.sendMessage(ChatColor.RED + "You must wait " + secondsLeft + "s before sleeping reduces notoriety again!");
+            return;
+        }
+        lastSleepTime.put(id, currentTime);
+        decreaseNotoriety(player, 100, false);
     }
 
     @EventHandler
