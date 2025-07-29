@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
@@ -109,9 +110,8 @@ public class Flight implements Listener {
         if (SkillTreeManager.getInstance() != null) {
             talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
         }
-        distance += talentLevel * 0.1; // each talent level adds 0.1km
-        if (meritManager.hasPerk(player.getUniqueId(), "Icarus")) {
-            distance *= 2;
+        if(PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player).hasPerk(PetManager.PetPerk.FLIGHT)){
+            distance += talentLevel * 0.1; // each talent level adds 0.1km
         }
         return distance;
     }

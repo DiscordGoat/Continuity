@@ -38,7 +38,7 @@ public class Leap implements Listener {
             }
 
             // Perform leap if conditions are met
-            if (((activePet != null && activePet.hasPerk(PetManager.PetPerk.LEAP)) || talent > 0) && player.isOnGround()) {
+            if (((activePet != null && activePet.hasPerk(PetManager.PetPerk.LEAP))) && player.isOnGround()) {
                 performLeap(player, activePet, talent);
             }
         }
