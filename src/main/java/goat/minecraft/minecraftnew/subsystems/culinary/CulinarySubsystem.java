@@ -843,7 +843,11 @@ public class CulinarySubsystem implements Listener {
             // -- 2) Placing an ingredient on an ACTIVE recipe session --
             if (activeRecipeSessions.containsKey(locKey)) {
                 RecipeSession session = activeRecipeSessions.get(locKey);
-                if (session.finalized) {
+                if (session.readyForPickup) {
+                    event.setCancelled(true);
+                    player.sendMessage(ChatColor.YELLOW + "LEFT CLICK to claim " + session.recipe.getName() + "!");
+                    return;
+                } else if (session.finalized) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "This recipe is already cooking!");
                     return;
@@ -897,7 +901,10 @@ public class CulinarySubsystem implements Listener {
         else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (activeRecipeSessions.containsKey(locKey)) {
                 RecipeSession session = activeRecipeSessions.get(locKey);
-                if (session.finalized) {
+                if (session.readyForPickup) {
+                    event.setCancelled(true);
+                    claimRecipe(session, player);
+                } else if (session.finalized) {
                     event.setCancelled(true);
                     player.sendMessage(ChatColor.RED + "This recipe is already cooking!");
                 } else if (session.placedIngredientsStands.size() == session.recipe.getIngredients().size()) {
@@ -1297,50 +1304,20 @@ public class CulinarySubsystem implements Listener {
         }
 
         removeEntityByUUID(session.timerStandUUID);
-        removeEntityByUUID(session.mainArmorStandUUID);
         session.placedIngredientItems.clear();
 
         ItemStack result = createOutputItem(session.recipe);
 
-        int yield = 1 + random.nextInt(3);
-
-        PetManager.Pet pet = null;
-        if (player != null) {
-            pet = PetManager.getInstance(plugin).getActivePet(player);
-        }
-        if (pet != null && pet.hasPerk(PetManager.PetPerk.TRASH_CAN)) {
-            yield += 2;
+        ArmorStand mainStand = (ArmorStand) Bukkit.getEntity(session.mainArmorStandUUID);
+        if (mainStand != null) {
+            mainStand.setCustomName(ChatColor.GREEN + "LEFT CLICK to claim " + session.recipe.getName() + "!");
         }
 
-        for (int i = 0; i < yield; i++) {
-            session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
-        }
-
-        if (player != null) {
-            SkillTreeManager manager = SkillTreeManager.getInstance();
-            if (manager != null) {
-                int level = 0;
-                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_I);
-                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_II);
-                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_III);
-                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_IV);
-                level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_V);
-                if (level > 0 && random.nextDouble() < level * 0.04) {
-                    for (int i = 0; i < yield; i++) {
-                        session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
-                    }
-                }
-            }
-
-            XPManager xpManager = new XPManager(plugin);
-            xpManager.addXP(player, "Culinary", session.recipe.getXpReward());
-            player.sendMessage(ChatColor.GREEN + "You cooked " + session.recipe.getName() + "! You gained culinary XP.");
-        }
-        logger.info("[CulinarySubsystem] finalizeRecipe: Recipe crafted, XP granted.");
-
-        if (session.locationKey != null) {
-            activeRecipeSessions.remove(session.locationKey);
-        }
+        UUID resultStand = spawnResultAboveTable(session.tableLocation, result);
+        session.resultStandUUID = resultStand;
+        session.resultSpinTask = startSpinning(resultStand);
+        session.readyForPickup = true;
+        logger.info("[CulinarySubsystem] finalizeRecipe: Dish ready for pickup.");
     }
 
     private UUID spawnInvisibleArmorStand(Location loc, String displayName, List<String> lore, boolean marker) {
@@ -1382,6 +1359,69 @@ public class CulinarySubsystem implements Listener {
         UUID uuid = stand.getUniqueId();
         Bukkit.getLogger().info("[CulinarySubsystem] spawnIngredientAboveTableRandom: Spawned item stand UUID=" + uuid);
         return uuid;
+    }
+
+    private UUID spawnResultAboveTable(Location tableLoc, ItemStack result) {
+        Location itemLoc = tableLoc.clone().add(0.5, 1.0, 0.5);
+        ArmorStand stand = (ArmorStand) itemLoc.getWorld().spawnEntity(itemLoc, EntityType.ARMOR_STAND);
+        stand.setInvisible(true);
+        stand.setMarker(true);
+        stand.setInvulnerable(true);
+        stand.setGravity(false);
+        stand.setSmall(true);
+        stand.setArms(true);
+        ItemStack copy = result.clone();
+        copy.setAmount(1);
+        stand.getEquipment().setItemInMainHand(copy);
+        stand.setCustomNameVisible(false);
+        stand.setRightArmPose(new EulerAngle(Math.toRadians(-90), 0, 0));
+        return stand.getUniqueId();
+    }
+
+    private void claimRecipe(RecipeSession session, Player player) {
+        if (!session.readyForPickup) return;
+
+        if (session.resultSpinTask != null) {
+            session.resultSpinTask.cancel();
+        }
+
+        removeEntityByUUID(session.resultStandUUID);
+        removeEntityByUUID(session.mainArmorStandUUID);
+
+        ItemStack result = createOutputItem(session.recipe);
+
+        int yield = 1 + random.nextInt(3);
+
+        PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
+        if (pet != null && pet.hasPerk(PetManager.PetPerk.TRASH_CAN)) {
+            yield += 2;
+        }
+
+        for (int i = 0; i < yield; i++) {
+            session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
+        }
+
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager != null) {
+            int level = 0;
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_I);
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_II);
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_III);
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_IV);
+            level += manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.CUTTING_BOARD_V);
+            if (level > 0 && random.nextDouble() < level * 0.04) {
+                for (int i = 0; i < yield; i++) {
+                    session.tableLocation.getWorld().dropItem(session.tableLocation.clone().add(0.5, 1, 0.5), result.clone());
+                }
+            }
+        }
+
+        XPManager xpManager = new XPManager(plugin);
+        xpManager.addXP(player, "Culinary", session.recipe.getXpReward());
+        player.sendMessage(ChatColor.GREEN + "You cooked " + session.recipe.getName() + "! You gained culinary XP.");
+
+        activeRecipeSessions.remove(session.locationKey);
+        session.readyForPickup = false;
     }
 
     private BukkitTask startSpinning(UUID standUUID) {
@@ -1624,6 +1664,11 @@ public class CulinarySubsystem implements Listener {
         public UUID timerStandUUID;
         public BukkitTask particleTask;
         public boolean finalized = false;
+
+        // New fields for completed dishes waiting to be claimed
+        public boolean readyForPickup = false;
+        public UUID resultStandUUID;
+        public BukkitTask resultSpinTask;
 
         public RecipeSession(String locKey, CulinaryRecipe recipe, Location tableLocation) {
             this.locationKey = locKey;
