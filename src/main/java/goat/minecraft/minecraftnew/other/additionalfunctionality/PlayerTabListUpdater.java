@@ -10,12 +10,31 @@ import org.bukkit.Statistic;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerTabListUpdater {
 
     private final JavaPlugin plugin;
     private final XPManager xpManager;
+
+    // Mapping of potion names to display colors
+    private static final Map<String, ChatColor> POTION_COLORS = new HashMap<>();
+
+    static {
+        POTION_COLORS.put("Potion of Recurve", ChatColor.DARK_PURPLE);
+        POTION_COLORS.put("Potion of Liquid Luck", ChatColor.GOLD);
+        POTION_COLORS.put("Potion of Strength", ChatColor.RED);
+        POTION_COLORS.put("Potion of Fountains", ChatColor.AQUA);
+        POTION_COLORS.put("Potion of Sovereignty", ChatColor.AQUA);
+        POTION_COLORS.put("Potion of Swift Step", ChatColor.YELLOW);
+        POTION_COLORS.put("Potion of Solar Fury", ChatColor.GOLD);
+        POTION_COLORS.put("Potion of Night Vision", ChatColor.LIGHT_PURPLE);
+        POTION_COLORS.put("Potion of Charismatic Bartering", ChatColor.GREEN);
+        POTION_COLORS.put("Potion of Oxygen Recovery", ChatColor.AQUA);
+        POTION_COLORS.put("Potion of Metal Detection", ChatColor.RED);
+        POTION_COLORS.put("Potion of Optimal Eating", ChatColor.GOLD);
+    }
 
     public PlayerTabListUpdater(JavaPlugin plugin, XPManager xpManager) {
         this.plugin = plugin;
@@ -43,42 +62,43 @@ public class PlayerTabListUpdater {
     }
 
     private void updatePlayerTabList(Player player) {
-        int playerXP        = xpManager.getPlayerLevel(player, "Player");
-        int playerLevel     = xpManager.getPlayerLevel(player, "Player");
-        int xpToNextLevel   = xpManager.getXPToNextLevel(player, "Player");
-        int daysPlayed      = getDaysPlayed(player);
+        int playerLevel   = xpManager.getPlayerLevel(player, "Player");
+        int xpToNextLevel = xpManager.getXPToNextLevel(player, "Player");
 
-        // Pull the countdown from your manager
         int secondsLeft = VillagerWorkCycleManager.getInstance(plugin).getSecondsUntilNextWorkCycle();
         String formattedTime = formatSecondsToMMSS(secondsLeft);
         int saplingSec = SaplingManager.getInstance(plugin).getCooldownSecondsRemaining();
         String saplingTime = formatSecondsToDDMMSS(saplingSec);
 
-        String header = ChatColor.GOLD + "Welcome, " + player.getName() + "!";
-        String footer = ChatColor.AQUA + "Player XP: " + playerXP
-                + ChatColor.DARK_PURPLE + " | Level: " + playerLevel
-                + ChatColor.GREEN + " | Days Played: " + daysPlayed;
-
-        if (xpToNextLevel != -1) {
-            footer += "\nXP to next level: " + xpToNextLevel;
-        } else {
-            footer += "\nMax Level Reached";
+        StringBuilder header = new StringBuilder();
+        header.append(ChatColor.GOLD).append("Players: ")
+                .append(ChatColor.WHITE).append(Bukkit.getOnlinePlayers().size())
+                .append("/").append(Bukkit.getMaxPlayers());
+        header.append("\n").append(ChatColor.GREEN).append("Level ")
+                .append(playerLevel).append(" ")
+                .append(createXPBar(player));
+        if (xpToNextLevel > 0) {
+            header.append(" ").append(ChatColor.YELLOW).append("(").append(xpToNextLevel).append(" XP)");
         }
 
-        // Add your villager work cycle countdown in the footer
-        footer += "\n" + ChatColor.YELLOW + "Next Villager Work Cycle: " + ChatColor.WHITE + formattedTime;
-        footer += "\n" + ChatColor.GREEN + "Sapling Growth: " + ChatColor.WHITE + saplingTime;
+        StringBuilder footer = new StringBuilder();
+        footer.append(ChatColor.YELLOW).append("World Stats:");
+        footer.append("\n").append(ChatColor.YELLOW).append("Next Work Cycle: ")
+                .append(ChatColor.WHITE).append(formattedTime);
+        footer.append("\n").append(ChatColor.GREEN).append("Sapling Growth: ")
+                .append(ChatColor.WHITE).append(saplingTime);
 
-        // New segment: Active Potion Effects
         Map<String, Integer> effects = PotionManager.getActiveEffects(player);
         if (!effects.isEmpty()) {
-            footer += "\n" + ChatColor.LIGHT_PURPLE + "Active Potions:";
+            footer.append("\n").append(ChatColor.LIGHT_PURPLE).append("Active Potions:");
             for (Map.Entry<String, Integer> entry : effects.entrySet()) {
-                footer += "\n" + ChatColor.WHITE + entry.getKey() + ": " + entry.getValue() + "s";
+                ChatColor color = POTION_COLORS.getOrDefault(entry.getKey(), ChatColor.WHITE);
+                footer.append("\n").append(color).append(entry.getKey()).append(": ")
+                        .append(createPotionBar(entry.getValue(), color));
             }
         }
 
-        player.setPlayerListHeaderFooter(header, footer);
+        player.setPlayerListHeaderFooter(header.toString(), footer.toString());
     }
 
     /**
@@ -95,5 +115,62 @@ public class PlayerTabListUpdater {
         int minutes = (totalSeconds % 86400) / 60;
         int seconds = totalSeconds % 60;
         return days + "d:" + String.format("%02d:%02d", minutes, seconds);
+    }
+
+    /**
+     * Builds a progress bar for potion durations.
+     */
+    private String createPotionBar(int seconds, ChatColor color) {
+        int segments = 35;
+        int max = 10000;
+        double ratio = Math.min(1.0, (double) seconds / max);
+        int filled = (int) Math.round(ratio * segments);
+
+        StringBuilder bar = new StringBuilder();
+        bar.append(ChatColor.DARK_GRAY).append("[");
+        for (int i = 0; i < segments; i++) {
+            if (i < filled) {
+                bar.append(color).append('|');
+            } else {
+                bar.append(ChatColor.GRAY).append('|');
+            }
+        }
+        bar.append(ChatColor.DARK_GRAY).append(']');
+        return bar.toString();
+    }
+
+    /**
+     * Builds a progress bar for the Player skill.
+     */
+    private String createXPBar(Player player) {
+        int segments = 25;
+        int level = xpManager.getPlayerLevel(player, "Player");
+        if (level >= 100) {
+            StringBuilder full = new StringBuilder();
+            full.append(ChatColor.DARK_GRAY).append('[');
+            for (int i = 0; i < segments; i++) {
+                full.append(ChatColor.GREEN).append('|');
+            }
+            full.append(ChatColor.DARK_GRAY).append(']');
+            return full.toString();
+        }
+
+        int currentXP = xpManager.getXP(player, "Player");
+        int start = xpManager.getLevelStartXP(level);
+        int end = xpManager.getLevelEndXP(level);
+        double ratio = (double) (currentXP - start) / (end - start);
+        int filled = (int) Math.round(ratio * segments);
+
+        StringBuilder bar = new StringBuilder();
+        bar.append(ChatColor.DARK_GRAY).append('[');
+        for (int i = 0; i < segments; i++) {
+            if (i < filled) {
+                bar.append(ChatColor.GREEN).append('|');
+            } else {
+                bar.append(ChatColor.GRAY).append('|');
+            }
+        }
+        bar.append(ChatColor.DARK_GRAY).append(']');
+        return bar.toString();
     }
 }
