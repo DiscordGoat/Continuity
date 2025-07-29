@@ -96,6 +96,7 @@ public class PotionBrewingSubsystem implements Listener {
             if (!activeSessions.containsKey(locKey)) {
                 String potionName = dataConfig.getString(locKey + ".potionName", null);
                 int timeLeft = dataConfig.getInt(locKey + ".timeLeft", 0);
+                boolean complete = dataConfig.getBoolean(locKey + ".complete", false);
 
                 // Load placed ingredients with their ItemStacks
                 Map<String, ItemStack> placedIngs = new HashMap<>();
@@ -116,10 +117,13 @@ public class PotionBrewingSubsystem implements Listener {
                 }
                 BrewSession session = new BrewSession(locKey, found);
                 session.brewTimeRemaining = timeLeft;
+                session.complete = complete;
 
                 // Restore placed ingredients
-                for (Map.Entry<String, ItemStack> entry : placedIngs.entrySet()) {
-                    session.placeIngredient(entry.getKey(), entry.getValue());
+                if (!complete) {
+                    for (Map.Entry<String, ItemStack> entry : placedIngs.entrySet()) {
+                        session.placeIngredient(entry.getKey(), entry.getValue());
+                    }
                 }
 
                 // Re-summon stands for main stand, label stands, spinning stands, etc.
@@ -142,6 +146,7 @@ public class PotionBrewingSubsystem implements Listener {
             BrewSession session = activeSessions.get(locKey);
             dataConfig.set(locKey + ".potionName", session.recipe.getName());
             dataConfig.set(locKey + ".timeLeft", session.brewTimeRemaining);
+            dataConfig.set(locKey + ".complete", session.complete);
 
             // Store placed ingredients with their ItemStacks
             for (Map.Entry<String, ItemStack> entry : session.placedIngredientItems.entrySet()) {
@@ -447,13 +452,18 @@ public class PotionBrewingSubsystem implements Listener {
             return;
         }
 
-        // Left-click => finalize
+        // Left-click => finalize or claim
         if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
             if (!activeSessions.containsKey(locKey)) {
                 player.sendMessage(ChatColor.RED + "No potion recipe is placed here yet.");
                 return;
             }
             BrewSession session = activeSessions.get(locKey);
+            if (session.complete) {
+                session.claimPotion(player);
+                event.setCancelled(true);
+                return;
+            }
             if (session.allIngredientsPlaced()) {
                 player.sendMessage(ChatColor.GREEN + "All ingredients are placed! Brewing started...");
                 session.beginBrewing(false, event.getPlayer());
@@ -598,6 +608,10 @@ public class PotionBrewingSubsystem implements Listener {
         private final Map<String, UUID> labelStands = new HashMap<>();
         private final Map<String, UUID> spinStands = new HashMap<>();
 
+        // completion state
+        private boolean complete = false;
+        private UUID finalPotionStand;
+
         public BrewSession(String locKey, PotionRecipe recipe) {
             this.locationKey = locKey;
             this.recipe = recipe;
@@ -635,11 +649,15 @@ public class PotionBrewingSubsystem implements Listener {
          */
         public void summonAllStandsAndTasks() {
             spawnMainArmorStand();
-            updateIngredientLabels();
-            // For each placed ingredient, we re-summon a spinning stand
-            // If brewTimeRemaining > 0 => we are still brewing => resume
-            if (brewTimeRemaining > 0) {
-                beginBrewing(true, null);  // resume = true
+            if (complete) {
+                spawnFinalPotion();
+            } else {
+                updateIngredientLabels();
+                // For each placed ingredient, we re-summon a spinning stand
+                // If brewTimeRemaining > 0 => we are still brewing => resume
+                if (brewTimeRemaining > 0) {
+                    beginBrewing(true, null);  // resume = true
+                }
             }
         }
 
@@ -677,12 +695,6 @@ public class PotionBrewingSubsystem implements Listener {
             startParticleTask();
             startSoundTask();
             updateDB();
-
-            if(player == null){
-                return;
-            }
-            XPManager xpManager = new XPManager(plugin);
-            xpManager.addXP(player, "Brewing", 500);
         }
 
         public void spawnMainArmorStand() {
@@ -832,49 +844,24 @@ public class PotionBrewingSubsystem implements Listener {
             if (particleTask != null) particleTask.cancel();
             if (soundTask != null) soundTask.cancel();
 
-            // Summon final potion
+            // remove timer and ingredient stands
+            removeEntityByUUID(timerStand);
+            for (UUID u : labelStands.values()) removeEntityByUUID(u);
+            labelStands.clear();
+            for (UUID u : spinStands.values()) removeEntityByUUID(u);
+            spinStands.clear();
+            placedIngredientItems.clear();
+            placedIngredients.clear();
+
             Location standLoc = fromLocKey(locationKey).add(0.5, 1, 0.5);
             World w = standLoc.getWorld();
             if (w != null) {
                 w.playSound(standLoc, Sound.ENTITY_LIGHTNING_BOLT_THUNDER, 2.0f, 1.0f);
-
-                // build final potion
-                ItemStack finalPotion = buildFinalPotion();
-                if(SkillTreeManager.getInstance().hasTalent(getNearestPlayer(standLoc), Talent.TRIPLE_BATCH)) {
-                    double chance = (SkillTreeManager.getInstance().getTalentLevel(getNearestPlayer(standLoc).getUniqueId(), Skill.BREWING, Talent.TRIPLE_BATCH) * 10) / 100.0;   // 0.0–0.80
-                    if (Math.random() < chance) {
-                        Item dropped = w.dropItem(standLoc, finalPotion);
-                        Item dropped2 = w.dropItem(standLoc, finalPotion);
-                        Item dropped3 = w.dropItem(standLoc, finalPotion);
-                        dropped.setUnlimitedLifetime(true);
-                        dropped2.setUnlimitedLifetime(true);
-                        dropped3.setUnlimitedLifetime(true);
-                    }
-                    else{
-                        Item dropped = w.dropItem(standLoc, finalPotion);
-                        dropped.setUnlimitedLifetime(true);
-                    }
-                }else{
-                    Item dropped = w.dropItem(standLoc, finalPotion);
-                    dropped.setUnlimitedLifetime(true);
-                }
-
-
-
-                // Cleanup stands
-                removeEntityByUUID(mainArmorStand);
-                for (UUID u : labelStands.values()) removeEntityByUUID(u);
-                labelStands.clear();
-                for (UUID u : spinStands.values()) removeEntityByUUID(u);
-                spinStands.clear();
-                removeEntityByUUID(timerStand);
-
-                Bukkit.broadcastMessage(ChatColor.GREEN + "[Brewing] " + recipe.getName() + " brew has finished!");
             }
-            // remove from memory & DB
-            activeSessions.remove(locationKey);
-            dataConfig.set(locationKey, null);
-            try { dataConfig.save(dataFile); } catch (IOException ex) { ex.printStackTrace(); }
+
+            complete = true;
+            spawnFinalPotion();
+            updateDB();
         }
 
         /**
@@ -913,6 +900,7 @@ public class PotionBrewingSubsystem implements Listener {
         private void updateDB() {
             dataConfig.set(locationKey + ".potionName", recipe.getName());
             dataConfig.set(locationKey + ".timeLeft", brewTimeRemaining);
+            dataConfig.set(locationKey + ".complete", complete);
             // store placedIngs as a list
             dataConfig.set(locationKey + ".placedIngredients", new ArrayList<>(placedIngredients));
             try { dataConfig.save(dataFile); } catch (IOException e) { e.printStackTrace(); }
@@ -979,6 +967,55 @@ public class PotionBrewingSubsystem implements Listener {
             }.runTaskTimer(plugin, 0L, 1L);
         }
 
+        private void spawnFinalPotion() {
+            ItemStack potion = buildFinalPotion();
+            Location loc = fromLocKey(locationKey).clone().add(0.5, 1.0, 0.5);
+            ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
+            stand.setInvisible(true);
+            stand.setMarker(true);
+            stand.setInvulnerable(true);
+            stand.setGravity(false);
+            stand.setSmall(true);
+            stand.setArms(true);
+            potion.setAmount(1);
+            stand.getEquipment().setItemInMainHand(potion);
+            stand.setCustomNameVisible(false);
+            finalPotionStand = stand.getUniqueId();
+            startSpinning(stand);
+
+            Entity e = Bukkit.getEntity(mainArmorStand);
+            if (e instanceof ArmorStand a && a.isValid()) {
+                a.setCustomName(ChatColor.GREEN + "LEFT CLICK to claim " + recipe.getName() + "!");
+            }
+        }
+
+        private void claimPotion(Player player) {
+            if (!complete) return;
+            if (finalPotionStand != null) {
+                removeEntityByUUID(finalPotionStand);
+                finalPotionStand = null;
+            }
+            ItemStack potion = buildFinalPotion();
+            int count = 1;
+            SkillTreeManager manager = SkillTreeManager.getInstance();
+            if (manager != null && manager.hasTalent(player, Talent.TRIPLE_BATCH)) {
+                double chance = (manager.getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.TRIPLE_BATCH) * 10) / 100.0;
+                if (Math.random() < chance) {
+                    count = 3;
+                }
+            }
+            for (int i = 0; i < count; i++) {
+                player.getInventory().addItem(potion.clone());
+            }
+            XPManager xp = new XPManager(plugin);
+            xp.addXP(player, "Brewing", 500);
+
+            removeEntityByUUID(mainArmorStand);
+            activeSessions.remove(locationKey);
+            dataConfig.set(locationKey, null);
+            try { dataConfig.save(dataFile); } catch (IOException e) { e.printStackTrace(); }
+        }
+
         public String matchIngredient(ItemStack hand) {
             if (hand == null || hand.getType() == Material.AIR) return null;
             String name;
@@ -1020,6 +1057,7 @@ public class PotionBrewingSubsystem implements Listener {
 
             removeEntityByUUID(mainArmorStand);
             removeEntityByUUID(timerStand);
+            removeEntityByUUID(finalPotionStand);
             for (UUID u : labelStands.values()) {
                 removeEntityByUUID(u);
             }
