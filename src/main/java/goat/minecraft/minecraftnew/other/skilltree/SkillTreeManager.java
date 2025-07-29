@@ -714,8 +714,6 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "-" + level + "% Oxygen Depletion Rate";
             case OXYGEN_RESERVE:
                 return ChatColor.YELLOW + "-" + (level * 5) + "% Depletion Rate below 50% Oxygen";
-            case COAL_YIELD:
-                return ChatColor.YELLOW + "+" + level + " Coal per Ore";
             case OXYGEN_V:
                 return ChatColor.YELLOW + "+" + (level * 50) + " " + ChatColor.AQUA + "Oxygen";
             case BIG_BUBBLES_III:

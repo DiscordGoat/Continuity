@@ -40,7 +40,6 @@ public class MiningTalentFeatures implements Listener {
         handleBubbles(player, block);
         handleMagnet(player, block);
         handleAncientDebris(player, block);
-        handleWakeStatue(player, block);
         handleHeartOfMountain(player);
     }
 
@@ -121,20 +120,6 @@ public class MiningTalentFeatures implements Listener {
         }
     }
 
-    private void handleWakeStatue(Player player, Block block) {
-        if (SkillTreeManager.getInstance() == null) return;
-        int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.WAKE_UP_THE_STATUES);
-        if (level <= 0) return;
-        for (Entity e : block.getWorld().getNearbyEntities(block.getLocation(), 5, 5, 5)) {
-            if (e instanceof ArmorStand && "Stone Statue".equals(e.getCustomName())) {
-                e.remove();
-                IronGolem golem = (IronGolem) block.getWorld().spawnEntity(e.getLocation(), EntityType.IRON_GOLEM);
-                golem.setCustomName("Awakened Statue");
-                golem.setPlayerCreated(false);
-                break;
-            }
-        }
-    }
 
     private void handleHeartOfMountain(Player player) {
         if (SkillTreeManager.getInstance() == null) return;

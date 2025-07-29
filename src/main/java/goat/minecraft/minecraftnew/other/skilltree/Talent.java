@@ -1677,7 +1677,7 @@ public enum Talent {
             "Gold Fever",
             ChatColor.GRAY + "Ignore fatigue at moderate hypoxia",
             ChatColor.YELLOW + "Removes Mining Fatigue from Hypoxia",
-            2,
+            1,
             40,
             Material.GOLD_INGOT
     ),
@@ -1721,14 +1721,6 @@ public enum Talent {
             4,
             60,
             Material.BEACON
-    ),
-    COAL_YIELD(
-            "Coal Yield",
-            ChatColor.GRAY + "Mine extra coal",
-            ChatColor.YELLOW + "+1 Coal per Ore",
-            4,
-            60,
-            Material.COAL
     ),
 
     OXYGEN_V(

@@ -333,6 +333,17 @@ public class PlayerOxygenManager implements Listener {
             efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_V);
         }
         double modifier = 1.0 - (efficiencyLevel * 0.05);
+        int reserveLevel = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            reserveLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_RESERVE);
+        }
+        if (reserveLevel > 0) {
+            int current = playerOxygenLevels.getOrDefault(player.getUniqueId(), calculateInitialOxygen(player));
+            int initial = calculateInitialOxygen(player);
+            if (current < initial / 2) {
+                modifier *= (1.0 - reserveLevel * 0.05);
+            }
+        }
         if (modifier < 0) modifier = 0;
         double adjusted = rate * modifier;
         depletionBuffer.put(player.getUniqueId(), depletionBuffer.getOrDefault(player.getUniqueId(), 0.0) + adjusted);
@@ -535,6 +546,11 @@ public class PlayerOxygenManager implements Listener {
             int amp = (stage == 0) ? 3 : 0;
             if(SkillTreeManager.getInstance().hasTalent(player, Talent.GOLD_FEVER)){
                 amp -= 1;
+            }
+            if(SkillTreeManager.getInstance().hasTalent(player, Talent.WAKE_UP_THE_STATUES)){
+                int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.WAKE_UP_THE_STATUES);
+
+                amp -= 1 + level;
             }
             player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 40, amp, false, false, false));
         } else {
