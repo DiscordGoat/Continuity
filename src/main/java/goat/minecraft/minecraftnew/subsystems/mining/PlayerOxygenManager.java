@@ -284,77 +284,80 @@ public class PlayerOxygenManager implements Listener {
     }
 
     /**
-     * Determines the oxygen depletion rate based on the player's location.
+     * Determines how much oxygen to drain this tick (called once per second).
+     * Each level of oxygen efficiency slows the drain rate by 1% (i.e. interval *= 1 + levels*0.01).
+     * Reserve levels add +5 efficiency levels when below half O₂.
      *
      * @param player The player to check.
-     * @return The oxygen depletion rate in oxygen units per second.
+     * @return The integer amount of O₂ to subtract this second.
      */
     public int getOxygenDepletionRate(Player player) {
-        Location location = player.getLocation();
-        World world = location.getWorld();
+        UUID uuid = player.getUniqueId();
+        World world = player.getLocation().getWorld();
         if (world == null) return 0;
-        int y = location.getBlockY();
-        PetManager.Pet activePet = PetManager.getInstance(plugin).getActivePet(player);
+
+        // Base 1 O₂/sec when in range
+        int rate = 0;
+        int y = player.getLocation().getBlockY();
+
+        // Blacklung check (pet or talent)
         boolean hasBlacklung = false;
+        PetManager.Pet activePet = PetManager.getInstance(plugin).getActivePet(player);
         if (activePet != null) {
             hasBlacklung = activePet.hasPerk(PetManager.PetPerk.BLACKLUNG)
                     || activePet.hasUniqueTraitPerk(PetManager.PetPerk.BLACKLUNG);
         }
-
         if (!hasBlacklung && SkillTreeManager.getInstance() != null) {
-            int talent = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.BLACKLUNG);
-            hasBlacklung = talent > 0;
+            int bl = SkillTreeManager.getInstance()
+                    .getTalentLevel(uuid, Skill.TAMING, Talent.BLACKLUNG);
+            hasBlacklung = bl > 0;
         }
-        Random random = new Random();
 
-        int rate = 0;
+        // Determine raw rate
         if (world.getEnvironment() == World.Environment.NETHER) {
-            if (hasBlacklung) {
-                rate = random.nextBoolean() ? 1 : 0;
-            } else {
-                rate = 1;
-            }
+            rate = hasBlacklung ? (new Random().nextBoolean() ? 1 : 0) : 1;
         } else if (world.getEnvironment() == World.Environment.NORMAL) {
-            if (hasBlacklung) {
-                rate = 0;
-            }
-            if (y < 44) {
+            if (!hasBlacklung && y < 44) {
                 rate = 1;
             }
         }
 
-        int efficiencyLevel = 0;
+        // Sum Oxygen Efficiency I–V
+        int efficiencyLevels = 0;
         if (SkillTreeManager.getInstance() != null) {
-            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_I);
-            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_II);
-            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_III);
-            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_IV);
-            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_V);
+            efficiencyLevels += SkillTreeManager.getInstance().getTalentLevel(uuid, Skill.MINING, Talent.OXYGEN_EFFICIENCY_I);
+            efficiencyLevels += SkillTreeManager.getInstance().getTalentLevel(uuid, Skill.MINING, Talent.OXYGEN_EFFICIENCY_II);
+            efficiencyLevels += SkillTreeManager.getInstance().getTalentLevel(uuid, Skill.MINING, Talent.OXYGEN_EFFICIENCY_III);
+            efficiencyLevels += SkillTreeManager.getInstance().getTalentLevel(uuid, Skill.MINING, Talent.OXYGEN_EFFICIENCY_IV);
+            efficiencyLevels += SkillTreeManager.getInstance().getTalentLevel(uuid, Skill.MINING, Talent.OXYGEN_EFFICIENCY_V);
         }
-        double modifier = 1.0 - (efficiencyLevel * 0.05);
+
+        // Apply Reserve as +5 levels each when below half O₂
         int reserveLevel = 0;
         if (SkillTreeManager.getInstance() != null) {
-            reserveLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_RESERVE);
+            reserveLevel = SkillTreeManager.getInstance().getTalentLevel(uuid, Skill.MINING, Talent.OXYGEN_RESERVE);
         }
+        int totalLevels = efficiencyLevels;
         if (reserveLevel > 0) {
-            int current = playerOxygenLevels.getOrDefault(player.getUniqueId(), calculateInitialOxygen(player));
+            int current = playerOxygenLevels.getOrDefault(uuid, calculateInitialOxygen(player));
             int initial = calculateInitialOxygen(player);
             if (current < initial / 2) {
-                modifier *= (1.0 - reserveLevel * 0.05);
+                totalLevels += reserveLevel * 5;
             }
         }
-        if (modifier < 0) modifier = 0;
-        double adjusted = rate * modifier;
-        depletionBuffer.put(player.getUniqueId(), depletionBuffer.getOrDefault(player.getUniqueId(), 0.0) + adjusted);
-        int result = 0;
-        double buf = depletionBuffer.get(player.getUniqueId());
-        if (buf >= 1.0) {
-            result = (int)Math.floor(buf);
-            depletionBuffer.put(player.getUniqueId(), buf - result);
-        }
-        return result;
+
+        // Compute slowed rate: effectiveRate = rate / (1 + totalLevels * 0.01)
+        double intervalMultiplier = 1.0 + (totalLevels * 0.01);
+        double effectiveRate = rate / intervalMultiplier;
+
+        // Accumulate fractional drains
+        double buf = depletionBuffer.getOrDefault(uuid, 0.0) + effectiveRate;
+        int toDrain = (int) Math.floor(buf);
+        depletionBuffer.put(uuid, buf - toDrain);
+
+        return toDrain;
     }
+
 
     /**
      * Sets the player's oxygen level to the specified value, saves it, and notifies the player.
