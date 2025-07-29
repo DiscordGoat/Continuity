@@ -17,6 +17,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.MetadataValue;
 
 import java.util.List;
@@ -27,6 +28,27 @@ public class SeaCreatureDeathEvent implements Listener {
     private final MinecraftNew plugin = MinecraftNew.getInstance();
     private final XPManager xpManager = new XPManager(plugin);
     private final Random random = new Random();
+
+    private static final java.util.Map<java.util.UUID, Double> mawBonus = new java.util.HashMap<>();
+    private static final java.util.Map<java.util.UUID, Long> mawExpire = new java.util.HashMap<>();
+
+    public static double getMawBonus(Player player) {
+        Double bonus = mawBonus.get(player.getUniqueId());
+        Long exp = mawExpire.get(player.getUniqueId());
+        if (bonus == null || exp == null) return 0;
+        if (System.currentTimeMillis() > exp) {
+            mawBonus.remove(player.getUniqueId());
+            mawExpire.remove(player.getUniqueId());
+            return 0;
+        }
+        return bonus;
+    }
+
+    public static void activateMawBonus(Player player, int level) {
+        if (level <= 0) return;
+        mawBonus.put(player.getUniqueId(), level * 1.0);
+        mawExpire.put(player.getUniqueId(), System.currentTimeMillis() + 10000);
+    }
 
     ItemStack lapis = new ItemStack(Material.LAPIS_LAZULI, 4);
 
@@ -93,6 +115,50 @@ public class SeaCreatureDeathEvent implements Listener {
         FishingPetManager fishingPetManager = FishingPetManager.getInstance();
 
         fishingPetManager.incrementSeaCreatureKills(player);
+
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr != null) {
+            int rain = mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.WHEN_IT_RAINS_IT_POURS);
+            if (rain > 0 && player.getWorld().hasStorm() && random.nextDouble() < rain * 0.05) {
+                World w = player.getWorld();
+                w.setWeatherDuration(w.getWeatherDuration() + 200);
+                player.sendMessage(ChatColor.AQUA + "The rain continues!");
+            }
+
+            int abyssal = mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.ABYSSAL_STRIKE);
+            if (abyssal > 0 && random.nextDouble() < abyssal * 0.20) {
+                java.util.List<ItemStack> extra = new java.util.ArrayList<>();
+                for (ItemStack drop : event.getDrops()) {
+                    extra.add(drop.clone());
+                }
+                event.getDrops().addAll(extra);
+                player.sendMessage(ChatColor.DARK_PURPLE + "Abyssal Strike doubles your loot!");
+            }
+
+            int biolum = mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.BIOLUMINESCENCE);
+            if (biolum > 0 && random.nextDouble() < biolum * 0.01) {
+                for (ItemStack armor : player.getInventory().getArmorContents()) {
+                    if (armor == null) continue;
+                    int max = armor.getType().getMaxDurability();
+                    if (max <= 0) continue;
+                    org.bukkit.inventory.meta.Damageable dmg = (org.bukkit.inventory.meta.Damageable) armor.getItemMeta();
+                    int repair = (int) (max * 0.10);
+                    dmg.setDamage(Math.max(0, dmg.getDamage() - repair));
+                    armor.setItemMeta((ItemMeta) dmg);
+                }
+                player.sendMessage(ChatColor.AQUA + "Bioluminescence mends your armor!");
+            }
+
+            int ruins = mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SUNKEN_RUINS);
+            if (ruins > 0 && random.nextDouble() < ruins * 0.01) {
+                ItemStack stone = ItemRegistry.getCompactStone();
+                stone.setAmount(64);
+                event.getDrops().add(stone);
+            }
+
+            int maw = mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.MAW_OF_THE_VOID);
+            activateMawBonus(player, maw);
+        }
 
         // 16% chance to drop a Forbidden Book
         if (random.nextInt(100) < 32) {

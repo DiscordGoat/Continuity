@@ -20,6 +20,7 @@ import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -200,6 +201,8 @@ public class FishingEvent implements Listener {
             }
         }
 
+        seaCreatureChance += SeaCreatureDeathEvent.getMawBonus(player);
+
         // Convert to a decimal for probability
         seaCreatureChance /= 100.0;
 
@@ -254,6 +257,38 @@ public class FishingEvent implements Listener {
             player.getInventory().addItem(fish);
             player.sendMessage(ChatColor.AQUA + "You caught an extra fish!");
             player.playSound(player.getLocation(), Sound.ENTITY_FISHING_BOBBER_SPLASH, 1.0f, 1.0f);
+        }
+
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr != null) {
+            int sponge = mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.MONUMENTAL);
+            if (sponge > 0 && random.nextDouble() < sponge * 0.01) {
+                player.getInventory().addItem(new ItemStack(Material.SPONGE));
+                player.sendMessage(ChatColor.GOLD + "You fished up a Sponge!");
+            }
+
+            double gfChance = 0.0;
+            gfChance += mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SNACK_THAT_SMILES_BACK_I) * 0.25;
+            gfChance += mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SNACK_THAT_SMILES_BACK_II) * 0.25;
+            gfChance += mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SNACK_THAT_SMILES_BACK_III) * 0.25;
+            gfChance += mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SNACK_THAT_SMILES_BACK_IV) * 0.25;
+            gfChance += mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SNACK_THAT_SMILES_BACK_V) * 0.25;
+            if (random.nextDouble() < gfChance / 100.0) {
+                player.getInventory().addItem(ItemRegistry.getGoldenFish());
+                player.sendMessage(ChatColor.GOLD + "You caught a Golden Fish!");
+            }
+
+            int library = mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.LOST_LIBRARY);
+            if (library > 0 && random.nextDouble() < library * 0.01) {
+                ItemStack book = new ItemStack(Material.ENCHANTED_BOOK);
+                org.bukkit.inventory.meta.EnchantmentStorageMeta bm = (org.bukkit.inventory.meta.EnchantmentStorageMeta) book.getItemMeta();
+                Enchantment[] values = Enchantment.values();
+                Enchantment ench = values[random.nextInt(values.length)];
+                bm.addStoredEnchant(ench, 1, true);
+                book.setItemMeta(bm);
+                player.getInventory().addItem(book);
+                player.sendMessage(ChatColor.LIGHT_PURPLE + "You found a mysterious book!");
+            }
         }
     }
     private int getAdjustedSeaCreatureLevel(int baseLevel, int hostilityLevel) {
@@ -524,6 +559,11 @@ public class FishingEvent implements Listener {
         ItemStack rod = player.getInventory().getItemInMainHand();
         int upgradeLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.TREASURE_HUNTER);
         treasureChance += upgradeLevel / 100.0;
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr != null) {
+            int treasury = mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.TREASURY);
+            treasureChance += treasury / 100.0;
+        }
         int petLevel = 1;
         if(petManager.getActivePet(player) != null) {
             petLevel = petManager.getActivePet(player).getLevel();
@@ -545,6 +585,13 @@ public class FishingEvent implements Listener {
         if (random.nextDouble() <= treasureChance) {
             ItemStack chest = ItemRegistry.getTreasureChest();
             player.getInventory().addItem(chest);
+            int motherlode = 0;
+            if (mgr != null) {
+                motherlode = mgr.getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.MOTHERLODE);
+            }
+            if (motherlode > 0 && random.nextDouble() < motherlode * 0.05) {
+                player.getInventory().addItem(ItemRegistry.getTreasureChest());
+            }
             player.sendMessage(ChatColor.GOLD + "You fished up a treasure chest!");
             player.playSound(player.getLocation(), Sound.ITEM_TRIDENT_RETURN, 1.0f, 1.0f);
 

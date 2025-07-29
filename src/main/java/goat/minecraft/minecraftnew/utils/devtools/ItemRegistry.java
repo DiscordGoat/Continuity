@@ -2728,6 +2728,22 @@ public class ItemRegistry {
                 true  // Add enchantment shimmer
         );
     }
+
+    /** Fast-eat item for fishing that grants long lasting absorption. */
+    public static ItemStack getGoldenFish() {
+        return createCustomItem(
+                Material.COD,
+                ChatColor.GOLD + "Golden Fish",
+                Arrays.asList(
+                        ChatColor.GRAY + "A rare catch that revitalizes you.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Heals, feeds and grants absorption.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                true,
+                true
+        );
+    }
     public static ItemStack getMithrilChunk() {
         return createCustomItem(
                 Material.LIGHT_BLUE_DYE,
