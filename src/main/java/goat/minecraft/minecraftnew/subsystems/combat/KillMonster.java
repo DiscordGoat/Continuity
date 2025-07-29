@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.combat;
 import goat.minecraft.minecraftnew.MinecraftNew;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.Pathfinder;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.combat.champion.ChampionManager;
@@ -13,6 +14,7 @@ import me.gamercoder215.mobchip.EntityBrain;
 import me.gamercoder215.mobchip.ai.EntityAI;
 import me.gamercoder215.mobchip.bukkit.BukkitBrain;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -81,7 +83,7 @@ public class KillMonster implements Listener {
     
             // Get player's combat level
             int playerCombatLevel = xpManager.getPlayerLevel(playerKiller, "Combat");
-    
+
             // Calculate bonus XP if monster level is higher than player's combat level
             if (monsterLevel > playerCombatLevel) {
                 int levelDifference = monsterLevel - playerCombatLevel;
