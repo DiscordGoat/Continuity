@@ -183,6 +183,10 @@ commands:
     description: Toggle your custom potion effects on or off
     usage: /togglepotioneffects
     default: true
+  togglebars:
+    description: Toggle bar display on your Environment sidebar
+    usage: /togglebars
+    default: true
   setskilllevel:
     description: Sets a player's skill level
     usage: /setskilllevel <player> <skill> <level>

@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other.additionalfunctionality;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.EnvironmentSidebarPreferences;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -67,14 +68,52 @@ public class ContinuityBoardManager implements Listener {
             scoreboard.resetScores(entry);
         }
 
-        // Set scores with ordering (higher score means higher up in the sidebar).
-        objective.getScore(notorietyStr).setScore(4);
-        objective.getScore(saturationStr).setScore(3);
-        objective.getScore(oxygenStr).setScore(2);
-        objective.getScore(temperatureStr).setScore(1);
+        boolean bars = EnvironmentSidebarPreferences.isEnabled(player);
+
+        int line = bars ? 8 : 4;
+        objective.getScore(notorietyStr).setScore(line--);
+        if (bars) {
+            String bar = createBar(notoriety, 700, ChatColor.DARK_RED);
+            objective.getScore(bar).setScore(line--);
+        }
+        objective.getScore(saturationStr).setScore(line--);
+        if (bars) {
+            String bar = createBar(saturation, 20, ChatColor.YELLOW);
+            objective.getScore(bar).setScore(line--);
+        }
+        objective.getScore(oxygenStr).setScore(line--);
+        if (bars) {
+            int maxOxygen = PlayerOxygenManager.getInstance().calculateInitialOxygen(player);
+            String bar = createBar(currentOxygen, maxOxygen, ChatColor.AQUA);
+            objective.getScore(bar).setScore(line--);
+        }
+        objective.getScore(temperatureStr).setScore(line--);
+        if (bars) {
+            String bar = createBar(temperature, 400, ChatColor.RED);
+            objective.getScore(bar).setScore(line--);
+        }
 
         // Re-apply the scoreboard to the player.
         player.setScoreboard(scoreboard);
+    }
+
+    /**
+     * Builds a small progress bar string for the scoreboard.
+     */
+    private String createBar(int current, int max, ChatColor color) {
+        int segments = 10;
+        if (max <= 0) return "";
+        double ratio = Math.min(1.0, (double) current / max);
+        int filled = (int) Math.round(ratio * segments);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < segments; i++) {
+            if (i < filled) {
+                sb.append(color).append('|');
+            } else {
+                sb.append(ChatColor.DARK_GRAY).append('|');
+            }
+        }
+        return sb.toString();
     }
 
     @EventHandler
