@@ -64,6 +64,7 @@ import goat.minecraft.minecraftnew.utils.commands.AuraCommand;
 import goat.minecraft.minecraftnew.utils.commands.ToggleCustomEnchantmentsCommand;
 import goat.minecraft.minecraftnew.utils.commands.StatsCommand;
 import goat.minecraft.minecraftnew.utils.commands.TogglePotionEffectsCommand;
+import goat.minecraft.minecraftnew.utils.commands.ToggleBarsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
@@ -107,6 +108,7 @@ import goat.minecraft.minecraftnew.other.structureblocks.GetStructureBlockComman
 import goat.minecraft.minecraftnew.other.structureblocks.SetStructureBlockPowerCommand;
 import goat.minecraft.minecraftnew.other.warpgate.WarpGateManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentPreferences;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.EnvironmentSidebarPreferences;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.other.realms.Tropic;
@@ -393,6 +395,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new CustomEnchantmentPreferences(), this);
         PotionEffectPreferences.init(this);
         getServer().getPluginManager().registerEvents(new PotionEffectPreferences(), this);
+        EnvironmentSidebarPreferences.init(this);
+        getServer().getPluginManager().registerEvents(new EnvironmentSidebarPreferences(), this);
 
         forestryPetManager = new ForestryPetManager(this);
 
@@ -721,6 +725,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("openvillagertrademenu").setExecutor(new OpenVillagerTradeMenuCommand(this));
         getCommand("togglecustomenchantments").setExecutor(new ToggleCustomEnchantmentsCommand(this));
         getCommand("togglepotioneffects").setExecutor(new TogglePotionEffectsCommand(this));
+        getCommand("togglebars").setExecutor(new ToggleBarsCommand());
         getCommand("stripreforge").setExecutor(new StripReforgeCommand());
         getCommand("applyreforge").setExecutor(new ApplyReforgeCommand());
         new SetAmountCommand(this);
@@ -848,6 +853,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         CustomEnchantmentPreferences.saveAll();
         PotionEffectPreferences.saveAll();
+        EnvironmentSidebarPreferences.saveAll();
         BeaconPassivesGUI.saveAllPassives();
         if (CatalystManager.getInstance() != null) {
             CatalystManager.getInstance().shutdown();
