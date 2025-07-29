@@ -51,6 +51,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
+import goat.minecraft.minecraftnew.subsystems.smithing.ReforgeSubsystem;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.MarketTrendManager;
@@ -161,6 +162,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     private PotionBrewingSubsystem potionBrewingSubsystem;
     private VerdantRelicsSubsystem verdantRelicsSubsystem;
+    private ReforgeSubsystem reforgeSubsystem;
     private CombatSubsystemManager combatSubsystemManager;
     private AuraManager auraManager;
     private FlowManager flowManager;
@@ -203,6 +205,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         potionBrewingSubsystem = PotionBrewingSubsystem.getInstance(this);
 
         verdantRelicsSubsystem = VerdantRelicsSubsystem.getInstance(this);
+        reforgeSubsystem = ReforgeSubsystem.getInstance(this);
 
         this.getCommand("pasteSchem").setExecutor(new PasteSchemCommand(this));
 
@@ -712,6 +715,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("repair").setExecutor(new RepairCommand());
         getCommand("repairall").setExecutor(new RepairAllCommand());
         getCommand("finishbrews").setExecutor(new FinishBrewsCommand(this));
+        getCommand("setreforgeseconds").setExecutor(new SetReforgeSecondsCommand(this));
         getCommand("openvillagertrademenu").setExecutor(new OpenVillagerTradeMenuCommand(this));
         getCommand("togglecustomenchantments").setExecutor(new ToggleCustomEnchantmentsCommand(this));
         getCommand("togglepotioneffects").setExecutor(new TogglePotionEffectsCommand(this));
@@ -762,6 +766,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         if (verdantRelicsSubsystem != null) {
             verdantRelicsSubsystem.onDisable();
+        }
+        if (reforgeSubsystem != null) {
+            reforgeSubsystem.onDisable();
         }
         if (saplingManager != null) {
             saplingManager.shutdown();

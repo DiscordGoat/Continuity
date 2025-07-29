@@ -72,37 +72,33 @@ public final class TalentRegistry {
                         Talent.REPAIR_AMOUNT_I,
                         Talent.QUALITY_MATERIALS_I,
                         Talent.ALLOY_I,
-                        Talent.NOVICE_SMITH,
                         Talent.SCRAPS_I,
-                        Talent.NOVICE_FOUNDATIONS,
 
                         Talent.REPAIR_AMOUNT_II,
                         Talent.QUALITY_MATERIALS_II,
                         Talent.ALLOY_II,
-                        Talent.APPRENTICE_SMITH,
                         Talent.SCRAPS_II,
-                        Talent.APPRENTICE_FOUNDATIONS,
 
                         Talent.REPAIR_AMOUNT_III,
                         Talent.QUALITY_MATERIALS_III,
                         Talent.ALLOY_III,
-                        Talent.JOURNEYMAN_SMITH,
                         Talent.SCRAPS_III,
-                        Talent.JOURNEYMAN_FOUNDATIONS,
 
                         Talent.REPAIR_AMOUNT_IV,
                         Talent.QUALITY_MATERIALS_IV,
                         Talent.ALLOY_IV,
-                        Talent.EXPERT_SMITH,
                         Talent.SCRAPS_IV,
-                        Talent.EXPERT_FOUNDATIONS,
 
                         Talent.REPAIR_AMOUNT_V,
                         Talent.QUALITY_MATERIALS_V,
                         Talent.ALLOY_V,
-                        Talent.MASTER_SMITH,
                         Talent.SCRAPS_V,
-                        Talent.MASTER_FOUNDATIONS
+
+                        Talent.FORGE_LABORATORIES_I,
+                        Talent.FORGE_LABORATORIES_II,
+                        Talent.FORGE_LABORATORIES_III,
+                        Talent.FORGE_LABORATORIES_IV,
+                        Talent.FORGE_LABORATORIES_V
                 )
         );
         SKILL_TALENTS.put(

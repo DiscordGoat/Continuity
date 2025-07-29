@@ -163,6 +163,10 @@ commands:
     description: Sets all active brews to finish in one second
     usage: /finishbrews
     permission: continuity.admin
+  setreforgeseconds:
+    description: Sets reforge timers to the provided seconds
+    usage: /setreforgeseconds <seconds>
+    permission: continuity.admin
   setsaplingcooldownsecondsremaining:
     description: Sets sapling cooldown seconds remaining
     usage: /setsaplingcooldownsecondsremaining <seconds>

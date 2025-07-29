@@ -434,6 +434,12 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "-" + (level * 3) + " Reforge Mats";
             case MASTER_FOUNDATIONS:
                 return ChatColor.YELLOW + "-" + (level * 25) + "% Anvil Degrade Chance";
+            case FORGE_LABORATORIES_I:
+            case FORGE_LABORATORIES_II:
+            case FORGE_LABORATORIES_III:
+            case FORGE_LABORATORIES_IV:
+            case FORGE_LABORATORIES_V:
+                return ChatColor.YELLOW + "-2% Reforge time per level";
             case SATIATION_MASTERY_I:
             case SATIATION_MASTERY_II:
             case SATIATION_MASTERY_III:
