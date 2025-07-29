@@ -101,7 +101,7 @@ public class ContinuityBoardManager implements Listener {
      * Builds a small progress bar string for the scoreboard.
      */
     private String createBar(int current, int max, ChatColor color) {
-        int segments = 10;
+        int segments = 25;
         if (max <= 0) return "";
         double ratio = Math.min(1.0, (double) current / max);
         int filled = (int) Math.round(ratio * segments);
