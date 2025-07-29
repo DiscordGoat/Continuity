@@ -77,11 +77,24 @@ public class PlayerOxygenManager implements Listener {
     private int recoveryCounter = 0; // Counts seconds for recovery pacing
 
     private int getRecoveryIntervalSeconds(Player player) {
+        int interval = RECOVERY_INTERVAL_SECONDS;
+
         if (PotionManager.isActive("Potion of Oxygen Recovery", player)
                 && PotionEffectPreferences.isEnabled(player, "Potion of Oxygen Recovery")) {
-            return 2;
+            interval = 2;
         }
-        return RECOVERY_INTERVAL_SECONDS;
+
+        int talent = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talent = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.WATERLOGGED);
+        }
+
+        if (talent > 0) {
+            interval = Math.max(1, interval - talent);
+        }
+
+        return interval;
     }
 
     public PlayerOxygenManager(MinecraftNew plugin) {
@@ -253,8 +266,17 @@ public class PlayerOxygenManager implements Listener {
 
         int y = location.getBlockY();
         PetManager.Pet activePet = PetManager.getInstance(plugin).getActivePet(player);
-        boolean hasBlacklung = activePet != null && (activePet.hasPerk(PetManager.PetPerk.BLACKLUNG)
-                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.BLACKLUNG));
+        boolean hasBlacklung = false;
+        if (activePet != null) {
+            hasBlacklung = activePet.hasPerk(PetManager.PetPerk.BLACKLUNG)
+                    || activePet.hasUniqueTraitPerk(PetManager.PetPerk.BLACKLUNG);
+        }
+
+        if (!hasBlacklung && SkillTreeManager.getInstance() != null) {
+            int talent = SkillTreeManager.getInstance()
+                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.BLACKLUNG);
+            hasBlacklung = talent > 0;
+        }
         Random random = new Random();
 
         if (world.getEnvironment() == World.Environment.NETHER) {
