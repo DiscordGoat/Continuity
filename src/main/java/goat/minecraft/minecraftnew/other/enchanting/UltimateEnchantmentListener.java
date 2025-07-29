@@ -156,8 +156,9 @@ public class UltimateEnchantmentListener implements Listener {
             }
         }
     }
-    private void breakBlocksGradually(Player player, List<Block> blocks, boolean consumeDurabilityIfNotOre) {
+    private void breakBlocksGradually(Player player, List<Block> blocks, boolean consumeDurabilityIfNotOre, boolean grantMiningXp) {
         final ItemStack tool = player.getInventory().getItemInMainHand();
+        final XPManager xpManager = grantMiningXp ? new XPManager(plugin) : null;
 
         // 1) Calculate total durability usage instantly if we want to consume it.
         if (consumeDurabilityIfNotOre
@@ -225,6 +226,9 @@ public class UltimateEnchantmentListener implements Listener {
 
                     // Set block to AIR
                     block.setType(Material.AIR);
+                    if (xpManager != null) {
+                        xpManager.addXP(player, "Mining", 1);
+                    }
                 }
 
                 // Stop the task if we've processed all blocks
@@ -276,6 +280,32 @@ public class UltimateEnchantmentListener implements Listener {
                 }
             }
         }
+    }
+
+    /**
+     * Collect surrounding non-ore blocks in a 3x3 area for the Hammer enchant.
+     */
+    private List<Block> collectHammerBlocks(Block centerBlock, boolean vertical) {
+        List<Block> result = new ArrayList<>();
+        result.add(centerBlock);
+        int range = 1;
+        for (int x = -range; x <= range; x++) {
+            for (int y = -range; y <= range; y++) {
+                for (int z = -range; z <= range; z++) {
+                    if (x == 0 && y == 0 && z == 0) continue;
+                    Block relative;
+                    if (vertical) {
+                        relative = centerBlock.getRelative(x, y, z);
+                    } else {
+                        relative = centerBlock.getRelative(x, z, y);
+                    }
+                    if (!relative.getType().isAir() && relative.getType().isSolid() && !isOreBlock(relative)) {
+                        result.add(relative);
+                    }
+                }
+            }
+        }
+        return result;
     }
 
     /**
@@ -460,13 +490,13 @@ public class UltimateEnchantmentListener implements Listener {
         // 1) Break logs with durability usage, because they’re not ores.
         //    We also want them to drop items.
         //    This means "consumeDurabilityIfNotOre=true".
-        breakBlocksGradually(player, new ArrayList<>(visitedLogs), false);
+        breakBlocksGradually(player, new ArrayList<>(visitedLogs), false, false);
 
         // 2) Break leaves. Typically we do not give XP for leaves, nor skip tool durability,
         //    but you can set it how you like.
         //    For most “treecapitator” tools, you do use durability on leaves.
         //    If you do *not* want that, set consumeDurabilityIfNotOre = false.
-        breakBlocksGradually(player, new ArrayList<>(leavesToBreak), false);
+        breakBlocksGradually(player, new ArrayList<>(leavesToBreak), false, false);
         if(SkillTreeManager.getInstance().hasTalent(player, Talent.PHOTOSYNTHESIS)){
             int photosynthesisLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.PHOTOSYNTHESIS);
             if(player.getHealth() < player.getMaxHealth()){
@@ -553,13 +583,12 @@ public class UltimateEnchantmentListener implements Listener {
                 return;
             }
             durMgr.applyDamage(player, tool, cost);
-
-            boolean isOre = false;
-            breakBlock(player, brokenBlock, false);
+            event.setCancelled(true);
 
             BlockFace blockFace = event.getBlock().getFace(brokenBlock);
             boolean isVerticalBreak = (blockFace == BlockFace.UP || blockFace == BlockFace.DOWN);
-            breakSurroundingBlocks(player, brokenBlock, isVerticalBreak);
+            List<Block> blocks = collectHammerBlocks(brokenBlock, isVerticalBreak);
+            breakBlocksGradually(player, blocks, false, true);
         }
     }
 
