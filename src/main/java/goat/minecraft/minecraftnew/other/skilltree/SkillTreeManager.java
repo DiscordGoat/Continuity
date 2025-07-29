@@ -439,7 +439,7 @@ public class SkillTreeManager implements Listener {
             case FORGE_LABORATORIES_III:
             case FORGE_LABORATORIES_IV:
             case FORGE_LABORATORIES_V:
-                return ChatColor.YELLOW + "-2% Reforge time per level";
+                return ChatColor.YELLOW + "-" + (level * 2) + "% Reforge time per level";
             case SATIATION_MASTERY_I:
             case SATIATION_MASTERY_II:
             case SATIATION_MASTERY_III:
