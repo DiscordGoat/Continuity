@@ -268,6 +268,7 @@ public class Gravedigging implements Listener {
         if (Math.random() < chainChance) {
             spawnGraveNear(player);
         }
+
     }
 
 }
