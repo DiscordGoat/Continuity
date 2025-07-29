@@ -16,6 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +40,9 @@ public class PlayerOxygenManager implements Listener {
     private FileConfiguration oxygenDataConfig;
     private static PlayerOxygenManager instance;
     private final Map<UUID, Integer> playerOxygenLevels = new HashMap<>();
+    private final Map<UUID, Double> depletionBuffer = new HashMap<>();
+    private final Map<UUID, Integer> oxygenReserve = new HashMap<>();
+    private final Map<UUID, Long> restCooldown = new HashMap<>();
 
     // Data structure for tracking player-placed blocks
     private final Map<UUID, Set<Location>> playerPlacedBlocks = new HashMap<>();
@@ -74,6 +78,7 @@ public class PlayerOxygenManager implements Listener {
     // Recovery: If initial oxygen is e.g. 180s, and we want 40 minutes (2400s) to fully recover,
     // that’s roughly 12 seconds per oxygen increment when empty.
     private static final int RECOVERY_INTERVAL_SECONDS = 6;
+    private static final long REST_COOLDOWN_MS = 60000; // 60s cooldown for Rest talent
     private int recoveryCounter = 0; // Counts seconds for recovery pacing
 
     private int getRecoveryIntervalSeconds(Player player) {
@@ -202,9 +207,18 @@ public class PlayerOxygenManager implements Listener {
         boolean isUnderwater = player.getEyeLocation().getBlock().getType() == Material.WATER;
 
         if (oxygenDepletionRate > 0 && !player.isInWater()) {
-            // Deplete oxygen every second if not underwater
             currentOxygen -= oxygenDepletionRate;
-            if (currentOxygen < 0) currentOxygen = 0;
+            if (currentOxygen < 0) {
+                int reserve = oxygenReserve.getOrDefault(uuid, 0);
+                int needed = -currentOxygen;
+                if (reserve > 0) {
+                    int used = Math.min(reserve, needed);
+                    reserve -= used;
+                    currentOxygen += used;
+                    oxygenReserve.put(uuid, reserve);
+                }
+                if (currentOxygen < 0) currentOxygen = 0;
+            }
             playerOxygenLevels.put(uuid, currentOxygen);
 
             // Effects and sounds when oxygen is low
@@ -232,6 +246,15 @@ public class PlayerOxygenManager implements Listener {
                     currentOxygen++;
                     playerOxygenLevels.put(uuid, currentOxygen);
                 }
+            } else {
+                int reserve = oxygenReserve.getOrDefault(uuid, 0);
+                int maxReserve = calculateInitialOxygen(player) - initialOxygen;
+                if (reserve < maxReserve) {
+                    if (recoveryCounter % getRecoveryIntervalSeconds(player) == 0) {
+                        reserve++;
+                        oxygenReserve.put(uuid, reserve);
+                    }
+                }
             }
         handleHypoxiaEffects(player, currentOxygen, initialOxygen);
         }
@@ -243,14 +266,29 @@ public class PlayerOxygenManager implements Listener {
      */
     public int calculateInitialOxygen(Player player) {
         int talentLevel = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            talentLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_I);
+            talentLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_II);
+            talentLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_III);
+            talentLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_IV);
+            talentLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_V);
+        }
         int ventilationBonus = getTotalVentilationEnchantmentLevel(player) * 25;
         int dwellerBonus = 0;
         if (BlessingUtils.hasFullSetBonus(player, "Dweller")) {
             dwellerBonus += 500;
         }
 
-        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (talentLevel * 20) + ventilationBonus + dwellerBonus;
-        return initialOxygen;
+        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (talentLevel * 10) + ventilationBonus + dwellerBonus;
+
+        int reserveLevel = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            reserveLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_RESERVE);
+        }
+        int reserveAmount = reserveLevel * 10;
+        oxygenReserve.put(player.getUniqueId(), reserveAmount);
+
+        return initialOxygen + reserveAmount;
     }
 
     /**
@@ -279,20 +317,41 @@ public class PlayerOxygenManager implements Listener {
         }
         Random random = new Random();
 
+        int rate = 0;
         if (world.getEnvironment() == World.Environment.NETHER) {
             if (hasBlacklung) {
-                return random.nextBoolean() ? 1 : 0;
+                rate = random.nextBoolean() ? 1 : 0;
+            } else {
+                rate = 1;
             }
-            return 1;
         } else if (world.getEnvironment() == World.Environment.NORMAL) {
             if (hasBlacklung) {
-                return 0;
+                rate = 0;
             }
             if (y < 44) {
-                return 1;
+                rate = 1;
             }
         }
-        return 0;
+
+        int efficiencyLevel = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_I);
+            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_II);
+            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_III);
+            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_IV);
+            efficiencyLevel += SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_EFFICIENCY_V);
+        }
+        double modifier = 1.0 - (efficiencyLevel * 0.05);
+        if (modifier < 0) modifier = 0;
+        double adjusted = rate * modifier;
+        depletionBuffer.put(player.getUniqueId(), depletionBuffer.getOrDefault(player.getUniqueId(), 0.0) + adjusted);
+        int result = 0;
+        double buf = depletionBuffer.get(player.getUniqueId());
+        if (buf >= 1.0) {
+            result = (int)Math.floor(buf);
+            depletionBuffer.put(player.getUniqueId(), buf - result);
+        }
+        return result;
     }
 
     /**
@@ -537,6 +596,21 @@ public class PlayerOxygenManager implements Listener {
     }
 
     @EventHandler
+    public void onPlayerLeaveBed(PlayerBedLeaveEvent event) {
+        Player player = event.getPlayer();
+        if (SkillTreeManager.getInstance() == null) return;
+        int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.REST);
+        if (level <= 0) return;
+        long last = restCooldown.getOrDefault(player.getUniqueId(), 0L);
+        long now = System.currentTimeMillis();
+        if (now - last < REST_COOLDOWN_MS) return;
+        restCooldown.put(player.getUniqueId(), now);
+        int initial = calculateInitialOxygen(player);
+        int amount = (int)(initial * 0.05 * level);
+        addOxygen(player, amount);
+    }
+
+    @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         UUID uuid = player.getUniqueId();
@@ -590,6 +664,23 @@ public class PlayerOxygenManager implements Listener {
         if (locations != null) {
             locations.remove(blockLoc);
         }
+    }
+
+    public void addOxygen(Player player, int amount) {
+        UUID id = player.getUniqueId();
+        int initial = calculateInitialOxygen(player);
+        int current = playerOxygenLevels.getOrDefault(id, initial);
+        current += amount;
+        if (current > initial) {
+            int extra = current - initial;
+            int reserve = oxygenReserve.getOrDefault(id, 0);
+            int maxReserve = calculateInitialOxygen(player) - initial;
+            reserve = Math.min(reserve + extra, maxReserve);
+            oxygenReserve.put(id, reserve);
+            current = initial;
+        }
+        playerOxygenLevels.put(id, current);
+        handleHypoxiaEffects(player, current, initial);
     }
 
     public int getPlayerOxygen(Player player) {
