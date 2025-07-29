@@ -810,7 +810,7 @@ public enum Talent {
             "Forge Laboratories I",
             ChatColor.GRAY + "Optimize your forge",
             ChatColor.YELLOW + "-2% Reforge time per level",
-            5,
+            7,
             1,
             Material.CAULDRON
     ),
@@ -818,7 +818,7 @@ public enum Talent {
             "Forge Laboratories II",
             ChatColor.GRAY + "Advanced forge equipment",
             ChatColor.YELLOW + "-2% Reforge time per level",
-            5,
+            7,
             20,
             Material.CAULDRON
     ),
@@ -826,7 +826,7 @@ public enum Talent {
             "Forge Laboratories III",
             ChatColor.GRAY + "Further forge improvements",
             ChatColor.YELLOW + "-2% Reforge time per level",
-            5,
+            7,
             40,
             Material.CAULDRON
     ),
@@ -834,7 +834,7 @@ public enum Talent {
             "Forge Laboratories IV",
             ChatColor.GRAY + "Cutting-edge forge labs",
             ChatColor.YELLOW + "-2% Reforge time per level",
-            5,
+            7,
             60,
             Material.CAULDRON
     ),
@@ -842,7 +842,7 @@ public enum Talent {
             "Forge Laboratories V",
             ChatColor.GRAY + "State of the art forging",
             ChatColor.YELLOW + "-2% Reforge time per level",
-            5,
+            7,
             80,
             Material.CAULDRON
     ),
