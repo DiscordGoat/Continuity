@@ -5,7 +5,9 @@ import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,7 +15,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -33,7 +38,6 @@ public class MiningTalentFeatures implements Listener {
         Player player = event.getPlayer();
         Block block = event.getBlock();
         handleBubbles(player, block);
-        handleGoldFever(player, block);
         handleMagnet(player, block);
         handleAncientDebris(player, block);
         handleWakeStatue(player, block);
@@ -60,6 +64,7 @@ public class MiningTalentFeatures implements Listener {
             }
         }
         Location loc = block.getLocation().add(0.5, 0.1, 0.5);
+        int finalOxygen = oxygen;
         ArmorStand stand = loc.getWorld().spawn(loc, ArmorStand.class, s -> {
             s.setInvisible(true);
             s.setMarker(true);
@@ -67,7 +72,7 @@ public class MiningTalentFeatures implements Listener {
             ItemStack head = new ItemStack(Material.PLAYER_HEAD);
             ItemMeta meta = head.getItemMeta();
             if (meta != null) {
-                meta.getPersistentDataContainer().set(new NamespacedKey(plugin, BUBBLE_KEY), PersistentDataType.INTEGER, oxygen);
+                meta.getPersistentDataContainer().set(new NamespacedKey(plugin, BUBBLE_KEY), PersistentDataType.INTEGER, finalOxygen);
                 head.setItemMeta(meta);
             }
             s.getEquipment().setHelmet(head);
@@ -89,14 +94,6 @@ public class MiningTalentFeatures implements Listener {
         PlayerOxygenManager.getInstance().addOxygen(p, oxy);
     }
 
-    private void handleGoldFever(Player player, Block block) {
-        if (SkillTreeManager.getInstance() == null) return;
-        int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.GOLD_FEVER);
-        if (level <= 0) return;
-        if (block.getType() == Material.GOLD_ORE || block.getType() == Material.DEEPSLATE_GOLD_ORE) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.HASTE, 200, 0));
-        }
-    }
 
     private void handleMagnet(Player player, Block block) {
         if (SkillTreeManager.getInstance() == null) return;
@@ -119,7 +116,7 @@ public class MiningTalentFeatures implements Listener {
         if (block.getType() == Material.ANCIENT_DEBRIS) {
             double chance = level * 0.05;
             if (Math.random() < chance) {
-                block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.ANCIENT_DEBRIS));
+                block.getWorld().dropItemNaturally(block.getLocation(), ItemRegistry.getMasterworkIngot());
             }
         }
     }

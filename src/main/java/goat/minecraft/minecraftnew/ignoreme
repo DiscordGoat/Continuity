@@ -545,7 +545,7 @@ Hivemind: +25% Festival Bees Duration , Max level 4
 Fishing:
 Scaling Stat: Sea Creature Chance
 Scaling Max: 25%
-Golden Fish is the FastEat item of fishing, identical in functionality to the perfect apple of forestry, but unlike that one, the golden fish grants 100 absorption hearts with infinite duration.
+Golden Fish is the FastEat item of fishing, identical in functionality to the perfect apple of forestry, but unlike that one, the golden fish grants 40 absorption hearts with infinite duration.
 
 Common:
 Sea Creature Chance I: +0.5% per level, Max level 3
@@ -560,7 +560,6 @@ When It Rains It Pours: +5% Chance to Extend Rain Duration when killing a Sea Cr
 Exosuit II: +2% Damage Reduction from Sea Creatures, Max level 5
 Lost Library: +1% Chance to Fish up an Enchanted Book, Max level 5
 Snack That Smiles Back II: +0.25% Chance to Fish up a Golden Fish, Max level 2
-
 
 Rare:
 Sea Creature Chance III: +1.5% per level, Max level 3

@@ -1676,7 +1676,7 @@ public enum Talent {
     GOLD_FEVER(
             "Gold Fever",
             ChatColor.GRAY + "Ignore fatigue at moderate hypoxia",
-            ChatColor.YELLOW + "Removes Mining Fatigue from Moderate Hypoxia",
+            ChatColor.YELLOW + "Removes Mining Fatigue from Hypoxia",
             2,
             40,
             Material.GOLD_INGOT

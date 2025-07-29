@@ -279,16 +279,8 @@ public class PlayerOxygenManager implements Listener {
             dwellerBonus += 500;
         }
 
-        int initialOxygen = DEFAULT_OXYGEN_SECONDS + (talentLevel * 10) + ventilationBonus + dwellerBonus;
 
-        int reserveLevel = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            reserveLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.OXYGEN_RESERVE);
-        }
-        int reserveAmount = reserveLevel * 10;
-        oxygenReserve.put(player.getUniqueId(), reserveAmount);
-
-        return initialOxygen + reserveAmount;
+        return DEFAULT_OXYGEN_SECONDS + (talentLevel * 10) + ventilationBonus + dwellerBonus;
     }
 
     /**
@@ -301,7 +293,6 @@ public class PlayerOxygenManager implements Listener {
         Location location = player.getLocation();
         World world = location.getWorld();
         if (world == null) return 0;
-
         int y = location.getBlockY();
         PetManager.Pet activePet = PetManager.getInstance(plugin).getActivePet(player);
         boolean hasBlacklung = false;
@@ -542,6 +533,9 @@ public class PlayerOxygenManager implements Listener {
         }
         if (stage <= 25) {
             int amp = (stage == 0) ? 3 : 0;
+            if(SkillTreeManager.getInstance().hasTalent(player, Talent.GOLD_FEVER)){
+                amp -= 1;
+            }
             player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 40, amp, false, false, false));
         } else {
             player.removePotionEffect(PotionEffectType.MINING_FATIGUE);
