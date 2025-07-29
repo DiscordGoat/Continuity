@@ -376,8 +376,8 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.GREEN + "+" + (level * 1) + ChatColor.GRAY + " Repair Quality";
             case ALLOY_I:
                 return ChatColor.YELLOW + "+" + (level * 1.5) + "% Max Durability Chance";
-            case FORGE_LABS_I:
-                return ChatColor.YELLOW + "-" + (level * 5) + "% Reforge time";
+            case NOVICE_SMITH:
+                return ChatColor.YELLOW + "+" + (level * 25) + "% Common Reforge Chance";
             case SCRAPS_I:
                 return ChatColor.YELLOW + "-" + (level * 3) + " Reforge Mats";
             case NOVICE_FOUNDATIONS:
@@ -389,8 +389,8 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.GREEN + "+" + (level * 2) + ChatColor.GRAY + " Repair Quality";
             case ALLOY_II:
                 return ChatColor.YELLOW + "+" + (level * 1.5) + "% Max Durability Chance";
-            case FORGE_LABS_II:
-                return ChatColor.YELLOW + "-" + (level * 5) + "% Reforge time";
+            case APPRENTICE_SMITH:
+                return ChatColor.YELLOW + "+" + (level * 25) + "% Uncommon Reforge Chance";
             case SCRAPS_II:
                 return ChatColor.YELLOW + "-" + (level * 3) + " Reforge Mats";
             case APPRENTICE_FOUNDATIONS:
@@ -402,8 +402,8 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.GREEN + "+" + (level * 3) + ChatColor.GRAY + " Repair Quality";
             case ALLOY_III:
                 return ChatColor.YELLOW + "+" + (level * 1.5) + "% Max Durability Chance";
-            case FORGE_LABS_III:
-                return ChatColor.YELLOW + "-" + (level * 5) + "% Reforge time";
+            case JOURNEYMAN_SMITH:
+                return ChatColor.YELLOW + "+" + (level * 25) + "% Rare Reforge Chance";
             case SCRAPS_III:
                 return ChatColor.YELLOW + "-" + (level * 3) + " Reforge Mats";
             case JOURNEYMAN_FOUNDATIONS:
@@ -415,8 +415,8 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.GREEN + "+" + (level * 4) + ChatColor.GRAY + " Repair Quality";
             case ALLOY_IV:
                 return ChatColor.YELLOW + "+" + (level * 1.5) + "% Max Durability Chance";
-            case FORGE_LABS_IV:
-                return ChatColor.YELLOW + "-" + (level * 5) + "% Reforge time";
+            case EXPERT_SMITH:
+                return ChatColor.YELLOW + "+" + (level * 25) + "% Epic Reforge Chance";
             case SCRAPS_IV:
                 return ChatColor.YELLOW + "-" + (level * 3) + " Reforge Mats";
             case EXPERT_FOUNDATIONS:
@@ -428,8 +428,8 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.GREEN + "+" + (level * 5) + ChatColor.GRAY + " Repair Quality";
             case ALLOY_V:
                 return ChatColor.YELLOW + "+" + (level * 0.5) + "% Max Durability Chance";
-            case FORGE_LABS_V:
-                return ChatColor.YELLOW + "-" + (level * 5) + "% Reforge time";
+            case MASTER_SMITH:
+                return ChatColor.YELLOW + "+" + (level * 25) + "% Legendary Reforge Chance";
             case SCRAPS_V:
                 return ChatColor.YELLOW + "-" + (level * 3) + " Reforge Mats";
             case MASTER_FOUNDATIONS:

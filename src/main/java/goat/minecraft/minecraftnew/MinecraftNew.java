@@ -127,7 +127,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     //instancing
     private static MinecraftNew instance;
     private AnvilRepair anvilRepair;
-    private goat.minecraft.minecraftnew.subsystems.smithing.reforge.ReforgeSubsystem reforgeSubsystem;
     private CulinarySubsystem culinarySubsystem;
     private ItemDisplayManager displayManager;
     private PlayerOxygenManager playerOxygenManager;
@@ -539,8 +538,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("setpetlevel").setExecutor(new SetPetLevelCommand(petManager));
 
         anvilRepair = new AnvilRepair(this);
-        reforgeSubsystem = new goat.minecraft.minecraftnew.subsystems.smithing.reforge.ReforgeSubsystem(this);
-        reforgeSubsystem.onEnable();
         instance = this;
 
         new PlayerTabListUpdater(this, xpManager);
@@ -631,7 +628,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         saplingManager = SaplingManager.getInstance(this);
         new SetSaplingCooldownCommand(this, saplingManager);
-        new SetReforgeSecondsCommand(this, reforgeSubsystem);
 
 
         getServer().getPluginManager().registerEvents(new ContinuityBoardManager(), this);
@@ -859,9 +855,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         PetManager.getInstance(this).savePets();
         PetManager.getInstance(this).saveLastActivePets();
         anvilRepair.saveAllInventories();
-        if (reforgeSubsystem != null) {
-            reforgeSubsystem.onDisable();
-        }
         if (doubleEnderchest != null) {
             doubleEnderchest.saveAllInventories();
         }
