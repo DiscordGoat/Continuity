@@ -583,11 +583,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.PowerCrystalSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.mining.CompactStoneSystem(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.forestry.CompactWoodSystem(this), this);
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SoulApplicationSystem(this), this);
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.BlueLanternSystem(this), this);
-        // Register Soul upgrade system for weapons with Soul Power
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem(this), this);
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.SwordUpgradeListener(this), this);
+        // Combat listeners
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.CombatTalentListener(), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.combat.AntagonizeHandler(this), this);
 

@@ -226,8 +226,6 @@ public class VillagerTradeManager implements Listener {
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_SMITE", 1, 64, 4)); // ItemRegistry.getWeaponsmithSmite()
         weaponsmithPurchases.add(createTradeMap("WEAPONSMITH_BANE_OF_ARTHROPODS", 1, 64, 4)); // ItemRegistry.getWeaponsmithBaneofAnthropods()
 
-        weaponsmithPurchases.add(createTradeMap("BLUE_LANTERN", 1, 512, 5)); // Custom Item
-
         defaultConfig.set("WEAPONSMITH.purchases", weaponsmithPurchases);
 
         List<Map<String, Object>> weaponsmithSells = new ArrayList<>();
@@ -1005,8 +1003,6 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getWeaponsmithBaneofAnthropods();
             case "LEGENDARY_SWORD_REFORGE":
                 return ItemRegistry.getLegendarySwordReforge();
-            case "BLUE_LANTERN":
-                return ItemRegistry.getBlueLantern();
             case "SINGULARITY":
                 return ItemRegistry.getSingularity();
             case "SKELETON_DROP":

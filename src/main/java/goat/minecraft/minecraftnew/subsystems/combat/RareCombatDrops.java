@@ -63,8 +63,6 @@ public class RareCombatDrops implements Listener {
         event.getDrops().add(drop);
     }
 
-    private boolean isSoulItem(ItemStack item) {
-        if (item == null || !item.hasItemMeta() || !item.getItemMeta().hasLore()) return false;
         List<String> lore = item.getItemMeta().getLore();
         if (lore == null) return false;
         for (String line : lore) {
@@ -88,7 +86,6 @@ public class RareCombatDrops implements Listener {
             PetRegistry petRegistry = new PetRegistry();
 
             if (rollChance(player, 1, 25, hostilityLevel)) {
-                addRareDrop(player, event, ItemRegistry.getRandomSoulItem());
             }
             switch (type) {
                 case WITHER_SKELETON:
