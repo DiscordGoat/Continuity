@@ -14,7 +14,6 @@ import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter;
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
-import goat.minecraft.minecraftnew.subsystems.smithing.reforge.ReforgeSubsystem;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -1837,13 +1836,58 @@ public class AnvilRepair implements Listener {
             return;
         }
 
+        double chance = 0.0;
+        double degradeChance = 100.0; // chance for the anvil to take damage
+        if (mgr != null) {
+            UUID uid = player.getUniqueId();
+            switch (next) {
+                case TIER_1 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.NOVICE_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.NOVICE_FOUNDATIONS) * 25;
+                }
+                case TIER_2 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.APPRENTICE_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.APPRENTICE_FOUNDATIONS) * 25;
+                }
+                case TIER_3 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.JOURNEYMAN_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.JOURNEYMAN_FOUNDATIONS) * 25;
+                }
+                case TIER_4 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.EXPERT_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.EXPERT_FOUNDATIONS) * 25;
+                }
+                case TIER_5 -> {
+                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.MASTER_SMITH) * 25;
+                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.MASTER_FOUNDATIONS) * 25;
+                }
+            }
+        }
+        if (degradeChance < 0) {
+            degradeChance = 0;
+        }
+
         mats.setAmount(mats.getAmount() - matsCount);
 
-        Block anvilBlock = getNearestAnvil(player, 5);
-        if (anvilBlock != null) {
-            ReforgeSubsystem subsystem = ReforgeSubsystem.getInstance(MinecraftNew.getInstance());
-            subsystem.startSession(anvilBlock, item, next);
-            player.sendMessage(ChatColor.YELLOW + "Reforge started. Come back later!");
+        if (Math.random() * 100 < chance) {
+            reforgeManager.applyReforge(item, next);
+            xpManager.addXP(player, "Smithing", 2000.0);
+            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
+        } else {
+            int maxD = CustomDurabilityManager.getInstance().getMaxDurability(item);
+            CustomDurabilityManager.getInstance().applyDamage(player, item, maxD / 2);
+            // Provide feedback for the failed reforge attempt
+            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+            player.getWorld().spawnParticle(Particle.SMOKE, player.getLocation().add(0, 1, 0),
+                    20, 0.5, 0.5, 0.5, 0.05);
+            Block anvilBlock = getNearestAnvil(player, 5);
+            if (anvilBlock != null && Math.random() * 100 < degradeChance) {
+                switch (anvilBlock.getType()) {
+                    case ANVIL -> anvilBlock.setType(Material.CHIPPED_ANVIL);
+                    case CHIPPED_ANVIL -> anvilBlock.setType(Material.DAMAGED_ANVIL);
+                    case DAMAGED_ANVIL -> anvilBlock.setType(Material.AIR);
+                }
+            }
         }
 
         player.closeInventory();
