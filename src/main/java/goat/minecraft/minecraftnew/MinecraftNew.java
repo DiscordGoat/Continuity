@@ -42,6 +42,7 @@ import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.SpiritChanceCommand;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
 import goat.minecraft.minecraftnew.subsystems.mining.FortuneRemover;
+import goat.minecraft.minecraftnew.subsystems.mining.MiningTalentFeatures;
 import goat.minecraft.minecraftnew.subsystems.music.MusicDiscManager;
 import goat.minecraft.minecraftnew.subsystems.pets.*;
 import goat.minecraft.minecraftnew.subsystems.pets.perks.*;
@@ -624,6 +625,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         getServer().getPluginManager().registerEvents(new RareCombatDrops(), this);
         getServer().getPluginManager().registerEvents(new PlayerOxygenManager(this), this);
+        getServer().getPluginManager().registerEvents(new MiningTalentFeatures(this), this);
 
 
         Forestry forestry = Forestry.getInstance(this);

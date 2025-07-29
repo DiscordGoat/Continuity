@@ -380,7 +380,6 @@ public final class TalentRegistry {
                         Talent.BIG_BUBBLES_II,
                         Talent.OXYGEN_EFFICIENCY_IV,
                         Talent.OXYGEN_RESERVE,
-                        Talent.COAL_YIELD,
 
                         Talent.OXYGEN_V,
                         Talent.BIG_BUBBLES_III,
