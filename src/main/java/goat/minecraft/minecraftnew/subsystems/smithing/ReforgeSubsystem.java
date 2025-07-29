@@ -21,6 +21,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.EulerAngle;
+import org.bukkit.Material;
 
 import java.io.File;
 import java.io.IOException;
@@ -87,7 +89,7 @@ public class ReforgeSubsystem implements Listener {
                 duration = (int) Math.ceil(duration * (1 - lvl * 0.02));
             }
         }
-        ForgeSession session = new ForgeSession(key, item.clone(), tier, duration);
+        ForgeSession session = new ForgeSession(key, item.clone(), tier, duration, duration);
         activeSessions.put(key, session);
         session.spawnStand();
         session.startTimer();
@@ -139,8 +141,9 @@ public class ReforgeSubsystem implements Listener {
             ItemStack item = dataConfig.getItemStack(key + ".item");
             int tier = dataConfig.getInt(key + ".tier", 1);
             int time = dataConfig.getInt(key + ".time", 0);
+            int total = dataConfig.getInt(key + ".total", time);
             boolean complete = dataConfig.getBoolean(key + ".complete", false);
-            ForgeSession session = new ForgeSession(key, item, ReforgeManager.ReforgeTier.values()[tier], time);
+            ForgeSession session = new ForgeSession(key, item, ReforgeManager.ReforgeTier.values()[tier], time, total);
             session.complete = complete;
             session.spawnStand();
             if (!complete) {
@@ -160,6 +163,7 @@ public class ReforgeSubsystem implements Listener {
             dataConfig.set(e.getKey() + ".item", s.item);
             dataConfig.set(e.getKey() + ".tier", s.tier.getTier());
             dataConfig.set(e.getKey() + ".time", s.timeLeft);
+            dataConfig.set(e.getKey() + ".total", s.totalTime);
             dataConfig.set(e.getKey() + ".complete", s.complete);
         }
         try { dataConfig.save(dataFile); } catch (IOException e) { e.printStackTrace(); }
@@ -173,15 +177,22 @@ public class ReforgeSubsystem implements Listener {
         private final ItemStack item;
         private final ReforgeManager.ReforgeTier tier;
         private int timeLeft;
+        private final int totalTime;
         private boolean complete = false;
         private UUID standId;
+        private UUID itemStandId;
+        private final List<UUID> matStandIds = new ArrayList<>();
         private BukkitTask timerTask;
+        private BukkitTask spinTask;
+        private ItemStack reforgedItem;
+        private int soundCounter = 0;
 
-        public ForgeSession(String key, ItemStack item, ReforgeManager.ReforgeTier tier, int timeLeft) {
+        public ForgeSession(String key, ItemStack item, ReforgeManager.ReforgeTier tier, int timeLeft, int totalTime) {
             this.locKey = key;
             this.item = item;
             this.tier = tier;
             this.timeLeft = timeLeft;
+            this.totalTime = totalTime;
         }
 
         public boolean isComplete() { return complete; }
@@ -196,6 +207,125 @@ public class ReforgeSubsystem implements Listener {
             stand.setInvulnerable(true);
             stand.setCustomName(ChatColor.YELLOW + String.valueOf(timeLeft) + "s");
             standId = stand.getUniqueId();
+
+            spawnVisuals();
+        }
+
+        private void spawnVisuals() {
+            Location center = fromKey(locKey).add(0.5, 1.4, 0.5);
+            itemStandId = spawnItemStand(center, complete ? new ReforgeManager().applyReforge(item.clone(), tier) : item.clone());
+            if (!complete) {
+                spawnMatStands(center, getMatForTier(tier));
+                startSpinTask();
+            } else {
+                reforgedItem = new ReforgeManager().applyReforge(item.clone(), tier);
+                startSlowSpin();
+            }
+        }
+
+        private UUID spawnItemStand(Location loc, ItemStack stack) {
+            ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
+            stand.setInvisible(true);
+            stand.setMarker(true);
+            stand.setInvulnerable(true);
+            stand.setGravity(false);
+            stand.setSmall(true);
+            stand.setArms(true);
+            ItemStack copy = stack.clone();
+            copy.setAmount(1);
+            stand.getEquipment().setItemInMainHand(copy);
+            stand.setCustomNameVisible(false);
+            stand.setRightArmPose(new EulerAngle(Math.toRadians(-90), 0, 0));
+            return stand.getUniqueId();
+        }
+
+        private void spawnMatStands(Location center, Material mat) {
+            double radius = 0.5;
+            for (int i = 0; i < 4; i++) {
+                double angle = Math.toRadians(i * 90.0);
+                Location loc = center.clone().add(radius * Math.cos(angle), 0, radius * Math.sin(angle));
+                ArmorStand stand = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
+                stand.setInvisible(true);
+                stand.setMarker(true);
+                stand.setInvulnerable(true);
+                stand.setGravity(false);
+                stand.setSmall(true);
+                stand.setArms(true);
+                ItemStack it = new ItemStack(mat);
+                stand.getEquipment().setItemInMainHand(it);
+                stand.setCustomNameVisible(false);
+                stand.setRightArmPose(new EulerAngle(Math.toRadians(-90), 0, 0));
+                matStandIds.add(stand.getUniqueId());
+            }
+        }
+
+        private Material getMatForTier(ReforgeManager.ReforgeTier tier) {
+            return switch (tier) {
+                case TIER_1 -> Material.COBBLESTONE;
+                case TIER_2 -> Material.IRON_INGOT;
+                case TIER_3 -> Material.GOLD_INGOT;
+                case TIER_4 -> Material.AMETHYST_SHARD;
+                case TIER_5 -> Material.DIAMOND;
+                default -> Material.COBBLESTONE;
+            };
+        }
+
+        private void startSpinTask() {
+            spinTask = new BukkitRunnable() {
+                double yaw = 0.0;
+                double orbit = 0.0;
+
+                @Override
+                public void run() {
+                    double pct = (double) timeLeft / totalTime;
+                    double speed;
+                    if (pct > 0.8) speed = 0.5;
+                    else if (pct > 0.6) speed = 1.0;
+                    else if (pct > 0.4) speed = 2.0;
+                    else if (pct > 0.2) speed = 3.0;
+                    else speed = 4.0;
+
+                    yaw += speed * 2.0;
+                    if (yaw >= 360.0) yaw -= 360.0;
+                    orbit += speed * 0.05;
+
+                    ArmorStand itemStand = (ArmorStand) Bukkit.getEntity(itemStandId);
+                    if (itemStand != null && itemStand.isValid()) {
+                        Location loc = itemStand.getLocation();
+                        loc.setYaw((float) yaw);
+                        itemStand.teleport(loc);
+                        itemStand.setRightArmPose(new EulerAngle(Math.toRadians(yaw), 0, 0));
+                    }
+
+                    Location center = fromKey(locKey).add(0.5, 1.4, 0.5);
+                    double radius = 0.5;
+                    for (int i = 0; i < matStandIds.size(); i++) {
+                        double ang = orbit + i * (Math.PI * 2 / matStandIds.size());
+                        Entity ent = Bukkit.getEntity(matStandIds.get(i));
+                        if (ent instanceof ArmorStand ms && ms.isValid()) {
+                            Location loc = center.clone().add(radius * Math.cos(ang), 0, radius * Math.sin(ang));
+                            ms.teleport(loc);
+                        }
+                    }
+                }
+            }.runTaskTimer(plugin, 1L, 1L);
+        }
+
+        private void startSlowSpin() {
+            spinTask = new BukkitRunnable() {
+                double yaw = 0.0;
+                @Override
+                public void run() {
+                    ArmorStand itemStand = (ArmorStand) Bukkit.getEntity(itemStandId);
+                    if (itemStand == null || !itemStand.isValid()) { cancel(); return; }
+                    yaw += 1.0;
+                    if (yaw >= 360.0) yaw -= 360.0;
+                    Location loc = itemStand.getLocation();
+                    loc.setYaw((float) yaw);
+                    itemStand.teleport(loc);
+                    itemStand.setRightArmPose(new EulerAngle(Math.toRadians(yaw), 0, 0));
+                }
+            }.runTaskTimer(plugin, 1L, 1L);
         }
 
         private void updateStand(String text) {
@@ -216,22 +346,54 @@ public class ReforgeSubsystem implements Listener {
                     }
                     timeLeft--;
                     updateStand("" + ChatColor.YELLOW + timeLeft + "s");
+                    soundCounter++;
+                    if (soundCounter % 4 == 0) {
+                        Location base = fromKey(locKey).add(0.5, 1.0, 0.5);
+                        base.getWorld().playSound(base, Sound.BLOCK_ANVIL_USE, 1f, 2f);
+                        base.getWorld().spawnParticle(Particle.FLAME, base, 5, 0.1, 0.1, 0.1, 0.01);
+                        base.getWorld().spawnParticle(Particle.SMOKE_NORMAL, base, 5, 0.1, 0.1, 0.1, 0.01);
+                    }
                     saveAll();
                     if (timeLeft <= 0) {
-                        complete = true;
                         cancel();
-                        updateStand(ChatColor.GREEN + "Reforge Complete");
+                        completeSession();
                     }
                 }
             }.runTaskTimer(plugin, 20L, 20L);
         }
 
+        private void completeSession() {
+            complete = true;
+            updateStand(ChatColor.GREEN + "Reforge Complete");
+            if (spinTask != null) spinTask.cancel();
+            for (UUID id : matStandIds) {
+                Entity e = Bukkit.getEntity(id);
+                if (e != null) e.remove();
+            }
+            matStandIds.clear();
+            reforgedItem = new ReforgeManager().applyReforge(item.clone(), tier);
+            ArmorStand itemStand = (ArmorStand) Bukkit.getEntity(itemStandId);
+            if (itemStand != null && itemStand.isValid()) {
+                ItemStack copy = reforgedItem.clone();
+                copy.setAmount(1);
+                itemStand.getEquipment().setItemInMainHand(copy);
+            }
+            startSlowSpin();
+        }
+
         public void finish(Player player, Location anvilLoc) {
             if (timerTask != null) timerTask.cancel();
             updateStand(ChatColor.GREEN + "Reforge Complete");
+            if (spinTask != null) spinTask.cancel();
             Entity e = Bukkit.getEntity(standId);
             if (e != null) e.remove();
-            ItemStack output = new ReforgeManager().applyReforge(item, tier);
+            Entity itemEnt = Bukkit.getEntity(itemStandId);
+            if (itemEnt != null) itemEnt.remove();
+            for (UUID id : matStandIds) {
+                Entity me = Bukkit.getEntity(id);
+                if (me != null) me.remove();
+            }
+            ItemStack output = reforgedItem != null ? reforgedItem.clone() : new ReforgeManager().applyReforge(item.clone(), tier);
             player.getInventory().addItem(output);
             XPManager xp = new XPManager(MinecraftNew.getInstance());
             xp.addXP(player, "Smithing", 2000.0);
