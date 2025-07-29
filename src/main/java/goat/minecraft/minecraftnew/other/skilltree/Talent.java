@@ -586,10 +586,10 @@ public enum Talent {
             1,
             Material.COPPER_INGOT
     ),
-    NOVICE_SMITH(
-            "Novice Smith",
-            ChatColor.GRAY + "Practice basic reforging",
-            ChatColor.YELLOW + "+25% Common Reforge Chance",
+    FORGE_LABS_I(
+            "Forge Laboratories I",
+            ChatColor.GRAY + "Experimental workflows",
+            ChatColor.YELLOW + "-5% Reforge time",
             3,
             1,
             Material.STONE_PICKAXE
@@ -635,10 +635,10 @@ public enum Talent {
             20,
             Material.GOLD_INGOT
     ),
-    APPRENTICE_SMITH(
-            "Apprentice Smith",
-            ChatColor.GRAY + "Improved reforging",
-            ChatColor.YELLOW + "+25% Uncommon Reforge Chance",
+    FORGE_LABS_II(
+            "Forge Laboratories II",
+            ChatColor.GRAY + "Streamlined experiments",
+            ChatColor.YELLOW + "-5% Reforge time",
             3,
             20,
             Material.IRON_PICKAXE
@@ -684,10 +684,10 @@ public enum Talent {
             40,
             Material.GOLD_BLOCK
     ),
-    JOURNEYMAN_SMITH(
-            "Journeyman Smith",
-            ChatColor.GRAY + "Reliable reforging",
-            ChatColor.YELLOW + "+25% Rare Reforge Chance",
+    FORGE_LABS_III(
+            "Forge Laboratories III",
+            ChatColor.GRAY + "Automated methods",
+            ChatColor.YELLOW + "-5% Reforge time",
             3,
             40,
             Material.GOLDEN_PICKAXE
@@ -733,10 +733,10 @@ public enum Talent {
             60,
             Material.AMETHYST_SHARD
     ),
-    EXPERT_SMITH(
-            "Expert Smith",
-            ChatColor.GRAY + "Advanced reforging",
-            ChatColor.YELLOW + "+25% Epic Reforge Chance",
+    FORGE_LABS_IV(
+            "Forge Laboratories IV",
+            ChatColor.GRAY + "High-tech facilities",
+            ChatColor.YELLOW + "-5% Reforge time",
             3,
             60,
             Material.DIAMOND_PICKAXE
@@ -782,10 +782,10 @@ public enum Talent {
             80,
             Material.NETHERITE_SCRAP
     ),
-    MASTER_SMITH(
-            "Master Smith",
-            ChatColor.GRAY + "Perfect reforging",
-            ChatColor.YELLOW + "+25% Legendary Reforge Chance",
+    FORGE_LABS_V(
+            "Forge Laboratories V",
+            ChatColor.GRAY + "Pinnacle of engineering",
+            ChatColor.YELLOW + "-5% Reforge time",
             3,
             80,
             Material.NETHERITE_PICKAXE
