@@ -645,6 +645,15 @@ public class RightClickArtifacts implements Listener {
                 decrementItemAmount(itemInHand, player);
                 return;
             }
+            if (displayName.equals(ChatColor.GOLD + "Golden Fish")) {
+                player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 4 * 20, 0));
+                player.setFoodLevel(20);
+                player.setSaturation(20);
+                player.setAbsorptionAmount(player.getAbsorptionAmount() + 80.0);
+                player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
+                decrementItemAmount(itemInHand, player);
+                return;
+            }
             if (displayName.equals(ChatColor.YELLOW + "Cookbook")) {
                 player.playSound(player.getLocation(), Sound.ITEM_BOOK_PAGE_TURN, 1.0f, 1.0f);
                 dropRandomRecipes(player.getLocation());

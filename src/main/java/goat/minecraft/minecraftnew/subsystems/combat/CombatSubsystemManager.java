@@ -13,6 +13,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SpiderDam
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.HellbentDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.PostMortemDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.NecroticDamageReductionStrategy;
+import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SeaCreatureDamageReductionStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.MurderMysteryDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.commands.CombatReloadCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIController;
@@ -261,6 +262,7 @@ public class CombatSubsystemManager implements CommandExecutor {
         // Terraforming talent strategies
         damageCalculationService.registerStrategy(new PostMortemDamageStrategy());
         damageCalculationService.registerStrategy(new NecroticDamageReductionStrategy());
+        damageCalculationService.registerStrategy(new SeaCreatureDamageReductionStrategy());
         damageCalculationService.registerStrategy(new MurderMysteryDamageStrategy());
         
         // Register catalyst damage strategies (always enabled)
