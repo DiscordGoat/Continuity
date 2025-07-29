@@ -237,18 +237,6 @@ public class Mining implements Listener {
                 e.setDropItems(false);
                 block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.DIAMOND, 1));
             }
-
-            // Determine double drop chance from talent
-            int talentLevel = 0;
-            if (SkillTreeManager.getInstance() != null) {
-                talentLevel = SkillTreeManager.getInstance()
-                        .getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.RICH_VEINS);
-            }
-            double doubleDropChance = talentLevel * 4;
-
-            boolean hasDiamondGem = gemManager.getGemsFromItem(tool).contains(MiningGemManager.MiningGem.DIAMOND_GEM);
-            double tripleDropChance = hasDiamondGem ? 10 : 0; // 10% chance for triple drops if Diamond Gem is applied
-
             CatalystManager catalystManager = CatalystManager.getInstance();
             if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
                 Catalyst catalyst = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);
@@ -256,28 +244,10 @@ public class Mining implements Listener {
                     int tier = catalystManager.getCatalystTier(catalyst);
                     double bonus = 40 + (tier * 10); // percentage
                     if (bonus > 100) bonus = 100;
-                    tripleDropChance = Math.max(tripleDropChance, bonus);
                 }
             }
 
-            double roll = random.nextInt(100) + 1;
 
-            if (isDiamondOre) {
-                if (roll <= tripleDropChance) {
-                    block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Material.DIAMOND, 2));
-                    player.playSound(player.getLocation(), Sound.BLOCK_NETHERRACK_BREAK, 10, 5);
-                }
-            } else {
-                if (roll <= tripleDropChance) {
-                    // Triple drop chance
-                    dropAdditionalItems(block, player, 2); // Drop 2 additional stacks
-                    player.playSound(player.getLocation(), Sound.BLOCK_NETHERRACK_BREAK, 10, 5);
-                } else if (roll <= doubleDropChance) {
-                    // Double drop chance
-                    dropAdditionalItems(block, player, 1); // Drop 1 additional stack
-                    player.playSound(player.getLocation(), Sound.BLOCK_DEEPSLATE_BRICKS_BREAK, 10, 5);
-                }
-            }
 
             // Apply haste effect based on Mining level
             grantHaste(player, "Mining", tool);

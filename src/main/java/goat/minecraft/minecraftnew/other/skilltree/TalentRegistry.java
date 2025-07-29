@@ -386,10 +386,7 @@ public final class TalentRegistry {
                         Talent.BIG_BUBBLES_III,
                         Talent.OXYGEN_EFFICIENCY_V,
                         Talent.WAKE_UP_THE_STATUES,
-                        Talent.HEART_OF_THE_MOUNTAIN,
-
-                        Talent.RICH_VEINS,
-                        Talent.DEEP_LUNGS
+                        Talent.HEART_OF_THE_MOUNTAIN
                 )
         );
     //SKILL_TALENTS.put(Skill.BREWING, Collections.singletonList(Talent.REDSTONE_TWO));

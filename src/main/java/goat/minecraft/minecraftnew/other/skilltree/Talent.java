@@ -1579,24 +1579,6 @@ public enum Talent {
             40,
             Material.BONE_MEAL
     ),
-    RICH_VEINS(
-            "Rich Veins",
-            ChatColor.GRAY + "Find extra ore when mining",
-            ChatColor.YELLOW + "+(4*level)% " + ChatColor.GRAY + "Double Drop Chance",
-            25,
-            1,
-            Material.IRON_PICKAXE
-    ),
-
-    DEEP_LUNGS(
-            "Deep Lungs",
-            ChatColor.GRAY + "Increase oxygen capacity underground",
-            ChatColor.YELLOW + "+(20*level) " + ChatColor.AQUA + "Oxygen Capacity",
-            25,
-            10,
-            Material.TURTLE_SCUTE
-    ),
-
     // =============================================================
     // Mining Talents
     // =============================================================

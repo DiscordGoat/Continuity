@@ -680,12 +680,6 @@ public class SkillTreeManager implements Listener {
             case VERDANT_TENDING:
                 double minutes = level * 2.5;
                 return ChatColor.YELLOW + "-" + minutes + "m " + ChatColor.GRAY + "Verdant Relic growth time";
-            case RICH_VEINS:
-                double dropChance = level * 4;
-                return ChatColor.YELLOW + "+" + dropChance + "% " + ChatColor.GRAY + "Double Drop Chance";
-            case DEEP_LUNGS:
-                int oxygenBonus = level * 20;
-                return ChatColor.YELLOW + "+" + oxygenBonus + " " + ChatColor.AQUA + "Oxygen Capacity";
             case OXYGEN_I:
                 return ChatColor.YELLOW + "+" + (level * 10) + " " + ChatColor.AQUA + "Oxygen";
             case OXYGEN_EFFICIENCY_I:

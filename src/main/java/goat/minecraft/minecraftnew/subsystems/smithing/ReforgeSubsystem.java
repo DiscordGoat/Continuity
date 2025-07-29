@@ -210,8 +210,12 @@ public class ReforgeSubsystem implements Listener {
                 @Override
                 public void run() {
                     if (Bukkit.getOnlinePlayers().isEmpty()) return;
+                    if(devSeconds > 0){
+                        timeLeft = devSeconds;
+                        devSeconds = -1;
+                    }
                     timeLeft--;
-                    updateStand(ChatColor.YELLOW + timeLeft + "s");
+                    updateStand("" + ChatColor.YELLOW + timeLeft + "s");
                     saveAll();
                     if (timeLeft <= 0) {
                         complete = true;

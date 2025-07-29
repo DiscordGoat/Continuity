@@ -322,10 +322,6 @@ public class StatsCalculator {
     /** Double ore chance from talent and catalysts. */
     public double getDoubleOreChance(Player player) {
         double chance = 0.0;
-        if (SkillTreeManager.getInstance() != null) {
-            int lvl = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.RICH_VEINS);
-            chance += lvl * 4.0;
-        }
         CatalystManager cm = CatalystManager.getInstance();
         if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.PROSPERITY)) {
             Catalyst cat = cm.findNearestCatalyst(player.getLocation(), CatalystType.PROSPERITY);

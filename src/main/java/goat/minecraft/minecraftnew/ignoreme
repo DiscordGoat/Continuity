@@ -122,6 +122,42 @@ Master Foundations: -25% Chance of Degrading Anvil when failing a Legendary Refo
 
 
 
+
+
+
+
+
+
+I want to turn reforging into a continuous process that takes time, like cooking.
+Starting a reforge will take varying minutes to complete, depending on the rarity.
+Common=1 minute
+Uncommon=5 minutes
+Rare=20 minutes
+Epic = 60 minutes
+Legendary = 180 minutes
+(There will be a dev command: “/setreforgeseconds <int seconds>”, that sets all reforge timers to seconds)
+All reforge talents will be set to 100% success rate, and all success rate talents will be removed.
+In their stead there will be a new set of talents:
+“Forge laboratories”, reduce reforge timers by 5% per level, max level 3.
+There will be 5 tiers of this perk, all with the same amount and max level.
+Reforge timers are persistent (see brewing sessions, and culinary sessions), only decrement when the player is online, and the player can right click the anvil associated with the reforgesession with iron ingots to consume 1 ingot to reduce the reforge timer associated by 1%.
+The persistent animation displayed is as follows:
+Reforging item spins three dimensionally above the anvil (identically to potion session ingredients).
+All mats spin around this reforging item in a 2 dimensional ring (identical to culinary ingredients)
+The closer the reforge timer is to 0, the less mats are rotating. Also, the closer the reforge timer is to 0, the more fire and smoke particles will emit from the anvil. Tiny high pitched anvil sounds will be heard every 4 seconds while a reforge timer is active.
+After the reforge is complete, all mats will stop spinning and the reforged item will spin in place (differing from its previous 3 dimensional spinning identical to the brewing ingredient spinning, it will spin like a grand auction item above the anvil, albeit slower) with the text “Reforge Complete” hovering above it. Left clicking an anvil with a completed reforge timer will remove the session, apply the reforge and reward the player with smithing xp, the reforged item, a challenge complete toast, and a lightning strike at the anvil.
+Priorities: animation quality, particle quality, persistence.
+
+
+
+
+
+
+
+
+
+
+
 Culinary:
 Scaling Stat: Bonus Saturation
 Scaling Max: +5 Bonus Saturation.

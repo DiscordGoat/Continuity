@@ -230,10 +230,6 @@ public class PlayerOxygenManager implements Listener {
      */
     public int calculateInitialOxygen(Player player) {
         int talentLevel = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            talentLevel = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.DEEP_LUNGS);
-        }
         int ventilationBonus = getTotalVentilationEnchantmentLevel(player) * 25;
         int dwellerBonus = 0;
         if (BlessingUtils.hasFullSetBonus(player, "Dweller")) {

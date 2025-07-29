@@ -36,18 +36,6 @@ public class Forge implements Listener {
         Material smeltedType = getSmeltedMaterial(block.getType());
 
 
-        // Additional item drop logic based on Mining talent
-        int talentLevel = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            talentLevel = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.RICH_VEINS);
-        }
-        if (random.nextDouble() < (talentLevel * 4) / 100.0) {
-            if (getSmeltedMaterial(block.getType()) != null) {
-                block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(Objects.requireNonNull(getSmeltedMaterial(block.getType()))));
-            }
-        }
-
         // Tertiary chance if the tool has a diamond gemstone
         if (CustomEnchantmentManager.hasEnchantment(tool, "Forge") && hasDiamondGemstone(tool)) {
             if (random.nextDouble() < 0.1) {
