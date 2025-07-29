@@ -67,7 +67,7 @@ public class Lavabug implements Listener, CommandExecutor {
                         new BukkitRunnable() {
                             @Override
                             public void run() {
-                                clearLavaInChunk(chunk, chunkKey);
+                                clearLavaInChunkGradually(chunk, chunkKey);
                             }
                         }.runTask(plugin);
                     }
@@ -80,14 +80,14 @@ public class Lavabug implements Listener, CommandExecutor {
         World world = chunk.getWorld();
         int chunkX = chunk.getX() << 4;
         int chunkZ = chunk.getZ() << 4;
-        
+
         int blocksCleared = 0;
-        
+
         for (int x = chunkX; x < chunkX + 16; x++) {
             for (int z = chunkZ; z < chunkZ + 16; z++) {
                 for (int y = world.getMinHeight(); y <= LAVA_CLEAR_Y_THRESHOLD; y++) {
                     Block block = world.getBlockAt(x, y, z);
-                    
+
                     if (block.getType() == Material.LAVA) {
                         block.setType(Material.AIR);
                         blocksCleared++;
@@ -95,12 +95,46 @@ public class Lavabug implements Listener, CommandExecutor {
                 }
             }
         }
-        
+
         cleansedChunks.add(chunkKey);
-        
+
         if (blocksCleared > 0) {
             plugin.getLogger().info("Cleared " + blocksCleared + " lava blocks from chunk " + chunkKey);
         }
+    }
+
+    private void clearLavaInChunkGradually(Chunk chunk, String chunkKey) {
+        World world = chunk.getWorld();
+        int chunkX = chunk.getX() << 4;
+        int chunkZ = chunk.getZ() << 4;
+
+        new BukkitRunnable() {
+            int y = world.getMinHeight();
+            int cleared = 0;
+
+            @Override
+            public void run() {
+                if (y > LAVA_CLEAR_Y_THRESHOLD) {
+                    cleansedChunks.add(chunkKey);
+                    if (cleared > 0) {
+                        plugin.getLogger().info("Cleared " + cleared + " lava blocks from chunk " + chunkKey);
+                    }
+                    cancel();
+                    return;
+                }
+
+                for (int x = chunkX; x < chunkX + 16; x++) {
+                    for (int z = chunkZ; z < chunkZ + 16; z++) {
+                        Block block = world.getBlockAt(x, y, z);
+                        if (block.getType() == Material.LAVA) {
+                            block.setType(Material.AIR);
+                            cleared++;
+                        }
+                    }
+                }
+                y++;
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
     }
 
     @Override
