@@ -273,7 +273,7 @@ public class TransfigurationPouchManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if(meta==null) return;
         List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.GRAY+"Stores gemstones, effigies, souls and bait");
+        lore.add(ChatColor.GRAY+"Stores gemstones, effigies, bait");
         lore.add(ChatColor.BLUE+"Left-click"+ChatColor.GRAY+": Store items");
         lore.add(ChatColor.BLUE+"Shift-Left-click"+ChatColor.GRAY+": Convert to XP");
         lore.add(ChatColor.BLUE+"Shift-Right-click"+ChatColor.GRAY+": Open pouch");

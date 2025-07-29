@@ -314,6 +314,13 @@ public class SpawnMonsters implements Listener {
         //creeper rarity
         Random random = new Random();
 
+        if (entity instanceof Monster && !entity.hasMetadata("extraSpawned")) {
+            if (random.nextDouble() < playerHostility / 100.0) {
+                Entity extra = entity.getWorld().spawnEntity(entity.getLocation(), entity.getType());
+                extra.setMetadata("extraSpawned", new FixedMetadataValue(plugin, true));
+            }
+        }
+
 
         // Apocalypse upgrade removed
 
@@ -764,11 +771,6 @@ public class SpawnMonsters implements Listener {
     }
     public void applyMobAttributes(LivingEntity mob, int level) {
         level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL));
-        int cats = SoulUpgradeSystem.getUpgradeLevel(getNearestPlayer(mob, 1000).getItemInUse(), SoulUpgradeSystem.SwordUpgrade.BALLAD_OF_THE_CATS);
-        if (cats > 0 && mob instanceof Monster) {
-            LivingEntity newMob = (LivingEntity) mob.getWorld().spawnEntity(mob.getLocation(), mob.getType());
-            SpawnMonsters.getInstance(xpManager).applyMobAttributes(newMob, cats * 20);
-            level = level + (cats * 20);
         }
 
         AttributeInstance healthAttribute = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);

@@ -5,7 +5,6 @@ import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
-import goat.minecraft.minecraftnew.subsystems.combat.SoulUpgradeSystem;
 import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
@@ -790,8 +789,7 @@ public class UltimateEnchantmentListener implements Listener {
                 case "loyal":
                     // Activate the loyal enchantment effect.
                     activateLoyalSword(player, item);
-                    int loyalLvl = SoulUpgradeSystem.getUpgradeLevel(item, SoulUpgradeSystem.SwordUpgrade.LOYAL_AUGMENT);
-                    cooldownMs = Math.max(1000L, 5000L - (loyalLvl * 1000L));
+                    cooldownMs = 5000L;
                     break;
                 case "shred":
                     if (activateShred(player, item)) {
@@ -919,10 +917,7 @@ public class UltimateEnchantmentListener implements Listener {
     }
 
     private int getMaxShredCharges(Player player) {
-        if (player == null) return MAX_SHRED_SWORDS;
-        ItemStack sword = player.getInventory().getItemInMainHand();
-        int lvl = SoulUpgradeSystem.getUpgradeLevel(sword, SoulUpgradeSystem.SwordUpgrade.SHRED_AUGMENT);
-        return MAX_SHRED_SWORDS + lvl * 3;
+        return MAX_SHRED_SWORDS;
     }
 
     private int getShredCharges(UUID playerId) {
@@ -944,20 +939,18 @@ public class UltimateEnchantmentListener implements Listener {
 
     // ---- Warp charge helpers ----
     private int getMaxWarpCharges(Player player) {
-        ItemStack sword = player.getInventory().getItemInMainHand();
-        int lvl = SoulUpgradeSystem.getUpgradeLevel(sword, SoulUpgradeSystem.SwordUpgrade.WARP_AUGMENT);
-        if(BlessingUtils.hasFullSetBonus(player, "Duskblood")){
+        if (BlessingUtils.hasFullSetBonus(player, "Duskblood")) {
             DEFAULT_WARP_CHARGES += 60;
         }
-        if(PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player).hasPerk(PetManager.PetPerk.ENDLESS_WARP)){
+        if (PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player).hasPerk(PetManager.PetPerk.ENDLESS_WARP)) {
             DEFAULT_WARP_CHARGES += 100;
         }
         SkillTreeManager mgr = SkillTreeManager.getInstance();
-        if(mgr != null){
+        if (mgr != null) {
             int talent = mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ENDLESS_WARP);
             DEFAULT_WARP_CHARGES += talent * 100;
         }
-        return DEFAULT_WARP_CHARGES + lvl * 5;
+        return DEFAULT_WARP_CHARGES;
     }
 
     private List<Long> getWarpChargeList(Player player) {

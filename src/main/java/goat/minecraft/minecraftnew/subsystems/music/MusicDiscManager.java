@@ -1064,7 +1064,6 @@ public class MusicDiscManager implements Listener {
         auctionItems.add(new AuctionItem(ItemRegistry.getCrimsonEffigy(), 16));
         auctionItems.add(new AuctionItem(ItemRegistry.getWarpedEffigy(), 16));
         auctionItems.add(new AuctionItem(ItemRegistry.getCaviarBait(), 16));
-        auctionItems.add(new AuctionItem(ItemRegistry.getShade(), 16));
         auctionItems.add(new AuctionItem(ItemRegistry.getArmorsmithReforge(), 16));
         auctionItems.add(new AuctionItem(ItemRegistry.getArmorsmithReforgeTwo(), 16));
         auctionItems.add(new AuctionItem(ItemRegistry.getArmorSmithProtection(), 32));
@@ -1086,7 +1085,6 @@ public class MusicDiscManager implements Listener {
 
         auctionItems.add(new AuctionItem(ItemRegistry.getEntBark(), 64));
 
-        auctionItems.add(new AuctionItem(ItemRegistry.getBlueLantern(), 64));
         auctionItems.add(new AuctionItem(ItemRegistry.getNetherStardust(), 32));
         auctionItems.add(new AuctionItem(new ItemStack(Material.MUSIC_DISC_PIGSTEP), 16));
         auctionItems.add(new AuctionItem(ItemRegistry.getEngineeringDegree(), 8));
@@ -1877,8 +1875,6 @@ public class MusicDiscManager implements Listener {
             for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getCrimsonEffigy().clone());
         }));
 
-        list.add(new LotteryReward(ItemRegistry.getShade(), p -> {
-            for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getShade().clone());
         }));
 
         list.add(new LotteryReward(ItemRegistry.getCaviarBait(), p -> {
