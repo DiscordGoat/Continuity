@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.subsystems.mining.MiningGemManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
+import goat.minecraft.minecraftnew.subsystems.smithing.ReforgeSubsystem;
 import goat.minecraft.minecraftnew.other.enchanting.EnchantmentUtils;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -1836,60 +1837,18 @@ public class AnvilRepair implements Listener {
             return;
         }
 
-        double chance = 0.0;
-        double degradeChance = 100.0; // chance for the anvil to take damage
-        if (mgr != null) {
-            UUID uid = player.getUniqueId();
-            switch (next) {
-                case TIER_1 -> {
-                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.NOVICE_SMITH) * 25;
-                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.NOVICE_FOUNDATIONS) * 25;
-                }
-                case TIER_2 -> {
-                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.APPRENTICE_SMITH) * 25;
-                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.APPRENTICE_FOUNDATIONS) * 25;
-                }
-                case TIER_3 -> {
-                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.JOURNEYMAN_SMITH) * 25;
-                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.JOURNEYMAN_FOUNDATIONS) * 25;
-                }
-                case TIER_4 -> {
-                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.EXPERT_SMITH) * 25;
-                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.EXPERT_FOUNDATIONS) * 25;
-                }
-                case TIER_5 -> {
-                    chance += mgr.getTalentLevel(uid, Skill.SMITHING, Talent.MASTER_SMITH) * 25;
-                    degradeChance -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.MASTER_FOUNDATIONS) * 25;
-                }
-            }
-        }
-        if (degradeChance < 0) {
-            degradeChance = 0;
-        }
-
         mats.setAmount(mats.getAmount() - matsCount);
+        inventory.setItem(10, null);
 
-        if (Math.random() * 100 < chance) {
-            reforgeManager.applyReforge(item, next);
-            xpManager.addXP(player, "Smithing", 2000.0);
-            player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1, 1);
-        } else {
-            int maxD = CustomDurabilityManager.getInstance().getMaxDurability(item);
-            CustomDurabilityManager.getInstance().applyDamage(player, item, maxD / 2);
-            // Provide feedback for the failed reforge attempt
-            player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
-            player.getWorld().spawnParticle(Particle.SMOKE, player.getLocation().add(0, 1, 0),
-                    20, 0.5, 0.5, 0.5, 0.05);
-            Block anvilBlock = getNearestAnvil(player, 5);
-            if (anvilBlock != null && Math.random() * 100 < degradeChance) {
-                switch (anvilBlock.getType()) {
-                    case ANVIL -> anvilBlock.setType(Material.CHIPPED_ANVIL);
-                    case CHIPPED_ANVIL -> anvilBlock.setType(Material.DAMAGED_ANVIL);
-                    case DAMAGED_ANVIL -> anvilBlock.setType(Material.AIR);
-                }
-            }
+        Block anvilBlock = getNearestAnvil(player, 5);
+        if (anvilBlock == null) {
+            player.sendMessage(ChatColor.RED + "No anvil nearby!");
+            return;
         }
 
+        ReforgeSubsystem subsystem = ReforgeSubsystem.getInstance(MinecraftNew.getInstance());
+        subsystem.startReforge(anvilBlock.getLocation(), item, next, player);
+        player.sendMessage(ChatColor.GREEN + "Reforge started!");
         player.closeInventory();
     }
 

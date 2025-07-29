@@ -806,6 +806,46 @@ public enum Talent {
             80,
             Material.NETHERITE_BLOCK
     ),
+    FORGE_LABORATORIES_I(
+            "Forge Laboratories I",
+            ChatColor.GRAY + "Optimize your forge",
+            ChatColor.YELLOW + "-2% Reforge time per level",
+            5,
+            1,
+            Material.CAULDRON
+    ),
+    FORGE_LABORATORIES_II(
+            "Forge Laboratories II",
+            ChatColor.GRAY + "Advanced forge equipment",
+            ChatColor.YELLOW + "-2% Reforge time per level",
+            5,
+            20,
+            Material.CAULDRON
+    ),
+    FORGE_LABORATORIES_III(
+            "Forge Laboratories III",
+            ChatColor.GRAY + "Further forge improvements",
+            ChatColor.YELLOW + "-2% Reforge time per level",
+            5,
+            40,
+            Material.CAULDRON
+    ),
+    FORGE_LABORATORIES_IV(
+            "Forge Laboratories IV",
+            ChatColor.GRAY + "Cutting-edge forge labs",
+            ChatColor.YELLOW + "-2% Reforge time per level",
+            5,
+            60,
+            Material.CAULDRON
+    ),
+    FORGE_LABORATORIES_V(
+            "Forge Laboratories V",
+            ChatColor.GRAY + "State of the art forging",
+            ChatColor.YELLOW + "-2% Reforge time per level",
+            5,
+            80,
+            Material.CAULDRON
+    ),
     // =============================================================
     // Culinary Talents
     // =============================================================
