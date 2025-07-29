@@ -51,6 +51,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.perks.AutoComposter;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureDeathEvent;
 import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
+import goat.minecraft.minecraftnew.subsystems.smithing.reforging.ReforgeSubsystem;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.MarketTrendManager;
@@ -64,6 +65,7 @@ import goat.minecraft.minecraftnew.utils.commands.StatsCommand;
 import goat.minecraft.minecraftnew.utils.commands.TogglePotionEffectsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
+import goat.minecraft.minecraftnew.utils.developercommands.SetReforgeSecondsCommand;
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.developercommands.AddTalentPointCommand;
@@ -160,6 +162,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
 
     private PotionBrewingSubsystem potionBrewingSubsystem;
+    private ReforgeSubsystem reforgeSubsystem;
     private VerdantRelicsSubsystem verdantRelicsSubsystem;
     private CombatSubsystemManager combatSubsystemManager;
     private AuraManager auraManager;
@@ -538,7 +541,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("setpetlevel").setExecutor(new SetPetLevelCommand(petManager));
 
         anvilRepair = new AnvilRepair(this);
+        reforgeSubsystem = ReforgeSubsystem.getInstance(this);
         instance = this;
+
+        new SetReforgeSecondsCommand(this, reforgeSubsystem);
 
         new PlayerTabListUpdater(this, xpManager);
         this.getCommand("xp").setExecutor(xpManager);
@@ -759,6 +765,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         if(potionBrewingSubsystem != null){
             potionBrewingSubsystem.onDisable();
+        }
+        if (reforgeSubsystem != null) {
+            reforgeSubsystem.saveAll();
         }
         if (verdantRelicsSubsystem != null) {
             verdantRelicsSubsystem.onDisable();
