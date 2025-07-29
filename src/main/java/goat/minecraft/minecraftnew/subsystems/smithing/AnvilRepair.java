@@ -1557,14 +1557,8 @@ public class AnvilRepair implements Listener {
             // Unsupported repair material
             return;
         }
-
-        // Apply the repair by reducing the damage
         CustomDurabilityManager customDurabilityManager = CustomDurabilityManager.getInstance();
-        customDurabilityManager.setCustomDurability(repairee,
-                customDurabilityManager.getCurrentDurability(repairee) + repairAmount,
-                customDurabilityManager.getMaxDurability(repairee));
 
-        // Alloy talents: chance to grant extra max durability on repair
         if (mgr != null && isDurable(repairee)) {
             UUID uid = player.getUniqueId();
             Random rng = new Random();
@@ -1594,6 +1588,13 @@ public class AnvilRepair implements Listener {
                 customDurabilityManager.addMaxDurabilityBonus(repairee, 100);
             }
         }
+        // Apply the repair by reducing the damage
+        customDurabilityManager.setCustomDurability(repairee,
+                customDurabilityManager.getCurrentDurability(repairee) + repairAmount,
+                customDurabilityManager.getMaxDurability(repairee));
+
+        // Alloy talents: chance to grant extra max durability on repair
+
 
         // Subtract one from the repair material's stack
         billItem.setAmount(billItem.getAmount() - 1);
