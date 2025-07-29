@@ -1610,7 +1610,7 @@ public enum Talent {
     BUBBLES_I(
             "Bubbles I",
             ChatColor.GRAY + "Chance to spawn oxygen bubbles",
-            ChatColor.YELLOW + "+1% Bubble spawn chance",
+            ChatColor.YELLOW + "+0.25% Bubble spawn chance",
             5,
             1,
             Material.SLIME_BALL
@@ -1643,7 +1643,7 @@ public enum Talent {
     BUBBLES_II(
             "Bubbles II",
             ChatColor.GRAY + "Chance to spawn oxygen bubbles",
-            ChatColor.YELLOW + "+1% Bubble spawn chance",
+            ChatColor.YELLOW + "+0.25% Bubble spawn chance",
             5,
             20,
             Material.SLIME_BALL
