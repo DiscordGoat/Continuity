@@ -19,6 +19,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.SaplingManager;
+import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -914,6 +915,7 @@ public class SkillTreeManager implements Listener {
         }
         setTalentLevel(player.getUniqueId(), skill, talent, currentLevel + 1);
         player.sendMessage(ChatColor.GREEN + "Upgraded " + talent.getName() + " to " + (currentLevel + 1));
+        player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
         if (skill == Skill.PLAYER) {
             if (talent == Talent.HEALTH_I || talent == Talent.HEALTH_II ||
                     talent == Talent.HEALTH_III || talent == Talent.HEALTH_IV ||
