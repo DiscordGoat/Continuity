@@ -626,7 +626,7 @@ public class SkillTreeManager implements Listener {
             case POST_MORTEM_COMPLICATIONS_I:
                 return ChatColor.YELLOW + "+" + (level * 5) + "% " + ChatColor.GRAY + "damage to corpses";
             case PROSPEKT:
-                return ChatColor.YELLOW + "+" + (level * 50) + " Max Durability";
+                return ChatColor.YELLOW + "+" + (level) + "% Chance to prevent Durability loss";
             case GRAVEYARD_I:
                 return ChatColor.YELLOW + "+" + (level * 2.5) + "% " + ChatColor.GRAY + "chance for another grave";
             case X_MARKS_THE_SPOT:

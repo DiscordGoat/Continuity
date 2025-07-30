@@ -649,7 +649,7 @@ public class RightClickArtifacts implements Listener {
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 4 * 20, 0));
                 player.setFoodLevel(20);
                 player.setSaturation(20);
-                player.setAbsorptionAmount(player.getAbsorptionAmount() + 80.0);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, Integer.MAX_VALUE, 19,false ));
                 player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
                 decrementItemAmount(itemInHand, player);
                 return;
