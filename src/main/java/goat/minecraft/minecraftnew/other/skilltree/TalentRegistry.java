@@ -259,7 +259,12 @@ public final class TalentRegistry {
                         Talent.HEALTH_II,
                         Talent.HEALTH_III,
                         Talent.HEALTH_IV,
-                        Talent.HEALTH_V
+                        Talent.HEALTH_V,
+                        Talent.SHULKL_BOX,
+                        Talent.QUICKSWAP,
+                        Talent.RESTOCK,
+                        Talent.KEEP_INVENTORY,
+                        Talent.TUXEDO
                 )
         );
         SKILL_TALENTS.put(
