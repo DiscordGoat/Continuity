@@ -672,9 +672,37 @@ public class PotionBrewingSubsystem implements Listener {
                 brewTimeRemaining = recipe.getBrewTime();
                 if (player != null) {
                     PlayerMeritManager meritManager = PlayerMeritManager.getInstance(plugin);
-                    if(SkillTreeManager.getInstance().hasTalent(player, Talent.OPTIMAL_CONFIGURATION)){
-                        int brewTimeReduction = (4*SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.OPTIMAL_CONFIGURATION));
-                        brewTimeRemaining -= brewTimeReduction;
+                    SkillTreeManager manager = SkillTreeManager.getInstance();
+                    if (manager != null) {
+                        // ------------------------------------------------------------------
+                        // Talent: Redstone I-V (increase brew time)
+                        // ------------------------------------------------------------------
+                        if (manager.hasTalent(player, Talent.REDSTONE_ONE)) {
+                            int bonus = 10 * manager.getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_ONE);
+                            brewTimeRemaining += bonus;
+                        }
+                        if (manager.hasTalent(player, Talent.REDSTONE_TWO)) {
+                            int bonus = 10 * manager.getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_TWO);
+                            brewTimeRemaining += bonus;
+                        }
+                        if (manager.hasTalent(player, Talent.REDSTONE_THREE)) {
+                            int bonus = 20 * manager.getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_THREE);
+                            brewTimeRemaining += bonus;
+                        }
+                        if (manager.hasTalent(player, Talent.REDSTONE_FOUR)) {
+                            int bonus = 30 * manager.getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_FOUR);
+                            brewTimeRemaining += bonus;
+                        }
+                        if (manager.hasTalent(player, Talent.REDSTONE_FIVE)) {
+                            int bonus = 30 * manager.getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.REDSTONE_FIVE);
+                            brewTimeRemaining += bonus;
+                        }
+
+                        // Talent: Optimal Configuration (reduce brew time)
+                        if(manager.hasTalent(player, Talent.OPTIMAL_CONFIGURATION)){
+                            int brewTimeReduction = 4 * manager.getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.OPTIMAL_CONFIGURATION);
+                            brewTimeRemaining -= brewTimeReduction;
+                        }
                     }
 
                     PetManager petManager = PetManager.getInstance(plugin);
