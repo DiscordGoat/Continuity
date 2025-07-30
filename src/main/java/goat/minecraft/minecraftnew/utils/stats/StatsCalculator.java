@@ -128,18 +128,18 @@ public class StatsCalculator {
         return PlayerResistanceManager.getInstance(plugin).computeTotalResistance(player);
     }
 
-    /** Maximum flight distance in km from pet perks and merits. */
-    public double getFlightDistance(Player player) {
+    /** Maximum flight time in seconds from pet perks and merits. */
+    public int getFlightTime(Player player) {
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
-        double distance = 0.0;
+        int seconds = 0;
         if (pet != null && pet.hasPerk(PetManager.PetPerk.FLIGHT)) {
-            distance = pet.getLevel() / 100.0; // scales to 1km at level 100
+            seconds = (int) (pet.getLevel() / 100.0 * 60);
             PlayerMeritManager merits = PlayerMeritManager.getInstance(plugin);
             if (merits.hasPerk(player.getUniqueId(), "Icarus")) {
-                distance *= 2;
+                seconds *= 2;
             }
         }
-        return distance;
+        return seconds;
     }
 
     /** Grave spawning chance from talents and pet traits. */
