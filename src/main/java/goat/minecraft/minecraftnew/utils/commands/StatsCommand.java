@@ -76,7 +76,7 @@ public class StatsCommand implements CommandExecutor, Listener {
         addStatItem(inv, slots[index++], Material.IRON_SWORD, "Damage +%", String.format("%.1f%%", calculator.getDamageIncrease(player)));
         addStatItem(inv, slots[index++], Material.BOW, "Arrow Damage +%", String.format("%.1f%%", calculator.getArrowDamageIncrease(player)));
         addStatItem(inv, slots[index++], Material.SHIELD, "Resistance", String.format("%.1f%%", calculator.getResistance(player)));
-        addStatItem(inv, slots[index++], Material.ELYTRA, "Flight Distance", String.format("%.2f km", calculator.getFlightDistance(player)));
+        addStatItem(inv, slots[index++], Material.ELYTRA, "Flight Time", String.format("%ds", calculator.getFlightTime(player)));
         addStatItem(inv, slots[index++], Material.SOUL_TORCH, "Grave Chance", String.format("%.3f%%", calculator.getGraveChance(player)));
         addStatItem(inv, slots[index++], Material.NAUTILUS_SHELL, "Sea Creature Chance", String.format("%.2f%%", calculator.getSeaCreatureChance(player)));
         addStatItem(inv, slots[index++], Material.CHEST, "Treasure Chance", String.format("%.2f%%", calculator.getTreasureChance(player)));

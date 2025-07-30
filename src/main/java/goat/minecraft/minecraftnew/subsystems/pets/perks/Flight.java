@@ -4,7 +4,6 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -23,21 +22,17 @@ import java.util.UUID;
 
 public class Flight implements Listener {
 
-    private static final double MAX_FLIGHT_DISTANCE_AT_LEVEL_100 = 1.0; // Max flight distance at level 100 in km
-    private static final double DRAIN_RATE_PER_SECOND = 0.01; // Drain rate per second in kilometers
+    private static final int MAX_FLIGHT_SECONDS_AT_LEVEL_100 = 60; // Max flight time at level 100 in seconds
+    private static final int DRAIN_RATE_PER_SECOND = 1; // Drain rate in seconds
     private static final int TICKS_PER_SECOND = 20; // Number of ticks in one second
-    private static final double REGEN_RATE_PER_SECOND = 0.01; // Regeneration rate while near a Flight Catalyst
     private final PetManager petManager;
-    private final PlayerMeritManager meritManager;
-    private final Map<UUID, Double> dailyFlightTracker = new HashMap<>();
+    private final Map<UUID, Integer> dailyFlightTracker = new HashMap<>();
     private final Map<UUID, Long> lastFlightReset = new HashMap<>();
     private final Map<UUID, BukkitRunnable> flightTasks = new HashMap<>();
-    private final Map<UUID, BukkitRunnable> regenTasks = new HashMap<>();
     private final JavaPlugin plugin;
 
     public Flight(JavaPlugin plugin) {
         this.petManager = PetManager.getInstance(plugin);
-        this.meritManager = PlayerMeritManager.getInstance(plugin);
         this.plugin = plugin;
     }
 
@@ -57,44 +52,38 @@ public class Flight implements Listener {
         // Reset flight stats if the 3-day period has passed
         resetFlightStatsIfNewDay(player);
 
-        // Calculate the maximum flight distance based on player's level
+        // Calculate the maximum flight time based on player's level
         int petLevel = activePet != null ? activePet.getLevel() : 0;
         int flightTalent = 0;
         if (SkillTreeManager.getInstance() != null) {
             flightTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
         }
-        double maxFlightDistanceKm = calculateMaxFlightDistance(player, petLevel + (flightTalent * 10));
+        int maxFlightSeconds = calculateMaxFlightSeconds(player, petLevel + (flightTalent * 10));
 
-        // Calculate remaining flight distance
-        double flownDistanceKm = dailyFlightTracker.getOrDefault(playerId, 0.0);
-        double remainingDistance = maxFlightDistanceKm - flownDistanceKm;
+        // Calculate remaining flight time
+        int flownSeconds = dailyFlightTracker.getOrDefault(playerId, 0);
+        int remainingSeconds = maxFlightSeconds - flownSeconds;
 
         // Display flight progress
-        displayFlightProgress(player, flownDistanceKm, remainingDistance);
+        displayFlightProgress(player, flownSeconds, remainingSeconds);
 
-        // Check if player is near a Flight Catalyst - this takes priority over everything
         CatalystManager catalystManager = CatalystManager.getInstance();
-        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.FLIGHT)) {
-            // Flight Catalyst takes priority - enable flight regardless of pet limitations
-            enableFlightFromCatalyst(player);
-            startRegenTask(player);
+        boolean nearCatalyst = catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.FLIGHT);
+        boolean hasPerk = activePet != null && activePet.hasPerk(PetManager.PetPerk.FLIGHT);
+
+        // Must have either catalyst or perk to fly
+        if (!hasPerk && !nearCatalyst) {
+            disableFlight(player);
             return;
-        } else {
-            stopRegenTask(player);
         }
 
         // Check if the player has exceeded the flight limit
-        if (remainingDistance <= 0) {
+        if (remainingSeconds <= 0) {
             disableFlight(player);
             return;
         }
 
-        // Enable flight if the player has the perk and hasn't exceeded the limit
-        if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.FLIGHT)) || flightTalent > 0) {
-            enableFlight(player);
-        } else {
-            disableFlight(player);
-        }
+        enableFlight(player);
     }
 
     /**
@@ -103,33 +92,19 @@ public class Flight implements Listener {
      * @param level The pet level (0-100).
      * @return The maximum flight distance in kilometers.
      */
-    private double calculateMaxFlightDistance(Player player, int level) {
-        // Flight distance scales linearly with level from 0.0 km to 1.0 km at level 100
-        double distance = MAX_FLIGHT_DISTANCE_AT_LEVEL_100 * (level / 100.0);
+    private int calculateMaxFlightSeconds(Player player, int level) {
+        // Flight time scales linearly with level from 0s to MAX_FLIGHT_SECONDS_AT_LEVEL_100 at level 100
+        int seconds = (int) (MAX_FLIGHT_SECONDS_AT_LEVEL_100 * (level / 100.0));
         int talentLevel = 0;
         if (SkillTreeManager.getInstance() != null) {
             talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
         }
         if(PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player).hasPerk(PetManager.PetPerk.FLIGHT)){
-            distance += talentLevel * 0.1; // each talent level adds 0.1km
+            seconds += talentLevel * 6; // each talent level adds 6 seconds
         }
-        return distance;
+        return seconds;
     }
 
-    private void enableFlightFromCatalyst(Player player) {
-        if (!player.getAllowFlight()) {
-            player.setAllowFlight(true);
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "✈ Flight enabled by Catalyst of Flight!");
-        }
-        
-        // Don't start flight draining task for catalyst flight - it's unlimited
-        // Cancel any existing pet flight task since catalyst takes priority
-        UUID playerId = player.getUniqueId();
-        if (flightTasks.containsKey(playerId)) {
-            flightTasks.get(playerId).cancel();
-            flightTasks.remove(playerId);
-        }
-    }
 
     private void enableFlight(Player player) {
         UUID playerId = player.getUniqueId();
@@ -142,6 +117,8 @@ public class Flight implements Listener {
         // Start a flight draining task if not already active
         if (!flightTasks.containsKey(playerId)) {
             BukkitRunnable flightTask = new BukkitRunnable() {
+                private int tickCounter = 0;
+
                 @Override
                 public void run() {
                     // If the player stops flying, stop the task
@@ -151,20 +128,24 @@ public class Flight implements Listener {
                         return;
                     }
 
-                    // Deduct flight distance
-                    double flownDistance = dailyFlightTracker.getOrDefault(playerId, 0.0);
-                    flownDistance += DRAIN_RATE_PER_SECOND / TICKS_PER_SECOND;
-                    dailyFlightTracker.put(playerId, flownDistance);
+                    tickCounter++;
+                    if (tickCounter >= TICKS_PER_SECOND) {
+                        tickCounter = 0;
 
-                    // Get the pet's level and max distance
-                    PetManager.Pet activePet = petManager.getActivePet(player);
-                    int petLevel = activePet != null ? activePet.getLevel() : 0;
-                    double maxDistance = calculateMaxFlightDistance(player, petLevel);
+                        int flown = dailyFlightTracker.getOrDefault(playerId, 0);
+                        flown += DRAIN_RATE_PER_SECOND;
+                        dailyFlightTracker.put(playerId, flown);
 
-                    // Check if the player exceeds the limit
-                    if (flownDistance >= maxDistance) {
-                        disableFlight(player);
-                        this.cancel();
+                        // Get the pet's level and max time
+                        PetManager.Pet activePet = petManager.getActivePet(player);
+                        int petLevel = activePet != null ? activePet.getLevel() : 0;
+                        int maxSeconds = calculateMaxFlightSeconds(player, petLevel);
+
+                        // Check if the player exceeds the limit
+                        if (flown >= maxSeconds) {
+                            disableFlight(player);
+                            this.cancel();
+                        }
                     }
                 }
             };
@@ -180,45 +161,12 @@ public class Flight implements Listener {
 
         // Reset every 3 Minecraft days instead of daily
         if (currentDay - lastResetDay >= 3) {
-            dailyFlightTracker.put(playerId, 0.0);
+            dailyFlightTracker.put(playerId, 0);
             lastFlightReset.put(playerId, currentDay);
         }
     }
 
-    private void startRegenTask(Player player) {
-        UUID playerId = player.getUniqueId();
 
-        if (regenTasks.containsKey(playerId)) {
-            return;
-        }
-
-        BukkitRunnable regenTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                double flown = dailyFlightTracker.getOrDefault(playerId, 0.0);
-                if (flown <= 0) {
-                    this.cancel();
-                    regenTasks.remove(playerId);
-                    return;
-                }
-
-                flown -= REGEN_RATE_PER_SECOND / TICKS_PER_SECOND;
-                if (flown < 0) flown = 0;
-                dailyFlightTracker.put(playerId, flown);
-            }
-        };
-
-        regenTask.runTaskTimer(plugin, 0, 1); // run every tick
-        regenTasks.put(playerId, regenTask);
-    }
-
-    private void stopRegenTask(Player player) {
-        UUID playerId = player.getUniqueId();
-        if (regenTasks.containsKey(playerId)) {
-            regenTasks.get(playerId).cancel();
-            regenTasks.remove(playerId);
-        }
-    }
 
 
 
@@ -247,13 +195,12 @@ public class Flight implements Listener {
             flightTasks.remove(playerId);
         }
 
-        stopRegenTask(player);
     }
 
-    private void displayFlightProgress(Player player, double flownDistanceKm, double remainingDistance) {
+    private void displayFlightProgress(Player player, int flownSeconds, int remainingSeconds) {
         if(petManager.getActivePet(player) != null && petManager.getActivePet(player).hasPerk(PetManager.PetPerk.FLIGHT)) {
-            String progressMessage = ChatColor.AQUA + "Flown: " + ChatColor.GREEN + String.format("%.2f", flownDistanceKm) + " km " +
-                    ChatColor.AQUA + "Remaining: " + ChatColor.RED + String.format("%.2f", Math.max(remainingDistance, 0)) + " km";
+            String progressMessage = ChatColor.AQUA + "Flown: " + ChatColor.GREEN + flownSeconds + "s " +
+                    ChatColor.AQUA + "Remaining: " + ChatColor.RED + Math.max(remainingSeconds, 0) + "s";
             sendActionBar(player, progressMessage);
         }
     }
