@@ -192,7 +192,7 @@ public class UltimateEnchantmentListener implements Listener {
         // Decide how many blocks we break per tick (aim for ~20 seconds total).
         // For 200 blocks, we have 400 ticks in 20 seconds => ~0.5 blocks/tick -> round up to 1.
         // Tweak logic/variables as desired.
-        int totalTicks = 10 * 20; // 10 seconds * 20 = 200 ticks (adjust to your liking)
+        int totalTicks = 2; // 10 seconds * 20 = 200 ticks (adjust to your liking)
         double rawBpt = (double) blocks.size() / (double) totalTicks;
         int blocksPerTick = (int) Math.ceil(rawBpt);
 
@@ -200,8 +200,8 @@ public class UltimateEnchantmentListener implements Listener {
         if (blocksPerTick < 1) {
             blocksPerTick = 1;
         }
-        if (blocksPerTick > 10) {
-            blocksPerTick = 10;
+        if (blocksPerTick > 20) {
+            blocksPerTick = 20;
         }
 
         int finalBlocksPerTick = blocksPerTick;

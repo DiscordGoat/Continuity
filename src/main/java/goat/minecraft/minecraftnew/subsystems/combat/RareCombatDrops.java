@@ -62,16 +62,6 @@ public class RareCombatDrops implements Listener {
         ItemStack drop = item.clone();
         event.getDrops().add(drop);
     }
-
-        List<String> lore = item.getItemMeta().getLore();
-        if (lore == null) return false;
-        for (String line : lore) {
-            if (ChatColor.stripColor(line).equals("Soul Item")) {
-                return true;
-            }
-        }
-        return false;
-    }
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
 

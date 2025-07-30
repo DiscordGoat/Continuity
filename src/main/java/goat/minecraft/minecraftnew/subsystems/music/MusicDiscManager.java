@@ -1875,8 +1875,6 @@ public class MusicDiscManager implements Listener {
             for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getCrimsonEffigy().clone());
         }));
 
-        }));
-
         list.add(new LotteryReward(ItemRegistry.getCaviarBait(), p -> {
             for (int i=0;i<5;i++) p.getInventory().addItem(ItemRegistry.getCaviarBait().clone());
         }));

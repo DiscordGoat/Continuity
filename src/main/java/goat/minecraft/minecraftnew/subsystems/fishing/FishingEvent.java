@@ -111,14 +111,11 @@ public class FishingEvent implements Listener {
         
 
         // Talent: Angler's Instinct grants additional sea creature chance
-        int instinctLevel = SkillTreeManager.getInstance()
-                .getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.ANGLERS_INSTINCT);
         int scc1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_I);
         int scc2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_II);
         int scc3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_III);
         int scc4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_IV);
         int scc5 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FISHING, Talent.SEA_CREATURE_CHANCE_V);
-        seaCreatureChance += instinctLevel * 0.25;
         seaCreatureChance += scc1 * 0.5;
         seaCreatureChance += scc2 * 1.0;
         seaCreatureChance += scc3 * 1.5;

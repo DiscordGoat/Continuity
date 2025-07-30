@@ -771,7 +771,6 @@ public class SpawnMonsters implements Listener {
     }
     public void applyMobAttributes(LivingEntity mob, int level) {
         level = Math.max(1, Math.min(level, MAX_MONSTER_LEVEL));
-        }
 
         AttributeInstance healthAttribute = mob.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         if (healthAttribute != null) {

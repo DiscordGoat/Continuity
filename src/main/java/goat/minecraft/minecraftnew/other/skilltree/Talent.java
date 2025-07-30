@@ -6,6 +6,8 @@ import org.bukkit.Material;
 /**
  * Enumeration of all available talents in the plugin.  This acts as a
  * registry so other classes can easily reference a specific talent by
+ * its important to note that common refers to a level requirement of 1, uncommon
+ * has a level req of 20, rare 40, epic 60, legendary 80.
  * using <code>Talent.REDSTONE</code> for example.
  */
 public enum Talent {
@@ -136,14 +138,6 @@ public enum Talent {
             2,
             60,
             Material.DARK_PRISMARINE
-    ),
-    ANGLERS_INSTINCT(
-            "Angler's Instinct",
-            ChatColor.GRAY + "Hone your talent for reeling in the unusual",
-            ChatColor.YELLOW + "+0.25% " + ChatColor.AQUA + "Sea Creature Chance per level",
-            25,
-            1,
-            Material.NAUTILUS_SHELL
     ),
     SEA_CREATURE_CHANCE_I(
             "Sea Creature Chance I",

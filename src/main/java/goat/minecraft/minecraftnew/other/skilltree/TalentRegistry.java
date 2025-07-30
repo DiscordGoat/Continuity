@@ -325,7 +325,6 @@ public final class TalentRegistry {
               SKILL_TALENTS.put(
                 Skill.FISHING,
                 Arrays.asList(
-                        Talent.ANGLERS_INSTINCT,
                         Talent.SEA_CREATURE_CHANCE_I,
                         Talent.DURABILITY,
                         Talent.EXOSUIT_I,
