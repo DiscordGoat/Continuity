@@ -722,6 +722,7 @@ public class PotionBrewingSubsystem implements Listener {
             startBrewTimer();
             startParticleTask();
             startSoundTask();
+
             updateDB();
         }
 
