@@ -1558,6 +1558,22 @@ public enum Talent {
             80,
             Material.APPLE
     ),
+    MOTION_SENSOR(
+            "Motion Sensor",
+            ChatColor.GRAY + "Automatically open wooden doors",
+            ChatColor.YELLOW + "Enables wooden door motion sensor",
+            1,
+            20,
+            Material.OAK_DOOR
+    ),
+    MOTION_SENSOR_IRON(
+            "Iron Motion Sensor",
+            ChatColor.GRAY + "Extend motion sensor to iron doors",
+            ChatColor.YELLOW + "Enables iron door motion sensor",
+            1,
+            40,
+            Material.IRON_DOOR
+    ),
     BOUNTIFUL_HARVEST(
             "Bountiful Harvest",
             ChatColor.GRAY + "Increases chances for extra crops",

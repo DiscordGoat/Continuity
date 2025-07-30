@@ -621,6 +621,10 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + level + " Farming Talent Point";
             case STUDY_FISHING:
                 return ChatColor.YELLOW + "+" + level + " Fishing Talent Point";
+            case MOTION_SENSOR:
+                return ChatColor.YELLOW + "Enables wooden door motion sensor";
+            case MOTION_SENSOR_IRON:
+                return ChatColor.YELLOW + "Enables iron door motion sensor";
             case GRAVE_DIGGER_I:
                 return ChatColor.YELLOW + "+" + String.format("%.3f", level * 0.001) + ChatColor.GRAY + " grave chance";
             case POST_MORTEM_COMPLICATIONS_I:

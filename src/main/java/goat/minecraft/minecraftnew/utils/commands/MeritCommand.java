@@ -72,11 +72,6 @@ public class MeritCommand implements CommandExecutor, Listener {
                             ChatColor.GRAY + "Allows opening Shulker Boxes only inside backpacks.",
                             ChatColor.BLUE + "Right Click Shulker Box in Backpack: " + ChatColor.GRAY + "Opens it."
                     )),
-            new Perk(ChatColor.DARK_GRAY + "Motion Sensor", 1, Material.OAK_DOOR,
-                    Arrays.asList(
-                            ChatColor.GRAY + "Enables Autoclose doors.",
-                            ChatColor.BLUE + "On Left Click Door: " + ChatColor.GRAY + "Opens doors for 2 seconds."
-                    )),
             new Perk(ChatColor.DARK_GRAY + "QuickSwap", 3, Material.TRIPWIRE_HOOK,
                     Arrays.asList(
                             ChatColor.GRAY + "Replenishes your supply of blocks.",
