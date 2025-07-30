@@ -35,6 +35,7 @@ public enum Talent {
             1,
             Material.REDSTONE
     ),
+
     REDSTONE_TWO(
             "Redstone II",
             ChatColor.GRAY + "Allows Potions to steep for even longer",
