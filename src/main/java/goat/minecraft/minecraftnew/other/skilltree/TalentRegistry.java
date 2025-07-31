@@ -260,6 +260,11 @@ public final class TalentRegistry {
                         Talent.HEALTH_III,
                         Talent.HEALTH_IV,
                         Talent.HEALTH_V,
+                        Talent.SHULKL_BOX,
+                        Talent.QUICKSWAP,
+                        Talent.RESTOCK,
+                        Talent.KEEP_INVENTORY,
+                        Talent.TUXEDO,
                         Talent.MOTION_SENSOR,
                         Talent.MOTION_SENSOR_IRON
                 )

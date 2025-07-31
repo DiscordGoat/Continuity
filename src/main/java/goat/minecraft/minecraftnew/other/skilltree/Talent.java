@@ -1558,6 +1558,46 @@ public enum Talent {
             80,
             Material.APPLE
     ),
+    SHULKL_BOX(
+            "Shulkl Box",
+            ChatColor.GRAY + "Open shulker boxes inside backpacks",
+            ChatColor.YELLOW + "Right Click in Backpack: " + ChatColor.GRAY + "Opens box",
+            1,
+            40,
+            Material.SHULKER_SHELL
+    ),
+    QUICKSWAP(
+            "QuickSwap",
+            ChatColor.GRAY + "Replenish blocks when placing",
+            ChatColor.YELLOW + "Uses matching stack from inventory",
+            1,
+            1,
+            Material.TRIPWIRE_HOOK
+    ),
+    RESTOCK(
+            "Restock",
+            ChatColor.GRAY + "Grants an arrow when empty",
+            ChatColor.YELLOW + "On bow use with no arrows",
+            1,
+            1,
+            Material.ARROW
+    ),
+    KEEP_INVENTORY(
+            "Keepinventory",
+            ChatColor.GRAY + "Chance to keep items on death",
+            ChatColor.YELLOW + "+(10*level)% Chance to keep inventory",
+            10,
+            1,
+            Material.CHEST
+    ),
+    TUXEDO(
+            "Tuxedo",
+            ChatColor.GRAY + "Displays two extra auction items",
+            ChatColor.YELLOW + "Bonus items with rare rewards",
+            1,
+            60,
+            Material.BLACK_WOOL
+      ),
     MOTION_SENSOR(
             "Motion Sensor",
             ChatColor.GRAY + "Automatically open wooden doors",
@@ -1572,7 +1612,6 @@ public enum Talent {
             ChatColor.YELLOW + "Enables iron door motion sensor",
             1,
             40,
-            Material.IRON_DOOR
     ),
     BOUNTIFUL_HARVEST(
             "Bountiful Harvest",

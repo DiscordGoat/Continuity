@@ -850,6 +850,17 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 5) + "% Discount";
             case QUIRKY:
                 return ChatColor.YELLOW + "+" + (level * 20) + "% Trait Effect";
+            case SHULKL_BOX:
+                return ChatColor.YELLOW + "Right Click in Backpack: " + ChatColor.GRAY + "Opens box";
+            case QUICKSWAP:
+                return ChatColor.YELLOW + "Refills block stack when placing";
+            case RESTOCK:
+                return ChatColor.YELLOW + "Grants one arrow when empty";
+            case KEEP_INVENTORY:
+                int keepChance = level * 10;
+                return ChatColor.YELLOW + "+" + keepChance + "% chance to keep inventory";
+            case TUXEDO:
+                return ChatColor.YELLOW + "Displays two extra auction items";
             case NATURAL_SELECTION:
                 return ChatColor.YELLOW + "Removes lowest rarity";
             default:
