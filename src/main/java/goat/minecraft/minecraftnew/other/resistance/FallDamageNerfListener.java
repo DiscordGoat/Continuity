@@ -33,7 +33,7 @@ public class FallDamageNerfListener implements Listener {
         }
 
         for (ItemStack armorPiece : player.getInventory().getArmorContents()) {
-            if (armorPiece != null && armorPiece.containsEnchantment(Enchantment.PROTECTION_ENVIRONMENTAL)) {
+            if (armorPiece != null && armorPiece.containsEnchantment(Enchantment.PROTECTION)) {
                 hasProtection = true;
                 break;
             }
