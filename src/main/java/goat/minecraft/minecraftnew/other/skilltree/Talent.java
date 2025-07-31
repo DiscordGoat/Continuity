@@ -1612,6 +1612,7 @@ public enum Talent {
             ChatColor.YELLOW + "Enables iron door motion sensor",
             1,
             40,
+            Material.IRON_ORE
     ),
     BOUNTIFUL_HARVEST(
             "Bountiful Harvest",
