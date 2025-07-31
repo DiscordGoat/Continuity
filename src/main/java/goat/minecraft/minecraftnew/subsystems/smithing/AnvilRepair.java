@@ -378,6 +378,16 @@ public class AnvilRepair implements Listener {
             Material.NETHERITE_HELMET, Material.NETHERITE_CHESTPLATE,
             Material.NETHERITE_LEGGINGS, Material.NETHERITE_BOOTS
     );
+
+    // Boots only subset used for boot-specific enchantments like Feather Falling
+    public static final Set<Material> BOOTS_ONLY = EnumSet.of(
+            Material.LEATHER_BOOTS,
+            Material.IRON_BOOTS,
+            Material.CHAINMAIL_BOOTS,
+            Material.GOLDEN_BOOTS,
+            Material.DIAMOND_BOOTS,
+            Material.NETHERITE_BOOTS
+    );
     /**
      * Finds the nearest anvil block around the player within a given radius.
      *
@@ -898,7 +908,7 @@ public class AnvilRepair implements Listener {
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Humid Bark") && ARMOR.contains(repairee.getType())){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Humid Bark") && BOOTS_ONLY.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.FEATHER_FALLING);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
@@ -1306,7 +1316,7 @@ public class AnvilRepair implements Listener {
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
-        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Feather Falling Expertise")&& ARMOR.contains(repairee.getType())){
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Feather Falling Expertise")&& BOOTS_ONLY.contains(repairee.getType())){
             incrementEnchantmentUnsafely(player, repairee, billItem, Enchantment.FEATHER_FALLING);
 
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
