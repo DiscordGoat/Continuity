@@ -11,6 +11,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.CorpseLev
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SwordTalentDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SpiderDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.HellbentDamageStrategy;
+import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.DontMineAtNightDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.PostMortemDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.NecroticDamageReductionStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SeaCreatureDamageReductionStrategy;
@@ -249,6 +250,7 @@ public class CombatSubsystemManager implements CommandExecutor {
 
             damageCalculationService.registerStrategy(new SwordTalentDamageStrategy());
             damageCalculationService.registerStrategy(new HellbentDamageStrategy());
+            damageCalculationService.registerStrategy(new DontMineAtNightDamageStrategy());
         }
         
         if (configuration.getBuffConfig().isMonsterLevelScaling()) {

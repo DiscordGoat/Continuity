@@ -1597,6 +1597,21 @@ public enum Talent {
             1,
             60,
             Material.BLACK_WOOL
+      ),
+    MOTION_SENSOR(
+            "Motion Sensor",
+            ChatColor.GRAY + "Automatically open wooden doors",
+            ChatColor.YELLOW + "Enables wooden door motion sensor",
+            1,
+            20,
+            Material.OAK_DOOR
+    ),
+    MOTION_SENSOR_IRON(
+            "Iron Motion Sensor",
+            ChatColor.GRAY + "Extend motion sensor to iron doors",
+            ChatColor.YELLOW + "Enables iron door motion sensor",
+            1,
+            40,
     ),
     BOUNTIFUL_HARVEST(
             "Bountiful Harvest",
@@ -1622,7 +1637,7 @@ public enum Talent {
             "Oxygen I",
             ChatColor.GRAY + "Increase your oxygen reserves",
             ChatColor.YELLOW + "+10 Oxygen",
-            4,
+            3,
             1,
             Material.GLASS_BOTTLE
     ),
@@ -1655,7 +1670,7 @@ public enum Talent {
             "Oxygen II",
             ChatColor.GRAY + "Further increase your oxygen reserves",
             ChatColor.YELLOW + "+20 Oxygen",
-            6,
+            3,
             20,
             Material.GLASS_BOTTLE
     ),
@@ -1688,7 +1703,7 @@ public enum Talent {
             "Oxygen III",
             ChatColor.GRAY + "Greatly increase your oxygen reserves",
             ChatColor.YELLOW + "+30 Oxygen",
-            8,
+            3,
             40,
             Material.GLASS_BOTTLE
     ),
@@ -1729,7 +1744,7 @@ public enum Talent {
             "Oxygen IV",
             ChatColor.GRAY + "Massively increase your oxygen reserves",
             ChatColor.YELLOW + "+40 Oxygen",
-            10,
+            3,
             60,
             Material.GLASS_BOTTLE
     ),
@@ -1762,7 +1777,7 @@ public enum Talent {
             "Oxygen V",
             ChatColor.GRAY + "Maximize your oxygen reserves",
             ChatColor.YELLOW + "+50 Oxygen",
-            12,
+            4,
             80,
             Material.GLASS_BOTTLE
     ),
@@ -1822,7 +1837,7 @@ public enum Talent {
     PROSPEKT(
             "Prospekt",
             ChatColor.GRAY + "Improve your excavation tools",
-            ChatColor.YELLOW + "+50 " + ChatColor.GRAY + "Max Durability",
+            ChatColor.YELLOW + "+1% Chance to cancel " + ChatColor.GRAY + "Durability Loss",
             4,
             1,
             Material.DIAMOND_PICKAXE

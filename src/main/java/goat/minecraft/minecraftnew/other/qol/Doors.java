@@ -1,7 +1,8 @@
 package goat.minecraft.minecraftnew.other.qol;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -36,9 +37,12 @@ public class Doors implements Listener {
         if (doorData.isOpen()) {
             return;
         }
-        PlayerMeritManager playerMeritManager = PlayerMeritManager.getInstance(MinecraftNew.getInstance());
         Player player = event.getPlayer();
-        if(playerMeritManager.hasPerk(player.getUniqueId(), "Motion Sensor")) {
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        Material type = bottomDoorBlock.getType();
+        boolean hasWood = manager.hasTalent(player, Talent.MOTION_SENSOR);
+        boolean hasIron = manager.hasTalent(player, Talent.MOTION_SENSOR_IRON);
+        if((type != Material.IRON_DOOR && hasWood) || (type == Material.IRON_DOOR && hasIron)) {
             openOrCloseDoor(bottomDoorBlock, true);
             playDoorSound(bottomDoorBlock, true);
 
