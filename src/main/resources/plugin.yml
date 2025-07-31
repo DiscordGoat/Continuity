@@ -125,7 +125,7 @@ commands:
     description: lol
   getpet:
     description: lol
-  pet:
+  pets:
     description: Opens the pet GUI.
     default: true
   setpetlevel:

@@ -23,7 +23,7 @@ public class PetCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        if (label.equalsIgnoreCase("pet")) {
+        if (label.equalsIgnoreCase("pets")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage("Only players can use this command.");
                 return true;

@@ -521,7 +521,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         // Register events
         getServer().getPluginManager().registerEvents(petManager, this);
         // Register commands
-        getCommand("pet").setExecutor((sender, command, label, args) -> {
+        getCommand("pets").setExecutor((sender, command, label, args) -> {
             if (!(sender instanceof org.bukkit.entity.Player)) {
                 sender.sendMessage("Only players can use this command.");
                 return true;
