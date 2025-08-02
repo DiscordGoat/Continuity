@@ -171,6 +171,7 @@ public class DragonFightManager implements Listener {
         stand.setSmall(true);
         stand.setBasePlate(false);
         stand.setGravity(false);
+        stand.setVisible(false);
         stand.setRotation(yaw, 0F);
         stand.getEquipment().setHelmet(createEyeSkull());
         new BukkitRunnable() {
