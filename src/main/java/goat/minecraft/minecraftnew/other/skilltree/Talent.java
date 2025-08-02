@@ -1654,7 +1654,7 @@ public enum Talent {
             "Rest",
             ChatColor.GRAY + "Sleeping restores oxygen",
             ChatColor.YELLOW + "+5% Max Oxygen on sleep",
-            5,
+            7,
             1,
             Material.RED_BED
     ),
@@ -1687,7 +1687,7 @@ public enum Talent {
             "Ancient Debris",
             ChatColor.GRAY + "Chance for masterwork ingots",
             ChatColor.YELLOW + "+0.10% Masterwork Ingot Chance",
-            4,
+            7,
             20,
             Material.ANCIENT_DEBRIS
     ),
@@ -1720,7 +1720,7 @@ public enum Talent {
             "Oxygen Efficiency III",
             ChatColor.GRAY + "Reduce oxygen consumption",
             ChatColor.YELLOW + "-1% Oxygen Depletion Rate",
-            5,
+            7,
             40,
             Material.PAPER
     ),
@@ -1769,7 +1769,7 @@ public enum Talent {
             "Oxygen Reserve",
             ChatColor.GRAY + "Conserve oxygen when low",
             ChatColor.YELLOW + "-5% Depletion Rate below 50% Oxygen",
-            4,
+            7,
             60,
             Material.BEACON
     ),
@@ -2333,14 +2333,6 @@ public enum Talent {
             1,
             20,
             Material.HOPPER
-    ),
-    WALKING_FORTRESS(
-            "Walking Fortress",
-            ChatColor.GRAY + "Bolster your defenses",
-            ChatColor.YELLOW + "+10% Damage Reduction",
-            2,
-            20,
-            Material.SHIELD
     ),
     SHOTCALLING(
             "Shotcalling",

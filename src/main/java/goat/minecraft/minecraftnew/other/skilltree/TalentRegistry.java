@@ -212,7 +212,6 @@ public final class TalentRegistry {
                         Talent.ANTIDOTE,
                         Talent.GREEN_THUMB,
                         Talent.COLLECTOR,
-                        Talent.WALKING_FORTRESS,
                         Talent.SHOTCALLING,
                         Talent.SPEED_BOOST,
 

@@ -804,8 +804,6 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "-" + (level * 25) + "% Cooldown";
             case COLLECTOR:
                 return ChatColor.YELLOW + "+" + (level * 50) + "% Range";
-            case WALKING_FORTRESS:
-                return ChatColor.YELLOW + "+" + (level * 10) + "% Damage Reduction";
             case SHOTCALLING:
                 return ChatColor.RED + "+" + (level * 5) + "% Arrow Damage";
             case SPEED_BOOST:
