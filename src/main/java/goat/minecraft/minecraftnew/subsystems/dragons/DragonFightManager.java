@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -34,6 +35,7 @@ public class DragonFightManager implements Listener {
     private final File gatewaysFile;
     private final YamlConfiguration gatewaysConfig;
     private final Map<Location, Integer> portalEyeCounts = new HashMap<>();
+    private final Set<Location> activeFights = new HashSet<>();
 
     public DragonFightManager(MinecraftNew plugin) {
         this.plugin = plugin;
@@ -117,9 +119,6 @@ public class DragonFightManager implements Listener {
                 blockLoc.getWorld().playSound(blockLoc, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
                 blockLoc.getWorld().spawnParticle(Particle.DRAGON_BREATH, blockLoc.clone().add(0.5, 1, 0.5), 100, 0.3, 0.3, 0.3, 0.01);
                 spawnFallingEye(blockLoc, player);
-                if (count >= 12) {
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> endDragonFight(portalLoc), 15 * 20L);
-                }
             }
         }, 1L);
     }
@@ -131,6 +130,29 @@ public class DragonFightManager implements Listener {
             }
         }
         return new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
+
+    @EventHandler
+    public void onPlayerUseEndPortal(PlayerPortalEvent event) {
+        if (event.getCause() != PlayerPortalEvent.TeleportCause.END_PORTAL) return;
+        Location portalLoc = findPortal(event.getFrom());
+        int count = portalEyeCounts.getOrDefault(portalLoc, 0);
+        if (count < 12) return;
+        // Start the fight once the player has been teleported to the End world.
+        Bukkit.getScheduler().runTask(plugin, () -> startDragonFight(event.getPlayer(), portalLoc));
+    }
+
+    private void startDragonFight(Player player, Location portalLoc) {
+        if (activeFights.contains(portalLoc)) return;
+        World endWorld = player.getWorld();
+        // Avoid spawning multiple dragons if one is already present.
+        if (!endWorld.getEntitiesByClass(org.bukkit.entity.EnderDragon.class).isEmpty()) {
+            activeFights.add(portalLoc);
+            return;
+        }
+        Dragon dragon = DragonRegistry.getRandomDragon();
+        dragon.spawn(new Location(endWorld, 0.5, 80, 0.5), plugin);
+        activeFights.add(portalLoc);
     }
 
     private void endDragonFight(Location portalLoc) {
