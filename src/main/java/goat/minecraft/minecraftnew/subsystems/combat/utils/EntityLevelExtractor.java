@@ -61,7 +61,7 @@ public class EntityLevelExtractor {
             return 0;
         }
 
-        String name = entity.getName();
+        String name = entity.getCustomName();
         if (name == null || name.trim().isEmpty()) {
             name = entity.getName();
         }
