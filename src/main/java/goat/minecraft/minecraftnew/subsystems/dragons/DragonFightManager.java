@@ -6,13 +6,18 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.EndPortalFrame;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -34,6 +39,11 @@ public class DragonFightManager implements Listener {
     private final File gatewaysFile;
     private final YamlConfiguration gatewaysConfig;
     private final Map<Location, Integer> portalEyeCounts = new HashMap<>();
+
+    private EnderDragon activeDragon;
+    private BossBar dragonBar;
+    private Dragon activeDragonType;
+    private Location activePortalLoc;
 
     public DragonFightManager(MinecraftNew plugin) {
         this.plugin = plugin;
@@ -117,8 +127,8 @@ public class DragonFightManager implements Listener {
                 blockLoc.getWorld().playSound(blockLoc, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
                 blockLoc.getWorld().spawnParticle(Particle.DRAGON_BREATH, blockLoc.clone().add(0.5, 1, 0.5), 100, 0.3, 0.3, 0.3, 0.01);
                 spawnFallingEye(blockLoc, player);
-                if (count >= 12) {
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> endDragonFight(portalLoc), 15 * 20L);
+                if (count >= 12 && activeDragon == null) {
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> startDragonFight(portalLoc), 20L);
                 }
             }
         }, 1L);
@@ -133,9 +143,52 @@ public class DragonFightManager implements Listener {
         return new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
+    private void startDragonFight(Location portalLoc) {
+        World world = portalLoc.getWorld();
+        if (world == null) return;
+
+        activePortalLoc = portalLoc;
+        activeDragonType = DragonRegistry.randomDragon();
+
+        EnderDragon dragon = (EnderDragon) world.spawnEntity(portalLoc.clone().add(0, 5, 0), EntityType.ENDER_DRAGON);
+        activeDragonType.applyAttributes(dragon);
+        activeDragon = dragon;
+
+        dragonBar = Bukkit.createBossBar(activeDragonType.getDisplayName(),
+                activeDragonType.getBarColor(),
+                activeDragonType.getBarStyle());
+        for (Player p : world.getPlayers()) {
+            dragonBar.addPlayer(p);
+        }
+        dragonBar.setProgress(1.0);
+
+        // Repeating task to keep boss bar in sync with dragon health
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (activeDragon == null || dragonBar == null) {
+                    cancel();
+                    return;
+                }
+                if (activeDragon.isDead()) {
+                    cancel();
+                    return;
+                }
+                dragonBar.setProgress(activeDragon.getHealth() / activeDragon.getMaxHealth());
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
+    }
+
     private void endDragonFight(Location portalLoc) {
         World world = portalLoc.getWorld();
         if (world == null) return;
+        if (dragonBar != null) {
+            dragonBar.removeAll();
+            dragonBar = null;
+        }
+        activeDragon = null;
+        activeDragonType = null;
+        activePortalLoc = null;
         int radius = 20;
         int startX = portalLoc.getBlockX() - radius;
         int endX = portalLoc.getBlockX() + radius;
@@ -161,6 +214,13 @@ public class DragonFightManager implements Listener {
                 entry.getKey().getWorld().equals(world) &&
                 entry.getKey().distanceSquared(portalLoc) <= radius * radius);
         saveData();
+    }
+
+    @EventHandler
+    public void onDragonDeath(EntityDeathEvent event) {
+        if (activeDragon != null && event.getEntity().getUniqueId().equals(activeDragon.getUniqueId())) {
+            endDragonFight(activePortalLoc);
+        }
     }
 
     private void spawnFallingEye(Location frameLoc, Player player) {
