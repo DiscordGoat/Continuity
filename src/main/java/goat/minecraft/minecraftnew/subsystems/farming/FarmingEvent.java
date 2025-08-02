@@ -173,10 +173,10 @@ public class FarmingEvent implements Listener {
             // Festival Bees spawn
             SkillTreeManager mgr = SkillTreeManager.getInstance();
             double beeChance =
-                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_I) * 0.25 +
-                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_II) * 0.25 +
-                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_III) * 0.25 +
-                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_IV) * 0.25;
+                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_I) * 0.1 +
+                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_II) * 0.1 +
+                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_III) * 0.1 +
+                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_IV) * 0.1;
             beeChance /= 100.0;
             if (random.nextDouble() < beeChance) {
                 int dur = 30
@@ -245,6 +245,7 @@ public class FarmingEvent implements Listener {
                             && name.contains(ChatColor.GOLD + "Festival");
                 })
                 .count();
+    }
 
     private void handleHarvestRewards(Block block, Player player, Material blockType) {
         double roll = random.nextDouble();
