@@ -30,7 +30,8 @@ import java.util.*;
 /**
  * Handles Enchanted Hopper trinkets. Items placed inside the hopper GUI act as a
  * whitelist. Matching items from the player's inventory are periodically moved
- * to the container directly above the hopper in the backpack.
+ * to the container directly above the hopper in the backpack. Containers may be
+ * shulker boxes, satchels or other special items.
  */
 public class EnchantedHopperManager implements Listener {
     private static EnchantedHopperManager instance;
@@ -227,11 +228,11 @@ public class EnchantedHopperManager implements Listener {
             bsm.setBlockState(box);
             containerItem.setItemMeta(bsm);
         } else {
-            String name = ChatColor.stripColor(meta.getDisplayName());
-            if (name.equals("Blue Satchel") || name.equals("Black Satchel") || name.equals("Green Satchel")) {
+            String name = ChatColor.stripColor(meta != null ? meta.getDisplayName() : null);
+            if (name != null && name.endsWith(" Satchel")) {
                 SatchelManager.getInstance().depositItem(player, name.split(" ")[0], toMove);
                 success = true;
-            } else if (name.equals("Enchanted Lava Bucket")) {
+            } else if ("Enchanted Lava Bucket".equals(name)) {
                 success = true; // item simply deleted
             }
         }
