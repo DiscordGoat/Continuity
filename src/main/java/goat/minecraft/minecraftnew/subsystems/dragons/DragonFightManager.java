@@ -180,7 +180,7 @@ public class DragonFightManager implements Listener {
                 blockLoc.getWorld().spawnParticle(Particle.DRAGON_BREATH, blockLoc.clone().add(0.5, 1, 0.5), 100, 0.3, 0.3, 0.3, 0.01);
                 spawnFallingEye(blockLoc, player);
                 if (count >= 12 && activeDragon == null) {
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> startDragonFight(portalLoc), 20L);
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> startDragonFight(portalLoc), 200L);
                 }
             }
         }, 1L);

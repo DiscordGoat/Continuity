@@ -20,34 +20,6 @@ public class EpicEnderDragonFight implements Listener {
         this.plugin = plugin;
     }
 
-
-    /**
-     * Handles player joining a world and modifies the Ender Dragon in the "custom_end" world.
-     */
-    @EventHandler
-    public void onPlayerEnterCustomEnd(PlayerJoinEvent event) {
-        Player player = event.getPlayer();
-        World world = player.getWorld();
-
-        if (world.getName().equalsIgnoreCase("custom_end")) {
-            EnderDragon dragon = world.getEntitiesByClass(EnderDragon.class).stream().findFirst().orElse(null);
-
-            if (dragon != null) {
-                Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                    dragon.setCustomName(ChatColor.DARK_RED + "Ender Dragon");
-                    dragon.setCustomNameVisible(true);
-
-                    // Check if the player already has a boss bar named "Ender Dragon" and remove it
-
-                    // Set BossBar with segments
-                    BossBar bossBar = dragon.getBossBar();
-                    bossBar.setColor(BarColor.RED);
-                    bossBar.setStyle(BarStyle.SEGMENTED_20);
-                    // Add health effects
-                }, 10*20); // 40 ticks = 2 seconds
-            }
-        }
-    }
     
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event) {
