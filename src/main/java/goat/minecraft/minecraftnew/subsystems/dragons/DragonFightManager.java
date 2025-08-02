@@ -114,7 +114,7 @@ public class DragonFightManager implements Listener {
                 Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "An Eye of Ender was placed! Total: " + portalEyeCounts.get(portalLoc));
                 blockLoc.getWorld().playSound(blockLoc, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
                 blockLoc.getWorld().spawnParticle(Particle.DRAGON_BREATH, blockLoc.clone().add(0.5, 1, 0.5), 100, 0.3, 0.3, 0.3, 0.01);
-                spawnFallingEye(blockLoc);
+                spawnFallingEye(blockLoc, player);
             }
         }, 1L);
     }
@@ -128,12 +128,15 @@ public class DragonFightManager implements Listener {
         return new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
     }
 
-    private void spawnFallingEye(Location frameLoc) {
+    private void spawnFallingEye(Location frameLoc, Player player) {
         Location start = frameLoc.clone().add(0.5, 1.5, 0.5);
+        float yaw = player.getLocation().getYaw() + 180F;
+        start.setYaw(yaw);
         ArmorStand stand = (ArmorStand) frameLoc.getWorld().spawnEntity(start, EntityType.ARMOR_STAND);
-        stand.setInvisible(true);
-        stand.setMarker(true);
+        stand.setSmall(true);
+        stand.setBasePlate(false);
         stand.setGravity(false);
+        stand.setRotation(yaw, 0F);
         stand.getEquipment().setHelmet(createEyeSkull());
         new BukkitRunnable() {
             int ticks = 0;
