@@ -19,6 +19,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
@@ -99,6 +101,56 @@ public class DragonFightManager implements Listener {
             gatewaysConfig.save(gatewaysFile);
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        handlePlayerEnterWorld(event.getPlayer(), event.getPlayer().getWorld());
+    }
+
+    @EventHandler
+    public void onPlayerChangedWorld(PlayerChangedWorldEvent event) {
+        handlePlayerEnterWorld(event.getPlayer(), event.getPlayer().getWorld());
+    }
+
+    private void handlePlayerEnterWorld(Player player, World world) {
+        EnderDragon dragon = world.getEntitiesByClass(EnderDragon.class).stream().findFirst().orElse(null);
+        if (dragon == null) return;
+
+        String customName = dragon.getCustomName();
+        boolean nameValid = false;
+        if (customName != null) {
+            String stripped = ChatColor.stripColor(customName);
+            for (Dragon d : DragonRegistry.getRegistered()) {
+                if (ChatColor.stripColor(d.getDisplayName()).equalsIgnoreCase(stripped)) {
+                    nameValid = true;
+                    break;
+                }
+            }
+        }
+
+        boolean bossBarValid = dragonBar != null && activeDragon != null &&
+                dragon.getUniqueId().equals(activeDragon.getUniqueId());
+
+        if (!nameValid || !bossBarValid) {
+            Dragon type = DragonRegistry.randomDragon();
+            type.applyAttributes(dragon);
+            activeDragon = dragon;
+            activeDragonType = type;
+            activePortalLoc = dragon.getLocation();
+
+            if (dragonBar != null) {
+                dragonBar.removeAll();
+            }
+
+            dragonBar = Bukkit.createBossBar(type.getDisplayName(), type.getBarColor(), type.getBarStyle());
+            dragonBar.setProgress(dragon.getHealth() / dragon.getMaxHealth());
+            for (Player p : world.getPlayers()) {
+                dragonBar.addPlayer(p);
+            }
+        } else {
+            dragonBar.addPlayer(player);
         }
     }
 
