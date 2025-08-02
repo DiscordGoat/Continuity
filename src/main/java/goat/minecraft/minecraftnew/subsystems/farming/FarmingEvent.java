@@ -95,6 +95,7 @@ public class FarmingEvent implements Listener {
 
         // Check if the block is a recognized crop
         if (cropXP.containsKey(blockType)) {
+            boolean harvest = false;
             // Check if the block was placed by a player
             if (block.hasMetadata(PLAYER_PLACED_KEY)) {
                 if (block.getType() == Material.PUMPKIN || block.getType() == Material.MELON) {
@@ -125,7 +126,7 @@ public class FarmingEvent implements Listener {
             if (blockType == Material.WHEAT || blockType == Material.WHEAT_SEEDS || blockType == Material.CARROTS || blockType == Material.POTATOES ||
                     blockType == Material.BEETROOTS || blockType == Material.PUMPKIN ||
                     blockType == Material.MELON || blockType == Material.COCOA) {
-                CropCountManager.getInstance(plugin).increment(player, blockType);
+                harvest = CropCountManager.getInstance(plugin).increment(player, blockType);
             }
 
             StatsCalculator calc = StatsCalculator.getInstance(plugin);
@@ -209,8 +210,11 @@ public class FarmingEvent implements Listener {
 
             }
 
-            // Roll for custom harvest rewards (seeders, smithing items, pets)
-            handleHarvestRewards(block, player, blockType);
+            if (harvest) {
+                xpManager.addXP(player, "Farming", 100);
+                player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 2.0f);
+                handleHarvestRewards(block, player, blockType);
+            }
 
             handleRareItemDrop(block, player, blockType);
         }

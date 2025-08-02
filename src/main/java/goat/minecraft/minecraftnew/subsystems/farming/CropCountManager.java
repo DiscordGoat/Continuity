@@ -1,30 +1,23 @@
 package goat.minecraft.minecraftnew.subsystems.farming;
 
-import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.XPManager;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.Sound;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
 
 public class CropCountManager {
     private static CropCountManager instance;
     private final JavaPlugin plugin;
     private final File file;
     private YamlConfiguration config;
-    private final XPManager xpManager;
 
     private CropCountManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -33,7 +26,6 @@ public class CropCountManager {
             try { file.createNewFile(); } catch (IOException ignored) {}
         }
         this.config = YamlConfiguration.loadConfiguration(file);
-        this.xpManager = new XPManager(plugin);
     }
 
     public static CropCountManager getInstance(JavaPlugin plugin) {
@@ -53,7 +45,7 @@ public class CropCountManager {
 
     private String key(Material mat) {
         switch (mat) {
-            case WHEAT_SEEDS: return "wheat";
+            case WHEAT, WHEAT_SEEDS: return "wheat";
             case CARROTS: return "carrots";
             case POTATOES: return "potatoes";
             case BEETROOTS: return "beetroots";
@@ -64,9 +56,9 @@ public class CropCountManager {
         }
     }
 
-    public void increment(Player player, Material crop) {
+    public boolean increment(Player player, Material crop) {
         String k = key(crop);
-        if (k == null) return;
+        if (k == null) return false;
         String uuid = player.getUniqueId().toString();
 
         int c = config.getInt(uuid + "." + k, 0) + 1;
@@ -74,10 +66,7 @@ public class CropCountManager {
         int total = config.getInt(uuid + ".cropsHarvested", 0) + 1;
         config.set(uuid + ".cropsHarvested", total);
         save();
-        handleRewards(player, crop, c, total);
-    }
 
-    private void handleRewards(Player player, Material crop, int cropCount, int total) {
         checkPetThresholds(player, total);
         int reduction = 0;
         if (SkillTreeManager.getInstance() != null) {
@@ -90,33 +79,7 @@ public class CropCountManager {
         }
         int requirement = (int) Math.ceil(500 * (1 - reduction / 100.0));
         if (requirement < 1) requirement = 1;
-        if (cropCount % requirement == 0) {
-            switch (crop) {
-                case WHEAT, WHEAT_SEEDS:
-                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(), ItemRegistry.getWheatSeeder());
-                    break;
-                case CARROTS:
-                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getCarrotSeeder());
-                    break;
-                case POTATOES:
-                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getPotatoSeeder());
-                    break;
-                case BEETROOTS:
-                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getBeetrootSeeder());
-                    break;
-                case PUMPKIN:
-                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getJackOLantern());
-                    break;
-                case MELON:
-                    Objects.requireNonNull(player.getLocation().getWorld()).dropItem(player.getLocation(),ItemRegistry.getWatermelon());
-                    break;
-                default:
-                    break;
-            }
-            xpManager.addXP(player, "Farming", 100);
-            player.sendMessage(ChatColor.LIGHT_PURPLE + "Harvest Reward!");
-            player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 2.0f);
-        }
+        return c % requirement == 0;
     }
 
     public void checkPetThresholds(Player player) {
