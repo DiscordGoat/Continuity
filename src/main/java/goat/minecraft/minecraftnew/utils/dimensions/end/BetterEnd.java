@@ -133,7 +133,6 @@ public class BetterEnd implements Listener {
                             if (entity instanceof EnderDragon) {
                                 EnderDragon dragon = (EnderDragon) entity;
                                 SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(new XPManager(MinecraftNew.getInstance()));
-                                spawnMonsters.applyEnderDragonAttributes(dragon);
                             }
                         }
                     }

@@ -523,28 +523,28 @@ public class SpawnMonsters implements Listener {
         return nearestPlayer;
     }
 
-    public void applyEnderDragonAttributes(EnderDragon dragon) {
-        int level = 300;
-        dragon.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
-        dragon.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, Integer.MAX_VALUE, 255, true));
-        dragon.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, Integer.MAX_VALUE, 255, true));
-        dragon.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, Integer.MAX_VALUE, 3, true));
-        double healthMultiplier = 1 + (level * 0.1);
-        double originalHealth = dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
-        double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
-        Objects.requireNonNull(dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(2000);
-        dragon.setHealth(newHealth);
-        dragon.setMetadata("mobLevel", new FixedMetadataValue(MinecraftNew.getInstance(), level));
-        String color = getColorForLevel(level);
-        dragon.setCustomName(color + "Level: " + level + " " + formatMobType(dragon.getType().toString()));
-        dragon.setCustomNameVisible(true);
-        dragon.setRemoveWhenFarAway(true);
-        dragon.setCustomName(ChatColor.DARK_RED + "[Lv: 1000] Ender Dragon");
-        BossBar bossBar = dragon.getBossBar();
-        bossBar.setColor(BarColor.RED);
-        bossBar.setStyle(BarStyle.SEGMENTED_20);
-        dragon.setHealth(dragon.getMaxHealth());
-    }
+//    public void applyEnderDragonAttributes(EnderDragon dragon) {
+//        int level = 300;
+//        dragon.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, Integer.MAX_VALUE, 1, true));
+//        dragon.addPotionEffect(new PotionEffect(PotionEffectType.HEALTH_BOOST, Integer.MAX_VALUE, 255, true));
+//        dragon.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, Integer.MAX_VALUE, 255, true));
+//        dragon.addPotionEffect(new PotionEffect(PotionEffectType.RESISTANCE, Integer.MAX_VALUE, 3, true));
+//        double healthMultiplier = 1 + (level * 0.1);
+//        double originalHealth = dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+//        double newHealth = Math.min(originalHealth * healthMultiplier, 2000);
+//        Objects.requireNonNull(dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH)).setBaseValue(2000);
+//        dragon.setHealth(newHealth);
+//        dragon.setMetadata("mobLevel", new FixedMetadataValue(MinecraftNew.getInstance(), level));
+//        String color = getColorForLevel(level);
+//        dragon.setCustomName(color + "Level: " + level + " " + formatMobType(dragon.getType().toString()));
+//        dragon.setCustomNameVisible(true);
+//        dragon.setRemoveWhenFarAway(true);
+//        dragon.setCustomName(ChatColor.DARK_RED + "[Lv: 1000] Ender Dragon");
+//        BossBar bossBar = dragon.getBossBar();
+//        bossBar.setColor(BarColor.RED);
+//        bossBar.setStyle(BarStyle.SEGMENTED_20);
+//        dragon.setHealth(dragon.getMaxHealth());
+//    }
     public void transformDrownedToDeepSeaDiver(Drowned drowned) {
         // Set the custom name to identify our Deep Sea Diver.
         drowned.setCustomName(ChatColor.DARK_AQUA + "Deep Sea Diver");
