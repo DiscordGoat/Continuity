@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
@@ -120,6 +121,10 @@ public class CorpseEvent {
         NPC npc = registry.createNPC(EntityType.PLAYER, corpse.getDisplayName());
 
         npc.setName(corpse.getDisplayName());
+        if (npc.getEntity() instanceof LivingEntity le) {
+            le.setCustomName(corpse.getDisplayName());
+            le.setCustomNameVisible(true);
+        }
         Location spawnLoc = loc.clone().subtract(0, 1, 0);
 
         npc.spawn(spawnLoc);
