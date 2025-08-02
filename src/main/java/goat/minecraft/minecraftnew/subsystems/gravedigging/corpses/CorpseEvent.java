@@ -21,6 +21,9 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.Arrays;
 import java.util.Optional;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 /**
  * Spawns a random Corpse from the registry with an emergence animation.
@@ -41,6 +44,20 @@ public class CorpseEvent {
             return;
         }
         spawnCorpse(optional.get(), location);
+    }
+
+    /**
+     * Spawns a random legendary corpse at the given location.
+     */
+    public void triggerLegendary(Location location) {
+        List<Corpse> legendary = CorpseRegistry.getCorpses().stream()
+                .filter(c -> c.getRarity() == Rarity.LEGENDARY)
+                .collect(Collectors.toList());
+        if (legendary.isEmpty()) {
+            return;
+        }
+        Corpse corpse = legendary.get(new Random().nextInt(legendary.size()));
+        spawnCorpse(corpse, location);
     }
 
     private void applyAttributes(NPC npc, Rarity rarity) {

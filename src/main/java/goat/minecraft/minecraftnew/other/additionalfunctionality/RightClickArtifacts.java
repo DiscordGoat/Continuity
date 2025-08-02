@@ -11,6 +11,7 @@ import goat.minecraft.minecraftnew.utils.biomeutils.StructureUtils;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.VillagerNameRepository;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.subsystems.gravedigging.corpses.CorpseEvent;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -761,6 +762,16 @@ public class RightClickArtifacts implements Listener {
             if (displayName.equals(ChatColor.YELLOW + "Iron Golem")) {
                 player.playSound(player.getLocation(), Sound.ENTITY_IRON_GOLEM_DEATH, 1.0f, 1.0f);
                 player.getWorld().spawnEntity(player.getLocation(), EntityType.IRON_GOLEM);
+                decrementItemAmount(itemInHand, player);
+                return;
+            }
+            if (displayName.equals(ChatColor.GOLD + "World's Largest Watermelon™")) {
+                new CorpseEvent(MinecraftNew.getInstance()).triggerLegendary(player.getLocation());
+                decrementItemAmount(itemInHand, player);
+                return;
+            }
+            if (displayName.equals(ChatColor.GOLD + "World's Largest Pumpkin™")) {
+                new CorpseEvent(MinecraftNew.getInstance()).triggerLegendary(player.getLocation());
                 decrementItemAmount(itemInHand, player);
                 return;
             }

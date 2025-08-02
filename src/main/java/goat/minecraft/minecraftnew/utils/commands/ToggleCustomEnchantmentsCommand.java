@@ -94,6 +94,24 @@ public class ToggleCustomEnchantmentsCommand implements CommandExecutor, Listene
         descriptions.put("Water Aspect", Arrays.asList(
                 "Deals bonus damage to certain",
                 "mobs like guardians or endermen."));
+        descriptions.put("Cornfield", Arrays.asList(
+                "10% * level chance to",
+                "double-count wheat."));
+        descriptions.put("What's Up Doc", Arrays.asList(
+                "10% * level chance to",
+                "double-count carrots."));
+        descriptions.put("Venerate", Arrays.asList(
+                "10% * level chance to",
+                "double-count beetroot."));
+        descriptions.put("Legend", Arrays.asList(
+                "10% * level chance to",
+                "double-count potatoes."));
+        descriptions.put("Clean Cut", Arrays.asList(
+                "10% * level chance to",
+                "double-count melons."));
+        descriptions.put("Gourd", Arrays.asList(
+                "10% * level chance to",
+                "double-count pumpkins."));
     }
 
     @Override

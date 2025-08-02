@@ -12,6 +12,7 @@ import goat.minecraft.minecraftnew.subsystems.farming.FestivalBeeManager;
 import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -127,6 +128,60 @@ public class FarmingEvent implements Listener {
                     blockType == Material.BEETROOTS || blockType == Material.PUMPKIN ||
                     blockType == Material.MELON || blockType == Material.COCOA) {
                 harvest = CropCountManager.getInstance(plugin).increment(player, blockType);
+
+                ItemStack tool = player.getInventory().getItemInMainHand();
+                switch (blockType) {
+                    case WHEAT, WHEAT_SEEDS -> {
+                        int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Cornfield");
+                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
+                                harvest = true;
+                            }
+                        }
+                    }
+                    case CARROTS -> {
+                        int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "What's Up Doc");
+                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
+                                harvest = true;
+                            }
+                        }
+                    }
+                    case POTATOES -> {
+                        int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Legend");
+                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
+                                harvest = true;
+                            }
+                        }
+                    }
+                    case BEETROOTS -> {
+                        int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Venerate");
+                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
+                                harvest = true;
+                            }
+                        }
+                    }
+                    case MELON -> {
+                        int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Clean Cut");
+                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
+                                harvest = true;
+                            }
+                        }
+                    }
+                    case PUMPKIN -> {
+                        int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Gourd");
+                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
+                                harvest = true;
+                            }
+                        }
+                    }
+                    default -> {
+                    }
+                }
             }
 
             StatsCalculator calc = StatsCalculator.getInstance(plugin);
