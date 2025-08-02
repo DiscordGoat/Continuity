@@ -41,7 +41,7 @@ public class FallDamageNerfListener implements Listener {
 
         if (hasFeather || hasProtection) {
             double damage = event.getDamage();
-            event.setDamage(damage * 1.5);
+            event.setDamage(damage * 1.3);
         }
     }
 }
