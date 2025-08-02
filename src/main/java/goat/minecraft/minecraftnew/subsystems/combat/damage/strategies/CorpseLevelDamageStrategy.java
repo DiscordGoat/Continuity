@@ -41,7 +41,7 @@ public class CorpseLevelDamageStrategy implements DamageCalculationStrategy {
 
         double originalDamage = context.getBaseDamage();
         try {
-            int level = levelExtractor.extractLevelFromName(corpse);
+            int level = levelExtractor.extractLevelFromPlayerName(corpse);
             if (level <= 0) {
                 return DamageCalculationResult.noChange(originalDamage);
             }

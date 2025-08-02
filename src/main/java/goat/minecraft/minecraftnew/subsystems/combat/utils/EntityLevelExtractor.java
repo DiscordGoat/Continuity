@@ -44,6 +44,18 @@ public class EntityLevelExtractor {
         
         return extractLevelFromString(name);
     }
+    public int extractLevelFromPlayerName(Entity entity) {
+        if (entity == null) {
+            return 0;
+        }
+
+        String name = entity.getName();
+        if (name == null || name.trim().isEmpty()) {
+            name = entity.getName();
+        }
+
+        return extractLevelFromString(name);
+    }
     
     /**
      * Extracts the level from a string name.
