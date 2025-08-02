@@ -9,6 +9,7 @@ import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
@@ -60,14 +61,19 @@ public class CorpseDeathEvent implements Listener {
                 xpManager.addXP(killer, "Terraforming", terraXP);
             }
 
-            // Legendary corpses have a small chance to drop a random ultimate smithing item.
-            // Using dropItemNaturally ensures the item actually appears in the world
-            // instead of relying on the event drops, which Citizens NPCs may ignore.
+            // Legendary corpses (mass murderers) have a small chance to drop a random
+            // ultimate smithing item. When this happens, notify the killer with a
+            // message and play a celebratory sound.
             if (corpse.getRarity() == Rarity.LEGENDARY && Math.random() < 0.04) {
                 entity.getWorld().dropItemNaturally(
                         entity.getLocation(),
                         ItemRegistry.getRandomUltimateSmithingItem()
                 );
+                var killer = event.getEntity().getKiller();
+                if (killer != null) {
+                    killer.sendMessage(ChatColor.GOLD + "The mass murderer dropped an Ultimate Enchantment!");
+                    killer.playSound(killer.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
+                }
             }
         });
 
