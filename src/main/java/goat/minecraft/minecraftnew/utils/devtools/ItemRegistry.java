@@ -2840,6 +2840,67 @@ public class ItemRegistry {
                 false   // Add enchantment shimmer
         );
     }
+
+    /** Smithing item used to enhance wheat harvests. */
+    public static ItemStack getEnchantedHayBale() {
+        return createCustomItem(
+                Material.HAY_BLOCK,
+                ChatColor.YELLOW + "Enchanted Hay Bale",
+                Arrays.asList(
+                        ChatColor.GRAY + "Adds one level of Cornfield.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Smithing item used to enhance carrot harvests. */
+    public static ItemStack getEnchantedGoldenCarrot() {
+        return createCustomItem(
+                Material.GOLDEN_CARROT,
+                ChatColor.YELLOW + "Enchanted Golden Carrot",
+                Arrays.asList(
+                        ChatColor.GRAY + "Adds one level of What's Up Doc.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Smithing item used to enhance beetroot harvests. */
+    public static ItemStack getHeartRoot() {
+        return createCustomItem(
+                Material.BEETROOT,
+                ChatColor.YELLOW + "HeartRoot",
+                Arrays.asList(
+                        ChatColor.GRAY + "Adds one level of Venerate.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Smithing item used to enhance potato harvests. */
+    public static ItemStack getImmortalPotato() {
+        return createCustomItem(
+                Material.POTATO,
+                ChatColor.YELLOW + "Immortal Potato",
+                Arrays.asList(
+                        ChatColor.GRAY + "Adds one level of Legend.",
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
     public static ItemStack getCalamari() {
         return createCustomItem(
                 Material.INK_SAC,
@@ -4587,6 +4648,36 @@ public class ItemRegistry {
                 Arrays.asList(
                         ChatColor.GRAY + "Adds one level of Clean Cut.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Legendary melon artifact. */
+    public static ItemStack getWorldsLargestWatermelon() {
+        return createCustomItem(
+                Material.MELON,
+                ChatColor.GOLD + "World's Largest Watermelon™",
+                Arrays.asList(
+                        ChatColor.GRAY + "It's bigger than your head.",
+                        ChatColor.DARK_PURPLE + "Artifact"
+                ),
+                1,
+                false,
+                true
+        );
+    }
+
+    /** Legendary pumpkin artifact. */
+    public static ItemStack getWorldsLargestPumpkin() {
+        return createCustomItem(
+                Material.PUMPKIN,
+                ChatColor.GOLD + "World's Largest Pumpkin™",
+                Arrays.asList(
+                        ChatColor.GRAY + "A gargantuan gourd.",
+                        ChatColor.DARK_PURPLE + "Artifact"
                 ),
                 1,
                 false,

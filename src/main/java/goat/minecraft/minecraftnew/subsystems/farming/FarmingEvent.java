@@ -209,6 +209,9 @@ public class FarmingEvent implements Listener {
 
             }
 
+            // Roll for custom harvest rewards (seeders, smithing items, pets)
+            handleHarvestRewards(block, player, blockType);
+
             handleRareItemDrop(block, player, blockType);
         }
     }
@@ -238,7 +241,119 @@ public class FarmingEvent implements Listener {
                             && name.contains(ChatColor.GOLD + "Festival");
                 })
                 .count();
+
+    private void handleHarvestRewards(Block block, Player player, Material blockType) {
+        double roll = random.nextDouble();
+        Location dropLoc = block.getLocation().add(0.5, 0.5, 0.5);
+
+        switch (blockType) {
+            case WHEAT -> {
+                if (roll < 0.50) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getWheatSeeder());
+                } else if (roll < 0.80) {
+                    ItemStack item = ItemRegistry.getWheatSeeder();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else if (roll < 0.90) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getEnchantedHayBale());
+                } else if (roll < 0.975) {
+                    ItemStack item = ItemRegistry.getEnchantedHayBale();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else {
+                    player.sendMessage(ChatColor.GOLD + "You got the Scarecrow pet!");
+                }
+            }
+            case CARROTS -> {
+                if (roll < 0.50) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getCarrotSeeder());
+                } else if (roll < 0.80) {
+                    ItemStack item = ItemRegistry.getCarrotSeeder();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else if (roll < 0.90) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getEnchantedGoldenCarrot());
+                } else if (roll < 0.975) {
+                    ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else {
+                    player.sendMessage(ChatColor.GOLD + "You got the Killer Rabbit pet!");
+                }
+            }
+            case BEETROOTS -> {
+                if (roll < 0.50) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getBeetrootSeeder());
+                } else if (roll < 0.80) {
+                    ItemStack item = ItemRegistry.getBeetrootSeeder();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else if (roll < 0.90) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getHeartRoot());
+                } else if (roll < 0.975) {
+                    ItemStack item = ItemRegistry.getHeartRoot();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else {
+                    player.sendMessage(ChatColor.GOLD + "You got the Baron pet!");
+                }
+            }
+            case POTATOES -> {
+                if (roll < 0.50) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getPotatoSeeder());
+                } else if (roll < 0.80) {
+                    ItemStack item = ItemRegistry.getPotatoSeeder();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else if (roll < 0.90) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getImmortalPotato());
+                } else if (roll < 0.975) {
+                    ItemStack item = ItemRegistry.getImmortalPotato();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else {
+                    player.sendMessage(ChatColor.GOLD + "You got the Mole pet!");
+                }
+            }
+            case MELON -> {
+                if (roll < 0.50) {
+                    ItemStack item = new ItemStack(Material.MELON_SLICE, 16);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else if (roll < 0.80) {
+                    ItemStack item = new ItemStack(Material.MELON_SLICE, 64);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else if (roll < 0.90) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getWatermelon());
+                } else if (roll < 0.975) {
+                    ItemStack item = ItemRegistry.getWatermelon();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getWorldsLargestWatermelon());
+                }
+            }
+            case PUMPKIN -> {
+                if (roll < 0.50) {
+                    ItemStack item = new ItemStack(Material.PUMPKIN, 16);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else if (roll < 0.80) {
+                    ItemStack item = new ItemStack(Material.PUMPKIN, 64);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else if (roll < 0.90) {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getJackOLantern());
+                } else if (roll < 0.975) {
+                    ItemStack item = ItemRegistry.getJackOLantern();
+                    item.setAmount(4);
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                } else {
+                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getWorldsLargestPumpkin());
+                }
+            }
+            default -> {
+            }
+        }
     }
+
     /**
      * Handles the rare item drop for eligible crops with a 1/400 chance.
      *
