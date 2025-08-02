@@ -148,6 +148,7 @@ public class DragonFightManager implements Listener {
             dragonBar.setStyle(type.getBarStyle());
             dragonBar.setColor(type.getBarColor());
             dragonBar.setProgress(dragon.getHealth() / dragon.getMaxHealth());
+            
             for (Player p : world.getPlayers()) {
                 dragonBar.addPlayer(p);
             }
