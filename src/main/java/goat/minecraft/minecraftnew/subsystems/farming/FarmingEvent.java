@@ -249,104 +249,142 @@ public class FarmingEvent implements Listener {
         switch (blockType) {
             case WHEAT -> {
                 if (roll < 0.50) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getWheatSeeder());
+                    ItemStack item = ItemRegistry.getWheatSeeder();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getWheatSeeder();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getEnchantedHayBale());
+                    ItemStack item = ItemRegistry.getEnchantedHayBale();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getEnchantedHayBale();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else {
-                    player.sendMessage(ChatColor.GOLD + "You got the Scarecrow pet!");
+                    notifyHarvest(player, ChatColor.GOLD + "Scarecrow pet", 1, true);
                 }
             }
             case CARROTS -> {
                 if (roll < 0.50) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getCarrotSeeder());
+                    ItemStack item = ItemRegistry.getCarrotSeeder();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getCarrotSeeder();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getEnchantedGoldenCarrot());
+                    ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else {
-                    player.sendMessage(ChatColor.GOLD + "You got the Killer Rabbit pet!");
+                    notifyHarvest(player, ChatColor.GOLD + "Killer Rabbit pet", 1, true);
                 }
             }
             case BEETROOTS -> {
                 if (roll < 0.50) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getBeetrootSeeder());
+                    ItemStack item = ItemRegistry.getBeetrootSeeder();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getBeetrootSeeder();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getHeartRoot());
+                    ItemStack item = ItemRegistry.getHeartRoot();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getHeartRoot();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else {
-                    player.sendMessage(ChatColor.GOLD + "You got the Baron pet!");
+                    notifyHarvest(player, ChatColor.GOLD + "Baron pet", 1, true);
                 }
             }
             case POTATOES -> {
                 if (roll < 0.50) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getPotatoSeeder());
+                    ItemStack item = ItemRegistry.getPotatoSeeder();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getPotatoSeeder();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getImmortalPotato());
+                    ItemStack item = ItemRegistry.getImmortalPotato();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getImmortalPotato();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else {
-                    player.sendMessage(ChatColor.GOLD + "You got the Mole pet!");
+                    notifyHarvest(player, ChatColor.GOLD + "Mole pet", 1, true);
                 }
             }
             case MELON -> {
                 if (roll < 0.50) {
                     ItemStack item = new ItemStack(Material.MELON_SLICE, 16);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = new ItemStack(Material.MELON_SLICE, 64);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getWatermelon());
+                    ItemStack item = ItemRegistry.getWatermelon();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getWatermelon();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getWorldsLargestWatermelon());
+                    ItemStack item = ItemRegistry.getWorldsLargestWatermelon();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 }
             }
             case PUMPKIN -> {
                 if (roll < 0.50) {
                     ItemStack item = new ItemStack(Material.PUMPKIN, 16);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = new ItemStack(Material.PUMPKIN, 64);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getJackOLantern());
+                    ItemStack item = ItemRegistry.getJackOLantern();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getJackOLantern();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 } else {
-                    block.getWorld().dropItemNaturally(dropLoc, ItemRegistry.getWorldsLargestPumpkin());
+                    ItemStack item = ItemRegistry.getWorldsLargestPumpkin();
+                    block.getWorld().dropItemNaturally(dropLoc, item);
+                    notifyHarvest(player, item, true);
                 }
             }
             default -> {
@@ -375,15 +413,42 @@ public class FarmingEvent implements Listener {
  //yup
                     // Optional: Play a unique sound to indicate a rare drop
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-
-                    // Optional: Send a message to the player
-                    player.sendMessage(ChatColor.LIGHT_PURPLE + "✨ A rare item has dropped!");
+                    notifyHarvest(player, rareItem, true);
                 } else {
                     // Log a warning if the rare item is not defined
                     plugin.getLogger().warning("Rare item is not defined in ItemRegistry.getRareItem(Material). Crop: " + blockType.name());
                 }
             }
         }
+    }
+
+    private void notifyHarvest(Player player, ItemStack item, boolean rareOrAbove) {
+        String name;
+        if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
+            name = item.getItemMeta().getDisplayName();
+        } else {
+            name = ChatColor.YELLOW + formatMaterialName(item.getType());
+        }
+        notifyHarvest(player, name, item.getAmount(), rareOrAbove);
+    }
+
+    private void notifyHarvest(Player player, String itemName, int amount, boolean rareOrAbove) {
+        String amountText = amount > 1 ? ChatColor.YELLOW + "" + amount + "x " : "";
+        player.sendMessage(ChatColor.GREEN + "Harvest Reward: " + amountText + itemName);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+        if (rareOrAbove) {
+            String subtitle = amount > 1 ? ChatColor.YELLOW + "" + amount + "x" : "";
+            player.sendTitle(itemName, subtitle, 10, 70, 20);
+        }
+    }
+
+    private String formatMaterialName(Material material) {
+        String[] words = material.name().toLowerCase(Locale.ROOT).split("_");
+        StringBuilder builder = new StringBuilder();
+        for (String word : words) {
+            builder.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+        }
+        return builder.toString().trim();
     }
 
 }
