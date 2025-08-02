@@ -22,6 +22,9 @@ import java.util.UUID;
 
 public class Flight implements Listener {
 
+    // Singleton instance for access from other systems
+    private static Flight instance;
+
     private static final int MAX_FLIGHT_SECONDS_AT_LEVEL_100 = 60; // Max flight time at level 100 in seconds
     private static final int DRAIN_RATE_PER_SECOND = 1; // Drain rate in seconds
     private static final int TICKS_PER_SECOND = 20; // Number of ticks in one second
@@ -34,6 +37,30 @@ public class Flight implements Listener {
     public Flight(JavaPlugin plugin) {
         this.petManager = PetManager.getInstance(plugin);
         this.plugin = plugin;
+
+        // store instance for global access
+        instance = this;
+    }
+
+    /**
+     * Gets the active Flight instance.
+     */
+    public static Flight getInstance() {
+        return instance;
+    }
+
+    /**
+     * Restores a number of flown seconds for the given player.
+     * @param player the player whose flight time should be restored
+     * @param seconds amount of seconds to restore
+     */
+    public void restoreFlightSeconds(Player player, int seconds) {
+        if (seconds <= 0) return;
+
+        UUID playerId = player.getUniqueId();
+        int flown = dailyFlightTracker.getOrDefault(playerId, 0);
+        flown = Math.max(0, flown - seconds);
+        dailyFlightTracker.put(playerId, flown);
     }
 
     @EventHandler

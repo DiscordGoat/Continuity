@@ -13,6 +13,8 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.logging.Logger;
 
+import goat.minecraft.minecraftnew.subsystems.pets.perks.Flight;
+
 /**
  * Listener for handling Flight Catalyst creative flight abilities.
  * Grants creative flight to players within range of Flight catalysts.
@@ -51,6 +53,14 @@ public class FlightCatalystListener implements Listener {
                 UUID playerId = player.getUniqueId();
                 boolean nearFlightCatalyst = catalystManager.isNearCatalyst(player.getLocation(), CatalystType.FLIGHT);
                 boolean hadCatalystFlight = playersWithCatalystFlight.contains(playerId);
+
+                // Restore flight time while within range
+                if (nearFlightCatalyst) {
+                    Flight flight = Flight.getInstance();
+                    if (flight != null) {
+                        flight.restoreFlightSeconds(player, 1); // 1s every 0.5s => 2s per second
+                    }
+                }
                 
                 // Player entered catalyst range
                 if (nearFlightCatalyst && !hadCatalystFlight && player.getGameMode() != GameMode.CREATIVE && player.getGameMode() != GameMode.SPECTATOR) {
