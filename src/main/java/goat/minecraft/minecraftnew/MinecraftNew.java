@@ -109,6 +109,7 @@ import goat.minecraft.minecraftnew.other.structureblocks.SetStructureBlockPowerC
 import goat.minecraft.minecraftnew.other.warpgate.WarpGateManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentPreferences;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.EnvironmentSidebarPreferences;
+import goat.minecraft.minecraftnew.subsystems.dragons.DragonFightManager;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.other.realms.Tropic;
@@ -141,6 +142,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
     private WarpGateManager warpGateManager;
+    private DragonFightManager dragonFightManager;
     private BeaconPassiveEffects beaconPassiveEffects;
     private MonolithSetBonus monolithSetBonus;
     private DuskbloodSetBonus duskbloodSetBonus;
@@ -214,6 +216,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         this.shelfManager = new ShelfManager(this);
         this.warpGateManager = new WarpGateManager(this);
+        this.dragonFightManager = new DragonFightManager(this);
 
 
         Tropic tropicCommand = new Tropic(this);
@@ -765,6 +768,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         if (warpGateManager != null) {
             warpGateManager.onDisable();
+        }
+        if (dragonFightManager != null) {
+            dragonFightManager.onDisable();
         }
         if(potionBrewingSubsystem != null){
             potionBrewingSubsystem.onDisable();
