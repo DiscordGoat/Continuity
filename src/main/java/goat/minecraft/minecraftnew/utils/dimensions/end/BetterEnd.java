@@ -145,6 +145,7 @@ public class BetterEnd implements Listener {
 
     // ---------------- Inner Classes ----------------
 
+
     /**
      * The custom chunk generator that produces islands with irregular boundaries,
      * a naturally sloping underside, rectangular obsidian pillars, and floating parkour platforms.
