@@ -2862,7 +2862,7 @@ public class ItemRegistry {
                 Material.GOLDEN_CARROT,
                 ChatColor.YELLOW + "Enchanted Golden Carrot",
                 Arrays.asList(
-                        ChatColor.GRAY + "Adds one level of What's Up Doc.",
+                        ChatColor.GRAY + "Adds one level of What's Up Doc to Hoes.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
                 1,
@@ -2877,7 +2877,7 @@ public class ItemRegistry {
                 Material.BEETROOT,
                 ChatColor.YELLOW + "HeartRoot",
                 Arrays.asList(
-                        ChatColor.GRAY + "Adds one level of Venerate.",
+                        ChatColor.GRAY + "Adds one level of Venerate to Hoes.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
                 1,
@@ -2892,7 +2892,7 @@ public class ItemRegistry {
                 Material.POTATO,
                 ChatColor.YELLOW + "Immortal Potato",
                 Arrays.asList(
-                        ChatColor.GRAY + "Adds one level of Legend.",
+                        ChatColor.GRAY + "Adds one level of Legend to Hoes.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
                 1,
