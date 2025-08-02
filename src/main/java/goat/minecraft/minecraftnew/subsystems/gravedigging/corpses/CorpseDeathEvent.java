@@ -60,8 +60,14 @@ public class CorpseDeathEvent implements Listener {
                 xpManager.addXP(killer, "Terraforming", terraXP);
             }
 
+            // Legendary corpses have a small chance to drop a random ultimate smithing item.
+            // Using dropItemNaturally ensures the item actually appears in the world
+            // instead of relying on the event drops, which Citizens NPCs may ignore.
             if (corpse.getRarity() == Rarity.LEGENDARY && Math.random() < 0.04) {
-                event.getDrops().add(ItemRegistry.getRandomUltimateSmithingItem());
+                entity.getWorld().dropItemNaturally(
+                        entity.getLocation(),
+                        ItemRegistry.getRandomUltimateSmithingItem()
+                );
             }
         });
 
