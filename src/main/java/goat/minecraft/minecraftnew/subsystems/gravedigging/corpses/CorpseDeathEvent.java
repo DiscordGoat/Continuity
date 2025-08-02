@@ -64,12 +64,11 @@ public class CorpseDeathEvent implements Listener {
             // Legendary corpses (mass murderers) have a small chance to drop a random
             // ultimate smithing item. When this happens, notify the killer with a
             // message and play a celebratory sound.
-            if (corpse.getRarity() == Rarity.LEGENDARY && Math.random() < 0.04) {
+            if (corpse.getRarity() == Rarity.LEGENDARY) {
                 entity.getWorld().dropItemNaturally(
                         entity.getLocation(),
                         ItemRegistry.getRandomUltimateSmithingItem()
                 );
-                var killer = event.getEntity().getKiller();
                 if (killer != null) {
                     killer.sendMessage(ChatColor.GOLD + "The mass murderer dropped an Ultimate Enchantment!");
                     killer.playSound(killer.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
