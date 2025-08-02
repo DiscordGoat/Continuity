@@ -1,7 +1,9 @@
 package goat.minecraft.minecraftnew.subsystems.combat.utils;
 
 import org.bukkit.entity.Entity;
+import org.bukkit.metadata.MetadataValue;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.logging.Logger;
@@ -28,23 +30,33 @@ public class EntityLevelExtractor {
     
     /**
      * Extracts the level from an entity's display name.
-     * 
+     *
      * @param entity The entity to extract level from
      * @return The level found in the name, or 0 if no level is found
      */
     public int extractLevelFromName(Entity entity) {
+        int metaLevel = extractLevelFromMetadata(entity);
+        if (metaLevel > 0) {
+            return metaLevel;
+        }
+
         if (entity == null) {
             return 0;
         }
-        
+
         String name = entity.getCustomName();
         if (name == null || name.trim().isEmpty()) {
             name = entity.getName();
         }
-        
+
         return extractLevelFromString(name);
     }
     public int extractLevelFromPlayerName(Entity entity) {
+        int metaLevel = extractLevelFromMetadata(entity);
+        if (metaLevel > 0) {
+            return metaLevel;
+        }
+
         if (entity == null) {
             return 0;
         }
@@ -55,6 +67,22 @@ public class EntityLevelExtractor {
         }
 
         return extractLevelFromString(name);
+    }
+
+    private int extractLevelFromMetadata(Entity entity) {
+        if (entity == null) {
+            return 0;
+        }
+        if (entity.hasMetadata("CORPSE_LEVEL")) {
+            List<MetadataValue> meta = entity.getMetadata("CORPSE_LEVEL");
+            if (!meta.isEmpty()) {
+                try {
+                    return meta.get(0).asInt();
+                } catch (Exception ignored) {
+                }
+            }
+        }
+        return 0;
     }
     
     /**

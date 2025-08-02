@@ -141,6 +141,7 @@ public class CorpseEvent {
         npc.addTrait(new CorpseTrait(plugin, corpse.getRarity(), corpse.usesBow(),
                 corpse.getDisplayName().equalsIgnoreCase("Duskblood") ? 100 : 0));
         npc.getEntity().setMetadata("CORPSE", new FixedMetadataValue(plugin, corpse.getDisplayName()));
+        npc.getEntity().setMetadata("CORPSE_LEVEL", new FixedMetadataValue(plugin, corpse.getLevel()));
         playSpawnSound(loc, corpse.getRarity());
     }
 

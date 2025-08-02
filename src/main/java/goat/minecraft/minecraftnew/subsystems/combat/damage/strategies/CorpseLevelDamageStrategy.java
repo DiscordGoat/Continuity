@@ -4,12 +4,13 @@ import goat.minecraft.minecraftnew.subsystems.combat.config.CombatConfiguration;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationContext;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationResult;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationStrategy;
-import goat.minecraft.minecraftnew.subsystems.combat.utils.EntityLevelExtractor;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.metadata.MetadataValue;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 /**
@@ -21,11 +22,9 @@ public class CorpseLevelDamageStrategy implements DamageCalculationStrategy {
     private static final Logger logger = Logger.getLogger(CorpseLevelDamageStrategy.class.getName());
 
     private final CombatConfiguration.DamageConfig config;
-    private final EntityLevelExtractor levelExtractor;
 
     public CorpseLevelDamageStrategy(CombatConfiguration.DamageConfig config) {
         this.config = config;
-        this.levelExtractor = new EntityLevelExtractor();
     }
 
     @Override
@@ -41,7 +40,7 @@ public class CorpseLevelDamageStrategy implements DamageCalculationStrategy {
 
         double originalDamage = context.getBaseDamage();
         try {
-            int level = levelExtractor.extractLevelFromPlayerName(corpse);
+            int level = getCorpseLevel(corpse);
             if (level <= 0) {
                 return DamageCalculationResult.noChange(originalDamage);
             }
@@ -77,6 +76,16 @@ public class CorpseLevelDamageStrategy implements DamageCalculationStrategy {
     @Override
     public String getName() {
         return "Corpse Level Damage Scaling";
+    }
+
+    private int getCorpseLevel(LivingEntity corpse) {
+        if (corpse.hasMetadata("CORPSE_LEVEL")) {
+            List<MetadataValue> meta = corpse.getMetadata("CORPSE_LEVEL");
+            if (!meta.isEmpty()) {
+                return meta.get(0).asInt();
+            }
+        }
+        return 0;
     }
 
     private LivingEntity getCorpseAttacker(DamageCalculationContext context) {
