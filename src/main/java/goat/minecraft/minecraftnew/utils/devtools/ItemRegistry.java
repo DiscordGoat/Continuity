@@ -2847,7 +2847,7 @@ public class ItemRegistry {
                 Material.HAY_BLOCK,
                 ChatColor.YELLOW + "Enchanted Hay Bale",
                 Arrays.asList(
-                        ChatColor.GRAY + "Adds one level of Cornfield.",
+                        ChatColor.GRAY + "Adds one level of Cornfield to Hoes.",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
                 1,
