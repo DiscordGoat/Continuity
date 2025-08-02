@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.type.EndPortalFrame;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
@@ -109,12 +110,16 @@ public class DragonFightManager implements Listener {
             boolean placed = before - 1 == after && frame.hasEye();
             if (placed) {
                 Location portalLoc = findPortal(blockLoc);
-                portalEyeCounts.put(portalLoc, portalEyeCounts.getOrDefault(portalLoc, 0) + 1);
+                int count = portalEyeCounts.getOrDefault(portalLoc, 0) + 1;
+                portalEyeCounts.put(portalLoc, count);
                 saveData();
-                Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "An Eye of Ender was placed! Total: " + portalEyeCounts.get(portalLoc));
+                Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "An Eye of Ender was placed! Total: " + count);
                 blockLoc.getWorld().playSound(blockLoc, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
                 blockLoc.getWorld().spawnParticle(Particle.DRAGON_BREATH, blockLoc.clone().add(0.5, 1, 0.5), 100, 0.3, 0.3, 0.3, 0.01);
                 spawnFallingEye(blockLoc, player);
+                if (count >= 12) {
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> endDragonFight(portalLoc), 15 * 20L);
+                }
             }
         }, 1L);
     }
@@ -126,6 +131,36 @@ public class DragonFightManager implements Listener {
             }
         }
         return new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
+
+    private void endDragonFight(Location portalLoc) {
+        World world = portalLoc.getWorld();
+        if (world == null) return;
+        int radius = 20;
+        int startX = portalLoc.getBlockX() - radius;
+        int endX = portalLoc.getBlockX() + radius;
+        int startY = portalLoc.getBlockY() - radius;
+        int endY = portalLoc.getBlockY() + radius;
+        int startZ = portalLoc.getBlockZ() - radius;
+        int endZ = portalLoc.getBlockZ() + radius;
+        for (int x = startX; x <= endX; x++) {
+            for (int y = startY; y <= endY; y++) {
+                for (int z = startZ; z <= endZ; z++) {
+                    Block block = world.getBlockAt(x, y, z);
+                    if (block.getType() == Material.END_PORTAL_FRAME) {
+                        EndPortalFrame frame = (EndPortalFrame) block.getBlockData();
+                        frame.setEye(false);
+                        block.setBlockData(frame);
+                    } else if (block.getType() == Material.END_PORTAL) {
+                        block.setType(Material.AIR);
+                    }
+                }
+            }
+        }
+        portalEyeCounts.entrySet().removeIf(entry ->
+                entry.getKey().getWorld().equals(world) &&
+                entry.getKey().distanceSquared(portalLoc) <= radius * radius);
+        saveData();
     }
 
     private void spawnFallingEye(Location frameLoc, Player player) {
