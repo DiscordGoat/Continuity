@@ -322,6 +322,14 @@ public class AnvilRepair implements Listener {
         return item.getType().toString().toUpperCase().endsWith("HOE");
     }
 
+    public boolean isAxe(ItemStack item) {
+        if (item == null || item.getType() == Material.AIR) {
+            return false;
+        }
+        String type = item.getType().toString().toUpperCase();
+        return type.endsWith("_AXE") && !type.endsWith("PICKAXE");
+    }
+
     public boolean isBow(ItemStack item) {
         if (item == null || item.getType() == Material.AIR) {
             return false; // Check for null or empty items
@@ -1149,6 +1157,30 @@ public class AnvilRepair implements Listener {
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Water Aspect") && isSword(repairee)){
             CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Water Aspect", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Water Aspect") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Enchanted Hay Bale") && isHoe(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Cornfield", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Cornfield") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Enchanted Golden Carrot") && isHoe(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "What's Up Doc", CustomEnchantmentManager.getEnchantmentLevel(repairee, "What's Up Doc") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "HeartRoot") && isHoe(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Venerate", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Venerate") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Immortal Potato") && isHoe(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Legend", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Legend") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Jack o' Lantern") && isAxe(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Gourd", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Gourd") +1);
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Watermelon") && isAxe(repairee)){
+            CustomEnchantmentManager.addEnchantment(player, billItem, repairee, "Clean Cut", CustomEnchantmentManager.getEnchantmentLevel(repairee, "Clean Cut") +1);
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "The Law of Gravity") && TOOLS.contains(repairee.getType())){
