@@ -909,6 +909,9 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public ForestryPetManager getForestryManager() {
         return forestryPetManager;
     }
+    public DragonFightManager getDragonFightManager() {
+        return dragonFightManager;
+    }
 
 
     private void removeAllCitizenEntities() {

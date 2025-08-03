@@ -50,6 +50,13 @@ public interface Dragon {
     int getBaseRage();
 
     /**
+     * @return the maximum health pool for this dragon. Stored externally by
+     *         the {@link goat.minecraft.minecraftnew.subsystems.dragons.DragonFightManager}
+     *         to bypass the vanilla 2000 HP limit.
+     */
+    int getMaxHealth();
+
+    /**
      * Apply basic attributes to the supplied EnderDragon entity.
      * Implementations should avoid ability logic – this method is only for
      * name and simple attribute assignment.
