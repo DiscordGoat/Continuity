@@ -1,8 +1,6 @@
 package goat.minecraft.minecraftnew.utils.dimensions.end;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
-import goat.minecraft.minecraftnew.subsystems.combat.SpawnMonsters;
-import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -10,8 +8,6 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.block.Biome;
-import org.bukkit.entity.EnderDragon;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -124,19 +120,8 @@ public class BetterEnd implements Listener {
                 Location target = new Location(customEndWorld, 0.5, 80, 0.5);
                 event.getPlayer().teleport(target);
 
-                // Schedule a task to apply EnderDragon attributes after the player enters the end.
-                new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        // Iterate through all entities in the custom end world.
-                        for (Entity entity : customEndWorld.getEntities()) {
-                            if (entity instanceof EnderDragon) {
-                                EnderDragon dragon = (EnderDragon) entity;
-                                SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(new XPManager(MinecraftNew.getInstance()));
-                            }
-                        }
-                    }
-                }.runTaskLater(MinecraftNew.getInstance(), 60L); // delay ~3 seconds (60 ticks)
+                // Begin the dragon fight when the first player arrives.
+                MinecraftNew.getInstance().getDragonFightManager().startFight(customEndWorld);
             }
         }
     }
