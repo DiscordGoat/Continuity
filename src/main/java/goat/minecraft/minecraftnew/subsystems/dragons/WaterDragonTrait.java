@@ -45,7 +45,7 @@ public class WaterDragonTrait extends Trait implements Listener {
 
     private static final long FURY_COOLDOWN = 60000L;
     private static final long LAUNCH_COOLDOWN = 20000L;
-    private static final long SMITE_COOLDOWN = 10000L;
+    private static final long SMITE_COOLDOWN = 1000L;
 
     public WaterDragonTrait(MinecraftNew plugin, DragonFight fight) {
         super("water_dragon_trait");
@@ -98,6 +98,7 @@ public class WaterDragonTrait extends Trait implements Listener {
             case FLY_TO_PORTAL:
             case LEAVE_PORTAL:
             case HOVER:
+            case ROAR_BEFORE_ATTACK:
             case BREATH_ATTACK:
             case SEARCH_FOR_BREATH_ATTACK_TARGET:
                 event.setNewPhase(EnderDragon.Phase.CIRCLING);
