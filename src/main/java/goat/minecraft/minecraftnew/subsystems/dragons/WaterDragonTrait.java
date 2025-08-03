@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.dragons;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.dragons.behaviors.PerformBasicAttack;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
 import org.bukkit.Bukkit;
@@ -14,14 +15,17 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 /**
- * Trait handling the Water Dragon's healing behaviour.
+ * Trait handling the Water Dragon's behaviour including flight control,
+ * decision making and healing.
  *
  * <p>When the dragon takes sufficient damage based on its current crystal
  * bias, it flies to the nearest end crystal and orbits it for five seconds
  * before restoring to full health. Each heal reduces the crystal bias making
- * subsequent heals require more damage.</p>
+ * subsequent heals require more damage. The trait also slows the dragon's
+ * flight speed and periodically triggers a basic lightning attack.</p>
  */
 public class WaterDragonTrait extends Trait implements Listener {
 
@@ -30,6 +34,9 @@ public class WaterDragonTrait extends Trait implements Listener {
 
     private int crystalBias;
     private BukkitTask healTask;
+    private BukkitTask flightTask;
+    private BukkitTask decisionTask;
+    private boolean attacking;
 
     public WaterDragonTrait(MinecraftNew plugin, DragonFight fight) {
         super("water_dragon_trait");
@@ -41,6 +48,8 @@ public class WaterDragonTrait extends Trait implements Listener {
     @Override
     public void onAttach() {
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        startFlightTask();
+        startDecisionLoop();
     }
 
     @Override
@@ -48,6 +57,12 @@ public class WaterDragonTrait extends Trait implements Listener {
         HandlerList.unregisterAll(this);
         if (healTask != null) {
             healTask.cancel();
+        }
+        if (flightTask != null) {
+            flightTask.cancel();
+        }
+        if (decisionTask != null) {
+            decisionTask.cancel();
         }
     }
 
@@ -124,6 +139,48 @@ public class WaterDragonTrait extends Trait implements Listener {
             }
         }
         return nearest;
+    }
+
+    private void startFlightTask() {
+        EnderDragon dragon = fight.getDragonEntity();
+        int speed = fight.getDragonType().getFlightSpeed();
+        double multiplier = speed / 5.0;
+        dragon.setVelocity(dragon.getVelocity().multiply(multiplier));
+        flightTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!npc.isSpawned() || dragon.isDead()) {
+                    cancel();
+                    return;
+                }
+                if (attacking) return;
+                Vector dir = dragon.getLocation().getDirection().normalize();
+                Vector vel = dragon.getVelocity();
+                if (multiplier > 1.0) {
+                    dragon.setVelocity(vel.add(dir.multiply(multiplier)));
+                } else if (multiplier < 1.0) {
+                    dragon.setVelocity(vel.multiply(multiplier));
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 5L);
+    }
+
+    private void startDecisionLoop() {
+        int interval = fight.getDragonType().getDecisionInterval();
+        decisionTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!npc.isSpawned() || attacking) {
+                    return;
+                }
+                attacking = true;
+                new PerformBasicAttack(plugin, fight, WaterDragonTrait.this).run();
+            }
+        }.runTaskTimer(plugin, interval, interval);
+    }
+
+    public void onAttackComplete() {
+        attacking = false;
     }
 
     @Override public void load(DataKey key) { }
