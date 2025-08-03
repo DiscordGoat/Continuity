@@ -41,11 +41,10 @@ public class LaunchPhase implements Phase {
         }
         Player target = players.get(random.nextInt(players.size()));
         Location loc = target.getLocation();
-        world.playSound(loc, Sound.ITEM_TRIDENT_RIPTIDE_3, 2.0f, 1.0f);
+        world.playSound(loc, Sound.ITEM_TRIDENT_RIPTIDE_3, 2000.0f, 1.0f);
         target.setVelocity(new Vector(0, 5, 0));
         Bukkit.getScheduler().runTask(plugin, () -> {
             target.setVelocity(new Vector(0, 5, 0));
-            target.teleport(target.getLocation().add(0, 100, 0));
             trait.onPhaseComplete();
         });
     }
