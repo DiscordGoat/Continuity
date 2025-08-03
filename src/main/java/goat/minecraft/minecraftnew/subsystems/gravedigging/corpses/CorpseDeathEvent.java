@@ -95,7 +95,7 @@ public class CorpseDeathEvent implements Listener {
             if (kills >= 94) {
                 petRegistry.addPetByName(killer, "Wraith");
             }
-            if (kills >= 200) {
+            if (kills >= 282) {
                 petRegistry.addPetByName(killer, "Revenant");
             }
         }
