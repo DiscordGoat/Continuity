@@ -110,6 +110,7 @@ import goat.minecraft.minecraftnew.other.warpgate.WarpGateManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentPreferences;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.EnvironmentSidebarPreferences;
 import goat.minecraft.minecraftnew.subsystems.dragons.DragonFightManager;
+import goat.minecraft.minecraftnew.subsystems.dragons.RefreshEndCommand;
 
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.other.realms.Tropic;
@@ -360,6 +361,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("nether").setExecutor(new NetherCommand());
         getCommand("overworld").setExecutor(new OverworldCommand());
         getCommand("resetend").setExecutor(new ResetEndCommand());
+        getCommand("refreshend").setExecutor(new RefreshEndCommand(this, dragonFightManager));
         getCommand("generatecontinuityisland").setExecutor(new GenerateContinuityIslandCommand());
         getCommand("continuitytp").setExecutor(new ContinuityTpCommand());
         getCommand("warp").setExecutor(new WarpCommand());
