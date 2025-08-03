@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.dragons;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.EndPortalFrame;
@@ -12,11 +13,13 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EnderDragon;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -42,10 +45,8 @@ public class DragonFightManager implements Listener {
     private final YamlConfiguration gatewaysConfig;
     private final Map<Location, Integer> portalEyeCounts = new HashMap<>();
 
-    private EnderDragon activeDragon;
+    private DragonFight activeFight;
     private BossBar dragonBar;
-    private Dragon activeDragonType;
-    private Location activePortalLoc;
 
     public DragonFightManager(MinecraftNew plugin) {
         this.plugin = plugin;
@@ -115,46 +116,53 @@ public class DragonFightManager implements Listener {
     }
 
     private void handlePlayerEnterWorld(Player player, World world) {
-        EnderDragon dragon = world.getEntitiesByClass(EnderDragon.class).stream().findFirst().orElse(null);
-        if (dragon == null) return;
-
-        String customName = dragon.getCustomName();
-        boolean nameValid = false;
-        if (customName != null) {
-            String stripped = ChatColor.stripColor(customName);
-            for (Dragon d : DragonRegistry.getRegistered()) {
-                if (ChatColor.stripColor(d.getDisplayName()).equalsIgnoreCase(stripped)) {
-                    nameValid = true;
-                    break;
-                }
+        // Remove boss bar if player leaves the custom End
+        if (!"custom_end".equalsIgnoreCase(world.getName())) {
+            if (dragonBar != null) {
+                dragonBar.removePlayer(player);
             }
+            return;
         }
 
-        boolean bossBarValid = dragonBar != null && activeDragon != null &&
-                dragon.getUniqueId().equals(activeDragon.getUniqueId());
-
-        if (!nameValid || !bossBarValid) {
+        if (activeFight == null) {
+            // Clear any leftover dragons and spawn a new one
+            for (EnderDragon d : world.getEntitiesByClass(EnderDragon.class)) {
+                d.remove();
+            }
             Dragon type = DragonRegistry.randomDragon();
+            EnderDragon dragon = (EnderDragon) world.spawnEntity(new Location(world, 0, 100, 0), EntityType.ENDER_DRAGON);
+            dragon.setAI(true);
             type.applyAttributes(dragon);
-            activeDragon = dragon;
-            activeDragonType = type;
-            activePortalLoc = dragon.getLocation();
+            activeFight = new DragonFight(dragon, type);
 
             if (dragonBar != null) {
                 dragonBar.removeAll();
             }
 
-            dragonBar = Bukkit.createBossBar(type.getDisplayName(), type.getBarColor(), type.getBarStyle());
-            dragonBar.setStyle(type.getBarStyle());
-            dragonBar.setColor(type.getBarColor());
-            dragonBar.setProgress(dragon.getHealth() / dragon.getMaxHealth());
-            
+            dragonBar = Bukkit.createBossBar(buildBossBarTitle(), type.getBarColor(), type.getBarStyle());
+            dragonBar.setProgress(1.0);
             for (Player p : world.getPlayers()) {
                 dragonBar.addPlayer(p);
             }
+
+            // Placeholder AI decision loop
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (activeFight == null || activeFight.getDragonEntity().isDead()) {
+                        cancel();
+                        return;
+                    }
+                    activeFight.getDragonType().decide(activeFight.getDragonEntity());
+                }
+            }.runTaskTimer(plugin, activeFight.getDragonType().getDecisionInterval(), activeFight.getDragonType().getDecisionInterval());
         } else {
             dragonBar.addPlayer(player);
         }
+    }
+
+    private String buildBossBarTitle() {
+        return activeFight.getDragonType().getDisplayName() + ": " + (int) activeFight.getHealth().getCurrentHealth();
     }
 
     @EventHandler
@@ -182,14 +190,53 @@ public class DragonFightManager implements Listener {
                 blockLoc.getWorld().playSound(blockLoc, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
                 blockLoc.getWorld().spawnParticle(Particle.DRAGON_BREATH, blockLoc.clone().add(0.5, 1, 0.5), 100, 0.3, 0.3, 0.3, 0.01);
                 spawnFallingEye(blockLoc, player);
-                if (count >= 12 && activeDragon == null) {
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                        startDragonFight(portalLoc);
-                        deactivatePortal(portalLoc);
-                    }, 200L);
+                if (count >= 12 && activeFight == null) {
+                    List<Block> frames = getPortalFramesWithEyes(portalLoc);
+                    new BukkitRunnable() {
+                        int index = 0;
+                        @Override
+                        public void run() {
+                            if (index < frames.size()) {
+                                Block b = frames.get(index++);
+                                EndPortalFrame data = (EndPortalFrame) b.getBlockData();
+                                data.setEye(false);
+                                b.setBlockData(data);
+                                portalEyeCounts.put(portalLoc, frames.size() - index);
+                                if (frames.size() - index == 0) {
+                                    deactivatePortal(portalLoc);
+                                    portalEyeCounts.remove(portalLoc);
+                                    saveData();
+                                    cancel();
+                                }
+                            } else {
+                                cancel();
+                            }
+                        }
+                    }.runTaskTimer(plugin, 20L, 20L);
                 }
             }
         }, 1L);
+    }
+
+    private List<Block> getPortalFramesWithEyes(Location portalLoc) {
+        List<Block> frames = new ArrayList<>();
+        World world = portalLoc.getWorld();
+        if (world == null) return frames;
+        int radius = 5;
+        for (int x = portalLoc.getBlockX() - radius; x <= portalLoc.getBlockX() + radius; x++) {
+            for (int y = portalLoc.getBlockY() - 1; y <= portalLoc.getBlockY() + 1; y++) {
+                for (int z = portalLoc.getBlockZ() - radius; z <= portalLoc.getBlockZ() + radius; z++) {
+                    Block block = world.getBlockAt(x, y, z);
+                    if (block.getType() == Material.END_PORTAL_FRAME) {
+                        EndPortalFrame frame = (EndPortalFrame) block.getBlockData();
+                        if (frame.hasEye()) {
+                            frames.add(block);
+                        }
+                    }
+                }
+            }
+        }
+        return frames;
     }
 
     private Location findPortal(Location loc) {
@@ -250,83 +297,66 @@ public class DragonFightManager implements Listener {
         }
     }
 
-    private void startDragonFight(Location portalLoc) {
-        World world = portalLoc.getWorld();
-        if (world == null) return;
+    private void handleDragonDefeat() {
+        if (activeFight == null) return;
+        EnderDragon dragon = activeFight.getDragonEntity();
+        World world = dragon.getWorld();
 
-        activePortalLoc = portalLoc;
-        activeDragonType = DragonRegistry.randomDragon();
-
-        EnderDragon dragon = (EnderDragon) world.spawnEntity(portalLoc.clone().add(0, 5, 0), EntityType.ENDER_DRAGON);
-        activeDragonType.applyAttributes(dragon);
-        activeDragon = dragon;
-
-        dragonBar = Bukkit.createBossBar(activeDragonType.getDisplayName(),
-                activeDragonType.getBarColor(),
-                activeDragonType.getBarStyle());
+        String name = ChatColor.stripColor(activeFight.getDragonType().getDisplayName());
         for (Player p : world.getPlayers()) {
-            dragonBar.addPlayer(p);
+            p.sendTitle(ChatColor.GOLD + "You defeated the " + name + "!", "", 10, 70, 20);
         }
-        dragonBar.setProgress(1.0);
 
-        // Repeating task to keep boss bar in sync with dragon health
+        // Clear boss bar
+        if (dragonBar != null) {
+            dragonBar.removeAll();
+        }
+
+        // Teleport players out and reset the world after 60 seconds
         new BukkitRunnable() {
             @Override
             public void run() {
-                if (activeDragon == null || dragonBar == null) {
-                    cancel();
-                    return;
+                for (Player p : world.getPlayers()) {
+                    Location spawn = p.getBedSpawnLocation();
+                    if (spawn == null) {
+                        spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
+                    }
+                    p.teleport(spawn);
                 }
-                if (activeDragon.isDead()) {
-                    cancel();
-                    return;
-                }
-                dragonBar.setProgress(activeDragon.getHealth() / activeDragon.getMaxHealth());
-            }
-        }.runTaskTimer(plugin, 0L, 20L);
-    }
-
-    private void endDragonFight(Location portalLoc) {
-        World world = portalLoc.getWorld();
-        if (world == null) return;
-        if (dragonBar != null) {
-            dragonBar.removeAll();
-            dragonBar = null;
-        }
-        activeDragon = null;
-        activeDragonType = null;
-        activePortalLoc = null;
-        int radius = 20;
-        int startX = portalLoc.getBlockX() - radius;
-        int endX = portalLoc.getBlockX() + radius;
-        int startY = portalLoc.getBlockY() - radius;
-        int endY = portalLoc.getBlockY() + radius;
-        int startZ = portalLoc.getBlockZ() - radius;
-        int endZ = portalLoc.getBlockZ() + radius;
-        for (int x = startX; x <= endX; x++) {
-            for (int y = startY; y <= endY; y++) {
-                for (int z = startZ; z <= endZ; z++) {
-                    Block block = world.getBlockAt(x, y, z);
-                    if (block.getType() == Material.END_PORTAL_FRAME) {
-                        EndPortalFrame frame = (EndPortalFrame) block.getBlockData();
-                        frame.setEye(false);
-                        block.setBlockData(frame);
-                    } else if (block.getType() == Material.END_PORTAL) {
-                        block.setType(Material.AIR);
+                for (Entity e : world.getEntities()) {
+                    if (!(e instanceof Player)) {
+                        e.remove();
                     }
                 }
+                Bukkit.unloadWorld(world, false);
+                BetterEnd.init(plugin);
             }
-        }
-        portalEyeCounts.entrySet().removeIf(entry ->
-                entry.getKey().getWorld().equals(world) &&
-                entry.getKey().distanceSquared(portalLoc) <= radius * radius);
-        saveData();
+        }.runTaskLater(plugin, 20L * 60);
+
+        activeFight = null;
+        dragonBar = null;
     }
 
     @EventHandler
     public void onDragonDeath(EntityDeathEvent event) {
-        if (activeDragon != null && event.getEntity().getUniqueId().equals(activeDragon.getUniqueId())) {
-            endDragonFight(activePortalLoc);
+        if (activeFight != null && event.getEntity().getUniqueId().equals(activeFight.getDragonEntity().getUniqueId())) {
+            handleDragonDefeat();
+        }
+    }
+
+    @EventHandler
+    public void onDragonDamage(EntityDamageEvent event) {
+        if (activeFight == null) return;
+        if (!event.getEntity().getUniqueId().equals(activeFight.getDragonEntity().getUniqueId())) return;
+        event.setCancelled(true);
+        DragonHealthInstance health = activeFight.getHealth();
+        health.damage(event.getFinalDamage());
+        if (dragonBar != null) {
+            dragonBar.setProgress(health.getHealthPercentage());
+            dragonBar.setTitle(buildBossBarTitle());
+        }
+        if (health.isDead()) {
+            activeFight.getDragonEntity().setHealth(0);
         }
     }
 

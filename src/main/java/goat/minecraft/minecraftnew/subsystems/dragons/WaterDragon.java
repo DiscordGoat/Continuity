@@ -16,6 +16,8 @@ public class WaterDragon implements Dragon {
     private static final int CRYSTAL_BIAS = 7;
     private static final int FLIGHT_SPEED = 4;
     private static final int BASE_RAGE = 2;
+    private static final int MAX_HEALTH = 25_000;
+    private static final int DECISION_INTERVAL = 100; // placeholder
 
     @Override
     public ChatColor getNameColor() {
@@ -51,6 +53,21 @@ public class WaterDragon implements Dragon {
     @Override
     public int getBaseRage() {
         return BASE_RAGE;
+    }
+
+    @Override
+    public int getMaxHealth() {
+        return MAX_HEALTH;
+    }
+
+    @Override
+    public int getDecisionInterval() {
+        return DECISION_INTERVAL;
+    }
+
+    @Override
+    public void decide(EnderDragon dragon) {
+        // Future AI for the Water Dragon will be implemented here.
     }
 
     @Override

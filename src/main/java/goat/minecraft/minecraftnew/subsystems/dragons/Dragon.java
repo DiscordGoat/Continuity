@@ -50,6 +50,26 @@ public interface Dragon {
     int getBaseRage();
 
     /**
+     * @return the maximum amount of health this dragon should have.
+     */
+    int getMaxHealth();
+
+    /**
+     * How often (in ticks) the dragon should reconsider its actions.  This is
+     * purely a placeholder for future AI work and is currently unused.
+     */
+    int getDecisionInterval();
+
+    /**
+     * Placeholder hook for future decision making logic.  Implementations can
+     * override this method to provide custom AI behaviour when the decision
+     * interval elapses.
+     */
+    default void decide(EnderDragon dragon) {
+        // no-op for now
+    }
+
+    /**
      * Apply basic attributes to the supplied EnderDragon entity.
      * Implementations should avoid ability logic – this method is only for
      * name and simple attribute assignment.
