@@ -86,6 +86,10 @@ public class PetManager implements Listener {
         PET_TEXTURES.put("Chicken", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTk2Y2Q1YzVjNTQ3NDdlMjk4YmExYzNiZjJhMmU3NjNjZWU2NThmOTc3MzY1YTlkMjMxYTM0M2Y5YjhkYzM2ZCJ9fX0=");
         PET_TEXTURES.put("Mooshroom", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzNhY2VlZjVkNDM1YTNjYTVkMjc2OGMwM2NlN2M3NDdjYWU4YWE1MDkxODE0NWUyOGQ5MzgwYjQ4N2UzYjI5MiJ9fX0=");
         PET_TEXTURES.put("Pig", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2FlZGZkYTE0NTQ0ZmEzNmM3NzE5NjYxODExZmRhOGY2YWRmZjViYzk1YWU3ZjlhMTgyNDExOTkxNmI1OTkzMCJ9fX0=");
+        PET_TEXTURES.put("Scarecrow", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYWQ2MjZiY2QyMTQ3ZGY4ZDdhMDllNDhkYThjYzg2OTU5YWJkNzZiYzllYTYyNTYxZGMyOWYwNTg5OWEzNjA0OSJ9fX0=");
+        PET_TEXTURES.put("Killer Rabbit", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzc0ZDgyOTg3OTdlNzEyYmIxZjc1YWQ2ZmZhNzczNGFjNDIzN2VhNjliZTFkYjkyZjBlNDExMTVhMmMxNzBjZiJ9fX0=");
+        PET_TEXTURES.put("Baron", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNzEyYTk3MWYxY2U1OWUzNTk3MGE3Y2Q3Y2Y4YzllMjY5MjQ4ZWJmYzQ5NjUxOTBhMDM0NThmZWY2MjRjYjVmIn19fQ==");
+        PET_TEXTURES.put("Mole", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzRiNTRmN2Y1NTkzYTMyM2I2NTUyMWU2MTA2MTZmZGM5OTEwZjI5ZTI3YWUzMTkxNTExNjIzZTgxOGQ4ODM0OCJ9fX0=");
         PET_TEXTURES.put("Yeti", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZjM0MjUzODAxMjFjOGVjMWUwYmY0OTVhOTgzNGMxMGNiODNkOTRkMTlkZTk5NDJiMTg5NDAyM2E4Zjg3MiJ9fX0=");
         PET_TEXTURES.put("Iron Golem", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDI3MTkxM2EzZmM4ZjU2YmRmNmI5MGE0YjRlZDZhMDVjNTYyY2UwMDc2YjUzNDRkNDQ0ZmIyYjA0MGFlNTdkIn19fQ==");
         PET_TEXTURES.put("Dwarf", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTU5YWNjZDY1NzAzNzIyY2ZlYjlmNjUwOTk5M2VlNzJiYWRmNGNiYWVhZmM4ODA4MzYyZDRlOWE4MjA3ODdhNCJ9fX0=");
@@ -1300,6 +1304,11 @@ public class PetManager implements Listener {
         NO_HIBERNATION("No Hibernation", ChatColor.GOLD + ""),
         GROOT("Groot", ChatColor.GOLD + ""),
         COMPOSTER("Composter", ChatColor.GOLD + ""),
+        HARVEST_FESTIVAL("Harvest Festival", ChatColor.GOLD + "Removes Common and Uncommon Harvest Rewards"),
+        HEADLESS_HORSEMAN("Headless Horseman", ChatColor.GOLD + "+[Lvl]% Bonus Wheat Cropcount."),
+        ORANGE("Orange", ChatColor.GOLD + "+[Lvl]% Bonus Carrot Cropcount."),
+        BEETS_ME("Beets me", ChatColor.GOLD + "+[Lvl]% Bonus Beetroot Cropcount."),
+        BLOODTHIRSTY("Bloodthirsty", ChatColor.GOLD + "+[Lvl]% Bonus Potato Cropcount."),
         OBSESSION("Obsession", ChatColor.GOLD + ""),
         SPIDER_STEVE("Spider Steve", ChatColor.GOLD + ""),
         ALPHA("Alpha", ChatColor.GOLD + ""),

@@ -313,6 +313,34 @@ public class PetRegistry {
         ));
 
         // Farming Pets
+        registry.put("Scarecrow", new PetDefinition(
+                "Scarecrow",
+                PetManager.Rarity.LEGENDARY,
+                100,
+                Particle.ANGRY_VILLAGER,
+                Arrays.asList(PetManager.PetPerk.HEADLESS_HORSEMAN, PetManager.PetPerk.HARVEST_FESTIVAL, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.LULLABY)
+        ));
+        registry.put("Killer Rabbit", new PetDefinition(
+                "Killer Rabbit",
+                PetManager.Rarity.LEGENDARY,
+                100,
+                Particle.ANGRY_VILLAGER,
+                Arrays.asList(PetManager.PetPerk.ORANGE, PetManager.PetPerk.HARVEST_FESTIVAL, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.LULLABY)
+        ));
+        registry.put("Baron", new PetDefinition(
+                "Baron",
+                PetManager.Rarity.LEGENDARY,
+                100,
+                Particle.ANGRY_VILLAGER,
+                Arrays.asList(PetManager.PetPerk.BEETS_ME, PetManager.PetPerk.HARVEST_FESTIVAL, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.LULLABY)
+        ));
+        registry.put("Mole", new PetDefinition(
+                "Mole",
+                PetManager.Rarity.LEGENDARY,
+                100,
+                Particle.ANGRY_VILLAGER,
+                Arrays.asList(PetManager.PetPerk.BLOODTHIRSTY, PetManager.PetPerk.HARVEST_FESTIVAL, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.LULLABY)
+        ));
         registry.put("Pig", new PetDefinition(
                 "Pig",
                 PetManager.Rarity.LEGENDARY,
