@@ -21,6 +21,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
@@ -32,6 +33,9 @@ import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+
+import net.citizensnpcs.api.CitizensAPI;
+import net.citizensnpcs.api.npc.NPC;
 
 import java.io.File;
 import java.io.IOException;
@@ -143,15 +147,23 @@ public class DragonFightManager implements Listener {
         if (decisionTask != null) {
             decisionTask.cancel();
         }
+        for (NPC npc : CitizensAPI.getNPCRegistry()) {
+            if (npc.getEntity() instanceof EnderDragon) {
+                npc.destroy();
+            }
+        }
         for (EnderDragon d : world.getEntitiesByClass(EnderDragon.class)) {
             d.remove();
         }
         Dragon type = DragonRegistry.randomDragon();
-        EnderDragon dragon = (EnderDragon) world.spawnEntity(new Location(world, 0, 100, 0), EntityType.ENDER_DRAGON);
-        dragon.setAI(true);
+        NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.ENDER_DRAGON, type.getDisplayName());
+        npc.setUseMinecraftAI(true);
+        npc.data().setPersistent(NPC.Metadata.DEFAULT_PROTECTED, false);
+        npc.spawn(new Location(world, 0, 100, 0));
+        EnderDragon dragon = (EnderDragon) npc.getEntity();
         dragon.setPhase(EnderDragon.Phase.CIRCLING);
         type.applyAttributes(dragon);
-        activeFight = new DragonFight(dragon, type);
+        activeFight = new DragonFight(npc, type);
         plugin.getLogger().info("[DragonAI] FlightSpeed=" + type.getFlightSpeed() + ", BaseRage=" + type.getBaseRage());
 
         if (dragonBar != null) {
@@ -371,8 +383,10 @@ public class DragonFightManager implements Listener {
         if (decisionTask != null) {
             decisionTask.cancel();
         }
+        NPC npc = activeFight.getNpc();
         EnderDragon dragon = activeFight.getDragonEntity();
         World world = dragon.getWorld();
+        npc.destroy();
 
         String name = ChatColor.stripColor(activeFight.getDragonType().getDisplayName());
         for (Player p : world.getPlayers()) {
@@ -437,6 +451,19 @@ public class DragonFightManager implements Listener {
         }
         if (health.isDead()) {
             activeFight.getDragonEntity().setHealth(0);
+        }
+    }
+
+    @EventHandler
+    public void onDragonRegain(EntityRegainHealthEvent event) {
+        if (activeFight == null) return;
+        if (!event.getEntity().getUniqueId().equals(activeFight.getDragonEntity().getUniqueId())) return;
+        event.setCancelled(true);
+        DragonHealthInstance health = activeFight.getHealth();
+        health.heal(event.getAmount());
+        if (dragonBar != null) {
+            dragonBar.setProgress(health.getHealthPercentage());
+            dragonBar.setTitle(buildBossBarTitle());
         }
     }
 
