@@ -22,10 +22,10 @@ import org.bukkit.util.Vector;
  * decision making and healing.
  *
  * <p>When the dragon takes sufficient damage based on its current crystal
- * bias, it flies to the nearest end crystal and orbits it for five seconds
- * before restoring to full health. Each heal reduces the crystal bias making
- * subsequent heals require more damage. The trait also slows the dragon's
- * flight speed and periodically triggers a basic lightning attack.</p>
+ * bias, it flies to the nearest end crystal and perches above it for five
+ * seconds before restoring to full health. Each heal reduces the crystal bias
+ * making subsequent heals require more damage. The trait also slows the
+ * dragon's flight speed and periodically triggers a basic lightning attack.</p>
  */
 public class WaterDragonTrait extends Trait implements Listener {
 
@@ -89,29 +89,33 @@ public class WaterDragonTrait extends Trait implements Listener {
     private void startHeal() {
         EnderDragon dragon = fight.getDragonEntity();
         EnderCrystal crystal = findNearestCrystal(dragon);
-        Location center = (crystal != null)
-                ? crystal.getLocation().clone().add(0, 5, 0)
-                : dragon.getLocation().clone();
+        if (crystal == null || crystal.isDead()) {
+            return; // cannot heal without a crystal
+        }
+        Location center = crystal.getLocation().clone().add(0, 5, 0);
 
         healTask = new BukkitRunnable() {
-            int ticks = 0;
+            int perchTicks = 0;
+
             @Override
             public void run() {
-                if (!npc.isSpawned()) {
+                if (!npc.isSpawned() || crystal.isDead()) {
                     cancel();
                     healTask = null;
                     return;
                 }
-                double angle = ticks * (Math.PI / 20); // ~18 degrees per tick
-                double radius = 5.0;
-                Location loc = center.clone().add(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
-                dragon.setRiptiding(true);
-                npc.setMoveDestination(loc);
-                ticks++;
-                if (ticks >= 100) {
-                    finishHeal();
-                    cancel();
-                    healTask = null;
+
+                npc.setMoveDestination(center);
+
+                if (dragon.getLocation().distanceSquared(center) <= 4) { // within 2 blocks
+                    perchTicks++;
+                    if (perchTicks >= 100) {
+                        finishHeal();
+                        cancel();
+                        healTask = null;
+                    }
+                } else {
+                    perchTicks = 0; // reset if the dragon strays away
                 }
             }
         }.runTaskTimer(plugin, 0L, 1L);
