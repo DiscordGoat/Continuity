@@ -116,6 +116,7 @@ import goat.minecraft.minecraftnew.other.realms.Tropic;
 import goat.minecraft.minecraftnew.other.realms.Frozen;
 import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.*;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -186,7 +187,19 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public AnvilRepair getAnvilRepair() {
         return anvilRepair;
     }
-
+    public void removeAllEnderDragonsFromOverworld() {
+        // Loop through all loaded worlds
+        for (World world : Bukkit.getServer().getWorlds()) {
+            // Only target the Overworld environment
+            if (world.getEnvironment() == World.Environment.NORMAL) {
+                // Fetch all EnderDragon instances and remove them
+                for (EnderDragon dragon : world.getEntitiesByClass(EnderDragon.class)) {
+                    dragon.remove();
+                    this.getLogger().info("Removed Ender Dragon from world: " + world.getName());
+                }
+            }
+        }
+    }
     @Override
     public void onEnable() {
         instance = this;
