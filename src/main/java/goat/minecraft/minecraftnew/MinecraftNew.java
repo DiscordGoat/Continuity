@@ -788,9 +788,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (warpGateManager != null) {
             warpGateManager.onDisable();
         }
-        if (dragonFightManager != null) {
-            dragonFightManager.onDisable();
-        }
+
         if(potionBrewingSubsystem != null){
             potionBrewingSubsystem.onDisable();
         }
