@@ -49,8 +49,6 @@ public interface Dragon {
 
     int getBaseRage();
 
-    int getMaxHealth();
-
     /**
      * Apply basic attributes to the supplied EnderDragon entity.
      * Implementations should avoid ability logic – this method is only for
