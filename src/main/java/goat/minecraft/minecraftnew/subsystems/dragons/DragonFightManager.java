@@ -30,6 +30,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,6 +49,8 @@ public class DragonFightManager implements Listener {
 
     private DragonFight activeFight;
     private BossBar dragonBar;
+    private BukkitTask decisionTask;
+    private BukkitTask flightTask;
 
     public DragonFightManager(MinecraftNew plugin) {
         this.plugin = plugin;
@@ -125,41 +129,102 @@ public class DragonFightManager implements Listener {
         }
 
         if (activeFight == null) {
-            // Clear any leftover dragons and spawn a new one
-            for (EnderDragon d : world.getEntitiesByClass(EnderDragon.class)) {
-                d.remove();
-            }
-            Dragon type = DragonRegistry.randomDragon();
-            EnderDragon dragon = (EnderDragon) world.spawnEntity(new Location(world, 0, 100, 0), EntityType.ENDER_DRAGON);
-            dragon.setAI(true);
-            dragon.setPhase(EnderDragon.Phase.CIRCLING);
-            type.applyAttributes(dragon);
-            activeFight = new DragonFight(dragon, type);
-
-            if (dragonBar != null) {
-                dragonBar.removeAll();
-            }
-
-            dragonBar = Bukkit.createBossBar(buildBossBarTitle(), type.getBarColor(), type.getBarStyle());
-            dragonBar.setProgress(1.0);
-            for (Player p : world.getPlayers()) {
-                dragonBar.addPlayer(p);
-            }
-
-            // Placeholder AI decision loop
-            new BukkitRunnable() {
-                @Override
-                public void run() {
-                    if (activeFight == null || activeFight.getDragonEntity().isDead()) {
-                        cancel();
-                        return;
-                    }
-                    activeFight.getDragonType().decide(activeFight.getDragonEntity());
-                }
-            }.runTaskTimer(plugin, activeFight.getDragonType().getDecisionInterval(), activeFight.getDragonType().getDecisionInterval());
+            spawnFight(world);
         } else {
             dragonBar.addPlayer(player);
         }
+    }
+
+    private void spawnFight(World world) {
+        plugin.getLogger().info("[DragonAI] Spawning new dragon fight in " + world.getName());
+        if (flightTask != null) {
+            flightTask.cancel();
+        }
+        if (decisionTask != null) {
+            decisionTask.cancel();
+        }
+        for (EnderDragon d : world.getEntitiesByClass(EnderDragon.class)) {
+            d.remove();
+        }
+        Dragon type = DragonRegistry.randomDragon();
+        EnderDragon dragon = (EnderDragon) world.spawnEntity(new Location(world, 0, 100, 0), EntityType.ENDER_DRAGON);
+        dragon.setAI(true);
+        dragon.setPhase(EnderDragon.Phase.CIRCLING);
+        type.applyAttributes(dragon);
+        activeFight = new DragonFight(dragon, type);
+        plugin.getLogger().info("[DragonAI] FlightSpeed=" + type.getFlightSpeed() + ", BaseRage=" + type.getBaseRage());
+
+        if (dragonBar != null) {
+            dragonBar.removeAll();
+        }
+        dragonBar = Bukkit.createBossBar(buildBossBarTitle(), type.getBarColor(), type.getBarStyle());
+        dragonBar.setProgress(1.0);
+        for (Player p : world.getPlayers()) {
+            dragonBar.addPlayer(p);
+        }
+
+        startFlightTask();
+        scheduleNextDecision();
+    }
+
+    public void refreshEnd(World world) {
+        if (!"custom_end".equalsIgnoreCase(world.getName())) {
+            return;
+        }
+        spawnFight(world);
+    }
+
+    private void startFlightTask() {
+        EnderDragon dragon = activeFight.getDragonEntity();
+        int speed = activeFight.getDragonType().getFlightSpeed();
+        double multiplier = speed / 5.0;
+        plugin.getLogger().info("[DragonAI] Flight speed multiplier=" + multiplier);
+        dragon.setVelocity(dragon.getVelocity().multiply(multiplier));
+        flightTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (activeFight == null || dragon.isDead()) {
+                    cancel();
+                    return;
+                }
+                Vector dir = dragon.getLocation().getDirection().normalize();
+                Vector vel = dragon.getVelocity();
+                if (multiplier > 1.0) {
+                    Vector add = dir.multiply(multiplier);
+                    dragon.setVelocity(vel.add(add));
+                    plugin.getLogger().info("[DragonAI] Accelerating dragon by " + add + ", newVel=" + dragon.getVelocity());
+                } else if (multiplier < 1.0) {
+                    Vector newVel = vel.multiply(multiplier);
+                    dragon.setVelocity(newVel);
+                    plugin.getLogger().info("[DragonAI] Slowing dragon to " + newVel);
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 5L);
+    }
+
+    private void scheduleNextDecision() {
+        int baseRage = activeFight.getDragonType().getBaseRage();
+        long cooldownTicks = Math.max(0, 65 - baseRage * 5) * 20L;
+        double chance = baseRage * 0.1;
+        plugin.getLogger().info("[DragonAI] Scheduling decision: baseRage=" + baseRage + ", cooldown=" + (cooldownTicks / 20) + "s, chance=" + chance);
+        decisionTask = new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (activeFight == null || activeFight.getDragonEntity().isDead()) {
+                    cancel();
+                    return;
+                }
+                double roll = Math.random();
+                plugin.getLogger().info("[DragonAI] Decision roll=" + roll);
+                if (roll <= chance) {
+                    Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "dragon has made a decision.");
+                    activeFight.getDragonType().decide(activeFight.getDragonEntity());
+                } else {
+                    plugin.getLogger().info("[DragonAI] Decision roll failed, restarting cooldown");
+                }
+                scheduleNextDecision();
+            }
+        }.runTaskLater(plugin, cooldownTicks);
     }
 
     private String buildBossBarTitle() {
@@ -300,6 +365,12 @@ public class DragonFightManager implements Listener {
 
     private void handleDragonDefeat() {
         if (activeFight == null) return;
+        if (flightTask != null) {
+            flightTask.cancel();
+        }
+        if (decisionTask != null) {
+            decisionTask.cancel();
+        }
         EnderDragon dragon = activeFight.getDragonEntity();
         World world = dragon.getWorld();
 
@@ -308,34 +379,42 @@ public class DragonFightManager implements Listener {
             p.sendTitle(ChatColor.GOLD + "You defeated the " + name + "!", "", 10, 70, 20);
         }
 
-        // Clear boss bar
         if (dragonBar != null) {
             dragonBar.removeAll();
         }
 
-        // Teleport players out and reset the world after 60 seconds
         new BukkitRunnable() {
+            int seconds = 60;
+
             @Override
             public void run() {
-                for (Player p : world.getPlayers()) {
-                    Location spawn = p.getBedSpawnLocation();
-                    if (spawn == null) {
-                        spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
+                if (seconds <= 0) {
+                    for (Player p : world.getPlayers()) {
+                        Location spawn = p.getBedSpawnLocation();
+                        if (spawn == null) {
+                            spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
+                        }
+                        p.teleport(spawn);
                     }
-                    p.teleport(spawn);
-                }
-                for (Entity e : world.getEntities()) {
-                    if (!(e instanceof Player)) {
-                        e.remove();
+                    for (Entity e : world.getEntities()) {
+                        if (!(e instanceof Player)) {
+                            e.remove();
+                        }
                     }
+                    Bukkit.unloadWorld(world, false);
+                    BetterEnd.init(plugin);
+                    activeFight = null;
+                    dragonBar = null;
+                    cancel();
+                    return;
                 }
-                Bukkit.unloadWorld(world, false);
-                BetterEnd.init(plugin);
-            }
-        }.runTaskLater(plugin, 20L * 60);
 
-        activeFight = null;
-        dragonBar = null;
+                for (Player p : world.getPlayers()) {
+                    p.sendMessage(ChatColor.DARK_PURPLE + "The End will reset in " + seconds + " seconds!");
+                }
+                seconds--;
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
     }
 
     @EventHandler

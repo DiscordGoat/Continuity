@@ -73,6 +73,10 @@ commands:
   resetend:
     description: Resets The End dimension.
     usage: /resetend
+  refreshend:
+    description: Respawns a fresh dragon in The End.
+    usage: /refreshEnd
+    permission: continuity.admin
   end:
     description: Teleports the player to The End.
     usage: /end
