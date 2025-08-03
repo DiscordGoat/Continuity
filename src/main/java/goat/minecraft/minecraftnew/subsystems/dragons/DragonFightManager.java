@@ -143,8 +143,10 @@ public class DragonFightManager implements Listener {
                 npc.destroy();
             }
         }
-        for (EnderDragon d : world.getEntitiesByClass(EnderDragon.class)) {
-            d.remove();
+        for (World w : Bukkit.getWorlds()) {
+            for (EnderDragon d : w.getEntitiesByClass(EnderDragon.class)) {
+                d.remove();
+            }
         }
         Dragon type = DragonRegistry.randomDragon();
         NPC npc = CitizensAPI.getNPCRegistry().createNPC(EntityType.ENDER_DRAGON, type.getDisplayName());
@@ -159,6 +161,8 @@ public class DragonFightManager implements Listener {
         // Attach behaviours specific to the dragon type.
         if (type instanceof WaterDragon) {
             npc.addTrait(new WaterDragonTrait(plugin, activeFight));
+        } else if (type instanceof FireDragon) {
+            npc.addTrait(new FireDragonTrait(plugin, activeFight));
         }
         plugin.getLogger().info("[DragonAI] FlightSpeed=" + type.getFlightSpeed() + ", BaseRage=" + type.getBaseRage());
 

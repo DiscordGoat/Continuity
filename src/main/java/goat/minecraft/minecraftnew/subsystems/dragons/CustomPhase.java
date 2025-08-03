@@ -20,5 +20,8 @@ public enum CustomPhase {
     HEALING,
     SMITE,
     LAUNCH,
-    FURY
+    FURY,
+    FIREBALL,
+    SCORCH,
+    HELLFIRE
 }

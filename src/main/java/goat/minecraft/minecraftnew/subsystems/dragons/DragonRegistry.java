@@ -16,8 +16,9 @@ public final class DragonRegistry {
     private static final Random RANDOM = new Random();
 
     static {
-        // Only the Water Dragon exists currently.
+        // Register available dragon types.
         REGISTERED.add(new WaterDragon());
+        REGISTERED.add(new FireDragon());
     }
 
     private DragonRegistry() {
