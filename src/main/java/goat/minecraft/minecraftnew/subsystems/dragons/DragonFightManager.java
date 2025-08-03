@@ -17,6 +17,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -371,13 +372,16 @@ public class DragonFightManager implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onDragonDamage(EntityDamageEvent event) {
         if (activeFight == null) return;
         if (!event.getEntity().getUniqueId().equals(activeFight.getDragonEntity().getUniqueId())) return;
+
+        double damage = event.getFinalDamage();
         event.setCancelled(true);
+
         DragonHealthInstance health = activeFight.getHealth();
-        health.damage(event.getFinalDamage());
+        health.damage(damage);
         if (dragonBar != null) {
             dragonBar.setProgress(health.getHealthPercentage());
             dragonBar.setTitle(buildBossBarTitle());
