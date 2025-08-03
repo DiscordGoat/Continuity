@@ -50,6 +50,11 @@ public interface Dragon {
     int getBaseRage();
 
     /**
+     * @return the maximum health value for this dragon.
+     */
+    double getMaxHealth();
+
+    /**
      * Apply basic attributes to the supplied EnderDragon entity.
      * Implementations should avoid ability logic – this method is only for
      * name and simple attribute assignment.
