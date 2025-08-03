@@ -31,8 +31,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
 
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
@@ -53,8 +51,6 @@ public class DragonFightManager implements Listener {
 
     private DragonFight activeFight;
     private BossBar dragonBar;
-    private BukkitTask decisionTask;
-    private BukkitTask flightTask;
 
     public DragonFightManager(MinecraftNew plugin) {
         this.plugin = plugin;
@@ -141,12 +137,6 @@ public class DragonFightManager implements Listener {
 
     private void spawnFight(World world) {
         plugin.getLogger().info("[DragonAI] Spawning new dragon fight in " + world.getName());
-        if (flightTask != null) {
-            flightTask.cancel();
-        }
-        if (decisionTask != null) {
-            decisionTask.cancel();
-        }
         for (NPC npc : CitizensAPI.getNPCRegistry()) {
             if (npc.getEntity() instanceof EnderDragon) {
                 npc.destroy();
@@ -179,9 +169,6 @@ public class DragonFightManager implements Listener {
         for (Player p : world.getPlayers()) {
             dragonBar.addPlayer(p);
         }
-
-        startFlightTask();
-        scheduleNextDecision();
     }
 
     public void refreshEnd(World world) {
@@ -189,59 +176,6 @@ public class DragonFightManager implements Listener {
             return;
         }
         spawnFight(world);
-    }
-
-    private void startFlightTask() {
-        EnderDragon dragon = activeFight.getDragonEntity();
-        int speed = activeFight.getDragonType().getFlightSpeed();
-        double multiplier = speed / 5.0;
-        plugin.getLogger().info("[DragonAI] Flight speed multiplier=" + multiplier);
-        dragon.setVelocity(dragon.getVelocity().multiply(multiplier));
-        flightTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (activeFight == null || dragon.isDead()) {
-                    cancel();
-                    return;
-                }
-                Vector dir = dragon.getLocation().getDirection().normalize();
-                Vector vel = dragon.getVelocity();
-                if (multiplier > 1.0) {
-                    Vector add = dir.multiply(multiplier);
-                    dragon.setVelocity(vel.add(add));
-                    plugin.getLogger().info("[DragonAI] Accelerating dragon by " + add + ", newVel=" + dragon.getVelocity());
-                } else if (multiplier < 1.0) {
-                    Vector newVel = vel.multiply(multiplier);
-                    dragon.setVelocity(newVel);
-                    plugin.getLogger().info("[DragonAI] Slowing dragon to " + newVel);
-                }
-            }
-        }.runTaskTimer(plugin, 0L, 5L);
-    }
-
-    private void scheduleNextDecision() {
-        int baseRage = activeFight.getDragonType().getBaseRage();
-        long cooldownTicks = Math.max(0, 65 - baseRage * 5) * 20L;
-        double chance = baseRage * 0.1;
-        plugin.getLogger().info("[DragonAI] Scheduling decision: baseRage=" + baseRage + ", cooldown=" + (cooldownTicks / 20) + "s, chance=" + chance);
-        decisionTask = new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (activeFight == null || activeFight.getDragonEntity().isDead()) {
-                    cancel();
-                    return;
-                }
-                double roll = Math.random();
-                plugin.getLogger().info("[DragonAI] Decision roll=" + roll);
-                if (roll <= chance) {
-                    Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "dragon has made a decision.");
-                    activeFight.getDragonType().decide(activeFight.getDragonEntity());
-                } else {
-                    Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "[DragonAI] Decision roll failed, restarting cooldown");
-                }
-                scheduleNextDecision();
-            }
-        }.runTaskLater(plugin, cooldownTicks);
     }
 
     private String buildBossBarTitle() {
@@ -382,12 +316,6 @@ public class DragonFightManager implements Listener {
 
     private void handleDragonDefeat() {
         if (activeFight == null) return;
-        if (flightTask != null) {
-            flightTask.cancel();
-        }
-        if (decisionTask != null) {
-            decisionTask.cancel();
-        }
         NPC npc = activeFight.getNpc();
         EnderDragon dragon = activeFight.getDragonEntity();
         World world = dragon.getWorld();
