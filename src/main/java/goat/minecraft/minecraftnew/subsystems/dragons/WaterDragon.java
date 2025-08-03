@@ -16,7 +16,7 @@ public class WaterDragon implements Dragon {
     private static final int CRYSTAL_BIAS = 7;
     private static final int FLIGHT_SPEED = 4;
     private static final int BASE_RAGE = 2;
-    private static final int MAX_HEALTH = 25_000;
+    private static final int MAX_HEALTH = 1_000;
     private static final int DECISION_INTERVAL = 100; // placeholder
 
     @Override

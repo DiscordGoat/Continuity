@@ -132,6 +132,7 @@ public class DragonFightManager implements Listener {
             Dragon type = DragonRegistry.randomDragon();
             EnderDragon dragon = (EnderDragon) world.spawnEntity(new Location(world, 0, 100, 0), EntityType.ENDER_DRAGON);
             dragon.setAI(true);
+            dragon.setPhase(EnderDragon.Phase.CIRCLING);
             type.applyAttributes(dragon);
             activeFight = new DragonFight(dragon, type);
 
