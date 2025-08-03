@@ -57,7 +57,7 @@ public class CorpseDeathEvent implements Listener {
                     case LEGENDARY -> 5;
                     default -> 1; // COMMON or unknown
                 };
-                int terraXP = 200 * tier;
+                int terraXP = 120 * tier;
                 xpManager.addXP(killer, "Terraforming", terraXP);
             }
 
