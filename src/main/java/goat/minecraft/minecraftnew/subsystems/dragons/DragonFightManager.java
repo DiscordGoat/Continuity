@@ -11,12 +11,14 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -27,6 +29,8 @@ import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+import goat.minecraft.minecraftnew.utils.dimensions.end.BetterEnd;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,9 +46,7 @@ public class DragonFightManager implements Listener {
     private final YamlConfiguration gatewaysConfig;
     private final Map<Location, Integer> portalEyeCounts = new HashMap<>();
 
-    private EnderDragon activeDragon;
-    private BossBar dragonBar;
-    private Dragon activeDragonType;
+    private DragonFight activeFight;
     private Location activePortalLoc;
 
     public DragonFightManager(MinecraftNew plugin) {
@@ -115,45 +117,19 @@ public class DragonFightManager implements Listener {
     }
 
     private void handlePlayerEnterWorld(Player player, World world) {
-        EnderDragon dragon = world.getEntitiesByClass(EnderDragon.class).stream().findFirst().orElse(null);
-        if (dragon == null) return;
-
-        String customName = dragon.getCustomName();
-        boolean nameValid = false;
-        if (customName != null) {
-            String stripped = ChatColor.stripColor(customName);
-            for (Dragon d : DragonRegistry.getRegistered()) {
-                if (ChatColor.stripColor(d.getDisplayName()).equalsIgnoreCase(stripped)) {
-                    nameValid = true;
-                    break;
-                }
+        if (!world.getName().equals("custom_end")) {
+            if (activeFight != null && activeFight.getBossBar() != null) {
+                activeFight.getBossBar().removePlayer(player);
             }
+            return;
         }
 
-        boolean bossBarValid = dragonBar != null && activeDragon != null &&
-                dragon.getUniqueId().equals(activeDragon.getUniqueId());
+        if (activeFight == null && activePortalLoc != null) {
+            startDragonFight(world);
+        }
 
-        if (!nameValid || !bossBarValid) {
-            Dragon type = DragonRegistry.randomDragon();
-            type.applyAttributes(dragon);
-            activeDragon = dragon;
-            activeDragonType = type;
-            activePortalLoc = dragon.getLocation();
-
-            if (dragonBar != null) {
-                dragonBar.removeAll();
-            }
-
-            dragonBar = Bukkit.createBossBar(type.getDisplayName(), type.getBarColor(), type.getBarStyle());
-            dragonBar.setStyle(type.getBarStyle());
-            dragonBar.setColor(type.getBarColor());
-            dragonBar.setProgress(dragon.getHealth() / dragon.getMaxHealth());
-            
-            for (Player p : world.getPlayers()) {
-                dragonBar.addPlayer(p);
-            }
-        } else {
-            dragonBar.addPlayer(player);
+        if (activeFight != null && activeFight.getBossBar() != null) {
+            activeFight.getBossBar().addPlayer(player);
         }
     }
 
@@ -182,11 +158,9 @@ public class DragonFightManager implements Listener {
                 blockLoc.getWorld().playSound(blockLoc, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
                 blockLoc.getWorld().spawnParticle(Particle.DRAGON_BREATH, blockLoc.clone().add(0.5, 1, 0.5), 100, 0.3, 0.3, 0.3, 0.01);
                 spawnFallingEye(blockLoc, player);
-                if (count >= 12 && activeDragon == null) {
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                        startDragonFight(portalLoc);
-                        deactivatePortal(portalLoc);
-                    }, 200L);
+                if (count >= 12 && activeFight == null) {
+                    activePortalLoc = portalLoc;
+                    Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "The portal hums with energy...");
                 }
             }
         }, 1L);
@@ -228,106 +202,132 @@ public class DragonFightManager implements Listener {
         return count;
     }
 
-    private void deactivatePortal(Location portalLoc) {
-        World world = portalLoc.getWorld();
-        if (world == null) return;
-        int radius = 5;
-        int startX = portalLoc.getBlockX() - radius;
-        int endX = portalLoc.getBlockX() + radius;
-        int startY = portalLoc.getBlockY() - 1;
-        int endY = portalLoc.getBlockY() + 1;
-        int startZ = portalLoc.getBlockZ() - radius;
-        int endZ = portalLoc.getBlockZ() + radius;
-        for (int x = startX; x <= endX; x++) {
-            for (int y = startY; y <= endY; y++) {
-                for (int z = startZ; z <= endZ; z++) {
-                    Block block = world.getBlockAt(x, y, z);
-                    if (block.getType() == Material.END_PORTAL) {
-                        block.setType(Material.AIR);
-                    }
-                }
-            }
+    private void startDragonFight(World world) {
+        Dragon type = DragonRegistry.randomDragon();
+        EnderDragon dragon = (EnderDragon) world.spawnEntity(world.getSpawnLocation().clone().add(0, 5, 0), EntityType.ENDER_DRAGON);
+        type.applyAttributes(dragon);
+        if (dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null) {
+            dragon.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(type.getMaxHealth());
         }
-    }
+        dragon.setHealth(type.getMaxHealth());
+        if (dragon.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED) != null) {
+            dragon.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED)
+                    .setBaseValue(dragon.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).getBaseValue() * (type.getFlightSpeed() / 5.0));
+        }
+        activeFight = new DragonFight(type, dragon);
 
-    private void startDragonFight(Location portalLoc) {
-        World world = portalLoc.getWorld();
-        if (world == null) return;
-
-        activePortalLoc = portalLoc;
-        activeDragonType = DragonRegistry.randomDragon();
-
-        EnderDragon dragon = (EnderDragon) world.spawnEntity(portalLoc.clone().add(0, 5, 0), EntityType.ENDER_DRAGON);
-        activeDragonType.applyAttributes(dragon);
-        activeDragon = dragon;
-
-        dragonBar = Bukkit.createBossBar(activeDragonType.getDisplayName(),
-                activeDragonType.getBarColor(),
-                activeDragonType.getBarStyle());
+        BossBar bar = Bukkit.createBossBar(type.getDisplayName(), type.getBarColor(), type.getBarStyle());
+        activeFight.setBossBar(bar);
+        bar.setProgress(1.0);
         for (Player p : world.getPlayers()) {
-            dragonBar.addPlayer(p);
+            bar.addPlayer(p);
         }
-        dragonBar.setProgress(1.0);
 
-        // Repeating task to keep boss bar in sync with dragon health
-        new BukkitRunnable() {
+        int cooldown = Math.max(15, 65 - type.getBaseRage() * 5);
+        BukkitTask task = new BukkitRunnable() {
             @Override
             public void run() {
-                if (activeDragon == null || dragonBar == null) {
-                    cancel();
-                    return;
+                double chance = (type.getBaseRage() * 10) / 100.0;
+                if (Math.random() <= chance) {
+                    plugin.getLogger().info("dragon has made a decision");
                 }
-                if (activeDragon.isDead()) {
-                    cancel();
-                    return;
-                }
-                dragonBar.setProgress(activeDragon.getHealth() / activeDragon.getMaxHealth());
             }
-        }.runTaskTimer(plugin, 0L, 20L);
+        }.runTaskTimer(plugin, cooldown * 20L, cooldown * 20L);
+        activeFight.setDecisionTask(task);
     }
 
-    private void endDragonFight(Location portalLoc) {
-        World world = portalLoc.getWorld();
-        if (world == null) return;
-        if (dragonBar != null) {
-            dragonBar.removeAll();
-            dragonBar = null;
+    private void endDragonFight() {
+        if (activeFight != null && activeFight.getBossBar() != null) {
+            activeFight.getBossBar().removeAll();
         }
-        activeDragon = null;
-        activeDragonType = null;
-        activePortalLoc = null;
-        int radius = 20;
-        int startX = portalLoc.getBlockX() - radius;
-        int endX = portalLoc.getBlockX() + radius;
-        int startY = portalLoc.getBlockY() - radius;
-        int endY = portalLoc.getBlockY() + radius;
-        int startZ = portalLoc.getBlockZ() - radius;
-        int endZ = portalLoc.getBlockZ() + radius;
-        for (int x = startX; x <= endX; x++) {
-            for (int y = startY; y <= endY; y++) {
-                for (int z = startZ; z <= endZ; z++) {
-                    Block block = world.getBlockAt(x, y, z);
-                    if (block.getType() == Material.END_PORTAL_FRAME) {
-                        EndPortalFrame frame = (EndPortalFrame) block.getBlockData();
-                        frame.setEye(false);
-                        block.setBlockData(frame);
-                    } else if (block.getType() == Material.END_PORTAL) {
-                        block.setType(Material.AIR);
+        if (activeFight != null && activeFight.getDecisionTask() != null) {
+            activeFight.getDecisionTask().cancel();
+        }
+        if (activePortalLoc != null) {
+            World world = activePortalLoc.getWorld();
+            int radius = 20;
+            int startX = activePortalLoc.getBlockX() - radius;
+            int endX = activePortalLoc.getBlockX() + radius;
+            int startY = activePortalLoc.getBlockY() - radius;
+            int endY = activePortalLoc.getBlockY() + radius;
+            int startZ = activePortalLoc.getBlockZ() - radius;
+            int endZ = activePortalLoc.getBlockZ() + radius;
+            for (int x = startX; x <= endX; x++) {
+                for (int y = startY; y <= endY; y++) {
+                    for (int z = startZ; z <= endZ; z++) {
+                        Block block = world.getBlockAt(x, y, z);
+                        if (block.getType() == Material.END_PORTAL_FRAME) {
+                            EndPortalFrame frame = (EndPortalFrame) block.getBlockData();
+                            frame.setEye(false);
+                            block.setBlockData(frame);
+                        } else if (block.getType() == Material.END_PORTAL) {
+                            block.setType(Material.AIR);
+                        }
                     }
                 }
             }
+            portalEyeCounts.entrySet().removeIf(entry ->
+                    entry.getKey().getWorld().equals(world) &&
+                    entry.getKey().distanceSquared(activePortalLoc) <= radius * radius);
+            saveData();
         }
-        portalEyeCounts.entrySet().removeIf(entry ->
-                entry.getKey().getWorld().equals(world) &&
-                entry.getKey().distanceSquared(portalLoc) <= radius * radius);
-        saveData();
+        activeFight = null;
+        activePortalLoc = null;
+    }
+
+    @EventHandler
+    public void onDragonDamage(EntityDamageEvent event) {
+        if (activeFight == null) return;
+        if (!event.getEntity().getUniqueId().equals(activeFight.getDragon().getUniqueId())) return;
+        event.setCancelled(true);
+        double health = activeFight.getCurrentHealth() - event.getFinalDamage();
+        activeFight.setCurrentHealth(Math.max(0, health));
+        if (activeFight.getBossBar() != null) {
+            activeFight.getBossBar().setProgress(activeFight.getCurrentHealth() / activeFight.getMaxHealth());
+        }
+        if (activeFight.getCurrentHealth() <= 0) {
+            activeFight.getDragon().setHealth(0);
+        }
     }
 
     @EventHandler
     public void onDragonDeath(EntityDeathEvent event) {
-        if (activeDragon != null && event.getEntity().getUniqueId().equals(activeDragon.getUniqueId())) {
-            endDragonFight(activePortalLoc);
+        if (activeFight != null && event.getEntity().getUniqueId().equals(activeFight.getDragon().getUniqueId())) {
+            handleDragonVictory();
         }
+    }
+
+    private void handleDragonVictory() {
+        if (activeFight == null) return;
+        World world = activeFight.getDragon().getWorld();
+        for (Player p : world.getPlayers()) {
+            p.sendTitle(ChatColor.GOLD + "You Defeated the " + activeFight.getType().getName() + " Dragon!", "", 10, 70, 20);
+        }
+        if (activeFight.getDecisionTask() != null) {
+            activeFight.getDecisionTask().cancel();
+        }
+        new BukkitRunnable() {
+            int seconds = 60;
+
+            @Override
+            public void run() {
+                if (seconds <= 0) {
+                    for (Player p : world.getPlayers()) {
+                        Location spawn = p.getBedSpawnLocation();
+                        if (spawn == null) spawn = Bukkit.getWorlds().get(0).getSpawnLocation();
+                        p.teleport(spawn);
+                    }
+                    endDragonFight();
+                    BetterEnd.init(plugin);
+                    cancel();
+                    return;
+                }
+                for (Player p : world.getPlayers()) {
+                    p.sendMessage(ChatColor.YELLOW + "Returning in " + seconds + "s");
+                }
+                seconds--;
+            }
+        }.runTaskTimer(plugin, 0L, 20L);
     }
 
     private void spawnFallingEye(Location frameLoc, Player player) {
