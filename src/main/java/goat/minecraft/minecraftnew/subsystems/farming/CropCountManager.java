@@ -12,12 +12,14 @@ import goat.minecraft.minecraftnew.other.skilltree.Talent;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 public class CropCountManager {
     private static CropCountManager instance;
     private final JavaPlugin plugin;
     private final File file;
     private YamlConfiguration config;
+    private final Random random = new Random();
 
     private CropCountManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -61,9 +63,26 @@ public class CropCountManager {
         if (k == null) return false;
         String uuid = player.getUniqueId().toString();
 
-        int c = config.getInt(uuid + "." + k, 0) + 1;
+        int incrementValue = 1;
+        PetManager.Pet activePet = PetManager.getInstance(plugin).getActivePet(player);
+        if (activePet != null) {
+            int level = activePet.getLevel();
+            if (crop == Material.WHEAT && activePet.hasPerk(PetManager.PetPerk.HEADLESS_HORSEMAN)) {
+                if (random.nextInt(100) < level) incrementValue++;
+            } else if (crop == Material.CARROTS && activePet.hasPerk(PetManager.PetPerk.ORANGE)) {
+                if (random.nextInt(100) < level) incrementValue++;
+            } else if (crop == Material.BEETROOTS && activePet.hasPerk(PetManager.PetPerk.BEETS_ME)) {
+                if (random.nextInt(100) < level) incrementValue++;
+            } else if (crop == Material.POTATOES && activePet.hasPerk(PetManager.PetPerk.BLOODTHIRSTY)) {
+                if (random.nextInt(100) < level) incrementValue++;
+            }
+        }
+
+        int previous = config.getInt(uuid + "." + k, 0);
+        int c = previous + incrementValue;
         config.set(uuid + "." + k, c);
-        int total = config.getInt(uuid + ".cropsHarvested", 0) + 1;
+        int totalPrev = config.getInt(uuid + ".cropsHarvested", 0);
+        int total = totalPrev + incrementValue;
         config.set(uuid + ".cropsHarvested", total);
         save();
 
@@ -79,7 +98,14 @@ public class CropCountManager {
         }
         int requirement = (int) Math.ceil(500 * (1 - reduction / 100.0));
         if (requirement < 1) requirement = 1;
-        return c % requirement == 0;
+        boolean trigger = false;
+        for (int i = previous + 1; i <= c; i++) {
+            if (i % requirement == 0) {
+                trigger = true;
+                break;
+            }
+        }
+        return trigger;
     }
 
     public void checkPetThresholds(Player player) {

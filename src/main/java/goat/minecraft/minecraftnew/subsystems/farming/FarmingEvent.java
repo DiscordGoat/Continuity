@@ -10,6 +10,8 @@ import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.farming.FestivalBeeManager;
 import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
@@ -303,7 +305,9 @@ public class FarmingEvent implements Listener {
     }
 
     private void handleHarvestRewards(Block block, Player player, Material blockType) {
-        double roll = random.nextDouble();
+        PetManager.Pet activePet = PetManager.getInstance(plugin).getActivePet(player);
+        boolean festival = activePet != null && activePet.hasPerk(PetManager.PetPerk.HARVEST_FESTIVAL);
+        double roll = festival ? 0.8 + random.nextDouble() * 0.2 : random.nextDouble();
         Location dropLoc = block.getLocation().add(0.5, 0.5, 0.5);
 
         switch (blockType) {
@@ -327,6 +331,7 @@ public class FarmingEvent implements Listener {
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
+                    new PetRegistry().addPetByName(player, "Scarecrow");
                     notifyHarvest(player, ChatColor.GOLD + "Scarecrow pet", 1, true);
                 }
             }
@@ -350,6 +355,7 @@ public class FarmingEvent implements Listener {
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
+                    new PetRegistry().addPetByName(player, "Killer Rabbit");
                     notifyHarvest(player, ChatColor.GOLD + "Killer Rabbit pet", 1, true);
                 }
             }
@@ -373,6 +379,7 @@ public class FarmingEvent implements Listener {
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
+                    new PetRegistry().addPetByName(player, "Baron");
                     notifyHarvest(player, ChatColor.GOLD + "Baron pet", 1, true);
                 }
             }
@@ -396,6 +403,7 @@ public class FarmingEvent implements Listener {
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
+                    new PetRegistry().addPetByName(player, "Mole");
                     notifyHarvest(player, ChatColor.GOLD + "Mole pet", 1, true);
                 }
             }
