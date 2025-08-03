@@ -160,6 +160,7 @@ public class DragonFightManager implements Listener {
         npc.setUseMinecraftAI(true);
         npc.data().setPersistent(NPC.Metadata.DEFAULT_PROTECTED, false);
         npc.spawn(new Location(world, 0, 100, 0));
+
         EnderDragon dragon = (EnderDragon) npc.getEntity();
         dragon.setPhase(EnderDragon.Phase.CIRCLING);
         type.applyAttributes(dragon);
@@ -232,7 +233,7 @@ public class DragonFightManager implements Listener {
                     Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "dragon has made a decision.");
                     activeFight.getDragonType().decide(activeFight.getDragonEntity());
                 } else {
-                    plugin.getLogger().info("[DragonAI] Decision roll failed, restarting cooldown");
+                    Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "[DragonAI] Decision roll failed, restarting cooldown");
                 }
                 scheduleNextDecision();
             }
