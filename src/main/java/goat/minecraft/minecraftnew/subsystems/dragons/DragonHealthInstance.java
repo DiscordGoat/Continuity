@@ -35,6 +35,10 @@ public class DragonHealthInstance {
         currentHealth = Math.max(0, currentHealth - amount);
     }
 
+    public void heal(double amount) {
+        currentHealth = Math.min(maxHealth, currentHealth + amount);
+    }
+
     public double getHealthPercentage() {
         return currentHealth / maxHealth;
     }
