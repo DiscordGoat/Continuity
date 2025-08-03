@@ -175,7 +175,7 @@ public class DragonFightManager implements Listener {
             boolean placed = before - 1 == after && frame.hasEye();
             if (placed) {
                 Location portalLoc = findPortal(blockLoc);
-                int count = portalEyeCounts.getOrDefault(portalLoc, 0) + 1;
+                int count = countPortalEyes(portalLoc);
                 portalEyeCounts.put(portalLoc, count);
                 saveData();
                 Bukkit.broadcastMessage(ChatColor.DARK_PURPLE + "An Eye of Ender was placed! Total: " + count);
@@ -183,7 +183,10 @@ public class DragonFightManager implements Listener {
                 blockLoc.getWorld().spawnParticle(Particle.DRAGON_BREATH, blockLoc.clone().add(0.5, 1, 0.5), 100, 0.3, 0.3, 0.3, 0.01);
                 spawnFallingEye(blockLoc, player);
                 if (count >= 12 && activeDragon == null) {
-                    Bukkit.getScheduler().runTaskLater(plugin, () -> startDragonFight(portalLoc), 200L);
+                    Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                        startDragonFight(portalLoc);
+                        deactivatePortal(portalLoc);
+                    }, 200L);
                 }
             }
         }, 1L);
@@ -196,6 +199,55 @@ public class DragonFightManager implements Listener {
             }
         }
         return new Location(loc.getWorld(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
+    }
+
+    private int countPortalEyes(Location portalLoc) {
+        World world = portalLoc.getWorld();
+        if (world == null) return 0;
+        int radius = 5;
+        int startX = portalLoc.getBlockX() - radius;
+        int endX = portalLoc.getBlockX() + radius;
+        int startY = portalLoc.getBlockY() - 1;
+        int endY = portalLoc.getBlockY() + 1;
+        int startZ = portalLoc.getBlockZ() - radius;
+        int endZ = portalLoc.getBlockZ() + radius;
+        int count = 0;
+        for (int x = startX; x <= endX; x++) {
+            for (int y = startY; y <= endY; y++) {
+                for (int z = startZ; z <= endZ; z++) {
+                    Block block = world.getBlockAt(x, y, z);
+                    if (block.getType() == Material.END_PORTAL_FRAME) {
+                        EndPortalFrame frame = (EndPortalFrame) block.getBlockData();
+                        if (frame.hasEye()) {
+                            count++;
+                        }
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    private void deactivatePortal(Location portalLoc) {
+        World world = portalLoc.getWorld();
+        if (world == null) return;
+        int radius = 5;
+        int startX = portalLoc.getBlockX() - radius;
+        int endX = portalLoc.getBlockX() + radius;
+        int startY = portalLoc.getBlockY() - 1;
+        int endY = portalLoc.getBlockY() + 1;
+        int startZ = portalLoc.getBlockZ() - radius;
+        int endZ = portalLoc.getBlockZ() + radius;
+        for (int x = startX; x <= endX; x++) {
+            for (int y = startY; y <= endY; y++) {
+                for (int z = startZ; z <= endZ; z++) {
+                    Block block = world.getBlockAt(x, y, z);
+                    if (block.getType() == Material.END_PORTAL) {
+                        block.setType(Material.AIR);
+                    }
+                }
+            }
+        }
     }
 
     private void startDragonFight(Location portalLoc) {
