@@ -54,6 +54,7 @@ public class PerformBasicAttack implements Behavior {
             public void run() {
                 for (Location loc : targets) {
                     world.strikeLightning(loc);
+
                 }
                 dragon.setAI(true);
                 trait.onAttackComplete();
