@@ -165,6 +165,10 @@ public class DragonFightManager implements Listener {
         dragon.setPhase(EnderDragon.Phase.CIRCLING);
         type.applyAttributes(dragon);
         activeFight = new DragonFight(npc, type);
+        // Attach behaviours specific to the dragon type.
+        if (type instanceof WaterDragon) {
+            npc.addTrait(new WaterDragonTrait(plugin, activeFight));
+        }
         plugin.getLogger().info("[DragonAI] FlightSpeed=" + type.getFlightSpeed() + ", BaseRage=" + type.getBaseRage());
 
         if (dragonBar != null) {
