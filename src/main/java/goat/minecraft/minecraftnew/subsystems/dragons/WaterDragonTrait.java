@@ -105,7 +105,8 @@ public class WaterDragonTrait extends Trait implements Listener {
                 double angle = ticks * (Math.PI / 20); // ~18 degrees per tick
                 double radius = 5.0;
                 Location loc = center.clone().add(Math.cos(angle) * radius, 0, Math.sin(angle) * radius);
-                dragon.teleport(loc);
+                dragon.setRiptiding(true);
+                npc.setMoveDestination(loc);
                 ticks++;
                 if (ticks >= 100) {
                     finishHeal();
