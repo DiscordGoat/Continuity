@@ -246,10 +246,8 @@ public class CustomDurabilityManager implements Listener {
                 return;
             } else {
                 removeGoldenDurability(item);
-                amount = -newGolden;
-                if (amount <= 0) {
-                    return;
-                }
+                repairFully(item);
+                return;
             }
         }
 
@@ -323,16 +321,25 @@ public class CustomDurabilityManager implements Listener {
         } else {
             line = ChatColor.GRAY + "Durability: " + current + "/" + max;
         }
-        if (!lore.isEmpty()) {
-            String stripped = ChatColor.stripColor(lore.get(lore.size() - 1));
+
+        int index = -1;
+        for (int i = 0; i < lore.size(); i++) {
+            String stripped = ChatColor.stripColor(lore.get(i));
             if (stripped.startsWith("Durability:") || stripped.startsWith("Golden Durability:")) {
-                lore.set(lore.size() - 1, line);
-            } else {
-                lore.add(line);
+                if (index == -1) {
+                    index = i;
+                } else {
+                    lore.remove(i);
+                    i--;
+                }
             }
+        }
+        if (index != -1) {
+            lore.set(index, line);
         } else {
             lore.add(line);
         }
+
         meta.setLore(lore);
         item.setItemMeta(meta);
         goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter.formatLore(item);
