@@ -687,30 +687,22 @@ public class CulinarySubsystem implements Listener {
 
             case "Sweet Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
-                player.setFoodLevel(20);
-                player.setSaturation(player.getSaturation() + 100);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*3, 0));
                 player.setHealth(player.getMaxHealth());
                 break;
             case "Vegetarian Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
-                player.setFoodLevel(20);
-                player.setSaturation(player.getSaturation() + 100);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*3, 0));
                 player.setHealth(player.getMaxHealth());
                 break;
             case "Meatlovers Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
-                player.setFoodLevel(20);
-                player.setSaturation(player.getSaturation() + 100);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*3, 0));
                 player.setHealth(player.getMaxHealth());
                 break;
             case "Seafood Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*10, 0));
-                player.setFoodLevel(20);
-                player.setSaturation(player.getSaturation() + 100);
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*3, 0));
                 player.setHealth(player.getMaxHealth());
                 break;
             default:
@@ -742,6 +734,11 @@ public class CulinarySubsystem implements Listener {
                 }
                 // don't break to allow detecting Culinary Delight flag
             }
+        }
+
+        if (isCulinaryDelight) {
+            player.setFoodLevel(20);
+            player.setSaturation(20f);
         }
 
         if (pantryLevel > 0 && isCulinaryDelight) {
