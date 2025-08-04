@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.other.enchanting.enchantingeffects;
 
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -22,7 +23,16 @@ public class Preservation implements Listener {
         if (!CustomEnchantmentManager.isEnchantmentActive(player, item, "Preservation")) return;
 
         // Instead of letting the item break, "save" it by resetting its durability.
-        item.setDurability((short) (item.getType().getMaxDurability() - 1));
+        // Use custom durability if the system is active so that items with
+        // preservation do not lose their custom data when breaking.
+        CustomDurabilityManager mgr = CustomDurabilityManager.getInstance();
+        if (mgr != null) {
+            int max = mgr.getMaxDurability(item);
+            int current = Math.max(max - 1, 1);
+            mgr.setCustomDurability(item, current, max);
+        } else {
+            item.setDurability((short) (item.getType().getMaxDurability() - 1));
+        }
 
         // If the item was worn (armor), remove it from its slot
         player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
