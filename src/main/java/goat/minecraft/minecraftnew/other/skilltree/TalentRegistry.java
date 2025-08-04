@@ -72,31 +72,36 @@ public final class TalentRegistry {
                         Talent.REPAIR_AMOUNT_I,
                         Talent.QUALITY_MATERIALS_I,
                         Talent.ALLOY_I,
-                        Talent.SCRAPS_I,
+                        Talent.GOLDEN_REPAIR_I,
+                        Talent.GOLDSMITH_I,
                         Talent.FORGE_LABORATORIES_I,
 
                         Talent.REPAIR_AMOUNT_II,
                         Talent.QUALITY_MATERIALS_II,
                         Talent.ALLOY_II,
-                        Talent.SCRAPS_II,
+                        Talent.GOLDEN_REPAIR_II,
+                        Talent.GOLDSMITH_II,
                         Talent.FORGE_LABORATORIES_II,
 
                         Talent.REPAIR_AMOUNT_III,
                         Talent.QUALITY_MATERIALS_III,
                         Talent.ALLOY_III,
-                        Talent.SCRAPS_III,
+                        Talent.GOLDEN_REPAIR_III,
+                        Talent.GOLDSMITH_III,
                         Talent.FORGE_LABORATORIES_III,
 
                         Talent.REPAIR_AMOUNT_IV,
                         Talent.QUALITY_MATERIALS_IV,
                         Talent.ALLOY_IV,
-                        Talent.SCRAPS_IV,
+                        Talent.GOLDEN_REPAIR_IV,
+                        Talent.GOLDSMITH_IV,
                         Talent.FORGE_LABORATORIES_IV,
 
                         Talent.REPAIR_AMOUNT_V,
                         Talent.QUALITY_MATERIALS_V,
                         Talent.ALLOY_V,
-                        Talent.SCRAPS_V,
+                        Talent.GOLDEN_REPAIR_V,
+                        Talent.GOLDSMITH_V,
                         Talent.FORGE_LABORATORIES_V
 
                 )

@@ -589,13 +589,21 @@ public enum Talent {
             1,
             Material.STONE_PICKAXE
     ),
-    SCRAPS_I(
-            "Scraps I",
-            ChatColor.GRAY + "Reuse leftover materials",
-            ChatColor.YELLOW + "-3 Reforge Mats",
-            3,
+    GOLDEN_REPAIR_I(
+            "Golden Repair I",
+            ChatColor.GRAY + "Improve gilding capacity",
+            ChatColor.GOLD + "+2 Golden Repair Amount",
+            2,
             1,
-            Material.COBBLESTONE
+            Material.GOLD_INGOT
+    ),
+    GOLDSMITH_I(
+            "Goldsmith I",
+            ChatColor.GRAY + "Refine golden craftsmanship",
+            ChatColor.GOLD + "+2 Golden Repair Quality",
+            1,
+            1,
+            Material.GOLD_BLOCK
     ),
     NOVICE_FOUNDATIONS(
             "Novice Foundations",
@@ -638,13 +646,21 @@ public enum Talent {
             20,
             Material.IRON_PICKAXE
     ),
-    SCRAPS_II(
-            "Scraps II",
-            ChatColor.GRAY + "Reduce material waste",
-            ChatColor.YELLOW + "-3 Reforge Mats",
-            3,
+    GOLDEN_REPAIR_II(
+            "Golden Repair II",
+            ChatColor.GRAY + "Improve gilding capacity",
+            ChatColor.GOLD + "+2 Golden Repair Amount",
+            2,
             20,
-            Material.IRON_NUGGET
+            Material.GOLD_INGOT
+    ),
+    GOLDSMITH_II(
+            "Goldsmith II",
+            ChatColor.GRAY + "Refine golden craftsmanship",
+            ChatColor.GOLD + "+2 Golden Repair Quality",
+            1,
+            20,
+            Material.GOLD_BLOCK
     ),
     APPRENTICE_FOUNDATIONS(
             "Apprentice Foundations",
@@ -687,13 +703,21 @@ public enum Talent {
             40,
             Material.GOLDEN_PICKAXE
     ),
-    SCRAPS_III(
-            "Scraps III",
-            ChatColor.GRAY + "Efficient recycling",
-            ChatColor.YELLOW + "-3 Reforge Mats",
-            3,
+    GOLDEN_REPAIR_III(
+            "Golden Repair III",
+            ChatColor.GRAY + "Improve gilding capacity",
+            ChatColor.GOLD + "+2 Golden Repair Amount",
+            2,
             40,
-            Material.GOLD_NUGGET
+            Material.GOLD_INGOT
+    ),
+    GOLDSMITH_III(
+            "Goldsmith III",
+            ChatColor.GRAY + "Refine golden craftsmanship",
+            ChatColor.GOLD + "+2 Golden Repair Quality",
+            1,
+            40,
+            Material.GOLD_BLOCK
     ),
     JOURNEYMAN_FOUNDATIONS(
             "Journeyman Foundations",
@@ -736,13 +760,21 @@ public enum Talent {
             60,
             Material.DIAMOND_PICKAXE
     ),
-    SCRAPS_IV(
-            "Scraps IV",
-            ChatColor.GRAY + "Minimal waste",
-            ChatColor.YELLOW + "-3 Reforge Mats",
-            3,
+    GOLDEN_REPAIR_IV(
+            "Golden Repair IV",
+            ChatColor.GRAY + "Improve gilding capacity",
+            ChatColor.GOLD + "+2 Golden Repair Amount",
+            2,
             60,
-            Material.DIAMOND
+            Material.GOLD_INGOT
+    ),
+    GOLDSMITH_IV(
+            "Goldsmith IV",
+            ChatColor.GRAY + "Refine golden craftsmanship",
+            ChatColor.GOLD + "+2 Golden Repair Quality",
+            1,
+            60,
+            Material.GOLD_BLOCK
     ),
     EXPERT_FOUNDATIONS(
             "Expert Foundations",
@@ -785,13 +817,21 @@ public enum Talent {
             80,
             Material.NETHERITE_PICKAXE
     ),
-    SCRAPS_V(
-            "Scraps V",
-            ChatColor.GRAY + "Zero waste",
-            ChatColor.YELLOW + "-3 Reforge Mats",
-            3,
+    GOLDEN_REPAIR_V(
+            "Golden Repair V",
+            ChatColor.GRAY + "Improve gilding capacity",
+            ChatColor.GOLD + "+2 Golden Repair Amount",
+            2,
             80,
-            Material.NETHERITE_SCRAP
+            Material.GOLD_INGOT
+    ),
+    GOLDSMITH_V(
+            "Goldsmith V",
+            ChatColor.GRAY + "Refine golden craftsmanship",
+            ChatColor.GOLD + "+2 Golden Repair Quality",
+            1,
+            80,
+            Material.GOLD_BLOCK
     ),
     MASTER_FOUNDATIONS(
             "Master Foundations",

@@ -247,15 +247,6 @@ public class AnvilRepair implements Listener {
                     case TIER_5 -> needed = Material.DIAMOND;
                 }
                 int matsCount = 64;
-                SkillTreeManager mgr = SkillTreeManager.getInstance();
-                if (mgr != null) {
-                    UUID uid = player.getUniqueId();
-                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_I) * 3;
-                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_II) * 3;
-                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_III) * 3;
-                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_IV) * 3;
-                    matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_V) * 3;
-                }
                 lore.add(ChatColor.GRAY + "Next: " + next.getColor() + next.name());
                 lore.add(ChatColor.GRAY + "Cost: " + matsCount + " " + formatMaterial(needed));
             }
@@ -1870,15 +1861,6 @@ public class AnvilRepair implements Listener {
         }
 
         int matsCount = 64;
-        SkillTreeManager mgr = SkillTreeManager.getInstance();
-        if (mgr != null) {
-            UUID uid = player.getUniqueId();
-            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_I) * 3;
-            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_II) * 3;
-            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_III) * 3;
-            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_IV) * 3;
-            matsCount -= mgr.getTalentLevel(uid, Skill.SMITHING, Talent.SCRAPS_V) * 3;
-        }
 
         if (mats.getType() != needed || mats.getAmount() < matsCount) {
             player.sendMessage(ChatColor.RED + "Not enough materials");
