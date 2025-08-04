@@ -29,6 +29,8 @@ public class Preservation implements Listener {
         if (mgr != null) {
             int max = mgr.getMaxDurability(item);
             mgr.setCustomDurability(item, Math.min(1, max), max);
+            int current = Math.max(max - 1, 1);
+            mgr.setCustomDurability(item, current, max);
         } else {
             item.setDurability((short) (item.getType().getMaxDurability() - 1));
         }
