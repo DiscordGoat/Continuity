@@ -94,7 +94,7 @@ public class ItemLoreFormatter {
 
         newLore.addAll(vanilla);
         newLore.addAll(custom);
-        if (power != null) {
+        if (power != null && !isSwordOrAxe(item)) {
             newLore.add(power);
             if (bar != null) newLore.add(bar);
             if(upgrades != null) newLore.add(upgrades);
@@ -119,6 +119,12 @@ public class ItemLoreFormatter {
         if (lastSpace == -1) return false;
         String numeral = stripped.substring(lastSpace + 1);
         return ROMAN.matcher(numeral).matches();
+    }
+
+    private static boolean isSwordOrAxe(ItemStack item) {
+        if (item == null) return false;
+        String n = item.getType().name();
+        return n.endsWith("_SWORD") || n.endsWith("_AXE");
     }
 
     private static boolean isArmor(ItemStack item) {
