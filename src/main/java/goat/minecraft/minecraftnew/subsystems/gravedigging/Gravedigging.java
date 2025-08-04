@@ -1,11 +1,8 @@
 package goat.minecraft.minecraftnew.subsystems.gravedigging;
 
-import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.gravedigging.corpses.CorpseEvent;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
-import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
-import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -16,20 +13,16 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
+import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
-import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
-import goat.minecraft.minecraftnew.other.beacon.Catalyst;
-import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
-import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +34,6 @@ import java.util.Random;
  * triggers a random event.
  */
 public class Gravedigging implements Listener {
-    private static final double BASE_CHANCE = 0.0005; // 0.01%
     private final Random random = new Random();
     private final Map<Location, BukkitTask> graves = new HashMap<>();
     private final Map<java.util.UUID, Integer> blockBreaks = new HashMap<>();
@@ -69,11 +61,6 @@ public class Gravedigging implements Listener {
 
         Bukkit.getLogger().info("All Citizens NPCs in world 'world' have been cleared.");
     }
-    private boolean isNight(World world) {
-        long time = world.getTime();
-        return time >= 13000 && time <= 23000;
-    }
-
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
@@ -108,65 +95,9 @@ public class Gravedigging implements Listener {
         int highest = world.getHighestBlockYAt(loc);
         if (loc.getBlockY() < highest) return;
         if(loc.getBlock().getType().equals(Material.DIRT) || loc.getBlock().getType().equals(Material.GRASS_BLOCK)) return;
-        // Calculate chance
-        double chance = BASE_CHANCE;
-        ItemStack tool = player.getInventory().getItemInMainHand();
-        if (tool != null && tool.getType().toString().endsWith("_SHOVEL")) {
-            int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Lynch");
-            chance += level * 0.0002;
-        }
-        PetManager petManager = PetManager.getInstance(plugin);
-        PetManager.Pet activePet = petManager.getActivePet(player);
-        if (activePet != null) {
-            if (activePet.hasPerk(PetManager.PetPerk.MEMORY)) {
-                chance += 0.001;
-            }
-            if (activePet.hasPerk(PetManager.PetPerk.HAUNTING)) {
-                chance += 0.002;
-            }
-            if (activePet.hasPerk(PetManager.PetPerk.SCREAM)) {
-                chance += 0.004;
-            }
-            if (activePet.hasPerk(PetManager.PetPerk.COLD)) {
-                chance += 0.005;
-            }
-            if (activePet.hasPerk(PetManager.PetPerk.MALIGNANCE)) {
-                chance += 0.010;
-            }
-            if (activePet.getTrait() == PetTrait.PARANORMAL) {
-                chance += activePet.getTrait().getValueForRarity(activePet.getTraitRarity());
-            }
-        }
-        if (PotionManager.isActive("Potion of Metal Detection", player)
-                && PotionEffectPreferences.isEnabled(player, "Potion of Metal Detection")) {
-            chance += 0.01;
-            if (SkillTreeManager.getInstance().hasTalent(player, Talent.METAL_DETECTION_MASTERY)) {
-                int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.METAL_DETECTION_MASTERY);
-                chance += 0.01 * level;
-            }
-        }
-        int gd1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_I);
-        int gd2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_II);
-        int gd3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_III);
-        int gd4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_IV);
-        int gd5 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_V);
-        chance += 0.001 * gd1;
-        chance += 0.0015 * gd2;
-        chance += 0.002 * gd3;
-        chance += 0.0025 * gd4;
-        chance += 0.00725 * gd5;
-
-        CatalystManager catalystManager = CatalystManager.getInstance();
-        if (catalystManager != null && catalystManager.isNearCatalyst(player.getLocation(), CatalystType.DEATH)) {
-            Catalyst cat = catalystManager.findNearestCatalyst(player.getLocation(), CatalystType.DEATH);
-            if (cat != null) {
-                int tier = catalystManager.getCatalystTier(cat);
-                chance += 0.01 + (tier * 0.001);
-            }
-        }
-        if (isNight(world)) {
-            chance = Math.min(1.0, chance * 2);
-        }
+        // Calculate chance via StatsCalculator to keep logic centralized
+        StatsCalculator calc = StatsCalculator.getInstance(plugin);
+        double chance = calc.getGraveChance(player) / 100.0;
 
         // Roll for grave spawn
         if (random.nextDouble() <= chance) {
