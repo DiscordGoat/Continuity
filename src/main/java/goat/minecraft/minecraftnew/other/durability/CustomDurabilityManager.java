@@ -119,6 +119,16 @@ public class CustomDurabilityManager implements Listener {
     }
 
     /**
+     * Checks if the item has custom durability data stored.
+     */
+    public boolean hasCustomDurability(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        return data.has(currentKey, PersistentDataType.INTEGER) && data.has(maxKey, PersistentDataType.INTEGER);
+    }
+
+    /**
      * Returns true if the item currently has golden durability applied.
      */
     public boolean hasGoldenDurability(ItemStack item) {
@@ -163,6 +173,28 @@ public class CustomDurabilityManager implements Listener {
         int max = getMaxDurability(item);
         updateLore(item, current, max);
         updateVanillaDamage(item, current, max);
+    }
+
+    /**
+     * Adds to the existing golden durability values on the item.
+     */
+    public void addGoldenDurability(ItemStack item, int amount) {
+        if (item == null || amount <= 0) return;
+        int cur = getGoldenDurability(item);
+        int max = getGoldenMaxDurability(item);
+        int newCur = cur + amount;
+        int newMax = max + amount;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.set(goldenKey, PersistentDataType.INTEGER, newCur);
+        data.set(goldenMaxKey, PersistentDataType.INTEGER, newMax);
+        item.setItemMeta(meta);
+
+        int current = getCurrentDurability(item);
+        int maxDur = getMaxDurability(item);
+        updateLore(item, current, maxDur);
+        updateVanillaDamage(item, current, maxDur);
     }
 
     /**
