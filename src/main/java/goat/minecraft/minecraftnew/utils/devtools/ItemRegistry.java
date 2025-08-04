@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.utils.devtools;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
+import goat.minecraft.minecraftnew.other.durability.HeirloomManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -4653,6 +4654,62 @@ public class ItemRegistry {
                 false,
                 true
         );
+    }
+
+    // ===== Heirlooms =====
+
+    public static ItemStack getGoldenRing() {
+        ItemStack item = createCustomItem(
+                Material.LEATHER_CHESTPLATE,
+                ChatColor.GOLD + "Golden Ring",
+                Arrays.asList(
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+        HeirloomManager mgr = HeirloomManager.getInstance();
+        if (mgr != null) {
+            mgr.setGild(item, 0, 100);
+        }
+        return item;
+    }
+
+    public static ItemStack getGoldenChalice() {
+        ItemStack item = createCustomItem(
+                Material.LEATHER_CHESTPLATE,
+                ChatColor.GOLD + "Golden Chalice",
+                Arrays.asList(
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+        HeirloomManager mgr = HeirloomManager.getInstance();
+        if (mgr != null) {
+            mgr.setGild(item, 0, 250);
+        }
+        return item;
+    }
+
+    public static ItemStack getGoldenCrown() {
+        ItemStack item = createCustomItem(
+                Material.LEATHER_CHESTPLATE,
+                ChatColor.GOLD + "Golden Crown",
+                Arrays.asList(
+                        ChatColor.DARK_PURPLE + "Smithing Item"
+                ),
+                1,
+                false,
+                true
+        );
+        HeirloomManager mgr = HeirloomManager.getInstance();
+        if (mgr != null) {
+            mgr.setGild(item, 0, 500);
+        }
+        return item;
     }
 
     /** Legendary melon artifact. */

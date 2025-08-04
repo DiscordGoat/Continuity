@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.subsystems.smithing;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
+import goat.minecraft.minecraftnew.other.durability.HeirloomManager;
 import goat.minecraft.minecraftnew.subsystems.mining.MiningGemManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.ReforgeSubsystem;
@@ -845,7 +846,28 @@ public class AnvilRepair implements Listener {
             repairAmount = repairAmount + 150;
         }
         // Determine the type of repair material and set the repair amount accordingly
-        if (billItem.getType() == Material.IRON_INGOT) {
+        if (billItem.getType() == Material.GOLD_INGOT) {
+            if (HeirloomManager.getInstance().isHeirloom(repairee)) {
+                StatsCalculator statsCalculator = StatsCalculator.getInstance(MinecraftNew.getInstance());
+                double quality = statsCalculator.getGoldenRepairQuality(player);
+                double max = statsCalculator.getGoldenRepairAmount(player);
+                double roll = max > quality ? quality + new Random().nextDouble(max - quality + 1) : quality;
+                int gild = (int) roll;
+                HeirloomManager.getInstance().addGild(repairee, gild);
+                billItem.setAmount(billItem.getAmount() - 1);
+                xpManager.addXP(player, "Smithing", roll);
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            }
+            return;
+        } else if (HeirloomManager.getInstance().isHeirloom(billItem)
+                && CustomDurabilityManager.getInstance().hasCustomDurability(repairee)
+                && HeirloomManager.getInstance().getGild(billItem) > 0) {
+            int gild = HeirloomManager.getInstance().getGild(billItem);
+            CustomDurabilityManager.getInstance().addGoldenDurability(repairee, gild);
+            HeirloomManager.getInstance().setGild(billItem, 0, HeirloomManager.getInstance().getMaxGild(billItem));
+            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            return;
+        } else if (billItem.getType() == Material.IRON_INGOT) {
             StatsCalculator statsCalculator = StatsCalculator.getInstance(MinecraftNew.getInstance());
             double quality = statsCalculator.getRepairQuality(player);
             double roll = quality;

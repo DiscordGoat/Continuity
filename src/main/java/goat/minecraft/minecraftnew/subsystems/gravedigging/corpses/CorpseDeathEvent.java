@@ -20,6 +20,8 @@ import org.bukkit.metadata.MetadataValue;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Handles drops and cleanup when a Corpse NPC dies.
@@ -75,6 +77,20 @@ public class CorpseDeathEvent implements Listener {
                 }
             }
         });
+
+        // 4% chance to drop a random heirloom
+        if (new Random().nextDouble() < 0.04) {
+            ItemStack heirloom;
+            int r = new Random().nextInt(3);
+            if (r == 0) {
+                heirloom = ItemRegistry.getGoldenRing();
+            } else if (r == 1) {
+                heirloom = ItemRegistry.getGoldenChalice();
+            } else {
+                heirloom = ItemRegistry.getGoldenCrown();
+            }
+            entity.getWorld().dropItemNaturally(entity.getLocation(), heirloom);
+        }
 
         Player killer = event.getEntity().getKiller();
         if (killer != null) {

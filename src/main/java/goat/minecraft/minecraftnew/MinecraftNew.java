@@ -100,6 +100,7 @@ import goat.minecraft.minecraftnew.other.armorsets.LostLegionSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.CountershotSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.StriderSetBonus;
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
+import goat.minecraft.minecraftnew.other.durability.HeirloomManager;
 import goat.minecraft.minecraftnew.other.skilltree.SwiftStepMasteryBonus;
 import goat.minecraft.minecraftnew.other.skilltree.FastFarmerBonus;
 import goat.minecraft.minecraftnew.other.skilltree.SpectralArmorBonus;
@@ -262,6 +263,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         new SetDurabilityCommand(this);
         CustomDurabilityManager.init(this);
+        HeirloomManager.init(this);
         new SetCustomDurabilityCommand(this);
         new AddGoldenDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
