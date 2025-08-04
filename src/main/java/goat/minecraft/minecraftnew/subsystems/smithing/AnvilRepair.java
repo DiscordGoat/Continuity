@@ -668,6 +668,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.ENDER_EYE);
                     billableItems.add(Material.WHITE_DYE);
                     billableItems.add(Material.IRON_SHOVEL);
+                    billableItems.add(Material.LEATHER_CHESTPLATE);
                     billableItems.add(Material.LEATHER);
                     billableItems.add(Material.RED_DYE);
                     billableItems.add(Material.MOJANG_BANNER_PATTERN);
@@ -864,6 +865,7 @@ public class AnvilRepair implements Listener {
                 && HeirloomManager.getInstance().getGild(billItem) > 0) {
             int gild = HeirloomManager.getInstance().getGild(billItem);
             CustomDurabilityManager.getInstance().addGoldenDurability(repairee, gild);
+            billItem.setAmount(0);
             HeirloomManager.getInstance().setGild(billItem, 0, HeirloomManager.getInstance().getMaxGild(billItem));
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;

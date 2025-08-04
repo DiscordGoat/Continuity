@@ -595,7 +595,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Amount",
             2,
             1,
-            Material.GOLD_INGOT
+            Material.RAW_GOLD
     ),
     GOLDSMITH_I(
             "Goldsmith I",
@@ -603,7 +603,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Quality",
             1,
             1,
-            Material.GOLD_BLOCK
+            Material.GOLD_NUGGET
     ),
     NOVICE_FOUNDATIONS(
             "Novice Foundations",
@@ -652,7 +652,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Amount",
             2,
             20,
-            Material.GOLD_INGOT
+            Material.RAW_GOLD
     ),
     GOLDSMITH_II(
             "Goldsmith II",
@@ -660,7 +660,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Quality",
             1,
             20,
-            Material.GOLD_BLOCK
+            Material.GOLD_NUGGET
     ),
     APPRENTICE_FOUNDATIONS(
             "Apprentice Foundations",
@@ -709,7 +709,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Amount",
             2,
             40,
-            Material.GOLD_INGOT
+            Material.RAW_GOLD
     ),
     GOLDSMITH_III(
             "Goldsmith III",
@@ -717,7 +717,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Quality",
             1,
             40,
-            Material.GOLD_BLOCK
+            Material.GOLD_NUGGET
     ),
     JOURNEYMAN_FOUNDATIONS(
             "Journeyman Foundations",
@@ -766,7 +766,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Amount",
             2,
             60,
-            Material.GOLD_INGOT
+            Material.RAW_GOLD
     ),
     GOLDSMITH_IV(
             "Goldsmith IV",
@@ -774,7 +774,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Quality",
             1,
             60,
-            Material.GOLD_BLOCK
+            Material.GOLD_NUGGET
     ),
     EXPERT_FOUNDATIONS(
             "Expert Foundations",
@@ -823,7 +823,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Amount",
             2,
             80,
-            Material.GOLD_INGOT
+            Material.RAW_GOLD
     ),
     GOLDSMITH_V(
             "Goldsmith V",
@@ -831,7 +831,7 @@ public enum Talent {
             ChatColor.GOLD + "+2 Golden Repair Quality",
             1,
             80,
-            Material.GOLD_BLOCK
+            Material.GOLD_NUGGET
     ),
     MASTER_FOUNDATIONS(
             "Master Foundations",
@@ -1637,7 +1637,7 @@ public enum Talent {
             1,
             60,
             Material.BLACK_WOOL
-      ),
+    ),
     MOTION_SENSOR(
             "Motion Sensor",
             ChatColor.GRAY + "Automatically open wooden doors",

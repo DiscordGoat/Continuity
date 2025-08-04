@@ -182,8 +182,8 @@ public class CustomDurabilityManager implements Listener {
         if (item == null || amount <= 0) return;
         int cur = getGoldenDurability(item);
         int max = getGoldenMaxDurability(item);
-        int newCur = cur + amount;
-        int newMax = max + amount;
+        int newCur = amount;
+        int newMax = amount;
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         PersistentDataContainer data = meta.getPersistentDataContainer();
@@ -196,6 +196,7 @@ public class CustomDurabilityManager implements Listener {
         updateLore(item, current, maxDur);
         updateVanillaDamage(item, current, maxDur);
     }
+
 
     /**
      * Updates the current golden durability while keeping the max the same.
