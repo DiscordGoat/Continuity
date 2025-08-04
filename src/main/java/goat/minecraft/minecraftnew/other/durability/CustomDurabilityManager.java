@@ -32,12 +32,14 @@ public class CustomDurabilityManager implements Listener {
     private final NamespacedKey currentKey;
     private final NamespacedKey maxKey;
     private final NamespacedKey bonusKey;
+    private final NamespacedKey goldenKey;
 
     private CustomDurabilityManager(JavaPlugin plugin) {
         this.plugin = plugin;
         this.currentKey = new NamespacedKey(plugin, "custom_durability");
         this.maxKey = new NamespacedKey(plugin, "custom_max_durability");
         this.bonusKey = new NamespacedKey(plugin, "custom_bonus_durability");
+        this.goldenKey = new NamespacedKey(plugin, "golden_durability");
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -134,6 +136,38 @@ public class CustomDurabilityManager implements Listener {
     }
 
     /**
+     * Sets the golden durability on the item. A value of 0 removes it.
+     */
+    public void setGoldenDurability(ItemStack item, int amount) {
+        if (item == null) return;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        if (amount > 0) {
+            data.set(goldenKey, PersistentDataType.INTEGER, amount);
+        } else {
+            data.remove(goldenKey);
+        }
+        item.setItemMeta(meta);
+
+        int current = getCurrentDurability(item);
+        int max = getMaxDurability(item);
+        updateLore(item, current, max);
+        updateVanillaDamage(item, current, max);
+    }
+
+    /**
+     * Returns the golden durability stored on the item, or 0 if none.
+     */
+    public int getGoldenDurability(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return 0;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        Integer value = data.get(goldenKey, PersistentDataType.INTEGER);
+        return value != null ? value : 0;
+    }
+
+    /**
      * Ensures items with the custom Unbreaking enchantment have their
      * associated durability bonus applied. This allows preexisting
      * enchanted items to receive the bonus when they first take damage.
@@ -154,6 +188,19 @@ public class CustomDurabilityManager implements Listener {
     public void applyDamage(Player player, ItemStack item, int amount) {
         convertVanillaUnbreaking(item);
         ensureUnbreakingBonus(item);
+
+        int golden = getGoldenDurability(item);
+        if (golden > 0) {
+            int newGolden = golden - amount;
+            if (newGolden > 0) {
+                setGoldenDurability(item, newGolden);
+                return;
+            } else {
+                amount = -newGolden; // leftover damage
+                setGoldenDurability(item, 0);
+                if (amount <= 0) return;
+            }
+        }
 
         int current = getCurrentDurability(item);
         int max = getMaxDurability(item);
@@ -217,9 +264,17 @@ public class CustomDurabilityManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
-        String line = ChatColor.GRAY + "Durability: " + current + "/" + max;
-        if (!lore.isEmpty() && ChatColor.stripColor(lore.get(lore.size() - 1)).startsWith("Durability:")) {
-            lore.set(lore.size() - 1, line);
+        int golden = getGoldenDurability(item);
+        String line = golden > 0
+                ? ChatColor.GOLD + "Golden Durability: " + golden
+                : ChatColor.GRAY + "Durability: " + current + "/" + max;
+        if (!lore.isEmpty()) {
+            String last = ChatColor.stripColor(lore.get(lore.size() - 1));
+            if (last.startsWith("Durability:") || last.startsWith("Golden Durability:")) {
+                lore.set(lore.size() - 1, line);
+            } else {
+                lore.add(line);
+            }
         } else {
             lore.add(line);
         }
@@ -230,6 +285,17 @@ public class CustomDurabilityManager implements Listener {
 
     private void updateVanillaDamage(ItemStack item, int current, int max) {
         ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        int golden = getGoldenDurability(item);
+        if (golden > 0) {
+            if (meta instanceof Damageable damageable) {
+                damageable.setDamage(0);
+            }
+            meta.setUnbreakable(true);
+            item.setItemMeta(meta);
+            return;
+        }
+
         if (meta instanceof Damageable damageable) {
             int vanillaMax = item.getType().getMaxDurability();
             if (vanillaMax > 0) {
@@ -238,8 +304,12 @@ public class CustomDurabilityManager implements Listener {
                 if (newDamage < 0) newDamage = 0;
                 if (newDamage > vanillaMax) newDamage = vanillaMax;
                 damageable.setDamage(newDamage);
+                meta.setUnbreakable(false);
                 item.setItemMeta(meta);
             }
+        } else {
+            meta.setUnbreakable(false);
+            item.setItemMeta(meta);
         }
     }
 

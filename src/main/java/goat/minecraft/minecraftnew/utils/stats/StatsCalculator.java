@@ -415,4 +415,38 @@ public class StatsCalculator {
         }
         return quality;
     }
+
+    /**
+     * Golden repair amount from smithing talents.
+     * Base amount is 10.
+     */
+    public double getGoldenRepairAmount(Player player) {
+        double amount = 10.0; // base
+        if (SkillTreeManager.getInstance() != null) {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDEN_REPAIR_I) * 2;
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDEN_REPAIR_II) * 2;
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDEN_REPAIR_III) * 2;
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDEN_REPAIR_IV) * 2;
+            amount += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDEN_REPAIR_V) * 2;
+        }
+        return amount;
+    }
+
+    /**
+     * Golden repair quality from smithing talents.
+     * Base quality is 0.
+     */
+    public double getGoldenRepairQuality(Player player) {
+        double quality = 0.0; // base
+        if (SkillTreeManager.getInstance() != null) {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDSMITH_I) * 2;
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDSMITH_II) * 2;
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDSMITH_III) * 2;
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDSMITH_IV) * 2;
+            quality += mgr.getTalentLevel(player.getUniqueId(), Skill.SMITHING, Talent.GOLDSMITH_V) * 2;
+        }
+        return quality;
+    }
 }

@@ -67,6 +67,7 @@ import goat.minecraft.minecraftnew.utils.commands.TogglePotionEffectsCommand;
 import goat.minecraft.minecraftnew.utils.commands.ToggleBarsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
+import goat.minecraft.minecraftnew.utils.developercommands.AddGoldenDurabilityCommand;
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.developercommands.AddTalentPointCommand;
@@ -263,6 +264,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         new SetDurabilityCommand(this);
         CustomDurabilityManager.init(this);
         new SetCustomDurabilityCommand(this);
+        new AddGoldenDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
         PetManager petManager = PetManager.getInstance(this);
         this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));

@@ -89,6 +89,8 @@ public class StatsCommand implements CommandExecutor, Listener {
         addStatItem(inv, slots[index++], Material.WHEAT, "Double Crop Chance", String.format("%.1f%%", calculator.getDoubleCropChance(player)));
         addStatItem(inv, slots[index++], Material.ANVIL, "Repair Amount", String.format("%.1f", calculator.getRepairAmount(player)));
         addStatItem(inv, slots[index++], Material.ENCHANTED_BOOK, "Repair Quality", String.format("%.1f", calculator.getRepairQuality(player)));
+        addStatItem(inv, slots[index++], Material.GOLD_INGOT, "Golden Repair Amount", String.format("%.1f", calculator.getGoldenRepairAmount(player)));
+        addStatItem(inv, slots[index++], Material.GOLD_BLOCK, "Golden Repair Quality", String.format("%.1f", calculator.getGoldenRepairQuality(player)));
 
         player.openInventory(inv);
     }

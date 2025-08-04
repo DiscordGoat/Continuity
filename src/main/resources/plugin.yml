@@ -47,6 +47,10 @@ commands:
     description: Sets custom durability values on the held item
     usage: /setcustomdurability <current> <max>
     permission: continuity.admin
+  addgoldendurability:
+    description: Sets Golden Durability on the held item
+    usage: /addgoldendurability <amount>
+    permission: continuity.admin
   forceworkcycle:
     description: Forces the villager work cycle timer to 1 second.
     usage: /<command>
