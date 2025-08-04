@@ -376,8 +376,10 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 1.5) + "% Chance to increase Max Durability";
             case NOVICE_SMITH:
                 return ChatColor.YELLOW + "+" + (level * 25) + "% Common Reforge Chance";
-            case SCRAPS_I:
-                return ChatColor.YELLOW + "-" + (level * 3) + " Mats required to start a Reforge";
+            case GOLDEN_REPAIR_I:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Amount";
+            case GOLDSMITH_I:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Quality";
             case NOVICE_FOUNDATIONS:
                 return ChatColor.YELLOW + "-" + (level * 25) + "% Anvil Degrade Chance";
 
@@ -389,8 +391,10 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 1.5) + "% Chance to increase Max Durability";
             case APPRENTICE_SMITH:
                 return ChatColor.YELLOW + "+" + (level * 25) + "% Uncommon Reforge Chance";
-            case SCRAPS_II:
-                return ChatColor.YELLOW + "-" + (level * 3) + " Mats required to start a Reforge";
+            case GOLDEN_REPAIR_II:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Amount";
+            case GOLDSMITH_II:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Quality";
             case APPRENTICE_FOUNDATIONS:
                 return ChatColor.YELLOW + "-" + (level * 25) + "% Anvil Degrade Chance";
 
@@ -402,8 +406,10 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 1.5) + "% Chance to increase Max Durability";
             case JOURNEYMAN_SMITH:
                 return ChatColor.YELLOW + "+" + (level * 25) + "% Rare Reforge Chance";
-            case SCRAPS_III:
-                return ChatColor.YELLOW + "-" + (level * 3) + " Mats required to start a Reforge";
+            case GOLDEN_REPAIR_III:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Amount";
+            case GOLDSMITH_III:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Quality";
             case JOURNEYMAN_FOUNDATIONS:
                 return ChatColor.YELLOW + "-" + (level * 25) + "% Anvil Degrade Chance";
 
@@ -415,8 +421,10 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 1.5) + "% Chance to increase Max Durability";
             case EXPERT_SMITH:
                 return ChatColor.YELLOW + "+" + (level * 25) + "% Epic Reforge Chance";
-            case SCRAPS_IV:
-                return ChatColor.YELLOW + "-" + (level * 3) + " Mats required to start a Reforge";
+            case GOLDEN_REPAIR_IV:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Amount";
+            case GOLDSMITH_IV:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Quality";
             case EXPERT_FOUNDATIONS:
                 return ChatColor.YELLOW + "-" + (level * 25) + "% Anvil Degrade Chance";
 
@@ -428,8 +436,10 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 0.5) + "% Chance to increase Max Durability";
             case MASTER_SMITH:
                 return ChatColor.YELLOW + "+" + (level * 25) + "% Legendary Reforge Chance";
-            case SCRAPS_V:
-                return ChatColor.YELLOW + "-" + (level * 3) + " Mats required to start a Reforge";
+            case GOLDEN_REPAIR_V:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Amount";
+            case GOLDSMITH_V:
+                return ChatColor.GOLD + "+" + (level * 2) + ChatColor.GRAY + " Golden Repair Quality";
             case MASTER_FOUNDATIONS:
                 return ChatColor.YELLOW + "-" + (level * 25) + "% Anvil Degrade Chance";
             case FORGE_LABORATORIES_I:
