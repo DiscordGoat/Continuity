@@ -164,7 +164,7 @@ public class CustomDurabilityManager implements Listener {
         if (updated == 0 && player != null
                 && CustomEnchantmentManager.isEnchantmentActive(player, item, "Preservation")) {
             preserved = true;
-            updated = Math.max(max - 1, 1);
+            updated = Math.min(max, 1);
         }
 
         setCustomDurability(item, updated, max);
