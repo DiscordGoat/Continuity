@@ -32,12 +32,16 @@ public class CustomDurabilityManager implements Listener {
     private final NamespacedKey currentKey;
     private final NamespacedKey maxKey;
     private final NamespacedKey bonusKey;
+    private final NamespacedKey goldenKey;
+    private final NamespacedKey goldenMaxKey;
 
     private CustomDurabilityManager(JavaPlugin plugin) {
         this.plugin = plugin;
         this.currentKey = new NamespacedKey(plugin, "custom_durability");
         this.maxKey = new NamespacedKey(plugin, "custom_max_durability");
         this.bonusKey = new NamespacedKey(plugin, "custom_bonus_durability");
+        this.goldenKey = new NamespacedKey(plugin, "golden_durability");
+        this.goldenMaxKey = new NamespacedKey(plugin, "golden_max_durability");
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -115,6 +119,86 @@ public class CustomDurabilityManager implements Listener {
     }
 
     /**
+     * Returns true if the item currently has golden durability applied.
+     */
+    public boolean hasGoldenDurability(ItemStack item) {
+        return getGoldenDurability(item) > 0;
+    }
+
+    /**
+     * Gets the current golden durability on the item.
+     */
+    public int getGoldenDurability(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return 0;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        Integer value = data.get(goldenKey, PersistentDataType.INTEGER);
+        return value != null ? value : 0;
+    }
+
+    /**
+     * Gets the max golden durability on the item.
+     */
+    public int getGoldenMaxDurability(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return 0;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        Integer value = data.get(goldenMaxKey, PersistentDataType.INTEGER);
+        return value != null ? value : 0;
+    }
+
+    /**
+     * Applies golden durability to the item.
+     */
+    public void setGoldenDurability(ItemStack item, int amount) {
+        if (item == null || amount <= 0) return;
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.set(goldenKey, PersistentDataType.INTEGER, amount);
+        data.set(goldenMaxKey, PersistentDataType.INTEGER, amount);
+        item.setItemMeta(meta);
+
+        int current = getCurrentDurability(item);
+        int max = getMaxDurability(item);
+        updateLore(item, current, max);
+        updateVanillaDamage(item, current, max);
+    }
+
+    /**
+     * Updates the current golden durability while keeping the max the same.
+     */
+    private void setGoldenCurrent(ItemStack item, int amount) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.set(goldenKey, PersistentDataType.INTEGER, Math.max(0, amount));
+        item.setItemMeta(meta);
+
+        int current = getCurrentDurability(item);
+        int max = getMaxDurability(item);
+        updateLore(item, current, max);
+        updateVanillaDamage(item, current, max);
+    }
+
+    /**
+     * Removes all golden durability data from the item.
+     */
+    public void removeGoldenDurability(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.remove(goldenKey);
+        data.remove(goldenMaxKey);
+        item.setItemMeta(meta);
+
+        int current = getCurrentDurability(item);
+        int max = getMaxDurability(item);
+        updateLore(item, current, max);
+        updateVanillaDamage(item, current, max);
+    }
+
+    /**
      * Adds bonus max durability to the item and updates lore.
      */
     public void addMaxDurabilityBonus(ItemStack item, int amount) {
@@ -154,6 +238,20 @@ public class CustomDurabilityManager implements Listener {
     public void applyDamage(Player player, ItemStack item, int amount) {
         convertVanillaUnbreaking(item);
         ensureUnbreakingBonus(item);
+        int golden = getGoldenDurability(item);
+        if (golden > 0) {
+            int newGolden = golden - amount;
+            if (newGolden > 0) {
+                setGoldenCurrent(item, newGolden);
+                return;
+            } else {
+                removeGoldenDurability(item);
+                amount = -newGolden;
+                if (amount <= 0) {
+                    return;
+                }
+            }
+        }
 
         int current = getCurrentDurability(item);
         int max = getMaxDurability(item);
@@ -217,9 +315,21 @@ public class CustomDurabilityManager implements Listener {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
-        String line = ChatColor.GRAY + "Durability: " + current + "/" + max;
-        if (!lore.isEmpty() && ChatColor.stripColor(lore.get(lore.size() - 1)).startsWith("Durability:")) {
-            lore.set(lore.size() - 1, line);
+        String line;
+        if (hasGoldenDurability(item)) {
+            int gCur = getGoldenDurability(item);
+            int gMax = getGoldenMaxDurability(item);
+            line = ChatColor.GOLD + "Golden Durability: " + gCur + "/" + gMax;
+        } else {
+            line = ChatColor.GRAY + "Durability: " + current + "/" + max;
+        }
+        if (!lore.isEmpty()) {
+            String stripped = ChatColor.stripColor(lore.get(lore.size() - 1));
+            if (stripped.startsWith("Durability:") || stripped.startsWith("Golden Durability:")) {
+                lore.set(lore.size() - 1, line);
+            } else {
+                lore.add(line);
+            }
         } else {
             lore.add(line);
         }
@@ -233,11 +343,15 @@ public class CustomDurabilityManager implements Listener {
         if (meta instanceof Damageable damageable) {
             int vanillaMax = item.getType().getMaxDurability();
             if (vanillaMax > 0) {
-                double ratio = 1.0 - ((double) current / max);
-                int newDamage = (int) Math.round(ratio * vanillaMax);
-                if (newDamage < 0) newDamage = 0;
-                if (newDamage > vanillaMax) newDamage = vanillaMax;
-                damageable.setDamage(newDamage);
+                if (hasGoldenDurability(item)) {
+                    damageable.setDamage(0);
+                } else {
+                    double ratio = 1.0 - ((double) current / max);
+                    int newDamage = (int) Math.round(ratio * vanillaMax);
+                    if (newDamage < 0) newDamage = 0;
+                    if (newDamage > vanillaMax) newDamage = vanillaMax;
+                    damageable.setDamage(newDamage);
+                }
                 item.setItemMeta(meta);
             }
         }

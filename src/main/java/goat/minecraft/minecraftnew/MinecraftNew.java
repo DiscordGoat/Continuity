@@ -263,6 +263,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         new SetDurabilityCommand(this);
         CustomDurabilityManager.init(this);
         new SetCustomDurabilityCommand(this);
+        new AddGoldenDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
         PetManager petManager = PetManager.getInstance(this);
         this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));
