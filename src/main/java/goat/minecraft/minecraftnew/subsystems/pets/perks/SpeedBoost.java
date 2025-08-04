@@ -43,8 +43,8 @@ public class SpeedBoost implements Listener {
                 speed *= (1.0 + bonusPercent / 100.0);
             }
 
-            // Apply Speed Boost perk bonus if present
-            if (activePet.hasPerk(PetManager.PetPerk.SPEED_BOOST) || talent > 0) {
+            // Apply Speed Boost perk bonus if the perk is active
+            if (activePet.hasPerk(PetManager.PetPerk.SPEED_BOOST)) {
                 int petLevel = activePet.getLevel();
                 speed += DEFAULT_WALK_SPEED * petLevel * 0.004f; // Add 0.5% per level of the pet
                 speed *= (1 + talent * 0.10);

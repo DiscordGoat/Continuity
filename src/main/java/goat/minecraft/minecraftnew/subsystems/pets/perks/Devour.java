@@ -32,13 +32,12 @@ public class Devour implements Listener {
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        int talent = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.DEVOUR);
-        }
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.DEVOUR)) {
+            int talent = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.DEVOUR);
+            }
 
-        // Check if the player has the DEVOUR perk or talent
-        if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.DEVOUR)) || talent > 0) {
             // Check if the damaged entity is a living entity
             if (event.getEntity() instanceof LivingEntity) {
                 int amount = 1;

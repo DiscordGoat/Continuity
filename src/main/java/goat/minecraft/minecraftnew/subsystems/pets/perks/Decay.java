@@ -32,18 +32,16 @@ public class Decay implements Listener {
         if (!(event.getEntity() instanceof LivingEntity target)) return;
 
         PetManager.Pet activePet = petManager.getActivePet(player);
-
-        int stacks = 0;
-        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.DECAY)) {
-            stacks += 10;
+        if (activePet == null || !activePet.hasPerk(PetManager.PetPerk.DECAY)) {
+            return;
         }
+
+        int stacks = 10;
         if (SkillTreeManager.getInstance() != null) {
             int level = SkillTreeManager.getInstance()
                     .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.DECAY);
             stacks += level * 5;
         }
-        if (stacks > 0) {
-            DeteriorationDamageHandler.getInstance().addDeterioration(target, stacks);
-        }
+        DeteriorationDamageHandler.getInstance().addDeterioration(target, stacks);
     }
 }

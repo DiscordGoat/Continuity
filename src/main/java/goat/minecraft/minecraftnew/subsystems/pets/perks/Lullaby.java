@@ -33,20 +33,19 @@ public class Lullaby implements Listener {
 
         // Check for players in the world
         for (Player player : world.getPlayers()) {
-            // Get the player's active pet
+            // Get the player's active pet and ensure the perk is active
             PetManager.Pet activePet = petManager.getActivePet(player);
             boolean hasPerk = activePet != null && (activePet.hasPerk(PetManager.PetPerk.LULLABY)
                     || activePet.hasUniqueTraitPerk(PetManager.PetPerk.LULLABY));
+            if (!hasPerk) {
+                continue;
+            }
 
-            int petLevel = activePet != null ? activePet.getLevel() : 0;
+            int petLevel = activePet.getLevel();
 
             int talentLevel = 0;
             if (SkillTreeManager.getInstance() != null) {
                 talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.LULLABY);
-            }
-
-            if (!hasPerk && talentLevel <= 0) {
-                continue;
             }
 
             // Calculate the radius based on the pet's level and talent level

@@ -1,6 +1,5 @@
 package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
-import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
@@ -79,13 +78,8 @@ public class Flight implements Listener {
         // Reset flight stats if the 3-day period has passed
         resetFlightStatsIfNewDay(player);
 
-        // Calculate the maximum flight time based on player's level
-        int petLevel = activePet != null ? activePet.getLevel() : 0;
-        int flightTalent = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            flightTalent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
-        }
-        int maxFlightSeconds = calculateMaxFlightSeconds(player, petLevel + (flightTalent * 10));
+        // Calculate the maximum flight time based on player's level and talents
+        int maxFlightSeconds = calculateMaxFlightSeconds(player, activePet);
 
         // Calculate remaining flight time
         int flownSeconds = dailyFlightTracker.getOrDefault(playerId, 0);
@@ -114,19 +108,20 @@ public class Flight implements Listener {
     }
 
     /**
-     * Calculates the maximum flight distance based on the player's pet level.
+     * Calculates the maximum flight distance based on the player's active pet level.
      *
-     * @param level The pet level (0-100).
+     * @param activePet The player's active pet.
      * @return The maximum flight distance in kilometers.
      */
-    private int calculateMaxFlightSeconds(Player player, int level) {
+    private int calculateMaxFlightSeconds(Player player, PetManager.Pet activePet) {
+        int level = activePet != null ? activePet.getLevel() : 0;
         // Flight time scales linearly with level from 0s to MAX_FLIGHT_SECONDS_AT_LEVEL_100 at level 100
         int seconds = (int) (MAX_FLIGHT_SECONDS_AT_LEVEL_100 * (level / 100.0));
-        int talentLevel = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
-        }
-        if(PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player).hasPerk(PetManager.PetPerk.FLIGHT)){
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.FLIGHT)) {
+            int talentLevel = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
+            }
             seconds += talentLevel * 6; // each talent level adds 6 seconds
         }
         return seconds;
@@ -165,8 +160,7 @@ public class Flight implements Listener {
 
                         // Get the pet's level and max time
                         PetManager.Pet activePet = petManager.getActivePet(player);
-                        int petLevel = activePet != null ? activePet.getLevel() : 0;
-                        int maxSeconds = calculateMaxFlightSeconds(player, petLevel);
+                        int maxSeconds = calculateMaxFlightSeconds(player, activePet);
 
                         // Check if the player exceeds the limit
                         if (flown >= maxSeconds) {

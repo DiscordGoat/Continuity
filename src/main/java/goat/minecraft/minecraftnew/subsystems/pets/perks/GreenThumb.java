@@ -43,6 +43,13 @@ public class GreenThumb implements Listener {
         UUID playerId = player.getUniqueId();
         long currentTime = System.currentTimeMillis();
 
+        // Check if player has the Green Thumb perk or unique trait
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        if (activePet == null || !(activePet.hasPerk(PetManager.PetPerk.GREEN_THUMB)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.GREEN_THUMB))) {
+            return;
+        }
+
         int talent = 0;
         if (SkillTreeManager.getInstance() != null) {
             talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.GREEN_THUMB);
@@ -55,16 +62,11 @@ public class GreenThumb implements Listener {
             return; // Growth cooldown hasn't passed
         }
 
-        // Check if player has the Green Thumb perk or unique trait
-        PetManager.Pet activePet = petManager.getActivePet(player);
-        if ((activePet != null && (activePet.hasPerk(PetManager.PetPerk.GREEN_THUMB)
-                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.GREEN_THUMB))) || talent > 0) {
-            int petLevel = activePet != null ? activePet.getLevel() : 0;
-            int radius = 10 + petLevel;
-            growCropsAroundPlayer(player, radius);
-            player.sendMessage(ChatColor.YELLOW + "Your pet naturally grows nearby crops!");
-            lastGrowthTime.put(playerId, currentTime); // Update growth time
-        }
+        int petLevel = activePet.getLevel();
+        int radius = 10 + petLevel;
+        growCropsAroundPlayer(player, radius);
+        player.sendMessage(ChatColor.YELLOW + "Your pet naturally grows nearby crops!");
+        lastGrowthTime.put(playerId, currentTime); // Update growth time
     }
 
     private void growCropsAroundPlayer(Player player, int radius) {

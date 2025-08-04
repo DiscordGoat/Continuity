@@ -50,12 +50,13 @@ public class Antidote implements Listener {
                 for (Player player : plugin.getServer().getOnlinePlayers()) {
                     // Check if the player has an active pet with the Antidote perk
                     PetManager.Pet activePet = petManager.getActivePet(player);
+                    if (activePet == null || !activePet.hasPerk(PetManager.PetPerk.ANTIDOTE)) {
+                        continue;
+                    }
+
                     int talent = 0;
                     if (SkillTreeManager.getInstance() != null) {
                         talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ANTIDOTE);
-                    }
-                    if (activePet == null || !activePet.hasPerk(PetManager.PetPerk.ANTIDOTE)) {
-                        if (talent <= 0) continue;
                     }
 
                     UUID playerId = player.getUniqueId();
