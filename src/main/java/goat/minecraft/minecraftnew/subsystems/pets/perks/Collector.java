@@ -33,17 +33,16 @@ public class Collector implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         PetManager.Pet activePet = petManager.getActivePet(player);
-        int talent = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.COLLECTOR);
-        }
+        if (activePet != null && (activePet.hasPerk(PetManager.PetPerk.COLLECTOR)
+                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.COLLECTOR))) {
+            int talent = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.COLLECTOR);
+            }
 
-        // Check if the player has the COLLECTOR perk or unique trait
-        if ((activePet != null && (activePet.hasPerk(PetManager.PetPerk.COLLECTOR)
-                || activePet.hasUniqueTraitPerk(PetManager.PetPerk.COLLECTOR))) || talent > 0) {
             // Define the collection radius based on pet level:
             // start at 15 and increase by 1 per level, capped at 50
-            int petLevel = activePet != null ? activePet.getLevel() : 0;
+            int petLevel = activePet.getLevel();
             double radius = Math.min(50.0, 15.0 + petLevel);
             radius *= (1 + talent * 0.5);
 

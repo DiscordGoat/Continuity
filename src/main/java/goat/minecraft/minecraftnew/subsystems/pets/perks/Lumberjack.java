@@ -50,11 +50,11 @@ public class Lumberjack implements Listener {
         }
 
         PetManager.Pet activePet = petManager.getActivePet(player);
-        int talent = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.LUMBERJACK);
-        }
-        if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.LUMBERJACK)) || talent > 0) {
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.LUMBERJACK)) {
+            int talent = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.LUMBERJACK);
+            }
             int extra = 2 + talent; // +1 log per talent level
             block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), extra));
         }

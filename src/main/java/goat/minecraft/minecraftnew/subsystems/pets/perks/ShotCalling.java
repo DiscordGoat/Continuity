@@ -30,20 +30,18 @@ public class ShotCalling implements Listener {
                 // Get the player's active pet
                 PetManager petManager = PetManager.getInstance(plugin);
                 PetManager.Pet activePet = petManager.getActivePet(player);
-                int talent = 0;
-                if (SkillTreeManager.getInstance() != null) {
-                    talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.SHOTCALLING);
-                }
-                // Check if the player has an active pet with the SHOTCALLING perk or the talent
-                if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.SHOTCALLING)) || talent > 0) {
-                    int petLevel = activePet != null ? activePet.getLevel() : 0;
+                if (activePet != null && activePet.hasPerk(PetManager.PetPerk.SHOTCALLING)) {
+                    int talent = 0;
+                    if (SkillTreeManager.getInstance() != null) {
+                        talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.SHOTCALLING);
+                    }
+                    int petLevel = activePet.getLevel();
 
                     // Calculate damage multiplier based on pet level
                     double damageMultiplier = 1 + (petLevel * 0.005) + (talent * 0.05);
 
                     // Apply damage multiplier to the event
                     event.setDamage(event.getDamage() * damageMultiplier);
-
 
                     // Optional: Notify the player about the damage boost
 

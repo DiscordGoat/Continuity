@@ -29,13 +29,12 @@ public class DiggingClaws implements Listener {
         // Get the player's active pet
         PetManager.Pet activePet = petManager.getActivePet(player);
 
-        // Check if the player has the DIGGING_CLAWS perk or talent
-        int talent = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.DIGGING_CLAWS);
-        }
-        if ((activePet != null && activePet.hasPerk(PetManager.PetPerk.DIGGING_CLAWS)) || talent > 0) {
-            int petLevel = activePet != null ? activePet.getLevel() : 0;
+        if (activePet != null && activePet.hasPerk(PetManager.PetPerk.DIGGING_CLAWS)) {
+            int talent = 0;
+            if (SkillTreeManager.getInstance() != null) {
+                talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.DIGGING_CLAWS);
+            }
+            int petLevel = activePet.getLevel();
 
             // Calculate the duration of the Haste effect
             int duration = 20 * (5 + petLevel);
