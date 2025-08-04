@@ -66,7 +66,7 @@ public class ItemLoreFormatter {
             } else if (stripped.startsWith("Damage Increase") || stripped.startsWith("Damage Reduction") ||
                        stripped.startsWith("Chance to repair durability") || stripped.startsWith("Max Durability")) {
                 reforge.add(line);
-            } else if (stripped.startsWith("Durability:")) {
+            } else if (stripped.startsWith("Durability:") || stripped.startsWith("Golden Durability:")) {
                 durability = line;
             } else if (stripped.contains("Full Set Bonus")) {
                 bless = line;
