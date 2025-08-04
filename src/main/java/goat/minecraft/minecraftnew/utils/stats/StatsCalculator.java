@@ -16,6 +16,8 @@ import goat.minecraft.minecraftnew.subsystems.pets.TraitRarity;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager.ReforgeTier;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -142,30 +144,71 @@ public class StatsCalculator {
         return seconds;
     }
 
-    /** Grave spawning chance from talents and pet traits. */
+    /**
+     * Overall grave spawning chance as used by the {@link goat.minecraft.minecraftnew.subsystems.gravedigging.Gravedigging}
+     * event. The calculation mirrors the roll performed when a surface block is broken so that both the stats
+     * display and the actual event logic remain in sync.
+     *
+     * @return chance expressed as a percentage
+     */
     public double getGraveChance(Player player) {
-        double chance = 0.0;
-        if (SkillTreeManager.getInstance() != null) {
-            int g1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_I);
-            int g2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_II);
-            int g3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_III);
-            int g4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_IV);
-            int g5 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_V);
+        double chance = 0.0005; // base chance
+
+        // Shovel enchantment bonus
+        ItemStack tool = player.getInventory().getItemInMainHand();
+        if (tool != null && tool.getType().toString().endsWith("_SHOVEL")) {
+            int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Lynch");
+            chance += level * 0.0002;
+        }
+
+        // Pet perks and traits
+        PetManager petManager = PetManager.getInstance(plugin);
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        if (activePet != null) {
+            if (activePet.hasPerk(PetManager.PetPerk.MEMORY)) chance += 0.001;
+            if (activePet.hasPerk(PetManager.PetPerk.HAUNTING)) chance += 0.002;
+            if (activePet.hasPerk(PetManager.PetPerk.SCREAM)) chance += 0.004;
+            if (activePet.hasPerk(PetManager.PetPerk.COLD)) chance += 0.005;
+            if (activePet.hasPerk(PetManager.PetPerk.MALIGNANCE)) chance += 0.010;
+
+            if (activePet.getTrait() == PetTrait.PARANORMAL) {
+                double val = activePet.getTrait().getValueForRarity(activePet.getTraitRarity());
+                SkillTreeManager stm = SkillTreeManager.getInstance();
+                if (stm != null) {
+                    int q = stm.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                    val *= (1 + q * 0.20);
+                }
+                chance += val;
+            }
+        }
+
+        // Potion effects
+        if (PotionManager.isActive("Potion of Metal Detection", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Metal Detection")) {
+            chance += 0.01;
+            SkillTreeManager stm = SkillTreeManager.getInstance();
+            if (stm != null && stm.hasTalent(player, Talent.METAL_DETECTION_MASTERY)) {
+                int level = stm.getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.METAL_DETECTION_MASTERY);
+                chance += 0.01 * level;
+            }
+        }
+
+        // Talents
+        SkillTreeManager stm = SkillTreeManager.getInstance();
+        if (stm != null) {
+            int g1 = stm.getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_I);
+            int g2 = stm.getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_II);
+            int g3 = stm.getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_III);
+            int g4 = stm.getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_IV);
+            int g5 = stm.getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_V);
             chance += g1 * 0.001;
             chance += g2 * 0.0015;
             chance += g3 * 0.002;
             chance += g4 * 0.0025;
             chance += g5 * 0.00725;
         }
-        PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
-        if (pet != null && pet.getTrait() == PetTrait.PARANORMAL) {
-            double val = pet.getTrait().getValueForRarity(pet.getTraitRarity());
-            if (SkillTreeManager.getInstance() != null) {
-                int q = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
-                val *= (1 + q * 0.20);
-            }
-            chance += val;
-        }
+
+        // Catalyst bonus
         CatalystManager cm = CatalystManager.getInstance();
         if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.DEATH)) {
             Catalyst cat = cm.findNearestCatalyst(player.getLocation(), CatalystType.DEATH);
@@ -173,6 +216,13 @@ public class StatsCalculator {
                 chance += 0.01 + (cm.getCatalystTier(cat) * 0.001);
             }
         }
+
+        // Night time doubles the chance
+        long time = player.getWorld().getTime();
+        if (time >= 13000 && time <= 23000) {
+            chance = Math.min(1.0, chance * 2);
+        }
+
         return chance * 100.0;
     }
 
