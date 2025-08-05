@@ -11,7 +11,7 @@ public enum CatalystType {
     INSANITY("Catalyst of Insanity", Particle.CRIMSON_SPORE, Sound.BLOCK_WOOD_BREAK, ChatColor.DARK_PURPLE),
     REJUVENATION("Catalyst of Rejuvenation", Particle.HEART, Sound.BLOCK_LAVA_POP, ChatColor.GOLD),
     PROSPERITY("Catalyst of Prosperity", Particle.CRIMSON_SPORE, Sound.BLOCK_SNOW_BREAK, ChatColor.GREEN),
-    DEATH("Catalyst of Death", Particle.SOUL, Sound.ENTITY_WITHER_AMBIENT, ChatColor.DARK_GRAY);
+    DEATH("Catalyst of Death", Particle.SOUL, Sound.BLOCK_ROOTED_DIRT_BREAK, ChatColor.DARK_GRAY);
 
     private final String displayName;
     private final Particle particle;

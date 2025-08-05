@@ -167,9 +167,9 @@ public class StatsCalculator {
         if (activePet != null) {
             if (activePet.hasPerk(PetManager.PetPerk.MEMORY)) chance += 0.001;
             if (activePet.hasPerk(PetManager.PetPerk.HAUNTING)) chance += 0.002;
-            if (activePet.hasPerk(PetManager.PetPerk.SCREAM)) chance += 0.004;
-            if (activePet.hasPerk(PetManager.PetPerk.COLD)) chance += 0.005;
-            if (activePet.hasPerk(PetManager.PetPerk.MALIGNANCE)) chance += 0.010;
+            if (activePet.hasPerk(PetManager.PetPerk.SCREAM)) chance += 0.003;
+            if (activePet.hasPerk(PetManager.PetPerk.COLD)) chance += 0.004;
+            if (activePet.hasPerk(PetManager.PetPerk.MALIGNANCE)) chance += 0.005;
 
             if (activePet.getTrait() == PetTrait.PARANORMAL) {
                 double val = activePet.getTrait().getValueForRarity(activePet.getTraitRarity());
@@ -185,12 +185,7 @@ public class StatsCalculator {
         // Potion effects
         if (PotionManager.isActive("Potion of Metal Detection", player)
                 && PotionEffectPreferences.isEnabled(player, "Potion of Metal Detection")) {
-            chance += 0.01;
-            SkillTreeManager stm = SkillTreeManager.getInstance();
-            if (stm != null && stm.hasTalent(player, Talent.METAL_DETECTION_MASTERY)) {
-                int level = stm.getTalentLevel(player.getUniqueId(), Skill.BREWING, Talent.METAL_DETECTION_MASTERY);
-                chance += 0.01 * level;
-            }
+            chance += 0.001;
         }
 
         // Talents
@@ -201,11 +196,11 @@ public class StatsCalculator {
             int g3 = stm.getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_III);
             int g4 = stm.getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_IV);
             int g5 = stm.getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVE_DIGGER_V);
-            chance += g1 * 0.001;
-            chance += g2 * 0.0015;
-            chance += g3 * 0.002;
-            chance += g4 * 0.0025;
-            chance += g5 * 0.00725;
+            chance += g1 * 0.0001;
+            chance += g2 * 0.00015;
+            chance += g3 * 0.0002;
+            chance += g4 * 0.00025;
+            chance += g5 * 0.000725;
         }
 
         // Catalyst bonus
@@ -213,7 +208,7 @@ public class StatsCalculator {
         if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.DEATH)) {
             Catalyst cat = cm.findNearestCatalyst(player.getLocation(), CatalystType.DEATH);
             if (cat != null) {
-                chance += 0.01 + (cm.getCatalystTier(cat) * 0.001);
+                chance += 0.001 + (cm.getCatalystTier(cat) * 0.0001);
             }
         }
 

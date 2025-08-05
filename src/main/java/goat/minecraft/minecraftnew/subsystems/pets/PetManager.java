@@ -783,6 +783,8 @@ public class PetManager implements Listener {
                 return "Has a " + ChatColor.AQUA + (level * 1) + "% chance " + ChatColor.GRAY + "to " + ChatColor.DARK_AQUA + "assist ranged attacks.";
             case SHOTCALLING:
                 return "Gain " + ChatColor.RED + "+" + (level * 0.5) + "% Arrow Damage.";
+            case HEADLESS_HORSEMAN:
+                return "+ " + ChatColor.RED + level + "% Double Wheat Tally.";
             case BONE_COLD:
                 return "Provides " + ChatColor.AQUA + "immunity to freeze damage.";
             case TIPPED_SLOWNESS:
@@ -1304,7 +1306,7 @@ public class PetManager implements Listener {
         NO_HIBERNATION("No Hibernation", ChatColor.GOLD + ""),
         GROOT("Groot", ChatColor.GOLD + ""),
         COMPOSTER("Composter", ChatColor.GOLD + ""),
-        HARVEST_FESTIVAL("Harvest Festival", ChatColor.GOLD + "Removes Common and Uncommon Harvest Rewards"),
+        HARVEST_FESTIVAL("Harvest Festival", ChatColor.GOLD + "Doubles Seeder Drops"),
         HEADLESS_HORSEMAN("Headless Horseman", ChatColor.GOLD + "+[Lvl]% Bonus Wheat Cropcount."),
         ORANGE("Orange", ChatColor.GOLD + "+[Lvl]% Bonus Carrot Cropcount."),
         BEETS_ME("Beets me", ChatColor.GOLD + "+[Lvl]% Bonus Beetroot Cropcount."),

@@ -318,7 +318,7 @@ public class PetRegistry {
                 PetManager.Rarity.LEGENDARY,
                 100,
                 Particle.ANGRY_VILLAGER,
-                Arrays.asList(PetManager.PetPerk.HEADLESS_HORSEMAN, PetManager.PetPerk.HARVEST_FESTIVAL, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.LULLABY)
+                Arrays.asList(PetManager.PetPerk.HEADLESS_HORSEMAN, PetManager.PetPerk.HARVEST_FESTIVAL, PetManager.PetPerk.COMPOSTER, PetManager.PetPerk.SPEED_BOOST, PetManager.PetPerk.GREEN_THUMB, PetManager.PetPerk.CULTIVATION, PetManager.PetPerk.COLLECTOR, PetManager.PetPerk.LULLABY)
         ));
         registry.put("Killer Rabbit", new PetDefinition(
                 "Killer Rabbit",

@@ -125,7 +125,7 @@ public class FestivalBeeManager {
         int count = bees.size();
 
         // adjust tick speed always
-        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3 + count * 50);
+        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3 + count * 10);
 
         if (count > 0) {
             // Disable natural day/night

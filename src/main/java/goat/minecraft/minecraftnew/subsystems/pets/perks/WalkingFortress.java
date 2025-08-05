@@ -31,9 +31,7 @@ public class WalkingFortress implements Listener {
         PetManager.Pet activePet = petManager.getActivePet(player);
         if (activePet != null && activePet.hasPerk(PetManager.PetPerk.WALKING_FORTRESS)) {
             int talent = 0;
-            if (SkillTreeManager.getInstance() != null) {
-                talent = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.WALKING_FORTRESS);
-            }
+
             int petLevel = activePet.getLevel();
 
             // Calculate damage reduction percentage
