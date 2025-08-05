@@ -94,7 +94,11 @@ public class Gravedigging implements Listener {
         // Only surface blocks
         int highest = world.getHighestBlockYAt(loc);
         if (loc.getBlockY() < highest) return;
-        if(loc.getBlock().getType().equals(Material.DIRT) || loc.getBlock().getType().equals(Material.GRASS_BLOCK)) return;
+
+        // Graves should only spawn when dirt or stone is broken
+        Material type = block.getType();
+        if (type != Material.DIRT && type != Material.STONE) return;
+
         // Calculate chance via StatsCalculator to keep logic centralized
         StatsCalculator calc = StatsCalculator.getInstance(plugin);
         double chance = calc.getGraveChance(player) / 100.0;
