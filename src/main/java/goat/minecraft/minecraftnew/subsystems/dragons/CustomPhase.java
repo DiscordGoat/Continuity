@@ -18,6 +18,7 @@ public enum CustomPhase {
     HOVER,
     // Custom phases
     HEALING,
+    CHARGE,
     SMITE,
     LAUNCH,
     FURY,
