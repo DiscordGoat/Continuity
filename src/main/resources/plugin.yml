@@ -293,3 +293,7 @@ commands:
     description: Highlights nearby ores with a colored glow
     usage: /glowingores <seconds>
     permission: continuity.admin
+  flytome:
+    description: Calls every Ender Dragon to your location
+    usage: /flytome
+    permission: continuity.admin
