@@ -54,26 +54,27 @@ public class ChargePhase implements Phase {
         npc.data().set(NPC.Metadata.FLYABLE, true);
         Navigator navigator = npc.getNavigator();
         NavigatorParameters params = navigator.getLocalParameters();
-        params.range(50.0F);
+        params.range(5000.0F);
         params.speedModifier(3f);
 
         dragon.setAI(false);
 
+        Player finalTarget = target;
         new BukkitRunnable() {
             int ticks = 0;
             @Override
             public void run() {
-                if (ticks++ > 100 || !target.isValid() || dragon.isDead()) {
+                if (ticks++ > 100 || !finalTarget.isValid() || dragon.isDead()) {
                     navigator.cancelNavigation();
                     dragon.setAI(true);
                     trait.onPhaseComplete();
                     cancel();
                     return;
                 }
-                Location loc = target.getLocation();
+                Location loc = finalTarget.getLocation();
                 navigator.setTarget(loc);
                 if (npc.getEntity().getLocation().distanceSquared(loc) < 4) {
-                    target.damage(20.0, dragon);
+                    finalTarget.damage(20.0, dragon);
                     navigator.cancelNavigation();
                     dragon.setAI(true);
                     trait.onPhaseComplete();

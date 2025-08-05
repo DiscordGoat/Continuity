@@ -3,6 +3,9 @@ package goat.minecraft.minecraftnew.subsystems.dragons.phases;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.dragons.DragonFight;
 import goat.minecraft.minecraftnew.subsystems.dragons.WaterDragonTrait;
+import net.citizensnpcs.api.ai.Navigator;
+import net.citizensnpcs.api.ai.NavigatorParameters;
+import net.citizensnpcs.api.npc.NPC;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -55,7 +58,9 @@ public class SmitePhase implements Phase {
                 }
                 dragon.setAI(true);
                 trait.onPhaseComplete();
+
             }
         }.runTaskLater(plugin, 60L);
     }
+
 }

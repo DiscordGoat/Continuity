@@ -191,9 +191,7 @@ public class WaterDragonTrait extends Trait implements Listener {
         this.crystalBias = crystalBias;
     }
 
-    public NPC getNPC() {
-        return npc;
-    }
+
 
     @Override public void load(DataKey key) { }
     @Override public void save(DataKey key) { }
