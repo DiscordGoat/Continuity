@@ -2,9 +2,10 @@ package goat.minecraft.minecraftnew.subsystems.dragons;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.dragons.phases.*;
-import org.bukkit.event.entity.EnderDragonChangePhaseEvent;
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
+import net.citizensnpcs.api.npc.NPC;
+import org.bukkit.event.entity.EnderDragonChangePhaseEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.EnderDragon;
 import org.bukkit.event.EventHandler;
@@ -40,12 +41,10 @@ public class WaterDragonTrait extends Trait implements Listener {
     private CustomPhase currentPhase;
     private long furyCooldownEnd;
     private long launchCooldownEnd;
-    private long smiteCooldownEnd;
     private final Random random = new Random();
 
     private static final long FURY_COOLDOWN = 60000L;
     private static final long LAUNCH_COOLDOWN = 20000L;
-    private static final long SMITE_COOLDOWN = 1000L;
 
     public WaterDragonTrait(MinecraftNew plugin, DragonFight fight) {
         super("water_dragon_trait");
@@ -165,9 +164,8 @@ public class WaterDragonTrait extends Trait implements Listener {
                     new LaunchPhase(plugin, fight, WaterDragonTrait.this).start();
                     launchCooldownEnd = now + LAUNCH_COOLDOWN;
                 } else {
-                    currentPhase = CustomPhase.SMITE;
-                    new SmitePhase(plugin, fight, WaterDragonTrait.this).start();
-                    smiteCooldownEnd = now + SMITE_COOLDOWN;
+                    currentPhase = CustomPhase.CHARGE;
+                    new ChargePhase(plugin, fight, WaterDragonTrait.this).start();
                 }
             }
         }.runTaskTimer(plugin, interval, interval);
@@ -191,6 +189,10 @@ public class WaterDragonTrait extends Trait implements Listener {
 
     public void setCrystalBias(int crystalBias) {
         this.crystalBias = crystalBias;
+    }
+
+    public NPC getNPC() {
+        return npc;
     }
 
     @Override public void load(DataKey key) { }
