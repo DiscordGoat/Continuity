@@ -10,7 +10,6 @@ import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.farming.FestivalBeeManager;
 import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
-import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
@@ -305,9 +304,7 @@ public class FarmingEvent implements Listener {
     }
 
     private void handleHarvestRewards(Block block, Player player, Material blockType) {
-        PetManager.Pet activePet = PetManager.getInstance(plugin).getActivePet(player);
-        boolean festival = activePet != null && activePet.hasPerk(PetManager.PetPerk.HARVEST_FESTIVAL);
-        double roll = festival ? 0.8 + random.nextDouble() * 0.2 : random.nextDouble();
+        double roll = random.nextDouble();
         Location dropLoc = block.getLocation().add(0.5, 0.5, 0.5);
 
         switch (blockType) {

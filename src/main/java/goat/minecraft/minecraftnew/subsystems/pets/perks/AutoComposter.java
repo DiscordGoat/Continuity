@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.pets.perks;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager.PetPerk;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
@@ -62,9 +63,10 @@ public class AutoComposter {
                     boolean isMoving = isPlayerMoving(lastLocation, currentLocation);
 
                     if (isMoving) {
-                        // Only run if player's active pet has the COMPOSTER perk
-                        if (hasComposterPetPerk(player)) {
-                            performConversion(player);
+                        // Only run if player's active pet has the COMPOSTER or HARVEST_FESTIVAL perk
+                        PetPerk perk = getAutoPerk(player);
+                        if (perk != null) {
+                            performConversion(player, perk);
                         }
                     }
 
@@ -88,37 +90,40 @@ public class AutoComposter {
     }
 
     /**
-     * Checks if the player's active pet has the COMPOSTER perk.
-     * Replace with your actual logic to detect the perk from your pet system.
+     * Determines which auto-compost perk the player's active pet has, if any.
      */
-    private boolean hasComposterPetPerk(Player player) {
+    private PetPerk getAutoPerk(Player player) {
         PetManager petManager = PetManager.getInstance(plugin);
-        if(petManager.getActivePet(player) == null){
-            return false;
-        }
         PetManager.Pet activePet = petManager.getActivePet(player);
-        return activePet.hasPerk(PetManager.PetPerk.COMPOSTER);
+        if (activePet == null) {
+            return null;
+        }
+        if (activePet.hasPerk(PetPerk.COMPOSTER)) {
+            return PetPerk.COMPOSTER;
+        }
+        if (activePet.hasPerk(PetPerk.HARVEST_FESTIVAL)) {
+            return PetPerk.HARVEST_FESTIVAL;
+        }
+        return null;
     }
 
     /**
-     * Gets the composter level from the player's active pet.
-     * Replace with your actual logic for retrieving the pet's level.
+     * Gets the pet's level from the player's active pet.
      */
-    private int getPetComposterLevel(Player player) {
+    private int getPetLevel(Player player) {
         PetManager petManager = PetManager.getInstance(plugin);
         PetManager.Pet activePet = petManager.getActivePet(player);
         return activePet.getLevel();
     }
 
     /**
-     * Performs the crop-to-Organic-Soil conversion for the player, using the
+     * Performs the crop conversion for the player, using the
      * dynamic "required materials" formula:
      *
      *  requiredMaterialsOrganic = max(256 - (level - 1)*(256 - 64)/99, 64)
      */
-    private void performConversion(Player player) {
-        // 1) Get the player's composter level from their active pet
-        int level = getPetComposterLevel(player);
+    private void performConversion(Player player, PetPerk perk) {
+        int level = getPetLevel(player);
 
         // 2) Calculate how many crops are required for 1 organic soil
         int requiredMaterialsOrganic = Math.max(
@@ -148,7 +153,11 @@ public class AutoComposter {
                 int itemsToRemove = (int) Math.ceil(effectiveUsed / (double) weight);
 
                 subtractCrops(player, crop, itemsToRemove);
-                addOrganicSoil(player, conversions);
+                if (perk == PetPerk.COMPOSTER) {
+                    addOrganicSoil(player, conversions);
+                } else {
+                    addFertilizer(player, conversions);
+                }
             }
         }
     }
@@ -196,14 +205,20 @@ public class AutoComposter {
      */
     private void addOrganicSoil(Player player, int quantity) {
         ItemStack organicSoil = ItemRegistry.getOrganicSoil();
+        addItems(player, organicSoil, ChatColor.RED + "Your inventory is full! Organic Soil has been dropped on the ground.", quantity);
+    }
 
+    private void addFertilizer(Player player, int quantity) {
+        ItemStack fertilizer = ItemRegistry.getFertilizer();
+        addItems(player, fertilizer, ChatColor.RED + "Your inventory is full! Fertilizer has been dropped on the ground.", quantity);
+    }
+
+    private void addItems(Player player, ItemStack item, String fullMessage, int quantity) {
         for (int i = 0; i < quantity; i++) {
-            Map<Integer, ItemStack> overflow = player.getInventory().addItem(organicSoil.clone());
+            Map<Integer, ItemStack> overflow = player.getInventory().addItem(item.clone());
             if (!overflow.isEmpty()) {
-                // If the player's inventory is full, drop on the ground
-                player.getWorld().dropItemNaturally(player.getLocation(), organicSoil);
-                player.sendMessage(ChatColor.RED
-                        + "Your inventory is full! Organic Soil has been dropped on the ground.");
+                player.getWorld().dropItemNaturally(player.getLocation(), item);
+                player.sendMessage(fullMessage);
             }
         }
     }

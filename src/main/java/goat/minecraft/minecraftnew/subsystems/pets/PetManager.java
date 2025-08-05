@@ -846,6 +846,9 @@ public class PetManager implements Listener {
             case COMPOSTER:
                 int requiredMaterialsOrganic = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
                 return ChatColor.GRAY + "Compacts " + requiredMaterialsOrganic + " crops into " + ChatColor.GREEN + "Organic Soil";
+            case HARVEST_FESTIVAL:
+                int requiredMaterialsFertilizer = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
+                return ChatColor.GRAY + "Compacts " + requiredMaterialsFertilizer + " crops into " + ChatColor.YELLOW + "Fertilizer";
             case LUMBERJACK:
                 return "Drops " + ChatColor.GREEN + "+2 logs " + ChatColor.GRAY + "when chopping trees.";
             case EARTHWORM:
@@ -1306,7 +1309,7 @@ public class PetManager implements Listener {
         NO_HIBERNATION("No Hibernation", ChatColor.GOLD + ""),
         GROOT("Groot", ChatColor.GOLD + ""),
         COMPOSTER("Composter", ChatColor.GOLD + ""),
-        HARVEST_FESTIVAL("Harvest Festival", ChatColor.GOLD + "Doubles Seeder Drops"),
+        HARVEST_FESTIVAL("Harvest Festival", ChatColor.GOLD + "Compacts crops into Fertilizer while moving"),
         HEADLESS_HORSEMAN("Headless Horseman", ChatColor.GOLD + "+[Lvl]% Bonus Wheat Cropcount."),
         ORANGE("Orange", ChatColor.GOLD + "+[Lvl]% Bonus Carrot Cropcount."),
         BEETS_ME("Beets me", ChatColor.GOLD + "+[Lvl]% Bonus Beetroot Cropcount."),
