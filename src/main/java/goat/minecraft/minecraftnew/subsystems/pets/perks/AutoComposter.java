@@ -42,6 +42,8 @@ public class AutoComposter {
     );
 
     private final Map<Player, Location> playerLastLocations = new HashMap<>();
+    private final Map<Player, Integer> composterTally = new HashMap<>();
+    private final Map<Player, Long> lastHarvestFestivalTime = new HashMap<>();
 
     public AutoComposter(MinecraftNew plugin) {
         this.plugin = plugin;
@@ -65,8 +67,14 @@ public class AutoComposter {
                     if (isMoving) {
                         // Only run if player's active pet has the COMPOSTER or HARVEST_FESTIVAL perk
                         PetPerk perk = getAutoPerk(player);
-                        if (perk != null) {
+                        if (perk == PetPerk.COMPOSTER) {
                             performConversion(player, perk);
+                        } else if (perk == PetPerk.HARVEST_FESTIVAL) {
+                            long lastTime = lastHarvestFestivalTime.getOrDefault(player, 0L);
+                            if (System.currentTimeMillis() - lastTime >= 15000) {
+                                performHarvestFestival(player);
+                                lastHarvestFestivalTime.put(player, System.currentTimeMillis());
+                            }
                         }
                     }
 
@@ -196,6 +204,25 @@ public class AutoComposter {
                     }
                 }
             }
+        }
+    }
+
+    private void performHarvestFestival(Player player) {
+        int removed = 0;
+        for (int i = 0; i < player.getInventory().getSize(); i++) {
+            ItemStack item = player.getInventory().getItem(i);
+            if (item != null && AUTO_COMPOSTER_ELIGIBLE_CROPS.contains(item.getType())) {
+                removed += item.getAmount();
+                player.getInventory().clear(i);
+            }
+        }
+        if (removed > 0) {
+            int tally = composterTally.getOrDefault(player, 0) + removed;
+            while (tally >= 1000) {
+                tally -= 1000;
+                player.getWorld().dropItemNaturally(player.getLocation(), ItemRegistry.getFertilizer().clone());
+            }
+            composterTally.put(player, tally);
         }
     }
 
