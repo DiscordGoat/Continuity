@@ -15,7 +15,6 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
-import goat.minecraft.minecraftnew.subsystems.fishing.Rarity;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.Ageable;
@@ -359,31 +358,31 @@ public class FarmingEvent implements Listener {
                 if (roll < 0.50) {
                     ItemStack item = ItemRegistry.getWheatSeeder();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.COMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getWheatSeeder();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.UNCOMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
                     ItemStack item = ItemRegistry.getEnchantedHayBale();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                     notifyHarvest(player, item, Rarity.RARE);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getEnchantedHayBale();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.EPIC);
+                    notifyHarvest(player, item, true);
                 } else {
                     PetManager petManager = PetManager.getInstance(plugin);
                     if (petManager.getPet(player, "Scarecrow") == null) {
                         new PetRegistry().addPetByName(player, "Scarecrow");
-                        notifyHarvest(player, ChatColor.GOLD + "Scarecrow pet", 1, Rarity.LEGENDARY);
+                        notifyHarvest(player, ChatColor.GOLD + "Scarecrow pet", 1, true);
                     } else {
                         ItemStack item = ItemRegistry.getEnchantedHayBale();
                         item.setAmount(16);
                         block.getWorld().dropItemNaturally(dropLoc, item);
-                        notifyHarvest(player, item, Rarity.LEGENDARY);
+                        notifyHarvest(player, item, true);
                     }
                 }
             }
@@ -391,31 +390,31 @@ public class FarmingEvent implements Listener {
                 if (roll < 0.50) {
                     ItemStack item = ItemRegistry.getCarrotSeeder();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.COMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getCarrotSeeder();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.UNCOMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
                     ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.RARE);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.EPIC);
+                    notifyHarvest(player, item, true);
                 } else {
                     PetManager petManager = PetManager.getInstance(plugin);
                     if (petManager.getPet(player, "Killer Rabbit") == null) {
                         new PetRegistry().addPetByName(player, "Killer Rabbit");
-                        notifyHarvest(player, ChatColor.GOLD + "Killer Rabbit pet", 1, Rarity.LEGENDARY);
+                        notifyHarvest(player, ChatColor.GOLD + "Killer Rabbit pet", 1, true);
                     } else {
                         ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
                         item.setAmount(16);
                         block.getWorld().dropItemNaturally(dropLoc, item);
-                        notifyHarvest(player, item, Rarity.LEGENDARY);
+                        notifyHarvest(player, item, true);
                     }
                 }
             }
@@ -423,31 +422,31 @@ public class FarmingEvent implements Listener {
                 if (roll < 0.50) {
                     ItemStack item = ItemRegistry.getBeetrootSeeder();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.COMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getBeetrootSeeder();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.UNCOMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
                     ItemStack item = ItemRegistry.getHeartRoot();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.RARE);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getHeartRoot();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.EPIC);
+                    notifyHarvest(player, item, true);
                 } else {
                     PetManager petManager = PetManager.getInstance(plugin);
                     if (petManager.getPet(player, "Baron") == null) {
                         new PetRegistry().addPetByName(player, "Baron");
-                        notifyHarvest(player, ChatColor.GOLD + "Baron pet", 1, Rarity.LEGENDARY);
+                        notifyHarvest(player, ChatColor.GOLD + "Baron pet", 1, true);
                     } else {
                         ItemStack item = ItemRegistry.getHeartRoot();
                         item.setAmount(16);
                         block.getWorld().dropItemNaturally(dropLoc, item);
-                        notifyHarvest(player, item, Rarity.LEGENDARY);
+                        notifyHarvest(player, item, true);
                     }
                 }
             }
@@ -455,31 +454,31 @@ public class FarmingEvent implements Listener {
                 if (roll < 0.50) {
                     ItemStack item = ItemRegistry.getPotatoSeeder();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.COMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getPotatoSeeder();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.UNCOMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
                     ItemStack item = ItemRegistry.getImmortalPotato();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.RARE);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getImmortalPotato();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.EPIC);
+                    notifyHarvest(player, item, true);
                 } else {
                     PetManager petManager = PetManager.getInstance(plugin);
                     if (petManager.getPet(player, "Mole") == null) {
                         new PetRegistry().addPetByName(player, "Mole");
-                        notifyHarvest(player, ChatColor.GOLD + "Mole pet", 1, Rarity.LEGENDARY);
+                        notifyHarvest(player, ChatColor.GOLD + "Mole pet", 1, true);
                     } else {
                         ItemStack item = ItemRegistry.getImmortalPotato();
                         item.setAmount(16);
                         block.getWorld().dropItemNaturally(dropLoc, item);
-                        notifyHarvest(player, item, Rarity.LEGENDARY);
+                        notifyHarvest(player, item, true);
                     }
                 }
             }
@@ -487,48 +486,48 @@ public class FarmingEvent implements Listener {
                 if (roll < 0.50) {
                     ItemStack item = new ItemStack(Material.MELON_SLICE, 16);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.COMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = new ItemStack(Material.MELON_SLICE, 64);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.UNCOMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
                     ItemStack item = ItemRegistry.getWatermelon();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.RARE);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getWatermelon();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.EPIC);
+                    notifyHarvest(player, item, true);
                 } else {
                     ItemStack item = ItemRegistry.getWorldsLargestWatermelon();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.LEGENDARY);
+                    notifyHarvest(player, item, true);
                 }
             }
             case PUMPKIN -> {
                 if (roll < 0.50) {
                     ItemStack item = new ItemStack(Material.PUMPKIN, 16);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.COMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = new ItemStack(Material.PUMPKIN, 64);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.UNCOMMON);
+                    notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
                     ItemStack item = ItemRegistry.getJackOLantern();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.RARE);
+                    notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getJackOLantern();
                     item.setAmount(4);
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.EPIC);
+                    notifyHarvest(player, item, true);
                 } else {
                     ItemStack item = ItemRegistry.getWorldsLargestPumpkin();
                     block.getWorld().dropItemNaturally(dropLoc, item);
-                    notifyHarvest(player, item, Rarity.LEGENDARY);
+                    notifyHarvest(player, item, true);
                 }
             }
             default -> {
@@ -557,7 +556,7 @@ public class FarmingEvent implements Listener {
  //yup
                     // Optional: Play a unique sound to indicate a rare drop
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1.0f, 1.0f);
-                    notifyHarvest(player, rareItem, Rarity.LEGENDARY);
+                    notifyHarvest(player, rareItem, true);
                 } else {
                     // Log a warning if the rare item is not defined
                     plugin.getLogger().warning("Rare item is not defined in ItemRegistry.getRareItem(Material). Crop: " + blockType.name());
@@ -566,93 +565,22 @@ public class FarmingEvent implements Listener {
         }
     }
 
-    private void notifyHarvest(Player player, ItemStack item, Rarity rarity) {
+    private void notifyHarvest(Player player, ItemStack item, boolean rareOrAbove) {
         String name;
         if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
             name = item.getItemMeta().getDisplayName();
         } else {
             name = ChatColor.YELLOW + formatMaterialName(item.getType());
         }
-        notifyHarvest(player, name, item.getAmount(), rarity);
+        notifyHarvest(player, name, item.getAmount(), rareOrAbove);
     }
 
-    private void notifyHarvest(Player player, String itemName, int amount, Rarity rarity) {
+    private void notifyHarvest(Player player, String itemName, int amount, boolean rareOrAbove) {
         String amountText = amount > 1 ? ChatColor.YELLOW + "" + amount + "x " : "";
-        ChatColor rarityColor = switch (rarity) {
-            case COMMON -> ChatColor.WHITE;
-            case UNCOMMON -> ChatColor.GREEN;
-            case RARE -> ChatColor.BLUE;
-            case EPIC -> ChatColor.DARK_PURPLE;
-            case LEGENDARY, MYTHIC -> ChatColor.GOLD;
-        };
-
-        // Send chat message
-        player.sendMessage(ChatColor.GREEN + "Harvest Reward: " + amountText + rarityColor + ChatColor.stripColor(itemName));
-
-        // Play sound based on rarity
-        playRaritySound(player, rarity);
-
-        // Title animation durations
-        int fadeIn;
-        int stay;
-        int fadeOut;
-        switch (rarity) {
-            case COMMON -> {
-                fadeIn = 5; stay = 40; fadeOut = 10;
-            }
-            case UNCOMMON -> {
-                fadeIn = 5; stay = 60; fadeOut = 15;
-            }
-            case RARE -> {
-                fadeIn = 10; stay = 70; fadeOut = 20;
-            }
-            case EPIC -> {
-                fadeIn = 15; stay = 80; fadeOut = 25;
-            }
-            case LEGENDARY, MYTHIC -> {
-                fadeIn = 20; stay = 100; fadeOut = 30;
-            }
-        }
-
+        player.sendMessage(ChatColor.GREEN + "Harvest Reward: " + amountText + itemName);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
         String subtitle = amount > 1 ? ChatColor.YELLOW + "" + amount + "x" : "";
-        String title = rarityColor + ChatColor.stripColor(itemName);
-        if (rarity.ordinal() >= Rarity.RARE.ordinal()) {
-            title = ChatColor.BOLD + title;
-        }
-        if (rarity.ordinal() >= Rarity.EPIC.ordinal()) {
-            title = ChatColor.ITALIC + title;
-        }
-
-        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
-    }
-
-    private void playRaritySound(Player player, Rarity rarity) {
-        Sound sound;
-        float volume;
-        float pitch;
-        switch (rarity) {
-            case COMMON -> {
-                sound = Sound.BLOCK_NOTE_BLOCK_CHIME;
-                volume = 0.5f; pitch = 1.0f;
-            }
-            case UNCOMMON -> {
-                sound = Sound.BLOCK_NOTE_BLOCK_CHIME;
-                volume = 0.7f; pitch = 1.2f;
-            }
-            case RARE -> {
-                sound = Sound.BLOCK_NOTE_BLOCK_BELL;
-                volume = 0.9f; pitch = 1.5f;
-            }
-            case EPIC -> {
-                sound = Sound.BLOCK_NOTE_BLOCK_BELL;
-                volume = 1.0f; pitch = 1.8f;
-            }
-            case LEGENDARY, MYTHIC -> {
-                sound = Sound.UI_TOAST_CHALLENGE_COMPLETE;
-                volume = 1.0f; pitch = 1.0f;
-            }
-        }
-        player.playSound(player.getLocation(), sound, volume, pitch);
+        player.sendTitle(itemName, subtitle, 10, 70, 20);
     }
 
     private String formatMaterialName(Material material) {
