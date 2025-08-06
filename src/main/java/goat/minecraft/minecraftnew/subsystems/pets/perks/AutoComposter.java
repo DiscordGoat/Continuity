@@ -218,8 +218,8 @@ public class AutoComposter {
         }
         if (removed > 0) {
             int tally = composterTally.getOrDefault(player, 0) + removed;
-            while (tally >= 1000) {
-                tally -= 1000;
+            while (tally >= 2000) {
+                tally -= 2000;
                 player.getWorld().dropItemNaturally(player.getLocation(), ItemRegistry.getFertilizer().clone());
             }
             composterTally.put(player, tally);

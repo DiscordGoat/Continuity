@@ -476,32 +476,18 @@ public class RightClickArtifacts implements Listener {
                         }
                     }
 
+                    int fert = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FERTILIZER_EFFICIENCY);
+                    double chance = 0.10 + fert * 0.05;
                     int grown = 0;
-                    for(Block farmland : farmlandBlocks) {
+                    for (Block farmland : farmlandBlocks) {
                         Block cropBlock = farmland.getRelative(BlockFace.UP);
-                        if(cropBlock.getBlockData() instanceof Ageable crop) {
+                        if (cropBlock.getBlockData() instanceof Ageable crop) {
                             Material mat = cropBlock.getType();
-                            if(mat == Material.WHEAT || mat == Material.CARROTS || mat == Material.POTATOES || mat == Material.BEETROOTS) {
-                                if(crop.getAge() < crop.getMaximumAge()) {
+                            if (mat == Material.WHEAT || mat == Material.CARROTS || mat == Material.POTATOES || mat == Material.BEETROOTS) {
+                                if (crop.getAge() < crop.getMaximumAge() && Math.random() < chance) {
                                     crop.setAge(Math.min(crop.getAge() + 1, crop.getMaximumAge()));
                                     cropBlock.setBlockData(crop);
                                     grown++;
-                                }
-                            }
-                        }
-                    }
-
-                    int fert = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FERTILIZER_EFFICIENCY);
-                    if (fert > 0 && Math.random() < fert * 0.20) {
-                        for(Block farmland : farmlandBlocks) {
-                            Block cropBlock = farmland.getRelative(BlockFace.UP);
-                            if(cropBlock.getBlockData() instanceof Ageable crop) {
-                                Material mat = cropBlock.getType();
-                                if(mat == Material.WHEAT || mat == Material.CARROTS || mat == Material.POTATOES || mat == Material.BEETROOTS) {
-                                    if(crop.getAge() < crop.getMaximumAge()) {
-                                        crop.setAge(Math.min(crop.getAge() + 1, crop.getMaximumAge()));
-                                        cropBlock.setBlockData(crop);
-                                    }
                                 }
                             }
                         }

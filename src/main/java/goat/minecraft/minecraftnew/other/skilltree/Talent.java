@@ -2209,8 +2209,8 @@ public enum Talent {
     ),
     FERTILIZER_EFFICIENCY(
             "Fertilizer Efficiency",
-            ChatColor.GRAY + "Chance for double fertilizer growth",
-            ChatColor.YELLOW + "+(20*level)% " + ChatColor.GRAY + "double growth chance",
+            ChatColor.GRAY + "Improves fertilizer success rate",
+            ChatColor.YELLOW + "+(5*level)% " + ChatColor.GRAY + "fertilizer growth chance",
             5,
             60,
             Material.BONE_MEAL
