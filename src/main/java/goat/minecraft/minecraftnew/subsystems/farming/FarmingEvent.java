@@ -24,7 +24,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
@@ -86,6 +89,48 @@ public class FarmingEvent implements Listener {
                 }
             }
         }
+    }
+
+    @EventHandler
+    public void onSeederCompost(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getHand() != EquipmentSlot.HAND) return;
+
+        Block block = event.getClickedBlock();
+        if (block == null || block.getType() != Material.COMPOSTER) return;
+
+        ItemStack item = event.getItem();
+        if (item == null) return;
+
+        ItemStack seeder = null;
+        if (item.isSimilar(ItemRegistry.getEnchantedHayBale())) {
+            seeder = ItemRegistry.getWheatSeeder();
+        } else if (item.isSimilar(ItemRegistry.getEnchantedGoldenCarrot())) {
+            seeder = ItemRegistry.getCarrotSeeder();
+        } else if (item.isSimilar(ItemRegistry.getHeartRoot())) {
+            seeder = ItemRegistry.getBeetrootSeeder();
+        } else if (item.isSimilar(ItemRegistry.getImmortalPotato())) {
+            seeder = ItemRegistry.getPotatoSeeder();
+        }
+
+        if (seeder == null) return;
+
+        event.setCancelled(true);
+
+        if (item.getAmount() > 1) {
+            item.setAmount(item.getAmount() - 1);
+        } else {
+            event.getPlayer().getInventory().setItem(event.getHand(), null);
+        }
+
+        int amount = random.nextInt(4) + 1;
+        seeder.setAmount(amount);
+        Location dropLoc = block.getLocation().add(0.5, 1.0, 0.5);
+        block.getWorld().dropItemNaturally(dropLoc, seeder);
+
+        World world = block.getWorld();
+        world.playSound(dropLoc, Sound.BLOCK_COMPOSTER_FILL_SUCCESS, 1.0f, 1.0f);
+        world.spawnParticle(Particle.COMPOSTER, dropLoc, 10, 0.25, 0.25, 0.25, 0.01);
     }
 
     @EventHandler

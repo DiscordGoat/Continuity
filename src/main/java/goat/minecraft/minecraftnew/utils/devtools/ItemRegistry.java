@@ -2849,7 +2849,8 @@ public class ItemRegistry {
                 ChatColor.YELLOW + "Enchanted Hay Bale",
                 Arrays.asList(
                         ChatColor.GRAY + "Adds one level of Cornfield to Hoes.",
-                        ChatColor.DARK_PURPLE + "Smithing Item"
+                        ChatColor.DARK_PURPLE + "Smithing Item",
+                        ChatColor.DARK_PURPLE + "Compostable"
                 ),
                 1,
                 false,
@@ -2864,7 +2865,8 @@ public class ItemRegistry {
                 ChatColor.YELLOW + "Enchanted Golden Carrot",
                 Arrays.asList(
                         ChatColor.GRAY + "Adds one level of What's Up Doc to Hoes.",
-                        ChatColor.DARK_PURPLE + "Smithing Item"
+                        ChatColor.DARK_PURPLE + "Smithing Item",
+                        ChatColor.DARK_PURPLE + "Compostable"
                 ),
                 1,
                 false,
@@ -2879,7 +2881,8 @@ public class ItemRegistry {
                 ChatColor.YELLOW + "HeartRoot",
                 Arrays.asList(
                         ChatColor.GRAY + "Adds one level of Venerate to Hoes.",
-                        ChatColor.DARK_PURPLE + "Smithing Item"
+                        ChatColor.DARK_PURPLE + "Smithing Item",
+                        ChatColor.DARK_PURPLE + "Compostable"
                 ),
                 1,
                 false,
@@ -2894,7 +2897,8 @@ public class ItemRegistry {
                 ChatColor.YELLOW + "Immortal Potato",
                 Arrays.asList(
                         ChatColor.GRAY + "Adds one level of Legend to Hoes.",
-                        ChatColor.DARK_PURPLE + "Smithing Item"
+                        ChatColor.DARK_PURPLE + "Smithing Item",
+                        ChatColor.DARK_PURPLE + "Compostable"
                 ),
                 1,
                 false,
