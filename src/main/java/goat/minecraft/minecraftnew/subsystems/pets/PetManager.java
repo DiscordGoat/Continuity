@@ -847,8 +847,7 @@ public class PetManager implements Listener {
                 int requiredMaterialsOrganic = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
                 return ChatColor.GRAY + "Compacts " + requiredMaterialsOrganic + " crops into " + ChatColor.GREEN + "Organic Soil";
             case HARVEST_FESTIVAL:
-                int requiredMaterialsFertilizer = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
-                return ChatColor.GRAY + "Compacts " + requiredMaterialsFertilizer + " crops into " + ChatColor.YELLOW + "Fertilizer";
+                return ChatColor.GRAY + "Compacts 2000 crops into " + ChatColor.YELLOW + "Fertilizer";
             case LUMBERJACK:
                 return "Drops " + ChatColor.GREEN + "+2 logs " + ChatColor.GRAY + "when chopping trees.";
             case EARTHWORM:
