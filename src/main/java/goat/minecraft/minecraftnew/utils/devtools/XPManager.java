@@ -283,6 +283,20 @@ public class XPManager implements CommandExecutor {
         // Create a key for stacking animations.
         String key = player.getUniqueId().toString() + ":" + skill;
 
+        // Taming XP does not use an actionbar animation.
+        if (skill.equalsIgnoreCase("Taming")) {
+            activeAnimations.remove(key);
+            String bonusMessage = "";
+            if (bonusXP > 0) {
+                bonusMessage = ChatColor.LIGHT_PURPLE + " + Bonus: " + (int) bonusXP + " XP";
+            }
+            String message = ChatColor.AQUA + "[+" + finalXP + " XP " + ChatColor.DARK_AQUA + "(" +
+                    String.format("%.2f", finalProgressPercentage) + "%)]" +
+                    bonusMessage + " " + ChatColor.GREEN + skill;
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(message));
+            return;
+        }
+
         // If an animation is already active for this skill, update it.
         if(activeAnimations.containsKey(key)) {
             HotbarAnimation anim = activeAnimations.get(key);
