@@ -35,8 +35,8 @@ public class SaplingManager implements Listener {
     private int cooldownSeconds;
     private BukkitRunnable timerTask;
 
-    private static final int DEFAULT_COOLDOWN = 30 * 24 * 60 * 60; // 30 days
-    private static final int SECONDS_IN_DAY = 24 * 60 * 60;
+    private static final int SECONDS_IN_DAY = 20 * 60; // 1 in-game day = 20 minutes
+    private static final int DEFAULT_COOLDOWN = 30 * SECONDS_IN_DAY; // 30 in-game days
 
     private SaplingManager(JavaPlugin plugin) {
         this.plugin = plugin;
