@@ -111,8 +111,8 @@ public class PlayerTabListUpdater {
     }
 
     private String formatSecondsToDDMMSS(int totalSeconds) {
-        int days = totalSeconds / 86400;
-        int minutes = (totalSeconds % 86400) / 60;
+        int days = totalSeconds / (20 * 60);
+        int minutes = (totalSeconds % (20 * 60)) / 60;
         int seconds = totalSeconds % 60;
         return days + "d:" + String.format("%02d:%02d", minutes, seconds);
     }
