@@ -570,17 +570,91 @@ public class FarmingEvent implements Listener {
         if (item.hasItemMeta() && item.getItemMeta().hasDisplayName()) {
             name = item.getItemMeta().getDisplayName();
         } else {
-            name = ChatColor.YELLOW + formatMaterialName(item.getType());
+            // default to common (white) when no display name
+            name = ChatColor.WHITE + formatMaterialName(item.getType());
         }
         notifyHarvest(player, name, item.getAmount(), rareOrAbove);
     }
 
     private void notifyHarvest(Player player, String itemName, int amount, boolean rareOrAbove) {
+        HarvestRarity rarity = detectRarity(itemName, rareOrAbove);
+        String baseName = ChatColor.stripColor(itemName);
+        String styledName = rarity.getColor() + rarity.getStyles() + baseName;
         String amountText = amount > 1 ? ChatColor.YELLOW + "" + amount + "x " : "";
-        player.sendMessage(ChatColor.GREEN + "Harvest Reward: " + amountText + itemName);
-        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
+        player.sendMessage(ChatColor.GREEN + "Harvest Reward: " + amountText + styledName);
+        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, rarity.getVolume(), rarity.getPitch());
         String subtitle = amount > 1 ? ChatColor.YELLOW + "" + amount + "x" : "";
-        player.sendTitle(itemName, subtitle, 10, 70, 20);
+        player.sendTitle(styledName, subtitle, rarity.getFadeIn(), rarity.getStay(), rarity.getFadeOut());
+    }
+
+    private HarvestRarity detectRarity(String name, boolean rareOrAbove) {
+        if (name.startsWith(ChatColor.GOLD.toString())) {
+            return HarvestRarity.LEGENDARY;
+        }
+        if (name.startsWith(ChatColor.DARK_PURPLE.toString())) {
+            return HarvestRarity.EPIC;
+        }
+        if (name.startsWith(ChatColor.BLUE.toString())) {
+            return HarvestRarity.RARE;
+        }
+        if (name.startsWith(ChatColor.GREEN.toString())) {
+            return HarvestRarity.UNCOMMON;
+        }
+        return rareOrAbove ? HarvestRarity.RARE : HarvestRarity.COMMON;
+    }
+
+    private enum HarvestRarity {
+        COMMON(ChatColor.WHITE, "", 0.8f, 1.0f, 5, 40, 10),
+        UNCOMMON(ChatColor.GREEN, ChatColor.ITALIC.toString(), 1.0f, 1.1f, 10, 60, 10),
+        RARE(ChatColor.BLUE, ChatColor.BOLD.toString(), 1.2f, 1.2f, 15, 80, 15),
+        EPIC(ChatColor.DARK_PURPLE, ChatColor.BOLD.toString() + ChatColor.ITALIC, 1.4f, 1.3f, 20, 100, 20),
+        LEGENDARY(ChatColor.GOLD, ChatColor.BOLD.toString() + ChatColor.ITALIC + ChatColor.UNDERLINE, 1.6f, 1.4f, 25, 120, 25);
+
+        private final ChatColor color;
+        private final String styles;
+        private final float volume;
+        private final float pitch;
+        private final int fadeIn;
+        private final int stay;
+        private final int fadeOut;
+
+        HarvestRarity(ChatColor color, String styles, float volume, float pitch, int fadeIn, int stay, int fadeOut) {
+            this.color = color;
+            this.styles = styles;
+            this.volume = volume;
+            this.pitch = pitch;
+            this.fadeIn = fadeIn;
+            this.stay = stay;
+            this.fadeOut = fadeOut;
+        }
+
+        public String getColor() {
+            return color.toString();
+        }
+
+        public String getStyles() {
+            return styles;
+        }
+
+        public float getVolume() {
+            return volume;
+        }
+
+        public float getPitch() {
+            return pitch;
+        }
+
+        public int getFadeIn() {
+            return fadeIn;
+        }
+
+        public int getStay() {
+            return stay;
+        }
+
+        public int getFadeOut() {
+            return fadeOut;
+        }
     }
 
     private String formatMaterialName(Material material) {
