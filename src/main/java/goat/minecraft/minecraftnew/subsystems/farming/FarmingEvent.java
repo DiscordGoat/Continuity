@@ -11,6 +11,7 @@ import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.farming.FestivalBeeManager;
 import goat.minecraft.minecraftnew.subsystems.farming.CropCountManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
@@ -373,8 +374,16 @@ public class FarmingEvent implements Listener {
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
-                    new PetRegistry().addPetByName(player, "Scarecrow");
-                    notifyHarvest(player, ChatColor.GOLD + "Scarecrow pet", 1, true);
+                    PetManager petManager = PetManager.getInstance(plugin);
+                    if (petManager.getPet(player, "Scarecrow") == null) {
+                        new PetRegistry().addPetByName(player, "Scarecrow");
+                        notifyHarvest(player, ChatColor.GOLD + "Scarecrow pet", 1, true);
+                    } else {
+                        ItemStack item = ItemRegistry.getEnchantedHayBale();
+                        item.setAmount(16);
+                        block.getWorld().dropItemNaturally(dropLoc, item);
+                        notifyHarvest(player, item, true);
+                    }
                 }
             }
             case CARROTS -> {
@@ -397,8 +406,16 @@ public class FarmingEvent implements Listener {
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
-                    new PetRegistry().addPetByName(player, "Killer Rabbit");
-                    notifyHarvest(player, ChatColor.GOLD + "Killer Rabbit pet", 1, true);
+                    PetManager petManager = PetManager.getInstance(plugin);
+                    if (petManager.getPet(player, "Killer Rabbit") == null) {
+                        new PetRegistry().addPetByName(player, "Killer Rabbit");
+                        notifyHarvest(player, ChatColor.GOLD + "Killer Rabbit pet", 1, true);
+                    } else {
+                        ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
+                        item.setAmount(16);
+                        block.getWorld().dropItemNaturally(dropLoc, item);
+                        notifyHarvest(player, item, true);
+                    }
                 }
             }
             case BEETROOTS -> {
@@ -421,8 +438,16 @@ public class FarmingEvent implements Listener {
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
-                    new PetRegistry().addPetByName(player, "Baron");
-                    notifyHarvest(player, ChatColor.GOLD + "Baron pet", 1, true);
+                    PetManager petManager = PetManager.getInstance(plugin);
+                    if (petManager.getPet(player, "Baron") == null) {
+                        new PetRegistry().addPetByName(player, "Baron");
+                        notifyHarvest(player, ChatColor.GOLD + "Baron pet", 1, true);
+                    } else {
+                        ItemStack item = ItemRegistry.getHeartRoot();
+                        item.setAmount(16);
+                        block.getWorld().dropItemNaturally(dropLoc, item);
+                        notifyHarvest(player, item, true);
+                    }
                 }
             }
             case POTATOES -> {
@@ -445,8 +470,16 @@ public class FarmingEvent implements Listener {
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
-                    new PetRegistry().addPetByName(player, "Mole");
-                    notifyHarvest(player, ChatColor.GOLD + "Mole pet", 1, true);
+                    PetManager petManager = PetManager.getInstance(plugin);
+                    if (petManager.getPet(player, "Mole") == null) {
+                        new PetRegistry().addPetByName(player, "Mole");
+                        notifyHarvest(player, ChatColor.GOLD + "Mole pet", 1, true);
+                    } else {
+                        ItemStack item = ItemRegistry.getImmortalPotato();
+                        item.setAmount(16);
+                        block.getWorld().dropItemNaturally(dropLoc, item);
+                        notifyHarvest(player, item, true);
+                    }
                 }
             }
             case MELON -> {
@@ -546,10 +579,8 @@ public class FarmingEvent implements Listener {
         String amountText = amount > 1 ? ChatColor.YELLOW + "" + amount + "x " : "";
         player.sendMessage(ChatColor.GREEN + "Harvest Reward: " + amountText + itemName);
         player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, 1.0f, 1.0f);
-        if (rareOrAbove) {
-            String subtitle = amount > 1 ? ChatColor.YELLOW + "" + amount + "x" : "";
-            player.sendTitle(itemName, subtitle, 10, 70, 20);
-        }
+        String subtitle = amount > 1 ? ChatColor.YELLOW + "" + amount + "x" : "";
+        player.sendTitle(itemName, subtitle, 10, 70, 20);
     }
 
     private String formatMaterialName(Material material) {
