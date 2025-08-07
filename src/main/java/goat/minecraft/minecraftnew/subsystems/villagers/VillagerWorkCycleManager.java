@@ -153,6 +153,11 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             }
 
         }
+        // Persist shelf inventories in case of abrupt shutdown
+        ShelfManager shelfManager = MinecraftNew.getInstance().getShelfManager();
+        if (shelfManager != null) {
+            shelfManager.saveAllShelves();
+        }
     }
 
     private void performVillagerWork(Villager villager) {
