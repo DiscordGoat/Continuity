@@ -225,6 +225,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         potionBrewingSubsystem = PotionBrewingSubsystem.getInstance(this);
 
         verdantRelicsSubsystem = VerdantRelicsSubsystem.getInstance(this);
+        new SetVerdantRelicGrowthPercentageCommand(this, verdantRelicsSubsystem);
         reforgeSubsystem = ReforgeSubsystem.getInstance(this);
 
         this.getCommand("pasteSchem").setExecutor(new PasteSchemCommand(this));

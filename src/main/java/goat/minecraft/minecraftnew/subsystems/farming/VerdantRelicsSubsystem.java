@@ -293,6 +293,24 @@ public class VerdantRelicsSubsystem implements Listener {
     }
 
     /**
+     * Sets the growth progress of every loaded relic to the provided
+     * percentage. Values are clamped between 0 and 100. Any relic set to
+     * 100% will be marked ready for harvest.
+     *
+     * @param percent percentage grown for all relics
+     */
+    public void setAllRelicsGrowthPercentage(int percent) {
+        int clamped = Math.max(0, Math.min(100, percent));
+        for (RelicSession session : activeSessions.values()) {
+            int newRemaining = session.totalGrowthDuration * (100 - clamped) / 100;
+            session.growthTimeRemaining = newRemaining;
+            session.readyForHarvest = newRemaining <= 0;
+            session.updateDisplayName();
+        }
+        saveAllRelics();
+    }
+
+    /**
      * Removes all active complications from every loaded relic.
      * Used by music discs or other effects that grant temporary immunity
      * to negative farming events.
