@@ -307,8 +307,15 @@ public class Forestry implements Listener {
     public void saveNotoriety(Player player) {
         UUID uuid = player.getUniqueId();
         File notorietyFile = new File(plugin.getDataFolder(), "notoriety_" + uuid + ".yml");
+        int notoriety = notorietyMap.getOrDefault(uuid, 0);
+        if (notoriety <= 0) {
+            if (notorietyFile.exists()) {
+                notorietyFile.delete();
+            }
+            return;
+        }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(notorietyFile);
-        config.set("notoriety", notorietyMap.getOrDefault(uuid, 0));
+        config.set("notoriety", notoriety);
         try {
             config.save(notorietyFile);
         } catch (IOException e) {
@@ -325,7 +332,13 @@ public class Forestry implements Listener {
         File notorietyFile = new File(plugin.getDataFolder(), "notoriety_" + uuid + ".yml");
         if (notorietyFile.exists()) {
             YamlConfiguration config = YamlConfiguration.loadConfiguration(notorietyFile);
-            notorietyMap.put(uuid, config.getInt("notoriety"));
+            int notoriety = config.getInt("notoriety");
+            if (notoriety <= 0) {
+                notorietyMap.put(uuid, 0);
+                notorietyFile.delete();
+            } else {
+                notorietyMap.put(uuid, notoriety);
+            }
         } else {
             notorietyMap.put(uuid, 0);
         }
@@ -350,8 +363,15 @@ public class Forestry implements Listener {
                 saveNotoriety(p);
             } else {
                 File notorietyFile = new File(plugin.getDataFolder(), "notoriety_" + id + ".yml");
+                int notoriety = notorietyMap.getOrDefault(id, 0);
+                if (notoriety <= 0) {
+                    if (notorietyFile.exists()) {
+                        notorietyFile.delete();
+                    }
+                    continue;
+                }
                 YamlConfiguration config = YamlConfiguration.loadConfiguration(notorietyFile);
-                config.set("notoriety", notorietyMap.get(id));
+                config.set("notoriety", notoriety);
                 try {
                     config.save(notorietyFile);
                 } catch (IOException e) {
