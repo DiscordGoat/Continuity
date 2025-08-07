@@ -76,6 +76,14 @@ public class CorpseDeathEvent implements Listener {
                     killer.playSound(killer.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, 1.0f, 1.0f);
                 }
             }
+
+            // Epic corpses have a 50% chance to drop Dinosaur Bones
+            if (corpse.getRarity() == Rarity.EPIC && new Random().nextDouble() < 0.5) {
+                entity.getWorld().dropItemNaturally(
+                        entity.getLocation(),
+                        ItemRegistry.getDinosaurBones()
+                );
+            }
         });
 
         // 4% chance to drop a random heirloom
