@@ -192,6 +192,51 @@ public class VerdantRelicsSubsystem implements Listener {
     }
 
     /**
+     * Removes the Overgrown complication from every relic located in the given
+     * world. This is used by farmer work cycles to ensure that any active
+     * farmer cures all relics in their world, regardless of distance.
+     *
+     * @param world The world to cleanse
+     * @return number of relics cured
+     */
+    public int cureOvergrownInWorld(World world) {
+        if (world == null) return 0;
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(dataFile);
+        int cured = 0;
+
+        for (String key : config.getKeys(false)) {
+            Location relicLoc = fromLocKey(key);
+            if (relicLoc.getWorld() == null || !relicLoc.getWorld().equals(world)) continue;
+
+            List<String> comps = config.getStringList(key + ".complications");
+            boolean removed = comps.removeIf(c -> c.equalsIgnoreCase("overgrown"));
+            if (!removed) continue;
+
+            RelicSession session = activeSessions.get(key);
+            if (session != null) {
+                session.activeComplications.removeIf(c -> c.equalsIgnoreCase("overgrown"));
+                session.spawnComplicationStands();
+                session.updateDisplayName();
+            }
+
+            config.set(key + ".complications", comps);
+            cured++;
+        }
+
+        if (cured > 0) {
+            try {
+                config.save(dataFile);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            dataConfig = config;
+        }
+
+        return cured;
+    }
+
+    /**
      * Accelerates growth of all active relics by the given amount of seconds.
      * Used by certain music discs to temporarily speed up farming progress.
      *
