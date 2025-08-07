@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.other.enchanting;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -27,8 +28,18 @@ public class EnchantmentUtils {
             return item;
         }
 
-        // Apply the enchantment
-        item.addUnsafeEnchantment(enchantment, level);
+        if (enchantment == Enchantment.UNBREAKING) {
+            // Use custom Unbreaking instead of vanilla
+            CustomEnchantmentManager.addEnchantment(item, "Unbreaking", level);
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.removeEnchant(Enchantment.UNBREAKING);
+                item.setItemMeta(meta);
+            }
+        } else {
+            // Apply the enchantment
+            item.addUnsafeEnchantment(enchantment, level);
+        }
 
         System.out.println("Set " + enchantment.getKey().getKey() + " level to "
                 + level + " for item " + item.getType());
@@ -109,8 +120,15 @@ public class EnchantmentUtils {
             return item;
         }
 
-        int currentLevel = item.getEnchantmentLevel(enchantment);
-        int maxLevel = enchantment.getMaxLevel();
+        int currentLevel;
+        int maxLevel;
+        if (enchantment == Enchantment.UNBREAKING) {
+            currentLevel = CustomEnchantmentManager.getEnchantmentLevel(item, "Unbreaking");
+            maxLevel = CustomEnchantmentManager.getMaxLevel("Unbreaking");
+        } else {
+            currentLevel = item.getEnchantmentLevel(enchantment);
+            maxLevel = enchantment.getMaxLevel();
+        }
 
         if (currentLevel >= maxLevel) {
             System.out.println("Enchantment level limit reached.");
@@ -118,7 +136,16 @@ public class EnchantmentUtils {
         }
 
         int newLevel = currentLevel + 1;
-        item.addUnsafeEnchantment(enchantment, newLevel);
+        if (enchantment == Enchantment.UNBREAKING) {
+            CustomEnchantmentManager.addEnchantment(item, "Unbreaking", newLevel);
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.removeEnchant(Enchantment.UNBREAKING);
+                item.setItemMeta(meta);
+            }
+        } else {
+            item.addUnsafeEnchantment(enchantment, newLevel);
+        }
 
         // Handle billItem if it's not null
         if (billItem != null && billItem.getAmount() > 0) {
@@ -146,9 +173,18 @@ public class EnchantmentUtils {
             return item;
         }
 
-        int currentLevel = item.getEnchantmentLevel(enchantment);
-        int maxLevel = enchantment.getMaxLevel() + 2; // Set cap at double the base level
-        int vanillaMaxLevel = enchantment.getMaxLevel(); // Set cap at double the base level
+        int currentLevel;
+        int maxLevel;
+        int vanillaMaxLevel;
+        if (enchantment == Enchantment.UNBREAKING) {
+            currentLevel = CustomEnchantmentManager.getEnchantmentLevel(item, "Unbreaking");
+            vanillaMaxLevel = Enchantment.UNBREAKING.getMaxLevel();
+            maxLevel = vanillaMaxLevel + 2;
+        } else {
+            currentLevel = item.getEnchantmentLevel(enchantment);
+            vanillaMaxLevel = enchantment.getMaxLevel();
+            maxLevel = enchantment.getMaxLevel() + 2; // Set cap at double the base level
+        }
         if (currentLevel != vanillaMaxLevel) {
             // Cap reached, add billItem to player's inventory
             System.out.println("Enchantment must be max level to use Mastery Enchantments.");
@@ -161,7 +197,16 @@ public class EnchantmentUtils {
         }
 
         int newLevel = currentLevel + 1;
-        item.addUnsafeEnchantment(enchantment, newLevel);
+        if (enchantment == Enchantment.UNBREAKING) {
+            CustomEnchantmentManager.addEnchantment(item, "Unbreaking", newLevel);
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null) {
+                meta.removeEnchant(Enchantment.UNBREAKING);
+                item.setItemMeta(meta);
+            }
+        } else {
+            item.addUnsafeEnchantment(enchantment, newLevel);
+        }
 
         System.out.println("Incremented " + enchantment.getKey().getKey() + " level from "
                 + currentLevel + " to " + newLevel + " for item " + item.getType());
