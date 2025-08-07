@@ -33,6 +33,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 
@@ -46,6 +47,9 @@ public class FarmingEvent implements Listener {
     private static final String PLAYER_PLACED_KEY = "player_placed";
 
     private static final Map<Material, Integer> cropXP = new HashMap<>();
+
+    private static final long HARVEST_BALLAD_TICKS = 240L * 20L;
+    private final Map<World, BukkitTask> harvestBalladLoops = new HashMap<>();
 
     static {
         cropXP.put(Material.WHEAT, 3); // Common crops
@@ -312,14 +316,7 @@ public class FarmingEvent implements Listener {
 
 
                 if (before == 0 && after > 0) {
-                    Bukkit.getOnlinePlayers().forEach(p ->
-                            p.playSound(
-                                    p.getLocation(),
-                                    "custom.harvest_ballad",
-                                    SoundCategory.AMBIENT,
-                                    1.0f, 1.0f
-                            )
-                    );
+                    startHarvestBalladLoop(world);
                 }
 
                 player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 0.5f);
@@ -348,8 +345,41 @@ public class FarmingEvent implements Listener {
             });
         }
     }
+    private void startHarvestBalladLoop(World world) {
+        if (harvestBalladLoops.containsKey(world)) return;
+
+        Bukkit.getOnlinePlayers().forEach(p ->
+                p.playSound(
+                        p.getLocation(),
+                        "custom.harvest_ballad",
+                        SoundCategory.AMBIENT,
+                        1.0f, 1.0f
+                )
+        );
+
+        BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            if (countFestivalBees(world) > 0) {
+                Bukkit.getOnlinePlayers().forEach(p ->
+                        p.playSound(
+                                p.getLocation(),
+                                "custom.harvest_ballad",
+                                SoundCategory.AMBIENT,
+                                1.0f, 1.0f
+                        )
+                );
+            } else {
+                BukkitTask t = harvestBalladLoops.remove(world);
+                if (t != null) t.cancel();
+            }
+        }, HARVEST_BALLAD_TICKS, HARVEST_BALLAD_TICKS);
+
+        harvestBalladLoops.put(world, task);
+    }
+
     private void stopAllHarvestBallads() {
         Bukkit.getOnlinePlayers().forEach(Player::stopAllSounds);
+        harvestBalladLoops.values().forEach(BukkitTask::cancel);
+        harvestBalladLoops.clear();
     }
     private long countFestivalBees(World world) {
         return world.getEntities().stream()
