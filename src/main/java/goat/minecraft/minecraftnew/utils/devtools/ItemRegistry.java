@@ -581,7 +581,7 @@ public class ItemRegistry {
     /**
      * Returns a random Verdant Relic seed.
      */
-    public static ItemStack getRandomVerdantRelicSeed() {
+    public static ItemStack getRandomVerdantRelic() {
         Random random = new Random();
         List<ItemStack> seeds = Arrays.asList(
                 getVerdantRelicEntionPlastSeed(),
