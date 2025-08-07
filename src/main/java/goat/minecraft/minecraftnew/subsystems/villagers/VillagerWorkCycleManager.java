@@ -314,15 +314,14 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             }
         }
 
-        sendHarvestToChest(villager, harvestYield);        villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ROOTED_DIRT_BREAK, 1.0f, 1.0f);
+        sendHarvestToChest(villager, harvestYield);
+        villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ROOTED_DIRT_BREAK, 1.0f, 1.0f);
 
-        // 25% chance to cure overgrown relics nearby
-        if (Math.random() < 0.25) {
-            VerdantRelicsSubsystem relics = VerdantRelicsSubsystem.getInstance(MinecraftNew.getInstance());
-            int cured = relics.cureOvergrownNearby(villager.getLocation(), 150);
-            if (cured > 0) {
-                villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_HOE_TILL, 1.0f, 1.0f);
-            }
+        // Always cure overgrown relics in a 500 block radius
+        VerdantRelicsSubsystem relics = VerdantRelicsSubsystem.getInstance(MinecraftNew.getInstance());
+        int cured = relics.cureOvergrownNearby(villager.getLocation(), 500);
+        if (cured > 0) {
+            villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_HOE_TILL, 1.0f, 1.0f);
         }
     }
 
