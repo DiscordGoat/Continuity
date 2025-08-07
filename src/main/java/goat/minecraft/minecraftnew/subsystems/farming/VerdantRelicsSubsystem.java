@@ -192,6 +192,48 @@ public class VerdantRelicsSubsystem implements Listener {
     }
 
     /**
+     * Removes the Overgrown complication from all loaded relics in the given
+     * world using the same effects as a player right‑clicking the relic with
+     * shears. This operates only on currently loaded relic sessions and will
+     * update persistent data for those relics.
+     *
+     * @param world The world whose relics should be cleaned
+     * @return number of relics cured
+     */
+    public int shearOvergrownInWorld(World world) {
+        if (world == null) return 0;
+
+        int cured = 0;
+        for (Map.Entry<String, RelicSession> entry : activeSessions.entrySet()) {
+            String key = entry.getKey();
+            RelicSession session = entry.getValue();
+            Location loc = fromLocKey(key);
+
+            if (loc.getWorld() == null || !loc.getWorld().equals(world)) continue;
+
+            boolean removed = session.activeComplications.removeIf(c -> c.equalsIgnoreCase("overgrown"));
+            if (!removed) continue;
+
+            // Update persistent data
+            List<String> comps = dataConfig.getStringList(key + ".complications");
+            comps.removeIf(c -> c.equalsIgnoreCase("overgrown"));
+            dataConfig.set(key + ".complications", comps);
+
+            session.spawnComplicationStands();
+            session.updateDisplayName();
+            loc.getWorld().playSound(loc, Sound.ENTITY_SHEEP_SHEAR, 1.0f, 1.0f);
+            session.spawnLeaves(loc, plugin);
+            cured++;
+        }
+
+        if (cured > 0) {
+            saveAllRelics();
+        }
+
+        return cured;
+    }
+
+    /**
      * Removes the Overgrown complication from every relic located in the given
      * world. This is used by farmer work cycles to ensure that any active
      * farmer cures all relics in their world, regardless of distance.
