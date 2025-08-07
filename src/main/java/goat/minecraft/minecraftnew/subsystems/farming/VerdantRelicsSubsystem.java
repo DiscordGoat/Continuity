@@ -380,6 +380,11 @@ public class VerdantRelicsSubsystem implements Listener {
         int reduction = talentLevel * 150; // 2.5 minutes per level
         growthDuration = Math.max(growthDuration - reduction, 0);
 
+        int optimizedLevel = SkillTreeManager.getInstance()
+                .getTalentLevel(p.getUniqueId(), Skill.FARMING, Talent.OPTIMIZED_FORMULA);
+        double multiplier = 1 - (optimizedLevel * 0.20);
+        growthDuration = (int) Math.max(growthDuration * multiplier, 0);
+
         RelicSession session = new RelicSession(locKey, relicName, growthDuration, growthDuration);
         activeSessions.put(locKey, session);
 
@@ -643,8 +648,20 @@ public class VerdantRelicsSubsystem implements Listener {
         private void maybeAddComplication() {
             if (activeComplications.size() >= 1) return; // Changed from 4 to 1 since we only have one complication type now
             if (Math.random() < 0.1) { // 10% chance
+                boolean prevented = false;
+                Location center = fromLocKey(locationKey);
+                for (Player p : center.getWorld().getPlayers()) {
+                    if (p.getLocation().distanceSquared(center) <= 100) {
+                        int level = SkillTreeManager.getInstance()
+                                .getTalentLevel(p.getUniqueId(), Skill.FARMING, Talent.BOTANIST);
+                        if (level > 0 && Math.random() < level * 0.20) {
+                            prevented = true;
+                            break;
+                        }
+                    }
+                }
                 // Only add "Overgrown" as a complication
-                if (!activeComplications.contains("Overgrown")) {
+                if (!prevented && !activeComplications.contains("Overgrown")) {
                     activeComplications.add("Overgrown");
                     spawnComplicationParticle("Overgrown");
                     spawnComplicationStands(); // show updated stands

@@ -317,7 +317,7 @@ public final class TalentRegistry {
                         Talent.FESTIVAL_BEES_I,
                         Talent.EXTRA_CROP_CHANCE_III,
                         Talent.REAPER_III,
-                        Talent.HALLOWEEN,
+                        Talent.BOTANIST,
                         Talent.FESTIVAL_BEE_DURATION_I,
                         Talent.FESTIVAL_BEES_II,
                         Talent.EXTRA_CROP_CHANCE_IV,
@@ -329,7 +329,7 @@ public final class TalentRegistry {
                         Talent.REAPER_V,
                         Talent.FESTIVAL_BEES_IV,
                         Talent.SWARM,
-                        Talent.HIVEMIND
+                        Talent.OPTIMIZED_FORMULA
                 )
         );
               SKILL_TALENTS.put(
