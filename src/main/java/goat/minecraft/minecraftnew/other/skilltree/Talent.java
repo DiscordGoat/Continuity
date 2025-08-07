@@ -2166,13 +2166,13 @@ public enum Talent {
             40,
             Material.WITHER_ROSE
     ),
-    HALLOWEEN(
-            "Halloween",
-            ChatColor.GRAY + "Reduce Scythe durability cost",
-            ChatColor.YELLOW + "-" + "(1*level)" + ChatColor.GRAY + " Scythe durability",
+    BOTANIST(
+            "Botanist",
+            ChatColor.GRAY + "Prevent relics from overgrowing",
+            ChatColor.YELLOW + "+(20*level)% " + ChatColor.GRAY + "chance to prevent Overgrown",
             5,
-            40,
-            Material.PUMPKIN
+            60,
+            Material.SHEARS
     ),
     FESTIVAL_BEE_DURATION_I(
             "Festival Bee Duration I",
@@ -2264,13 +2264,13 @@ public enum Talent {
             80,
             Material.HONEYCOMB_BLOCK
     ),
-    HIVEMIND(
-            "Hivemind",
-            ChatColor.GRAY + "Festival Bees last longer",
-            ChatColor.YELLOW + "+(25*level)% " + ChatColor.GRAY + "Festival Bee Duration",
+    OPTIMIZED_FORMULA(
+            "Optimized Formula",
+            ChatColor.GRAY + "Relics grow faster",
+            ChatColor.YELLOW + "-(20*level)% " + ChatColor.GRAY + "Verdant Relic grow time",
             4,
             80,
-            Material.BEE_SPAWN_EGG
+            Material.BOOK
     ),
 
     // =============================================================

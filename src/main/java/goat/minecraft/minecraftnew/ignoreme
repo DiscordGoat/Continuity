@@ -522,7 +522,7 @@ Festival Bees I: +0.25% Chance for Harvesting to spawn a Festival Bee for 30s, M
 Rare:
 Extra Crop Chance III: +24% per level, Max level 3
 Reaper III: -1% Crop Count Requirement for Harvest Rewards, Max level 5
-Halloween: -1 Durability Cost from the Scythe Ultimate Enchantment, Max level 5
+Botanist: (20*level)% chance to prevent Relics from becoming Overgrown, Max level 5, Level req 60
 Festival Bee Duration I: +10s Festival Bee Duration, Max level 5
 Festival Bees II: +0.25% Chance for Harvesting to spawn a Festival Bee for 30s, Max level 2
 
@@ -538,7 +538,7 @@ Extra Crop Chance V: +40% per level, Max level 4
 Reaper V: -1% Crop Count Requirement for Harvest Rewards, Max level 5
 Festival Bees IV: +0.25% Chance for Harvesting to spawn a Festival Bee for 30s, Max level 2
 Swarm: +10% Chance to spawn Double Festival Bees, Max level 5
-Hivemind: +25% Festival Bees Duration , Max level 4
+Optimized Formula: -(20*level)% Grow time for Verdant Relics, Max level 4, Level req 80
 
 
 

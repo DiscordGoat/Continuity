@@ -760,8 +760,8 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 24) + "% " + ChatColor.GRAY + "Extra Crop Chance";
             case REAPER_III:
                 return ChatColor.YELLOW + "-" + level + "% " + ChatColor.GRAY + "Harvest requirement";
-            case HALLOWEEN:
-                return ChatColor.YELLOW + "-" + level + " " + ChatColor.GRAY + "Scythe durability";
+            case BOTANIST:
+                return ChatColor.YELLOW + "+" + (level * 20) + "% " + ChatColor.GRAY + "chance to prevent Overgrown";
             case FESTIVAL_BEE_DURATION_I:
                 return ChatColor.YELLOW + "+" + (level * 10) + "s Festival Bee Duration";
             case FESTIVAL_BEES_II:
@@ -784,8 +784,8 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 0.25) + "% " + ChatColor.GRAY + "Festival Bee chance";
             case SWARM:
                 return ChatColor.YELLOW + "+" + (level * 10) + "% " + ChatColor.GRAY + "double bee chance";
-            case HIVEMIND:
-                return ChatColor.YELLOW + "+" + (level * 25) + "% " + ChatColor.GRAY + "Festival Bee Duration";
+            case OPTIMIZED_FORMULA:
+                return ChatColor.YELLOW + "-" + (level * 20) + "% " + ChatColor.GRAY + "Verdant Relic grow time";
             // =============================
             // Taming Talents
             // =============================
