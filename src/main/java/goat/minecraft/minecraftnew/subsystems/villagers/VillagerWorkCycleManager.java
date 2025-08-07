@@ -317,12 +317,9 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         sendHarvestToChest(villager, harvestYield);
         villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_ROOTED_DIRT_BREAK, 1.0f, 1.0f);
 
-        // Always cure overgrown relics anywhere in this world while a farmer works
+        // Always cure Overgrown relics anywhere in this world while a farmer works
         VerdantRelicsSubsystem relics = VerdantRelicsSubsystem.getInstance(MinecraftNew.getInstance());
-        int cured = relics.cureOvergrownInWorld(villager.getWorld());
-        if (cured > 0) {
-            villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_HOE_TILL, 1.0f, 1.0f);
-        }
+        relics.shearOvergrownInWorld(villager.getWorld());
     }
 
 
