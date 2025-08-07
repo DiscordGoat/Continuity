@@ -10,37 +10,36 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.EnumSet;
 import java.util.Random;
 import java.util.Set;
 
 public class Composter implements Listener {
 
-    private static final Set<Material> ELIGIBLE_MATERIALS = EnumSet.of(
-            Material.DIRT,
-            Material.GRAVEL,
-            Material.SAND,
-            Material.WHEAT_SEEDS,
-            Material.BEETROOT_SEEDS,
-            Material.MELON_SEEDS,
-            Material.PUMPKIN_SEEDS,
-            Material.DANDELION,
-            Material.POPPY,
-            Material.BLUE_ORCHID,
-            Material.ALLIUM,
-            Material.AZURE_BLUET,
-            Material.RED_TULIP,
-            Material.ORANGE_TULIP,
-            Material.WHITE_TULIP,
-            Material.PINK_TULIP,
-            Material.OXEYE_DAISY,
-            Material.CORNFLOWER,
-            Material.LILY_OF_THE_VALLEY,
-            Material.WITHER_ROSE,
-            Material.SUNFLOWER,
-            Material.LILAC,
-            Material.ROSE_BUSH,
-            Material.PEONY
+    private static final Set<String> ELIGIBLE_MATERIALS = Set.of(
+            "DIRT",
+            "GRAVEL",
+            "SAND",
+            "WHEAT_SEEDS",
+            "BEETROOT_SEEDS",
+            "MELON_SEEDS",
+            "PUMPKIN_SEEDS",
+            "DANDELION",
+            "POPPY",
+            "BLUE_ORCHID",
+            "ALLIUM",
+            "AZURE_BLUET",
+            "RED_TULIP",
+            "ORANGE_TULIP",
+            "WHITE_TULIP",
+            "PINK_TULIP",
+            "OXEYE_DAISY",
+            "CORNFLOWER",
+            "LILY_OF_THE_VALLEY",
+            "WITHER_ROSE",
+            "SUNFLOWER",
+            "LILAC",
+            "ROSE_BUSH",
+            "PEONY"
     );
 
     private final Random random = new Random();
@@ -65,7 +64,11 @@ public class Composter implements Listener {
     }
 
     private void autoCompost(Player player, Location dropLoc) {
-        for (Material mat : ELIGIBLE_MATERIALS) {
+        for (String matName : ELIGIBLE_MATERIALS) {
+            Material mat = Material.matchMaterial(matName);
+            if (mat == null) {
+                continue;
+            }
             int count = countItem(player, mat);
             if (count >= 256) {
                 removeItem(player, mat, 64);
