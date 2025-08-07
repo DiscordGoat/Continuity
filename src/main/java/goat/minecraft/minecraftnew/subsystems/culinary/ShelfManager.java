@@ -32,6 +32,8 @@ public class ShelfManager implements Listener {
     private final Map<String, UUID> displayStands = new HashMap<>();
     // locKey -> facing direction for persistence
     private final Map<String, String> shelfDirections = new HashMap<>();
+    // flag to ensure shelves are loaded before we attempt to save
+    private boolean hasLoaded = false;
 
     public ShelfManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -79,10 +81,11 @@ public class ShelfManager implements Listener {
             displayStands.put(locKey, stand.getUniqueId());
         }
         plugin.getLogger().info("[ShelfManager] Loaded " + shelfContents.size() + " shelf(s).");
+        hasLoaded = true;
     }
 
-
-    private void saveAllShelves() {
+    public void saveAllShelves() {
+        if (!hasLoaded) return; // avoid overriding data before we've loaded existing shelves
         // clear old
         for (String key : dataConfig.getKeys(false)) {
             dataConfig.set(key, null);
