@@ -130,7 +130,7 @@ public class Gravedigging implements Listener {
             Location target = base.clone().add(dx, 0, dz);
             int y = world.getHighestBlockYAt(target) + 1;
             Block block = world.getBlockAt(target.getBlockX(), y - 1, target.getBlockZ());
-            if (!block.getType().isAir() && !graves.containsKey(block.getLocation())) {
+            if (!block.getType().isAir() && !block.isLiquid() && !graves.containsKey(block.getLocation())) {
                 // Particle marker & sound when grave appears
                 startParticle(block.getLocation(), indicator);
                 break;
