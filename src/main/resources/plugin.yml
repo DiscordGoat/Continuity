@@ -297,3 +297,7 @@ commands:
     description: Calls every Ender Dragon to your location
     usage: /flytome
     permission: continuity.admin
+  setverdantrelicgrowthpercentage:
+    description: Sets all Verdant relics to a growth percentage
+    usage: /setverdantrelicgrowthpercentage <1-100>
+    permission: continuity.admin
