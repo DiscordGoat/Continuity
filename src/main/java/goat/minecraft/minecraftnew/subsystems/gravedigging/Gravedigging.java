@@ -12,6 +12,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.EquipmentSlot;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +21,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.block.Action;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
@@ -82,11 +85,11 @@ public class Gravedigging implements Listener {
             blockBreaks.put(player.getUniqueId(), count);
         }
 
-        // If there's already a grave here, trigger it
+        // If there's already a grave here, breaking triggers a corpse event
         if (graves.containsKey(loc)) {
             BukkitTask task = graves.remove(loc);
             if (task != null) task.cancel();
-            triggerEvent(player, loc);
+            triggerCorpseEvent(player, loc);
             event.setCancelled(true);
             return;
         }
@@ -148,40 +151,20 @@ public class Gravedigging implements Listener {
         graves.put(loc, task);
     }
 
-    private void triggerEvent(Player player, Location loc) {
+    private void triggerCorpseEvent(Player player, Location loc) {
         World world = loc.getWorld();
         if (world == null) return;
 
-        int mass = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
-                Skill.TERRAFORMING, Talent.MASS_GRAVE);
-        double corpseChance = 0.5 + mass * 0.10;
-
-        double roll = random.nextDouble();
         Location center = loc.clone().add(0.5, 2, 0.5);
 
-        if (roll < corpseChance) {
-            // --- CORPSE EVENT ---
-            world.spawnParticle(Particle.EXPLOSION, center, 10, 0, 0, 0, 0);
-            world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
+        // --- CORPSE EVENT ---
+        world.spawnParticle(Particle.EXPLOSION, center, 10, 0, 0, 0, 0);
+        world.playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 1.0f, 1.0f);
+        new CorpseEvent(plugin).trigger(center);
+        int dt = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
+                Skill.TERRAFORMING, Talent.DOUBLE_TROUBLE);
+        if (dt > 0 && Math.random() < dt * 0.01) {
             new CorpseEvent(plugin).trigger(center);
-            int dt = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(),
-                    Skill.TERRAFORMING, Talent.DOUBLE_TROUBLE);
-            if (dt > 0 && Math.random() < dt * 0.01) {
-                new CorpseEvent(plugin).trigger(center);
-            }
-        } else {
-            // --- TREASURE EVENT ---
-            ItemStack relic = ItemRegistry.getRandomVerdantRelicSeed();
-            world.dropItemNaturally(center, relic);
-            world.playSound(center, Sound.ENTITY_ITEM_PICKUP, 1.0f, 0.8f);
-            String name = relic.getItemMeta() != null
-                    ? relic.getItemMeta().getDisplayName()
-                    : "Relic";
-            player.sendMessage(ChatColor.AQUA
-                    + "You uncover a treasure! ("
-                    + name
-                    + ChatColor.AQUA
-                    + ")");
         }
 
         // common dust + gravel sound for breaking the grave
@@ -204,6 +187,60 @@ public class Gravedigging implements Listener {
             spawnGraveNear(player);
         }
 
+    }
+
+    @EventHandler
+    public void onGraveRightClick(PlayerInteractEvent event) {
+        if (!event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
+        if (!event.getHand().equals(EquipmentSlot.HAND)) return;
+
+        Block block = event.getClickedBlock();
+        if (block == null) return;
+        Location loc = block.getLocation();
+
+        if (graves.containsKey(loc)) {
+            BukkitTask task = graves.remove(loc);
+            if (task != null) task.cancel();
+            event.setCancelled(true);
+            digUpRelic(event.getPlayer(), loc);
+        }
+    }
+
+    private void digUpRelic(Player player, Location loc) {
+        World world = loc.getWorld();
+        if (world == null) return;
+        Location center = loc.clone().add(0.5, 2, 0.5);
+
+        ItemStack relic = ItemRegistry.getRandomVerdantRelic();
+        world.dropItemNaturally(center, relic);
+        world.playSound(center, Sound.ENTITY_ITEM_PICKUP, 1.0f, 0.8f);
+        String name = relic.getItemMeta() != null
+                ? relic.getItemMeta().getDisplayName()
+                : "Relic";
+        player.sendMessage(ChatColor.AQUA
+                + "You uncover a treasure! ("
+                + name
+                + ChatColor.AQUA
+                + ")");
+
+        world.spawnParticle(
+                Particle.BLOCK,
+                loc,
+                20,
+                0.2, 0.2, 0.2,
+                Material.DIRT.createBlockData()
+        );
+        world.playSound(loc, Sound.BLOCK_GRAVEL_BREAK, 1.0f, 1.0f);
+
+        int gy1 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVEYARD_I);
+        int gy2 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVEYARD_II);
+        int gy3 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVEYARD_III);
+        int gy4 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVEYARD_IV);
+        int gy5 = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TERRAFORMING, Talent.GRAVEYARD_V);
+        double chainChance = 0.025 * (gy1 + gy2 + gy3 + gy4 + gy5);
+        if (Math.random() < chainChance) {
+            spawnGraveNear(player);
+        }
     }
 
 }
