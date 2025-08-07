@@ -62,7 +62,8 @@ public class UltimateEnchantmentListener implements Listener {
 
     // Warp charge tracking
     private static final long WARP_CHARGE_COOLDOWN = 60_000L; // 60 seconds
-    private static int DEFAULT_WARP_CHARGES = 10;
+    // Base number of warp stacks a player starts with
+    private static final int DEFAULT_WARP_CHARGES = 10;
     private final Map<UUID, List<Long>> warpCharges = new HashMap<>();
     // Removed Leviathan ultimate enchantment
 
@@ -943,18 +944,20 @@ public class UltimateEnchantmentListener implements Listener {
 
     // ---- Warp charge helpers ----
     private int getMaxWarpCharges(Player player) {
+        int max = DEFAULT_WARP_CHARGES;
         if (BlessingUtils.hasFullSetBonus(player, "Duskblood")) {
-            DEFAULT_WARP_CHARGES += 60;
+            max += 60;
         }
-        if (PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player).hasPerk(PetManager.PetPerk.ENDLESS_WARP)) {
-            DEFAULT_WARP_CHARGES += 100;
+        if (PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player)
+                .hasPerk(PetManager.PetPerk.ENDLESS_WARP)) {
+            max += 100;
         }
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         if (mgr != null) {
             int talent = mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ENDLESS_WARP);
-            DEFAULT_WARP_CHARGES += talent * 100;
+            max += talent * 100;
         }
-        return DEFAULT_WARP_CHARGES;
+        return max;
     }
 
     private List<Long> getWarpChargeList(Player player) {
