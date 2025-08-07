@@ -269,6 +269,11 @@ public class CustomDurabilityManager implements Listener {
      * Applies damage using the custom durability system.
      */
     public void applyDamage(Player player, ItemStack item, int amount) {
+        if (item == null || amount <= 0) return;
+
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null && meta.isUnbreakable()) return;
+
         convertVanillaUnbreaking(item);
         ensureUnbreakingBonus(item);
         int golden = getGoldenDurability(item);
