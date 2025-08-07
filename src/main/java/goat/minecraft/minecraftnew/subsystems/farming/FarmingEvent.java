@@ -302,8 +302,6 @@ public class FarmingEvent implements Listener {
                 int dur = 30
                         + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEE_DURATION_I) * 10
                         + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEE_DURATION_II) * 10;
-                double multi = 1 + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.HIVEMIND) * 0.25;
-                dur = (int) (dur * multi);
                 World world = player.getWorld();
                 long before = countFestivalBees(world);
                 FestivalBeeManager.getInstance(plugin).spawnFestivalBee(block.getLocation(), dur);
