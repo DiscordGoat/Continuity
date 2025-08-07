@@ -564,7 +564,7 @@ public class PetManager implements Listener {
             activePet.addXP(petXP);
             if (xpManager != null) {
                 if(activePet.getLevel() < 100) {
-                    xpManager.addXP(player, "Taming", petXP);
+                    xpManager.addXP(player, "Taming", petXP/4);
                     if (before < 100 && activePet.getLevel() >= 100) {
                         xpManager.addXP(player, "Taming", 2500);
                     }
@@ -784,7 +784,13 @@ public class PetManager implements Listener {
             case SHOTCALLING:
                 return "Gain " + ChatColor.RED + "+" + (level * 0.5) + "% Arrow Damage.";
             case HEADLESS_HORSEMAN:
-                return "+ " + ChatColor.RED + level + "% Double Wheat Tally.";
+                return "+" + ChatColor.RED + level*0.25 + "% Double Wheat Tally.";
+            case ORANGE:
+                return "+" + ChatColor.RED + level*0.25 + "% Double Carrot Tally.";
+            case BEETS_ME:
+                return "+" + ChatColor.RED + level*0.25 + "% Double Beetroot Tally.";
+            case BLOODTHIRSTY:
+                return "+" + ChatColor.RED + level*0.25 + "% Double Potato Tally.";
             case BONE_COLD:
                 return "Provides " + ChatColor.AQUA + "immunity to freeze damage.";
             case TIPPED_SLOWNESS:

@@ -229,7 +229,6 @@ public final class TalentRegistry {
 
                         Talent.BONUS_PET_XP_IV,
                         Talent.SECRET_LEGION,
-                        Talent.BLACKLUNG,
                         Talent.COMFORTABLE,
                         Talent.SPLASH_POTION,
                         Talent.EXPERIMENTATION,

@@ -743,7 +743,7 @@ public class SkillTreeManager implements Listener {
             case REAPER_I:
                 return ChatColor.YELLOW + "-" + level + "% " + ChatColor.GRAY + "Harvest requirement";
             case FAST_FARMER:
-                return ChatColor.YELLOW + "Speed " + level + ChatColor.GRAY + " on crop break";
+                return ChatColor.YELLOW + "Speed " + 1 + ChatColor.GRAY + " on crop break for " + ChatColor.YELLOW + level * 0.5 + ChatColor.YELLOW + "s";
             case HARVEST_FESTIVAL:
                 return ChatColor.YELLOW + "+" + (level * 50) + "% " + ChatColor.GRAY + "Haste II chance";
             case EXTRA_CROP_CHANCE_II:
@@ -836,8 +836,6 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + (level * 8) + "% " + ChatColor.GRAY + "Bonus Pet XP Chance";
             case SECRET_LEGION:
                 return ChatColor.YELLOW + "No Hunger Cost";
-            case BLACKLUNG:
-                return ChatColor.YELLOW + "No Overworld Oxygen Loss";
             case COMFORTABLE:
                 return ChatColor.YELLOW + "Double Absorption Duration & Health";
             case SPLASH_POTION:

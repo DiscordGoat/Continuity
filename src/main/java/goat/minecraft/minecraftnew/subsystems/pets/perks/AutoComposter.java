@@ -69,7 +69,7 @@ public class AutoComposter {
                             performConversion(player, perk);
                         } else if (perk == PetPerk.HARVEST_FESTIVAL) {
                             long lastTime = lastHarvestFestivalTime.getOrDefault(player, 0L);
-                            if (System.currentTimeMillis() - lastTime >= 15000) {
+                            if (System.currentTimeMillis() - lastTime >= 5000) {
                                 performHarvestFestival(player);
                                 lastHarvestFestivalTime.put(player, System.currentTimeMillis());
                             }
@@ -228,8 +228,8 @@ public class AutoComposter {
         }
         if (removed > 0) {
             int tally = composterTally.getOrDefault(player, 0) + removed;
-            while (tally >= 2000) {
-                tally -= 2000;
+            while (tally >= 4000) {
+                tally -= 4000;
                 player.getWorld().dropItemNaturally(player.getLocation(), ItemRegistry.getFertilizer().clone());
             }
             composterTally.put(player, tally);

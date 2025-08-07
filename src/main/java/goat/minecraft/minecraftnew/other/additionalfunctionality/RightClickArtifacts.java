@@ -563,7 +563,7 @@ public class RightClickArtifacts implements Listener {
                 clickedBlock.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, clickedBlock.getLocation().add(0.5, 1, 0.5), 50, 0.5, 1, 0.5, 0.05);
 
             }
-            if (itemInHand.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Jackhammer")) {
+            if (itemInHand.getItemMeta() != null && itemInHand.getItemMeta().getDisplayName().equals(ChatColor.LIGHT_PURPLE + "Jackhammer")) {
                 Block clickedBlock = e.getClickedBlock();
                 if (clickedBlock == null) {
                     return;

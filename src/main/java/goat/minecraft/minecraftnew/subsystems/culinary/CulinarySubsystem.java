@@ -756,6 +756,7 @@ public class CulinarySubsystem implements Listener {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
+                        refund.setAmount(1);
                         player.getInventory().addItem(refund);
                         player.sendMessage(ChatColor.GREEN + "You kept your snack!");
                     }

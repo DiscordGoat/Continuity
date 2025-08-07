@@ -68,13 +68,13 @@ public class CropCountManager {
         if (activePet != null) {
             int level = activePet.getLevel();
             if (crop == Material.WHEAT && activePet.hasPerk(PetManager.PetPerk.HEADLESS_HORSEMAN)) {
-                if (random.nextInt(100) < level) incrementValue++;
+                if (random.nextInt(100) < level*0.25) incrementValue++;
             } else if (crop == Material.CARROTS && activePet.hasPerk(PetManager.PetPerk.ORANGE)) {
-                if (random.nextInt(100) < level) incrementValue++;
+                if (random.nextInt(100) < level*0.25) incrementValue++;
             } else if (crop == Material.BEETROOTS && activePet.hasPerk(PetManager.PetPerk.BEETS_ME)) {
-                if (random.nextInt(100) < level) incrementValue++;
+                if (random.nextInt(100) < level*0.25) incrementValue++;
             } else if (crop == Material.POTATOES && activePet.hasPerk(PetManager.PetPerk.BLOODTHIRSTY)) {
-                if (random.nextInt(100) < level) incrementValue++;
+                if (random.nextInt(100) < level*0.25) incrementValue++;
             }
         }
 
@@ -96,7 +96,7 @@ public class CropCountManager {
             reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_IV);
             reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_V);
         }
-        int requirement = (int) Math.ceil(500 * (1 - reduction / 100.0));
+        int requirement = (int) Math.ceil(1000 * (1 - reduction / 100.0));
         if (requirement < 1) requirement = 1;
         boolean trigger = false;
         for (int i = previous + 1; i <= c; i++) {

@@ -30,6 +30,7 @@ import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffectType;
 
@@ -103,35 +104,48 @@ public class FarmingEvent implements Listener {
         ItemStack item = event.getItem();
         if (item == null) return;
 
+        // grab the display name (strip color if you're using ChatColor)
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null || !meta.hasDisplayName()) return;
+        String name = ChatColor.stripColor(meta.getDisplayName());
+
         ItemStack seeder = null;
-        if (item.isSimilar(ItemRegistry.getEnchantedHayBale())) {
-            seeder = ItemRegistry.getWheatSeeder();
-        } else if (item.isSimilar(ItemRegistry.getEnchantedGoldenCarrot())) {
-            seeder = ItemRegistry.getCarrotSeeder();
-        } else if (item.isSimilar(ItemRegistry.getHeartRoot())) {
-            seeder = ItemRegistry.getBeetrootSeeder();
-        } else if (item.isSimilar(ItemRegistry.getImmortalPotato())) {
-            seeder = ItemRegistry.getPotatoSeeder();
+        switch (name) {
+            case "Enchanted Hay Bale":
+                seeder = ItemRegistry.getWheatSeeder();
+                break;
+            case "Enchanted Golden Carrot":
+                seeder = ItemRegistry.getCarrotSeeder();
+                break;
+            case "Heart Root":
+                seeder = ItemRegistry.getBeetrootSeeder();
+                break;
+            case "Immortal Potato":
+                seeder = ItemRegistry.getPotatoSeeder();
+                break;
+            default:
+                return;  // no matching seeder
         }
 
-        if (seeder == null) return;
-
-        event.setCancelled(true);
-
+        // consume one of the clicked items
         if (item.getAmount() > 1) {
             item.setAmount(item.getAmount() - 1);
         } else {
             event.getPlayer().getInventory().setItem(event.getHand(), null);
         }
 
-        int amount = random.nextInt(4) + 1;
+        // drop the seeder(s)
+        int amount = 1;
         seeder.setAmount(amount);
         Location dropLoc = block.getLocation().add(0.5, 1.0, 0.5);
         block.getWorld().dropItemNaturally(dropLoc, seeder);
 
+        // effects
         World world = block.getWorld();
         world.playSound(dropLoc, Sound.BLOCK_COMPOSTER_FILL_SUCCESS, 1.0f, 1.0f);
         world.spawnParticle(Particle.COMPOSTER, dropLoc, 10, 0.25, 0.25, 0.25, 0.01);
+
+        event.setCancelled(true);
     }
 
     @EventHandler
@@ -317,8 +331,6 @@ public class FarmingEvent implements Listener {
                 player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 2.0f);
                 handleHarvestRewards(block, player, blockType);
             }
-
-            handleRareItemDrop(block, player, blockType);
         }
     }
     @EventHandler
@@ -361,7 +373,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getWheatSeeder();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
@@ -370,7 +382,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getEnchantedHayBale();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
@@ -380,7 +392,7 @@ public class FarmingEvent implements Listener {
                         notifyHarvest(player, ChatColor.GOLD + "Scarecrow pet", 1, true);
                     } else {
                         ItemStack item = ItemRegistry.getEnchantedHayBale();
-                        item.setAmount(16);
+                        item.setAmount(4);
                         block.getWorld().dropItemNaturally(dropLoc, item);
                         notifyHarvest(player, item, true);
                     }
@@ -393,7 +405,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getCarrotSeeder();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
@@ -402,7 +414,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
@@ -412,7 +424,7 @@ public class FarmingEvent implements Listener {
                         notifyHarvest(player, ChatColor.GOLD + "Killer Rabbit pet", 1, true);
                     } else {
                         ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
-                        item.setAmount(16);
+                        item.setAmount(4);
                         block.getWorld().dropItemNaturally(dropLoc, item);
                         notifyHarvest(player, item, true);
                     }
@@ -425,7 +437,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getBeetrootSeeder();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
@@ -434,7 +446,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getHeartRoot();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
@@ -444,7 +456,7 @@ public class FarmingEvent implements Listener {
                         notifyHarvest(player, ChatColor.GOLD + "Baron pet", 1, true);
                     } else {
                         ItemStack item = ItemRegistry.getHeartRoot();
-                        item.setAmount(16);
+                        item.setAmount(4);
                         block.getWorld().dropItemNaturally(dropLoc, item);
                         notifyHarvest(player, item, true);
                     }
@@ -457,7 +469,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, false);
                 } else if (roll < 0.80) {
                     ItemStack item = ItemRegistry.getPotatoSeeder();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, false);
                 } else if (roll < 0.90) {
@@ -466,7 +478,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getImmortalPotato();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
@@ -476,7 +488,7 @@ public class FarmingEvent implements Listener {
                         notifyHarvest(player, ChatColor.GOLD + "Mole pet", 1, true);
                     } else {
                         ItemStack item = ItemRegistry.getImmortalPotato();
-                        item.setAmount(16);
+                        item.setAmount(4);
                         block.getWorld().dropItemNaturally(dropLoc, item);
                         notifyHarvest(player, item, true);
                     }
@@ -497,7 +509,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getWatermelon();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {
@@ -521,7 +533,7 @@ public class FarmingEvent implements Listener {
                     notifyHarvest(player, item, true);
                 } else if (roll < 0.975) {
                     ItemStack item = ItemRegistry.getJackOLantern();
-                    item.setAmount(4);
+                    item.setAmount(2);
                     block.getWorld().dropItemNaturally(dropLoc, item);
                     notifyHarvest(player, item, true);
                 } else {

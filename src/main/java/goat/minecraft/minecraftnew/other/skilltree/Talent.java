@@ -2095,7 +2095,7 @@ public enum Talent {
     FAST_FARMER(
             "Fast Farmer",
             ChatColor.GRAY + "Gain Speed when harvesting crops",
-            ChatColor.YELLOW + "Speed " + ChatColor.GRAY + "I-V on crop break",
+            ChatColor.YELLOW + "Speed " + ChatColor.GRAY + "I on crop break",
             5,
             1,
             Material.LEATHER_BOOTS
@@ -2455,14 +2455,6 @@ public enum Talent {
             1,
             60,
             Material.TOTEM_OF_UNDYING
-    ),
-    BLACKLUNG(
-            "Blacklung",
-            ChatColor.GRAY + "Breathe freely underground",
-            ChatColor.YELLOW + "No Overworld Oxygen Loss",
-            1,
-            60,
-            Material.COAL
     ),
     COMFORTABLE(
             "Comfortable",

@@ -110,27 +110,27 @@ public class XPManager implements CommandExecutor {
             30735*8, // Level 77
             31680*8, // Level 78
             32649*8, // Level 79
-            33643*8, // Level 80
-            34662*8, // Level 81
-            35707*8, // Level 82
-            36779*8, // Level 83
-            37878*8, // Level 84
-            39005*8, // Level 85
-            40161*8, // Level 86
-            41347*8, // Level 87
-            42563*8, // Level 88
-            43811*8, // Level 89
-            45091*8, // Level 90
-            46405*8, // Level 91
-            47752*8, // Level 92
-            49135*8, // Level 93
-            50554*8, // Level 94
-            52010*8, // Level 95
-            53505*8, // Level 96
-            55039*8, // Level 97
-            56614*8, // Level 98
-            58231*8, // Level 99
-            59891*8  // Level 100
+            33643*16, // Level 80
+            34662*16, // Level 81
+            35707*16, // Level 82
+            36779*16, // Level 83
+            37878*16, // Level 84
+            39005*16, // Level 85
+            40161*16, // Level 86
+            41347*16, // Level 87
+            42563*16, // Level 88
+            43811*16, // Level 89
+            45091*16, // Level 90
+            46405*16, // Level 91
+            47752*16, // Level 92
+            49135*16, // Level 93
+            50554*16, // Level 94
+            52010*16, // Level 95
+            53505*16, // Level 96
+            55039*16, // Level 97
+            56614*16, // Level 98
+            58231*16, // Level 99
+            59891*16  // Level 100
     };
 
     public XPManager(JavaPlugin plugin) {
@@ -403,7 +403,9 @@ public class XPManager implements CommandExecutor {
         int newLevel = calculateLevel(newXP);
 
         // Now send the hotbar message with bonus XP information
-        sendHotbarMessage(player, skill, xp, newXP, getXPToNextLevel(player, skill), bonusXP);
+        if(!skill.equalsIgnoreCase("Taming")){
+            sendHotbarMessage(player, skill, xp, newXP, getXPToNextLevel(player, skill), bonusXP);
+        }
 
 
         // Check if we leveled up

@@ -125,10 +125,10 @@ public class FestivalBeeManager {
         int count = bees.size();
 
         // adjust tick speed always
-        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3 + count * 10);
+        world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3 + count * 2);
 
         if (count > 0) {
-            // Disable natural day/night
+            // Disable natural day/night0
             world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 
             // Only start a new timelapse if one isn't already running

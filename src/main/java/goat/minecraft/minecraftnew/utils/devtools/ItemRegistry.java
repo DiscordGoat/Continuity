@@ -585,6 +585,9 @@ public class ItemRegistry {
         Random random = new Random();
         List<ItemStack> seeds = Arrays.asList(
                 getVerdantRelicEntionPlastSeed(),
+                getGravity(),
+                getGhost(),
+                getVerdantRelicTreasury(),
                 getVerdantRelicEntropySeed(),
                 getVerdantRelicSunflareSeed(),
                 getVerdantRelicStarlightSeed(),
@@ -3574,7 +3577,7 @@ public class ItemRegistry {
 
     public static ItemStack getIrrigation() {
         return createCustomItem(
-                Material.WATER_BUCKET,
+                Material.BUCKET,
                 ChatColor.YELLOW + "Irrigation",
                 Arrays.asList(
                         ChatColor.GRAY + "Hydrates nearby soil and crops.",

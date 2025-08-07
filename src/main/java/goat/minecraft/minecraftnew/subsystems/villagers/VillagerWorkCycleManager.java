@@ -209,7 +209,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         if (hayBale == null) {            return; // No hay bale nearby, don't perform farming
         }
 
-        int radius = 40; // Set the search radius to 40 blocks
+        int radius = 50; // Set the search radius to 40 blocks
 
         List<Material> harvestableCrops = List.of(
                 Material.WHEAT,

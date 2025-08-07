@@ -28,7 +28,7 @@ public class SwiftStepMasteryBonus implements Listener {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 checkPlayer(player);
             }
-        }, 1L);
+        }, 100L);
     }
 
     @EventHandler

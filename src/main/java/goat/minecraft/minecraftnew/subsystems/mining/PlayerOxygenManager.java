@@ -307,11 +307,6 @@ public class PlayerOxygenManager implements Listener {
             hasBlacklung = activePet.hasPerk(PetManager.PetPerk.BLACKLUNG)
                     || activePet.hasUniqueTraitPerk(PetManager.PetPerk.BLACKLUNG);
         }
-        if (!hasBlacklung && SkillTreeManager.getInstance() != null) {
-            int bl = SkillTreeManager.getInstance()
-                    .getTalentLevel(uuid, Skill.TAMING, Talent.BLACKLUNG);
-            hasBlacklung = bl > 0;
-        }
 
         // Determine raw rate
         if (world.getEnvironment() == World.Environment.NETHER) {

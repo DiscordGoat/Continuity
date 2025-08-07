@@ -955,7 +955,10 @@ public class UltimateEnchantmentListener implements Listener {
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         if (mgr != null) {
             int talent = mgr.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ENDLESS_WARP);
-            max += talent * 100;
+            if (PetManager.getInstance(MinecraftNew.getInstance()).getActivePet(player)
+                    .hasPerk(PetManager.PetPerk.ENDLESS_WARP)) {
+                max += talent * 100;
+            }
         }
         return max;
     }

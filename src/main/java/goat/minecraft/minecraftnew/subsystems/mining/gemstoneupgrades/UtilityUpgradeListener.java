@@ -48,9 +48,6 @@ public class UtilityUpgradeListener implements Listener {
             // Handle mining XP boost
             handleMiningXPBoost(player, tool);
             
-            // Handle oxygen restoration
-            handleOxygenRestore(player, tool);
-            
             // Handle feed effect
             handleFeedEffect(player, tool);
         }
@@ -69,19 +66,6 @@ public class UtilityUpgradeListener implements Listener {
         }
     }
 
-    private void handleOxygenRestore(Player player, ItemStack tool) {
-        int oxygenLevel = upgradeSystemInstance.getUpgradeLevel(player, tool, GemstoneUpgradeSystem.UpgradeType.OXYGEN);
-        if (oxygenLevel > 0) {
-            double chance = oxygenLevel * 2.5; // 2.5% per level
-            if (random.nextDouble() * 100 < chance) {
-                PlayerOxygenManager oxygenManager = PlayerOxygenManager.getInstance();
-                if (oxygenManager != null) {
-                    oxygenManager.setPlayerOxygenLevel(player, (oxygenManager.getPlayerOxygen(player) +10));
-                    player.playSound(player.getLocation(), Sound.ENTITY_AXOLOTL_IDLE_AIR, 1.0f, 1.0f);
-                }
-            }
-        }
-    }
 
     private void handleFeedEffect(Player player, ItemStack tool) {
         int feedLevel = upgradeSystemInstance.getUpgradeLevel(player, tool, GemstoneUpgradeSystem.UpgradeType.FEED);

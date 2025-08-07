@@ -33,7 +33,6 @@ public class GemstoneUpgradeSystem implements Listener {
         // Row 3: Utilities (slots 20-25)
         GEMSTONE_YIELD("Gemstone Yield", "Increases gemstone drop chance from eligible ores", Material.EMERALD, 6, 20),
         MINING_XP_BOOST("Mining XP Boost", "Increases XP gained from mining", Material.EXPERIENCE_BOTTLE, 3, 21),
-        OXYGEN("Oxygen", "Chance to restore oxygen when mining ores", Material.GLASS_BOTTLE, 5, 22),
         FEED("Feed", "Rare chance to restore hunger and saturation", Material.BREAD, 3, 23),
         PAYOUT("Payout", "Chance to sell stone stack for 16 emeralds", Material.EMERALD_BLOCK, 4, 24),
 
@@ -441,7 +440,6 @@ public class GemstoneUpgradeSystem implements Listener {
             case MASTERWORK: return "🛠"; // Hammer and wrench for masterwork
             case GEMSTONE_YIELD: return "✦"; // Four-pointed star for gemstones
             case MINING_XP_BOOST: return "📈"; // Chart for XP boost
-            case OXYGEN: return "💨"; // Wind for oxygen
             case FEED: return "🍖"; // Meat for feed
             case PAYOUT: return "💰"; // Money bag for payout
             case GOLD_FEVER_CHANCE: return "🎯"; // Target for chance
@@ -593,7 +591,6 @@ public class GemstoneUpgradeSystem implements Listener {
         // Utility upgrades in slots 20-24
         gui.setItem(20, createUpgradeItem(UpgradeType.GEMSTONE_YIELD, tool, getUpgradeCost(UpgradeType.GEMSTONE_YIELD), availablePower));
         gui.setItem(21, createUpgradeItem(UpgradeType.MINING_XP_BOOST, tool, getUpgradeCost(UpgradeType.MINING_XP_BOOST), availablePower));
-        gui.setItem(22, createUpgradeItem(UpgradeType.OXYGEN, tool, getUpgradeCost(UpgradeType.OXYGEN), availablePower));
         gui.setItem(23, createUpgradeItem(UpgradeType.FEED, tool, getUpgradeCost(UpgradeType.FEED), availablePower));
         gui.setItem(24, createUpgradeItem(UpgradeType.PAYOUT, tool, getUpgradeCost(UpgradeType.PAYOUT), availablePower));
         

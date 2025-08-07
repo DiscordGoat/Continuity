@@ -855,9 +855,6 @@ public class VerdantRelicsSubsystem implements Listener {
             else if (relicType.equalsIgnoreCase("Shiny Emerald")) {
                 return ItemRegistry.getShinyEmerald();
             }
-            else if (relicType.equalsIgnoreCase("Tide")) {
-                return ItemRegistry.getTide();
-            }
             // Default fallback yield
             return null;
         }
