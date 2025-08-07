@@ -1627,27 +1627,27 @@ public class AnvilRepair implements Listener {
 
             int level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_I);
             if (rng.nextDouble() < (level * 1.5) / 100.0) {
-                customDurabilityManager.addMaxDurabilityBonus(repairee, 1);
+                addAlloyBonus(player, repairee, customDurabilityManager, 1);
             }
 
             level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_II);
             if (rng.nextDouble() < (level * 1.5) / 100.0) {
-                customDurabilityManager.addMaxDurabilityBonus(repairee, 2);
+                addAlloyBonus(player, repairee, customDurabilityManager, 2);
             }
 
             level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_III);
             if (rng.nextDouble() < (level * 1.5) / 100.0) {
-                customDurabilityManager.addMaxDurabilityBonus(repairee, 3);
+                addAlloyBonus(player, repairee, customDurabilityManager, 3);
             }
 
             level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_IV);
             if (rng.nextDouble() < (level * 1.5) / 100.0) {
-                customDurabilityManager.addMaxDurabilityBonus(repairee, 4);
+                addAlloyBonus(player, repairee, customDurabilityManager, 4);
             }
 
             level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_V);
             if (rng.nextDouble() < (level * 0.5) / 100.0) {
-                customDurabilityManager.addMaxDurabilityBonus(repairee, 100);
+                addAlloyBonus(player, repairee, customDurabilityManager, 100);
             }
         }
         // Apply the repair by reducing the damage
@@ -1847,6 +1847,30 @@ public class AnvilRepair implements Listener {
         if (item == null || item.getItemMeta() == null) return false;
         String displayName = item.getItemMeta().getDisplayName();
         return displayName != null && (displayName.contains("Place") || displayName.contains("Click") || displayName.equals("Repair Instructions"));
+    }
+
+    /**
+     * Applies an Alloy perk max durability bonus and informs the player.
+     */
+    private void addAlloyBonus(Player player, ItemStack item, CustomDurabilityManager manager, int amount) {
+        int previous = manager.getMaxDurability(item);
+        manager.addMaxDurabilityBonus(item, amount);
+
+        ItemMeta meta = item.getItemMeta();
+        String name;
+        if (meta != null && meta.hasDisplayName()) {
+            name = meta.getDisplayName();
+        } else {
+            String[] parts = item.getType().toString().toLowerCase().split("_");
+            StringBuilder builder = new StringBuilder();
+            for (String part : parts) {
+                if (part.isEmpty()) continue;
+                builder.append(Character.toUpperCase(part.charAt(0))).append(part.substring(1)).append(" ");
+            }
+            name = builder.toString().trim();
+        }
+
+        player.sendMessage(ChatColor.GREEN + "Your Alloy perk added +" + amount + " Max Durability to " + name + "! (previously: " + previous + ")");
     }
 
     /**
