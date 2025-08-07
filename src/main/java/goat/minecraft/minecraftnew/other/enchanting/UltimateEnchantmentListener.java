@@ -37,6 +37,8 @@ import org.bukkit.util.Vector;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.Location;
 import org.bukkit.entity.Monster;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.*;
 
@@ -753,6 +755,8 @@ public class UltimateEnchantmentListener implements Listener {
                 Vector offset = direction.multiply(8);
                 player.teleport(player.getLocation().add(offset));
                 player.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 1.0F, 1.0f);
+                int remaining = getRemainingWarpCharges(player);
+                sendActionBar(player, ChatColor.DARK_PURPLE + "Warp Stacks: " + ChatColor.YELLOW + remaining);
                 cooldownMs = 0L;
             } else {
                 if (isOnCooldown(player.getUniqueId(), ueData.getName())) {
@@ -978,6 +982,22 @@ public class UltimateEnchantmentListener implements Listener {
             }
         }
         return false;
+    }
+
+    private int getRemainingWarpCharges(Player player) {
+        List<Long> list = getWarpChargeList(player);
+        long now = System.currentTimeMillis();
+        int count = 0;
+        for (long t : list) {
+            if (t <= now) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private void sendActionBar(Player player, String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
     }
 
     private void addShredCharges(Player player, int amount) {
