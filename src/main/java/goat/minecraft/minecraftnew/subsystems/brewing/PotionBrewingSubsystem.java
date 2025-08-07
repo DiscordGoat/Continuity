@@ -255,8 +255,8 @@ public class PotionBrewingSubsystem implements Listener {
         }
         if (name.equalsIgnoreCase("Potion of Metal Detection") &&
                 SkillTreeManager.getInstance().hasTalent(player, Talent.METAL_DETECTION_MASTERY)) {
-            if (!ingredients.contains("Zombie Skull")) {
-                ingredients.add("Zombie Skull");
+            if (!ingredients.contains("Zombie Head")) {
+                ingredients.add("Zombie Head");
             }
         }
         if (name.equalsIgnoreCase("Potion of Night Vision") &&

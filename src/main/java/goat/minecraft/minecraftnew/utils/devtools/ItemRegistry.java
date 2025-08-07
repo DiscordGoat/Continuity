@@ -585,7 +585,7 @@ public class ItemRegistry {
         Random random = new Random();
         List<ItemStack> seeds = Arrays.asList(
                 getVerdantRelicEntionPlastSeed(),
-                getGravity(),
+                getVerdantRelicGravity(),
                 getGhost(),
                 getVerdantRelicTreasury(),
                 getVerdantRelicEntropySeed(),
