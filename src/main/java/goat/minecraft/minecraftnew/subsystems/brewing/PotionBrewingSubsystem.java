@@ -326,7 +326,7 @@ public class PotionBrewingSubsystem implements Listener {
         //strength is farmed from Knights
         List<String> strengthIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Gravity");
         int baseDuration = (60 * 3);
-        List<String> strengthLore = Arrays.asList("Increases melee damage by 25%", "Base Duration of " + baseDuration);
+        List<String> strengthLore = Arrays.asList("Grants +25 Strength ⚔", "Base Duration of " + baseDuration);
         Color strengthColor = Color.fromRGB(101, 67, 33);
         recipeRegistry.add(
                 new PotionRecipe("Potion of Strength", strengthIngredients, 60 * 10, new ItemStack(Material.POTION), strengthColor, strengthLore)
