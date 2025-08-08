@@ -8,7 +8,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.MonsterLe
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.PowerCatalystDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.RangedDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.CorpseLevelDamageStrategy;
-import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SwordTalentDamageStrategy;
+import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.StrengthDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SpiderDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.HellbentDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.DontMineAtNightDamageStrategy;
@@ -248,7 +248,7 @@ public class CombatSubsystemManager implements CommandExecutor {
             damageCalculationService.registerStrategy(
                 new RangedDamageStrategy(configuration.getDamageConfig(), xpManager));
 
-            damageCalculationService.registerStrategy(new SwordTalentDamageStrategy());
+            damageCalculationService.registerStrategy(new StrengthDamageStrategy());
             damageCalculationService.registerStrategy(new HellbentDamageStrategy());
             damageCalculationService.registerStrategy(new DontMineAtNightDamageStrategy());
         }

@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.other.skilltree;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 
 /**
  * Enumeration of all available talents in the plugin.  This acts as a
@@ -383,7 +384,7 @@ public enum Talent {
     SWORD_DAMAGE_I(
             "Sword Damage I",
             ChatColor.GRAY + "Sharpen your striking technique",
-            ChatColor.RED + "+4% Sword Damage",
+            ChatColor.RED + "+4 Strength " + StrengthManager.EMOJI,
             5,
             1,
             Material.WOODEN_SWORD
@@ -423,7 +424,7 @@ public enum Talent {
     SWORD_DAMAGE_II(
             "Sword Damage II",
             ChatColor.GRAY + "Refined swordplay",
-            ChatColor.RED + "+4% Sword Damage",
+            ChatColor.RED + "+4 Strength " + StrengthManager.EMOJI,
             5,
             20,
             Material.STONE_SWORD
@@ -463,7 +464,7 @@ public enum Talent {
     SWORD_DAMAGE_III(
             "Sword Damage III",
             ChatColor.GRAY + "Polish your edge",
-            ChatColor.RED + "+4% Sword Damage",
+            ChatColor.RED + "+4 Strength " + StrengthManager.EMOJI,
             5,
             40,
             Material.IRON_SWORD
@@ -495,7 +496,7 @@ public enum Talent {
     SWORD_DAMAGE_IV(
             "Sword Damage IV",
             ChatColor.GRAY + "Deadly technique",
-            ChatColor.RED + "+4% Sword Damage",
+            ChatColor.RED + "+4 Strength " + StrengthManager.EMOJI,
             5,
             60,
             Material.DIAMOND_SWORD
@@ -527,7 +528,7 @@ public enum Talent {
     SWORD_DAMAGE_V(
             "Sword Damage V",
             ChatColor.GRAY + "Unmatched sword mastery",
-            ChatColor.RED + "+4% Sword Damage",
+            ChatColor.RED + "+4 Strength " + StrengthManager.EMOJI,
             5,
             80,
             Material.NETHERITE_SWORD

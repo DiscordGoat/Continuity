@@ -87,6 +87,16 @@ public class StatsCalculator {
         return bonus;
     }
 
+    /**
+     * Calculates the player's Strength value.
+     *
+     * @param player player to calculate Strength for
+     * @return total Strength amount
+     */
+    public int getStrength(Player player) {
+        return StrengthManager.getStrength(player);
+    }
+
     /** Arrow damage increase percent from talents, potions and reforges. */
     public double getArrowDamageIncrease(Player player) {
         double bonus = 0.0;

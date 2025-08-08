@@ -19,6 +19,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.SaplingManager;
+import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 import org.bukkit.Sound;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -325,7 +326,7 @@ public class SkillTreeManager implements Listener {
             case SWORD_DAMAGE_IV:
             case SWORD_DAMAGE_V:
                 int bonus = level * 4;
-                return ChatColor.RED + "+" + bonus + "% Sword Damage";
+                return StrengthManager.COLOR + "+" + bonus + " Strength " + StrengthManager.EMOJI;
             case ARROW_DAMAGE_INCREASE_I:
             case ARROW_DAMAGE_INCREASE_II:
             case ARROW_DAMAGE_INCREASE_III:
