@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager.ReforgeTier;
+import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -55,6 +56,9 @@ public final class StrengthManager {
         if (rm.isSword(weapon)) {
             ReforgeTier tier = rm.getReforgeTierByTier(rm.getReforgeTier(weapon));
             strength += tier.getWeaponDamageIncrease();
+
+            // Legacy Damage talismans grant additional Strength
+            strength += TalismanManager.getDamageStrength(weapon);
         }
 
         return strength;
