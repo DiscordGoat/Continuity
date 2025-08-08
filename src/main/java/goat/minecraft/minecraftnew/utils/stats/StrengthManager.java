@@ -3,6 +3,8 @@ package goat.minecraft.minecraftnew.utils.stats;
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
+import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -75,13 +77,35 @@ public final class StrengthManager {
                 strength += 25 + (tier * 5);
             }
         }
+        // Pet perks that grant bonus Strength
+        PetManager pm = PetManager.getInstance(MinecraftNew.getInstance());
+        if (pm != null) {
+            PetManager.Pet pet = pm.getActivePet(player);
+            if (pet != null) {
+                if (pet.hasPerk(PetManager.PetPerk.ELITE)) {
+                    // 0.5 Strength per pet level, capped at +25
+                    int petStrength = Math.min((int) (pet.getLevel() * 0.5), 25);
+                    strength += petStrength;
 
-        // Potion of Strength grants a flat Strength bonus while active
+                    // Elite talent adds +10 Strength per level
+                    SkillTreeManager stm = SkillTreeManager.getInstance();
+                    if (stm != null) {
+                        int lvl = stm.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ELITE);
+                        strength += lvl * 10;
+                    }
+                }
+                if (pet.hasPerk(PetManager.PetPerk.CLAW)) {
+                    // 0.5 Strength per pet level, capped at +10
+                    int petStrength = Math.min((int) (pet.getLevel() * 0.5), 10);
+                    strength += petStrength;
+                }
+            }
+        }
+      // Potion of Strength grants a flat Strength bonus while active
         if (PotionManager.isActive("Potion of Strength", player)
                 && PotionEffectPreferences.isEnabled(player, "Potion of Strength")) {
             strength += 25;
         }
-
         return strength;
     }
 }
