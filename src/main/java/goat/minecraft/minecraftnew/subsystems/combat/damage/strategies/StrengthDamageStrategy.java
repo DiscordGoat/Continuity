@@ -48,6 +48,7 @@ public class StrengthDamageStrategy implements DamageCalculationStrategy {
         return 75;
     }
 
+
     @Override
     public String getName() {
         return "Strength Damage";

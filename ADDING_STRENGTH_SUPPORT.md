@@ -8,3 +8,4 @@ B: Replaced Old Display: "<oldDisplay (example: "+4% Damage")>" with "<newDispla
 C: Removed Deprecated Logic: True/False, <oldExampleOfDeprecatedDamageIncreaseListeners/strategies>
 5: When adding new components to the StrengthManager#getStrength calculation, ensure each component is also represented in the
    Strength breakdown printout so users can see its contribution.
+Notes: Ensure to use the StrengthManager.DISPLAY_NAME, as it includes both the emoji and the Strength Prefix. it does not include a leading space however, so make sure to put a space before using StrengthManager.DISPLAY_NAME.

@@ -55,7 +55,7 @@ public class BeaconCatalystsGUI implements Listener {
             "Grants increased Strength to all",
             "players within range.",
             "",
-            ChatColor.GOLD + "Strength Bonus: " + StrengthManager.COLOR + "+" + powerStrength + " " + StrengthManager.EMOJI,
+            ChatColor.GOLD + "Strength Bonus: " + StrengthManager.COLOR + "+" + powerStrength + " " + StrengthManager.DISPLAY_NAME,
             ChatColor.GRAY + "(Base: +25 + " + tier + " × 5)",
             ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
             ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"

@@ -16,6 +16,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.TraitRarity;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
+import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -102,7 +103,7 @@ public class StatsCalculator {
         ReforgeManager rm = new ReforgeManager();
         ItemStack bow = player.getInventory().getItemInMainHand();
         if (rm.isBow(bow)) {
-            ReforgeTier tier = rm.getReforgeTierByTier(rm.getReforgeTier(bow));
+            ReforgeManager.ReforgeTier tier = rm.getReforgeTierByTier(rm.getReforgeTier(bow));
             bonus += tier.getBowDamageIncrease();
         }
         if (PetManager.getInstance(plugin).getActivePet(player) != null &&

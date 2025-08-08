@@ -39,7 +39,7 @@ public class TalismanManager {
         String newLine;
         if ("Damage".equalsIgnoreCase(reforgeType)) {
             newLine = ChatColor.GOLD + "Talisman: Damage. "
-                    + StrengthManager.COLOR + "+" + DAMAGE_STRENGTH_BONUS + " Strength" + StrengthManager.EMOJI;
+                    + StrengthManager.COLOR + "+" + DAMAGE_STRENGTH_BONUS + " Strength " + StrengthManager.EMOJI;
         } else {
             newLine = ChatColor.GOLD + "Talisman: " + reforgeType;
         }

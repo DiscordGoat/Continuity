@@ -763,7 +763,7 @@ public class PetManager implements Listener {
             case DIGGING_CLAWS:
                 return "Gain " + ChatColor.YELLOW + "Haste II " + ChatColor.GRAY + "when mining blocks.";
             case ELITE:
-                return ChatColor.GRAY + "Grants " + StrengthManager.COLOR + "+" + Math.min(level * 0.5, 25) + " Strength" + StrengthManager.EMOJI + ChatColor.GRAY + ".";
+                return ChatColor.GRAY + "Grants " + StrengthManager.COLOR + "+" + Math.min(level * 0.5, 25) + " " + StrengthManager.DISPLAY_NAME;
             case WALKING_FORTRESS:
                 return "Gain " + ChatColor.DARK_GRAY + (level * 0.5) + "% Damage Reduction.";
             case REBIRTH:
@@ -844,7 +844,7 @@ public class PetManager implements Listener {
             case SPEED_BOOST:
                 return "Increases " + ChatColor.YELLOW + "speed " + ChatColor.GRAY + "by " + ChatColor.YELLOW + (level * 0.4f) + "%.";
             case CLAW:
-                return ChatColor.GRAY + "Grants " + StrengthManager.COLOR + "+" + Math.min(level * 0.5, 10) + " Strength" + StrengthManager.EMOJI + ChatColor.GRAY + ".";
+                return ChatColor.GRAY + "Grants " + StrengthManager.COLOR + "+" + Math.min(level * 0.5, 10) + " " + StrengthManager.DISPLAY_NAME;
             case NO_HIBERNATION:
                 return "Increases " + ChatColor.RED + "Natural Regeneration " + ChatColor.GRAY + "by " + ChatColor.RED + (level) + "%.";
             case GROOT:
