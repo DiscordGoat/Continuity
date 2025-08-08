@@ -62,20 +62,11 @@ public class StatsCalculator {
         return HealthManager.getInstance(plugin).computeMaxHealth(player);
     }
 
-    /** Approximate melee damage increase percent from reforges, talents and catalysts. */
+    /** Approximate melee damage increase percent from reforges and talents. */
     public double getDamageIncrease(Player player) {
         double bonus = 0.0;
         // Strength mastery no longer grants direct damage bonus
         // Sword reforges now grant Strength instead of direct damage
-        // Power catalyst
-        CatalystManager cm = CatalystManager.getInstance();
-        if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.POWER)) {
-            Catalyst cat = cm.findNearestCatalyst(player.getLocation(), CatalystType.POWER);
-            if (cat != null) {
-                int t = cm.getCatalystTier(cat);
-                bonus += (0.25 + t * 0.05) * 100.0;
-            }
-        }
         return bonus;
     }
 

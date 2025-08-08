@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +52,12 @@ public class BeaconUpgradesGUI implements Listener {
         ItemStack catalystStats = createStatItem(Material.REDSTONE_BLOCK,
             ChatColor.RED + "Catalyst of Power",
             ChatColor.GRAY + "Active catalyst statistics and",
-            ChatColor.GRAY + "damage calculation details.",
+            ChatColor.GRAY + "Strength calculation details.",
             "",
-            ChatColor.GOLD + "Damage Calculation:",
-            ChatColor.YELLOW + "Base: +25%",
-            ChatColor.YELLOW + "Tier Bonus: +" + (tier * 5) + "% (Tier " + tier + " × 5%)",
-            ChatColor.RED + "Total Damage: +" + (25 + (tier * 5)) + "%",
+            ChatColor.GOLD + "Strength Calculation:",
+            StrengthManager.COLOR + "Base: +25 " + StrengthManager.EMOJI,
+            StrengthManager.COLOR + "Tier Bonus: +" + (tier * 5) + " " + StrengthManager.EMOJI + ChatColor.GRAY + " (Tier " + tier + " × 5)",
+            StrengthManager.COLOR + "Total Strength: +" + (25 + (tier * 5)) + " " + StrengthManager.EMOJI,
             "",
             ChatColor.BLUE + "Effect Range: " + ChatColor.WHITE + range + " blocks",
             ChatColor.GREEN + "Effect Duration: " + ChatColor.WHITE + duration + " seconds"

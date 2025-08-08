@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,16 +47,16 @@ public class BeaconCatalystsGUI implements Listener {
         int duration = BeaconManager.getBeaconDuration(heldBeacon);
         
         // Catalyst of Power
-        int powerDamage = 25 + (tier * 5);
+        int powerStrength = 25 + (tier * 5);
         ItemStack powerCatalyst = createCatalystButton(
             Material.REDSTONE_BLOCK,
             ChatColor.RED + "Catalyst of Power",
             true,
-            "Grants increased damage to all",
+            "Grants increased Strength to all",
             "players within range.",
             "",
-            ChatColor.GOLD + "Total Damage Bonus: " + ChatColor.YELLOW + "+" + powerDamage + "%",
-            ChatColor.GRAY + "(Base: +25% + " + tier + " × 5%)",
+            ChatColor.GOLD + "Strength Bonus: " + StrengthManager.COLOR + "+" + powerStrength + " " + StrengthManager.EMOJI,
+            ChatColor.GRAY + "(Base: +25 + " + tier + " × 5)",
             ChatColor.BLUE + "Range: " + ChatColor.WHITE + range + " blocks",
             ChatColor.GREEN + "Duration: " + ChatColor.WHITE + duration + " seconds"
         );

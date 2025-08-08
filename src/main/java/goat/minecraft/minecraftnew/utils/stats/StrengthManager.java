@@ -1,5 +1,8 @@
 package goat.minecraft.minecraftnew.utils.stats;
 
+import goat.minecraft.minecraftnew.other.beacon.Catalyst;
+import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
+import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -55,6 +58,16 @@ public final class StrengthManager {
         if (rm.isSword(weapon)) {
             ReforgeTier tier = rm.getReforgeTierByTier(rm.getReforgeTier(weapon));
             strength += tier.getWeaponDamageIncrease();
+        }
+
+        // Catalyst of Power grants Strength when nearby
+        CatalystManager cm = CatalystManager.getInstance();
+        if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.POWER)) {
+            Catalyst catalyst = cm.findNearestCatalyst(player.getLocation(), CatalystType.POWER);
+            if (catalyst != null) {
+                int tier = cm.getCatalystTier(catalyst);
+                strength += 25 + (tier * 5);
+            }
         }
 
         return strength;
