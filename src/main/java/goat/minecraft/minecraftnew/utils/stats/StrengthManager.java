@@ -3,8 +3,11 @@ package goat.minecraft.minecraftnew.utils.stats;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
+import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager.ReforgeTier;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Utility class for calculating a player's Strength stat.
@@ -44,6 +47,14 @@ public final class StrengthManager {
             strength += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_III) * 4;
             strength += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_IV) * 4;
             strength += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_V) * 4;
+        }
+
+        // Sword reforges grant Strength based on their tier
+        ItemStack weapon = player.getInventory().getItemInMainHand();
+        ReforgeManager rm = new ReforgeManager();
+        if (rm.isSword(weapon)) {
+            ReforgeTier tier = rm.getReforgeTierByTier(rm.getReforgeTier(weapon));
+            strength += tier.getWeaponDamageIncrease();
         }
 
         return strength;

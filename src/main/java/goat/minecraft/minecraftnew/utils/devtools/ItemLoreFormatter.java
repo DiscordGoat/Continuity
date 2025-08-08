@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.utils.devtools;
 
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -63,7 +64,30 @@ public class ItemLoreFormatter {
                 trim = line;
             } else if (stripped.startsWith("Talisman:")) {
                 talismans.add(line);
-            } else if (stripped.startsWith("Damage Increase") || stripped.startsWith("Damage Reduction") ||
+            } else if (stripped.startsWith("Damage Increase")) {
+                if (isSwordOrAxe(item)) {
+                    // convert old sword reforge display to new Strength format
+                    String[] parts = stripped.split(" ");
+                    int amount = 0;
+                    if (parts.length > 0) {
+                        String last = parts[parts.length - 1];
+                        if (last.endsWith("%")) {
+                            last = last.substring(0, last.length() - 1);
+                        }
+                        try {
+                            amount = Integer.parseInt(last);
+                        } catch (NumberFormatException ignored) {
+                        }
+                    }
+                    String newline = ChatColor.DARK_GRAY + "Strength: " + StrengthManager.COLOR + "+" +
+                            amount + " " + StrengthManager.EMOJI;
+                    reforge.add(newline);
+                } else {
+                    reforge.add(line);
+                }
+            } else if (stripped.startsWith("Strength:")) {
+                reforge.add(line);
+            } else if (stripped.startsWith("Damage Reduction") ||
                        stripped.startsWith("Chance to repair durability") || stripped.startsWith("Max Durability")) {
                 reforge.add(line);
             } else if (stripped.startsWith("Durability:") || stripped.startsWith("Golden Durability:")) {

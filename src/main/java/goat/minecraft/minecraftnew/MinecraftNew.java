@@ -731,7 +731,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new KnightMob(this), this);
         getServer().getPluginManager().registerEvents(
                 goat.minecraft.minecraftnew.subsystems.combat.champion.ChampionManager.getInstance(this), this);
-        getServer().getPluginManager().registerEvents(new SwordReforge(new ReforgeManager()), this);
         getServer().getPluginManager().registerEvents(new ArmorReforge(new ReforgeManager()), this);
         getServer().getPluginManager().registerEvents(new ToolReforge(new ReforgeManager()), this);
         getServer().getPluginManager().registerEvents(new Experience(), this);

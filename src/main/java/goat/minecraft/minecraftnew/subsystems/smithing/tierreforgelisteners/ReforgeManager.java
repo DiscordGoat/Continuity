@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -153,11 +154,13 @@ public class ReforgeManager {
         lore.removeIf(line -> line.contains("Damage Increase:")
                 || line.contains("Damage Reduction:")
                 || line.contains("Chance to repair durability:")
-                || line.contains("Max Durability: +"));
+                || line.contains("Max Durability: +")
+                || line.contains("Strength:"));
 
         // Add the new reforge lore
         if (isSword) {
-            lore.add(ChatColor.DARK_GRAY + "Damage Increase: " + ChatColor.AQUA + targetTier.getWeaponDamageIncrease() + "%");
+            lore.add(ChatColor.DARK_GRAY + "Strength: " + StrengthManager.COLOR + "+" +
+                    targetTier.getWeaponDamageIncrease() + " " + StrengthManager.EMOJI);
         } else if (isArmor) {
             lore.add(ChatColor.DARK_GRAY + "Damage Reduction: " + ChatColor.AQUA + targetTier.getArmorDamageReduction() + "%");
         } else if (isTool) {
@@ -261,7 +264,8 @@ public class ReforgeManager {
                 || line.contains("Damage Reduction:")
                 || line.contains("Chance to repair durability:")
                 || line.contains("Max Durability: ")
-                || line.contains("Max Durability: +"));
+                || line.contains("Max Durability: +")
+                || line.contains("Strength:"));
         meta.setLore(lore);
         item.setItemMeta(meta);
 

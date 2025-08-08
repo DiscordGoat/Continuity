@@ -13,8 +13,6 @@ import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.subsystems.pets.TraitRarity;
-import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
-import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager.ReforgeTier;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
@@ -68,13 +66,7 @@ public class StatsCalculator {
     public double getDamageIncrease(Player player) {
         double bonus = 0.0;
         // Strength mastery no longer grants direct damage bonus
-        // Weapon reforge bonus
-        ReforgeManager rm = new ReforgeManager();
-        ItemStack weapon = player.getInventory().getItemInMainHand();
-        if (rm.isSword(weapon)) {
-            ReforgeTier tier = rm.getReforgeTierByTier(rm.getReforgeTier(weapon));
-            bonus += tier.getWeaponDamageIncrease();
-        }
+        // Sword reforges now grant Strength instead of direct damage
         // Power catalyst
         CatalystManager cm = CatalystManager.getInstance();
         if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.POWER)) {
