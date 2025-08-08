@@ -5,7 +5,6 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationSer
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.InsanityCatalystDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.MeleeDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.MonsterLevelDamageStrategy;
-import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.PowerCatalystDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.RangedDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.CorpseLevelDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.StrengthDamageStrategy;
@@ -268,7 +267,6 @@ public class CombatSubsystemManager implements CommandExecutor {
         damageCalculationService.registerStrategy(new MurderMysteryDamageStrategy());
         
         // Register catalyst damage strategies (always enabled)
-        damageCalculationService.registerStrategy(new PowerCatalystDamageStrategy());
         damageCalculationService.registerStrategy(new InsanityCatalystDamageStrategy());
         
         logger.fine("Damage calculation strategies registered");
