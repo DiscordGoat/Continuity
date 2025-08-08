@@ -8,6 +8,8 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
+import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager.ReforgeTier;
 import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
@@ -75,7 +77,6 @@ public final class StrengthManager {
                 strength += 25 + (tier * 5);
             }
         }
-
         // Pet perks that grant bonus Strength
         PetManager pm = PetManager.getInstance(MinecraftNew.getInstance());
         if (pm != null) {
@@ -100,7 +101,11 @@ public final class StrengthManager {
                 }
             }
         }
-
+      // Potion of Strength grants a flat Strength bonus while active
+        if (PotionManager.isActive("Potion of Strength", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Strength")) {
+            strength += 25;
+        }
         return strength;
     }
 }
