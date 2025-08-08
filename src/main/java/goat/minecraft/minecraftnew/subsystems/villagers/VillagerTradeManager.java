@@ -608,10 +608,13 @@ public class VillagerTradeManager implements Listener {
         farmerPurchases.add(createTradeMap("MELON_SEEDS", 3, 32, 2)); // Level 2 trade
         farmerPurchases.add(createTradeMap("FARMER_ENCHANT", 1, 64, 2)); // Custom item
         farmerPurchases.add(createTradeMap("CAKE", 1, 8, 3)); // Level 3 trade
-        // Seeder items now obtained via farming milestones
         farmerPurchases.add(createTradeMap("JACK_O_LANTERN", 1, 3, 3));
         farmerPurchases.add(createTradeMap("MILK_BUCKET", 5, 15, 3)); // Level 3 trade
         farmerPurchases.add(createTradeMap("EGG", 12, 12, 3)); // Level 3 trade
+        farmerPurchases.add(createTradeMap("WHEAT_SEEDER", 1, 128, 4));
+        farmerPurchases.add(createTradeMap("CARROT_SEEDER", 1, 128, 4));
+        farmerPurchases.add(createTradeMap("POTATO_SEEDER", 1, 128, 4));
+        farmerPurchases.add(createTradeMap("BEETROOT_SEEDER", 1, 128, 4));
         farmerPurchases.add(createTradeMap("GOLDEN_CARROT", 4, 3, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("HONEY_BOTTLE", 1, 8, 4)); // Level 4 trade
         farmerPurchases.add(createTradeMap("IRRIGATION", 1, 32, 4)); // Custom item
@@ -723,6 +726,14 @@ public class VillagerTradeManager implements Listener {
                 return ItemRegistry.getIrrigation();
             case "ORGANIC_SOIL":
                 return ItemRegistry.getOrganicSoil();
+            case "WHEAT_SEEDER":
+                return ItemRegistry.getWheatSeeder();
+            case "CARROT_SEEDER":
+                return ItemRegistry.getCarrotSeeder();
+            case "POTATO_SEEDER":
+                return ItemRegistry.getPotatoSeeder();
+            case "BEETROOT_SEEDER":
+                return ItemRegistry.getBeetrootSeeder();
             case "COOKBOOK":
                 return ItemRegistry.getCulinaryRecipe();
             case "SHELF":
