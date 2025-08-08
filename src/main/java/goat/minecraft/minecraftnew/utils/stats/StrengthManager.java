@@ -108,5 +108,91 @@ public final class StrengthManager {
         }
         return strength;
     }
+
+    /**
+     * Sends a detailed breakdown of the player's Strength, listing each
+     * contributing component and the total value.
+     *
+     * @param player the player to report Strength for
+     */
+    public static void sendStrengthBreakdown(Player player) {
+        player.sendMessage(COLOR + "Strength Breakdown:");
+
+        int total = 0;
+
+        // Strength from sword damage talents
+        int talentStrength = 0;
+        SkillTreeManager mgr = SkillTreeManager.getInstance();
+        if (mgr != null) {
+            talentStrength += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_I) * 4;
+            talentStrength += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_II) * 4;
+            talentStrength += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_III) * 4;
+            talentStrength += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_IV) * 4;
+            talentStrength += mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.SWORD_DAMAGE_V) * 4;
+        }
+        total += talentStrength;
+        player.sendMessage(COLOR + "Sword Damage Talents: " + ChatColor.YELLOW + talentStrength);
+
+        // Strength from sword reforges and damage talismans
+        ItemStack weapon = player.getInventory().getItemInMainHand();
+        ReforgeManager rm = new ReforgeManager();
+        int reforgeStrength = 0;
+        int talismanStrength = 0;
+        if (rm.isSword(weapon)) {
+            ReforgeTier tier = rm.getReforgeTierByTier(rm.getReforgeTier(weapon));
+            reforgeStrength += tier.getWeaponDamageIncrease();
+            talismanStrength += TalismanManager.getDamageStrength(weapon);
+        }
+        total += reforgeStrength + talismanStrength;
+        player.sendMessage(COLOR + "Sword Reforge: " + ChatColor.YELLOW + reforgeStrength);
+        player.sendMessage(COLOR + "Damage Talismans: " + ChatColor.YELLOW + talismanStrength);
+
+        // Strength from a nearby Catalyst of Power
+        int catalystStrength = 0;
+        CatalystManager cm = CatalystManager.getInstance();
+        if (cm != null && cm.isNearCatalyst(player.getLocation(), CatalystType.POWER)) {
+            Catalyst catalyst = cm.findNearestCatalyst(player.getLocation(), CatalystType.POWER);
+            if (catalyst != null) {
+                int tier = cm.getCatalystTier(catalyst);
+                catalystStrength = 25 + (tier * 5);
+            }
+        }
+        total += catalystStrength;
+        player.sendMessage(COLOR + "Catalyst of Power: " + ChatColor.YELLOW + catalystStrength);
+
+        // Strength from pet perks
+        int petEliteStrength = 0;
+        int eliteTalentStrength = 0;
+        int petClawStrength = 0;
+        PetManager pm = PetManager.getInstance(MinecraftNew.getInstance());
+        if (pm != null) {
+            PetManager.Pet pet = pm.getActivePet(player);
+            if (pet != null) {
+                if (pet.hasPerk(PetManager.PetPerk.ELITE)) {
+                    petEliteStrength = Math.min((int) (pet.getLevel() * 0.5), 25);
+                    SkillTreeManager stm = SkillTreeManager.getInstance();
+                    if (stm != null) {
+                        int lvl = stm.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.ELITE);
+                        eliteTalentStrength = lvl * 10;
+                    }
+                }
+                if (pet.hasPerk(PetManager.PetPerk.CLAW)) {
+                    petClawStrength = Math.min((int) (pet.getLevel() * 0.5), 10);
+                }
+            }
+        }
+        total += petEliteStrength + eliteTalentStrength + petClawStrength;
+        player.sendMessage(COLOR + "Pet Elite Perk: " + ChatColor.YELLOW + petEliteStrength);
+        player.sendMessage(COLOR + "Elite Talent Bonus: " + ChatColor.YELLOW + eliteTalentStrength);
+        player.sendMessage(COLOR + "Pet Claw Perk: " + ChatColor.YELLOW + petClawStrength);
+
+        // Strength from active potion effects
+        int potionStrength = (PotionManager.isActive("Potion of Strength", player)
+                && PotionEffectPreferences.isEnabled(player, "Potion of Strength")) ? 25 : 0;
+        total += potionStrength;
+        player.sendMessage(COLOR + "Potion of Strength: " + ChatColor.YELLOW + potionStrength);
+
+        player.sendMessage(COLOR + "Total Strength: " + ChatColor.YELLOW + total);
+    }
 }
 
