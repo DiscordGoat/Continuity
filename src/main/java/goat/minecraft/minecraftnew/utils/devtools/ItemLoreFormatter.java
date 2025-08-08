@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.utils.devtools;
 
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
+import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
@@ -63,7 +64,14 @@ public class ItemLoreFormatter {
             } else if (stripped.startsWith("Trim:")) {
                 trim = line;
             } else if (stripped.startsWith("Talisman:")) {
-                talismans.add(line);
+                if (stripped.startsWith("Talisman: Damage") && !stripped.contains("Strength")) {
+                    String newline = ChatColor.GOLD + "Talisman: Damage. "
+                            + StrengthManager.COLOR + "+" + TalismanManager.DAMAGE_STRENGTH_BONUS
+                            + " Strength" + StrengthManager.EMOJI;
+                    talismans.add(newline);
+                } else {
+                    talismans.add(line);
+                }
             } else if (stripped.startsWith("Damage Increase")) {
                 if (isSwordOrAxe(item)) {
                     // convert old sword reforge display to new Strength format
