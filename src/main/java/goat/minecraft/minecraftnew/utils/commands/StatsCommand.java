@@ -36,9 +36,19 @@ public class StatsCommand implements CommandExecutor, Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) return;
+        if (!(event.getWhoClicked() instanceof Player player)) return;
         if (ChatColor.stripColor(event.getView().getTitle()).equals("Player Stats")) {
             event.setCancelled(true);
+
+            ItemStack clicked = event.getCurrentItem();
+            if (clicked == null) return;
+            ItemMeta meta = clicked.getItemMeta();
+            if (meta == null || !meta.hasDisplayName()) return;
+
+            String name = ChatColor.stripColor(meta.getDisplayName());
+            if (name.equals(ChatColor.stripColor(StrengthManager.DISPLAY_NAME))) {
+                StrengthManager.sendStrengthBreakdown(player);
+            }
         }
     }
 
