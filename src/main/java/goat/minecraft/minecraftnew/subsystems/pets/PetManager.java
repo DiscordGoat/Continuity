@@ -21,6 +21,7 @@ import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 import org.bukkit.scheduler.BukkitTask;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
+import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -762,7 +763,7 @@ public class PetManager implements Listener {
             case DIGGING_CLAWS:
                 return "Gain " + ChatColor.YELLOW + "Haste II " + ChatColor.GRAY + "when mining blocks.";
             case ELITE:
-                return "Gain " + ChatColor.RED + "+" + (level * 0.25) + "% Melee Damage.";
+                return ChatColor.GRAY + "Grants " + StrengthManager.COLOR + "+" + Math.min(level * 0.5, 25) + " Strength" + StrengthManager.EMOJI + ChatColor.GRAY + ".";
             case WALKING_FORTRESS:
                 return "Gain " + ChatColor.DARK_GRAY + (level * 0.5) + "% Damage Reduction.";
             case REBIRTH:
@@ -843,7 +844,7 @@ public class PetManager implements Listener {
             case SPEED_BOOST:
                 return "Increases " + ChatColor.YELLOW + "speed " + ChatColor.GRAY + "by " + ChatColor.YELLOW + (level * 0.4f) + "%.";
             case CLAW:
-                return "Increases " + ChatColor.RED + "melee damage " + ChatColor.GRAY + "by " + ChatColor.RED + (0.1 * level) + "%.";
+                return ChatColor.GRAY + "Grants " + StrengthManager.COLOR + "+" + Math.min(level * 0.5, 10) + " Strength" + StrengthManager.EMOJI + ChatColor.GRAY + ".";
             case NO_HIBERNATION:
                 return "Increases " + ChatColor.RED + "Natural Regeneration " + ChatColor.GRAY + "by " + ChatColor.RED + (level) + "%.";
             case GROOT:
@@ -1263,7 +1264,7 @@ public class PetManager implements Listener {
         DECAY("Decay","Rapidly Deteriorates hit mobs."),
         BLACKLUNG("Blacklung","Transplants a nether-attuned lung."),
         SUPERIOR_ENDURANCE("Superior Endurance", "Gain +1 saturation when breaking crops."),
-        ELITE("Elite","Deal 50% more damage."),
+        ELITE("Elite", "+50 Strength ⚔"),
         GREED("Greed","4% chance to drop 1-16 emeralds on killing a monster."),
         BONE_COLD("Bone Cold","Grants immunity to freeze damage."),
         TIPPED_SLOWNESS("Tipped Slowness","Arrows you fire apply slowness."),
@@ -1297,7 +1298,7 @@ public class PetManager implements Listener {
         ANTIDOTE("Antidote","Cures a random negative potion effect on eating."),
         LEAP("Leap","Enables you to leap forward when shifting."),
         SOFT_PAW("Soft Paw","Reduces fall damage."),
-        CLAW("Claws","Deal 0.2% bonus damage per level."),
+        CLAW("Claws", "+0.5 Strength ⚔ per level (max +10)"),
         REBIRTH("Rebirth","Cheat Death at the cost of your entire hunger bar."),
         DEVOUR("Devour", "Provides hunger when damaging mobs."),
         BONE_PLATING_WEAK("Weak Bone Plating", ChatColor.GOLD + "Provides minor damage resistance on taking damage."),

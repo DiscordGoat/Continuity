@@ -2518,7 +2518,7 @@ public enum Talent {
     ELITE(
             "Elite",
             ChatColor.GRAY + "Train pets for greater damage",
-            ChatColor.RED + "+10% Damage",
+            ChatColor.RED + "+10 Strength ⚔",
             2,
             80,
             Material.DIAMOND_SWORD
