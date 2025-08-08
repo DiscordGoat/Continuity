@@ -669,7 +669,7 @@ public class VerdantRelicsSubsystem implements Listener {
                 boolean prevented = false;
                 Location center = fromLocKey(locationKey);
                 for (Player p : center.getWorld().getPlayers()) {
-                    if (p.getLocation().distanceSquared(center) <= 100) {
+                    if (p.getLocation().distanceSquared(center) <= 1000000000) {
                         int level = SkillTreeManager.getInstance()
                                 .getTalentLevel(p.getUniqueId(), Skill.FARMING, Talent.BOTANIST);
                         if (level > 0 && Math.random() < level * 0.20) {

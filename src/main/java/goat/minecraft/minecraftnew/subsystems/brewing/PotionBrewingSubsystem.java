@@ -1034,7 +1034,7 @@ public class PotionBrewingSubsystem implements Listener {
                 }
             }
             for (int i = 0; i < count; i++) {
-                player.getInventory().addItem(potion.clone());
+                player.getLocation().getWorld().dropItemNaturally(player.getLocation(), potion.clone());
             }
             XPManager xp = new XPManager(plugin);
             xp.addXP(player, "Brewing", 500);

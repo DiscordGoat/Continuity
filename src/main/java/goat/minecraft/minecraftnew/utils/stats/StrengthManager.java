@@ -18,7 +18,7 @@ public final class StrengthManager {
     public static final ChatColor COLOR = ChatColor.RED;
 
     /** Emoji used alongside the Strength name. */
-    public static final String EMOJI = "\uD83D\uDCAA"; // flexed biceps
+    public static final String EMOJI = "⚔"; // flexed biceps
 
     /** Preformatted display name for Strength with color and emoji. */
     public static final String DISPLAY_NAME = COLOR + "Strength " + EMOJI;
