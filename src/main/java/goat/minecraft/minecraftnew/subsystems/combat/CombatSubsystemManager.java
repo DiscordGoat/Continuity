@@ -9,7 +9,6 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.RangedDam
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.CorpseLevelDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.StrengthDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SpiderDamageStrategy;
-import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.HellbentDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.DontMineAtNightDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.PostMortemDamageStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.NecroticDamageReductionStrategy;
@@ -248,7 +247,6 @@ public class CombatSubsystemManager implements CommandExecutor {
                 new RangedDamageStrategy(configuration.getDamageConfig(), xpManager));
 
             damageCalculationService.registerStrategy(new StrengthDamageStrategy());
-            damageCalculationService.registerStrategy(new HellbentDamageStrategy());
             damageCalculationService.registerStrategy(new DontMineAtNightDamageStrategy());
         }
         

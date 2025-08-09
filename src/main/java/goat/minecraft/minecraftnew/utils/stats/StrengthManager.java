@@ -36,6 +36,9 @@ public final class StrengthManager {
     /** Preformatted display name for Strength with color and emoji. */
     public static final String DISPLAY_NAME = COLOR + "Strength " + EMOJI;
 
+    /** Strength granted by the Hellbent talent while active. */
+    private static final int HELLBENT_STRENGTH_BONUS = 25;
+
     private StrengthManager() {
         // Utility class
     }
@@ -84,6 +87,18 @@ public final class StrengthManager {
         if (BeaconPassivesGUI.hasBeaconPassives(player)
                 && BeaconPassivesGUI.hasPassiveEnabled(player, "power")) {
             strength += 15;
+        }
+
+        // Hellbent talent grants bonus Strength when below the health threshold
+        if (mgr != null) {
+            int hellbentLevel = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.HELLBENT);
+            if (hellbentLevel > 0) {
+                double thresholdPct = hellbentLevel * 10.0;
+                double currentPct = (player.getHealth() / player.getMaxHealth()) * 100.0;
+                if (currentPct < thresholdPct) {
+                    strength += HELLBENT_STRENGTH_BONUS;
+                }
+            }
         }
 
         // Pet traits and perks that grant bonus Strength
@@ -186,6 +201,21 @@ public final class StrengthManager {
         }
         total += powerPassiveStrength;
         player.sendMessage(COLOR + "Beacon Power Passive: " + ChatColor.YELLOW + powerPassiveStrength);
+
+        // Strength from the Hellbent talent
+        int hellbentStrength = 0;
+        if (mgr != null) {
+            int hellbentLevel = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.HELLBENT);
+            if (hellbentLevel > 0) {
+                double thresholdPct = hellbentLevel * 10.0;
+                double currentPct = (player.getHealth() / player.getMaxHealth()) * 100.0;
+                if (currentPct < thresholdPct) {
+                    hellbentStrength = HELLBENT_STRENGTH_BONUS;
+                }
+            }
+        }
+        total += hellbentStrength;
+        player.sendMessage(COLOR + "Hellbent Talent: " + ChatColor.YELLOW + hellbentStrength);
 
         // Strength from pet traits and perks
         int petEliteStrength = 0;
