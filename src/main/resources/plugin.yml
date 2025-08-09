@@ -16,6 +16,9 @@ commands:
   debugplayer:
     description: Spawns a hostile player NPC that attacks the sender
     usage: /debugplayer
+  debugdamagefeedback:
+    description: Toggles detailed damage debug messages
+    usage: /debugdamagefeedback
   getculinaryrecipe:
     description: Gives you the crafted output for a culinary recipe.
     usage: /getculinaryrecipe <recipe name>
