@@ -345,7 +345,7 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + creeperBonus + "% " + ChatColor.RED + "Creeper Damage";
             case HELLBENT:
                 int threshold = level * 10;
-                return ChatColor.RED + "+25% Damage below " + threshold + "% Health";
+                return ChatColor.RED + "+25 Strength ⚔ below " + threshold + "% Health";
             case BLOODLUST:
                 return ChatColor.RED + "Activates Bloodlust for 5s on kill";
             case BLOODLUST_DURATION_I:
