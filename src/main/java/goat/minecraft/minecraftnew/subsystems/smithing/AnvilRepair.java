@@ -1647,7 +1647,7 @@ public class AnvilRepair implements Listener {
 
             level = mgr.getTalentLevel(uid, Skill.SMITHING, Talent.ALLOY_V);
             if (rng.nextDouble() < (level * 0.5) / 100.0) {
-                addAlloyBonus(player, repairee, customDurabilityManager, 100);
+                addAlloyBonus(player, repairee, customDurabilityManager, 10);
             }
         }
         // Apply the repair by reducing the damage

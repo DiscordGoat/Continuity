@@ -806,7 +806,7 @@ public enum Talent {
     ALLOY_V(
             "Alloy V",
             ChatColor.GRAY + "Miraculous alloys",
-            ChatColor.YELLOW + "+0.5% Chance for +100 Max Durability",
+            ChatColor.YELLOW + "+0.5% Chance for +10 Max Durability",
             3,
             80,
             Material.NETHERITE_SCRAP
