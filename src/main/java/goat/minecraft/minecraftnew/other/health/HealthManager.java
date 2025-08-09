@@ -61,10 +61,10 @@ public final class HealthManager {
             health += beaconBonus;
         }
 
-        double setBonus = 0.0;
+        double monolithBonus = 0.0;
         if (BlessingUtils.hasFullSetBonus(player, "Monolith")) {
-            setBonus = 20.0;
-            health += setBonus;
+            monolithBonus = 20.0;
+            health += monolithBonus;
         }
 
         double petBonus = 0.0;
@@ -118,12 +118,12 @@ public final class HealthManager {
         total += beaconBonus;
         player.sendMessage(COLOR + "Beacon Mending Passive: " + ChatColor.YELLOW + beaconBonus);
 
-        double setBonus = 0.0;
+        double monolithBonus = 0.0;
         if (BlessingUtils.hasFullSetBonus(player, "Monolith")) {
-            setBonus = 20.0;
+            monolithBonus = 20.0;
         }
-        total += setBonus;
-        player.sendMessage(COLOR + "Monolith Set Bonus: " + ChatColor.YELLOW + setBonus);
+        total += monolithBonus;
+        player.sendMessage(COLOR + "Monolith Set Bonus: " + ChatColor.YELLOW + monolithBonus);
 
         double petBonus = 0.0;
         PetManager pm = PetManager.getInstance(MinecraftNew.getInstance());
