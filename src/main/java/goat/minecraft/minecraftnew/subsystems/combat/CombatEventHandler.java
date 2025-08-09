@@ -87,6 +87,7 @@ public class CombatEventHandler implements Listener {
             }
 
             if (event.getEntity() instanceof Player player && DamageDebugManager.isEnabled(player)) {
+                sendDebugInfo(player, event.getCause(), baseDamage, result.getFinalDamage());
                 DamageTag tag = mapTag(event.getCause());
                 double expected = DefenseManager.computeFinalDamage(baseDamage, player, tag);
                 player.sendMessage(ChatColor.GRAY + "Expected Damage: " + ChatColor.YELLOW + String.format("%.2f", expected));
@@ -101,6 +102,22 @@ public class CombatEventHandler implements Listener {
             logger.log(Level.WARNING, "Unexpected error in combat event handling", e);
             // Continue processing to avoid breaking the game
         }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityDamage(EntityDamageEvent event) {
+        if (event instanceof EntityDamageByEntityEvent) {
+            return; // handled by onEntityDamageByEntity
+        }
+        if (!(event.getEntity() instanceof Player player)) {
+            return;
+        }
+        if (!DamageDebugManager.isEnabled(player)) {
+            return;
+        }
+        double baseDamage = event.getDamage();
+        double finalDamage = event.getFinalDamage();
+        sendDebugInfo(player, event.getCause(), baseDamage, finalDamage);
     }
     
     /**
@@ -135,5 +152,22 @@ public class CombatEventHandler implements Listener {
             default:
                 return DamageTag.GENERIC;
         }
+    }
+    private void sendDebugInfo(Player player, EntityDamageEvent.DamageCause cause,
+                               double baseDamage, double finalDamage) {
+        DamageTag tag = mapTag(cause);
+        double expected = DefenseManager.computeFinalDamage(baseDamage, player, tag);
+        double reduction = baseDamage - expected;
+        double percent = baseDamage > 0 ? (reduction / baseDamage) * 100.0 : 0.0;
+        double totalDefense = DefenseManager.getDefense(player, tag);
+        double baseDefense = DefenseManager.getDefense(player, DamageTag.GENERIC);
+        double bonusDefense = totalDefense - baseDefense;
+
+        player.sendMessage(ChatColor.GRAY + "DamageCause: " + ChatColor.YELLOW + cause.name());
+        player.sendMessage(ChatColor.GRAY + "Damage Before Defense: " + ChatColor.YELLOW + String.format("%.2f", baseDamage));
+        player.sendMessage(ChatColor.GRAY + "Damage Reduction from Defense: " + ChatColor.YELLOW + String.format("%.2f", reduction));
+        player.sendMessage(ChatColor.GRAY + "Final Damage: " + ChatColor.YELLOW + String.format("%.2f", finalDamage));
+        player.sendMessage(ChatColor.GRAY + "Bonus Defense Applied: " + ChatColor.YELLOW + String.format("%.2f", bonusDefense));
+        player.sendMessage(ChatColor.GRAY + "Damage Reduction %: " + ChatColor.YELLOW + String.format("%.2f%%", percent));
     }
 }
