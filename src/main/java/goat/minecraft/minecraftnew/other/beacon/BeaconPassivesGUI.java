@@ -17,6 +17,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 
@@ -93,8 +94,9 @@ public class BeaconPassivesGUI implements Listener {
         ItemStack swiftButton = createPassiveButton(Material.FEATHER, 
             "Swift", "+20% walk speed, -50% fall damage", passives.getOrDefault("swift", false));
         
-        ItemStack powerButton = createPassiveButton(Material.DIAMOND_SWORD, 
-            "Power", "+15% damage", passives.getOrDefault("power", false));
+        ItemStack powerButton = createPassiveButton(Material.DIAMOND_SWORD,
+            "Power", ChatColor.RED + "+15 " + StrengthManager.DISPLAY_NAME,
+            passives.getOrDefault("power", false));
         
         // Place passive buttons in the GUI
         gui.setItem(10, mendingButton);

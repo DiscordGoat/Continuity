@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.utils.stats;
 
+import goat.minecraft.minecraftnew.other.beacon.BeaconPassivesGUI;
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
@@ -77,6 +78,13 @@ public final class StrengthManager {
                 strength += 25 + (tier * 5);
             }
         }
+
+        // Beacon Power passive grants flat Strength
+        if (BeaconPassivesGUI.hasBeaconPassives(player)
+                && BeaconPassivesGUI.hasPassiveEnabled(player, "power")) {
+            strength += 15;
+        }
+
         // Pet perks that grant bonus Strength
         PetManager pm = PetManager.getInstance(MinecraftNew.getInstance());
         if (pm != null) {
@@ -159,6 +167,15 @@ public final class StrengthManager {
         }
         total += catalystStrength;
         player.sendMessage(COLOR + "Catalyst of Power: " + ChatColor.YELLOW + catalystStrength);
+
+        // Strength from Beacon Power passive
+        int powerPassiveStrength = 0;
+        if (BeaconPassivesGUI.hasBeaconPassives(player)
+                && BeaconPassivesGUI.hasPassiveEnabled(player, "power")) {
+            powerPassiveStrength = 15;
+        }
+        total += powerPassiveStrength;
+        player.sendMessage(COLOR + "Beacon Power Passive: " + ChatColor.YELLOW + powerPassiveStrength);
 
         // Strength from pet perks
         int petEliteStrength = 0;
