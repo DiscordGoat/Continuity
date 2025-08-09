@@ -88,16 +88,6 @@ public class PetTraitEffects implements Listener {
     // ===== Event Hooks =====
 
     @EventHandler
-    public void onMeleeDamage(EntityDamageByEntityEvent event) {
-        if (!(event.getDamager() instanceof Player player)) return;
-        PetManager.Pet active = petManager.getActivePet(player);
-        if (active != null && active.getTrait() == PetTrait.STRONG) {
-            double bonus = active.getTrait().getValueForRarity(active.getTraitRarity());
-            event.setDamage(event.getDamage() * (1.0 + bonus / 100.0));
-        }
-    }
-
-    @EventHandler
     public void onArrowDamage(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Arrow arrow && arrow.getShooter() instanceof Player player) {
             PetManager.Pet active = petManager.getActivePet(player);
