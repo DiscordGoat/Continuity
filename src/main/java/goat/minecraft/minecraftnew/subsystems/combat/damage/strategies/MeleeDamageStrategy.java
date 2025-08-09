@@ -40,11 +40,7 @@ public class MeleeDamageStrategy implements DamageCalculationStrategy {
             double multiplier = 1.0; // placeholder for future adjustments
             double finalDamage = originalDamage * multiplier;
 
-            boolean strengthTalent = SkillTreeManager.getInstance() != null &&
-                    SkillTreeManager.getInstance().hasTalent(player, Talent.STRENGTH_MASTERY);
-            if (strengthTalent) {
-                finalDamage *= 1.05;
-            }
+
             
             DamageCalculationResult.DamageModifier modifier =
                 DamageCalculationResult.DamageModifier.multiplicative(
@@ -57,11 +53,6 @@ public class MeleeDamageStrategy implements DamageCalculationStrategy {
                        player.getName(), (multiplier - 1.0) * 100));
             
             DamageCalculationResult result = DamageCalculationResult.withModifier(originalDamage, finalDamage, modifier);
-
-            if (strengthTalent) {
-                result.getAppliedModifiers().add(DamageCalculationResult.DamageModifier.multiplicative(
-                        "Strength Mastery", 1.05, "+5% Damage"));
-            }
 
             return result;
             
