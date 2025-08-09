@@ -7,6 +7,7 @@ import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -99,6 +100,10 @@ public final class StrengthManager {
                     strength += HELLBENT_STRENGTH_BONUS;
                 }
             }
+        }
+      // Slayer armor blessing grants flat Strength
+        if (BlessingUtils.hasFullSetBonus(player, "Slayer")) {
+            strength += 20;
         }
 
         // Pet traits and perks that grant bonus Strength
@@ -216,6 +221,13 @@ public final class StrengthManager {
         }
         total += hellbentStrength;
         player.sendMessage(COLOR + "Hellbent Talent: " + ChatColor.YELLOW + hellbentStrength);
+        // Strength from Slayer full set bonus
+        int slayerStrength = 0;
+        if (BlessingUtils.hasFullSetBonus(player, "Slayer")) {
+            slayerStrength = 20;
+        }
+        total += slayerStrength;
+        player.sendMessage(COLOR + "Slayer Set Bonus: " + ChatColor.YELLOW + slayerStrength);
 
         // Strength from pet traits and perks
         int petEliteStrength = 0;
