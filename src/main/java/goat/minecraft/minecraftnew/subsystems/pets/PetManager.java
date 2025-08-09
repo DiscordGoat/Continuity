@@ -690,8 +690,18 @@ public class PetManager implements Listener {
                             + "[" + pet.getTraitRarity().getDisplayName() + "] "
                             + pet.getTraitRarity().getColor() + pet.getTrait().getDisplayName());
                     double traitValue = pet.getTrait().getValueForRarity(pet.getTraitRarity());
-                    lore.add(pet.getTrait().getColor() + pet.getTrait().getDescription() + ": "
-                            + pet.getTrait().getColor() + "+" + traitValue + "%");
+                    if (pet.getTrait() == PetTrait.STRONG) {
+                        SkillTreeManager stm = SkillTreeManager.getInstance();
+                        if (stm != null) {
+                            int q = stm.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                            traitValue *= (1 + q * 0.20);
+                        }
+                        int strengthBonus = (int) Math.round(traitValue);
+                        lore.add(ChatColor.GRAY + "Grants " + StrengthManager.COLOR + "+" + strengthBonus + " " + StrengthManager.DISPLAY_NAME);
+                    } else {
+                        lore.add(pet.getTrait().getColor() + pet.getTrait().getDescription() + ": "
+                                + pet.getTrait().getColor() + "+" + traitValue + "%");
+                    }
                 }
                 if (pet.equals(active)) {
                     lore.add(ChatColor.GREEN + "Currently Active");

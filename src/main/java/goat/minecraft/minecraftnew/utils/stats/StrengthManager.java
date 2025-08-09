@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.PetTrait;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -85,11 +86,20 @@ public final class StrengthManager {
             strength += 15;
         }
 
-        // Pet perks that grant bonus Strength
+        // Pet traits and perks that grant bonus Strength
         PetManager pm = PetManager.getInstance(MinecraftNew.getInstance());
         if (pm != null) {
             PetManager.Pet pet = pm.getActivePet(player);
             if (pet != null) {
+                if (pet.getTrait() == PetTrait.STRONG) {
+                    double petStrength = pet.getTrait().getValueForRarity(pet.getTraitRarity());
+                    SkillTreeManager stm = SkillTreeManager.getInstance();
+                    if (stm != null) {
+                        int q = stm.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                        petStrength *= (1 + q * 0.20);
+                    }
+                    strength += (int) Math.round(petStrength);
+                }
                 if (pet.hasPerk(PetManager.PetPerk.ELITE)) {
                     // 0.5 Strength per pet level, capped at +25
                     int petStrength = Math.min((int) (pet.getLevel() * 0.5), 25);
@@ -177,14 +187,24 @@ public final class StrengthManager {
         total += powerPassiveStrength;
         player.sendMessage(COLOR + "Beacon Power Passive: " + ChatColor.YELLOW + powerPassiveStrength);
 
-        // Strength from pet perks
+        // Strength from pet traits and perks
         int petEliteStrength = 0;
         int eliteTalentStrength = 0;
         int petClawStrength = 0;
+        int petStrongTraitStrength = 0;
         PetManager pm = PetManager.getInstance(MinecraftNew.getInstance());
         if (pm != null) {
             PetManager.Pet pet = pm.getActivePet(player);
             if (pet != null) {
+                if (pet.getTrait() == PetTrait.STRONG) {
+                    double val = pet.getTrait().getValueForRarity(pet.getTraitRarity());
+                    SkillTreeManager stm = SkillTreeManager.getInstance();
+                    if (stm != null) {
+                        int q = stm.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                        val *= (1 + q * 0.20);
+                    }
+                    petStrongTraitStrength = (int) Math.round(val);
+                }
                 if (pet.hasPerk(PetManager.PetPerk.ELITE)) {
                     petEliteStrength = Math.min((int) (pet.getLevel() * 0.5), 25);
                     SkillTreeManager stm = SkillTreeManager.getInstance();
@@ -198,7 +218,8 @@ public final class StrengthManager {
                 }
             }
         }
-        total += petEliteStrength + eliteTalentStrength + petClawStrength;
+        total += petEliteStrength + eliteTalentStrength + petClawStrength + petStrongTraitStrength;
+        player.sendMessage(COLOR + "Pet Strong Trait: " + ChatColor.YELLOW + petStrongTraitStrength);
         player.sendMessage(COLOR + "Pet Elite Perk: " + ChatColor.YELLOW + petEliteStrength);
         player.sendMessage(COLOR + "Elite Talent Bonus: " + ChatColor.YELLOW + eliteTalentStrength);
         player.sendMessage(COLOR + "Pet Claw Perk: " + ChatColor.YELLOW + petClawStrength);
