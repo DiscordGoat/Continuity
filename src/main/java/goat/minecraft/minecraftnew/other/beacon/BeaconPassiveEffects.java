@@ -4,7 +4,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -102,20 +101,6 @@ public class BeaconPassiveEffects implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        // Power passive: +15% damage when player attacks
-        if (event.getDamager() instanceof Player) {
-            Player player = (Player) event.getDamager();
-            
-            if (BeaconPassivesGUI.hasBeaconPassives(player) && 
-                BeaconPassivesGUI.hasPassiveEnabled(player, "power")) {
-                double damage = event.getDamage();
-                event.setDamage(damage * 1.15);
-            }
-        }
-    }
-
-    @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         
@@ -146,4 +131,5 @@ public class BeaconPassiveEffects implements Listener {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             updatePassiveEffects(player);
         }
-    }}
+    }
+}
