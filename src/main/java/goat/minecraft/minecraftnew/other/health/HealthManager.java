@@ -25,7 +25,7 @@ public final class HealthManager {
     public static final ChatColor COLOR = ChatColor.RED;
 
     /** Emoji used alongside the Health name. */
-    public static final String EMOJI = "❤️";
+    public static final String EMOJI = "❤";
 
     /** Preformatted display name for Health with color and emoji. */
     public static final String DISPLAY_NAME = COLOR + "Health " + EMOJI;
