@@ -73,6 +73,10 @@ public final class HealthManager {
             PetManager.Pet active = pm.getActivePet(player);
             if (active != null && active.getTrait() == PetTrait.HEALTHY) {
                 double percent = active.getTrait().getValueForRarity(active.getTraitRarity());
+                if (stm != null) {
+                    int q = stm.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                    percent *= (1 + q * 0.20);
+                }
                 petBonus = Math.floor((health * percent / 100.0) / 2) * 2; // round down to full hearts
                 health += petBonus;
             }
@@ -127,6 +131,10 @@ public final class HealthManager {
             PetManager.Pet active = pm.getActivePet(player);
             if (active != null && active.getTrait() == PetTrait.HEALTHY) {
                 double percent = active.getTrait().getValueForRarity(active.getTraitRarity());
+                if (stm != null) {
+                    int q = stm.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                    percent *= (1 + q * 0.20);
+                }
                 petBonus = Math.floor((total * percent / 100.0) / 2) * 2; // round down to full hearts
             }
         }

@@ -25,6 +25,9 @@ import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
+import goat.minecraft.minecraftnew.other.beacon.BeaconPassivesGUI;
+import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -698,6 +701,32 @@ public class PetManager implements Listener {
                         }
                         int strengthBonus = (int) Math.round(traitValue);
                         lore.add(ChatColor.GRAY + "Grants " + StrengthManager.COLOR + "+" + strengthBonus + " " + StrengthManager.DISPLAY_NAME);
+                    } else if (pet.getTrait() == PetTrait.HEALTHY) {
+                        SkillTreeManager stm = SkillTreeManager.getInstance();
+                        if (stm != null) {
+                            int q = stm.getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.QUIRKY);
+                            traitValue *= (1 + q * 0.20);
+                        }
+                        double base = 20.0;
+                        double talent = 0.0;
+                        SkillTreeManager mgr = SkillTreeManager.getInstance();
+                        if (mgr != null) {
+                            talent += mgr.getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_I);
+                            talent += mgr.getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_II);
+                            talent += mgr.getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_III);
+                            talent += mgr.getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_IV);
+                            talent += mgr.getTalentLevel(player.getUniqueId(), Skill.PLAYER, Talent.HEALTH_V);
+                        }
+                        base += talent;
+                        if (BeaconPassivesGUI.hasBeaconPassives(player)
+                                && BeaconPassivesGUI.hasPassiveEnabled(player, "mending")) {
+                            base += 20.0;
+                        }
+                        if (BlessingUtils.hasFullSetBonus(player, "Monolith")) {
+                            base += 20.0;
+                        }
+                        double petBonus = Math.floor((base * traitValue / 100.0) / 2) * 2;
+                        lore.add(ChatColor.GRAY + "Grants " + HealthManager.COLOR + "+" + (int) petBonus + " " + HealthManager.DISPLAY_NAME);
                     } else {
                         lore.add(pet.getTrait().getColor() + pet.getTrait().getDescription() + ": "
                                 + pet.getTrait().getColor() + "+" + traitValue + "%");
