@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.utils.commands;
 
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
+import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -48,6 +49,8 @@ public class StatsCommand implements CommandExecutor, Listener {
                 StrengthManager.sendStrengthBreakdown(player);
             } else if (name.equals(ChatColor.stripColor(HealthManager.DISPLAY_NAME))) {
                 HealthManager.sendHealthBreakdown(player);
+            } else if (name.equals(ChatColor.stripColor(DefenseManager.DISPLAY_NAME))) {
+                DefenseManager.sendDefenseBreakdown(player);
             }
         }
     }
@@ -85,6 +88,7 @@ public class StatsCommand implements CommandExecutor, Listener {
         int index = 0;
         addStatItem(inv, slots[index++], Material.REDSTONE, HealthManager.DISPLAY_NAME, String.format("%.1f", calculator.getHealth(player)));
         addStatItem(inv, slots[index++], Material.IRON_SWORD, StrengthManager.DISPLAY_NAME, String.format("%d", calculator.getStrength(player)));
+        addStatItem(inv, slots[index++], Material.DIAMOND_CHESTPLATE, DefenseManager.DISPLAY_NAME, String.format("%.1f", calculator.getDefense(player)));
         addStatItem(inv, slots[index++], Material.BOW, "Arrow Damage +%", String.format("%.1f%%", calculator.getArrowDamageIncrease(player)));
         addStatItem(inv, slots[index++], Material.SHIELD, "Resistance", String.format("%.1f%%", calculator.getResistance(player)));
         addStatItem(inv, slots[index++], Material.ELYTRA, "Flight Time", String.format("%ds", calculator.getFlightTime(player)));
