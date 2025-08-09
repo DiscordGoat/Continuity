@@ -18,6 +18,7 @@ import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
+import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -79,6 +80,16 @@ public class StatsCalculator {
      */
     public int getStrength(Player player) {
         return StrengthManager.getStrength(player);
+    }
+
+    /**
+     * Calculates the player's Defense value.
+     *
+     * @param player player to calculate Defense for
+     * @return total Defense amount
+     */
+    public double getDefense(Player player) {
+        return DefenseManager.getDefense(player, DefenseManager.DamageTag.GENERIC);
     }
 
     /** Arrow damage increase percent from talents, potions and reforges. */

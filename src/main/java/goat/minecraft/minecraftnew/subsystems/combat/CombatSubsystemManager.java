@@ -14,6 +14,7 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.PostMorte
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.NecroticDamageReductionStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.SeaCreatureDamageReductionStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.MurderMysteryDamageStrategy;
+import goat.minecraft.minecraftnew.subsystems.combat.damage.strategies.DefenseDamageReductionStrategy;
 import goat.minecraft.minecraftnew.subsystems.combat.commands.CombatReloadCommand;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityGUIController;
 import goat.minecraft.minecraftnew.subsystems.combat.hostility.HostilityService;
@@ -263,10 +264,13 @@ public class CombatSubsystemManager implements CommandExecutor {
         damageCalculationService.registerStrategy(new NecroticDamageReductionStrategy());
         damageCalculationService.registerStrategy(new SeaCreatureDamageReductionStrategy());
         damageCalculationService.registerStrategy(new MurderMysteryDamageStrategy());
-        
+
         // Register catalyst damage strategies (always enabled)
         damageCalculationService.registerStrategy(new InsanityCatalystDamageStrategy());
-        
+
+        // Global Defense reduction (always enabled)
+        damageCalculationService.registerStrategy(new DefenseDamageReductionStrategy());
+
         logger.fine("Damage calculation strategies registered");
     }
     
