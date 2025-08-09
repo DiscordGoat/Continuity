@@ -60,7 +60,7 @@ public class StatsCalculator {
 
     /** Calculate max health using HealthManager. */
     public double getHealth(Player player) {
-        return HealthManager.getInstance(plugin).computeMaxHealth(player);
+        return HealthManager.getMaxHealth(player);
     }
 
     /** Approximate melee damage increase percent from reforges and talents. */

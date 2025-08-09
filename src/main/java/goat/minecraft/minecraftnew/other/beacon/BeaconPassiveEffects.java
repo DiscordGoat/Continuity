@@ -40,7 +40,7 @@ public class BeaconPassiveEffects implements Listener {
         boolean hasBeaconPassives = BeaconPassivesGUI.hasBeaconPassives(player);
         
         // Trigger health updates for Mending passive
-        HealthManager.getInstance(plugin).updateHealth(player);
+        HealthManager.updateHealth(player);
         
         // Apply/remove Swift effect (+20% walk speed, -50% fall damage)
         if (hasBeaconPassives && BeaconPassivesGUI.hasPassiveEnabled(player, "swift")) {
@@ -107,7 +107,7 @@ public class BeaconPassiveEffects implements Listener {
         // Clean up effects when player no longer has beacon
         if (!BeaconPassivesGUI.hasBeaconPassives(player)) {
             removeSwiftEffect(player);
-            HealthManager.getInstance(plugin).updateHealth(player);
+            HealthManager.updateHealth(player);
         }
     }
 
@@ -118,7 +118,7 @@ public class BeaconPassiveEffects implements Listener {
     public void removeAllPassiveEffects() {
         for (Player player : plugin.getServer().getOnlinePlayers()) {
             removeSwiftEffect(player);
-            HealthManager.getInstance(plugin).updateHealth(player);
+            HealthManager.updateHealth(player);
         }
         swiftApplied.clear();
     }

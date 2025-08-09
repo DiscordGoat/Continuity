@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.utils.commands;
 
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -25,13 +26,10 @@ import java.util.List;
  */
 public class StatsCommand implements CommandExecutor, Listener {
 
-    private final JavaPlugin plugin;
     private final StatsCalculator calculator;
 
     public StatsCommand(JavaPlugin plugin) {
-        this.plugin = plugin;
         this.calculator = StatsCalculator.getInstance(plugin);
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler
@@ -48,6 +46,8 @@ public class StatsCommand implements CommandExecutor, Listener {
             String name = ChatColor.stripColor(meta.getDisplayName());
             if (name.equals(ChatColor.stripColor(StrengthManager.DISPLAY_NAME))) {
                 StrengthManager.sendStrengthBreakdown(player);
+            } else if (name.equals(ChatColor.stripColor(HealthManager.DISPLAY_NAME))) {
+                HealthManager.sendHealthBreakdown(player);
             }
         }
     }
@@ -83,7 +83,7 @@ public class StatsCommand implements CommandExecutor, Listener {
 
         int[] slots = {10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34};
         int index = 0;
-        addStatItem(inv, slots[index++], Material.REDSTONE, "Health", String.format("%.1f", calculator.getHealth(player)));
+        addStatItem(inv, slots[index++], Material.REDSTONE, HealthManager.DISPLAY_NAME, String.format("%.1f", calculator.getHealth(player)));
         addStatItem(inv, slots[index++], Material.IRON_SWORD, StrengthManager.DISPLAY_NAME, String.format("%d", calculator.getStrength(player)));
         addStatItem(inv, slots[index++], Material.BOW, "Arrow Damage +%", String.format("%.1f%%", calculator.getArrowDamageIncrease(player)));
         addStatItem(inv, slots[index++], Material.SHIELD, "Resistance", String.format("%.1f%%", calculator.getResistance(player)));

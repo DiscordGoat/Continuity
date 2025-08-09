@@ -214,7 +214,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
                 p.stopAllSounds());
         removeAllCitizenEntities();
 
-        HealthManager.getInstance(this).startup();
+        HealthManager.startup();
 
         ArmorStandCommand armorStandCommand = new ArmorStandCommand(this);
         armorStandCommand.removeInvisibleArmorStands();
@@ -784,7 +784,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        HealthManager.getInstance(this).shutdown();
+        HealthManager.shutdown();
         if (shelfManager != null) {
             shelfManager.onDisable();
         }
