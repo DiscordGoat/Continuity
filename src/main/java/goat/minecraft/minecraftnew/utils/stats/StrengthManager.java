@@ -37,6 +37,9 @@ public final class StrengthManager {
     /** Preformatted display name for Strength with color and emoji. */
     public static final String DISPLAY_NAME = COLOR + "Strength " + EMOJI;
 
+    /** Strength granted by the Hellbent talent while active. */
+    private static final int HELLBENT_STRENGTH_BONUS = 25;
+
     private StrengthManager() {
         // Utility class
     }
@@ -87,7 +90,18 @@ public final class StrengthManager {
             strength += 15;
         }
 
-        // Slayer armor blessing grants flat Strength
+        // Hellbent talent grants bonus Strength when below the health threshold
+        if (mgr != null) {
+            int hellbentLevel = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.HELLBENT);
+            if (hellbentLevel > 0) {
+                double thresholdPct = hellbentLevel * 10.0;
+                double currentPct = (player.getHealth() / player.getMaxHealth()) * 100.0;
+                if (currentPct < thresholdPct) {
+                    strength += HELLBENT_STRENGTH_BONUS;
+                }
+            }
+        }
+      // Slayer armor blessing grants flat Strength
         if (BlessingUtils.hasFullSetBonus(player, "Slayer")) {
             strength += 20;
         }
@@ -193,6 +207,20 @@ public final class StrengthManager {
         total += powerPassiveStrength;
         player.sendMessage(COLOR + "Beacon Power Passive: " + ChatColor.YELLOW + powerPassiveStrength);
 
+        // Strength from the Hellbent talent
+        int hellbentStrength = 0;
+        if (mgr != null) {
+            int hellbentLevel = mgr.getTalentLevel(player.getUniqueId(), Skill.COMBAT, Talent.HELLBENT);
+            if (hellbentLevel > 0) {
+                double thresholdPct = hellbentLevel * 10.0;
+                double currentPct = (player.getHealth() / player.getMaxHealth()) * 100.0;
+                if (currentPct < thresholdPct) {
+                    hellbentStrength = HELLBENT_STRENGTH_BONUS;
+                }
+            }
+        }
+        total += hellbentStrength;
+        player.sendMessage(COLOR + "Hellbent Talent: " + ChatColor.YELLOW + hellbentStrength);
         // Strength from Slayer full set bonus
         int slayerStrength = 0;
         if (BlessingUtils.hasFullSetBonus(player, "Slayer")) {

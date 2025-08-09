@@ -480,7 +480,7 @@ public enum Talent {
     HELLBENT(
             "Hellbent",
             ChatColor.GRAY + "Fight harder when near death",
-            ChatColor.RED + "+25% Damage below (10*level)% health",
+            ChatColor.RED + "+25 " + StrengthManager.DISPLAY_NAME + " below (10*level)% health",
             6,
             40,
             Material.TOTEM_OF_UNDYING
