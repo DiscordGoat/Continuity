@@ -18,6 +18,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -332,30 +334,72 @@ public class BeaconPassivesGUI implements Listener {
     }
 
     /**
-     * Check if a player has any beacon passives active and has a beacon in inventory
+     * Check if a player has any beacon passives active and has a beacon either in their
+     * inventory or stored inside their backpack (if they are carrying one).
+     *
      * @param player The player to check
      * @return True if player has beacon with passives
      */
     public static boolean hasBeaconPassives(Player player) {
-        // Check if player has a beacon in inventory
         boolean hasBeacon = false;
+
+        // Check if the beacon is directly in the player's inventory
         for (ItemStack item : player.getInventory().getContents()) {
-            if (item != null && item.getType() == Material.BEACON) {
-                ItemMeta meta = item.getItemMeta();
-                if (meta != null && meta.hasDisplayName() && 
-                    ChatColor.stripColor(meta.getDisplayName()).equals("Beacon Charm")) {
-                    hasBeacon = true;
-                    break;
+            if (isBeaconCharm(item)) {
+                hasBeacon = true;
+                break;
+            }
+        }
+
+        // If not found, check the backpack storage when the player is carrying a backpack
+        if (!hasBeacon && hasBackpackInInventory(player)) {
+            CustomBundleGUI gui = CustomBundleGUI.getInstance();
+            if (gui != null) {
+                for (int i = 0; i < 54; i++) {
+                    ItemStack item = gui.getBackpackItem(player, i);
+                    if (isBeaconCharm(item)) {
+                        hasBeacon = true;
+                        break;
+                    }
                 }
             }
         }
-        
-        if (!hasBeacon) return false;
-        
+
+        if (!hasBeacon) {
+            return false;
+        }
+
         // Check if player has any passives enabled
         Map<String, Boolean> passives = playerPassives.get(player.getUniqueId());
         if (passives == null) return false;
-        
+
         return passives.values().stream().anyMatch(Boolean::booleanValue);
+    }
+
+    /**
+     * Determine if the provided item is the custom Beacon Charm.
+     */
+    private static boolean isBeaconCharm(ItemStack item) {
+        if (item == null || item.getType() != Material.BEACON || !item.hasItemMeta()) {
+            return false;
+        }
+        ItemMeta meta = item.getItemMeta();
+        return meta != null && meta.hasDisplayName() &&
+                ChatColor.stripColor(meta.getDisplayName()).equals("Beacon Charm");
+    }
+
+    /**
+     * Check if the player is carrying a backpack item in their main inventory.
+     */
+    private static boolean hasBackpackInInventory(Player player) {
+        for (ItemStack item : player.getInventory().getContents()) {
+            if (item == null || !item.hasItemMeta()) continue;
+            ItemMeta meta = item.getItemMeta();
+            if (meta != null && meta.hasDisplayName() &&
+                ChatColor.stripColor(meta.getDisplayName()).equals("Backpack")) {
+                return true;
+            }
+        }
+        return false;
     }
 }
