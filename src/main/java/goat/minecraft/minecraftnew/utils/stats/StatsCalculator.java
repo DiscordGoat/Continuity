@@ -83,7 +83,9 @@ public class StatsCalculator {
     }
 
     /**
-     * Calculates the player's Defense value.
+     * Calculates the player's Defense value using {@link DefenseManager}.
+     * This aggregates armor, toughness, protections and other bonuses into a
+     * single number representing how much incoming damage is mitigated.
      *
      * @param player player to calculate Defense for
      * @return total Defense amount
