@@ -79,7 +79,12 @@ public class Gravedigging implements Listener {
             int count = blockBreaks.getOrDefault(player.getUniqueId(), 0) + 1;
             double threshold = 512.0 / (xLevel * 0.1 + 1);
             if (count >= threshold) {
-                spawnGraveNear(player);
+                if(block.getType()!=Material.DIRT){
+                    Bukkit.getLogger().info("X Marks the Spot failed due to non-dirt block breakage");
+                }else{
+                    spawnGraveNear(player);
+                }
+
                 count = 0;
             }
             blockBreaks.put(player.getUniqueId(), count);
