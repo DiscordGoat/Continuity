@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.other.additionalfunctionality;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.music.MusicDiscManager;
+import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -44,7 +45,8 @@ public class BlessingArmorStandListener implements Listener {
         bonusMap.put("Pastureshade", List.of(ChatColor.GRAY + "Full Set Bonus: +100% Crop Yield, +1 Relic Yield"));
         bonusMap.put("Countershot", List.of(ChatColor.GRAY + "Full Set Bonus: Arrow Deflection"));
         bonusMap.put("Shadowstep", List.of(ChatColor.GRAY + "Full Set Bonus: +40% Dodge Chance"));
-        bonusMap.put("Slayer", List.of(ChatColor.GRAY + "Full Set Bonus: +20% Damage"));
+        bonusMap.put("Slayer", List.of(ChatColor.GRAY + "Full Set Bonus: "
+                + StrengthManager.COLOR + "+20 " + StrengthManager.DISPLAY_NAME));
         bonusMap.put("Duskblood", List.of(ChatColor.GRAY + "Full Set Bonus: +60 Warp Stacks"));
         bonusMap.put("Thunderforge", List.of(ChatColor.GRAY + "Full Set Bonus: +15% Fury Chance"));
         bonusMap.put("Fathmic Iron", List.of(ChatColor.GRAY + "Full Set Bonus: Removes Common/Uncommon Sea Creatures, -20% Sea Creature Chance."));

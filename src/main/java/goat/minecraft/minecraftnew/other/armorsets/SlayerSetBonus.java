@@ -18,7 +18,7 @@ import java.util.UUID;
 
 /**
  * Applies the Slayer full set bonus while the player is wearing the full set.
- * Grants +20% damage to all outgoing attacks.
+ * Grants +20 Strength and activates Flow on melee strikes.
  */
 public class SlayerSetBonus implements Listener {
 
@@ -65,9 +65,6 @@ public class SlayerSetBonus implements Listener {
             return;
         }
 
-        // Increase damage by 20%
-        event.setDamage(event.getDamage() * 1.2);
-        
         // Activate Flow on melee strikes
         FlowManager flowManager = FlowManager.getInstance(plugin);
         flowManager.addFlowStacks(player, 1);
