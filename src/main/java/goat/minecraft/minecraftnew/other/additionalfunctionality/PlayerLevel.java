@@ -21,7 +21,7 @@ public class PlayerLevel implements Listener {
 
     // Method to apply attribute bonuses to a player
     public void applyPlayerAttributes(Player player) {
-        HealthManager.getInstance(plugin).applyAndFill(player);
+        HealthManager.applyAndFill(player);
     }
 
     // Event handlers to apply attributes when necessary

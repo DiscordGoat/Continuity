@@ -535,7 +535,7 @@ public class XPManager implements CommandExecutor {
             player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 1200, 0));
             player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING, 600, 0));
 
-            HealthManager.getInstance(plugin).applyAndFill(player);
+            HealthManager.applyAndFill(player);
         }
 
         String borderTop    = ChatColor.DARK_AQUA + "╔═════════════════════╗";

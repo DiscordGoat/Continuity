@@ -939,7 +939,7 @@ public class SkillTreeManager implements Listener {
             if (talent == Talent.HEALTH_I || talent == Talent.HEALTH_II ||
                     talent == Talent.HEALTH_III || talent == Talent.HEALTH_IV ||
                     talent == Talent.HEALTH_V) {
-                HealthManager.getInstance(plugin).applyAndFill(player);
+                HealthManager.applyAndFill(player);
             }
             if (talent == Talent.STUDY_BREWING) {
                 addExtraTalentPoints(player.getUniqueId(), Skill.BREWING, 1);

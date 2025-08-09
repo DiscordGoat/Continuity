@@ -40,11 +40,11 @@ public class PetTraitEffects implements Listener {
 
     // ===== Attribute Helpers =====
     private void applyHealthTrait(Player player) {
-        HealthManager.getInstance(petManager.getPlugin()).updateHealth(player);
+        HealthManager.updateHealth(player);
     }
 
     private void removeHealthTrait(Player player) {
-        HealthManager.getInstance(petManager.getPlugin()).updateHealth(player);
+        HealthManager.updateHealth(player);
     }
 
     private void applySpeedTrait(Player player) {
@@ -76,13 +76,13 @@ public class PetTraitEffects implements Listener {
     public void applyTraits(Player player) {
         applyHealthTrait(player);
         applySpeedTrait(player);
-        HealthManager.getInstance(petManager.getPlugin()).updateHealth(player);
+        HealthManager.updateHealth(player);
     }
 
     public void removeTraits(Player player) {
         removeHealthTrait(player);
         removeSpeedTrait(player);
-        HealthManager.getInstance(petManager.getPlugin()).updateHealth(player);
+        HealthManager.updateHealth(player);
     }
 
     // ===== Event Hooks =====
