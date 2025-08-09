@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.pets;
 
 import org.bukkit.ChatColor;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
 
 /**
@@ -10,7 +11,7 @@ import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
  */
 
 public enum PetTrait {
-    HEALTHY(ChatColor.RED, "Health Increase", new double[]{1,2, 4,6,10,20}),
+    HEALTHY(ChatColor.RED, HealthManager.DISPLAY_NAME, new double[]{1,2, 4,6,10,20}),
     FAST(ChatColor.YELLOW, "Speed Increase", new double[]{1,3,5,8,10,20}),
     STRONG(ChatColor.RED, StrengthManager.DISPLAY_NAME, new double[]{3,5,8,10,15,20}),
     RESILIENT(ChatColor.WHITE, "Damage Reduction", new double[]{3,5,8,10,15,20}),

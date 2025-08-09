@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
 
@@ -84,8 +85,9 @@ public class BeaconPassivesGUI implements Listener {
         Map<String, Boolean> passives = getPlayerPassives(player);
         
         // Create passive buttons
-        ItemStack mendingButton = createPassiveButton(Material.GOLDEN_APPLE, 
-            "Mending", "+1 row of hearts", passives.getOrDefault("mending", false));
+        ItemStack mendingButton = createPassiveButton(Material.GOLDEN_APPLE,
+            "Mending", HealthManager.COLOR + "+20 " + HealthManager.DISPLAY_NAME,
+            passives.getOrDefault("mending", false));
         
         ItemStack sturdyButton = createPassiveButton(Material.SHIELD,
             "Sturdy", "+15% damage reduction, knockback resistance",
