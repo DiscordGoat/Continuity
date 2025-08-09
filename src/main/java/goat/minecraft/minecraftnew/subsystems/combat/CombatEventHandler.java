@@ -5,6 +5,9 @@ import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationRes
 import goat.minecraft.minecraftnew.subsystems.combat.damage.DamageCalculationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.DamageNotificationService;
 import goat.minecraft.minecraftnew.subsystems.combat.notification.PlayerFeedbackService;
+import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
+import goat.minecraft.minecraftnew.utils.stats.DefenseManager.DamageTag;
+import goat.minecraft.minecraftnew.subsystems.combat.DamageDebugManager;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.ChatColor;
@@ -14,6 +17,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -53,19 +57,21 @@ public class CombatEventHandler implements Listener {
                 logger.finest("Skipping zero/negative damage event");
                 return;
             }
-            
+
+            double baseDamage = event.getDamage();
+
             // Process damage calculations
             DamageCalculationResult result = damageCalculationService.processDamageEvent(event);
-            
+
             if (result.wasModified()) {
                 // Apply the calculated damage
                 event.setDamage(result.getFinalDamage());
-                
+
                 logger.fine(String.format("Applied damage modification: %s", result.toString()));
-                
+
                 // Provide feedback to attacking player if applicable
                 result.getAppliedModifiers().stream()
-                      .filter(modifier -> modifier.getSource().contains("Combat Skill") || 
+                      .filter(modifier -> modifier.getSource().contains("Combat Skill") ||
                                          modifier.getSource().contains("Recurve"))
                       .findFirst()
                       .ifPresent(modifier -> {
@@ -74,16 +80,23 @@ public class CombatEventHandler implements Listener {
                           }
                       });
             }
-            
+
             // Show damage notification if enabled and applicable
             if (config.getNotificationConfig().isEnabled() && shouldShowNotification(event)) {
                 notificationService.showDamageIndicator(event.getEntity().getLocation(), result.getFinalDamage());
             }
-            
+
+            if (event.getEntity() instanceof Player player && DamageDebugManager.isEnabled(player)) {
+                DamageTag tag = mapTag(event.getCause());
+                double expected = DefenseManager.computeFinalDamage(baseDamage, player, tag);
+                player.sendMessage(ChatColor.GRAY + "Expected Damage: " + ChatColor.YELLOW + String.format("%.2f", expected));
+                player.sendMessage(ChatColor.GRAY + "Actual Damage: " + ChatColor.YELLOW + String.format("%.2f", result.getFinalDamage()));
+            }
+
         } catch (DamageCalculationService.DamageCalculationException e) {
             logger.log(Level.SEVERE, "Critical error in damage calculation", e);
             // Don't modify damage on critical errors to maintain game stability
-            
+
         } catch (Exception e) {
             logger.log(Level.WARNING, "Unexpected error in combat event handling", e);
             // Continue processing to avoid breaking the game
@@ -96,8 +109,31 @@ public class CombatEventHandler implements Listener {
      */
     private boolean shouldShowNotification(EntityDamageByEntityEvent event) {
         // Show notifications for damage caused by or to players
-        return event.getDamager() instanceof Player || 
+        return event.getDamager() instanceof Player ||
                (event.getDamager() instanceof org.bukkit.entity.Projectile &&
                 ((org.bukkit.entity.Projectile) event.getDamager()).getShooter() instanceof Player);
+    }
+
+    private DamageTag mapTag(EntityDamageEvent.DamageCause cause) {
+        switch (cause) {
+            case FIRE:
+            case FIRE_TICK:
+            case LAVA:
+            case HOT_FLOOR:
+                return DamageTag.FIRE;
+            case ENTITY_EXPLOSION:
+            case BLOCK_EXPLOSION:
+                return DamageTag.BLAST;
+            case PROJECTILE:
+                return DamageTag.PROJECTILE;
+            case FALL:
+                return DamageTag.FALL;
+            case MAGIC:
+            case POISON:
+            case WITHER:
+                return DamageTag.MAGIC;
+            default:
+                return DamageTag.GENERIC;
+        }
     }
 }
