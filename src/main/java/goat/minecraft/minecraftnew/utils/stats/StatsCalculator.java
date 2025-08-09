@@ -1,12 +1,9 @@
 package goat.minecraft.minecraftnew.utils.stats;
 
 import goat.minecraft.minecraftnew.other.health.HealthManager;
-import goat.minecraft.minecraftnew.other.beacon.BeaconPassivesGUI;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.BlessingUtils;
 import goat.minecraft.minecraftnew.other.beacon.Catalyst;
 import goat.minecraft.minecraftnew.other.beacon.CatalystManager;
 import goat.minecraft.minecraftnew.other.beacon.CatalystType;
-import goat.minecraft.minecraftnew.other.resistance.PlayerResistanceManager;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
@@ -21,8 +18,6 @@ import goat.minecraft.minecraftnew.utils.devtools.PlayerMeritManager;
 import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -130,11 +125,6 @@ public class StatsCalculator {
             bonus += val;
         }
         return bonus;
-    }
-
-    /** Calculate total resistance percentage from various sources. */
-    public double getResistance(Player player) {
-        return PlayerResistanceManager.getInstance(plugin).computeTotalResistance(player);
     }
 
     /** Maximum flight time in seconds from pet perks and merits. */
