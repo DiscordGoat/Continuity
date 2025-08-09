@@ -567,7 +567,7 @@ public class SkillTreeManager implements Listener {
                 return ChatColor.YELLOW + "+" + frenzyDur + "s Haste Duration";
             case PHOTOSYNTHESIS:
                 int heal = level;
-                return ChatColor.GREEN + "+" + heal + " Health on Treecapitator use";
+                return HealthManager.COLOR + "+" + heal + " " + HealthManager.DISPLAY_NAME + " on Treecapitator use";
             case REGROWTH_I:
             case REGROWTH_II:
             case REGROWTH_III:
@@ -609,7 +609,7 @@ public class SkillTreeManager implements Listener {
             case HEALTH_IV:
             case HEALTH_V:
                 int extraHealth = level;
-                return ChatColor.GREEN + "+" + extraHealth + " Bonus Health";
+                return HealthManager.COLOR + "+" + extraHealth + " " + HealthManager.DISPLAY_NAME;
             case STUDY_BREWING:
                 return ChatColor.YELLOW + "+" + level + " Brewing Talent Point";
             case STUDY_SMITHING:
@@ -838,7 +838,7 @@ public class SkillTreeManager implements Listener {
             case SECRET_LEGION:
                 return ChatColor.YELLOW + "No Hunger Cost";
             case COMFORTABLE:
-                return ChatColor.YELLOW + "Double Absorption Duration & Health";
+                return ChatColor.YELLOW + "Double Absorption Duration & " + HealthManager.DISPLAY_NAME;
             case SPLASH_POTION:
                 return ChatColor.YELLOW + "-" + (level * 10) + "% Brewtime";
             case EXPERIMENTATION:

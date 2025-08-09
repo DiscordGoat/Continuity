@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other.skilltree;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
 
 /**
  * Enumeration of all available talents in the plugin.  This acts as a
@@ -1345,7 +1346,7 @@ public enum Talent {
     PHOTOSYNTHESIS(
             "Photosynthesis",
             ChatColor.GRAY + "Recover health when using Treecapitator",
-            ChatColor.GREEN + "+1 Health on Treecapitator use",
+            HealthManager.COLOR + "+1 " + HealthManager.DISPLAY_NAME + " on Treecapitator use",
             6,
             20,
             Material.SUNFLOWER
@@ -1474,7 +1475,7 @@ public enum Talent {
     HEALTH_I(
             "Health I",
             ChatColor.GRAY + "Fortify your body for survival",
-            ChatColor.GREEN + "+1 Bonus Health",
+            HealthManager.COLOR + "+1 " + HealthManager.DISPLAY_NAME,
             4,
             1,
             Material.APPLE
@@ -1570,7 +1571,7 @@ public enum Talent {
     HEALTH_II(
             "Health II",
             ChatColor.GRAY + "Increase your vitality",
-            ChatColor.GREEN + "+1 Bonus Health",
+            HealthManager.COLOR + "+1 " + HealthManager.DISPLAY_NAME,
             6,
             20,
             Material.APPLE
@@ -1578,7 +1579,7 @@ public enum Talent {
     HEALTH_III(
             "Health III",
             ChatColor.GRAY + "Further increase vitality",
-            ChatColor.GREEN + "+1 Bonus Health",
+            HealthManager.COLOR + "+1 " + HealthManager.DISPLAY_NAME,
             8,
             40,
             Material.APPLE
@@ -1586,7 +1587,7 @@ public enum Talent {
     HEALTH_IV(
             "Health IV",
             ChatColor.GRAY + "Empower your life force",
-            ChatColor.GREEN + "+1 Bonus Health",
+            HealthManager.COLOR + "+1 " + HealthManager.DISPLAY_NAME,
             10,
             60,
             Material.APPLE
@@ -1594,7 +1595,7 @@ public enum Talent {
     HEALTH_V(
             "Health V",
             ChatColor.GRAY + "Attain peak endurance",
-            ChatColor.GREEN + "+1 Bonus Health",
+            HealthManager.COLOR + "+1 " + HealthManager.DISPLAY_NAME,
             12,
             80,
             Material.APPLE
@@ -2460,7 +2461,7 @@ public enum Talent {
     COMFORTABLE(
             "Comfortable",
             ChatColor.GRAY + "Longer lasting absorption",
-            ChatColor.YELLOW + "Double Absorption Duration and Health",
+            ChatColor.YELLOW + "Double Absorption Duration and " + HealthManager.DISPLAY_NAME,
             1,
             60,
             Material.RED_BED
