@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.pets;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
 import org.bukkit.*;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -804,7 +805,7 @@ public class PetManager implements Listener {
             case ELITE:
                 return ChatColor.GRAY + "Grants " + StrengthManager.COLOR + "+" + Math.min(level * 0.5, 25) + " " + StrengthManager.DISPLAY_NAME;
             case WALKING_FORTRESS:
-                return "Gain " + ChatColor.DARK_GRAY + (level * 0.5) + "% Damage Reduction.";
+                return "Gain " + ChatColor.DARK_GRAY + 25 + DefenseManager.DISPLAY_NAME;
             case REBIRTH:
                 return "Revive after dying " + ChatColor.GRAY + "at " + ChatColor.GREEN + "full health " + ChatColor.GRAY + "at the cost of your entire hunger bar.";
             case SECOND_WIND:

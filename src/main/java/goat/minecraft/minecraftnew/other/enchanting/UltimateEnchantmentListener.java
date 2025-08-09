@@ -501,7 +501,7 @@ public class UltimateEnchantmentListener implements Listener {
         breakBlocksGradually(player, new ArrayList<>(leavesToBreak), false, false);
         if(SkillTreeManager.getInstance().hasTalent(player, Talent.PHOTOSYNTHESIS)){
             int photosynthesisLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.PHOTOSYNTHESIS);
-            if(player.getHealth() < player.getMaxHealth()){
+            if(player.getHealth() + photosynthesisLevel < player.getMaxHealth()){
                 player.setHealth(player.getHealth() + photosynthesisLevel);
             }
         }

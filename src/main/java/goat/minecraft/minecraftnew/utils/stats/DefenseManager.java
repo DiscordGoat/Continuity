@@ -23,7 +23,7 @@ public final class DefenseManager {
     public static final ChatColor COLOR = ChatColor.AQUA;
 
     /** Emoji used alongside the Defense name. */
-    public static final String EMOJI = "\u26E8"; // shield
+    public static final String EMOJI = "\uD83D\uDEE1"; // shield
 
     /** Preformatted display name for Defense with color and emoji. */
     public static final String DISPLAY_NAME = COLOR + "Defense " + EMOJI;
@@ -39,16 +39,16 @@ public final class DefenseManager {
         public double C = 20.0;
         public double minMult = 0.02;
 
-        public double armorToDefense = 12.0;
+        public double armorToDefense = 10.0;
         public double toughnessToDefense = 10.0;
         public double genericProtLevelToDefense = 6.0;
 
         public Map<String, Double> envProtPerLevel = Map.of(
-            "FIRE", 6.0,
-            "BLAST", 6.0,
-            "PROJECTILE", 6.0,
-            "FALL", 6.0,
-            "MAGIC", 4.0
+            "FIRE", 2.0,
+            "BLAST", 2.0,
+            "PROJECTILE", 2.0,
+            "FALL", 2.0,
+            "MAGIC", 2.0
         );
     }
 
@@ -82,15 +82,15 @@ public final class DefenseManager {
         Map<DamageTag, Integer> envProtLevels = new EnumMap<>(DamageTag.class);
         for (ItemStack piece : player.getInventory().getArmorContents()) {
             if (piece == null) continue;
-            genericProtLevels += piece.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL);
+            genericProtLevels += piece.getEnchantmentLevel(Enchantment.PROTECTION);
             envProtLevels.merge(DamageTag.FIRE,
-                piece.getEnchantmentLevel(Enchantment.PROTECTION_FIRE), Integer::sum);
+                piece.getEnchantmentLevel(Enchantment.FIRE_PROTECTION), Integer::sum);
             envProtLevels.merge(DamageTag.BLAST,
-                piece.getEnchantmentLevel(Enchantment.PROTECTION_EXPLOSIONS), Integer::sum);
+                piece.getEnchantmentLevel(Enchantment.BLAST_PROTECTION), Integer::sum);
             envProtLevels.merge(DamageTag.PROJECTILE,
-                piece.getEnchantmentLevel(Enchantment.PROTECTION_PROJECTILE), Integer::sum);
+                piece.getEnchantmentLevel(Enchantment.PROJECTILE_PROTECTION), Integer::sum);
             envProtLevels.merge(DamageTag.FALL,
-                piece.getEnchantmentLevel(Enchantment.PROTECTION_FALL), Integer::sum);
+                piece.getEnchantmentLevel(Enchantment.FEATHER_FALLING), Integer::sum);
         }
 
         double flatAdds = 0.0; // Placeholder for reforges/custom enchants
@@ -151,7 +151,7 @@ public final class DefenseManager {
         int genericProtLevels = 0;
         for (ItemStack piece : player.getInventory().getArmorContents()) {
             if (piece == null) continue;
-            genericProtLevels += piece.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL);
+            genericProtLevels += piece.getEnchantmentLevel(Enchantment.PROTECTION);
         }
         double defense = getDefense(player, DamageTag.GENERIC);
         player.sendMessage(COLOR + "Armor: " + ChatColor.YELLOW + armorPoints * CONFIG.armorToDefense);

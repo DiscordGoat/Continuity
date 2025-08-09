@@ -29,9 +29,7 @@ public class DefenseDamageReductionStrategy implements DamageCalculationStrategy
         EntityDamageEvent event = context.getEvent();
         try {
             event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, 0);
-            event.setDamage(EntityDamageEvent.DamageModifier.ARMOR_ENCHANTMENTS, 0);
             event.setDamage(EntityDamageEvent.DamageModifier.MAGIC, 0);
-            event.setDamage(EntityDamageEvent.DamageModifier.RESISTANCE, 0);
         } catch (Throwable ignored) {
             // API may not support modifiers; ignore
         }
