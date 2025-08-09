@@ -90,7 +90,6 @@ public class StatsCommand implements CommandExecutor, Listener {
         addStatItem(inv, slots[index++], Material.IRON_SWORD, StrengthManager.DISPLAY_NAME, String.format("%d", calculator.getStrength(player)));
         addStatItem(inv, slots[index++], Material.DIAMOND_CHESTPLATE, DefenseManager.DISPLAY_NAME, String.format("%.1f", calculator.getDefense(player)));
         addStatItem(inv, slots[index++], Material.BOW, "Arrow Damage +%", String.format("%.1f%%", calculator.getArrowDamageIncrease(player)));
-        addStatItem(inv, slots[index++], Material.SHIELD, "Resistance", String.format("%.1f%%", calculator.getResistance(player)));
         addStatItem(inv, slots[index++], Material.ELYTRA, "Flight Time", String.format("%ds", calculator.getFlightTime(player)));
         addStatItem(inv, slots[index++], Material.SOUL_TORCH, "Grave Chance", String.format("%.3f%%", calculator.getGraveChance(player)));
         addStatItem(inv, slots[index++], Material.NAUTILUS_SHELL, "Sea Creature Chance", String.format("%.2f%%", calculator.getSeaCreatureChance(player)));

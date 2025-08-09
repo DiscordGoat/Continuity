@@ -88,6 +88,10 @@ public class CombatEventHandler implements Listener {
 
             if (event.getEntity() instanceof Player player && DamageDebugManager.isEnabled(player)) {
                 sendDebugInfo(player, event.getCause(), baseDamage, result.getFinalDamage());
+                DamageTag tag = mapTag(event.getCause());
+                double expected = DefenseManager.computeFinalDamage(baseDamage, player, tag);
+                player.sendMessage(ChatColor.GRAY + "Expected Damage: " + ChatColor.YELLOW + String.format("%.2f", expected));
+                player.sendMessage(ChatColor.GRAY + "Actual Damage: " + ChatColor.YELLOW + String.format("%.2f", result.getFinalDamage()));
             }
 
         } catch (DamageCalculationService.DamageCalculationException e) {
@@ -149,7 +153,6 @@ public class CombatEventHandler implements Listener {
                 return DamageTag.GENERIC;
         }
     }
-
     private void sendDebugInfo(Player player, EntityDamageEvent.DamageCause cause,
                                double baseDamage, double finalDamage) {
         DamageTag tag = mapTag(cause);

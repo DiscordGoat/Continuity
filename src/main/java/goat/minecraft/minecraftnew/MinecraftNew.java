@@ -532,8 +532,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Spectral(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.pets.perks.Revenant(this), this);
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.other.qol.FastAscend(), this);
-        // Nerf Feather Falling and Protection against fall damage
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.other.resistance.FallDamageNerfListener(), this);
 
         this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
         this.getCommand("i").setExecutor(new ItemCommand());
