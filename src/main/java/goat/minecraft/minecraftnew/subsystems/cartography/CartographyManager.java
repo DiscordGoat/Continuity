@@ -428,11 +428,8 @@ public final class CartographyManager implements Listener {
             this.renderers = new MapRenderer[h][w];
             this.scaleSize = 1 << TILE_SCALE.getValue();
             this.tileSpan = 64 * scaleSize;
-            // Determine map axes based on placement direction to avoid horizontal mirroring
-            this.ux = uFace.getModX();
-            this.uz = uFace.getModZ();
-            // Map always renders with north at the top, so Z axis points south
-            this.vx = 0; this.vz = 1;
+            this.ux = 1; this.uz = 0; // east
+            this.vx = 0; this.vz = 1; // south
 
             this.tileOriginX = new int[h][w];
             this.tileOriginZ = new int[h][w];
@@ -463,11 +460,6 @@ public final class CartographyManager implements Listener {
 
                     int di = i - halfW;      // left -> right
                     int dj = j - halfH;      // top  -> bottom
-
-                    // Flip horizontal index when maps are placed facing west/north so
-                    // that world tiles progress left-to-right correctly
-                    if (ux < 0 || uz < 0) di = -di;
-                    if (vx < 0 || vz < 0) dj = -dj;
 
                     int centerX = cx + (di * tileSpan * ux) + (dj * tileSpan * vx);
                     int centerZ = cz + (di * tileSpan * uz) + (dj * tileSpan * vz);
