@@ -76,6 +76,11 @@ public final class CartographyManager implements Listener {
         Block centerBlock = e.getClickedBlock();
         Player p = e.getPlayer();
 
+        if (face == BlockFace.DOWN) {
+            p.sendMessage(ChatColor.RED + "Cannot place a world map on a ceiling.");
+            return;
+        }
+
         BlockFace uFace = rightOf(face);
         BlockFace vFace = upOf(face);
         Rect rect = computeSurfaceRect(centerBlock, face, uFace, vFace);
