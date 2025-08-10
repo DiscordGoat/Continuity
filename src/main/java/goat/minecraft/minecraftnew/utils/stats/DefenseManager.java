@@ -40,8 +40,7 @@ public final class DefenseManager {
         public double genericProtLevelToDefense = 6.0;
 
         // Entity attack sources
-        public double armorPointToDefense = 4.0;
-        public double armorToughnessToDefense = 6.0;
+        public double armorPointToDefense = 6.0;
         public double physProtLevelToDefense = 5.0;
 
         // Environmental protections
@@ -111,10 +110,7 @@ public final class DefenseManager {
         if (tag == DamageTag.ENTITY_ATTACK) {
             double armorPoints = player.getAttribute(Attribute.GENERIC_ARMOR) != null
                     ? player.getAttribute(Attribute.GENERIC_ARMOR).getValue() : 0.0;
-            double armorToughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS) != null
-                    ? player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue() : 0.0;
             defense += armorPoints * cfg.armorPointToDefense;
-            defense += armorToughness * cfg.armorToughnessToDefense;
             defense += physicalProtectionLevels * cfg.physProtLevelToDefense;
         } else if (tag == DamageTag.FALL) {
             defense += featherLevels * cfg.featherFallingToDefense;
