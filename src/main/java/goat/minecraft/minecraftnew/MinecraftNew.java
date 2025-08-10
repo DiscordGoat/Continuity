@@ -207,7 +207,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     public void onEnable() {
         instance = this;
 
-        new CartographyManager(this);
         // Initialize stats calculator singleton
         StatsCalculator.getInstance(this);
         getServer().getPluginManager()

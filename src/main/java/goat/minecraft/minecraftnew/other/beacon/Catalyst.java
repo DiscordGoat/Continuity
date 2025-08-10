@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.other.beacon;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -93,16 +94,15 @@ public class Catalyst {
         
         if (type.getParticle() != null) {
             if (type == CatalystType.POWER) {
-                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 10, 0.5, 0.5, 0.5, 0.02,
-                    new org.bukkit.Particle.DustOptions(org.bukkit.Color.RED, 1.0f));
+                location.getWorld().spawnParticle(Particle.CHERRY_LEAVES, effectLoc, 10);
             } else if (type == CatalystType.FLIGHT) {
-                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 15, 0.4, 0.4, 0.4, 0.05);
+                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 15);
             } else if (type == CatalystType.DEPTH) {
-                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 8, 0.3, 0.3, 0.3, 0.02);
+                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 8);
             } else if (type == CatalystType.INSANITY) {
-                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 12, 0.5, 0.5, 0.5, 0.03);
+                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 12);
             } else if (type == CatalystType.DEATH) {
-                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 10, 0.3, 0.3, 0.3, 0.02);
+                location.getWorld().spawnParticle(type.getParticle(), effectLoc, 10);
             }
         }
         

@@ -5,13 +5,13 @@ import org.bukkit.Particle;
 import org.bukkit.Sound;
 
 public enum CatalystType {
-    POWER("Catalyst of Power", Particle.CRIMSON_SPORE, Sound.ENTITY_WARDEN_HEARTBEAT, ChatColor.RED),
+    POWER("Catalyst of Power", Particle.CRIMSON_SPORE, null, ChatColor.RED),
     FLIGHT("Catalyst of Flight", Particle.CLOUD, null, ChatColor.AQUA),
-    DEPTH("Catalyst of Depth", Particle.NAUTILUS, Sound.BLOCK_CONDUIT_AMBIENT, ChatColor.DARK_AQUA),
-    INSANITY("Catalyst of Insanity", Particle.CRIMSON_SPORE, Sound.BLOCK_WOOD_BREAK, ChatColor.DARK_PURPLE),
-    REJUVENATION("Catalyst of Rejuvenation", Particle.HEART, Sound.BLOCK_LAVA_POP, ChatColor.GOLD),
-    PROSPERITY("Catalyst of Prosperity", Particle.CRIMSON_SPORE, Sound.BLOCK_SNOW_BREAK, ChatColor.GREEN),
-    DEATH("Catalyst of Death", Particle.SOUL, Sound.BLOCK_ROOTED_DIRT_BREAK, ChatColor.DARK_GRAY);
+    DEPTH("Catalyst of Depth", Particle.NAUTILUS, null, ChatColor.DARK_AQUA),
+    INSANITY("Catalyst of Insanity", Particle.CRIMSON_SPORE, null, ChatColor.DARK_PURPLE),
+    REJUVENATION("Catalyst of Rejuvenation", Particle.HEART, null, ChatColor.GOLD),
+    PROSPERITY("Catalyst of Prosperity", Particle.CRIMSON_SPORE, null, ChatColor.GREEN),
+    DEATH("Catalyst of Death", Particle.SOUL, null, ChatColor.DARK_GRAY);
 
     private final String displayName;
     private final Particle particle;
