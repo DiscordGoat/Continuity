@@ -477,9 +477,6 @@ public final class CartographyManager implements Listener {
 
             ensureFramesAndMaps();
         }
-
-        World world() { return this.world; }
-
         private Block topLeftSupport() {
             int uSteps = -(w - 1) / 2;      // left
             int vSteps = +(h - 1) / 2;      // UP  (note the +)
@@ -868,23 +865,6 @@ public final class CartographyManager implements Listener {
                 return null;
             }
         }
-    }
-
-    private static float yawFor(BlockFace f) {
-        return switch (f) {
-            case NORTH -> 180f;
-            case SOUTH -> 0f;
-            case EAST  -> -90f;
-            case WEST  -> 90f;
-            default -> 0f;
-        };
-    }
-    private static float pitchFor(BlockFace f) {
-        return switch (f) {
-            case UP -> -90f;
-            case DOWN -> 90f;
-            default -> 0f;
-        };
     }
 
     private record Rect(Block center, BlockFace face, BlockFace uFace, BlockFace vFace, int u0, int v0, int w, int h) {}
