@@ -900,9 +900,13 @@ public class AnvilRepair implements Listener {
             xpManager.addXP(player, "Smithing", 100.0);
             anvilPitch = getAnvilPitch(90); // legendary
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Mithril Chunk") && isDurable(repairee)){
-            incrementEnchantment(player, repairee, billItem,Enchantment.UNBREAKING);
-
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            int currentLevel = CustomEnchantmentManager.getEnchantmentLevel(repairee, "Unbreaking");
+            if(currentLevel >= 3){
+                player.sendMessage(ChatColor.RED + "Mithril Chunks can only upgrade Unbreaking up to level 3!");
+            }else {
+                incrementEnchantment(player, repairee, billItem,Enchantment.UNBREAKING);
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            }
             return;
         }
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.BLUE + "Perfect Diamond")&& TOOLS.contains(repairee.getType())){
@@ -922,9 +926,13 @@ public class AnvilRepair implements Listener {
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Petrified Log") && isDurable(repairee)){
-            incrementEnchantment(player, repairee, billItem,Enchantment.UNBREAKING);
-
-            player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            int currentLevel = CustomEnchantmentManager.getEnchantmentLevel(repairee, "Unbreaking");
+            if(currentLevel >= 3){
+                player.sendMessage(ChatColor.RED + "Petrified Logs can only upgrade Unbreaking up to level 3!");
+            }else {
+                incrementEnchantment(player, repairee, billItem,Enchantment.UNBREAKING);
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            }
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Pinecone") && ARMOR.contains(repairee.getType())){
             incrementEnchantment(player, repairee, billItem,Enchantment.BLAST_PROTECTION);
