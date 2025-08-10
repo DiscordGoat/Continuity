@@ -159,8 +159,8 @@ public final class CartographyManager implements Listener {
             Point ij = wall.lookupTileIndex(frame.getUniqueId());
             if (ij == null) return;
 
-            int wx = wall.pixelToWorldX(ij.i, localPx);
-            int wz = wall.pixelToWorldZ(ij.j, localPz);
+            int wx = wall.pixelToWorldX(ij.i, ij.j, localPx);
+            int wz = wall.pixelToWorldZ(ij.i, ij.j, localPz);
 
             Location dest = findSafeTeleport(new Location(frame.getWorld(), wx + 0.5, p.getLocation().getY(), wz + 0.5));
             p.teleport(dest);
@@ -392,8 +392,8 @@ public final class CartographyManager implements Listener {
         final BlockFace uFace;
         final BlockFace vFace;
         final int w, h;
-        final int ux, uz;  // right on wall projected to XZ
-        final int vx, vz;  // down on map (south)
+        final int ux, uz;  // map X axis (east)
+        final int vx, vz;  // map Z axis (south)
         final int[][] tileOriginX, tileOriginZ;  // world X/Z of pixel (0,0) for each tile
 
         final MapView[][] views;
@@ -403,24 +403,12 @@ public final class CartographyManager implements Listener {
         final MapRenderer[][] renderers;
         final int scaleSize;
         final int tileSpan;
-        final int originWx;
-        final int originWz;
 
         final Map<UUID, Point> index = new HashMap<>();
 
         final ArrayDeque<int[]> bfs = new ArrayDeque<>();
         final BitSet visited = new BitSet();
         volatile boolean expanderRunning = false;
-        private static int[] rightXZ(BlockFace f) {
-            return switch (f) {
-                case NORTH -> new int[]{+1, 0}; // east
-                case SOUTH -> new int[]{-1, 0}; // west
-                case EAST  -> new int[]{+1, 0}; // east   // CHANGED
-                case WEST  -> new int[]{-1, 0}; // west   // CHANGED
-                case UP, DOWN -> new int[]{+1, 0}; // use +X for right on floor/ceiling
-                default -> new int[]{+1, 0};
-            };
-        }
 
 
         WorldMapWall(Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace, BlockFace vFace, int w, int h) {
@@ -440,22 +428,11 @@ public final class CartographyManager implements Listener {
             this.renderers = new MapRenderer[h][w];
             this.scaleSize = 1 << TILE_SCALE.getValue();
             this.tileSpan = 64 * scaleSize;
-            int[] u2 = rightXZ(clickedFace); this.ux = u2[0]; this.uz = u2[1];
-            this.vx = 0; this.vz = 1; // south = “down” on the map
+            this.ux = 1; this.uz = 0; // east
+            this.vx = 0; this.vz = 1; // south
 
             this.tileOriginX = new int[h][w];
             this.tileOriginZ = new int[h][w];
-
-            int cx = anchor.getX();
-            int cz = anchor.getZ();
-            int totalWBlocks = w * tileSpan;
-            int totalHBlocks = h * tileSpan;
-            int ox = cx - (totalWBlocks / 2);
-            int oz = cz - (totalHBlocks / 2);
-            if (w % 2 == 0) ox += tileSpan / 2;
-            if (h % 2 == 0) oz += tileSpan / 2;
-            this.originWx = ox;
-            this.originWz = oz;
 
             ensureFramesAndMaps();
         }
@@ -553,15 +530,6 @@ public final class CartographyManager implements Listener {
         }
 
         Point lookupTileIndex(UUID frameId) { return index.get(frameId); }
-
-        int pixelToWorldX(int tileI, int localPx) {
-            int tileLeft = originWx + tileI * tileSpan;
-            return tileLeft + localPx * scaleSize;
-        }
-        int pixelToWorldZ(int tileJ, int localPz) {
-            int tileTop = originWz + tileJ * tileSpan;
-            return tileTop + localPz * scaleSize;
-        }
 
         void startExpander(boolean clear) {
             if (clear) {
