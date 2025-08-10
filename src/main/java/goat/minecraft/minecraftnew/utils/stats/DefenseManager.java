@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.utils.stats;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
+import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager.Pet;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager.PetPerk;
@@ -39,9 +40,9 @@ public final class DefenseManager {
         public double genericProtLevelToDefense = 6.0;
 
         // Entity attack sources
-        public double armorPointToDefense = 2.0;
-        public double armorToughnessToDefense = 10.0;
-        public double physProtLevelToDefense = 7.0;
+        public double armorPointToDefense = 4.0;
+        public double armorToughnessToDefense = 6.0;
+        public double physProtLevelToDefense = 5.0;
 
         // Environmental protections
         public double featherFallingToDefense = 30.0;
@@ -80,6 +81,7 @@ public final class DefenseManager {
         Config cfg = CONFIG;
         ItemStack[] armor = player.getInventory().getArmorContents();
         int protectionLevels = 0;
+        int physicalProtectionLevels = 0;
         int blastProtLevels = 0;
         int projProtLevels = 0;
         int featherLevels = 0;
@@ -90,6 +92,7 @@ public final class DefenseManager {
         ReforgeManager rm = new ReforgeManager();
         for (ItemStack piece : armor) {
             if (piece == null) continue;
+            physicalProtectionLevels += CustomEnchantmentManager.getEnchantmentLevel(piece, "Physical Protection");
             protectionLevels += piece.getEnchantmentLevel(Enchantment.PROTECTION);
             blastProtLevels += piece.getEnchantmentLevel(Enchantment.BLAST_PROTECTION);
             projProtLevels += piece.getEnchantmentLevel(Enchantment.PROJECTILE_PROTECTION);
@@ -102,7 +105,7 @@ public final class DefenseManager {
             talismanDefense += TalismanManager.getDefenseBonus(piece);
         }
 
-        double defense = protectionLevels * cfg.genericProtLevelToDefense +
+        double defense = (protectionLevels * cfg.genericProtLevelToDefense) +
                 reforgeDefense + talismanDefense;
 
         if (tag == DamageTag.ENTITY_ATTACK) {
@@ -112,7 +115,7 @@ public final class DefenseManager {
                     ? player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue() : 0.0;
             defense += armorPoints * cfg.armorPointToDefense;
             defense += armorToughness * cfg.armorToughnessToDefense;
-            defense += protectionLevels * cfg.physProtLevelToDefense;
+            defense += physicalProtectionLevels * cfg.physProtLevelToDefense;
         } else if (tag == DamageTag.FALL) {
             defense += featherLevels * cfg.featherFallingToDefense;
         } else if (tag == DamageTag.BLAST) {
@@ -131,7 +134,7 @@ public final class DefenseManager {
         if (pm != null) {
             Pet active = pm.getActivePet(player);
             if (active != null && active.hasPerk(PetPerk.WALKING_FORTRESS)) {
-                percentDefenseBuff += 0.25; // Tank-style pet buff
+                defense += 25; // Tank-style pet buff
             }
         }
 

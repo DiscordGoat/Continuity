@@ -19,7 +19,7 @@ public class TalismanManager {
     /**
      * Default Defense granted by an Armor talisman.
      */
-    public static final int DEFENSE_DEFENSE_BONUS = 10;
+    public static final int DEFENSE_DEFENSE_BONUS = 4;
 
     /**
      * Applies or updates the reforge lore on an ItemStack.
