@@ -4626,21 +4626,6 @@ public class ItemRegistry {
                 true
         );
     }
-
-    /** Artifact that expands a world map from the clicked pixel. */
-    public static ItemStack getTravelersBrush() {
-        return createCustomItem(
-                Material.BRUSH,
-                ChatColor.YELLOW + "Travelers Brush",
-                Arrays.asList(
-                        ChatColor.GRAY + "Right-click a world map to explore it.",
-                        ChatColor.DARK_PURPLE + "Artifact"
-                ),
-                1,
-                false,
-                true
-        );
-    }
     public static ItemStack getComposterEnchant() {
         return createCustomItem(Material.COMPOSTER, ChatColor.YELLOW +
                 "Composter", Arrays.asList(
