@@ -350,10 +350,10 @@ public final class CartographyManager implements Listener {
 
     private static BlockFace rightOf(BlockFace f) {
         return switch (f) {
-            case NORTH -> BlockFace.EAST;
-            case SOUTH -> BlockFace.WEST;
-            case EAST  -> BlockFace.SOUTH;
-            case WEST  -> BlockFace.NORTH;
+            case NORTH -> BlockFace.WEST;
+            case SOUTH -> BlockFace.EAST;
+            case EAST  -> BlockFace.NORTH;
+            case WEST  -> BlockFace.SOUTH;
             case UP, DOWN -> BlockFace.EAST;
             default -> BlockFace.EAST;
         };
