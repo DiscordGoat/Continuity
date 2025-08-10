@@ -45,9 +45,12 @@ public final class CartographyManager implements Listener {
     private static final NamespacedKey WALL_KEY = NamespacedKey.minecraft("cont_worldmap_wall");
     private static final String SAVE_FILE = "cartography2_walls.yml";
 
-    private static final int EXPAND_WARMUP_TICKS = 10;
-    private static final int EXPAND_WARMUP_BUDGET = 3000;
-    private static final int EXPAND_STEADY_BUDGET = 3000;
+    // Map expansion runs at a controlled pace so that large walls do not
+    // overwhelm the server.  The goal is roughly 20 pixels per tick, which
+    // gives players a responsive update without being too heavy.
+    private static final int EXPAND_WARMUP_TICKS = 0;
+    private static final int EXPAND_WARMUP_BUDGET = 20;
+    private static final int EXPAND_STEADY_BUDGET = 20;
 
     private final Plugin plugin;
     private final File dataFile;
@@ -61,6 +64,17 @@ public final class CartographyManager implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         loadAll();
         scheduleMidnightRefresh();
+
+        // Admin command to manually force all maps to refresh their pixels
+        plugin.getCommand("refreshmaps").setExecutor((sender, command, label, args) -> {
+            if (!sender.hasPermission("continuity.admin")) {
+                sender.sendMessage(ChatColor.RED + "You do not have permission to do that.");
+                return true;
+            }
+            refreshAll();
+            sender.sendMessage(ChatColor.GREEN + "Refreshing all world maps...");
+            return true;
+        });
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -94,7 +108,7 @@ public final class CartographyManager implements Listener {
             inHand.setAmount(inHand.getAmount() - 1);
         }
 
-        WorldMapWall wall = new WorldMapWall(plugin, p.getWorld(), centerBlock, face, uFace, vFace, rect.w, rect.h);
+        WorldMapWall wall = new WorldMapWall(this, plugin, p.getWorld(), centerBlock, face, uFace, vFace, rect.w, rect.h);
         walls.put(wall.id, wall);
         indexFrames(wall);
         saveAll();
@@ -201,6 +215,11 @@ public final class CartographyManager implements Listener {
         }, delay, day);
     }
 
+    /** Forces all known walls to rebuild their pixel caches. */
+    private void refreshAll() {
+        for (WorldMapWall w : walls.values()) w.startExpander(true);
+    }
+
     private long ticksUntilNextMidnight() {
         ZoneId zone = ZoneId.systemDefault();
         ZonedDateTime now = ZonedDateTime.now(zone);
@@ -227,12 +246,11 @@ public final class CartographyManager implements Listener {
         FileConfiguration cfg = YamlConfiguration.loadConfiguration(dataFile);
         List<Map<String, Object>> list = (List<Map<String, Object>>) cfg.getList("walls", Collections.emptyList());
         for (Map<String, Object> map : list) {
-            WorldMapWall w = WorldMapWall.deserialize(plugin, plugin.getServer(), map);
+            WorldMapWall w = WorldMapWall.deserialize(this, plugin, plugin.getServer(), map);
             if (w == null) continue;
             walls.put(w.id, w);
-            w.ensureFramesAndMaps();
             indexFrames(w);
-            w.startExpander(false);
+            if (w.needsRefresh()) w.startExpander(false);
         }
     }
 
@@ -391,6 +409,7 @@ public final class CartographyManager implements Listener {
 
     private static final class WorldMapWall {
         final UUID id = UUID.randomUUID();
+        final CartographyManager manager;
         final Plugin plugin;
         final World world;
         final Block anchor;
@@ -417,7 +436,13 @@ public final class CartographyManager implements Listener {
         volatile boolean expanderRunning = false;
 
 
-        WorldMapWall(Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace, BlockFace vFace, int w, int h) {
+        WorldMapWall(CartographyManager manager, Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace, BlockFace vFace, int w, int h) {
+            this(manager, plugin, world, anchor, face, uFace, vFace, w, h, null, null);
+        }
+
+        WorldMapWall(CartographyManager manager, Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace,
+                     BlockFace vFace, int w, int h, short[][] mapIds, byte[][] caches) {
+            this.manager = manager;
             this.plugin = plugin;
             this.world = world;
             this.anchor = anchor;
@@ -429,8 +454,8 @@ public final class CartographyManager implements Listener {
 
             this.views = new MapView[h][w];
             this.frames = new UUID[h][w];
-            this.mapIds = new short[h][w];
-            this.caches = new byte[h * w][];
+            this.mapIds = (mapIds != null) ? mapIds : new short[h][w];
+            this.caches = (caches != null) ? caches : new byte[h * w][];
             this.renderers = new MapRenderer[h][w];
             this.scaleSize = 1 << TILE_SCALE.getValue();
             this.tileSpan = 128 * scaleSize;
@@ -439,6 +464,15 @@ public final class CartographyManager implements Listener {
 
             this.tileOriginX = new int[h][w];
             this.tileOriginZ = new int[h][w];
+
+            // Ensure cache arrays exist and are initialised
+            int totalTiles = h * w;
+            for (int idx = 0; idx < totalTiles; idx++) {
+                if (this.caches[idx] == null) {
+                    this.caches[idx] = new byte[128 * 128];
+                    Arrays.fill(this.caches[idx], Byte.MIN_VALUE);
+                }
+            }
 
             ensureFramesAndMaps();
         }
@@ -458,7 +492,18 @@ public final class CartographyManager implements Listener {
                     ItemFrame frame = findOrSpawnFrame(frameLoc);
                     frames[j][i] = frame.getUniqueId();
 
-                    MapView view = Bukkit.createMap(world);
+                    MapView view;
+                    short existing = mapIds[j][i];
+                    if (existing != 0) {
+                        view = Bukkit.getMap(existing);
+                        if (view == null) {
+                            view = Bukkit.createMap(world);
+                            mapIds[j][i] = (short) view.getId();
+                        }
+                    } else {
+                        view = Bukkit.createMap(world);
+                        mapIds[j][i] = (short) view.getId();
+                    }
                     view.setScale(TILE_SCALE);
                     view.setTrackingPosition(false);
                     int cx = anchor.getX(), cz = anchor.getZ();
@@ -475,18 +520,13 @@ public final class CartographyManager implements Listener {
                     tileOriginX[j][i] = centerX - (tileSpan / 2);
                     tileOriginZ[j][i] = centerZ - (tileSpan / 2);
 
-
-
                     for (MapRenderer r : view.getRenderers()) view.removeRenderer(r);
                     int tileIndex = j * w + i;
-                    caches[tileIndex] = new byte[128 * 128];
-                    Arrays.fill(caches[tileIndex], Byte.MIN_VALUE);
                     MapRenderer renderer = new TileRenderer(this, i, j, tileIndex);
                     view.addRenderer(renderer);
 
                     renderers[j][i] = renderer;
                     views[j][i] = view;
-                    mapIds[j][i] = (short) view.getId();
 
                     ItemStack mapItem = new ItemStack(Material.FILLED_MAP);
                     MapMeta meta = (MapMeta) mapItem.getItemMeta();
@@ -553,7 +593,7 @@ public final class CartographyManager implements Listener {
             new BukkitRunnable() {
                 int warmupTicks = EXPAND_WARMUP_TICKS;
                 @Override public void run() {
-                    if (bfs.isEmpty()) { expanderRunning = false; cancel(); return; }
+                    if (bfs.isEmpty()) { expanderRunning = false; cancel(); manager.saveAll(); return; }
 
                     int budget = (warmupTicks-- > 0) ? EXPAND_WARMUP_BUDGET : EXPAND_STEADY_BUDGET;
                     for (int i = 0; i < budget; i++) {
@@ -596,6 +636,13 @@ public final class CartographyManager implements Listener {
                 caches[idx][off] = color;
                 return true;
             }
+            return false;
+        }
+
+        boolean needsRefresh() {
+            for (byte[] c : caches)
+                for (byte b : c)
+                    if (b == Byte.MIN_VALUE) return true;
             return false;
         }
 
@@ -691,6 +738,43 @@ public final class CartographyManager implements Listener {
                 return new int[]{110,170,60};
             }
 
+            if (top == Material.MUD || top == Material.MUDDY_MANGROVE_ROOTS) {
+                return new int[]{80,68,60};
+            }
+
+            if (top == Material.CLAY) {
+                return new int[]{160,170,180};
+            }
+
+            if (top == Material.MOSS_BLOCK || top == Material.MOSS_CARPET) {
+                return new int[]{90,130,60};
+            }
+
+            if (top == Material.MYCELIUM) {
+                return new int[]{126,103,133};
+            }
+
+            if (top == Material.NETHERRACK || top == Material.NETHER_WART_BLOCK) {
+                return new int[]{150,60,60};
+            }
+
+            if (top == Material.CRIMSON_NYLIUM) {
+                return new int[]{150,40,40};
+            }
+
+            if (top == Material.WARPED_NYLIUM) {
+                return new int[]{40,120,110};
+            }
+
+            if (top == Material.SOUL_SAND || top == Material.SOUL_SOIL) {
+                return new int[]{120,100,90};
+            }
+
+            if (top == Material.BLACKSTONE || top == Material.BASALT || top == Material.POLISHED_BASALT) {
+                int shade = clamp(90 - slope*4, 40, 90);
+                return new int[]{shade, shade, shade};
+            }
+
             if (top == Material.DIRT || top == Material.COARSE_DIRT || top == Material.ROOTED_DIRT || top == Material.DIRT_PATH) {
                 return new int[]{138,110,80};
             }
@@ -739,11 +823,15 @@ public final class CartographyManager implements Listener {
                 ids.add(row);
             }
             m.put("mapIds", ids);
+
+            List<String> data = new ArrayList<>();
+            for (byte[] c : caches) data.add(Base64.getEncoder().encodeToString(c));
+            m.put("caches", data);
             return m;
         }
 
         @SuppressWarnings("unchecked")
-        static WorldMapWall deserialize(Plugin plugin, Server server, Map<String, Object> m) {
+        static WorldMapWall deserialize(CartographyManager manager, Plugin plugin, Server server, Map<String, Object> m) {
             try {
                 World world = server.getWorld(UUID.fromString((String) m.get("world")));
                 if (world == null) return null;
@@ -754,7 +842,26 @@ public final class CartographyManager implements Listener {
                 BlockFace vFace = m.containsKey("vFace") ? BlockFace.valueOf((String) m.get("vFace")) : upOf(face);
                 int w = (int) m.get("w");
                 int h = (int) m.get("h");
-                return new WorldMapWall(plugin, world, anchor, face, uFace, vFace, w, h);
+
+                short[][] mapIds = new short[h][w];
+                List<List<Integer>> ids = (List<List<Integer>>) m.getOrDefault("mapIds", Collections.emptyList());
+                for (int j = 0; j < h && j < ids.size(); j++) {
+                    List<Integer> row = ids.get(j);
+                    for (int i = 0; i < w && i < row.size(); i++) {
+                        mapIds[j][i] = row.get(i).shortValue();
+                    }
+                }
+
+                byte[][] caches = null;
+                List<String> data = (List<String>) m.get("caches");
+                if (data != null && data.size() == w * h) {
+                    caches = new byte[w * h][];
+                    for (int idx = 0; idx < data.size(); idx++) {
+                        caches[idx] = Base64.getDecoder().decode(data.get(idx));
+                    }
+                }
+
+                return new WorldMapWall(manager, plugin, world, anchor, face, uFace, vFace, w, h, mapIds, caches);
             } catch (Exception ex) {
                 server.getLogger().warning("Failed to load world map wall: " + ex.getMessage());
                 return null;
