@@ -96,6 +96,7 @@ public class ItemLoreFormatter {
             } else if (stripped.startsWith("Strength:")) {
                 reforge.add(line);
             } else if (stripped.startsWith("Damage Reduction") ||
+                       stripped.startsWith("Defense") ||
                        stripped.startsWith("Chance to repair durability") || stripped.startsWith("Max Durability")) {
                 reforge.add(line);
             } else if (stripped.startsWith("Durability:") || stripped.startsWith("Golden Durability:")) {

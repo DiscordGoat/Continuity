@@ -4,14 +4,12 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager.Pet;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager.PetPerk;
+import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Player;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.EnumMap;
-import java.util.Map;
 
 /**
  * Utility class for calculating a player's Defense stat and applying
@@ -36,26 +34,36 @@ public final class DefenseManager {
      * Configuration values for Defense calculations.
      */
     public static class Config {
-        public double C = 20.0;
-        public double minMult = 0.02;
-
-        public double armorToDefense = 10.0;
-        public double toughnessToDefense = 10.0;
+        // Generic sources
         public double genericProtLevelToDefense = 6.0;
 
-        public Map<String, Double> envProtPerLevel = Map.of(
-            "FIRE", 2.0,
-            "BLAST", 2.0,
-            "PROJECTILE", 2.0,
-            "FALL", 2.0,
-            "MAGIC", 2.0
-        );
+        // Entity attack sources
+        public double armorPointToDefense = 2.0;
+        public double armorToughnessToDefense = 10.0;
+        public double physProtLevelToDefense = 7.0;
+
+        // Environmental protections
+        public double featherFallingToDefense = 30.0;
+        public double blastProtToDefense = 8.0;
+        public double fireProtToDefense = 8.0;      // fire tick
+        public double hotFloorProtToDefense = 20.0; // magma blocks
+        public double projectileProtToDefense = 8.0;
     }
 
     /**
      * Damage categories used for typed protections.
      */
-    public enum DamageTag { GENERIC, FIRE, BLAST, PROJECTILE, FALL, MAGIC }
+    public enum DamageTag {
+        GENERIC,
+        ENTITY_ATTACK,
+        PROJECTILE,
+        FALL,
+        BLAST,
+        FIRE_TICK,
+        HOT_FLOOR,
+        LAVA,
+        FIRE
+    }
 
     /** Default configuration instance. */
     public static Config CONFIG = new Config();
@@ -69,31 +77,52 @@ public final class DefenseManager {
      */
     public static double getDefense(Player player, DamageTag tag) {
         Config cfg = CONFIG;
-        double armorPoints = 0.0;
-        double armorToughness = 0.0;
-        if (player.getAttribute(Attribute.GENERIC_ARMOR) != null) {
-            armorPoints = player.getAttribute(Attribute.GENERIC_ARMOR).getValue();
-        }
-        if (player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS) != null) {
-            armorToughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue();
-        }
+        ItemStack[] armor = player.getInventory().getArmorContents();
+        int protectionLevels = 0;
+        int blastProtLevels = 0;
+        int projProtLevels = 0;
+        int featherLevels = 0;
+        int fireProtLevels = 0;
+        double reforgeDefense = 0.0;
 
-        int genericProtLevels = 0;
-        Map<DamageTag, Integer> envProtLevels = new EnumMap<>(DamageTag.class);
-        for (ItemStack piece : player.getInventory().getArmorContents()) {
+        ReforgeManager rm = new ReforgeManager();
+        for (ItemStack piece : armor) {
             if (piece == null) continue;
-            genericProtLevels += piece.getEnchantmentLevel(Enchantment.PROTECTION);
-            envProtLevels.merge(DamageTag.FIRE,
-                piece.getEnchantmentLevel(Enchantment.FIRE_PROTECTION), Integer::sum);
-            envProtLevels.merge(DamageTag.BLAST,
-                piece.getEnchantmentLevel(Enchantment.BLAST_PROTECTION), Integer::sum);
-            envProtLevels.merge(DamageTag.PROJECTILE,
-                piece.getEnchantmentLevel(Enchantment.PROJECTILE_PROTECTION), Integer::sum);
-            envProtLevels.merge(DamageTag.FALL,
-                piece.getEnchantmentLevel(Enchantment.FEATHER_FALLING), Integer::sum);
+            protectionLevels += piece.getEnchantmentLevel(Enchantment.PROTECTION);
+            blastProtLevels += piece.getEnchantmentLevel(Enchantment.BLAST_PROTECTION);
+            projProtLevels += piece.getEnchantmentLevel(Enchantment.PROJECTILE_PROTECTION);
+            featherLevels += piece.getEnchantmentLevel(Enchantment.FEATHER_FALLING);
+            fireProtLevels += piece.getEnchantmentLevel(Enchantment.FIRE_PROTECTION);
+
+            int tier = rm.getReforgeTier(piece);
+            ReforgeManager.ReforgeTier rt = rm.getReforgeTierByTier(tier);
+            reforgeDefense += rt.getArmorDefenseBonus();
         }
 
-        double flatAdds = 0.0; // Placeholder for reforges/custom enchants
+        double defense = protectionLevels * cfg.genericProtLevelToDefense +
+                reforgeDefense;
+
+        if (tag == DamageTag.ENTITY_ATTACK) {
+            double armorPoints = player.getAttribute(Attribute.GENERIC_ARMOR) != null
+                    ? player.getAttribute(Attribute.GENERIC_ARMOR).getValue() : 0.0;
+            double armorToughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS) != null
+                    ? player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue() : 0.0;
+            defense += armorPoints * cfg.armorPointToDefense;
+            defense += armorToughness * cfg.armorToughnessToDefense;
+            defense += protectionLevels * cfg.physProtLevelToDefense;
+        } else if (tag == DamageTag.FALL) {
+            defense += featherLevels * cfg.featherFallingToDefense;
+        } else if (tag == DamageTag.BLAST) {
+            defense += blastProtLevels * cfg.blastProtToDefense;
+        } else if (tag == DamageTag.FIRE_TICK) {
+            defense += fireProtLevels * cfg.fireProtToDefense;
+        } else if (tag == DamageTag.HOT_FLOOR) {
+            defense += fireProtLevels * cfg.hotFloorProtToDefense;
+        } else if (tag == DamageTag.PROJECTILE) {
+            defense += projProtLevels * cfg.projectileProtToDefense;
+        }
+        // LAVA and FIRE provide no extra defense beyond generic
+
         double percentDefenseBuff = 0.0;
         PetManager pm = PetManager.getInstance(MinecraftNew.getInstance());
         if (pm != null) {
@@ -102,16 +131,6 @@ public final class DefenseManager {
                 percentDefenseBuff += 0.25; // Tank-style pet buff
             }
         }
-
-        double defense =
-            armorPoints * cfg.armorToDefense +
-            armorToughness * cfg.toughnessToDefense +
-            genericProtLevels * cfg.genericProtLevelToDefense +
-            flatAdds;
-
-        int lvl = envProtLevels.getOrDefault(tag, 0);
-        double perLevel = cfg.envProtPerLevel.getOrDefault(tag.name(), 0.0);
-        defense += lvl * perLevel;
 
         defense *= (1.0 + percentDefenseBuff);
         return defense;
@@ -127,16 +146,8 @@ public final class DefenseManager {
      */
     public static double computeFinalDamage(double baseDamage, Player player, DamageTag tag) {
         double defense = getDefense(player, tag);
-        double mult = 1.0 / (1.0 + defense / CONFIG.C);
-        mult = Math.max(mult, CONFIG.minMult);
+        double mult = Math.max(0.0, 1.0 - defense * 0.002);
         return baseDamage * mult;
-    }
-
-    /**
-     * Utility: how much Defense for a 1% absolute drop at current fraction m (0<m<1).
-     */
-    public static double defenseForOnePercentDrop(double m, double C) {
-        return C * (1.0 / (m - 0.01) - 1.0 / m);
     }
 
     /**
@@ -144,19 +155,20 @@ public final class DefenseManager {
      */
     public static void sendDefenseBreakdown(Player player) {
         player.sendMessage(COLOR + "Defense Breakdown:");
-        double armorPoints = player.getAttribute(Attribute.GENERIC_ARMOR) != null
-                ? player.getAttribute(Attribute.GENERIC_ARMOR).getValue() : 0.0;
-        double armorToughness = player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS) != null
-                ? player.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).getValue() : 0.0;
-        int genericProtLevels = 0;
-        for (ItemStack piece : player.getInventory().getArmorContents()) {
+        ItemStack[] armor = player.getInventory().getArmorContents();
+        int protectionLevels = 0;
+        double reforgeDefense = 0.0;
+        ReforgeManager rm = new ReforgeManager();
+        for (ItemStack piece : armor) {
             if (piece == null) continue;
-            genericProtLevels += piece.getEnchantmentLevel(Enchantment.PROTECTION);
+            protectionLevels += piece.getEnchantmentLevel(Enchantment.PROTECTION);
+            int tier = rm.getReforgeTier(piece);
+            ReforgeManager.ReforgeTier rt = rm.getReforgeTierByTier(tier);
+            reforgeDefense += rt.getArmorDefenseBonus();
         }
         double defense = getDefense(player, DamageTag.GENERIC);
-        player.sendMessage(COLOR + "Armor: " + ChatColor.YELLOW + armorPoints * CONFIG.armorToDefense);
-        player.sendMessage(COLOR + "Toughness: " + ChatColor.YELLOW + armorToughness * CONFIG.toughnessToDefense);
-        player.sendMessage(COLOR + "Protection: " + ChatColor.YELLOW + genericProtLevels * CONFIG.genericProtLevelToDefense);
+        player.sendMessage(COLOR + "Reforges: " + ChatColor.YELLOW + reforgeDefense);
+        player.sendMessage(COLOR + "Protection: " + ChatColor.YELLOW + protectionLevels * CONFIG.genericProtLevelToDefense);
         player.sendMessage(COLOR + "Total: " + ChatColor.YELLOW + defense);
     }
 }

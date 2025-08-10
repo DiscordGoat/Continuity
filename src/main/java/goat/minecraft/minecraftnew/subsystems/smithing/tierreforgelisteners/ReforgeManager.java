@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
+import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -27,11 +28,11 @@ public class ReforgeManager {
      */
     public enum ReforgeTier {
         TIER_0(0, ChatColor.RESET, "Sword", "Armor", "Tool", "Bow", 0, 0, 0, 0),
-        TIER_1(1, ChatColor.WHITE, "Sturdy Blade", "Sturdy Armor", "Sturdy Tool", "Oak Bow", 4, 1, 100, 10),
-        TIER_2(2, ChatColor.GREEN, "Sharpened Blade", "Reinforced Armor", "Enhanced Tool", "Birch Bow", 8, 2, 150, 20),
-        TIER_3(3, ChatColor.BLUE, "Reinforced Blade", "Fortified Armor", "Refined Tool", "Spruce Bow", 12, 3, 200, 30),
-        TIER_4(4, ChatColor.DARK_PURPLE, "Lethal Blade", "Battle Armor", "Superior Tool", "Acacia Bow", 16, 4, 250, 40),
-        TIER_5(5, ChatColor.GOLD, "Fatal Blade", "Legendary Armor", "Masterwork Tool", "Dark Oak Bow", 20, 5, 400, 50);
+        TIER_1(1, ChatColor.WHITE, "Sturdy Blade", "Sturdy Armor", "Sturdy Tool", "Oak Bow", 4, 6, 100, 10),
+        TIER_2(2, ChatColor.GREEN, "Sharpened Blade", "Reinforced Armor", "Enhanced Tool", "Birch Bow", 8, 12, 150, 20),
+        TIER_3(3, ChatColor.BLUE, "Reinforced Blade", "Fortified Armor", "Refined Tool", "Spruce Bow", 12, 18, 200, 30),
+        TIER_4(4, ChatColor.DARK_PURPLE, "Lethal Blade", "Battle Armor", "Superior Tool", "Acacia Bow", 16, 24, 250, 40),
+        TIER_5(5, ChatColor.GOLD, "Fatal Blade", "Legendary Armor", "Masterwork Tool", "Dark Oak Bow", 20, 30, 400, 50);
 
         private final int tier;
         private final ChatColor color;
@@ -40,7 +41,7 @@ public class ReforgeManager {
         private final String toolName;
         private final String bowName;
         private final int weaponDamageIncrease; // In percent
-        private final int armorDamageReduction; // In percent
+        private final int armorDefenseBonus; // Flat Defense bonus
         private final int toolDurabilityBonus; // Additional max durability
         private final int bowDamageIncrease; // In percent
 
@@ -48,7 +49,7 @@ public class ReforgeManager {
          * Constructs a ReforgeTier enum constant.
          */
         ReforgeTier(int tier, ChatColor color, String swordName, String armorName, String toolName, String bowName,
-                    int weaponDamageIncrease, int armorDamageReduction, int toolDurabilityBonus, int bowDamageIncrease) {
+                    int weaponDamageIncrease, int armorDefenseBonus, int toolDurabilityBonus, int bowDamageIncrease) {
             this.tier = tier;
             this.color = color;
             this.swordName = swordName;
@@ -56,7 +57,7 @@ public class ReforgeManager {
             this.toolName = toolName;
             this.bowName = bowName;
             this.weaponDamageIncrease = weaponDamageIncrease;
-            this.armorDamageReduction = armorDamageReduction;
+            this.armorDefenseBonus = armorDefenseBonus;
             this.toolDurabilityBonus = toolDurabilityBonus;
             this.bowDamageIncrease = bowDamageIncrease;
         }
@@ -89,8 +90,8 @@ public class ReforgeManager {
             return weaponDamageIncrease;
         }
 
-        public int getArmorDamageReduction() {
-            return armorDamageReduction;
+        public int getArmorDefenseBonus() {
+            return armorDefenseBonus;
         }
 
         public int getToolDurabilityBonus() {
@@ -153,6 +154,7 @@ public class ReforgeManager {
         // Remove existing reforge-related lore
         lore.removeIf(line -> line.contains("Damage Increase:")
                 || line.contains("Damage Reduction:")
+                || line.contains("Defense:")
                 || line.contains("Chance to repair durability:")
                 || line.contains("Max Durability: +")
                 || line.contains("Strength:"));
@@ -162,7 +164,8 @@ public class ReforgeManager {
             lore.add(ChatColor.DARK_GRAY + "Strength: " + StrengthManager.COLOR + "+" +
                     targetTier.getWeaponDamageIncrease() + " " + StrengthManager.EMOJI);
         } else if (isArmor) {
-            lore.add(ChatColor.DARK_GRAY + "Damage Reduction: " + ChatColor.AQUA + targetTier.getArmorDamageReduction() + "%");
+            lore.add(ChatColor.DARK_GRAY + "Defense: " + DefenseManager.COLOR + "+" +
+                    targetTier.getArmorDefenseBonus() + " " + DefenseManager.EMOJI);
         } else if (isTool) {
             lore.add(ChatColor.DARK_GRAY + "Max Durability: " + ChatColor.AQUA + "+" + targetTier.getToolDurabilityBonus());
         } else if (isBow) {
@@ -262,6 +265,7 @@ public class ReforgeManager {
         List<String> lore = meta.hasLore() ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
         lore.removeIf(line -> line.contains("Damage Increase:")
                 || line.contains("Damage Reduction:")
+                || line.contains("Defense:")
                 || line.contains("Chance to repair durability:")
                 || line.contains("Max Durability: ")
                 || line.contains("Max Durability: +")
