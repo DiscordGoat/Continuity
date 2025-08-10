@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew;
 import goat.minecraft.minecraftnew.other.beacon.*;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
 import goat.minecraft.minecraftnew.other.resourcepack.ResourcePackListener;
+import goat.minecraft.minecraftnew.subsystems.cartography.CartographyManager;
 import goat.minecraft.minecraftnew.subsystems.gravedigging.Gravedigging;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender.BartenderVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineerVillagerManager;
@@ -205,6 +206,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+
+        new CartographyManager(this);
         // Initialize stats calculator singleton
         StatsCalculator.getInstance(this);
         getServer().getPluginManager()
