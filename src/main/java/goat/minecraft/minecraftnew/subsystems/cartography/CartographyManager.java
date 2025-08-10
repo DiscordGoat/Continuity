@@ -45,9 +45,9 @@ public final class CartographyManager implements Listener {
     private static final NamespacedKey WALL_KEY = NamespacedKey.minecraft("cont_worldmap_wall");
     private static final String SAVE_FILE = "cartography2_walls.yml";
 
-    private static final int EXPAND_WARMUP_TICKS = 3;
-    private static final int EXPAND_WARMUP_BUDGET = 800;
-    private static final int EXPAND_STEADY_BUDGET = 800;
+    private static final int EXPAND_WARMUP_TICKS = 10;
+    private static final int EXPAND_WARMUP_BUDGET = 3000;
+    private static final int EXPAND_STEADY_BUDGET = 3000;
 
     private final Plugin plugin;
     private final File dataFile;
