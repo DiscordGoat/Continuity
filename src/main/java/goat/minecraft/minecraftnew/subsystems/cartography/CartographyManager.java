@@ -428,8 +428,23 @@ public final class CartographyManager implements Listener {
             this.renderers = new MapRenderer[h][w];
             this.scaleSize = 1 << TILE_SCALE.getValue();
             this.tileSpan = 64 * scaleSize;
-            this.ux = 1; this.uz = 0; // east
-            this.vx = 0; this.vz = 1; // south
+            // Determine map axes in world coordinates. "u" grows to the east by default, but
+            // when the map is placed on a wall facing a different direction the sign or axis
+            // must change so that adjacent tiles line up correctly.  Using the actual block
+            // face for the horizontal axis fixes the maps mirroring horizontally.
+            this.ux = uFace.getModX();
+            this.uz = uFace.getModZ();
+
+            // Vertical map axis always points south for wall‑mounted maps so that north is up
+            // on the rendered map.  When the map is on the floor/ceiling the vFace will have a
+            // horizontal component and we use that instead.
+            if (vFace == BlockFace.UP || vFace == BlockFace.DOWN) {
+                this.vx = 0;
+                this.vz = 1;
+            } else {
+                this.vx = vFace.getModX();
+                this.vz = vFace.getModZ();
+            }
 
             this.tileOriginX = new int[h][w];
             this.tileOriginZ = new int[h][w];
