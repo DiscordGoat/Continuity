@@ -146,6 +146,39 @@ public final class CartographyManager implements Listener {
 
         Player p = e.getPlayer();
         ItemStack item = p.getInventory().getItemInMainHand();
+        // Use Traveler's Brush to expand map from clicked pixel
+        if (item != null && item.hasItemMeta() && item.getItemMeta().hasDisplayName()
+                && item.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Travelers Brush")) {
+            e.setCancelled(true);
+            WorldMapWall.Point tile = wall.lookupTileIndex(frame.getUniqueId());
+            if (tile == null) return;
+            Vector pos = e.getClickedPosition();
+            if (pos == null) return;
+            int localPx, localPz;
+            switch (wall.clickedFace) {
+                case NORTH, SOUTH -> {
+                    localPx = (int) Math.floor(pos.getX() * 128);
+                    localPz = (int) Math.floor((1 - pos.getY()) * 128);
+                }
+                case EAST, WEST -> {
+                    localPx = (int) Math.floor(pos.getZ() * 128);
+                    localPz = (int) Math.floor((1 - pos.getY()) * 128);
+                }
+                case UP, DOWN -> {
+                    localPx = (int) Math.floor(pos.getX() * 128);
+                    localPz = (int) Math.floor(pos.getZ() * 128);
+                }
+                default -> { return; }
+            }
+            localPx = Math.max(0, Math.min(127, localPx));
+            localPz = Math.max(0, Math.min(127, localPz));
+            int globalPx = tile.i * 128 + localPx;
+            int globalPz = tile.j * 128 + localPz;
+            wall.expandFromPixel(globalPx, globalPz, 5000);
+            if (item.getAmount() > 1) item.setAmount(item.getAmount() - 1);
+            else p.getInventory().removeItem(item);
+            return;
+        }
 
         // Show map coords on right-click with empty hand
         if (item == null || item.getType() == Material.AIR) {
@@ -468,6 +501,37 @@ public final class CartographyManager implements Listener {
                     }
                 }.runTaskTimerAsynchronously(this.plugin, 1L, 1L);
             }
+        }
+
+        void expandFromPixel(int startX, int startZ, int limit) {
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+                BitSet localVisited = new BitSet();
+                ArrayDeque<int[]> q = new ArrayDeque<>();
+                int totalW = w * 128, totalH = h * 128;
+                q.add(new int[]{startX, startZ});
+                int processed = 0;
+                while (!q.isEmpty() && processed < limit) {
+                    int[] p = q.pollFirst();
+                    int x = p[0], z = p[1];
+                    if (x < 0 || z < 0 || x >= totalW || z >= totalH) continue;
+                    int key = z * totalW + x;
+                    if (localVisited.get(key)) continue;
+                    localVisited.set(key);
+                    paintPixelOverwrite(x, z);
+                    processed++;
+                    q.add(new int[]{x + 1, z});
+                    q.add(new int[]{x - 1, z});
+                    q.add(new int[]{x, z + 1});
+                    q.add(new int[]{x, z - 1});
+                    if (USE_EIGHT_WAY_EXPANSION) {
+                        q.add(new int[]{x + 1, z + 1});
+                        q.add(new int[]{x + 1, z - 1});
+                        q.add(new int[]{x - 1, z + 1});
+                        q.add(new int[]{x - 1, z - 1});
+                    }
+                }
+                manager.saveAll();
+            });
         }
 
         private void processExpansionQueue() {
