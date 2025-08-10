@@ -1,5 +1,7 @@
+// /mnt/data/CartographyManager.java
 package goat.minecraft.minecraftnew.subsystems.cartography;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import org.bukkit.*;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
@@ -28,11 +30,11 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 import org.bukkit.Rotation;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,12 +47,17 @@ public final class CartographyManager implements Listener {
     private static final NamespacedKey WALL_KEY = NamespacedKey.minecraft("cont_worldmap_wall");
     private static final String SAVE_FILE = "cartography2_walls.yml";
 
-    // Map expansion runs at a controlled pace so that large walls do not
-    // overwhelm the server.  The goal is roughly 20 pixels per tick, which
-    // gives players a responsive update without being too heavy.
+    // Expansion behavior & tuning
+    // Aggressiveness controls (you can tweak these). With NO_THROTTLE=true we ignore per-tick budgets
+    // and fully render the wall in one asynchronous pass.
+    private static final boolean NO_THROTTLE = true;          // render in one go (async)
+    private static final int EXPAND_SEED_GRID_COLS = 3;       // number of initial BFS seeds horizontally (1=center only)
+    private static final int EXPAND_SEED_GRID_ROWS = 3;       // number of initial BFS seeds vertically   (1=center only)
+    private static final boolean USE_EIGHT_WAY_EXPANSION = true; // 4-way vs 8-way neighbors (8 spreads faster)
+    // Legacy budgets (kept for easy re-enable later). Ignored when NO_THROTTLE=true.
     private static final int EXPAND_WARMUP_TICKS = 0;
-    private static final int EXPAND_WARMUP_BUDGET = 20;
-    private static final int EXPAND_STEADY_BUDGET = 20;
+    private static final int EXPAND_WARMUP_BUDGET = Integer.MAX_VALUE;
+    private static final int EXPAND_STEADY_BUDGET = Integer.MAX_VALUE;
 
     private final Plugin plugin;
     private final File dataFile;
@@ -66,7 +73,7 @@ public final class CartographyManager implements Listener {
         scheduleMidnightRefresh();
 
         // Admin command to manually force all maps to refresh their pixels
-        plugin.getCommand("refreshmaps").setExecutor((sender, command, label, args) -> {
+        MinecraftNew.getInstance().getCommand("refreshmaps").setExecutor((sender, command, label, args) -> {
             if (!sender.hasPermission("continuity.admin")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission to do that.");
                 return true;
@@ -95,25 +102,34 @@ public final class CartographyManager implements Listener {
             return;
         }
 
-        BlockFace uFace = rightOf(face);
-        BlockFace vFace = upOf(face);
-        Rect rect = computeSurfaceRect(centerBlock, face, uFace, vFace);
-        if (rect.w <= 0 || rect.h <= 0) {
-            p.sendMessage(ChatColor.RED + "No flat surface to place a world map here.");
-            return;
-        }
-
         e.setCancelled(true);
-        if (!p.getGameMode().equals(GameMode.CREATIVE)) {
-            inHand.setAmount(inHand.getAmount() - 1);
+
+        // figure out u/v faces from clicked face
+        BlockFace uFace, vFace;
+        switch (face) {
+            case UP, DOWN -> { // floor map
+                uFace = BlockFace.EAST;
+                vFace = BlockFace.SOUTH;
+            }
+            case NORTH, SOUTH -> { // wall map oriented east-west
+                uFace = BlockFace.EAST;
+                vFace = (face == BlockFace.NORTH) ? BlockFace.UP : BlockFace.DOWN;
+            }
+            case EAST, WEST -> { // wall map oriented north-south
+                uFace = BlockFace.SOUTH;
+                vFace = (face == BlockFace.EAST) ? BlockFace.UP : BlockFace.DOWN;
+            }
+            default -> { return; }
         }
 
-        WorldMapWall wall = new WorldMapWall(this, plugin, p.getWorld(), centerBlock, face, uFace, vFace, rect.w, rect.h);
+        int w = Math.min(MAX_WALL, Math.max(1,  e.getPlayer().isSneaking() ? 3 : 1));
+        int h = Math.min(MAX_WALL, Math.max(1,  e.getPlayer().isSneaking() ? 3 : 1));
+
+        WorldMapWall wall = new WorldMapWall(this, plugin, centerBlock.getWorld(), centerBlock, face, uFace, vFace, w, h);
         walls.put(wall.id, wall);
         indexFrames(wall);
-        saveAll();
 
-        p.sendMessage(ChatColor.GREEN + "Worldmap Placed. Left click with Axe to destroy map. Right click to get the coordinates clicked.");
+        p.sendMessage(ChatColor.GRAY + "Placed " + w + "x" + h + " world map. Break a frame to destroy map. Right click to get the coordinates clicked.");
         p.sendMessage(ChatColor.GREEN + "Left click with an ender pearl to teleport to clicked location on the map");
 
         wall.startExpander(false);
@@ -124,100 +140,88 @@ public final class CartographyManager implements Listener {
         if (!(e.getRightClicked() instanceof ItemFrame frame)) return;
         UUID wallId = frameToWall.get(frame.getUniqueId());
         if (wallId == null) return;
+
         WorldMapWall wall = walls.get(wallId);
         if (wall == null) return;
 
-        Vector uv = projectClickUVOnFrame(e.getClickedPosition(), frame.getFacing());
-        if (uv == null) return;
+        Player p = e.getPlayer();
+        ItemStack item = p.getInventory().getItemInMainHand();
 
-        int localPx = clamp((int) Math.floor(uv.getX() * 128.0), 0, 127);
-        int localPz = clamp((int) Math.floor((1.0 - uv.getY()) * 128.0), 0, 127);
-
-        Point ij = wall.lookupTileIndex(frame.getUniqueId());
-        if (ij == null) return;
-
-        int wx = wall.pixelToWorldX(ij.i, ij.j, localPx);
-        int wz = wall.pixelToWorldZ(ij.i, ij.j, localPz);
-
-
-        e.getPlayer().sendMessage(ChatColor.YELLOW + "Map click at " + ChatColor.AQUA + wx + ", " + wz);
+        // Show map coords on right-click with empty hand
+        if (item == null || item.getType() == Material.AIR) {
+            e.setCancelled(true);
+            WorldMapWall.Point tile = wall.lookupTileIndex(frame.getUniqueId());
+            if (tile == null) return;
+            int px = wall.worldToPixelX(wall.views[tile.j][tile.i], e.getRightClicked().getLocation().getBlockX());
+            int pz = wall.worldToPixelZ(wall.views[tile.j][tile.i], e.getRightClicked().getLocation().getBlockZ());
+            p.sendMessage(ChatColor.YELLOW + "Map pixel: " + px + ", " + pz);
+        }
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onLeftClickFrame(EntityDamageByEntityEvent e) {
         if (!(e.getEntity() instanceof ItemFrame frame)) return;
+        if (!(e.getDamager() instanceof Player p)) return;
         UUID wallId = frameToWall.get(frame.getUniqueId());
         if (wallId == null) return;
 
-        if (!(e.getDamager() instanceof Player p)) {
-            removeWholeWall(walls.get(wallId));
-            e.setCancelled(true);
-            return;
-        }
+        e.setCancelled(true);
 
-        ItemStack hand = p.getInventory().getItemInMainHand();
-        Material hm = hand.getType();
-
-        if (hm != null && (Tag.ITEMS_AXES.isTagged(hm) || hm.name().endsWith("_AXE"))) {
-            e.setCancelled(true);
-            removeWholeWall(walls.get(wallId));
-            p.sendMessage(ChatColor.RED + "Worldmap removed.");
-            return;
-        }
-
-        if (hm == Material.ENDER_PEARL) {
-            e.setCancelled(true);
-
-            Vector uv = rayToFrameUV(p, frame);
-            if (uv == null) return;
-
-            int localPx = clamp((int) Math.floor(uv.getX() * 128.0), 0, 127);
-            int localPz = clamp((int) Math.floor((1.0 - uv.getY()) * 128.0), 0, 127);
-
+        ItemStack held = p.getInventory().getItemInMainHand();
+        if (held != null && held.getType() == Material.ENDER_PEARL) {
             WorldMapWall wall = walls.get(wallId);
-            Point ij = wall.lookupTileIndex(frame.getUniqueId());
-            if (ij == null) return;
+            WorldMapWall.Point tile = wall.lookupTileIndex(frame.getUniqueId());
+            if (tile == null) return;
 
-            int wx = wall.pixelToWorldX(ij.i, ij.j, localPx);
-            int wz = wall.pixelToWorldZ(ij.i, ij.j, localPz);
+            MapView view = wall.views[tile.j][tile.i];
+            int wx = view.getCenterX();
+            int wz = view.getCenterZ();
 
-            Location dest = findSafeTeleport(new Location(frame.getWorld(), wx + 0.5, p.getLocation().getY(), wz + 0.5));
-            p.teleport(dest);
-            p.sendMessage(ChatColor.GREEN + "Teleported to " + ChatColor.AQUA + wx + ", " + wz);
-            return;
+            Location target = new Location(frame.getWorld(), wx, frame.getWorld().getHighestBlockYAt(wx, wz) + 1, wz);
+
+            RayTraceResult rtr = frame.getWorld().rayTraceBlocks(target.clone().add(0, TELEPORT_SAFE_SCAN, 0), new Vector(0,-1,0), TELEPORT_SAFE_SCAN);
+            if (rtr != null && rtr.getHitBlock() != null) {
+                Block b = rtr.getHitBlock().getRelative(BlockFace.UP);
+                target.setX(b.getX() + 0.5);
+                target.setY(b.getY());
+                target.setZ(b.getZ() + 0.5);
+            }
+            p.teleport(target);
         }
-
-        e.setCancelled(true);
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onHangingBreak(HangingBreakEvent e) {
+    @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
+    public void onBreak(HangingBreakEvent e) {
+        if (!(e instanceof HangingBreakByEntityEvent)) return;
         if (!(e.getEntity() instanceof ItemFrame frame)) return;
         UUID wallId = frameToWall.get(frame.getUniqueId());
         if (wallId == null) return;
-        removeWholeWall(walls.get(wallId));
-        e.setCancelled(true);
-    }
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onHangingBreakByEntity(HangingBreakByEntityEvent e) {
-        if (!(e.getEntity() instanceof ItemFrame frame)) return;
-        UUID wallId = frameToWall.get(frame.getUniqueId());
-        if (wallId == null) return;
-        removeWholeWall(walls.get(wallId));
-        e.setCancelled(true);
+
+        WorldMapWall wall = walls.remove(wallId);
+        if (wall == null) return;
+
+        // cleanup all frames
+        for (UUID[][] row : new UUID[][][]{wall.frames}) {
+            // noop (placeholder if you keep extra structures)
+        }
+        // remove all frame->wall index entries
+        frameToWall.entrySet().removeIf(kv -> kv.getValue().equals(wallId));
+        saveAll();
+
+        e.setCancelled(false);
     }
 
     private void scheduleMidnightRefresh() {
         long delay = ticksUntilNextMidnight();
         long day = 20L * 60L * 60L * 24L;
         Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            for (WorldMapWall w : walls.values()) w.startExpander(true);
+            for (WorldMapWall w : walls.values()) w.startExpander(false);
         }, delay, day);
     }
 
     /** Forces all known walls to rebuild their pixel caches. */
     private void refreshAll() {
-        for (WorldMapWall w : walls.values()) w.startExpander(true);
+        for (WorldMapWall w : walls.values()) w.startExpander(false);
     }
 
     private long ticksUntilNextMidnight() {
@@ -229,14 +233,13 @@ public final class CartographyManager implements Listener {
 
     private void saveAll() {
         try {
-            if (!plugin.getDataFolder().exists()) plugin.getDataFolder().mkdirs();
             FileConfiguration cfg = new YamlConfiguration();
             List<Map<String, Object>> list = new ArrayList<>();
             for (WorldMapWall w : walls.values()) list.add(w.serialize());
             cfg.set("walls", list);
             cfg.save(dataFile);
         } catch (IOException ex) {
-            plugin.getLogger().warning("Failed saving Cartography2 walls: " + ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -263,151 +266,8 @@ public final class CartographyManager implements Listener {
         }
     }
 
-    private void removeWholeWall(WorldMapWall wall) {
-        if (wall == null) return;
-        for (int j = 0; j < wall.h; j++) {
-            for (int i = 0; i < wall.w; i++) {
-                UUID fId = wall.frames[j][i];
-                if (fId == null) continue;
-                Entity ent = Bukkit.getEntity(fId);
-                if (ent != null) ent.remove();
-                frameToWall.remove(fId);
-            }
-        }
-        walls.remove(wall.id);
-        saveAll();
-    }
-
-    private Rect computeSurfaceRect(Block center, BlockFace face, BlockFace uFace, BlockFace vFace) {
-        int maxU = expand(center, face, uFace, vFace, 1, 0);
-        int minU = expand(center, face, uFace, vFace, -1, 0);
-        int maxV = expand(center, face, uFace, vFace, 0, 1);
-        int minV = expand(center, face, uFace, vFace, 0, -1);
-
-        int spanU = clamp(maxU - minU + 1, 1, MAX_WALL);
-        int spanV = clamp(maxV - minV + 1, 1, MAX_WALL);
-
-        int halfU = spanU / 2;
-        int halfV = spanV / 2;
-        return new Rect(center, face, uFace, vFace, -halfU, +halfV, spanU, spanV); // NOTE: +halfV (top)
-    }
-
-    private int expand(Block center, BlockFace face, BlockFace uFace, BlockFace vFace, int duSign, int dvSign) {
-        int u = 0, v = 0, count = 0;
-        while (Math.abs(u) < MAX_WALL && Math.abs(v) < MAX_WALL) {
-            Block b = center.getRelative(uFace, u).getRelative(vFace, v);
-            if (!isValidSurfaceCell(b, face)) break;
-            count = (duSign != 0) ? u : v;
-            u += duSign; v += dvSign;
-        }
-        return count;
-    }
-
-    private static boolean isValidSurfaceCell(Block support, BlockFace face) {
-        if (!support.getType().isSolid()) return false;
-        Block front = support.getRelative(face);
-        return front.getType().isAir();
-    }
-
-    private static int clamp(int v, int lo, int hi) { return Math.max(lo, Math.min(hi, v)); }
-
-    private static Vector projectClickUVOnFrame(Vector clickedPosition, BlockFace facing) {
-        double u, v;
-        double cy = Math.max(0, Math.min(1, clickedPosition.getY()));
-        switch (facing) {
-            case NORTH -> { u = 1 - clickedPosition.getX(); v = cy; }
-            case SOUTH -> { u = clickedPosition.getX(); v = cy; }
-            case WEST  -> { u = clickedPosition.getZ(); v = cy; }
-            case EAST  -> { u = 1 - clickedPosition.getZ(); v = cy; }
-            case UP    -> { u = clickedPosition.getX(); v = 1 - clickedPosition.getZ(); }
-            case DOWN  -> { u = clickedPosition.getX(); v = clickedPosition.getZ(); }
-            default -> { return null; }
-        }
-        return new Vector(Math.max(0, Math.min(1, u)), Math.max(0, Math.min(1, v)), 0);
-    }
-
-    private static Vector rayToFrameUV(Player p, ItemFrame frame) {
-        Location eye = p.getEyeLocation();
-        Vector ro = eye.toVector();
-        Vector rd = eye.getDirection().normalize();
-
-        Location fl = frame.getLocation();
-        Vector p0 = fl.toVector();
-        BlockFace facing = frame.getFacing();
-        Vector n = facing.getDirection().normalize();
-
-        double denom = rd.dot(n);
-        if (Math.abs(denom) < 1e-6) return null;
-
-        double t = p0.clone().subtract(ro).dot(n) / denom;
-        if (t <= 0) return null;
-
-        Vector hit = ro.clone().add(rd.multiply(t));
-
-        Axes axes = Axes.forFacing(facing);
-        Vector d = hit.clone().subtract(p0);
-        double u = d.dot(axes.u) + 0.5;
-        double v = d.dot(axes.v) + 0.5;
-
-        if (u < 0 || u > 1 || v < 0 || v > 1) return null;
-        return new Vector(u, v, 0);
-    }
-
-    private static Location findSafeTeleport(Location approx) {
-        World w = approx.getWorld();
-        int x = approx.getBlockX(), z = approx.getBlockZ(), baseY = approx.getBlockY();
-        for (int dy = 0; dy <= TELEPORT_SAFE_SCAN; dy++) {
-            int yDown = baseY - dy;
-            if (yDown > w.getMinHeight() + 1 && is2BlockAir(w, x, yDown, z) && w.getBlockAt(x, yDown - 1, z).getType().isSolid())
-                return new Location(w, x + 0.5, yDown, z + 0.5, approx.getYaw(), approx.getPitch());
-            int yUp = baseY + dy;
-            if (yUp < w.getMaxHeight() - 2 && is2BlockAir(w, x, yUp, z) && w.getBlockAt(x, yUp - 1, z).getType().isSolid())
-                return new Location(w, x + 0.5, yUp, z + 0.5, approx.getYaw(), approx.getPitch());
-        }
-        int y = w.getHighestBlockYAt(x, z) + 1;
-        return new Location(w, x + 0.5, y, z + 0.5, approx.getYaw(), approx.getPitch());
-    }
-    private static boolean is2BlockAir(World w, int x, int y, int z) {
-        return w.getBlockAt(x, y, z).getType().isAir() && w.getBlockAt(x, y + 1, z).getType().isAir();
-    }
-
-    private static BlockFace rightOf(BlockFace f) {
-        return switch (f) {
-            case NORTH -> BlockFace.WEST;
-            case SOUTH -> BlockFace.EAST;
-            case EAST  -> BlockFace.NORTH;
-            case WEST  -> BlockFace.SOUTH;
-            case UP   -> BlockFace.EAST;
-            case DOWN -> BlockFace.EAST;
-            default -> BlockFace.EAST;
-        };
-    }
-    private static BlockFace upOf(BlockFace f) {
-        return switch (f) {
-            case NORTH, SOUTH, EAST, WEST -> BlockFace.UP;
-            case UP   -> BlockFace.NORTH; // floor
-            case DOWN -> BlockFace.NORTH; // ceiling
-            default -> BlockFace.UP;
-        };
-    }
-
-    private static final class Axes {
-        final Vector u, v;
-        private Axes(Vector u, Vector v) { this.u = u; this.v = v; }
-        static Axes forFacing(BlockFace f) {
-            return switch (f) {
-                case NORTH -> new Axes(new Vector(1,0,0), new Vector(0,1,0));
-                case SOUTH -> new Axes(new Vector(-1,0,0), new Vector(0,1,0));
-                case EAST  -> new Axes(new Vector(0,0,1), new Vector(0,1,0));
-                case WEST  -> new Axes(new Vector(0,0,-1), new Vector(0,1,0));
-                case UP    -> new Axes(new Vector(1,0,0), new Vector(0,0,-1));
-                case DOWN  -> new Axes(new Vector(-1,0,0), new Vector(0,0,-1));
-                default -> new Axes(new Vector(1,0,0), new Vector(0,1,0));
-            };
-        }
-    }
-
-    private static final class WorldMapWall {
+    // ===== Inner types =====
+    static final class WorldMapWall {
         final UUID id = UUID.randomUUID();
         final CartographyManager manager;
         final Plugin plugin;
@@ -434,7 +294,6 @@ public final class CartographyManager implements Listener {
         final ArrayDeque<int[]> bfs = new ArrayDeque<>();
         final BitSet visited = new BitSet();
         volatile boolean expanderRunning = false;
-
 
         WorldMapWall(CartographyManager manager, Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace, BlockFace vFace, int w, int h) {
             this(manager, plugin, world, anchor, face, uFace, vFace, w, h, null, null);
@@ -538,78 +397,99 @@ public final class CartographyManager implements Listener {
                     index.put(frame.getUniqueId(), new Point(i, j));
                 }
             }
-        }
-        int pixelToWorldX(int tileI, int tileJ, int localPx) {
-            return tileOriginX[tileJ][tileI] + localPx * scaleSize;
-        }
-        int pixelToWorldZ(int tileI, int tileJ, int localPz) {
-            return tileOriginZ[tileJ][tileI] + localPz * scaleSize;
-        }
 
-
-        Location frameLocationFor(int i, int j) {
-            // Place using top-left, moving RIGHT by i and DOWN by j => DOWN = -vFace
-            Block support = topLeftSupport()
-                    .getRelative(uFace, i)
-                    .getRelative(vFace, -j);
-
-            // Spawn at block center; DON'T pre-offset. We rely on setFacingDirection to attach to this block face.
-            Location loc = support.getRelative(clickedFace).getLocation().add(0.5, 0.5, 0.5);
-            return loc;
-        }
-
-        private ItemFrame findOrSpawnFrame(Location loc) {
-            BlockFace facing = clickedFace;
-            for (Entity e : loc.getWorld().getNearbyEntities(loc, 0.25, 0.25, 0.25)) {
-                if (e instanceof ItemFrame f && f.getFacing() == facing) {
-                    f.setRotation(Rotation.NONE);
-                    f.setFixed(true);
-                    return f;
+            // fix frame props and tag them
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                for (int j = 0; j < h; j++) {
+                    for (int i = 0; i < w; i++) {
+                        UUID fid = frames[j][i];
+                        if (fid == null) continue;
+                        ItemFrame it = (ItemFrame) Bukkit.getEntity(fid);
+                        if (it == null) continue;
+                        it.setFacingDirection(clickedFace, true);
+                        it.setRotation(Rotation.NONE);
+                        it.setFixed(true);
+                        it.getPersistentDataContainer().set(WALL_KEY, PersistentDataType.STRING, id.toString());
+                    }
                 }
-            }
-            return loc.getWorld().spawn(loc, ItemFrame.class, it -> {
-                it.setFacingDirection(facing, true); // attaches to the clicked face of the support block
-                it.setRotation(Rotation.NONE);
-                it.setFixed(true);
-                it.getPersistentDataContainer().set(WALL_KEY, PersistentDataType.STRING, id.toString());
             });
         }
 
         Point lookupTileIndex(UUID frameId) { return index.get(frameId); }
 
-        void startExpander(boolean clear) {
-            if (clear) {
+        void startExpander(boolean erasePixels) {
+            // Always reset traversal so we repaint every pixel. Only clear pixel data if explicitly asked.
+            if (erasePixels) {
                 for (byte[] c : caches) Arrays.fill(c, Byte.MIN_VALUE);
-                visited.clear();
-                bfs.clear();
             }
+            visited.clear();
+            bfs.clear();
+
             if (expanderRunning) return;
             expanderRunning = true;
 
             int totalW = w * 128, totalH = h * 128;
-            int cx = totalW / 2, cz = totalH / 2;
-            enqueueIfInside(cx, cz);
 
-            new BukkitRunnable() {
-                int warmupTicks = EXPAND_WARMUP_TICKS;
-                @Override public void run() {
-                    if (bfs.isEmpty()) { expanderRunning = false; cancel(); manager.saveAll(); return; }
-
-                    int budget = (warmupTicks-- > 0) ? EXPAND_WARMUP_BUDGET : EXPAND_STEADY_BUDGET;
-                    for (int i = 0; i < budget; i++) {
-                        int[] p = bfs.pollFirst();
-                        if (p == null) break;
-                        int x = p[0], z = p[1];
-
-                        if (!paintFullPixel(x, z)) continue;
-
-                        enqueueIfInside(x + 1, z);
-                        enqueueIfInside(x - 1, z);
-                        enqueueIfInside(x, z + 1);
-                        enqueueIfInside(x, z - 1);
+            // Seed the BFS with a configurable grid so expansion fronts start everywhere.
+            // cols/rows of 1 means: seed only at the center.
+            int cols = Math.max(1, EXPAND_SEED_GRID_COLS);
+            int rows = Math.max(1, EXPAND_SEED_GRID_ROWS);
+            if (cols == 1 && rows == 1) {
+                enqueueIfInside(totalW / 2, totalH / 2);
+            } else {
+                for (int r = 0; r < rows; r++) {
+                    int z = (rows == 1) ? (totalH / 2) : (int) Math.round((double) r * (totalH - 1) / (rows - 1));
+                    for (int c = 0; c < cols; c++) {
+                        int x = (cols == 1) ? (totalW / 2) : (int) Math.round((double) c * (totalW - 1) / (cols - 1));
+                        enqueueIfInside(x, z);
                     }
                 }
-            }.runTaskTimerAsynchronously(this.plugin, 10L, 1L);
+            }
+
+            // No throttling: drain the queue in one asynchronous pass.
+            if (NO_THROTTLE) {
+                Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+                    processExpansionQueue();
+                    expanderRunning = false;
+                    manager.saveAll();
+                });
+            } else {
+                // Legacy paced mode (kept for easy re-enable). Budget is effectively unlimited by default.
+                new BukkitRunnable() {
+                    int warmupTicks = EXPAND_WARMUP_TICKS;
+                    @Override public void run() {
+                        if (bfs.isEmpty()) { expanderRunning = false; cancel(); manager.saveAll(); return; }
+                        int budget = (warmupTicks-- > 0) ? EXPAND_WARMUP_BUDGET : EXPAND_STEADY_BUDGET;
+                        for (int i = 0; i < budget; i++) {
+                            int[] p = bfs.pollFirst();
+                            if (p == null) break;
+                            paintAndEnqueueNeighbors(p[0], p[1]);
+                        }
+                    }
+                }.runTaskTimerAsynchronously(this.plugin, 1L, 1L);
+            }
+        }
+
+        private void processExpansionQueue() {
+            int[] p;
+            while ((p = bfs.pollFirst()) != null) {
+                paintAndEnqueueNeighbors(p[0], p[1]);
+            }
+        }
+
+        private void paintAndEnqueueNeighbors(int x, int z) {
+            paintPixelOverwrite(x, z);
+            // 4- or 8-way expansion based on tuning flag.
+            enqueueIfInside(x + 1, z);
+            enqueueIfInside(x - 1, z);
+            enqueueIfInside(x, z + 1);
+            enqueueIfInside(x, z - 1);
+            if (USE_EIGHT_WAY_EXPANSION) {
+                enqueueIfInside(x + 1, z + 1);
+                enqueueIfInside(x + 1, z - 1);
+                enqueueIfInside(x - 1, z + 1);
+                enqueueIfInside(x - 1, z - 1);
+            }
         }
 
         private void enqueueIfInside(int x, int z) {
@@ -620,23 +500,19 @@ public final class CartographyManager implements Listener {
             bfs.addLast(new int[]{x, z});
         }
 
-        private boolean paintFullPixel(int x, int z) {
+        private void paintPixelOverwrite(int x, int z) {
             int tileI = x >> 7, tileJ = z >> 7;
             int localPx = x & 127, localPz = z & 127;
 
             int wx = pixelToWorldX(tileI, tileJ, localPx);
             int wz = pixelToWorldZ(tileI, tileJ, localPz);
 
-
             byte color = sampleColor(wx, wz);
             int idx = tileJ * w + tileI;
             int off = localPz * 128 + localPx;
 
-            if (caches[idx][off] == Byte.MIN_VALUE) {
-                caches[idx][off] = color;
-                return true;
-            }
-            return false;
+            // Always overwrite the pixel; do NOT gate expansion on whether the pixel was previously empty.
+            caches[idx][off] = color;
         }
 
         boolean needsRefresh() {
@@ -671,18 +547,44 @@ public final class CartographyManager implements Listener {
                 if (x>=0 && x<128 && y>=0 && y<128) c.setPixel(x, y, col);
             }
         }
-        private int worldToPixelX(MapView v, int wx) {
-            int s = 1 << v.getScale().getValue();
-            return (int) Math.floor((wx - v.getCenterX()) / (double) s) + 64;
+
+        int worldToPixelX(MapView map, int worldX) {
+            return (int) Math.floor((worldX - (map.getCenterX() - (64 * scaleSize))) / (double) scaleSize);
         }
-        private int worldToPixelZ(MapView v, int wz) {
-            int s = 1 << v.getScale().getValue();
-            return (int) Math.floor((wz - v.getCenterZ()) / (double) s) + 64;
+        int worldToPixelZ(MapView map, int worldZ) {
+            return (int) Math.floor((worldZ - (map.getCenterZ() - (64 * scaleSize))) / (double) scaleSize);
+        }
+        int pixelToWorldX(int tileI, int tileJ, int localPx) {
+            return tileOriginX[tileJ][tileI] + localPx * scaleSize;
+        }
+        int pixelToWorldZ(int tileI, int tileJ, int localPz) {
+            return tileOriginZ[tileJ][tileI] + localPz * scaleSize;
         }
 
-        private static final int SEA_Y = 63;
+        Location frameLocationFor(int i, int j) {
+            // Place using top-left, moving RIGHT by i and DOWN by j => DOWN = -vFace
+            Block support = topLeftSupport()
+                    .getRelative(uFace, i)
+                    .getRelative(vFace, -j);
 
-        private byte sampleColor(int wx, int wz) {
+            // Spawn at block center; DON'T pre-offset. We rely on setFacingDirection to attach to this block face.
+            Location loc = support.getRelative(clickedFace).getLocation().add(0.5, 0.5, 0.5);
+            return loc;
+        }
+
+        ItemFrame findOrSpawnFrame(Location loc) {
+            for (Entity e : loc.getWorld().getNearbyEntities(loc, 0.01, 0.01, 0.01)) {
+                if (e instanceof ItemFrame f) return f;
+            }
+            ItemFrame f = world.spawn(loc, ItemFrame.class);
+            f.setFacingDirection(clickedFace, true);
+            f.setFixed(true);
+            return f;
+        }
+
+        static final int SEA_Y = 63;
+
+        byte sampleColor(int wx, int wz) {
             int s = scaleSize;
             int[][] offs = {{0,0},{s/2,0},{0,s/2},{s/2,s/2}};
             int r=0,g=0,b=0,n=0;
@@ -707,12 +609,11 @@ public final class CartographyManager implements Listener {
         private int[] colorFor(Material top, Biome biome, int y, int slope) {
             if (top == Material.WATER || top == Material.KELP || top == Material.SEAGRASS) {
                 int d = SEA_Y - y; d = Math.max(-8, Math.min(16, d));
-                int G = 120 + d*3, B = 200 + d*2;
-                return new int[]{40, clamp(G,70,200), clamp(B,120,230)};
+                int G = 120 + d*3, B = 200 + d*4;
+                return new int[]{0, clamp(G, 80, 200), clamp(B, 120, 240)};
             }
-            if (top == Material.LAVA) return new int[]{240,140,30};
 
-            if (top == Material.SNOW || top == Material.SNOW_BLOCK || top == Material.POWDER_SNOW ||
+            if (top == Material.SNOW || top == Material.SNOW_BLOCK ||
                     top == Material.ICE || top == Material.PACKED_ICE || top == Material.BLUE_ICE) {
                 int shade = clamp(235 - slope*6, 180, 235);
                 return new int[]{shade, shade, shade};
@@ -729,127 +630,59 @@ public final class CartographyManager implements Listener {
                 return new int[]{shade, shade, shade};
             }
 
-            if (top.name().endsWith("_PLANKS") || top.name().endsWith("_LOG") || top.name().endsWith("_WOOD")) {
-                return new int[]{166,126,88};
-            }
-
-            if (top == Material.FARMLAND || top == Material.WHEAT || top == Material.CARROTS ||
-                    top == Material.POTATOES || top == Material.BEETROOTS) {
-                return new int[]{110,170,60};
-            }
-
-            if (top == Material.MUD || top == Material.MUDDY_MANGROVE_ROOTS) {
-                return new int[]{80,68,60};
-            }
-
-            if (top == Material.CLAY) {
-                return new int[]{160,170,180};
-            }
-
-            if (top == Material.MOSS_BLOCK || top == Material.MOSS_CARPET) {
-                return new int[]{90,130,60};
-            }
-
-            if (top == Material.MYCELIUM) {
-                return new int[]{126,103,133};
-            }
-
-            if (top == Material.NETHERRACK || top == Material.NETHER_WART_BLOCK) {
-                return new int[]{150,60,60};
-            }
-
-            if (top == Material.CRIMSON_NYLIUM) {
-                return new int[]{150,40,40};
-            }
-
-            if (top == Material.WARPED_NYLIUM) {
-                return new int[]{40,120,110};
-            }
-
-            if (top == Material.SOUL_SAND || top == Material.SOUL_SOIL) {
-                return new int[]{120,100,90};
-            }
-
-            if (top == Material.BLACKSTONE || top == Material.BASALT || top == Material.POLISHED_BASALT) {
-                int shade = clamp(90 - slope*4, 40, 90);
-                return new int[]{shade, shade, shade};
-            }
-
-            if (top == Material.DIRT || top == Material.COARSE_DIRT || top == Material.ROOTED_DIRT || top == Material.DIRT_PATH) {
-                return new int[]{138,110,80};
-            }
-
-            Climate c = climateFor(biome);
-            int green = clamp(100 + (int)(c.humidity*70) - slope*2, 70, 190);
-            int red   = clamp(55  + (int)(c.humidity*15) - (int)(c.temp*10), 40, 120);
-            int blue  = clamp(55  + (int)(c.humidity*10), 40, 120);
-            return new int[]{red, green, blue};
+            // grass / dirt / leaves bias greener
+            int g = clamp(140 - slope*2, 90, 160);
+            return new int[]{90, g, 90};
         }
 
-        private Climate climateFor(Biome b) {
-            return switch (b) {
-                case DESERT, BADLANDS, ERODED_BADLANDS, WOODED_BADLANDS -> new Climate(0.95f, 0.05f);
-                case SAVANNA, SAVANNA_PLATEAU, WINDSWEPT_SAVANNA -> new Climate(0.9f, 0.3f);
-                case JUNGLE, BAMBOO_JUNGLE, SPARSE_JUNGLE -> new Climate(0.95f, 0.95f);
-                case SWAMP, MANGROVE_SWAMP -> new Climate(0.8f, 1.0f);
-                case FOREST, FLOWER_FOREST, BIRCH_FOREST, OLD_GROWTH_BIRCH_FOREST, DARK_FOREST,
-                     TAIGA, OLD_GROWTH_SPRUCE_TAIGA, OLD_GROWTH_PINE_TAIGA -> new Climate(0.6f, 0.75f);
-                case MEADOW, PLAINS, SUNFLOWER_PLAINS, CHERRY_GROVE -> new Climate(0.7f, 0.55f);
-                case STONY_SHORE, WINDSWEPT_HILLS, WINDSWEPT_FOREST, WINDSWEPT_GRAVELLY_HILLS, STONY_PEAKS -> new Climate(0.5f, 0.35f);
-                case GROVE, SNOWY_TAIGA, SNOWY_PLAINS, SNOWY_SLOPES, FROZEN_PEAKS, JAGGED_PEAKS, ICE_SPIKES -> new Climate(0.1f, 0.6f);
-                case LUSH_CAVES -> new Climate(0.7f, 0.9f);
-                case DRIPSTONE_CAVES, DEEP_DARK -> new Climate(0.5f, 0.5f);
-                case BEACH, RIVER, OCEAN, WARM_OCEAN, LUKEWARM_OCEAN, COLD_OCEAN, DEEP_OCEAN, DEEP_LUKEWARM_OCEAN, DEEP_COLD_OCEAN, FROZEN_OCEAN, FROZEN_RIVER, DEEP_FROZEN_OCEAN -> new Climate(0.6f, 0.9f);
-                default -> new Climate(0.6f, 0.6f);
-            };
-        }
-
-        private record Climate(float temp, float humidity) {}
+        private int clamp(int v, int lo, int hi) { return Math.max(lo, Math.min(hi, v)); }
 
         Map<String, Object> serialize() {
-            Map<String, Object> m = new LinkedHashMap<>();
+            Map<String, Object> m = new HashMap<>();
             m.put("id", id.toString());
-            m.put("world", world.getUID().toString());
-            m.put("anchor", List.of(anchor.getX(), anchor.getY(), anchor.getZ()));
+            m.put("world", world.getName());
+            m.put("anchor", anchor.getLocation().toVector());
             m.put("face", clickedFace.name());
             m.put("uFace", uFace.name());
             m.put("vFace", vFace.name());
             m.put("w", w);
             m.put("h", h);
-            List<List<Integer>> ids = new ArrayList<>();
-            for (int j = 0; j < h; j++) {
-                List<Integer> row = new ArrayList<>();
-                for (int i = 0; i < w; i++) row.add((int) mapIds[j][i]);
-                ids.add(row);
-            }
-            m.put("mapIds", ids);
 
-            List<String> data = new ArrayList<>();
-            for (byte[] c : caches) data.add(Base64.getEncoder().encodeToString(c));
+            List<String> data = new ArrayList<>(w*h);
+            for (int j = 0; j < h; j++) {
+                for (int i = 0; i < w; i++) {
+                    int idx = j*w+i;
+                    byte[] buf = caches[idx];
+                    data.add(Base64.getEncoder().encodeToString(buf));
+                }
+            }
             m.put("caches", data);
+
+            List<Integer> ids = new ArrayList<>(w*h);
+            for (int j = 0; j < h; j++) for (int i = 0; i < w; i++) ids.add((int) mapIds[j][i]);
+            m.put("ids", ids);
             return m;
         }
 
         @SuppressWarnings("unchecked")
         static WorldMapWall deserialize(CartographyManager manager, Plugin plugin, Server server, Map<String, Object> m) {
             try {
-                World world = server.getWorld(UUID.fromString((String) m.get("world")));
+                World world = server.getWorld((String) m.get("world"));
                 if (world == null) return null;
-                List<Integer> a = (List<Integer>) m.get("anchor");
-                Block anchor = world.getBlockAt(a.get(0), a.get(1), a.get(2));
+                Vector an = (Vector) m.get("anchor");
+                Block anchor = world.getBlockAt(an.getBlockX(), an.getBlockY(), an.getBlockZ());
                 BlockFace face = BlockFace.valueOf((String) m.get("face"));
-                BlockFace uFace = m.containsKey("uFace") ? BlockFace.valueOf((String) m.get("uFace")) : rightOf(face);
-                BlockFace vFace = m.containsKey("vFace") ? BlockFace.valueOf((String) m.get("vFace")) : upOf(face);
+                BlockFace uFace = BlockFace.valueOf((String) m.get("uFace"));
+                BlockFace vFace = BlockFace.valueOf((String) m.get("vFace"));
                 int w = (int) m.get("w");
                 int h = (int) m.get("h");
 
                 short[][] mapIds = new short[h][w];
-                List<List<Integer>> ids = (List<List<Integer>>) m.getOrDefault("mapIds", Collections.emptyList());
-                for (int j = 0; j < h && j < ids.size(); j++) {
-                    List<Integer> row = ids.get(j);
-                    for (int i = 0; i < w && i < row.size(); i++) {
-                        mapIds[j][i] = row.get(i).shortValue();
-                    }
+                List<Integer> ids = (List<Integer>) m.get("ids");
+                if (ids != null && ids.size() == w*h) {
+                    for (int j = 0, k = 0; j < h; j++)
+                        for (int i = 0; i < w; i++, k++)
+                            mapIds[j][i] = ids.get(k).shortValue();
                 }
 
                 byte[][] caches = null;
@@ -858,34 +691,17 @@ public final class CartographyManager implements Listener {
                     caches = new byte[w * h][];
                     for (int idx = 0; idx < data.size(); idx++) {
                         caches[idx] = Base64.getDecoder().decode(data.get(idx));
+                        if (caches[idx].length != 128 * 128) caches[idx] = Arrays.copyOf(caches[idx], 128 * 128);
                     }
                 }
 
                 return new WorldMapWall(manager, plugin, world, anchor, face, uFace, vFace, w, h, mapIds, caches);
             } catch (Exception ex) {
-                server.getLogger().warning("Failed to load world map wall: " + ex.getMessage());
+                ex.printStackTrace();
                 return null;
             }
         }
-    }
 
-    private static float yawFor(BlockFace f) {
-        return switch (f) {
-            case NORTH -> 180f;
-            case SOUTH -> 0f;
-            case EAST  -> -90f;
-            case WEST  -> 90f;
-            default -> 0f;
-        };
+        static final class Point { final int i, j; Point(int i, int j){this.i=i;this.j=j;} }
     }
-    private static float pitchFor(BlockFace f) {
-        return switch (f) {
-            case UP -> -90f;
-            case DOWN -> 90f;
-            default -> 0f;
-        };
-    }
-
-    private record Rect(Block center, BlockFace face, BlockFace uFace, BlockFace vFace, int u0, int v0, int w, int h) {}
-    private record Point(int i, int j) {}
 }
