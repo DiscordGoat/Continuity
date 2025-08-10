@@ -354,9 +354,8 @@ public final class CartographyManager implements Listener {
             case SOUTH -> BlockFace.EAST;
             case EAST  -> BlockFace.NORTH;
             case WEST  -> BlockFace.SOUTH;
-            case UP   -> BlockFace.WEST;
+            case UP   -> BlockFace.EAST;
             case DOWN -> BlockFace.EAST;
-            case UP, DOWN -> BlockFace.EAST;
             default -> BlockFace.EAST;
         };
     }
