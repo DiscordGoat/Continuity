@@ -45,9 +45,9 @@ public final class CartographyManager implements Listener {
     private static final NamespacedKey WALL_KEY = NamespacedKey.minecraft("cont_worldmap_wall");
     private static final String SAVE_FILE = "cartography2_walls.yml";
 
-    private static final int EXPAND_WARMUP_TICKS = 10;
+    private static final int EXPAND_WARMUP_TICKS = 3;
     private static final int EXPAND_WARMUP_BUDGET = 800;
-    private static final int EXPAND_STEADY_BUDGET = 300;
+    private static final int EXPAND_STEADY_BUDGET = 800;
 
     private final Plugin plugin;
     private final File dataFile;
@@ -427,7 +427,7 @@ public final class CartographyManager implements Listener {
             this.caches = new byte[h * w][];
             this.renderers = new MapRenderer[h][w];
             this.scaleSize = 1 << TILE_SCALE.getValue();
-            this.tileSpan = 64 * scaleSize;
+            this.tileSpan = 128 * scaleSize;
             this.ux = 1; this.uz = 0; // east
             this.vx = 0; this.vz = 1; // south
 
