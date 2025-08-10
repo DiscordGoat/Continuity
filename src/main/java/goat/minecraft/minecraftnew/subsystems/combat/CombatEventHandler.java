@@ -133,22 +133,24 @@ public class CombatEventHandler implements Listener {
 
     private DamageTag mapTag(EntityDamageEvent.DamageCause cause) {
         switch (cause) {
-            case FIRE:
-            case FIRE_TICK:
-            case LAVA:
-            case HOT_FLOOR:
-                return DamageTag.FIRE;
-            case ENTITY_EXPLOSION:
-            case BLOCK_EXPLOSION:
-                return DamageTag.BLAST;
+            case ENTITY_ATTACK:
+            case ENTITY_SWEEP_ATTACK:
+                return DamageTag.ENTITY_ATTACK;
             case PROJECTILE:
                 return DamageTag.PROJECTILE;
             case FALL:
                 return DamageTag.FALL;
-            case MAGIC:
-            case POISON:
-            case WITHER:
-                return DamageTag.MAGIC;
+            case ENTITY_EXPLOSION:
+            case BLOCK_EXPLOSION:
+                return DamageTag.BLAST;
+            case FIRE_TICK:
+                return DamageTag.FIRE_TICK;
+            case HOT_FLOOR:
+                return DamageTag.HOT_FLOOR;
+            case LAVA:
+                return DamageTag.LAVA;
+            case FIRE:
+                return DamageTag.FIRE;
             default:
                 return DamageTag.GENERIC;
         }
