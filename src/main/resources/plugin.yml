@@ -84,6 +84,10 @@ commands:
     description: Respawns a fresh dragon in The End.
     usage: /refreshEnd
     permission: continuity.admin
+  refreshmaps:
+    description: Force all world maps to refresh their pixels
+    usage: /refreshmaps
+    permission: continuity.admin
   end:
     description: Teleports the player to The End.
     usage: /end
