@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.utils.devtools;
 
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
+import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,6 +15,11 @@ public class TalismanManager {
      * Default Strength granted by a Damage talisman.
      */
     public static final int DAMAGE_STRENGTH_BONUS = 30;
+
+    /**
+     * Default Defense granted by an Armor talisman.
+     */
+    public static final int DEFENSE_DEFENSE_BONUS = 10;
 
     /**
      * Applies or updates the reforge lore on an ItemStack.
@@ -40,6 +46,9 @@ public class TalismanManager {
         if ("Damage".equalsIgnoreCase(reforgeType)) {
             newLine = ChatColor.GOLD + "Talisman: Damage. "
                     + StrengthManager.COLOR + "+" + DAMAGE_STRENGTH_BONUS + " Strength " + StrengthManager.EMOJI;
+        } else if ("Defense".equalsIgnoreCase(reforgeType)) {
+            newLine = ChatColor.GOLD + "Talisman: Defense. "
+                    + DefenseManager.COLOR + "+" + DEFENSE_DEFENSE_BONUS + " Defense " + DefenseManager.EMOJI;
         } else {
             newLine = ChatColor.GOLD + "Talisman: " + reforgeType;
         }
@@ -120,6 +129,40 @@ public class TalismanManager {
                         }
                     }
                     return DAMAGE_STRENGTH_BONUS;
+                }
+            }
+        }
+        return 0;
+    }
+
+    /**
+     * Retrieves the Defense bonus provided by a Defense talisman on the item.
+     *
+     * @param item Item to inspect.
+     * @return Defense value granted or 0 if none.
+     */
+    public static int getDefenseBonus(ItemStack item) {
+        if (item == null || item.getItemMeta() == null) {
+            return 0;
+        }
+
+        List<String> lore = item.getItemMeta().getLore();
+        if (lore != null) {
+            for (String line : lore) {
+                String strippedLine = ChatColor.stripColor(line);
+                if (strippedLine.startsWith("Talisman: Defense")) {
+                    int plus = strippedLine.indexOf('+');
+                    if (plus >= 0) {
+                        String num = strippedLine.substring(plus + 1).replaceAll("[^0-9]", "");
+                        if (!num.isEmpty()) {
+                            try {
+                                return Integer.parseInt(num);
+                            } catch (NumberFormatException ignored) {
+                                // fall through to default
+                            }
+                        }
+                    }
+                    return DEFENSE_DEFENSE_BONUS;
                 }
             }
         }

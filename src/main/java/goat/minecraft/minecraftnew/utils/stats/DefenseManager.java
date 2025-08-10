@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager.Pet;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager.PetPerk;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
+import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
@@ -84,6 +85,7 @@ public final class DefenseManager {
         int featherLevels = 0;
         int fireProtLevels = 0;
         double reforgeDefense = 0.0;
+        double talismanDefense = 0.0;
 
         ReforgeManager rm = new ReforgeManager();
         for (ItemStack piece : armor) {
@@ -97,10 +99,11 @@ public final class DefenseManager {
             int tier = rm.getReforgeTier(piece);
             ReforgeManager.ReforgeTier rt = rm.getReforgeTierByTier(tier);
             reforgeDefense += rt.getArmorDefenseBonus();
+            talismanDefense += TalismanManager.getDefenseBonus(piece);
         }
 
         double defense = protectionLevels * cfg.genericProtLevelToDefense +
-                reforgeDefense;
+                reforgeDefense + talismanDefense;
 
         if (tag == DamageTag.ENTITY_ATTACK) {
             double armorPoints = player.getAttribute(Attribute.GENERIC_ARMOR) != null
@@ -158,6 +161,7 @@ public final class DefenseManager {
         ItemStack[] armor = player.getInventory().getArmorContents();
         int protectionLevels = 0;
         double reforgeDefense = 0.0;
+        double talismanDefense = 0.0;
         ReforgeManager rm = new ReforgeManager();
         for (ItemStack piece : armor) {
             if (piece == null) continue;
@@ -165,9 +169,11 @@ public final class DefenseManager {
             int tier = rm.getReforgeTier(piece);
             ReforgeManager.ReforgeTier rt = rm.getReforgeTierByTier(tier);
             reforgeDefense += rt.getArmorDefenseBonus();
+            talismanDefense += TalismanManager.getDefenseBonus(piece);
         }
         double defense = getDefense(player, DamageTag.GENERIC);
         player.sendMessage(COLOR + "Reforges: " + ChatColor.YELLOW + reforgeDefense);
+        player.sendMessage(COLOR + "Talismans: " + ChatColor.YELLOW + talismanDefense);
         player.sendMessage(COLOR + "Protection: " + ChatColor.YELLOW + protectionLevels * CONFIG.genericProtLevelToDefense);
         player.sendMessage(COLOR + "Total: " + ChatColor.YELLOW + defense);
     }

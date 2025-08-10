@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.utils.devtools;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.utils.devtools.TalismanManager;
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
+import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
 import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
@@ -68,6 +69,12 @@ public class ItemLoreFormatter {
                     String newline = ChatColor.GOLD + "Talisman: Damage. "
                             + StrengthManager.COLOR + "+" + TalismanManager.DAMAGE_STRENGTH_BONUS
                             + " Strength" + StrengthManager.EMOJI;
+                    talismans.add(newline);
+                } else if (stripped.startsWith("Talisman: Armor") ||
+                        (stripped.startsWith("Talisman: Defense") && !stripped.contains("+"))) {
+                    String newline = ChatColor.GOLD + "Talisman: Defense. "
+                            + DefenseManager.COLOR + "+" + TalismanManager.DEFENSE_DEFENSE_BONUS
+                            + " Defense" + DefenseManager.EMOJI;
                     talismans.add(newline);
                 } else {
                     talismans.add(line);

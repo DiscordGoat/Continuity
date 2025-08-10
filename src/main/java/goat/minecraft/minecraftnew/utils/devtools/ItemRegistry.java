@@ -4,6 +4,7 @@ package goat.minecraft.minecraftnew.utils.devtools;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.other.durability.HeirloomManager;
+import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -1778,7 +1779,8 @@ public class ItemRegistry {
                 ChatColor.YELLOW + "Armor Talisman",
                 Arrays.asList(
                         ChatColor.GRAY + "An armorsmiths expertise",
-                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman for obtaining a higher Armor Rating.",
+                        ChatColor.BLUE + "Use: " + ChatColor.GRAY + "Talisman that grants "
+                                + DefenseManager.COLOR + "+10 Defense" + ChatColor.GRAY + ".",
                         ChatColor.DARK_PURPLE + "Smithing Item"
                 ),
                 1,

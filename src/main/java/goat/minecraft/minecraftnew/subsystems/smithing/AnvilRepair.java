@@ -1233,7 +1233,7 @@ public class AnvilRepair implements Listener {
 
 
         else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Armor Talisman")&& ARMOR.contains(repairee.getType())){
-            TalismanManager.applyReforgeLore(repairee, "Armor");
+            TalismanManager.applyReforgeLore(repairee, "Defense");
             player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
             return;
         }else if(billItem.getItemMeta().getDisplayName().equals(ChatColor.YELLOW + "Armor Toughness Talisman")&& ARMOR.contains(repairee.getType())){
