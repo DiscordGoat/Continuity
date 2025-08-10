@@ -354,6 +354,8 @@ public final class CartographyManager implements Listener {
             case SOUTH -> BlockFace.EAST;
             case EAST  -> BlockFace.NORTH;
             case WEST  -> BlockFace.SOUTH;
+            case UP   -> BlockFace.WEST;
+            case DOWN -> BlockFace.EAST;
             case UP, DOWN -> BlockFace.EAST;
             default -> BlockFace.EAST;
         };
@@ -361,8 +363,8 @@ public final class CartographyManager implements Listener {
     private static BlockFace upOf(BlockFace f) {
         return switch (f) {
             case NORTH, SOUTH, EAST, WEST -> BlockFace.UP;
-            case UP  -> BlockFace.SOUTH;   // ceiling
-            case DOWN-> BlockFace.NORTH;   // floor
+            case UP   -> BlockFace.NORTH; // floor
+            case DOWN -> BlockFace.NORTH; // ceiling
             default -> BlockFace.UP;
         };
     }
@@ -377,7 +379,7 @@ public final class CartographyManager implements Listener {
                 case EAST  -> new Axes(new Vector(0,0,1), new Vector(0,1,0));
                 case WEST  -> new Axes(new Vector(0,0,-1), new Vector(0,1,0));
                 case UP    -> new Axes(new Vector(1,0,0), new Vector(0,0,-1));
-                case DOWN  -> new Axes(new Vector(1,0,0), new Vector(0,0,1));
+                case DOWN  -> new Axes(new Vector(-1,0,0), new Vector(0,0,-1));
                 default -> new Axes(new Vector(1,0,0), new Vector(0,1,0));
             };
         }
