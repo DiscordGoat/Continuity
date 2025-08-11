@@ -312,3 +312,11 @@ commands:
     description: Sets all Verdant relics to a growth percentage
     usage: /setverdantrelicgrowthpercentage <1-100>
     permission: continuity.admin
+  savearmorcontents:
+    description: Saves your armor contents to a champions YAML file
+    usage: /savearmorcontents <filename>
+    permission: continuity.admin
+  saveitem:
+    description: Saves the item in your hand to a champions YAML file
+    usage: /saveitem <filename>
+    permission: continuity.admin
