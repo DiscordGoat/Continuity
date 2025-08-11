@@ -1,7 +1,7 @@
 package goat.minecraft.minecraftnew.other.arenas.champions;
 
 import net.citizensnpcs.api.npc.NPC;
-import net.citizensnpcs.trait.InventoryTrait;
+import net.citizensnpcs.api.trait.trait.Equipment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,7 +20,6 @@ public class ChampionEquipmentUtil {
 
     /**
      * Loads armor contents from a YAML file bundled in the plugin resources and applies
-     * them to the NPC's armor slots via the Citizens {@link InventoryTrait}.
      *
      * <p>The YAML file is expected to contain a list of {@link ItemStack} in the same
      * order returned by Bukkit's {@code PlayerInventory#getArmorContents()} (boots,
@@ -36,11 +35,11 @@ public class ChampionEquipmentUtil {
             if (in == null) return;
             YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(in));
             List<?> armorList = config.getList("armor");
-            if (armorList == null || !npc.hasTrait(InventoryTrait.class)) {
+            if (armorList == null || !npc.hasTrait(Equipment.class)) {
                 return;
             }
-            InventoryTrait inventory = npc.getTrait(InventoryTrait.class);
-            if (inventory.getInventory() == null) {
+            Equipment equipmentTrait = npc.getOrAddTrait(Equipment.class);
+            if (equipmentTrait.getEquipment() == null) {
                 return;
             }
 
@@ -49,10 +48,10 @@ public class ChampionEquipmentUtil {
                     .map(ItemStack.class::cast)
                     .toArray(ItemStack[]::new);
 
-            if (armor.length > 3) inventory.setItem(0, armor[3]); // helmet
-            if (armor.length > 2) inventory.setItem(1, armor[2]); // chestplate
-            if (armor.length > 1) inventory.setItem(2, armor[1]); // leggings
-            if (armor.length > 0) inventory.setItem(3, armor[0]); // boots
+            if (armor.length > 3) equipmentTrait.set(Equipment.EquipmentSlot.HELMET, armor[3]); // helmet
+            if (armor.length > 2) equipmentTrait.set(Equipment.EquipmentSlot.CHESTPLATE, armor[2]); // chestplate
+            if (armor.length > 1) equipmentTrait.set(Equipment.EquipmentSlot.LEGGINGS, armor[1]); // leggings
+            if (armor.length > 0) equipmentTrait.set(Equipment.EquipmentSlot.BOOTS, armor[0]); // boots
         } catch (Exception ignored) {
         }
     }
