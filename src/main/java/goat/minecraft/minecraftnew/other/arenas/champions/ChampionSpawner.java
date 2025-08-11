@@ -54,8 +54,8 @@ public final class ChampionSpawner {
             // 2: Set skin
             npc.getOrAddTrait(SkinTrait.class)
                     .setSkinPersistent("champion", type.getSkinSig(), type.getSkinValue());
-            // 3: Set armor contents
-            ChampionEquipmentUtil.setArmorContentsFromFile(plugin, player, type.getArmorFile());
+            // 3: Set armor contents via Citizens inventory trait
+            ChampionEquipmentUtil.setArmorContentsFromFile(plugin, npc, type.getArmorFile());
             // 4: set held item as the sword
             ChampionEquipmentUtil.setHeldItemFromFile(plugin, player, type.getSwordFile());
         }
