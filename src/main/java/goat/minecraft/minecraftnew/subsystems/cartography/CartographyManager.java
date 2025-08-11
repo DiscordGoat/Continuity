@@ -41,17 +41,13 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class CartographyManager implements Listener {
 
     private static final int MAX_WALL = 16;
-    private static final MapView.Scale TILE_SCALE = MapView.Scale.NORMAL;
+    private static final MapView.Scale TILE_SCALE = MapView.Scale.FAR;
     private static final long TELEPORT_SAFE_SCAN = 24;
     private static final NamespacedKey WALL_KEY = NamespacedKey.minecraft("cont_worldmap_wall");
     private static final String SAVE_FILE = "cartography2_walls.yml";
 
-    // Map expansion runs at a controlled pace so that large walls do not
-    // overwhelm the server.  The goal is roughly 20 pixels per tick, which
-    // gives players a responsive update without being too heavy.
-    private static final int EXPAND_WARMUP_TICKS = 0;
-    private static final int EXPAND_WARMUP_BUDGET = 20000;
-    private static final int EXPAND_STEADY_BUDGET = 20000;
+    // Magic number: Chunks Per Second - adjust this to control map generation speed
+    private static final int CPS = 100 ; // Current: 48 chunks per second (2x faster than before)
 
     private final Plugin plugin;
     private final File dataFile;
@@ -318,8 +314,8 @@ public final class CartographyManager implements Listener {
         switch (facing) {
             case NORTH -> { u = 1 - clickedPosition.getX(); v = cy; }
             case SOUTH -> { u = clickedPosition.getX(); v = cy; }
-            case WEST  -> { u = clickedPosition.getZ(); v = cy; }
-            case EAST  -> { u = 1 - clickedPosition.getZ(); v = cy; }
+            case EAST  -> { u = clickedPosition.getZ(); v = cy; }
+            case WEST  -> { u = 1 - clickedPosition.getZ(); v = cy; }
             case UP    -> { u = clickedPosition.getX(); v = 1 - clickedPosition.getZ(); }
             case DOWN  -> { u = clickedPosition.getX(); v = clickedPosition.getZ(); }
             default -> { return null; }
@@ -426,6 +422,7 @@ public final class CartographyManager implements Listener {
         final UUID[][] frames;
         final short[][] mapIds;
         final byte[][] caches;
+        final BitSet[] filled;  // Track which pixels have been rendered
         final MapRenderer[][] renderers;
         final int scaleSize;
         final int tileSpan;
@@ -457,6 +454,7 @@ public final class CartographyManager implements Listener {
             this.frames = new UUID[h][w];
             this.mapIds = (mapIds != null) ? mapIds : new short[h][w];
             this.caches = (caches != null) ? caches : new byte[h * w][];
+            this.filled = new BitSet[h * w];  // Initialize filled tracking
             this.renderers = new MapRenderer[h][w];
             this.scaleSize = 1 << TILE_SCALE.getValue();
             this.tileSpan = 128 * scaleSize;
@@ -466,13 +464,14 @@ public final class CartographyManager implements Listener {
             this.tileOriginX = new int[h][w];
             this.tileOriginZ = new int[h][w];
 
-            // Ensure cache arrays exist and are initialised
+            // Ensure cache arrays and filled bitsets exist and are initialised
             int totalTiles = h * w;
             for (int idx = 0; idx < totalTiles; idx++) {
                 if (this.caches[idx] == null) {
                     this.caches[idx] = new byte[128 * 128];
-                    Arrays.fill(this.caches[idx], Byte.MIN_VALUE);
+                    // No need to fill with sentinel values anymore
                 }
+                this.filled[idx] = new BitSet(128 * 128);  // All bits start as false (unfilled)
             }
 
             ensureFramesAndMaps();
@@ -538,9 +537,17 @@ public final class CartographyManager implements Listener {
             }
         }
         int pixelToWorldX(int tileI, int tileJ, int localPx) {
+            // Add bounds checking to prevent ArrayIndexOutOfBoundsException
+            if (tileJ < 0 || tileJ >= h || tileI < 0 || tileI >= w) {
+                return anchor.getX(); // Return anchor position as fallback
+            }
             return tileOriginX[tileJ][tileI] + localPx * scaleSize;
         }
         int pixelToWorldZ(int tileI, int tileJ, int localPz) {
+            // Add bounds checking to prevent ArrayIndexOutOfBoundsException
+            if (tileJ < 0 || tileJ >= h || tileI < 0 || tileI >= w) {
+                return anchor.getZ(); // Return anchor position as fallback
+            }
             return tileOriginZ[tileJ][tileI] + localPz * scaleSize;
         }
 
@@ -577,128 +584,461 @@ public final class CartographyManager implements Listener {
 
         void startExpander(boolean clear) {
             if (clear) {
-                for (byte[] c : caches) Arrays.fill(c, Byte.MIN_VALUE);
+                for (int idx = 0; idx < caches.length; idx++) {
+                    filled[idx].clear();  // Clear filled status instead of filling with sentinel
+                }
                 visited.clear();
                 bfs.clear();
             }
             if (expanderRunning) return;
             expanderRunning = true;
 
-            int totalW = w * 128, totalH = h * 128;
-            int cx = totalW / 2, cz = totalH / 2;
-            enqueueIfInside(cx, cz);
-
             new BukkitRunnable() {
-                int warmupTicks = EXPAND_WARMUP_TICKS;
-                int currentScanX = 0, currentScanZ = 0;
-                boolean bfsPhase = true;
+                // Batch-based processing variables
+                private final List<String> orderedChunkList = new ArrayList<>();
+                private final Set<String> chunksBeingLoaded = new HashSet<>();
+                private final Set<String> loadedChunks = new HashSet<>();
+                private final Queue<String> readyToProcess = new LinkedList<>();
+                private boolean initialized = false;
+                private int currentBatchIndex = 0;
+
+                // Debug tracking
+                private int totalPixelsProcessed = 0;
+                private int failedWorldQueries = 0;
+                private int successfulWorldQueries = 0;
+                private int chunksProcessed = 0;
+                private final Map<String, Integer> errorCounts = new HashMap<>();
 
                 @Override
                 public void run() {
-                    // Reduced budget for less lag
-                    int budget = (warmupTicks-- > 0) ? 5000 : 2000; // Much smaller budget
-                    int processed = 0;
-
-                    // Phase 1: BFS expansion from center
-                    if (bfsPhase) {
-                        while (processed < budget && !bfs.isEmpty()) {
-                            int[] p = bfs.pollFirst();
-                            if (p == null) break;
-                            int x = p[0], z = p[1];
-
-                            if (paintFullPixel(x, z)) {
-                                processed++;
-                                enqueueIfInside(x + 1, z);
-                                enqueueIfInside(x - 1, z);
-                                enqueueIfInside(x, z + 1);
-                                enqueueIfInside(x, z - 1);
+                    // Initialize ordered chunk list on first run
+                    if (!initialized) {
+                        synchronized (this) {
+                            // Double-check locking pattern to prevent multiple initialization
+                            if (!initialized) {
+                                initializeOrderedChunkList();
+                                initialized = true;
+                                plugin.getLogger().info(String.format("Starting batch-based map rendering. Total chunks: %d, CPS: %d", orderedChunkList.size(), CartographyManager.CPS));
                             }
                         }
-
-                        // If BFS queue is empty, switch to systematic scan
-                        if (bfs.isEmpty()) {
-                            bfsPhase = false;
-                            currentScanX = 0;
-                            currentScanZ = 0;
-                        }
+                        return;
                     }
 
-                    // Phase 2: Systematic scan to fill any remaining pixels
-                    if (!bfsPhase) {
-                        int totalW = w * 128, totalH = h * 128;
+                    // Calculate batch size based on CPS (chunks per second)
+                    // We run every tick (20 times per second), so batch size = CPS / 20
+                    int batchSize = Math.max(1, CartographyManager.CPS / 20);
 
-                        while (processed < budget && currentScanZ < totalH) {
-                            if (currentScanX >= totalW) {
-                                currentScanX = 0;
-                                currentScanZ++;
-                                continue;
-                            }
+                    // Phase 1: Load next batch of chunks (if needed)
+                    loadNextBatch(batchSize);
 
-                            // Add bounds checking to prevent the ArrayIndexOutOfBoundsException
-                            int tileI = currentScanX >> 7;
-                            int tileJ = currentScanZ >> 7;
+                    // Phase 2: Process any chunks that are now loaded
+                    processLoadedChunks();
 
-                            if (tileI >= 0 && tileI < w && tileJ >= 0 && tileJ < h) {
-                                if (paintFullPixel(currentScanX, currentScanZ)) {
-                                    processed++;
-                                }
-                            }
+                    // Check if we're done
+                    if (chunksProcessed >= orderedChunkList.size()) {
+                        expanderRunning = false;
+                        cancel();
 
-                            currentScanX++;
+                        plugin.getLogger().info(String.format(
+                                "Map rendering complete! Chunks: %d, Pixels: %d, Success: %d, Failed: %d",
+                                chunksProcessed, totalPixelsProcessed, successfulWorldQueries, failedWorldQueries
+                        ));
+                        if (!errorCounts.isEmpty()) {
+                            plugin.getLogger().warning("Final error breakdown: " + errorCounts.toString());
                         }
 
-                        // Check if we've completed the entire map
-                        if (currentScanZ >= totalH) {
-                            expanderRunning = false;
-                            cancel();
-                            manager.saveAll();
-                            return;
-                        }
-                    }
-
-                    // If we processed nothing this tick, increase the budget slightly for next tick
-                    if (processed == 0 && budget < 10000) {
-                        // This helps when most pixels are already painted
+                        manager.saveAll();
                     }
                 }
-            }.runTaskTimerAsynchronously(this.plugin, 10L, 2L); // Run every 2 ticks instead of every tick
+
+                // Initialize ordered chunk list (top-left to bottom-right)
+                private void initializeOrderedChunkList() {
+                    synchronized (this) {
+                        int totalW = w * 128, totalH = h * 128;
+
+                        // Find all chunks and sort them by position (top-left to bottom-right)
+                        Map<String, int[]> chunkPositions = new HashMap<>();
+                        Set<String> requiredChunks = new HashSet<>();
+
+                        for (int z = 0; z < totalH; z++) { // Top to bottom
+                            for (int x = 0; x < totalW; x++) { // Left to right
+                                int tileI = x >> 7, tileJ = z >> 7;
+                                int localPx = x & 127, localPz = z & 127;
+
+                                int wx = pixelToWorldX(tileI, tileJ, localPx);
+                                int wz = pixelToWorldZ(tileI, tileJ, localPz);
+
+                                String chunkKey = (wx >> 4) + "," + (wz >> 4);
+                                if (!requiredChunks.contains(chunkKey)) {
+                                    requiredChunks.add(chunkKey);
+                                    chunkPositions.put(chunkKey, new int[]{wx >> 4, wz >> 4});
+                                }
+                            }
+                        }
+
+                        // Sort chunks by position (top-left to bottom-right)
+                        orderedChunkList.addAll(requiredChunks);
+                        orderedChunkList.sort((a, b) -> {
+                            int[] posA = chunkPositions.get(a);
+                            int[] posB = chunkPositions.get(b);
+
+                            // Handle null cases to ensure comparator contract is satisfied
+                            if (posA == null && posB == null) return 0;
+                            if (posA == null) return 1; // null values go to end
+                            if (posB == null) return -1; // null values go to end
+
+                            // Sort by Z first (top to bottom), then by X (left to right)
+                            if (posA[1] != posB[1]) return Integer.compare(posA[1], posB[1]);
+                            return Integer.compare(posA[0], posB[0]);
+                        });
+                    }
+                }
+
+                // Load next batch of chunks on main thread
+                private void loadNextBatch(int batchSize) {
+                    int loaded = 0;
+
+                    while (loaded < batchSize && currentBatchIndex < orderedChunkList.size()) {
+                        String chunkKey = orderedChunkList.get(currentBatchIndex);
+
+                        // Skip if already loaded or being loaded
+                        if (loadedChunks.contains(chunkKey) || chunksBeingLoaded.contains(chunkKey)) {
+                            currentBatchIndex++;
+                            continue;
+                        }
+
+                        String[] parts = chunkKey.split(",");
+                        int chunkX = Integer.parseInt(parts[0]);
+                        int chunkZ = Integer.parseInt(parts[1]);
+
+                        if (world.isChunkLoaded(chunkX, chunkZ)) {
+                            // Already loaded
+                            loadedChunks.add(chunkKey);
+                            readyToProcess.offer(chunkKey);
+                        } else {
+                            // Need to load - schedule on main thread
+                            chunksBeingLoaded.add(chunkKey);
+
+                            Bukkit.getScheduler().runTask(plugin, () -> {
+                                try {
+                                    world.loadChunk(chunkX, chunkZ);
+                                    // Mark as loaded and ready to process
+                                    synchronized (this) {
+                                        chunksBeingLoaded.remove(chunkKey);
+                                        loadedChunks.add(chunkKey);
+                                        readyToProcess.offer(chunkKey);
+                                    }
+                                } catch (Exception e) {
+                                    plugin.getLogger().severe(String.format("Failed to load chunk (%d, %d): %s", chunkX, chunkZ, e.getMessage()));
+                                    synchronized (this) {
+                                        chunksBeingLoaded.remove(chunkKey);
+                                    }
+                                }
+                            });
+                        }
+
+                        currentBatchIndex++;
+                        loaded++;
+                    }
+                }
+
+                // Process all chunks that are ready
+                private void processLoadedChunks() {
+                    while (!readyToProcess.isEmpty()) {
+                        String chunkKey = readyToProcess.poll();
+                        processLoadedChunk(chunkKey);
+                        chunksProcessed++;
+
+                        // Progress update every batch
+                        if (chunksProcessed % Math.max(1, CartographyManager.CPS / 10) == 0) {
+                            plugin.getLogger().info(String.format(
+                                    "Batch rendering progress: %d/%d chunks (%.1f%%), %d pixels, Success: %d, Failed: %d",
+                                    chunksProcessed, orderedChunkList.size(),
+                                    (chunksProcessed * 100.0 / orderedChunkList.size()),
+                                    totalPixelsProcessed, successfulWorldQueries, failedWorldQueries
+                            ));
+                        }
+                    }
+                }
+
+                // Process all pixels within a single chunk (chunk is already loaded)
+                private void processLoadedChunk(String chunkKey) {
+                    String[] parts = chunkKey.split(",");
+                    int chunkX = Integer.parseInt(parts[0]);
+                    int chunkZ = Integer.parseInt(parts[1]);
+
+                    plugin.getLogger().info(String.format("Processing loaded chunk (%d, %d)", chunkX, chunkZ));
+
+                    // Local cache for this chunk
+                    Map<String, Integer> chunkHeightCache = new HashMap<>();
+                    Map<String, Material> chunkMaterialCache = new HashMap<>();
+
+                    int totalW = w * 128, totalH = h * 128;
+                    int pixelsInChunk = 0;
+
+                    // Process all pixels that fall within this chunk
+                    for (int x = 0; x < totalW; x++) {
+                        for (int z = 0; z < totalH; z++) {
+                            int tileI = x >> 7, tileJ = z >> 7;
+                            int localPx = x & 127, localPz = z & 127;
+
+                            int wx = pixelToWorldX(tileI, tileJ, localPx);
+                            int wz = pixelToWorldZ(tileI, tileJ, localPz);
+
+                            // Check if this pixel belongs to the current chunk
+                            if ((wx >> 4) == chunkX && (wz >> 4) == chunkZ) {
+                                try {
+                                    paintPixelInChunk(x, z, wx, wz, chunkHeightCache, chunkMaterialCache);
+                                    pixelsInChunk++;
+                                    totalPixelsProcessed++;
+                                } catch (Exception e) {
+                                    failedWorldQueries++;
+                                    String errorType = e.getClass().getSimpleName();
+                                    errorCounts.put(errorType, errorCounts.getOrDefault(errorType, 0) + 1);
+                                    plugin.getLogger().warning(String.format(
+                                            "Failed to paint pixel at (%d, %d) in chunk (%d, %d): %s",
+                                            wx, wz, chunkX, chunkZ, e.getMessage()
+                                    ));
+                                }
+                            }
+                        }
+                    }
+
+                    plugin.getLogger().info(String.format("Completed chunk (%d, %d) with %d pixels", chunkX, chunkZ, pixelsInChunk));
+                }
+
+                // Paint a single pixel within the current chunk context
+                private void paintPixelInChunk(int x, int z, int wx, int wz,
+                                               Map<String, Integer> chunkHeightCache,
+                                               Map<String, Material> chunkMaterialCache) {
+                    int tileI = x >> 7, tileJ = z >> 7;
+                    int localPx = x & 127, localPz = z & 127;
+
+                    byte color = sampleColorInChunk(wx, wz, chunkHeightCache, chunkMaterialCache);
+                    int idx = tileJ * w + tileI;
+                    int off = localPz * 128 + localPx;
+
+                    caches[idx][off] = color;
+                    filled[idx].set(off);  // Mark pixel as filled
+                }
+
+                // Efficient sampling with aggressive caching
+                private byte sampleColorInChunk(int wx, int wz, Map<String, Integer> chunkHeightCache, Map<String, Material> chunkMaterialCache) {
+                    String key = wx + "," + wz;
+
+                    // Try cache first
+                    Integer cachedY = chunkHeightCache.get(key);
+                    Material cachedMaterial = chunkMaterialCache.get(key);
+
+                    int y;
+                    Material top;
+
+                    if (cachedY != null && cachedMaterial != null) {
+                        y = cachedY;
+                        top = cachedMaterial;
+                    } else {
+                        // Only query world if not cached - chunk is already loaded
+                        try {
+                            y = world.getHighestBlockYAt(wx, wz);
+                            Block block = world.getBlockAt(wx, y, wz);
+                            top = block.getType();
+
+                            // Cache the results in chunk-local cache
+                            chunkHeightCache.put(key, y);
+                            chunkMaterialCache.put(key, top);
+                            successfulWorldQueries++;
+
+                        } catch (Exception e) {
+                            // Detailed error logging for world access failures
+                            plugin.getLogger().severe(String.format(
+                                    "World query failed at (%d, %d), chunk (%d, %d): %s - %s",
+                                    wx, wz, wx >> 4, wz >> 4, e.getClass().getSimpleName(), e.getMessage()
+                            ));
+
+                            // Fallback for failed world queries
+                            y = 64;
+                            top = Material.GRASS_BLOCK;
+                            failedWorldQueries++;
+                        }
+                    }
+
+                    // Calculate depth-based shading by comparing with neighboring heights
+                    int depthShading = calculateDepthShadingInChunk(wx, wz, y, chunkHeightCache);
+
+                    int[] c = colorFor(top, y, 0);
+
+                    // Apply depth shading to the color
+                    c[0] = Math.max(0, c[0] - depthShading);
+                    c[1] = Math.max(0, c[1] - depthShading);
+                    c[2] = Math.max(0, c[2] - depthShading);
+
+                    return MapPalette.matchColor(c[0], c[1], c[2]);
+                }
+
+                // Calculate depth-based shading using chunk-local cache
+                private int calculateDepthShadingInChunk(int wx, int wz, int currentY, Map<String, Integer> chunkHeightCache) {
+                    // Sample neighboring heights (4-directional for performance)
+                    int[] neighborHeights = new int[4];
+                    int[][] directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+                    for (int i = 0; i < 4; i++) {
+                        int nx = wx + directions[i][0];
+                        int nz = wz + directions[i][1];
+                        String neighborKey = nx + "," + nz;
+
+                        Integer cachedHeight = chunkHeightCache.get(neighborKey);
+                        if (cachedHeight != null) {
+                            neighborHeights[i] = cachedHeight;
+                        } else {
+                            try {
+                                // Check if neighbor is in a different chunk
+                                if ((nx >> 4) != (wx >> 4) || (nz >> 4) != (wz >> 4)) {
+                                    // Neighbor is in different chunk - check if loaded
+                                    if (!world.isChunkLoaded(nx >> 4, nz >> 4)) {
+                                        neighborHeights[i] = currentY; // Use current height if chunk not loaded
+                                        continue;
+                                    }
+                                }
+
+                                neighborHeights[i] = world.getHighestBlockYAt(nx, nz);
+                                chunkHeightCache.put(neighborKey, neighborHeights[i]);
+                                successfulWorldQueries++;
+                            } catch (Exception e) {
+                                neighborHeights[i] = currentY; // Fallback to current height
+                                failedWorldQueries++;
+                            }
+                        }
+                    }
+
+                    // Calculate average height difference
+                    int totalDifference = 0;
+                    for (int neighborHeight : neighborHeights) {
+                        totalDifference += Math.abs(currentY - neighborHeight);
+                    }
+                    int avgDifference = totalDifference / 4;
+
+                    // Convert height difference to shading intensity
+                    // Scale: 0-2 blocks = no shading, 3-10 blocks = light to moderate shading, 10+ blocks = heavy shading
+                    int shading = 0;
+                    if (avgDifference >= 2) {
+                        shading = Math.min(60, (avgDifference - 1) * 6); // Max 60 darkness units
+                    }
+
+                    return shading;
+                }
+            }.runTaskTimerAsynchronously(plugin, 0L, 1L); // Increased speed: 1 tick = ~12 chunks/sec
         }
-
-
-
-        private void enqueueIfInside(int x, int z) {
-            if (x < 0 || z < 0 || x >= w * 128 || z >= h * 128) return;
-            int key = z * (w * 128) + x;
-            if (visited.get(key)) return;
-            visited.set(key);
-            bfs.addLast(new int[]{x, z});
-        }
-
-        private boolean paintFullPixel(int x, int z) {
-            int tileI = x >> 7, tileJ = z >> 7;
-            int localPx = x & 127, localPz = z & 127;
-
-            int wx = pixelToWorldX(tileI, tileJ, localPx);
-            int wz = pixelToWorldZ(tileI, tileJ, localPz);
-
-            int idx = tileJ * w + tileI;
-            int off = localPz * 128 + localPx;
-
-            // Only paint if the pixel hasn't been painted yet
-            if (caches[idx][off] == Byte.MIN_VALUE) {
-                byte color = sampleColor(wx, wz);
-                caches[idx][off] = color;
-                return true;
-            }
-            return false;
-        }
-
 
         boolean needsRefresh() {
-            for (byte[] c : caches)
-                for (byte b : c)
-                    if (b == Byte.MIN_VALUE) return true;
+            for (BitSet filledSet : filled)
+                if (filledSet.cardinality() < 128 * 128) return true;  // Check if any pixels are unfilled
             return false;
+        }
+
+        private int[] colorFor(Material top, int y, int slope) {
+            // Water - much darker and more blue
+            if (top == Material.WATER || top == Material.KELP || top == Material.SEAGRASS) {
+                int d = 63 - y;
+                d = Math.max(-8, Math.min(15, d));
+                int R = Math.max(10, 30 - d);
+                int G = Math.max(50, 80 + d*2);
+                int B = Math.max(120, 180 + d*4);
+                return new int[]{R, G, B};
+            }
+
+            // Lava
+            if (top == Material.LAVA) return new int[]{255, 80, 0};
+
+            // Brick materials - all bricks except red bricks should be dark gray
+            if (top.name().contains("BRICK")) {
+                // Keep red bricks their original color
+                if (top == Material.RED_NETHER_BRICKS || top == Material.RED_NETHER_BRICK_STAIRS ||
+                        top == Material.RED_NETHER_BRICK_SLAB || top == Material.RED_NETHER_BRICK_WALL) {
+                    return new int[]{120, 40, 40}; // Dark red for red bricks
+                }
+                // All other bricks become dark gray
+                return new int[]{64, 64, 64}; // Dark gray
+            }
+
+            // Snow and ice - much whiter/more cyan
+            if (top == Material.SNOW || top == Material.SNOW_BLOCK || top == Material.POWDER_SNOW) {
+                int shade = clamp(255 - slope*5, 240, 255);
+                return new int[]{shade, shade, shade};
+            }
+            if (top == Material.ICE || top == Material.PACKED_ICE) {
+                int shade = clamp(240 - slope*4, 220, 240);
+                return new int[]{shade - 20, shade - 10, shade};
+            }
+            if (top == Material.BLUE_ICE) {
+                return new int[]{180, 220, 255};
+            }
+
+            // Sand
+            if (top == Material.SAND) {
+                return new int[]{240, 220, 140};
+            }
+            if (top == Material.RED_SAND) {
+                return new int[]{220, 140, 80};
+            }
+
+            // Stone and rocky materials
+            if (y > 63 + 35 || top == Material.STONE || top == Material.TUFF || top == Material.GRAVEL ||
+                    top == Material.DIORITE || top == Material.ANDESITE || top == Material.GRANITE || top == Material.CALCITE) {
+                int base = 120;
+                if (top == Material.DIORITE || top == Material.CALCITE) base = 160;
+                else if (top == Material.ANDESITE) base = 100;
+                else if (top == Material.GRANITE) base = 140;
+
+                int shade = clamp(base - slope*6, 70, base);
+                return new int[]{shade, shade, shade};
+            }
+
+            // Wood materials
+            if (top.name().endsWith("_PLANKS") || top.name().endsWith("_LOG") || top.name().endsWith("_WOOD")) {
+                return new int[]{120, 80, 50};
+            }
+
+            // Crops and farmland - bright green
+            if (top == Material.FARMLAND) {
+                return new int[]{90, 60, 40}; // Brown farmland
+            }
+            if (top == Material.WHEAT || top == Material.CARROTS || top == Material.POTATOES ||
+                    top == Material.BEETROOTS || top == Material.NETHER_WART) {
+                return new int[]{80, 200, 60}; // Bright green crops
+            }
+
+            // Grass blocks - consistent green without climate influence
+            if (top == Material.GRASS_BLOCK) {
+                int green = clamp(160 - slope*2, 140, 180);
+                int red = clamp(70, 50, 90);
+                int blue = clamp(60, 40, 80);
+                return new int[]{red, green, blue};
+            }
+
+            // Special blocks
+            if (top == Material.MUD || top == Material.MUDDY_MANGROVE_ROOTS) {
+                return new int[]{80, 60, 45};
+            }
+            if (top == Material.CLAY) {
+                return new int[]{160, 170, 180};
+            }
+            if (top == Material.MOSS_BLOCK || top == Material.MOSS_CARPET) {
+                return new int[]{60, 120, 40};
+            }
+            if (top == Material.MYCELIUM) {
+                return new int[]{120, 100, 130};
+            }
+
+            // Dirt variants
+            if (top == Material.DIRT || top == Material.COARSE_DIRT || top == Material.ROOTED_DIRT || top == Material.DIRT_PATH) {
+                return new int[]{120, 90, 60};
+            }
+
+            // Default grass/vegetation color - consistent without climate influence
+            int green = clamp(140 - slope*2, 120, 160);
+            int red = clamp(60, 40, 80);
+            int blue = clamp(50, 30, 70);
+            return new int[]{red, green, blue};
         }
 
         private final class TileRenderer extends MapRenderer {
@@ -709,9 +1049,10 @@ public final class CartographyManager implements Listener {
             }
             @Override public void render(MapView map, MapCanvas canvas, Player player) {
                 byte[] buf = caches[index];
+                BitSet filledSet = filled[index];
                 for (int y = 0, k = 0; y < 128; y++)
                     for (int x = 0; x < 128; x++, k++)
-                        if (buf[k] != Byte.MIN_VALUE) canvas.setPixel(x, y, buf[k]);
+                        if (filledSet.get(k)) canvas.setPixel(x, y, buf[k]);  // Use BitSet instead of sentinel check
 
                 int px = worldToPixelX(views[tileJ][tileI], anchor.getX());
                 int pz = worldToPixelZ(views[tileJ][tileI], anchor.getZ());
@@ -736,161 +1077,6 @@ public final class CartographyManager implements Listener {
         }
 
         private static final int SEA_Y = 63;
-
-        private byte sampleColor(int wx, int wz) {
-            int s = scaleSize;
-            // Reduced sampling for better performance - only sample center and one offset
-            int[][] offs = {{0,0},{s/3,s/3}}; // Reduced from 4 samples to 2
-            int r=0,g=0,b=0,n=0;
-
-            for (int[] o : offs) {
-                int x = wx + o[0], z = wz + o[1];
-                int y = world.getHighestBlockYAt(x, z);
-                Material top = world.getBlockAt(x, y-1, z).getType();
-
-                // Calculate slope with better precision
-                int yx = world.getHighestBlockYAt(x+s, z);
-                int yz = world.getHighestBlockYAt(x, z+s);
-                int slope = Math.min(12, Math.abs(y-yx) + Math.abs(y-yz)); // Increased max slope
-
-                Biome biome = world.getBiome(x, y-1, z);
-
-                int[] c = colorFor(top, biome, y, slope);
-                r += c[0]; g += c[1]; b += c[2]; n++;
-            }
-            return MapPalette.matchColor(r/n, g/n, b/n);
-        }
-
-        private int[] colorFor(Material top, Biome biome, int y, int slope) {
-            // Water with better depth perception
-            if (top == Material.WATER || top == Material.KELP || top == Material.SEAGRASS) {
-                int d = SEA_Y - y;
-                d = Math.max(-12, Math.min(20, d));
-                int R = Math.max(20, 60 - d*2);
-                int G = Math.max(80, 140 + d*4);
-                int B = Math.max(140, 220 + d*3);
-                return new int[]{R, G, B};
-            }
-
-            // Lava - more vibrant
-            if (top == Material.LAVA) return new int[]{255, 100, 20};
-
-            // Snow and ice - more realistic
-            if (top == Material.SNOW || top == Material.SNOW_BLOCK || top == Material.POWDER_SNOW ||
-                    top == Material.ICE || top == Material.PACKED_ICE || top == Material.BLUE_ICE) {
-                int shade = clamp(250 - slope*8, 200, 250);
-                if (top == Material.BLUE_ICE) return new int[]{180, 200, 255};
-                return new int[]{shade, shade, Math.min(255, shade + 10)};
-            }
-
-            // Sand - more vibrant
-            if (top == Material.SAND) {
-                int shade = clamp(240 - slope*4, 180, 240);
-                return new int[]{shade, shade-20, shade-80};
-            }
-            if (top == Material.RED_SAND) {
-                return new int[]{220, 140, 80};
-            }
-
-            // Stone and rocky materials - better contrast
-            if (y > SEA_Y + 35 || top == Material.STONE || top == Material.TUFF || top == Material.GRAVEL ||
-                    top == Material.DIORITE || top == Material.ANDESITE || top == Material.GRANITE || top == Material.CALCITE) {
-                int base = 140;
-                if (top == Material.DIORITE || top == Material.CALCITE) base = 180;
-                else if (top == Material.ANDESITE) base = 120;
-                else if (top == Material.GRANITE) base = 160;
-
-                int shade = clamp(base - slope*8, 80, base);
-                return new int[]{shade, shade, shade};
-            }
-
-            // Wood materials
-            if (top.name().endsWith("_PLANKS") || top.name().endsWith("_LOG") || top.name().endsWith("_WOOD")) {
-                if (top.name().startsWith("DARK_OAK")) return new int[]{80, 50, 30};
-                if (top.name().startsWith("BIRCH")) return new int[]{220, 200, 160};
-                if (top.name().startsWith("JUNGLE")) return new int[]{160, 110, 80};
-                return new int[]{140, 100, 60};
-            }
-
-            // Farmland and crops - more vibrant greens
-            if (top == Material.FARMLAND || top == Material.WHEAT || top == Material.CARROTS ||
-                    top == Material.POTATOES || top == Material.BEETROOTS) {
-                return new int[]{100, 180, 60};
-            }
-
-            // Special blocks with distinctive colors
-            if (top == Material.MUD || top == Material.MUDDY_MANGROVE_ROOTS) {
-                return new int[]{100, 80, 65};
-            }
-            if (top == Material.CLAY) {
-                return new int[]{180, 185, 200};
-            }
-            if (top == Material.MOSS_BLOCK || top == Material.MOSS_CARPET) {
-                return new int[]{80, 140, 50};
-            }
-            if (top == Material.MYCELIUM) {
-                return new int[]{140, 120, 150};
-            }
-
-            // Nether materials
-            if (top == Material.NETHERRACK || top == Material.NETHER_WART_BLOCK) {
-                return new int[]{180, 80, 80};
-            }
-            if (top == Material.CRIMSON_NYLIUM) {
-                return new int[]{180, 60, 60};
-            }
-            if (top == Material.WARPED_NYLIUM) {
-                return new int[]{60, 140, 120};
-            }
-            if (top == Material.SOUL_SAND || top == Material.SOUL_SOIL) {
-                return new int[]{140, 120, 100};
-            }
-            if (top == Material.BLACKSTONE || top == Material.BASALT || top == Material.POLISHED_BASALT) {
-                int shade = clamp(100 - slope*5, 50, 100);
-                return new int[]{shade, shade, shade};
-            }
-
-            // Dirt variants
-            if (top == Material.DIRT || top == Material.COARSE_DIRT || top == Material.ROOTED_DIRT || top == Material.DIRT_PATH) {
-                return new int[]{160, 130, 90};
-            }
-
-            // Grass and vegetation - improved biome-based coloring
-            Climate c = climateFor(biome);
-
-            // More vibrant grass colors based on biome
-            int baseGreen = 120 + (int)(c.humidity * 80);
-            int baseRed = 60 + (int)(c.humidity * 20) - (int)(c.temp * 15);
-            int baseBlue = 50 + (int)(c.humidity * 15);
-
-            // Apply slope shading
-            int green = clamp(baseGreen - slope*3, 80, 200);
-            int red = clamp(baseRed, 30, 140);
-            int blue = clamp(baseBlue, 30, 120);
-
-            return new int[]{red, green, blue};
-        }
-
-
-        private Climate climateFor(Biome b) {
-            return switch (b) {
-                case DESERT, BADLANDS, ERODED_BADLANDS, WOODED_BADLANDS -> new Climate(0.95f, 0.05f);
-                case SAVANNA, SAVANNA_PLATEAU, WINDSWEPT_SAVANNA -> new Climate(0.9f, 0.3f);
-                case JUNGLE, BAMBOO_JUNGLE, SPARSE_JUNGLE -> new Climate(0.95f, 0.95f);
-                case SWAMP, MANGROVE_SWAMP -> new Climate(0.8f, 1.0f);
-                case FOREST, FLOWER_FOREST, BIRCH_FOREST, OLD_GROWTH_BIRCH_FOREST, DARK_FOREST,
-                     TAIGA, OLD_GROWTH_SPRUCE_TAIGA, OLD_GROWTH_PINE_TAIGA -> new Climate(0.6f, 0.75f);
-                case MEADOW, PLAINS, SUNFLOWER_PLAINS, CHERRY_GROVE -> new Climate(0.7f, 0.55f);
-                case STONY_SHORE, WINDSWEPT_HILLS, WINDSWEPT_FOREST, WINDSWEPT_GRAVELLY_HILLS, STONY_PEAKS -> new Climate(0.5f, 0.35f);
-                case GROVE, SNOWY_TAIGA, SNOWY_PLAINS, SNOWY_SLOPES, FROZEN_PEAKS, JAGGED_PEAKS, ICE_SPIKES -> new Climate(0.1f, 0.6f);
-                case LUSH_CAVES -> new Climate(0.7f, 0.9f);
-                case DRIPSTONE_CAVES, DEEP_DARK -> new Climate(0.5f, 0.5f);
-                case BEACH, RIVER, OCEAN, WARM_OCEAN, LUKEWARM_OCEAN, COLD_OCEAN, DEEP_OCEAN, DEEP_LUKEWARM_OCEAN, DEEP_COLD_OCEAN, FROZEN_OCEAN, FROZEN_RIVER, DEEP_FROZEN_OCEAN -> new Climate(0.6f, 0.9f);
-                default -> new Climate(0.6f, 0.6f);
-            };
-        }
-
-        private record Climate(float temp, float humidity) {}
 
         Map<String, Object> serialize() {
             Map<String, Object> m = new LinkedHashMap<>();
