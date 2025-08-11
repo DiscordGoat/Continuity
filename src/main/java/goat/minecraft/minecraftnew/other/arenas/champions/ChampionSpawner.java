@@ -18,6 +18,8 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
+
 /**
  * Utility for spawning champions at a given location.
  */
@@ -64,13 +66,14 @@ public final class ChampionSpawner {
             npc.setProtected(false);
             ItemStack sword = ChampionEquipmentUtil.getItemFromFile(plugin, type.getSwordFile());
 
-            if (sword != null) {
-                // Defer one tick so Citizens doesn't immediately overwrite it
-                Bukkit.getScheduler().runTask(plugin, () -> {
-                    Equipment eq = npc.getOrAddTrait(Equipment.class);
-                    eq.set(Equipment.EquipmentSlot.OFF_HAND, sword);
-                });
-            }
+            Bukkit.getScheduler().runTask(plugin, () -> {
+                Equipment eq = npc.getOrAddTrait(Equipment.class);
+                ItemStack[] armor = ChampionEquipmentUtil.getArmorForEquipment(plugin, type.getArmorFile());
+                eq.set(Equipment.EquipmentSlot.HELMET,     armor[0]);
+                eq.set(Equipment.EquipmentSlot.CHESTPLATE, armor[1]);
+                eq.set(Equipment.EquipmentSlot.LEGGINGS,   armor[2]);
+                eq.set(Equipment.EquipmentSlot.BOOTS,      armor[3]);
+            });
 
 // main hand (if you still want it)
             ChampionEquipmentUtil.setHeldItemFromFile(plugin, (Player) npc.getEntity(), type.getSwordFile());

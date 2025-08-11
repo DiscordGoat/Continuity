@@ -58,7 +58,40 @@ public class ChampionEquipmentUtil {
         } catch (Exception ignored) {
         }
     }
+    public static List<ItemStack> getArmorFromFile(JavaPlugin plugin, String resourcePath) {
+        try (InputStream in = plugin.getResource(resourcePath)) {
+            if (in == null) return List.of();
+            try (InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(reader);
+                List<?> raw = config.getList("armor");
+                if (raw == null) return List.of();
 
+                // Bukkit order: boots, leggings, chestplate, helmet
+                java.util.ArrayList<ItemStack> armor = new java.util.ArrayList<>(4);
+                for (Object o : raw) {
+                    if (o instanceof ItemStack is) armor.add(is.clone());
+                }
+                return armor;
+            }
+        } catch (Exception ex) {
+            plugin.getLogger().log(Level.WARNING, "Failed to load armor from " + resourcePath, ex);
+            return List.of();
+        }
+    }
+
+    /**
+     * Convenience: returns armor in Citizens Equipment order:
+     * [HELMET, CHESTPLATE, LEGGINGS, BOOTS]
+     */
+    public static ItemStack[] getArmorForEquipment(JavaPlugin plugin, String resourcePath) {
+        List<ItemStack> bukkitOrder = getArmorFromFile(plugin, resourcePath); // boots, leggings, chestplate, helmet
+        ItemStack[] out = new ItemStack[4]; // [helmet, chest, legs, boots]
+        if (bukkitOrder.size() > 3) out[0] = bukkitOrder.get(3).clone(); // helmet
+        if (bukkitOrder.size() > 2) out[1] = bukkitOrder.get(2).clone(); // chest
+        if (bukkitOrder.size() > 1) out[2] = bukkitOrder.get(1).clone(); // legs
+        if (bukkitOrder.size() > 0) out[3] = bukkitOrder.get(0).clone(); // boots
+        return out;
+    }
     /**
      * Loads armor contents from a YAML file in the plugin's data folder and applies
      * them to the provided player.
