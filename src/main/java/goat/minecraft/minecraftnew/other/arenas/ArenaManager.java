@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other.arenas;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -21,6 +22,10 @@ public class ArenaManager {
     private final JavaPlugin plugin;
     private final List<Location> arenaLocations = new ArrayList<>();
     private final File arenaFile;
+
+    private static final int RINGS = 4;
+    private static final int RING_STEP = 250;     // ring radius step
+    private static final int MIN_SEPARATION = 200; // min distance between arenas
 
     private ArenaManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -42,21 +47,32 @@ public class ArenaManager {
     }
 
     /**
-     * Calculates arena locations in concentric rings and stores them in arenaLocations.yml.
+     * Loads existing arena locations if present; otherwise generates them once and saves.
+     * Safe to call multiple times (idempotent).
      */
-    public void activateArenas() {
-        arenaLocations.clear();
+    public synchronized void activateArenas() {
         plugin.getDataFolder().mkdirs();
+
+        // If file already exists, load once and return (no new files created).
+        if (arenaFile.exists()) {
+            loadArenaLocations();
+            return;
+        }
+
+        // Otherwise, generate and save exactly once.
+        arenaLocations.clear();
 
         World world = Bukkit.getWorlds().get(0);
         Location spawn = world.getSpawnLocation();
         Random random = new Random();
 
-        for (int ring = 1; ring <= 4; ring++) {
-            int radius = ring * 250; // 250, 500, 750, 1000
+        for (int ring = 1; ring <= RINGS; ring++) {
+            int radius = ring * RING_STEP; // 250, 500, 750, 1000
             int arenasNeeded = ring * 3;
             int placed = 0;
-            while (placed < arenasNeeded) {
+            int safety = 0;
+            while (placed < arenasNeeded && safety < arenasNeeded * 50) {
+                safety++;
                 double angle = random.nextDouble() * Math.PI * 2;
                 double x = spawn.getX() + radius * Math.cos(angle);
                 double z = spawn.getZ() + radius * Math.sin(angle);
@@ -73,7 +89,7 @@ public class ArenaManager {
 
     private boolean isFarEnough(Location candidate) {
         for (Location loc : arenaLocations) {
-            if (loc.getWorld().equals(candidate.getWorld()) && loc.distance(candidate) < 200) {
+            if (loc.getWorld().equals(candidate.getWorld()) && loc.distance(candidate) < MIN_SEPARATION) {
                 return false;
             }
         }
@@ -81,6 +97,9 @@ public class ArenaManager {
     }
 
     private void saveArenaLocations() {
+        // Only save if the file doesn't already exist (defensive).
+        if (arenaFile.exists()) return;
+
         YamlConfiguration config = new YamlConfiguration();
         for (int i = 0; i < arenaLocations.size(); i++) {
             Location loc = arenaLocations.get(i);
@@ -94,6 +113,29 @@ public class ArenaManager {
             config.save(arenaFile);
         } catch (IOException e) {
             plugin.getLogger().warning("Could not save arena locations: " + e.getMessage());
+        }
+    }
+
+    private void loadArenaLocations() {
+        arenaLocations.clear();
+        if (!arenaFile.exists()) return;
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(arenaFile);
+        ConfigurationSection section = config.getConfigurationSection("arenas");
+        if (section == null) return;
+
+        for (String key : section.getKeys(false)) {
+            String base = "arenas." + key;
+            String worldName = config.getString(base + ".world");
+            World world = (worldName == null) ? null : Bukkit.getWorld(worldName);
+            if (world == null) continue;
+
+            // Stored as ints; read as doubles is fine.
+            double x = config.getDouble(base + ".x");
+            double y = config.getDouble(base + ".y");
+            double z = config.getDouble(base + ".z");
+
+            arenaLocations.add(new Location(world, x, y, z));
         }
     }
 
@@ -117,4 +159,3 @@ public class ArenaManager {
         return nearest;
     }
 }
-
