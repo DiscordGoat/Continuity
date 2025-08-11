@@ -19,6 +19,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -152,7 +153,10 @@ public class ChampionTrait extends Trait implements Listener {
             transitionToStatue();
             return;
         }
-        
+        SkinTrait skin = npc.getOrAddTrait(SkinTrait.class);
+        skin.setFetchDefaultSkin(false);
+        skin.setShouldUpdateSkins(false);
+        skin.setSkinPersistent("champion", championType.getSkinSig(), championType.getSkinValue());
         // Enable head tracking to stare at player
         LookClose lookClose = npc.getOrAddTrait(LookClose.class);
         lookClose.lookClose(true);
@@ -174,9 +178,10 @@ public class ChampionTrait extends Trait implements Listener {
             transitionToStatue();
             return;
         }
-        
+
         // Sprint toward player
         npc.getNavigator().setTarget(targetPlayer, true);
+
         self.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 40, 1, false, false));
         
         double distance = self.getLocation().distance(targetPlayer.getLocation());
@@ -223,13 +228,50 @@ public class ChampionTrait extends Trait implements Listener {
         // Flee from player
         fleeFromPlayer(self, targetPlayer);
     }
+    private void applyPermanentBuffs(LivingEntity e) {
+        // 1) clear old
+        for (PotionEffectType t : Arrays.asList(
+                PotionEffectType.HEALTH_BOOST,
+                PotionEffectType.RESISTANCE,
+                PotionEffectType.SLOWNESS,
+                PotionEffectType.STRENGTH)) {
+            e.removePotionEffect(t);
+        }
 
+        // 2) figure out the HEALTH_BOOST amp for your HP tiers
+        int targetHP = championType.getHealth();
+        // each amp+1 adds +4 HP; base is 20 HP → amp = (targetHP−20)/4 −1
+        int hpAmp = (targetHP - 20) / 4 - 1;
+
+        int infinite = Integer.MAX_VALUE;
+        e.addPotionEffect(new PotionEffect(
+                PotionEffectType.HEALTH_BOOST, infinite, hpAmp, true, false
+        ));
+        e.addPotionEffect(new PotionEffect(
+                PotionEffectType.RESISTANCE, infinite, 1, true, false
+        ));
+        e.addPotionEffect(new PotionEffect(
+                PotionEffectType.SLOWNESS, infinite, 1, true, false
+        ));
+        e.addPotionEffect(new PotionEffect(
+                PotionEffectType.STRENGTH, infinite, 1, true, false
+        ));
+    }
     private void transitionToAwaken(Player player) {
         currentPhase = ChampionPhase.AWAKEN;
         phaseStartTime = System.currentTimeMillis();
         targetPlayer = player;
         damageTaken = 0.0;
-        
+        LivingEntity self = (LivingEntity) npc.getEntity();
+        applyPermanentBuffs(self);
+        self.setHealth(self.getMaxHealth());
+        // 5s @ amp=4 is “insane”…should fill a few hundred HP in time
+        self.addPotionEffect(new PotionEffect(
+                PotionEffectType.REGENERATION,
+                /*durationTicks=*/20*3,  /*5s * 20 tps*/
+                /*amp=*/255,
+                true, false
+        ));
         // Trigger CHAT_GREET phase
         handleChatGreet();
         
@@ -251,9 +293,7 @@ public class ChampionTrait extends Trait implements Listener {
             eq.set(Equipment.EquipmentSlot.HAND, sword);
         }, 5L);
         
-        // Apply health and ensure max health is set
-        LivingEntity self = (LivingEntity) npc.getEntity();
-        applyChampionHealth(self);
+        // Apply health and ensure max health is setapplyChampionHealth(self);
     }
 
     private void transitionToSword() {
@@ -261,7 +301,8 @@ public class ChampionTrait extends Trait implements Listener {
         phaseStartTime = System.currentTimeMillis();
         damageTaken = 0.0;
         disengageHitCount = 0;
-        
+        ItemStack sword = ChampionEquipmentUtil.getItemFromFile(plugin, championType.getSwordFile());
+        npc.getOrAddTrait(Equipment.class).set(Equipment.EquipmentSlot.HAND, sword);
         // Disable look close during combat
         LookClose lookClose = npc.getOrAddTrait(LookClose.class);
         lookClose.lookClose(false);
