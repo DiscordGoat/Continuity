@@ -19,9 +19,10 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
+import java.util.Set;
 
 /**
- * Utility for spawning champions at a given location.
+ * Utility for spawning champions at a given location with phase-based AI.
  */
 public final class ChampionSpawner {
 
@@ -29,7 +30,7 @@ public final class ChampionSpawner {
     }
 
     /**
-     * Spawns the given champion type at the supplied location.
+     * Spawns the given champion type at the supplied location with ChampionTrait AI.
      *
      * @param type the champion definition
      * @param loc  where to spawn the champion
@@ -59,27 +60,15 @@ public final class ChampionSpawner {
         if (npc.getEntity() instanceof Player player) {
             player.setCustomName(type.getName());
             player.setCustomNameVisible(true);
-            // 2: Set skin
 
-            // 3: Set armor contents via Citizens inventory trait
-            ChampionEquipmentUtil.setArmorContentsFromFile(plugin, npc, type.getArmorFile());
+            // Champion starts in STATUE phase - ChampionTrait will handle skin and equipment
             npc.setProtected(false);
-            ItemStack sword = ChampionEquipmentUtil.getItemFromFile(plugin, type.getSwordFile());
 
-            Bukkit.getScheduler().runTask(plugin, () -> {
-                Equipment eq = npc.getOrAddTrait(Equipment.class);
-                ItemStack[] armor = ChampionEquipmentUtil.getArmorForEquipment(plugin, type.getArmorFile());
-                eq.set(Equipment.EquipmentSlot.HELMET,     armor[0]);
-                eq.set(Equipment.EquipmentSlot.CHESTPLATE, armor[1]);
-                eq.set(Equipment.EquipmentSlot.LEGGINGS,   armor[2]);
-                eq.set(Equipment.EquipmentSlot.BOOTS,      armor[3]);
-            });
-
-// main hand (if you still want it)
-            ChampionEquipmentUtil.setHeldItemFromFile(plugin, (Player) npc.getEntity(), type.getSwordFile());
+            // Get blessings for this champion type
+            Set<ChampionBlessing> blessings = ChampionRegistry.getBlessings(type.getName());
+            
+            // Add ChampionTrait - this handles all phase-based AI, equipment, and skin management
+            npc.addTrait(new ChampionTrait(plugin, type, blessings));
         }
-
-        // 5: set corpse trait (placeholder)
-        npc.addTrait(new CorpseTrait(plugin, Rarity.COMMON, false, 0));
     }
 }
