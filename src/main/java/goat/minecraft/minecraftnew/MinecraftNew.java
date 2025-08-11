@@ -109,6 +109,7 @@ import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.other.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.other.structureblocks.SetStructureBlockPowerCommand;
 import goat.minecraft.minecraftnew.other.warpgate.WarpGateManager;
+import goat.minecraft.minecraftnew.other.arenas.ArenaManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentPreferences;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.EnvironmentSidebarPreferences;
 import goat.minecraft.minecraftnew.subsystems.dragons.DragonFightManager;
@@ -146,6 +147,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
     private WarpGateManager warpGateManager;
+    private ArenaManager arenaManager;
     private DragonFightManager dragonFightManager;
     private BeaconPassiveEffects beaconPassiveEffects;
     private MonolithSetBonus monolithSetBonus;
@@ -185,6 +187,10 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
     public WarpGateManager getWarpGateManager() {
         return warpGateManager;
+    }
+
+    public ArenaManager getArenaManager() {
+        return arenaManager;
     }
 
     public AnvilRepair getAnvilRepair() {
@@ -279,6 +285,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
+        arenaManager = ArenaManager.getInstance(this);
+        arenaManager.activateArenas();
         PlayerMeritManager playerData = PlayerMeritManager.getInstance(this);
 
         // Register commands
