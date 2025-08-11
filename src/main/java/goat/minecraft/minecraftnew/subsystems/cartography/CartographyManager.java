@@ -590,25 +590,81 @@ public final class CartographyManager implements Listener {
 
             new BukkitRunnable() {
                 int warmupTicks = EXPAND_WARMUP_TICKS;
-                @Override public void run() {
-                    if (bfs.isEmpty()) { expanderRunning = false; cancel(); manager.saveAll(); return; }
+                int currentScanX = 0, currentScanZ = 0;
+                boolean bfsPhase = true;
 
-                    int budget = (warmupTicks-- > 0) ? EXPAND_WARMUP_BUDGET : EXPAND_STEADY_BUDGET;
-                    for (int i = 0; i < budget; i++) {
-                        int[] p = bfs.pollFirst();
-                        if (p == null) break;
-                        int x = p[0], z = p[1];
+                @Override
+                public void run() {
+                    // Reduced budget for less lag
+                    int budget = (warmupTicks-- > 0) ? 5000 : 2000; // Much smaller budget
+                    int processed = 0;
 
-                        if (!paintFullPixel(x, z)) continue;
+                    // Phase 1: BFS expansion from center
+                    if (bfsPhase) {
+                        while (processed < budget && !bfs.isEmpty()) {
+                            int[] p = bfs.pollFirst();
+                            if (p == null) break;
+                            int x = p[0], z = p[1];
 
-                        enqueueIfInside(x + 1, z);
-                        enqueueIfInside(x - 1, z);
-                        enqueueIfInside(x, z + 1);
-                        enqueueIfInside(x, z - 1);
+                            if (paintFullPixel(x, z)) {
+                                processed++;
+                                enqueueIfInside(x + 1, z);
+                                enqueueIfInside(x - 1, z);
+                                enqueueIfInside(x, z + 1);
+                                enqueueIfInside(x, z - 1);
+                            }
+                        }
+
+                        // If BFS queue is empty, switch to systematic scan
+                        if (bfs.isEmpty()) {
+                            bfsPhase = false;
+                            currentScanX = 0;
+                            currentScanZ = 0;
+                        }
+                    }
+
+                    // Phase 2: Systematic scan to fill any remaining pixels
+                    if (!bfsPhase) {
+                        int totalW = w * 128, totalH = h * 128;
+
+                        while (processed < budget && currentScanZ < totalH) {
+                            if (currentScanX >= totalW) {
+                                currentScanX = 0;
+                                currentScanZ++;
+                                continue;
+                            }
+
+                            // Add bounds checking to prevent the ArrayIndexOutOfBoundsException
+                            int tileI = currentScanX >> 7;
+                            int tileJ = currentScanZ >> 7;
+
+                            if (tileI >= 0 && tileI < w && tileJ >= 0 && tileJ < h) {
+                                if (paintFullPixel(currentScanX, currentScanZ)) {
+                                    processed++;
+                                }
+                            }
+
+                            currentScanX++;
+                        }
+
+                        // Check if we've completed the entire map
+                        if (currentScanZ >= totalH) {
+                            expanderRunning = false;
+                            cancel();
+                            manager.saveAll();
+                            return;
+                        }
+                    }
+
+                    // If we processed nothing this tick, increase the budget slightly for next tick
+                    if (processed == 0 && budget < 10000) {
+                        // This helps when most pixels are already painted
                     }
                 }
-            }.runTaskTimerAsynchronously(this.plugin, 10L, 1L);
+            }.runTaskTimerAsynchronously(this.plugin, 10L, 2L); // Run every 2 ticks instead of every tick
         }
+
+
 
         private void enqueueIfInside(int x, int z) {
             if (x < 0 || z < 0 || x >= w * 128 || z >= h * 128) return;
@@ -625,17 +681,18 @@ public final class CartographyManager implements Listener {
             int wx = pixelToWorldX(tileI, tileJ, localPx);
             int wz = pixelToWorldZ(tileI, tileJ, localPz);
 
-
-            byte color = sampleColor(wx, wz);
             int idx = tileJ * w + tileI;
             int off = localPz * 128 + localPx;
 
+            // Only paint if the pixel hasn't been painted yet
             if (caches[idx][off] == Byte.MIN_VALUE) {
+                byte color = sampleColor(wx, wz);
                 caches[idx][off] = color;
                 return true;
             }
             return false;
         }
+
 
         boolean needsRefresh() {
             for (byte[] c : caches)
@@ -682,17 +739,19 @@ public final class CartographyManager implements Listener {
 
         private byte sampleColor(int wx, int wz) {
             int s = scaleSize;
-            int[][] offs = {{0,0},{s/2,0},{0,s/2},{s/2,s/2}};
+            // Reduced sampling for better performance - only sample center and one offset
+            int[][] offs = {{0,0},{s/3,s/3}}; // Reduced from 4 samples to 2
             int r=0,g=0,b=0,n=0;
 
             for (int[] o : offs) {
                 int x = wx + o[0], z = wz + o[1];
-                int y  = world.getHighestBlockYAt(x, z);
+                int y = world.getHighestBlockYAt(x, z);
                 Material top = world.getBlockAt(x, y-1, z).getType();
 
-                int yx = world.getHighestBlockYAt(x+1, z);
-                int yz = world.getHighestBlockYAt(x, z+1);
-                int slope = Math.min(8, Math.abs(y-yx) + Math.abs(y-yz));
+                // Calculate slope with better precision
+                int yx = world.getHighestBlockYAt(x+s, z);
+                int yz = world.getHighestBlockYAt(x, z+s);
+                int slope = Math.min(12, Math.abs(y-yx) + Math.abs(y-yz)); // Increased max slope
 
                 Biome biome = world.getBiome(x, y-1, z);
 
@@ -703,86 +762,115 @@ public final class CartographyManager implements Listener {
         }
 
         private int[] colorFor(Material top, Biome biome, int y, int slope) {
+            // Water with better depth perception
             if (top == Material.WATER || top == Material.KELP || top == Material.SEAGRASS) {
-                int d = SEA_Y - y; d = Math.max(-8, Math.min(16, d));
-                int G = 120 + d*3, B = 200 + d*2;
-                return new int[]{40, clamp(G,70,200), clamp(B,120,230)};
+                int d = SEA_Y - y;
+                d = Math.max(-12, Math.min(20, d));
+                int R = Math.max(20, 60 - d*2);
+                int G = Math.max(80, 140 + d*4);
+                int B = Math.max(140, 220 + d*3);
+                return new int[]{R, G, B};
             }
-            if (top == Material.LAVA) return new int[]{240,140,30};
 
+            // Lava - more vibrant
+            if (top == Material.LAVA) return new int[]{255, 100, 20};
+
+            // Snow and ice - more realistic
             if (top == Material.SNOW || top == Material.SNOW_BLOCK || top == Material.POWDER_SNOW ||
                     top == Material.ICE || top == Material.PACKED_ICE || top == Material.BLUE_ICE) {
-                int shade = clamp(235 - slope*6, 180, 235);
-                return new int[]{shade, shade, shade};
+                int shade = clamp(250 - slope*8, 200, 250);
+                if (top == Material.BLUE_ICE) return new int[]{180, 200, 255};
+                return new int[]{shade, shade, Math.min(255, shade + 10)};
             }
 
-            if (top == Material.SAND || top == Material.RED_SAND) {
-                int shade = clamp(220 - slope*3, 160, 220);
-                return (top == Material.RED_SAND) ? new int[]{210,120,60} : new int[]{235,215,135};
+            // Sand - more vibrant
+            if (top == Material.SAND) {
+                int shade = clamp(240 - slope*4, 180, 240);
+                return new int[]{shade, shade-20, shade-80};
+            }
+            if (top == Material.RED_SAND) {
+                return new int[]{220, 140, 80};
             }
 
-            if (y > SEA_Y + 28 || top == Material.STONE || top == Material.TUFF || top == Material.GRAVEL ||
+            // Stone and rocky materials - better contrast
+            if (y > SEA_Y + 35 || top == Material.STONE || top == Material.TUFF || top == Material.GRAVEL ||
                     top == Material.DIORITE || top == Material.ANDESITE || top == Material.GRANITE || top == Material.CALCITE) {
-                int shade = clamp(160 - slope*6, 90, 160);
+                int base = 140;
+                if (top == Material.DIORITE || top == Material.CALCITE) base = 180;
+                else if (top == Material.ANDESITE) base = 120;
+                else if (top == Material.GRANITE) base = 160;
+
+                int shade = clamp(base - slope*8, 80, base);
                 return new int[]{shade, shade, shade};
             }
 
+            // Wood materials
             if (top.name().endsWith("_PLANKS") || top.name().endsWith("_LOG") || top.name().endsWith("_WOOD")) {
-                return new int[]{166,126,88};
+                if (top.name().startsWith("DARK_OAK")) return new int[]{80, 50, 30};
+                if (top.name().startsWith("BIRCH")) return new int[]{220, 200, 160};
+                if (top.name().startsWith("JUNGLE")) return new int[]{160, 110, 80};
+                return new int[]{140, 100, 60};
             }
 
+            // Farmland and crops - more vibrant greens
             if (top == Material.FARMLAND || top == Material.WHEAT || top == Material.CARROTS ||
                     top == Material.POTATOES || top == Material.BEETROOTS) {
-                return new int[]{110,170,60};
+                return new int[]{100, 180, 60};
             }
 
+            // Special blocks with distinctive colors
             if (top == Material.MUD || top == Material.MUDDY_MANGROVE_ROOTS) {
-                return new int[]{80,68,60};
+                return new int[]{100, 80, 65};
             }
-
             if (top == Material.CLAY) {
-                return new int[]{160,170,180};
+                return new int[]{180, 185, 200};
             }
-
             if (top == Material.MOSS_BLOCK || top == Material.MOSS_CARPET) {
-                return new int[]{90,130,60};
+                return new int[]{80, 140, 50};
             }
-
             if (top == Material.MYCELIUM) {
-                return new int[]{126,103,133};
+                return new int[]{140, 120, 150};
             }
 
+            // Nether materials
             if (top == Material.NETHERRACK || top == Material.NETHER_WART_BLOCK) {
-                return new int[]{150,60,60};
+                return new int[]{180, 80, 80};
             }
-
             if (top == Material.CRIMSON_NYLIUM) {
-                return new int[]{150,40,40};
+                return new int[]{180, 60, 60};
             }
-
             if (top == Material.WARPED_NYLIUM) {
-                return new int[]{40,120,110};
+                return new int[]{60, 140, 120};
             }
-
             if (top == Material.SOUL_SAND || top == Material.SOUL_SOIL) {
-                return new int[]{120,100,90};
+                return new int[]{140, 120, 100};
             }
-
             if (top == Material.BLACKSTONE || top == Material.BASALT || top == Material.POLISHED_BASALT) {
-                int shade = clamp(90 - slope*4, 40, 90);
+                int shade = clamp(100 - slope*5, 50, 100);
                 return new int[]{shade, shade, shade};
             }
 
+            // Dirt variants
             if (top == Material.DIRT || top == Material.COARSE_DIRT || top == Material.ROOTED_DIRT || top == Material.DIRT_PATH) {
-                return new int[]{138,110,80};
+                return new int[]{160, 130, 90};
             }
 
+            // Grass and vegetation - improved biome-based coloring
             Climate c = climateFor(biome);
-            int green = clamp(100 + (int)(c.humidity*70) - slope*2, 70, 190);
-            int red   = clamp(55  + (int)(c.humidity*15) - (int)(c.temp*10), 40, 120);
-            int blue  = clamp(55  + (int)(c.humidity*10), 40, 120);
+
+            // More vibrant grass colors based on biome
+            int baseGreen = 120 + (int)(c.humidity * 80);
+            int baseRed = 60 + (int)(c.humidity * 20) - (int)(c.temp * 15);
+            int baseBlue = 50 + (int)(c.humidity * 15);
+
+            // Apply slope shading
+            int green = clamp(baseGreen - slope*3, 80, 200);
+            int red = clamp(baseRed, 30, 140);
+            int blue = clamp(baseBlue, 30, 120);
+
             return new int[]{red, green, blue};
         }
+
 
         private Climate climateFor(Biome b) {
             return switch (b) {

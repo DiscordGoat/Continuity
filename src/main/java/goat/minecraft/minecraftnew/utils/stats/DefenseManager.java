@@ -44,7 +44,7 @@ public final class DefenseManager {
         public double physProtLevelToDefense = 5.0;
 
         // Environmental protections
-        public double featherFallingToDefense = 30.0;
+        public double featherFallingToDefense = 10.0;
         public double blastProtToDefense = 8.0;
         public double fireProtToDefense = 8.0;      // fire tick
         public double hotFloorProtToDefense = 20.0; // magma blocks
