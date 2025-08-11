@@ -136,8 +136,11 @@ public final class CartographyManager implements Listener {
         int wx = wall.pixelToWorldX(ij.i, ij.j, localPx);
         int wz = wall.pixelToWorldZ(ij.i, ij.j, localPz);
 
+        wall.toggleMark(wx, wz);
+        saveAll();
 
         e.getPlayer().sendMessage(ChatColor.YELLOW + "Map click at " + ChatColor.AQUA + wx + ", " + wz);
+        e.setCancelled(true);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -426,6 +429,10 @@ public final class CartographyManager implements Listener {
         final MapRenderer[][] renderers;
         final int scaleSize;
         final int tileSpan;
+        // User placed X markers
+        final List<XMark> marks;
+        // size in pixels for icons (houses and X markers)
+        private static final int ICON_SIZE = 12;
 
         final Map<UUID, Point> index = new HashMap<>();
 
@@ -435,11 +442,16 @@ public final class CartographyManager implements Listener {
 
 
         WorldMapWall(CartographyManager manager, Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace, BlockFace vFace, int w, int h) {
-            this(manager, plugin, world, anchor, face, uFace, vFace, w, h, null, null);
+            this(manager, plugin, world, anchor, face, uFace, vFace, w, h, null, null, null);
         }
 
         WorldMapWall(CartographyManager manager, Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace,
                      BlockFace vFace, int w, int h, short[][] mapIds, byte[][] caches) {
+            this(manager, plugin, world, anchor, face, uFace, vFace, w, h, mapIds, caches, null);
+        }
+
+        WorldMapWall(CartographyManager manager, Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace,
+                     BlockFace vFace, int w, int h, short[][] mapIds, byte[][] caches, List<XMark> marks) {
             this.manager = manager;
             this.plugin = plugin;
             this.world = world;
@@ -460,6 +472,7 @@ public final class CartographyManager implements Listener {
             this.tileSpan = 128 * scaleSize;
             this.ux = 1; this.uz = 0; // east
             this.vx = 0; this.vz = 1; // south
+            this.marks = (marks != null) ? new ArrayList<>(marks) : new ArrayList<>();
 
             this.tileOriginX = new int[h][w];
             this.tileOriginZ = new int[h][w];
@@ -475,6 +488,13 @@ public final class CartographyManager implements Listener {
             }
 
             ensureFramesAndMaps();
+        }
+
+        private static final class XMark {
+            final int x;
+            final int z;
+            byte[] patch;
+            XMark(int x, int z, byte[] patch) { this.x = x; this.z = z; this.patch = patch; }
         }
         private Block topLeftSupport() {
             int uSteps = -(w - 1) / 2;      // left
@@ -636,6 +656,10 @@ public final class CartographyManager implements Listener {
 
                     // Check if we're done
                     if (chunksProcessed >= orderedChunkList.size()) {
+                        // Overlay village icons and reapply any stored X markers
+                        overlayVillages();
+                        applyMarks();
+
                         expanderRunning = false;
                         cancel();
 
@@ -1076,6 +1100,145 @@ public final class CartographyManager implements Listener {
             return (int) Math.floor((wz - v.getCenterZ()) / (double) s) + 64;
         }
 
+        // Convert world coordinates to tile index and pixel coordinates within that tile
+        private int[] worldToTilePixel(int wx, int wz) {
+            for (int j = 0; j < h; j++) {
+                for (int i = 0; i < w; i++) {
+                    int x0 = tileOriginX[j][i];
+                    int z0 = tileOriginZ[j][i];
+                    if (wx >= x0 && wx < x0 + tileSpan && wz >= z0 && wz < z0 + tileSpan) {
+                        int px = (wx - x0) / scaleSize;
+                        int pz = (wz - z0) / scaleSize;
+                        return new int[]{i, j, px, pz};
+                    }
+                }
+            }
+            return null;
+        }
+
+        private void applyMarks() {
+            for (XMark m : marks) applyMark(m);
+        }
+
+        private void applyMark(XMark mark) {
+            int[] tp = worldToTilePixel(mark.x, mark.z);
+            if (tp == null) return;
+            int tileI = tp[0], tileJ = tp[1], px = tp[2], pz = tp[3];
+            int idx = tileJ * w + tileI;
+            mark.patch = new byte[ICON_SIZE * ICON_SIZE];
+            int startX = px - ICON_SIZE / 2;
+            int startZ = pz - ICON_SIZE / 2;
+            for (int dz = 0; dz < ICON_SIZE; dz++) {
+                for (int dx = 0; dx < ICON_SIZE; dx++) {
+                    int rx = startX + dx;
+                    int rz = startZ + dz;
+                    if (rx < 0 || rx >= 128 || rz < 0 || rz >= 128) continue;
+                    int off = rz * 128 + rx;
+                    mark.patch[dz * ICON_SIZE + dx] = caches[idx][off];
+                }
+            }
+            for (int dz = 0; dz < ICON_SIZE; dz++) {
+                for (int dx = 0; dx < ICON_SIZE; dx++) {
+                    int rx = startX + dx;
+                    int rz = startZ + dz;
+                    if (rx < 0 || rx >= 128 || rz < 0 || rz >= 128) continue;
+                    if (dx == dz || dx == ICON_SIZE - 1 - dz) {
+                        int off = rz * 128 + rx;
+                        caches[idx][off] = MapPalette.RED;
+                        filled[idx].set(off);
+                    }
+                }
+            }
+        }
+
+        private void restoreMark(XMark mark) {
+            int[] tp = worldToTilePixel(mark.x, mark.z);
+            if (tp == null || mark.patch == null) return;
+            int tileI = tp[0], tileJ = tp[1], px = tp[2], pz = tp[3];
+            int idx = tileJ * w + tileI;
+            int startX = px - ICON_SIZE / 2;
+            int startZ = pz - ICON_SIZE / 2;
+            for (int dz = 0; dz < ICON_SIZE; dz++) {
+                for (int dx = 0; dx < ICON_SIZE; dx++) {
+                    int rx = startX + dx;
+                    int rz = startZ + dz;
+                    if (rx < 0 || rx >= 128 || rz < 0 || rz >= 128) continue;
+                    int off = rz * 128 + rx;
+                    caches[idx][off] = mark.patch[dz * ICON_SIZE + dx];
+                    filled[idx].set(off);
+                }
+            }
+        }
+
+        boolean toggleMark(int wx, int wz) {
+            int threshold = 4 * scaleSize;
+            Iterator<XMark> it = marks.iterator();
+            while (it.hasNext()) {
+                XMark m = it.next();
+                if (Math.abs(wx - m.x) <= threshold && Math.abs(wz - m.z) <= threshold) {
+                    restoreMark(m);
+                    it.remove();
+                    return true;
+                }
+            }
+            XMark mark = new XMark(wx, wz, null);
+            applyMark(mark);
+            marks.add(mark);
+            return true;
+        }
+
+        private void drawHouseIcon(int wx, int wz) {
+            int[] tp = worldToTilePixel(wx, wz);
+            if (tp == null) return;
+            int tileI = tp[0], tileJ = tp[1], px = tp[2], pz = tp[3];
+            int idx = tileJ * w + tileI;
+            int startX = px - ICON_SIZE / 2;
+            int startZ = pz - ICON_SIZE / 2;
+            for (int dz = 0; dz < ICON_SIZE; dz++) {
+                for (int dx = 0; dx < ICON_SIZE; dx++) {
+                    int rx = startX + dx;
+                    int rz = startZ + dz;
+                    if (rx < 0 || rx >= 128 || rz < 0 || rz >= 128) continue;
+                    int off = rz * 128 + rx;
+                    byte color = (dz < 4) ? MapPalette.ORANGE : MapPalette.BROWN;
+                    caches[idx][off] = color;
+                    filled[idx].set(off);
+                }
+            }
+        }
+
+        private void overlayVillages() {
+            for (Location loc : findVillages()) {
+                drawHouseIcon(loc.getBlockX(), loc.getBlockZ());
+            }
+        }
+
+        private List<Location> findVillages() {
+            List<Location> result = new ArrayList<>();
+            Set<Long> seen = new HashSet<>();
+            int minX = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
+            int maxX = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+            for (int j = 0; j < h; j++) {
+                for (int i = 0; i < w; i++) {
+                    minX = Math.min(minX, tileOriginX[j][i]);
+                    minZ = Math.min(minZ, tileOriginZ[j][i]);
+                    maxX = Math.max(maxX, tileOriginX[j][i] + tileSpan);
+                    maxZ = Math.max(maxZ, tileOriginZ[j][i] + tileSpan);
+                }
+            }
+            for (int x = minX; x < maxX; x += 512) {
+                for (int z = minZ; z < maxZ; z += 512) {
+                    Location start = new Location(world, x, 0, z);
+                    Location v = world.locateNearestStructure(start, StructureType.VILLAGE, 512, false);
+                    if (v != null && v.getBlockX() >= minX && v.getBlockX() < maxX && v.getBlockZ() >= minZ && v.getBlockZ() < maxZ) {
+                        long key = (((long) v.getBlockX() >> 4) << 32) ^ (v.getBlockZ() >> 4 & 0xffffffffL);
+                        if (seen.add(key)) result.add(v);
+                    }
+                }
+            }
+            return result;
+        }
+
         private static final int SEA_Y = 63;
 
         Map<String, Object> serialize() {
@@ -1099,6 +1262,16 @@ public final class CartographyManager implements Listener {
             List<String> data = new ArrayList<>();
             for (byte[] c : caches) data.add(Base64.getEncoder().encodeToString(c));
             m.put("caches", data);
+
+            List<Map<String, Object>> markList = new ArrayList<>();
+            for (XMark mk : marks) {
+                Map<String, Object> mm = new LinkedHashMap<>();
+                mm.put("x", mk.x);
+                mm.put("z", mk.z);
+                if (mk.patch != null) mm.put("patch", Base64.getEncoder().encodeToString(mk.patch));
+                markList.add(mm);
+            }
+            m.put("marks", markList);
             return m;
         }
 
@@ -1133,7 +1306,20 @@ public final class CartographyManager implements Listener {
                     }
                 }
 
-                return new WorldMapWall(manager, plugin, world, anchor, face, uFace, vFace, w, h, mapIds, caches);
+                List<XMark> marks = new ArrayList<>();
+                List<Map<String, Object>> markData = (List<Map<String, Object>>) m.get("marks");
+                if (markData != null) {
+                    for (Map<String, Object> mk : markData) {
+                        int mx = (int) mk.get("x");
+                        int mz = (int) mk.get("z");
+                        byte[] patch = null;
+                        Object p = mk.get("patch");
+                        if (p instanceof String s) patch = Base64.getDecoder().decode(s);
+                        marks.add(new XMark(mx, mz, patch));
+                    }
+                }
+
+                return new WorldMapWall(manager, plugin, world, anchor, face, uFace, vFace, w, h, mapIds, caches, marks);
             } catch (Exception ex) {
                 server.getLogger().warning("Failed to load world map wall: " + ex.getMessage());
                 return null;
