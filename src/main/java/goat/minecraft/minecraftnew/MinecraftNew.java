@@ -548,6 +548,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
         this.getCommand("i").setExecutor(new ItemCommand());
         this.getCommand("savearmorcontents").setExecutor(new SaveArmorContentsCommand(this));
+        this.getCommand("equiparmorfromfile").setExecutor(new EquipArmorFromFileCommand(this));
         this.getCommand("saveitem").setExecutor(new SaveItemCommand(this));
 
         getCommand("testskill").setExecutor(new TestSkillMessageCommand(xpManager));
