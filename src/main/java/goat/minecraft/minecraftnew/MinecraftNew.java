@@ -383,6 +383,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("getstructureblock").setExecutor(new GetStructureBlockCommand());
         getCommand("setstructureblockpower").setExecutor(new SetStructureBlockPowerCommand());
         getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
+        getCommand("getnearestarena").setExecutor(new GetNearestArenaCommand());
         getCommand("previewparticle").setExecutor(new PreviewParticleCommand(this));
         getCommand("previewflow").setExecutor(new PreviewFlowCommand(this));
         new RedVignetteCommand(this);
