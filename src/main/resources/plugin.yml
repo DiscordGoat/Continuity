@@ -327,3 +327,7 @@ commands:
     description: Saves the item in your hand to a champions YAML file
     usage: /saveitem <filename>
     permission: continuity.admin
+  testchampion:
+    description: Spawns a Champion with phase-based AI for testing
+    usage: /testchampion <championName>
+    permission: continuity.admin

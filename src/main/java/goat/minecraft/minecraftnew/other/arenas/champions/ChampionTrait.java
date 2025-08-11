@@ -2,6 +2,7 @@ package goat.minecraft.minecraftnew.other.arenas.champions;
 
 import net.citizensnpcs.api.trait.Trait;
 import net.citizensnpcs.api.util.DataKey;
+import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.api.trait.trait.Equipment;
 import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.*;
@@ -87,7 +88,10 @@ public class ChampionTrait extends Trait implements Listener {
             equipment.set(Equipment.EquipmentSlot.BOOTS, null);
             equipment.set(Equipment.EquipmentSlot.HAND, null);
             
-            // Make NPC look down
+            // Make NPC look down and disable look close
+            LookClose lookClose = npc.getOrAddTrait(LookClose.class);
+            lookClose.lookClose(false);
+            
             if (npc.getEntity() instanceof LivingEntity living) {
                 Location lookDown = living.getLocation();
                 lookDown.setPitch(90f); // Look straight down
@@ -149,12 +153,11 @@ public class ChampionTrait extends Trait implements Listener {
             return;
         }
         
-        // Look at the target player
-        Location targetLoc = targetPlayer.getLocation();
-        Vector direction = targetLoc.toVector().subtract(self.getLocation().toVector()).normalize();
-        Location lookLoc = self.getLocation().clone();
-        lookLoc.setDirection(direction);
-        self.teleport(lookLoc);
+        // Enable head tracking to stare at player
+        LookClose lookClose = npc.getOrAddTrait(LookClose.class);
+        lookClose.lookClose(true);
+        lookClose.setRange(30);
+        lookClose.setRealisticLooking(true);
         
         // Check for phase transition conditions
         long timeInPhase = System.currentTimeMillis() - phaseStartTime;
@@ -227,6 +230,9 @@ public class ChampionTrait extends Trait implements Listener {
         targetPlayer = player;
         damageTaken = 0.0;
         
+        // Trigger CHAT_GREET phase
+        handleChatGreet();
+        
         // Set champion skin
         SkinTrait skin = npc.getOrAddTrait(SkinTrait.class);
         skin.setSkinPersistent("champion", championType.getSkinSig(), championType.getSkinValue());
@@ -245,7 +251,7 @@ public class ChampionTrait extends Trait implements Listener {
             eq.set(Equipment.EquipmentSlot.HAND, sword);
         }, 5L);
         
-        // Apply health
+        // Apply health and ensure max health is set
         LivingEntity self = (LivingEntity) npc.getEntity();
         applyChampionHealth(self);
     }
@@ -255,6 +261,10 @@ public class ChampionTrait extends Trait implements Listener {
         phaseStartTime = System.currentTimeMillis();
         damageTaken = 0.0;
         disengageHitCount = 0;
+        
+        // Disable look close during combat
+        LookClose lookClose = npc.getOrAddTrait(LookClose.class);
+        lookClose.lookClose(false);
     }
 
     private void transitionToDisengage() {
@@ -266,6 +276,10 @@ public class ChampionTrait extends Trait implements Listener {
         // Unequip all held items
         Equipment equipment = npc.getOrAddTrait(Equipment.class);
         equipment.set(Equipment.EquipmentSlot.HAND, null);
+        
+        // Disable look close during disengage
+        LookClose lookClose = npc.getOrAddTrait(LookClose.class);
+        lookClose.lookClose(false);
     }
 
     private void transitionToStatue() {
@@ -297,31 +311,71 @@ public class ChampionTrait extends Trait implements Listener {
             fleeTarget.setY(world.getMaxHeight() - 10);
         }
         
-        // Sprint jump away
-        self.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 40, 2, false, false));
-        self.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 40, 1, false, false));
+        // Sprint jump away with enhanced effects
+        self.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 60, 3, false, false)); // Faster speed
+        self.addPotionEffect(new PotionEffect(PotionEffectType.JUMP_BOOST, 60, 2, false, false)); // Higher jumps
+        
+        // Apply upward velocity for sprint jumping effect
+        Vector jumpVelocity = direction.multiply(1.5).setY(0.8); // Forward momentum + upward jump
+        self.setVelocity(jumpVelocity);
         
         // Use Citizens navigation
         npc.getNavigator().setTarget(fleeTarget);
     }
 
     private void applyChampionHealth(LivingEntity self) {
-        int targetHP = hasBlessing(ChampionBlessing.ENHANCED_VITALITY) ? 200 : championType.getHealth();
+        // Determine target health based on champion type and blessings
+        int targetHP = championType.getHealth();
+        if (hasBlessing(ChampionBlessing.ENHANCED_VITALITY)) {
+            targetHP = 200; // Override with enhanced vitality
+        }
         
-        // Apply health boost to reach target HP
+        // Set max health attribute directly
+        self.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(targetHP);
+        
+        // Apply health boost as backup to ensure target HP is reached
         int hpAmp = Math.max(0, (targetHP - 20) / 4 - 1);
-        self.addPotionEffect(new PotionEffect(
-            PotionEffectType.HEALTH_BOOST, 
-            Integer.MAX_VALUE, 
-            hpAmp, 
-            true, 
-            false
-        ));
+        if (hpAmp > 0) {
+            self.addPotionEffect(new PotionEffect(
+                PotionEffectType.HEALTH_BOOST, 
+                Integer.MAX_VALUE, 
+                hpAmp, 
+                true, 
+                false
+            ));
+        }
         
-        // Set to full health
+        // Set to full health after a short delay
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            self.setHealth(self.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
-        }, 5L);
+            double maxHealth = self.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+            self.setHealth(maxHealth);
+        }, 10L);
+    }
+
+    /**
+     * Handles CHAT_GREET phase - sends a random greeting from the champion's registry.
+     */
+    private void handleChatGreet() {
+        if (targetPlayer == null) return;
+        
+        String greeting = ChampionRegistry.getRandomGreeting(championType.getName());
+        ChatColor championColor = ChampionRegistry.getChampionColor(championType.getName());
+        
+        // Format the message with champion color and name
+        String formattedMessage = championColor + "[" + championType.getName() + "] " + ChatColor.WHITE + greeting;
+        
+        // Send message to the target player
+        targetPlayer.sendMessage(formattedMessage);
+        
+        // Also broadcast to nearby players within 30 blocks
+        Location championLoc = npc.getEntity().getLocation();
+        for (Player nearbyPlayer : Bukkit.getOnlinePlayers()) {
+            if (nearbyPlayer != targetPlayer && 
+                nearbyPlayer.getWorld() == championLoc.getWorld() &&
+                nearbyPlayer.getLocation().distance(championLoc) <= 30.0) {
+                nearbyPlayer.sendMessage(formattedMessage);
+            }
+        }
     }
 
     private void applyBlessingEffects(Player target) {

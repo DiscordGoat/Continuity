@@ -30,5 +30,12 @@ public enum ChampionPhase {
      * Lasts until 15 blocks away or 8s timeout, then returns to SWORD.
      * If hit more than once, immediately returns to SWORD.
      */
-    DISENGAGE
+    DISENGAGE,
+    
+    // CHAT phases - secondary phases for communication
+    /**
+     * Chat greeting phase. Champion says a random greeting from registry.
+     * Activates only during STATUE->AWAKEN transition.
+     */
+    CHAT_GREET
 }

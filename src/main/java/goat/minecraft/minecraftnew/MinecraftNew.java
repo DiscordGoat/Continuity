@@ -1,4 +1,5 @@
 package goat.minecraft.minecraftnew;
+import goat.minecraft.minecraftnew.other.arenas.champions.TestChampionPhaseCommand;
 import goat.minecraft.minecraftnew.other.beacon.*;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
 import goat.minecraft.minecraftnew.other.resourcepack.ResourcePackListener;
@@ -471,6 +472,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
         this.getCommand("spawnchampion").setExecutor(new SpawnChampionCommand());
+        this.getCommand("testchampion").setExecutor(new TestChampionPhaseCommand());
         getCommand("seacreaturechance").setExecutor(new SeaCreatureChanceCommand(this, xpManager));
         getCommand("treasurechance").setExecutor(new TreasureChanceCommand(this));
         getCommand("spiritchance").setExecutor(new SpiritChanceCommand(this, xpManager));
