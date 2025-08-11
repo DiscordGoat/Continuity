@@ -139,16 +139,9 @@ public final class CartographyManager implements Listener {
 
         int wx = wall.pixelToWorldX(ij.i, ij.j, localPx);
         int wz = wall.pixelToWorldZ(ij.i, ij.j, localPz);
-        int gx = ij.i * 128 + localPx;
-        int gz = ij.j * 128 + localPz;
 
-        boolean removed = wall.toggleMark(gx, gz);
-        if (removed) {
-            e.getPlayer().sendMessage(ChatColor.YELLOW + "Removed X at " + ChatColor.AQUA + wx + ", " + wz);
-        } else {
-            e.getPlayer().sendMessage(ChatColor.YELLOW + "Placed X at " + ChatColor.AQUA + wx + ", " + wz);
-        }
-        e.setCancelled(true);
+
+        e.getPlayer().sendMessage(ChatColor.YELLOW + "Map click at " + ChatColor.AQUA + wx + ", " + wz);
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
@@ -443,15 +436,13 @@ public final class CartographyManager implements Listener {
         final BitSet visited = new BitSet();
         volatile boolean expanderRunning = false;
 
-        final List<PixelPos> marks;
-        final List<PixelPos> villages;
 
         WorldMapWall(CartographyManager manager, Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace, BlockFace vFace, int w, int h) {
-            this(manager, plugin, world, anchor, face, uFace, vFace, w, h, null, null, null);
+            this(manager, plugin, world, anchor, face, uFace, vFace, w, h, null, null);
         }
 
         WorldMapWall(CartographyManager manager, Plugin plugin, World world, Block anchor, BlockFace face, BlockFace uFace,
-                     BlockFace vFace, int w, int h, short[][] mapIds, byte[][] caches, List<PixelPos> marks) {
+                     BlockFace vFace, int w, int h, short[][] mapIds, byte[][] caches) {
             this.manager = manager;
             this.plugin = plugin;
             this.world = world;
@@ -475,9 +466,6 @@ public final class CartographyManager implements Listener {
             this.tileOriginX = new int[h][w];
             this.tileOriginZ = new int[h][w];
 
-            this.marks = (marks != null) ? new ArrayList<>(marks) : new ArrayList<>();
-            this.villages = new ArrayList<>();
-
             // Ensure cache arrays exist and are initialised
             int totalTiles = h * w;
             for (int idx = 0; idx < totalTiles; idx++) {
@@ -488,7 +476,6 @@ public final class CartographyManager implements Listener {
             }
 
             ensureFramesAndMaps();
-            locateVillages();
         }
         private Block topLeftSupport() {
             int uSteps = -(w - 1) / 2;      // left
@@ -587,31 +574,6 @@ public final class CartographyManager implements Listener {
         }
 
         Point lookupTileIndex(UUID frameId) { return index.get(frameId); }
-
-        private void locateVillages() {
-            villages.clear();
-            int minX = tileOriginX[0][0];
-            int minZ = tileOriginZ[0][0];
-            int maxX = tileOriginX[h-1][w-1] + tileSpan;
-            int maxZ = tileOriginZ[h-1][w-1] + tileSpan;
-            int step = 512;
-            Set<Long> seen = new HashSet<>();
-            for (int x = minX; x <= maxX; x += step) {
-                for (int z = minZ; z <= maxZ; z += step) {
-                    Location start = new Location(world, x, world.getSeaLevel(), z);
-                    Location found = world.locateNearestStructure(start, StructureType.VILLAGE, step / 2, false);
-                    if (found == null) continue;
-                    int fx = found.getBlockX();
-                    int fz = found.getBlockZ();
-                    if (fx < minX || fz < minZ || fx >= maxX || fz >= maxZ) continue;
-                    long key = (((long) fx) << 32) ^ (fz & 0xffffffffL);
-                    if (!seen.add(key)) continue;
-                    int px = (fx - minX) / scaleSize;
-                    int pz = (fz - minZ) / scaleSize;
-                    villages.add(new PixelPos(px, pz));
-                }
-            }
-        }
 
         void startExpander(boolean clear) {
             if (clear) {
@@ -754,7 +716,6 @@ public final class CartographyManager implements Listener {
                 int px = worldToPixelX(views[tileJ][tileI], anchor.getX());
                 int pz = worldToPixelZ(views[tileJ][tileI], anchor.getZ());
                 drawStar(canvas, px, pz, MapPalette.RED);
-                drawDecorations(canvas, tileI, tileJ);
             }
         }
 
@@ -764,67 +725,6 @@ public final class CartographyManager implements Listener {
                 int x = px + d[0], y = pz + d[1];
                 if (x>=0 && x<128 && y>=0 && y<128) c.setPixel(x, y, col);
             }
-        }
-
-        private void drawRedX(MapCanvas c, int cx, int cz) {
-            int sx = cx - 6;
-            int sz = cz - 6;
-            for (int d = 0; d < 12; d++) {
-                int x1 = sx + d, z1 = sz + d;
-                int x2 = sx + d, z2 = sz + 11 - d;
-                if (x1>=0 && x1<128 && z1>=0 && z1<128) c.setPixel(x1, z1, MapPalette.RED);
-                if (x2>=0 && x2<128 && z2>=0 && z2<128) c.setPixel(x2, z2, MapPalette.RED);
-            }
-        }
-
-        private void drawHouse(MapCanvas c, int cx, int cz) {
-            int sx = cx - 6;
-            int sz = cz - 6;
-            for (int dz = 0; dz < 12; dz++) {
-                for (int dx = 0; dx < 12; dx++) {
-                    int x = sx + dx;
-                    int z = sz + dz;
-                    if (x<0 || x>=128 || z<0 || z>=128) continue;
-                    if (dz < 6) {
-                        int margin = 5 - dz;
-                        if (dx >= margin && dx < 12 - margin) c.setPixel(x, z, MapPalette.DARK_RED);
-                    } else {
-                        c.setPixel(x, z, MapPalette.BROWN);
-                    }
-                }
-            }
-        }
-
-        private void drawDecorations(MapCanvas canvas, int tileI, int tileJ) {
-            for (PixelPos v : villages) {
-                int lx = v.x() - tileI * 128;
-                int lz = v.z() - tileJ * 128;
-                if (lx < -6 || lx > 133 || lz < -6 || lz > 133) continue;
-                drawHouse(canvas, lx, lz);
-            }
-            for (PixelPos p : marks) {
-                int lx = p.x() - tileI * 128;
-                int lz = p.z() - tileJ * 128;
-                if (lx < -6 || lx > 133 || lz < -6 || lz > 133) continue;
-                drawRedX(canvas, lx, lz);
-            }
-        }
-
-        boolean toggleMark(int px, int pz) {
-            Iterator<PixelPos> it = marks.iterator();
-            while (it.hasNext()) {
-                PixelPos p = it.next();
-                int dx = p.x() - px;
-                int dz = p.z() - pz;
-                if (dx*dx + dz*dz <= 16) {
-                    it.remove();
-                    manager.saveAll();
-                    return true;
-                }
-            }
-            marks.add(new PixelPos(px, pz));
-            manager.saveAll();
-            return false;
         }
         private int worldToPixelX(MapView v, int wx) {
             int s = 1 << v.getScale().getValue();
@@ -1013,9 +913,6 @@ public final class CartographyManager implements Listener {
             List<String> data = new ArrayList<>();
             for (byte[] c : caches) data.add(Base64.getEncoder().encodeToString(c));
             m.put("caches", data);
-            List<List<Integer>> markData = new ArrayList<>();
-            for (PixelPos p : marks) markData.add(List.of(p.x(), p.z()));
-            m.put("marks", markData);
             return m;
         }
 
@@ -1050,13 +947,7 @@ public final class CartographyManager implements Listener {
                     }
                 }
 
-                List<List<Integer>> markData = (List<List<Integer>>) m.getOrDefault("marks", Collections.emptyList());
-                List<PixelPos> marks = new ArrayList<>();
-                for (List<Integer> p : markData) {
-                    if (p.size() >= 2) marks.add(new PixelPos(p.get(0), p.get(1)));
-                }
-
-                return new WorldMapWall(manager, plugin, world, anchor, face, uFace, vFace, w, h, mapIds, caches, marks);
+                return new WorldMapWall(manager, plugin, world, anchor, face, uFace, vFace, w, h, mapIds, caches);
             } catch (Exception ex) {
                 server.getLogger().warning("Failed to load world map wall: " + ex.getMessage());
                 return null;
@@ -1066,5 +957,4 @@ public final class CartographyManager implements Listener {
 
     private record Rect(Block center, BlockFace face, BlockFace uFace, BlockFace vFace, int u0, int v0, int w, int h) {}
     private record Point(int i, int j) {}
-    private record PixelPos(int x, int z) {}
 }
