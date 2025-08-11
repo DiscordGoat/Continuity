@@ -3,7 +3,6 @@ import goat.minecraft.minecraftnew.other.beacon.*;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
 import goat.minecraft.minecraftnew.other.resourcepack.ResourcePackListener;
 import goat.minecraft.minecraftnew.subsystems.cartography.CartographyManager;
-import goat.minecraft.minecraftnew.subsystems.cartography.MapMarkerManager;
 import goat.minecraft.minecraftnew.subsystems.gravedigging.Gravedigging;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender.BartenderVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineerVillagerManager;
@@ -514,7 +513,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Collector(this), this);
         getServer().getPluginManager().registerEvents(new Float(this), this);
         getServer().getPluginManager().registerEvents(new CartographyManager(this), this);
-        getServer().getPluginManager().registerEvents(new MapMarkerManager(this), this);
         getServer().getPluginManager().registerEvents(new Greed(this), this);
         getServer().getPluginManager().registerEvents(new GreenThumb(this), this);
         getServer().getPluginManager().registerEvents(new Cultivation(this), this);
