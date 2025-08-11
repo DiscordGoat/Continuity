@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.utils.developercommands;
 
+import goat.minecraft.minecraftnew.other.arenas.Arena;
 import goat.minecraft.minecraftnew.other.arenas.ArenaManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -60,17 +61,18 @@ public class GetNearestArenaCommand implements CommandExecutor {
             return true;
         }
 
-        Location nearest = arenaManager.getNearestArena(player.getLocation());
+        Arena nearest = arenaManager.getNearestArena(player.getLocation());
         if (nearest == null) {
             player.sendMessage(ChatColor.YELLOW + "No arena found in this world.");
             return true;
         }
 
-        String coords = String.format("%d %d %d", nearest.getBlockX(), nearest.getBlockY(), nearest.getBlockZ());
+        Location loc = nearest.getLocation();
+        String coords = String.format("%d %d %d", loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         TextComponent base = new TextComponent(ChatColor.GREEN + "Nearest arena: ");
         TextComponent coordComponent = new TextComponent(ChatColor.AQUA + coords);
         String commandStr = String.format("/getnearestarena tp %s %d %d %d",
-                nearest.getWorld().getName(), nearest.getBlockX(), nearest.getBlockY(), nearest.getBlockZ());
+                loc.getWorld().getName(), loc.getBlockX(), loc.getBlockY(), loc.getBlockZ());
         coordComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, commandStr));
         coordComponent.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
                 new ComponentBuilder("Click to teleport").color(net.md_5.bungee.api.ChatColor.YELLOW).create()));
