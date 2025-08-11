@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.YamlConfiguration;
 
+import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -52,6 +53,39 @@ public class ChampionEquipmentUtil {
             if (armor.length > 2) equipmentTrait.set(Equipment.EquipmentSlot.CHESTPLATE, armor[2]); // chestplate
             if (armor.length > 1) equipmentTrait.set(Equipment.EquipmentSlot.LEGGINGS, armor[1]); // leggings
             if (armor.length > 0) equipmentTrait.set(Equipment.EquipmentSlot.BOOTS, armor[0]); // boots
+        } catch (Exception ignored) {
+        }
+    }
+
+    /**
+     * Loads armor contents from a YAML file in the plugin's data folder and applies
+     * them to the provided player.
+     *
+     * <p>The YAML file must have the same structure produced by
+     * {@link goat.minecraft.minecraftnew.utils.developercommands.SaveArmorContentsCommand}
+     * so that the saved armor can be re-equipped.</p>
+     *
+     * @param plugin   plugin instance used to access the data folder
+     * @param player   player whose armor should be modified
+     * @param file     YAML file containing the armor contents
+     */
+    public static void setArmorContentsFromFile(JavaPlugin plugin, Player player, File file) {
+        try {
+            if (!file.exists() || player.getInventory() == null) {
+                return;
+            }
+            YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+            List<?> armorList = config.getList("armor");
+            if (armorList == null) {
+                return;
+            }
+
+            ItemStack[] armor = armorList.stream()
+                    .filter(ItemStack.class::isInstance)
+                    .map(ItemStack.class::cast)
+                    .toArray(ItemStack[]::new);
+
+            player.getInventory().setArmorContents(armor);
         } catch (Exception ignored) {
         }
     }

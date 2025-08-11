@@ -319,6 +319,10 @@ commands:
     description: Saves your armor contents to a champions YAML file
     usage: /savearmorcontents <filename>
     permission: continuity.admin
+  equiparmorfromfile:
+    description: Loads armor contents from a champions YAML file
+    usage: /equiparmorfromfile <filename>
+    permission: continuity.admin
   saveitem:
     description: Saves the item in your hand to a champions YAML file
     usage: /saveitem <filename>
