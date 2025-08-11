@@ -218,6 +218,10 @@ commands:
     description: Gets the nearest catalyst type in range of the player
     usage: /getnearestcatalysttype
     permission: continuity.admin
+  getnearestarena:
+    description: Gets the coordinates of the nearest arena
+    usage: /getnearestarena
+    permission: continuity.admin
   warp:
     description: Teleports the player to the specified world
     usage: /warp <worldname>
