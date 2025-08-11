@@ -24,7 +24,7 @@ public class ArenaManager {
 
     private static ArenaManager instance;
     private final JavaPlugin plugin;
-    private final List<Location> arenaLocations = new ArrayList<>();
+    private final List<Arena> arenaLocations = new ArrayList<>();
     private final File arenaFile;
     private final SchemManager schemManager;
 
@@ -80,7 +80,7 @@ public class ArenaManager {
                     double z = spawn.getZ() + radius * Math.sin(angle);
                     Location loc = new Location(world, x, -100, z);
                     if (isFarEnough(loc)) {
-                        arenaLocations.add(loc);
+                        arenaLocations.add(new Arena(loc, false));
                         placed++;
                     }
                 }
@@ -98,10 +98,15 @@ public class ArenaManager {
             public void run() {
                 for (Player player : Bukkit.getOnlinePlayers()) {
                     Location playerLoc = player.getLocation();
-                    Location arena = getNearestArena(playerLoc);
-                    if (arena != null && playerLoc.getWorld().equals(arena.getWorld()) &&
-                            playerLoc.distanceSquared(arena) <= 120 * 120) {
-                        schemManager.placeStructure("test", arena);
+                    Arena arena = getNearestArena(playerLoc);
+                    if (arena != null) {
+                        Location arenaLoc = arena.getLocation();
+                        if (playerLoc.getWorld().equals(arenaLoc.getWorld()) &&
+                                playerLoc.distanceSquared(arenaLoc) <= 120 * 120 && !arena.isPlaced()) {
+                            schemManager.placeStructure("test", arenaLoc);
+                            arena.setPlaced(true);
+                            saveArenaLocations();
+                        }
                     }
                 }
             }
@@ -109,7 +114,8 @@ public class ArenaManager {
     }
 
     private boolean isFarEnough(Location candidate) {
-        for (Location loc : arenaLocations) {
+        for (Arena arena : arenaLocations) {
+            Location loc = arena.getLocation();
             if (loc.getWorld().equals(candidate.getWorld()) && loc.distance(candidate) < MIN_SEPARATION) {
                 return false;
             }
@@ -118,17 +124,16 @@ public class ArenaManager {
     }
 
     private void saveArenaLocations() {
-        // Only save if the file doesn't already exist (defensive).
-        if (arenaFile.exists()) return;
-
         YamlConfiguration config = new YamlConfiguration();
         for (int i = 0; i < arenaLocations.size(); i++) {
-            Location loc = arenaLocations.get(i);
+            Arena arena = arenaLocations.get(i);
+            Location loc = arena.getLocation();
             String path = "arenas." + i;
             config.set(path + ".world", loc.getWorld().getName());
             config.set(path + ".x", loc.getBlockX());
             config.set(path + ".y", loc.getBlockY());
             config.set(path + ".z", loc.getBlockZ());
+            config.set(path + ".isPlaced", arena.isPlaced());
         }
         try {
             config.save(arenaFile);
@@ -155,26 +160,28 @@ public class ArenaManager {
             double x = config.getDouble(base + ".x");
             double y = config.getDouble(base + ".y");
             double z = config.getDouble(base + ".z");
+            boolean placed = config.getBoolean(base + ".isPlaced", false);
 
-            arenaLocations.add(new Location(world, x, y, z));
+            arenaLocations.add(new Arena(new Location(world, x, y, z), placed));
         }
     }
 
     /**
-     * Returns the location of the nearest arena to the provided location.
+     * Returns the nearest arena to the provided location.
      *
      * @param location input location
-     * @return nearest arena location or null if none exist in the same world
+     * @return nearest arena or null if none exist in the same world
      */
-    public Location getNearestArena(Location location) {
-        Location nearest = null;
+    public Arena getNearestArena(Location location) {
+        Arena nearest = null;
         double best = Double.MAX_VALUE;
-        for (Location loc : arenaLocations) {
+        for (Arena arena : arenaLocations) {
+            Location loc = arena.getLocation();
             if (!loc.getWorld().equals(location.getWorld())) continue;
             double dist = loc.distanceSquared(location);
             if (dist < best) {
                 best = dist;
-                nearest = loc;
+                nearest = arena;
             }
         }
         return nearest;
