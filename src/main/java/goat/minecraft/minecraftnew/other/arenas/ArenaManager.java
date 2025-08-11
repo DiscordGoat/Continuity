@@ -5,7 +5,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import goat.minecraft.minecraftnew.utils.devtools.SchemManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +26,7 @@ public class ArenaManager {
     private final JavaPlugin plugin;
     private final List<Location> arenaLocations = new ArrayList<>();
     private final File arenaFile;
+    private final SchemManager schemManager;
 
     private static final int RINGS = 4;
     private static final int RING_STEP = 250;     // ring radius step
@@ -30,6 +35,7 @@ public class ArenaManager {
     private ArenaManager(JavaPlugin plugin) {
         this.plugin = plugin;
         this.arenaFile = new File(plugin.getDataFolder(), "arenaLocations.yml");
+        this.schemManager = new SchemManager(plugin);
     }
 
     public static ArenaManager getInstance(JavaPlugin plugin) {
@@ -53,38 +59,53 @@ public class ArenaManager {
     public synchronized void activateArenas() {
         plugin.getDataFolder().mkdirs();
 
-        // If file already exists, load once and return (no new files created).
         if (arenaFile.exists()) {
             loadArenaLocations();
-            return;
-        }
+        } else {
+            arenaLocations.clear();
 
-        // Otherwise, generate and save exactly once.
-        arenaLocations.clear();
+            World world = Bukkit.getWorlds().get(0);
+            Location spawn = world.getSpawnLocation();
+            Random random = new Random();
 
-        World world = Bukkit.getWorlds().get(0);
-        Location spawn = world.getSpawnLocation();
-        Random random = new Random();
-
-        for (int ring = 1; ring <= RINGS; ring++) {
-            int radius = ring * RING_STEP; // 250, 500, 750, 1000
-            int arenasNeeded = ring * 3;
-            int placed = 0;
-            int safety = 0;
-            while (placed < arenasNeeded && safety < arenasNeeded * 50) {
-                safety++;
-                double angle = random.nextDouble() * Math.PI * 2;
-                double x = spawn.getX() + radius * Math.cos(angle);
-                double z = spawn.getZ() + radius * Math.sin(angle);
-                Location loc = new Location(world, x, -100, z);
-                if (isFarEnough(loc)) {
-                    arenaLocations.add(loc);
-                    placed++;
+            for (int ring = 1; ring <= RINGS; ring++) {
+                int radius = ring * RING_STEP; // 250, 500, 750, 1000
+                int arenasNeeded = ring * 3;
+                int placed = 0;
+                int safety = 0;
+                while (placed < arenasNeeded && safety < arenasNeeded * 50) {
+                    safety++;
+                    double angle = random.nextDouble() * Math.PI * 2;
+                    double x = spawn.getX() + radius * Math.cos(angle);
+                    double z = spawn.getZ() + radius * Math.sin(angle);
+                    Location loc = new Location(world, x, -100, z);
+                    if (isFarEnough(loc)) {
+                        arenaLocations.add(loc);
+                        placed++;
+                    }
                 }
             }
+
+            saveArenaLocations();
         }
 
-        saveArenaLocations();
+        startArenaCheckTask();
+    }
+
+    private void startArenaCheckTask() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    Location playerLoc = player.getLocation();
+                    Location arena = getNearestArena(playerLoc);
+                    if (arena != null && playerLoc.getWorld().equals(arena.getWorld()) &&
+                            playerLoc.distanceSquared(arena) <= 120 * 120) {
+                        schemManager.placeStructure("test", arena);
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 200L);
     }
 
     private boolean isFarEnough(Location candidate) {
