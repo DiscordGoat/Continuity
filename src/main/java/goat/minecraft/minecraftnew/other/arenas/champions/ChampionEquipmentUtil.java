@@ -10,7 +10,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * Utility methods for loading champion equipment from YAML files in the plugin resources.
@@ -107,6 +109,20 @@ public class ChampionEquipmentUtil {
                 player.getEquipment().setItemInMainHand(item);
             }
         } catch (Exception ignored) {
+        }
+    }
+    public static ItemStack getItemFromFile(JavaPlugin plugin, String resourcePath) {
+        try (InputStream in = plugin.getResource(resourcePath)) {
+            if (in == null) return null;
+
+            try (InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+                YamlConfiguration config = YamlConfiguration.loadConfiguration(reader);
+                ItemStack item = config.getItemStack("item");
+                return (item != null) ? item.clone() : null; // clone so callers can't mutate the cached instance
+            }
+        } catch (Exception ex) {
+            plugin.getLogger().log(Level.WARNING, "Failed to load ItemStack from " + resourcePath, ex);
+            return null;
         }
     }
 }

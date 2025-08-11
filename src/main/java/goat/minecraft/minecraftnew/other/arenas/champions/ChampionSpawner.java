@@ -7,13 +7,15 @@ import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.npc.MemoryNPCDataStore;
+import net.citizensnpcs.api.trait.trait.Equipment;
+import net.citizensnpcs.api.trait.trait.Inventory;
 import net.citizensnpcs.trait.SkinTrait;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -47,17 +49,31 @@ public final class ChampionSpawner {
 
         // 1: Set name
         npc.setName(type.getName());
+        SkinTrait skin = npc.getOrAddTrait(SkinTrait.class);
+        skin.setFetchDefaultSkin(false);
+        skin.setShouldUpdateSkins(false);
+        skin.setSkinPersistent("champion", type.getSkinSig(), type.getSkinValue());
         npc.spawn(loc);
         if (npc.getEntity() instanceof Player player) {
             player.setCustomName(type.getName());
             player.setCustomNameVisible(true);
             // 2: Set skin
-            npc.getOrAddTrait(SkinTrait.class)
-                    .setSkinPersistent("champion", type.getSkinSig(), type.getSkinValue());
+
             // 3: Set armor contents via Citizens inventory trait
             ChampionEquipmentUtil.setArmorContentsFromFile(plugin, npc, type.getArmorFile());
-            // 4: set held item as the sword
-            ChampionEquipmentUtil.setHeldItemFromFile(plugin, player, type.getSwordFile());
+            npc.setProtected(false);
+            ItemStack sword = ChampionEquipmentUtil.getItemFromFile(plugin, type.getSwordFile());
+
+            if (sword != null) {
+                // Defer one tick so Citizens doesn't immediately overwrite it
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    Equipment eq = npc.getOrAddTrait(Equipment.class);
+                    eq.set(Equipment.EquipmentSlot.OFF_HAND, sword);
+                });
+            }
+
+// main hand (if you still want it)
+            ChampionEquipmentUtil.setHeldItemFromFile(plugin, (Player) npc.getEntity(), type.getSwordFile());
         }
 
         // 5: set corpse trait (placeholder)
