@@ -112,6 +112,9 @@ commands:
   spawncorpse:
     description: Spawns a corpse by name.
     permission: continuity.admin
+  spawnchampion:
+    description: Spawns a champion by name.
+    permission: continuity.admin
   givecustomitem:
     description: Gives a predefined custom item to the player.
     usage: /givecustomitem <customitem>

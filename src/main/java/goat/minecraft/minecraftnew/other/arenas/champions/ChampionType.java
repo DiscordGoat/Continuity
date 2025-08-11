@@ -13,16 +13,21 @@ public class ChampionType {
     private final String swordFile;
     private final String bowFile;
     private final List<String> greetingMessages;
+    private final String skinValue;
+    private final String skinSig;
 
     public ChampionType(String name, int health, String armorFile,
                         String swordFile, String bowFile,
-                        List<String> greetingMessages) {
+                        List<String> greetingMessages,
+                        String skinValue, String skinSig) {
         this.name = name;
         this.health = health;
         this.armorFile = armorFile;
         this.swordFile = swordFile;
         this.bowFile = bowFile;
         this.greetingMessages = greetingMessages;
+        this.skinValue = skinValue;
+        this.skinSig = skinSig;
     }
 
     public String getName() {
@@ -47,5 +52,13 @@ public class ChampionType {
 
     public List<String> getGreetingMessages() {
         return greetingMessages;
+    }
+
+    public String getSkinValue() {
+        return skinValue;
+    }
+
+    public String getSkinSig() {
+        return skinSig;
     }
 }
