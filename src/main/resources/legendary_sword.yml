@@ -1,0 +1,37 @@
+item:
+  ==: org.bukkit.inventory.ItemStack
+  v: 3955
+  type: NETHERITE_SWORD
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    display-name: '{"text":"","extra":[{"text":"Fatal Blade","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gold","bold":false}]}'
+    lore:
+    - '""'
+    - '{"text":"","extra":[{"text":"Unbreaking V","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Water Aspect IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Preservation I","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Shear II","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Bloodlust III","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Cleaver V","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Experience V","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Ultimate: Shred I","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Talisman: Damage. ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gold","bold":false},{"text":"+30
+      Strength⚔","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"red","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Strength: ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_gray","bold":false},{"text":"+20
+      ⚔","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"red","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Durability: 2929/2929","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    enchants:
+      minecraft:impaling: 5
+      minecraft:sweeping_edge: 4
+      minecraft:smite: 6
+      minecraft:bane_of_arthropods: 3
+      minecraft:sharpness: 7
+      minecraft:looting: 4
+    PublicBukkitValues: |-
+      {
+          "minecraftnew:custom_bonus_durability": 898,
+          "minecraftnew:custom_durability": 2929,
+          "minecraftnew:custom_max_durability": 2031,
+          "minecraftnew:reforgetier": 5
+      }

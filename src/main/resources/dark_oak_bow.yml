@@ -1,0 +1,25 @@
+item:
+  ==: org.bukkit.inventory.ItemStack
+  v: 3955
+  type: BOW
+  meta:
+    ==: ItemMeta
+    meta-type: UNSPECIFIC
+    display-name: '{"text":"","extra":[{"text":"Dark Oak Bow","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gold","bold":false}]}'
+    lore:
+    - '{"text":"","extra":[{"text":"Unbreaking IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Velocity III","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Defenestration I","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Stun V","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Damage Increase: ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_gray","bold":false},{"text":"50%","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"aqua","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Durability: 801/801","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    enchants:
+      minecraft:infinity: 1
+      minecraft:power: 6
+    PublicBukkitValues: |-
+      {
+          "minecraftnew:custom_bonus_durability": 417,
+          "minecraftnew:custom_durability": 801,
+          "minecraftnew:custom_max_durability": 384,
+          "minecraftnew:reforgetier": 5
+      }

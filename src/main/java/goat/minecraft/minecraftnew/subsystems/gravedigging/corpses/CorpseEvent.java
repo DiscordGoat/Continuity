@@ -116,6 +116,15 @@ public class CorpseEvent {
     }
 
 
+        /**
+         * Spawns a Corpse NPC at the given location with the given corpse's
+         * attributes and traits. The NPC is spawned at the location minus 1
+         * block down to prevent it from spawning in the air.
+         *
+         * @param corpse the Corpse to spawn
+         * @param loc    the location to spawn the Corpse at
+         */
+
     private void spawnCorpse(Corpse corpse, Location loc) {
         NPCRegistry registry = CitizensAPI.createAnonymousNPCRegistry(new MemoryNPCDataStore());
         NPC npc = registry.createNPC(EntityType.PLAYER, corpse.getDisplayName());

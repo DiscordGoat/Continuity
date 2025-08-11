@@ -6,8 +6,8 @@ import goat.minecraft.minecraftnew.subsystems.gravedigging.corpses.CorpseTrait;
 import net.citizensnpcs.api.CitizensAPI;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
-import net.citizensnpcs.api.saving.MemoryNPCDataStore;
-import net.citizensnpcs.api.trait.trait.SkinTrait;
+import net.citizensnpcs.api.npc.MemoryNPCDataStore;
+import net.citizensnpcs.trait.SkinTrait;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
@@ -38,7 +38,7 @@ public final class ChampionSpawner {
         }
 
         // a: particle explosion
-        world.spawnParticle(Particle.EXPLOSION_LARGE, loc, 1);
+        world.spawnParticle(Particle.EXPLOSION, loc, 1);
         // b: dragon roar sound
         world.playSound(loc, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
 

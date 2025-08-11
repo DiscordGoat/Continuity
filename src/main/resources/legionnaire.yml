@@ -1,0 +1,142 @@
+armor:
+- ==: org.bukkit.inventory.ItemStack
+  v: 3955
+  type: NETHERITE_BOOTS
+  meta:
+    ==: ItemMeta
+    meta-type: ARMOR
+    display-name: '{"text":"","extra":[{"text":"Duskblood Boots","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_purple","bold":false}]}'
+    lore:
+    - '{"text":"","extra":[{"text":"Unbreaking V","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Physical Protection IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Preservation I","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Ventilation IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Talisman: Defense. ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gold","bold":false},{"text":"+4
+      Defense 🛡","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"aqua","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Defense: ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_gray","bold":false},{"text":"+30
+      🛡","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"aqua","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Full Set Bonus: +60 Warp Stacks","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Durability: 897/1005","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    enchants:
+      minecraft:protection: 5
+      minecraft:blast_protection: 4
+      minecraft:projectile_protection: 4
+      minecraft:depth_strider: 3
+      minecraft:fire_protection: 4
+      minecraft:feather_falling: 5
+    Damage: 52
+    PublicBukkitValues: |-
+      {
+          "minecraftnew:custom_bonus_durability": 524,
+          "minecraftnew:custom_durability": 897,
+          "minecraftnew:custom_max_durability": 481,
+          "minecraftnew:reforgetier": 5
+      }
+    trim:
+      material: minecraft:amethyst
+      pattern: minecraft:vex
+- ==: org.bukkit.inventory.ItemStack
+  v: 3955
+  type: NETHERITE_LEGGINGS
+  meta:
+    ==: ItemMeta
+    meta-type: ARMOR
+    display-name: '{"text":"","extra":[{"text":"Duskblood Leggings","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_purple","bold":false}]}'
+    lore:
+    - '{"text":"","extra":[{"text":"Unbreaking V","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Physical Protection IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Preservation I","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Ventilation IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Talisman: Defense. ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gold","bold":false},{"text":"+4
+      Defense 🛡","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"aqua","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Defense: ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_gray","bold":false},{"text":"+30
+      🛡","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"aqua","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Full Set Bonus: +60 Warp Stacks","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Durability: 954/1062","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    enchants:
+      minecraft:protection: 5
+      minecraft:blast_protection: 4
+      minecraft:projectile_protection: 4
+      minecraft:swift_sneak: 3
+      minecraft:fire_protection: 4
+    Damage: 56
+    PublicBukkitValues: |-
+      {
+          "minecraftnew:custom_bonus_durability": 507,
+          "minecraftnew:custom_durability": 954,
+          "minecraftnew:custom_max_durability": 555,
+          "minecraftnew:reforgetier": 5
+      }
+    trim:
+      material: minecraft:amethyst
+      pattern: minecraft:vex
+- ==: org.bukkit.inventory.ItemStack
+  v: 3955
+  type: NETHERITE_CHESTPLATE
+  meta:
+    ==: ItemMeta
+    meta-type: ARMOR
+    display-name: '{"text":"","extra":[{"text":"Duskblood Chestplate","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_purple","bold":false}]}'
+    lore:
+    - '{"text":"","extra":[{"text":"Unbreaking V","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Physical Protection IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Preservation I","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Ventilation IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Talisman: Defense. ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gold","bold":false},{"text":"+4
+      Defense 🛡","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"aqua","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Defense: ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_gray","bold":false},{"text":"+30
+      🛡","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"aqua","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Full Set Bonus: +60 Warp Stacks","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Durability: 989/1097","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    enchants:
+      minecraft:protection: 5
+      minecraft:blast_protection: 4
+      minecraft:projectile_protection: 4
+      minecraft:fire_protection: 4
+    Damage: 58
+    PublicBukkitValues: |-
+      {
+          "minecraftnew:custom_bonus_durability": 505,
+          "minecraftnew:custom_durability": 989,
+          "minecraftnew:custom_max_durability": 592,
+          "minecraftnew:reforgetier": 5
+      }
+    trim:
+      material: minecraft:amethyst
+      pattern: minecraft:vex
+- ==: org.bukkit.inventory.ItemStack
+  v: 3955
+  type: NETHERITE_HELMET
+  meta:
+    ==: ItemMeta
+    meta-type: ARMOR
+    display-name: '{"text":"","extra":[{"text":"Duskblood Helmet","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_purple","bold":false}]}'
+    lore:
+    - '{"text":"","extra":[{"text":"Unbreaking V","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Physical Protection IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Preservation I","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Ventilation IV","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Talisman: Defense. ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gold","bold":false},{"text":"+4
+      Defense 🛡","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"aqua","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Defense: ","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"dark_gray","bold":false},{"text":"+30
+      🛡","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"aqua","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Full Set Bonus: +60 Warp Stacks","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    - '{"text":"","extra":[{"text":"Durability: 893/1001","obfuscated":false,"italic":false,"underlined":false,"strikethrough":false,"color":"gray","bold":false}]}'
+    enchants:
+      minecraft:protection: 5
+      minecraft:respiration: 4
+      minecraft:blast_protection: 4
+      minecraft:aqua_affinity: 1
+      minecraft:projectile_protection: 4
+      minecraft:fire_protection: 4
+    Damage: 44
+    PublicBukkitValues: |-
+      {
+          "minecraftnew:custom_bonus_durability": 594,
+          "minecraftnew:custom_durability": 893,
+          "minecraftnew:custom_max_durability": 407,
+          "minecraftnew:reforgetier": 5
+      }
+    trim:
+      material: minecraft:amethyst
+      pattern: minecraft:vex
