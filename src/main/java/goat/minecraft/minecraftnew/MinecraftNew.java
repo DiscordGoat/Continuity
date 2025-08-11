@@ -39,6 +39,7 @@ import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
 import goat.minecraft.minecraftnew.subsystems.fishing.SpawnSeaCreatureCommand;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureChanceCommand;
 import goat.minecraft.minecraftnew.subsystems.fishing.TreasureChanceCommand;
+import goat.minecraft.minecraftnew.other.arenas.champions.SpawnChampionCommand;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.SpiritChanceCommand;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
@@ -469,6 +470,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             getDataFolder().mkdirs();
         }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
+        this.getCommand("spawnchampion").setExecutor(new SpawnChampionCommand());
         getCommand("seacreaturechance").setExecutor(new SeaCreatureChanceCommand(this, xpManager));
         getCommand("treasurechance").setExecutor(new TreasureChanceCommand(this));
         getCommand("spiritchance").setExecutor(new SpiritChanceCommand(this, xpManager));
