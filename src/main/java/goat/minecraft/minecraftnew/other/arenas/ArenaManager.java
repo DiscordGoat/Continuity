@@ -102,8 +102,8 @@ public class ArenaManager {
                     if (arena != null) {
                         Location arenaLoc = arena.getLocation();
                         if (playerLoc.getWorld().equals(arenaLoc.getWorld()) &&
-                                playerLoc.distanceSquared(arenaLoc) <= 120 * 120 && !arena.isPlaced()) {
-                            schemManager.placeStructure("test", arenaLoc);
+                                playerLoc.distanceSquared(arenaLoc) <= 120 * 120 && !arena.isPlaced() && playerLoc.getBlockY() < 0) {
+                            schemManager.placeStructure("arena_1", arenaLoc);
                             arena.setPlaced(true);
                             saveArenaLocations();
                         }
