@@ -286,7 +286,7 @@ public class Tropic implements CommandExecutor, TabCompleter {
                                         barLocation.getBlockY() + 1,
                                         barLocation.getBlockZ()
                                 );
-                                schemManager.placeStructure("bar", barY66);
+                                schemManager.placeStructure("test", barY66);
 
                                 Location stoneForBar = findNearestSolidBlock(barY66, 10);
                                 if (stoneForBar != null) {
@@ -317,7 +317,7 @@ public class Tropic implements CommandExecutor, TabCompleter {
                                         11, 11, Material.SAND
                                 );
 
-                                schemManager.placeStructure("lighthouse", lightLocation);
+                                schemManager.placeStructure("test", lightLocation);
                             }
                             lighthousePlaced = true;
                         }
@@ -518,7 +518,7 @@ public class Tropic implements CommandExecutor, TabCompleter {
                                     barLocation.getBlockY() +1,
                                     barLocation.getBlockZ()
                             );
-                            schemManager.placeStructure("bar", barY66);
+                            schemManager.placeStructure("test", barY66);
 
                             // Find a solid block near the bar for the bartender
                             Location stoneForBar = findNearestSolidBlock(barY66, 10);
@@ -553,7 +553,7 @@ public class Tropic implements CommandExecutor, TabCompleter {
                                     Material.SAND
                             );
 
-                            schemManager.placeStructure("lighthouse", lightLocation);
+                            schemManager.placeStructure("test", lightLocation);
 
                             plugin.getLogger().info("Lighthouse placed at: " +
                                     lightLocation.getBlockX() + "," +
@@ -588,7 +588,7 @@ public class Tropic implements CommandExecutor, TabCompleter {
                                         11, 11, Material.SAND
                                 );
 
-                                schemManager.placeStructure("lighthouse", lightLocation);
+                                schemManager.placeStructure("test", lightLocation);
                                 structureLocations.put("lighthouse", lighthouseLocation);
 
                                 plugin.getLogger().info("Emergency lighthouse placed at: " + lightLocation);
@@ -632,7 +632,7 @@ public class Tropic implements CommandExecutor, TabCompleter {
 
                 // place the mine
                 Location mineLoc = new Location(tropicWorld, x, floorY, z);
-                schemManager.placeStructure("seamine", mineLoc);
+                schemManager.placeStructure("test", mineLoc);
 
                 // look in a 3×20×3 area above for BLACKSTONE
                 outer:

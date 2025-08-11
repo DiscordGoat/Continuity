@@ -286,7 +286,7 @@ public class Frozen implements CommandExecutor, TabCompleter {
                                         barLocation.getBlockY() + 1,
                                         barLocation.getBlockZ()
                                 );
-                                schemManager.placeStructure("bar", barY66);
+                                schemManager.placeStructure("test", barY66);
 
                                 Location stoneForBar = findNearestSolidBlock(barY66, 10);
                                 if (stoneForBar != null) {

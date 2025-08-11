@@ -41,7 +41,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public final class CartographyManager implements Listener {
 
     private static final int MAX_WALL = 16;
-    private static final MapView.Scale TILE_SCALE = MapView.Scale.FAR;
+    private static final MapView.Scale TILE_SCALE = MapView.Scale.NORMAL;
     private static final long TELEPORT_SAFE_SCAN = 24;
     private static final NamespacedKey WALL_KEY = NamespacedKey.minecraft("cont_worldmap_wall");
     private static final String SAVE_FILE = "cartography2_walls.yml";
@@ -1200,7 +1200,7 @@ public final class CartographyManager implements Listener {
                     int rz = startZ + dz;
                     if (rx < 0 || rx >= 128 || rz < 0 || rz >= 128) continue;
                     int off = rz * 128 + rx;
-                    byte color = (dz < 4) ? MapPalette.ORANGE : MapPalette.BROWN;
+                    byte color = (dz < 4) ? MapPalette.DARK_BROWN : MapPalette.BROWN;
                     caches[idx][off] = color;
                     filled[idx].set(off);
                 }
