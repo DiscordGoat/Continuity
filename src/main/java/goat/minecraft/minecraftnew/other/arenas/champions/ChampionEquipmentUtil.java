@@ -24,14 +24,17 @@ public class ChampionEquipmentUtil {
      * @param player      player to modify
      * @param resourcePath path within the plugin JAR to the YAML file
      */
-    @SuppressWarnings("unchecked")
     public static void setArmorContentsFromFile(JavaPlugin plugin, Player player, String resourcePath) {
         try (InputStream in = plugin.getResource(resourcePath)) {
             if (in == null) return;
             YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(in));
-            List<ItemStack> armor = (List<ItemStack>) config.get("armor");
-            if (armor != null) {
-                player.getInventory().setArmorContents(armor.toArray(new ItemStack[0]));
+            List<?> armorList = config.getList("armor");
+            if (armorList != null && player.getEquipment() != null) {
+                ItemStack[] armor = armorList.stream()
+                        .filter(ItemStack.class::isInstance)
+                        .map(ItemStack.class::cast)
+                        .toArray(ItemStack[]::new);
+                player.getEquipment().setArmorContents(armor);
             }
         } catch (Exception ignored) {
         }
@@ -50,8 +53,8 @@ public class ChampionEquipmentUtil {
             if (in == null) return;
             YamlConfiguration config = YamlConfiguration.loadConfiguration(new InputStreamReader(in));
             ItemStack item = config.getItemStack("item");
-            if (item != null) {
-                player.getInventory().setItemInMainHand(item);
+            if (item != null && player.getEquipment() != null) {
+                player.getEquipment().setItemInMainHand(item);
             }
         } catch (Exception ignored) {
         }
