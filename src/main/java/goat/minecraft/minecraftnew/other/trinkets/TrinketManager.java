@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.other.trinkets.PotionPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.MiningPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.TransfigurationPouchManager;
 import goat.minecraft.minecraftnew.other.trinkets.EnchantedHopperManager;
+import goat.minecraft.minecraftnew.other.trinkets.EnchantedClockManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -170,6 +171,12 @@ public class TrinketManager implements Listener {
                     event.setCancelled(true);
                 } else if (event.getClick() == ClickType.SHIFT_RIGHT) {
                     EnchantedHopperManager.getInstance().cycleDelay(player, item);
+                    event.setCancelled(true);
+                }
+            }
+            case "Enchanted Clock" -> {
+                if (event.getClick() == ClickType.SHIFT_RIGHT) {
+                    EnchantedClockManager.getInstance().cycleDelay(player, item);
                     event.setCancelled(true);
                 }
             }

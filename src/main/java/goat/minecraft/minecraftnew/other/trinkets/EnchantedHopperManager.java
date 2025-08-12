@@ -41,6 +41,7 @@ public class EnchantedHopperManager implements Listener {
     private File hopperFile;
     private FileConfiguration hopperConfig;
     private final Map<UUID, UUID> openHoppers = new HashMap<>();
+    private final Map<UUID, Inventory> previousInventories = new HashMap<>();
     private final Map<UUID, Long> lastRun = new HashMap<>();
 
     private static final long[] DELAY_MS = {500L, 2000L, 30000L, 120000L};
@@ -95,7 +96,9 @@ public class EnchantedHopperManager implements Listener {
                 inv.setItem(i, stack);
             }
         }
-        openHoppers.put(player.getUniqueId(), id);
+        UUID pid = player.getUniqueId();
+        openHoppers.put(pid, id);
+        previousInventories.put(pid, player.getOpenInventory().getTopInventory());
         player.openInventory(inv);
     }
 
@@ -103,7 +106,8 @@ public class EnchantedHopperManager implements Listener {
     public void onInventoryClose(InventoryCloseEvent event) {
         if (!event.getView().getTitle().equals("Enchanted Hopper")) return;
         Player player = (Player) event.getPlayer();
-        UUID id = openHoppers.remove(player.getUniqueId());
+        UUID pid = player.getUniqueId();
+        UUID id = openHoppers.remove(pid);
         if (id == null) return;
         String base = id.toString();
         Inventory inv = event.getInventory();
@@ -116,6 +120,15 @@ public class EnchantedHopperManager implements Listener {
             }
         }
         save();
+        Inventory prev = previousInventories.remove(pid);
+        if (prev != null) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.openInventory(prev);
+                }
+            }.runTaskLater(plugin, 1L);
+        }
     }
 
     @EventHandler
