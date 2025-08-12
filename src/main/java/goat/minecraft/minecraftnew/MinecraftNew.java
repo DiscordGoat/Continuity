@@ -120,6 +120,7 @@ import goat.minecraft.minecraftnew.subsystems.dragons.RefreshEndCommand;
 import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
 import goat.minecraft.minecraftnew.other.realms.Tropic;
 import goat.minecraft.minecraftnew.other.realms.Frozen;
+import goat.minecraft.minecraftnew.subsystems.arenas.ArenaManager;
 import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.*;
 import org.bukkit.entity.EnderDragon;
@@ -214,6 +215,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
+
+        ArenaManager.activateArenas(this);
 
         // Initialize stats calculator singleton
         StatsCalculator.getInstance(this);
