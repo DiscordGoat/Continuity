@@ -284,12 +284,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         this.getCommand("island").setExecutor(new IslandCommand());
 
 
-        PigStepArena.init(this);
+
         if (!getDataFolder().exists()) {
             getDataFolder().mkdirs();
         }
-        arenaManager = ArenaManager.getInstance(this);
-        arenaManager.activateArenas();
+
         PlayerMeritManager playerData = PlayerMeritManager.getInstance(this);
 
         // Register commands

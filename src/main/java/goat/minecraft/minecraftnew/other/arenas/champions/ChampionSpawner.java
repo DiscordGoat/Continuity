@@ -31,7 +31,9 @@ public final class ChampionSpawner {
         if (world == null) {
             return;
         }
-
+        if (loc == null || loc.getWorld() == null) {
+            throw new IllegalArgumentException("Champion spawn location cannot be null or have a null world.");
+        }
         // Particle explosion and dragon roar for dramatic effect
         world.spawnParticle(Particle.EXPLOSION, loc, 1);
         world.playSound(loc, Sound.ENTITY_ENDER_DRAGON_GROWL, 1f, 1f);
