@@ -157,6 +157,10 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
      * Runs the actual villager work cycle logic (previously in startGlobalScheduler()).
      */
     private void runVillagerWorkCycle() {
+        if(Bukkit.getOnlinePlayers().isEmpty()){
+            Bukkit.getLogger().info("No players online, skipping work cycle for villagers");
+            return; // No players online, do not perform work
+        }
         // Iterate over all villagers in all worlds
         for (Villager villager : plugin.getServer().getWorlds().stream()
                 .flatMap(world -> world.getEntitiesByClass(Villager.class).stream())
@@ -165,10 +169,8 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             if(!isEligibleForWorkCycle(villager)){
                 continue; // Skip non-eligible villagers
             }
-            else{
-                performVillagerWork(villager);
-            }
 
+            performVillagerWork(villager);
         }
         // Persist shelf inventories in case of abrupt shutdown
         ShelfManager shelfManager = MinecraftNew.getInstance().getShelfManager();
@@ -180,10 +182,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     private void performVillagerWork(Villager villager) {
         Villager.Profession profession = villager.getProfession();
         int searchRadius = 10; // Configurable radius
-        if(Bukkit.getOnlinePlayers().isEmpty()){
-            Bukkit.getLogger().info("No players online, skipping work cycle for villagers");
-            return; // No players online, do not perform work
-        }
+
         // Previously this logic only ran when players were present in the
         // Overworld. This prevented work cycles from executing if everyone was
         // online in another dimension. Now we simply ensure at least one player
