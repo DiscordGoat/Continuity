@@ -6,6 +6,7 @@ import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.other.skilltree.Skill;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -79,6 +80,7 @@ public class Groot implements Listener {
             giveCompactWood(player);
             player.playSound(player.getLocation(), Sound.BLOCK_WOOD_BREAK, 1.0f, 1.0f);
         }
+
     }
 
     private int countMaterialInInventory(Player player, Material material) {
@@ -133,6 +135,29 @@ public class Groot implements Listener {
         Player player = event.getPlayer();
 
         if (woodMaterials.contains(block.getType())) {
+            PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
+            PetManager.Pet activePet = petManager.getActivePet(player);
+            if (activePet != null && activePet.hasPerk(PetManager.PetPerk.GROOT)) {
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+                compactWoodMaterials(player);
+            }
             int silkWormChance = random.nextInt(2400) + 1;
             if (silkWormChance == 1) {
                 event.getBlock()
@@ -147,11 +172,7 @@ public class Groot implements Listener {
                         1.0f);
             }
 
-            PetManager petManager = PetManager.getInstance(MinecraftNew.getInstance());
-            PetManager.Pet activePet = petManager.getActivePet(player);
-            if (activePet != null && activePet.hasPerk(PetManager.PetPerk.GROOT)) {
-                compactWoodMaterials(player);
-            }
+
         }
     }
 }

@@ -11,6 +11,7 @@ import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestryPetManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.SaplingManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
+import goat.minecraft.minecraftnew.subsystems.pets.perks.Groot;
 import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
@@ -195,17 +196,12 @@ public class UltimateEnchantmentListener implements Listener {
         // Decide how many blocks we break per tick (aim for ~20 seconds total).
         // For 200 blocks, we have 400 ticks in 20 seconds => ~0.5 blocks/tick -> round up to 1.
         // Tweak logic/variables as desired.
-        int totalTicks = 2; // 10 seconds * 20 = 200 ticks (adjust to your liking)
+        int totalTicks = 400; // 10 seconds * 20 = 200 ticks (adjust to your liking)
         double rawBpt = (double) blocks.size() / (double) totalTicks;
         int blocksPerTick = (int) Math.ceil(rawBpt);
 
         // Cap between 1 and 10
-        if (blocksPerTick < 1) {
-            blocksPerTick = 1;
-        }
-        if (blocksPerTick > 20) {
-            blocksPerTick = 20;
-        }
+        blocksPerTick = 1;
 
         int finalBlocksPerTick = blocksPerTick;
 

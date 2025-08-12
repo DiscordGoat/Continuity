@@ -1386,7 +1386,7 @@ public enum Talent {
     ONE_HUNDRED_ACRE_WOODS(
             "100 Acre Woods",
             ChatColor.GRAY + "Chance to gain a Honey Bottle when chopping",
-            ChatColor.YELLOW + "+1% Honey Bottle Chance",
+            ChatColor.YELLOW + "+0.1% Honey Bottle Chance",
             5,
             40,
             Material.HONEY_BOTTLE

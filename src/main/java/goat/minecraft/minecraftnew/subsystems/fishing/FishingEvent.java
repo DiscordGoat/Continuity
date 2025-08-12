@@ -20,11 +20,8 @@ import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.*;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.*;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -305,13 +302,12 @@ public class FishingEvent implements Listener {
         SeaCreature seaCreature;
         if (!optionalSeaCreature.isPresent()) return;
 
-        if(BlessingUtils.hasFullSetBonus(player, "Fathmic Iron")){
+        if (BlessingUtils.hasFullSetBonus(player, "Fathmic Iron")) {
             seaCreature = optionalRareSeaCreature.get();
-        }else{
+        } else {
             seaCreature = optionalSeaCreature.get();
         }
         EntityType entityType = seaCreature.getEntityType();
-
 
 
         // Log sea creature stats to the console
@@ -340,11 +336,11 @@ public class FishingEvent implements Listener {
         livingEntity.getEquipment().setLeggingsDropChance(0);
         livingEntity.getEquipment().setBootsDropChance(0);
         ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHandDropChance(1);
-        if(seaCreature.getSkullName().equals("Pirate")){
+        if (seaCreature.getSkullName().equals("Pirate")) {
             ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHand(ItemRegistry.getRandomTreasure());
             ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHandDropChance(1);
         }
-        if(seaCreature.getSkullName().equals("Poseidon")){
+        if (seaCreature.getSkullName().equals("Poseidon")) {
             ((LivingEntity) spawnedEntity).getEquipment().setItemInOffHand(ItemRegistry.getTrident());
 
         }
@@ -358,7 +354,7 @@ public class FishingEvent implements Listener {
         SpawnMonsters spawnMonsters = SpawnMonsters.getInstance(xpManager);
         int baseLevel = seaCreature.getLevel();
         int biggerLevel = FishingUpgradeSystem.getUpgradeLevel(rod, FishingUpgradeSystem.UpgradeType.BIGGER_FISH);
-        int adjustedLevel = (int)Math.max(1, Math.round(baseLevel * (1.0 - biggerLevel * 0.10)));
+        int adjustedLevel = (int) Math.max(1, Math.round(baseLevel * (1.0 - biggerLevel * 0.10)));
         plugin.getLogger().info("Base Level of Sea Creature: " + baseLevel);
 
         spawnMonsters.applyMobAttributes(livingEntity, adjustedLevel);
@@ -414,8 +410,10 @@ public class FishingEvent implements Listener {
             spawnSpecificSeaCreature(player, bobberLocation, seaCreature, adjustedLevel, rod);
             player.sendMessage(ChatColor.DARK_PURPLE + "Kraken awakens! Another sea creature appears.");
         }
+        if (seaCreature instanceof Monster monster) {
+            monster.setTarget(player);
+        }
     }
-
     private void spawnSpecificSeaCreature(Player player, Location bobberLocation, SeaCreature seaCreature, int level, ItemStack rod) {
         Entity spawned = player.getWorld().spawnEntity(bobberLocation, seaCreature.getEntityType());
         LivingEntity living = (LivingEntity) spawned;

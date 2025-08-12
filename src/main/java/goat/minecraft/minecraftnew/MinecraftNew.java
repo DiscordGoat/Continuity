@@ -214,7 +214,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         instance = this;
-
+        SkillTreeManager.init(this);
         // Initialize stats calculator singleton
         StatsCalculator.getInstance(this);
         getServer().getPluginManager()
@@ -596,7 +596,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(statsCommand, this);
         new SetSkillLevelCommand(this, xpManager);
 
-        SkillTreeManager.init(this);
+
         new AddTalentPointCommand(this, SkillTreeManager.getInstance());
 
         getCommand("getpet").setExecutor(new PetCommand(petManager));
@@ -753,6 +753,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
 
         this.getCommand("clearpets").setExecutor(new ClearPetsCommand(this, petManager));
         getServer().getPluginManager().registerEvents(new BowReforge(), this);
+
         villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);
         getCommand("forceworkcycle").setExecutor(villagerWorkCycleManager);
         getCommand("repair").setExecutor(new RepairCommand());

@@ -631,7 +631,7 @@ public class Forestry implements Listener {
         int level = mgr.getTalentLevel(player.getUniqueId(), Skill.FORESTRY, Talent.ONE_HUNDRED_ACRE_WOODS);
         if (level <= 0) return;
 
-        double chance = level * 1.0; // 1% per level
+        double chance = level * 0.1; // 1% per level
         if (random.nextDouble() * 100 < chance) {
             final Location dropLocation = block.getLocation().add(0.5, 0.5, 0.5);
             new BukkitRunnable() {

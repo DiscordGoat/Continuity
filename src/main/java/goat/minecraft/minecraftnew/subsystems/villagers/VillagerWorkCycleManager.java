@@ -98,6 +98,13 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
      * Starts a 1-second interval scheduler that counts down ticksUntilNextWorkCycle.
      */
     private void startGlobalScheduler() {
+        int levels = getHighestWorkCycleReductionLevels();
+        int reduction = levels * 10 * 20;
+        ticksUntilNextWorkCycle = Math.max(20, WORK_CYCLE_TICKS - reduction);
+
+        Bukkit.getLogger().info("[WorkCycle] Initial: levels=" + levels +
+                ", reduction=" + reduction + " ticks (" + (reduction / 20) + "s), starts in "
+                + (ticksUntilNextWorkCycle / 20) + "s");
         new BukkitRunnable() {
             @Override
             public void run() {
