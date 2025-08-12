@@ -1543,7 +1543,17 @@ public class VillagerTradeManager implements Listener {
                     if (sellIndex < sells.size()) {
                         TradeItem tradeItem = sells.get(sellIndex);
                         if (villagerLevel >= tradeItem.getRequiredLevel()) {
-                            processSell(player, villager, tradeItem);
+                            if (event.getClick().isRightClick()) {
+                                boolean soldAny = false;
+                                while (processSell(player, villager, tradeItem, false)) {
+                                    soldAny = true;
+                                }
+                                if (!soldAny) {
+                                    player.sendMessage(ChatColor.RED + "You don't have enough required items to sell.");
+                                }
+                            } else {
+                                processSell(player, villager, tradeItem, true);
+                            }
                         }
                     }
                 }
@@ -1769,7 +1779,7 @@ public class VillagerTradeManager implements Listener {
 
 
     // Main method to process the selling transaction
-    private void processSell(Player player, Villager villager, TradeItem tradeItem) {
+    private boolean processSell(Player player, Villager villager, TradeItem tradeItem, boolean notifyOnFailure) {
         XPManager xpManager = new XPManager(plugin);
         int emeraldReward = tradeItem.getEmeraldValue();
         SkillTreeManager manager = SkillTreeManager.getInstance();
@@ -1822,9 +1832,13 @@ public class VillagerTradeManager implements Listener {
                 }
             }
 
+            return true;
         } else {
-            // Not enough valid items were removed
-            player.sendMessage(ChatColor.RED + "You don't have enough required items to sell.");
+            if (notifyOnFailure) {
+                // Not enough valid items were removed
+                player.sendMessage(ChatColor.RED + "You don't have enough required items to sell.");
+            }
+            return false;
         }
     }
 
