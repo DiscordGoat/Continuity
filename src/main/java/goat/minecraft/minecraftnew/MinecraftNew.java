@@ -5,6 +5,7 @@ import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
 import goat.minecraft.minecraftnew.other.resourcepack.ResourcePackListener;
 import goat.minecraft.minecraftnew.subsystems.cartography.CartographyManager;
 import goat.minecraft.minecraftnew.subsystems.gravedigging.Gravedigging;
+import goat.minecraft.minecraftnew.subsystems.archaeology.TrailRuinManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender.BartenderVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineerVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineeringProfessionListener;
@@ -607,6 +608,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Mining(), MinecraftNew.getInstance());
         getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.gravedigging.terraforming.Terraforming(), MinecraftNew.getInstance());
 
+        getServer().getPluginManager().registerEvents(new TrailRuinManager(), this);
         getServer().getPluginManager().registerEvents(new Gravedigging(this), this);
         Gravedigging gravedigging = new Gravedigging(this);
         gravedigging.startup();

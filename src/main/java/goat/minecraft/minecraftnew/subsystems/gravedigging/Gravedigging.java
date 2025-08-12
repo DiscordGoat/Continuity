@@ -13,7 +13,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.EquipmentSlot;
-import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -216,17 +215,8 @@ public class Gravedigging implements Listener {
         if (world == null) return;
         Location center = loc.clone().add(0.5, 2, 0.5);
 
-        ItemStack relic = ItemRegistry.getRandomVerdantRelic();
-        world.dropItemNaturally(center, relic);
-        world.playSound(center, Sound.ENTITY_ITEM_PICKUP, 1.0f, 0.8f);
-        String name = relic.getItemMeta() != null
-                ? relic.getItemMeta().getDisplayName()
-                : "Relic";
-        player.sendMessage(ChatColor.AQUA
-                + "You uncover a treasure! ("
-                + name
-                + ChatColor.AQUA
-                + ")");
+        world.playSound(center, Sound.BLOCK_GRAVEL_BREAK, 1.0f, 1.0f);
+        player.sendMessage(ChatColor.GRAY + "You uncover nothing of value.");
 
         world.spawnParticle(
                 Particle.BLOCK,
