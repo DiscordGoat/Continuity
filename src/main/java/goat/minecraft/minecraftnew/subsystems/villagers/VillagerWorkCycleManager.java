@@ -49,7 +49,15 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
     private VillagerWorkCycleManager(JavaPlugin plugin) {
         this.plugin = plugin;
-        startGlobalScheduler();  // Start the new 1-second countdown
+
+        // compute initial cooldown from the highest online player's levels
+        int initialReduction = getWorkCycleReductionTicks();
+        ticksUntilNextWorkCycle = Math.max(20, WORK_CYCLE_TICKS - initialReduction);
+        Bukkit.getLogger().info("[WorkCycle] initial reduction=" + initialReduction
+                + " ticks (" + (initialReduction / 20) + "s). Starts in "
+                + (ticksUntilNextWorkCycle / 20) + "s");
+
+        startGlobalScheduler();  // start after setting the initial cooldown
     }
     /**
  * Checks if a villager is eligible for work cycles.
@@ -98,13 +106,16 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
                 // Once we reach zero or below, run the cycle and reset the timer
                 if (ticksUntilNextWorkCycle <= 0) {
+                    int levels = getHighestWorkCycleReductionLevels();
+                    int reduction = levels * 10 * 20;
+
+                    Bukkit.getLogger().info("Resetting: levels=" + levels +
+                            ", reduction=" + reduction + " ticks (" + (reduction / 20) + "s)");
+
                     runVillagerWorkCycle();
-                    int reduction = getWorkCycleReductionTicks();
-                    ticksUntilNextWorkCycle = WORK_CYCLE_TICKS - reduction;
-                    if (ticksUntilNextWorkCycle < 20) {
-                        ticksUntilNextWorkCycle = 20;
-                    }
+                    ticksUntilNextWorkCycle = Math.max(20, WORK_CYCLE_TICKS - reduction);
                 }
+
             }
         }.runTaskTimer(plugin, 0L, 20L); // run every 20 ticks (1 second)
     }
@@ -120,9 +131,10 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     /**
      * Calculates work cycle reduction from player talents.
      */
-    private int getWorkCycleReductionTicks() {
+    private int getHighestWorkCycleReductionLevels() {
         SkillTreeManager manager = SkillTreeManager.getInstance();
         if (manager == null) return 0;
+
         int highest = 0;
         for (Player player : Bukkit.getOnlinePlayers()) {
             int total = 0;
@@ -133,8 +145,13 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             total += manager.getTalentLevel(player.getUniqueId(), Skill.BARTERING, Talent.SLAVE_DRIVER);
             if (total > highest) highest = total;
         }
-        return highest * 10 * 20;
+        return highest;
     }
+
+    private int getWorkCycleReductionTicks() {
+        return getHighestWorkCycleReductionLevels() * 10 * 20; // 10s per level
+    }
+
 
     /**
      * Runs the actual villager work cycle logic (previously in startGlobalScheduler()).
@@ -146,7 +163,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 .toList()) {
             // Perform work for each villager
             if(!isEligibleForWorkCycle(villager)){
-                return; // Skip non-eligible villagers
+                continue; // Skip non-eligible villagers
             }
             else{
                 performVillagerWork(villager);
