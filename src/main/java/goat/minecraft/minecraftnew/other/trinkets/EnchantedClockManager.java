@@ -16,6 +16,13 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.NamespacedKey;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Handles the automated behaviour of the Enchanted Clock trinket. Every three
@@ -25,9 +32,16 @@ import org.bukkit.scheduler.BukkitRunnable;
 public class EnchantedClockManager {
     private static EnchantedClockManager instance;
     private final JavaPlugin plugin;
+    private final NamespacedKey idKey;
+    private final NamespacedKey delayKey;
+    private final Map<UUID, Long> lastRun = new HashMap<>();
+
+    private static final long[] DELAY_MS = {30000L, 60000L, 180000L, 600000L};
 
     private EnchantedClockManager(JavaPlugin plugin) {
         this.plugin = plugin;
+        idKey = new NamespacedKey(plugin, "clock_id");
+        delayKey = new NamespacedKey(plugin, "clock_delay");
         startTask();
     }
 
@@ -49,7 +63,7 @@ public class EnchantedClockManager {
                     processPlayer(player);
                 }
             }
-        }.runTaskTimer(plugin, 20, 20L * 60 * 3);
+        }.runTaskTimer(plugin, 20L, 20L);
     }
 
     private void processPlayer(Player player) {
@@ -64,9 +78,14 @@ public class EnchantedClockManager {
             if (meta == null || !meta.hasDisplayName()) continue;
             String name = ChatColor.stripColor(meta.getDisplayName());
             if (!name.equals("Enchanted Clock")) continue;
+            UUID id = getOrCreateId(item);
+            CustomBundleGUI.getInstance().setBackpackItem(player, slot, item);
+            int delayIndex = getDelayIndex(item);
+            if (!shouldRun(id, delayIndex)) continue;
             ItemStack above = CustomBundleGUI.getInstance().getBackpackItem(player, slot - 9);
             if (above == null) continue;
             triggerLeftClick(player, above);
+            CustomBundleGUI.getInstance().setBackpackItem(player, slot - 9, above);
         }
     }
 
@@ -106,5 +125,87 @@ public class EnchantedClockManager {
                 // do nothing for other trinkets
             }
         }
+    }
+
+    private UUID getOrCreateId(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return UUID.randomUUID();
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        String existing = container.get(idKey, PersistentDataType.STRING);
+        if (existing != null) {
+            if (!container.has(delayKey, PersistentDataType.INTEGER)) {
+                container.set(delayKey, PersistentDataType.INTEGER, 2);
+                item.setItemMeta(meta);
+                updateLore(item, 2);
+            }
+            return UUID.fromString(existing);
+        }
+        UUID id = UUID.randomUUID();
+        container.set(idKey, PersistentDataType.STRING, id.toString());
+        container.set(delayKey, PersistentDataType.INTEGER, 2);
+        item.setItemMeta(meta);
+        updateLore(item, 2);
+        return id;
+    }
+
+    private int getDelayIndex(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return 2;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        Integer index = container.get(delayKey, PersistentDataType.INTEGER);
+        if (index == null) {
+            index = 2;
+            container.set(delayKey, PersistentDataType.INTEGER, index);
+            item.setItemMeta(meta);
+            updateLore(item, index);
+        }
+        return index;
+    }
+
+    private boolean shouldRun(UUID id, int index) {
+        long now = System.currentTimeMillis();
+        long last = lastRun.getOrDefault(id, 0L);
+        if (now - last >= DELAY_MS[index]) {
+            lastRun.put(id, now);
+            return true;
+        }
+        return false;
+    }
+
+    public void cycleDelay(Player player, ItemStack item) {
+        UUID id = getOrCreateId(item);
+        int index = getDelayIndex(item);
+        index = (index + 1) % DELAY_MS.length;
+        ItemMeta meta = item.getItemMeta();
+        if (meta != null) {
+            meta.getPersistentDataContainer().set(delayKey, PersistentDataType.INTEGER, index);
+            item.setItemMeta(meta);
+        }
+        updateLore(item, index);
+        player.updateInventory();
+        player.sendMessage(ChatColor.GREEN + "Clock delay set to " + formatDelay(index));
+        lastRun.put(id, System.currentTimeMillis());
+    }
+
+    private String formatDelay(int index) {
+        switch (index) {
+            case 0 -> { return "30s"; }
+            case 1 -> { return "1m"; }
+            case 2 -> { return "3m"; }
+            case 3 -> { return "10m"; }
+            default -> { return ""; }
+        }
+    }
+
+    private void updateLore(ItemStack item, int index) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        java.util.List<String> lore = new java.util.ArrayList<>();
+        lore.add(ChatColor.GRAY + "Activates the trinket above automatically");
+        lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Change delay");
+        lore.add(ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up");
+        lore.add(ChatColor.GRAY + "Delay: " + ChatColor.WHITE + formatDelay(index));
+        meta.setLore(lore);
+        item.setItemMeta(meta);
     }
 }

@@ -11,15 +11,20 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class SatchelManager implements Listener {
     private static SatchelManager instance;
     private final JavaPlugin plugin;
     private File satchelFile;
     private FileConfiguration satchelConfig;
+    private final Map<UUID, Inventory> previousInventories = new HashMap<>();
 
     private SatchelManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -61,6 +66,8 @@ public class SatchelManager implements Listener {
                 }
             }
         }
+        UUID id = player.getUniqueId();
+        previousInventories.put(id, player.getOpenInventory().getTopInventory());
         player.openInventory(inv);
     }
 
@@ -69,8 +76,18 @@ public class SatchelManager implements Listener {
         String title = event.getView().getTitle();
         if (!title.endsWith(" Satchel")) return;
         Player player = (Player) event.getPlayer();
+        UUID id = player.getUniqueId();
         String color = title.split(" ")[0];
         saveSatchel(player, event.getInventory(), color);
+        Inventory prev = previousInventories.remove(id);
+        if (prev != null) {
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    player.openInventory(prev);
+                }
+            }.runTaskLater(plugin, 1L);
+        }
     }
 
     private void saveSatchel(Player player, Inventory inv, String color) {

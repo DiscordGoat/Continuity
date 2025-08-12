@@ -1400,8 +1400,10 @@ public class ItemRegistry {
                 Material.CLOCK,
                 ChatColor.YELLOW + "Enchanted Clock",
                 List.of(
-                        ChatColor.GRAY + "Activates the trinket above every 3 minutes",
-                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up"
+                        ChatColor.GRAY + "Activates the trinket above automatically",
+                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Change delay",
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Pick up",
+                        ChatColor.GRAY + "Delay: " + ChatColor.WHITE + "3m"
                 ),
                 1,
                 false,
