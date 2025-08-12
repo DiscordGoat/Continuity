@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -43,6 +44,7 @@ public class EnchantedHopperManager implements Listener {
     private final Map<UUID, UUID> openHoppers = new HashMap<>();
     private final Map<UUID, Inventory> previousInventories = new HashMap<>();
     private final Map<UUID, Long> lastRun = new HashMap<>();
+    private final Map<UUID, Long> disabledUntil = new HashMap<>();
 
     private static final long[] DELAY_MS = {500L, 2000L, 30000L, 120000L};
 
@@ -100,6 +102,15 @@ public class EnchantedHopperManager implements Listener {
         openHoppers.put(pid, id);
         previousInventories.put(pid, player.getOpenInventory().getTopInventory());
         player.openInventory(inv);
+    }
+
+    @EventHandler
+    public void onInventoryOpen(InventoryOpenEvent event) {
+        InventoryType type = event.getInventory().getType();
+        if (type != InventoryType.CRAFTING && type != InventoryType.CREATIVE) {
+            Player player = (Player) event.getPlayer();
+            disabledUntil.put(player.getUniqueId(), System.currentTimeMillis() + 10000L);
+        }
     }
 
     @EventHandler
@@ -181,6 +192,16 @@ public class EnchantedHopperManager implements Listener {
     }
 
     private void processPlayer(Player player) {
+        UUID pid = player.getUniqueId();
+        long now = System.currentTimeMillis();
+        Long until = disabledUntil.get(pid);
+        if (until != null) {
+            if (now < until) {
+                return;
+            } else {
+                disabledUntil.remove(pid);
+            }
+        }
         InventoryType openType = player.getOpenInventory().getTopInventory().getType();
         if (openType != InventoryType.CRAFTING && openType != InventoryType.CREATIVE) {
             return; // pause automation when a container is open
