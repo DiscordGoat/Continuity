@@ -394,7 +394,7 @@ public class PotionBrewingSubsystem implements Listener {
         );
 
         // Potion of Oxygen Recovery
-        List<String> oxygenRecoveryIngredients = Arrays.asList("Glass Bottle", "Nether Wart");
+        List<String> oxygenRecoveryIngredients = Arrays.asList("Glass Bottle", "Nether Wart", "Ghost");
         List<String> oxygenRecoveryLore = Arrays.asList("Recover oxygen faster while mining", "Base Duration of " + baseDuration);
         Color oxygenRecoveryColor = Color.fromRGB(0, 0, 0);
         recipeRegistry.add(

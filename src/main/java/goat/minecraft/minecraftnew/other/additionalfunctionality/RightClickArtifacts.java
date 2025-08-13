@@ -669,7 +669,7 @@ public class RightClickArtifacts implements Listener {
             if (displayName.equals(ChatColor.YELLOW + "Treasure Chest")) {
                 ItemStack treasure = getRandomFishingTreasure();
                 if (treasure != null) {
-                    player.getInventory().addItem(treasure);
+                    player.getWorld().dropItem(player.getLocation(), treasure);
                 }
                 player.playSound(player.getLocation(), Sound.BLOCK_CHEST_OPEN, 1.0f, 1.0f);
                 player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, player.getLocation(), 20, 1, 1, 1, 0.1);

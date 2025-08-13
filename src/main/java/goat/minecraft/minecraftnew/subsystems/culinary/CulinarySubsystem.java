@@ -1148,7 +1148,7 @@ public class CulinarySubsystem implements Listener {
                         plugin.getLogger().info("[PortalPantry] Shelf world mismatch – skipping.");
                         continue;
                     }
-                    if (shelfLoc.distance(player.getLocation()) > 10) {
+                    if (shelfLoc.distance(player.getLocation()) > 30) {
                         plugin.getLogger().info("[PortalPantry] Shelf too far (" + shelfLoc.distance(player.getLocation()) + " blocks) – skipping.");
                         continue;
                     }
