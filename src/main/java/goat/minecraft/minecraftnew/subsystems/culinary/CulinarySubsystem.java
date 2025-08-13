@@ -1521,11 +1521,11 @@ public class CulinarySubsystem implements Listener {
 
             if (session.finalized) {
                 summonCookingStands(session);
+                // Always resume cooking for finalized sessions so that the
+                // timer task can properly finalize dishes even after a reload.
+                resumeCooking(session);
             } else {
                 summonSessionStands(session);
-            }
-            if (session.cookTimeRemaining > 0) {
-                resumeCooking(session);
             }
             activeRecipeSessions.put(key, session);
         }
@@ -1573,6 +1573,11 @@ public class CulinarySubsystem implements Listener {
 
     private void resumeCooking(RecipeSession session) {
         session.finalized = true;
+        // If we are resuming after a reload and the timer has already
+        // elapsed, force at least 1 second so finalizeRecipe is invoked.
+        if (session.cookTimeRemaining <= 0) {
+            session.cookTimeRemaining = 1;
+        }
         Location timerLoc = session.tableLocation.clone().add(0.5, 2.0, 0.5);
         ArmorStand timer = (ArmorStand) timerLoc.getWorld().spawnEntity(timerLoc, EntityType.ARMOR_STAND);
         timer.setInvisible(true);
