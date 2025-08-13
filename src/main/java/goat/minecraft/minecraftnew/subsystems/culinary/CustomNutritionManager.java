@@ -4,6 +4,9 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.AFKDetector;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionManager;
 import goat.minecraft.minecraftnew.subsystems.brewing.PotionEffectPreferences;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -146,8 +149,16 @@ public class CustomNutritionManager implements Listener {
         if (map.getOrDefault(FoodGroup.FRUITS,0) >= 50 && player.getSaturation() >= 17) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.REGENERATION, 40, 0, true, false, false));
         }
+        int pantryLevel = 0;
+        SkillTreeManager manager = SkillTreeManager.getInstance();
+        if (manager != null) {
+            pantryLevel = manager.getTalentLevel(player.getUniqueId(), Skill.CULINARY, Talent.PANTRY_OF_PLENTY);
+        }
+        double pantryMultiplier = 1 + pantryLevel * 0.20;
+
         if (map.getOrDefault(FoodGroup.GRAINS,0) >= 50) {
-            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SATURATION, 40, 0, true, false, false));
+            int duration = (int) Math.round(40 * pantryMultiplier);
+            player.addPotionEffect(new org.bukkit.potion.PotionEffect(org.bukkit.potion.PotionEffectType.SATURATION, duration, 0, true, false, false));
         }
         if (map.getOrDefault(FoodGroup.PROTEINS,0) >= 50) {
             player.addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.STRENGTH, 40, 0, true, false, false));

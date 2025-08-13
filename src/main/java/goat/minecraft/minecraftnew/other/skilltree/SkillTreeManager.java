@@ -491,8 +491,8 @@ public class SkillTreeManager implements Listener {
                 double veggieBonus = level * 10;
                 return ChatColor.YELLOW + "+" + veggieBonus + "% Veggie Gains";
             case PANTRY_OF_PLENTY:
-                double satChance = level * 4;
-                return ChatColor.YELLOW + "+" + satChance + "% Chance to gain 20 Saturation when eating Culinary Delights";
+                double satDuration = level * 20;
+                return ChatColor.YELLOW + "+" + satDuration + "% Saturation effect duration";
             case CAVITY:
                 double sugarBonus = level * 10;
                 return ChatColor.YELLOW + "+" + sugarBonus + "% Sugar Gains";

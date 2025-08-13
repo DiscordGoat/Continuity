@@ -1044,7 +1044,7 @@ public enum Talent {
     PANTRY_OF_PLENTY(
             "Pantry of Plenty",
             ChatColor.GRAY + "Stocked for any feast",
-            ChatColor.YELLOW + "+4% Chance to gain 20 Saturation when eating Culinary Delights",
+            ChatColor.YELLOW + "+20% Saturation effect duration",
             5,
             60,
             Material.CHEST
