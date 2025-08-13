@@ -594,6 +594,8 @@ public class CulinarySubsystem implements Listener {
             }
         }
 
+        double pantryMultiplier = 1 + pantryLevel * 0.20;
+
         if (goldenLevel > 0) {
             player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, goldenLevel * 60, 0));
         }
@@ -628,81 +630,81 @@ public class CulinarySubsystem implements Listener {
         }
         switch (displayName) {
             case "Tidal Shot (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                addSaturationEffect(player, 20*2, pantryMultiplier);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 20*60*60, 4));
                 break;
             case "Coral Cooler (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                addSaturationEffect(player, 20*2, pantryMultiplier);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 20*60*60, 0));
                 break;
             case "Prismarita (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                addSaturationEffect(player, 20*2, pantryMultiplier);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 20*60*60, 0));
                 break;
             case "Kelp Mojito (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                addSaturationEffect(player, 20*2, pantryMultiplier);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*60, 0));
                 break;
             case "Pina Colada (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                addSaturationEffect(player, 20*2, pantryMultiplier);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 20*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*60*60, 0));
                 break;
             case "Banana Split (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                addSaturationEffect(player, 20*2, pantryMultiplier);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*60*60, 0));
                 break;
             case "Key Lime Pie (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                addSaturationEffect(player, 20*2, pantryMultiplier);
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*10, 0));
                 player.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 20*60*60, 0));
                 break;
             case "Salted Steak (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                addSaturationEffect(player, 20*2, pantryMultiplier);
                 break;
             case "Chicken Tenders (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*2, 0));
+                addSaturationEffect(player, 20*2, pantryMultiplier);
                 break;
             case "Ham and Cheese Sandwich (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*3, 0));
+                addSaturationEffect(player, 20*3, pantryMultiplier);
                 break;
             case "Toast (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*1, 0));
+                addSaturationEffect(player, 20*1, pantryMultiplier);
                 break;
             case "Grilled Salmon (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*1, 0));
+                addSaturationEffect(player, 20*1, pantryMultiplier);
                 break;
             case "Mushroom Soup (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*1, 0));
+                addSaturationEffect(player, 20*1, pantryMultiplier);
                 break;
             case "Loaded Baked Potato (Culinary)":
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*11, 0));
+                addSaturationEffect(player, 20*11, pantryMultiplier);
                 break;
 
 
             case "Sweet Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*3, 0));
+                addSaturationEffect(player, 20*60*3, pantryMultiplier);
                 player.setHealth(player.getMaxHealth());
                 break;
             case "Vegetarian Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*3, 0));
+                addSaturationEffect(player, 20*60*3, pantryMultiplier);
                 player.setHealth(player.getMaxHealth());
                 break;
             case "Meatlovers Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.STRENGTH, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*3, 0));
+                addSaturationEffect(player, 20*60*3, pantryMultiplier);
                 player.setHealth(player.getMaxHealth());
                 break;
             case "Seafood Feast (Culinary)":
                 player.addPotionEffect(new PotionEffect(PotionEffectType.WATER_BREATHING, 20*60*60*1, 0));
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 20*60*3, 0));
+                addSaturationEffect(player, 20*60*3, pantryMultiplier);
                 player.setHealth(player.getMaxHealth());
                 break;
             default:
@@ -741,14 +743,6 @@ public class CulinarySubsystem implements Listener {
             player.setSaturation(20f);
         }
 
-        if (pantryLevel > 0 && isCulinaryDelight) {
-            double chance = pantryLevel * 0.04;
-            if (Math.random() < chance) {
-                player.setSaturation(Math.min(player.getSaturation() + 20, 20f));
-                player.sendMessage(ChatColor.GREEN + "Your meal left you completely satisfied!");
-            }
-        }
-
         if (refundLevel > 0) {
             double chance = refundLevel * 0.05;
             if (Math.random() < chance) {
@@ -765,6 +759,11 @@ public class CulinarySubsystem implements Listener {
         }
 
         clampPlayerStats(player);
+    }
+
+    private void addSaturationEffect(Player player, int baseDuration, double pantryMultiplier) {
+        int duration = (int) Math.round(baseDuration * pantryMultiplier);
+        player.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, duration, 0));
     }
 
     private void clampPlayerStats(Player player) {
