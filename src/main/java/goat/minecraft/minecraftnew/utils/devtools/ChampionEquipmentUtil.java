@@ -1,4 +1,4 @@
-package goat.minecraft.minecraftnew.other.arenas.champions;
+package goat.minecraft.minecraftnew.utils.devtools;
 
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.trait.trait.Equipment;

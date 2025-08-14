@@ -40,6 +40,8 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
     private final JavaPlugin plugin;
     private static VillagerWorkCycleManager instance;
+    private final java.util.Random rng = new java.util.Random();
+    private final XPManager xp = new XPManager(MinecraftNew.getInstance());
 
 
     private static final int WORK_CYCLE_TICKS = 10*20*60;
@@ -67,13 +69,16 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
  * @return true if the villager is eligible for work cycles, false otherwise
  */
     public boolean isEligibleForWorkCycle(Villager villager) {
-    // Check if villager has a custom name
-    if(villager.getCustomName() != null){
-        return true;
-    } else {
-        return false;
+        // Check if villager has a custom name
+        if (villager.getCustomName() != null) {
+            return true;
+        } else {
+            return false;
+        }
     }
-}
+    private static boolean isChunkLoaded(World w, int x, int z) {
+        return w.isChunkLoaded(x >> 4, z >> 4);
+    }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("forceworkcycle")) {
@@ -98,27 +103,16 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
      * Starts a 1-second interval scheduler that counts down ticksUntilNextWorkCycle.
      */
     private void startGlobalScheduler() {
-        int levels = getHighestWorkCycleReductionLevels();
-        int reduction = levels * 10 * 20;
-        ticksUntilNextWorkCycle = Math.max(20, WORK_CYCLE_TICKS - reduction);
-
-        Bukkit.getLogger().info("[WorkCycle] Initial: levels=" + levels +
-                ", reduction=" + reduction + " ticks (" + (reduction / 20) + "s), starts in "
-                + (ticksUntilNextWorkCycle / 20) + "s");
         new BukkitRunnable() {
             @Override
             public void run() {
+                int levels = getHighestWorkCycleReductionLevels();
+                int reduction = levels * 10 * 20;
                 // Decrement the countdown by 20 (because this runs every 20 ticks = 1 second).
                 ticksUntilNextWorkCycle -= 20;
 
                 // Once we reach zero or below, run the cycle and reset the timer
                 if (ticksUntilNextWorkCycle <= 0) {
-                    int levels = getHighestWorkCycleReductionLevels();
-                    int reduction = levels * 10 * 20;
-
-                    Bukkit.getLogger().info("Resetting: levels=" + levels +
-                            ", reduction=" + reduction + " ticks (" + (reduction / 20) + "s)");
-
                     runVillagerWorkCycle();
                     ticksUntilNextWorkCycle = Math.max(20, WORK_CYCLE_TICKS - reduction);
                 }
@@ -164,27 +158,25 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
      * Runs the actual villager work cycle logic (previously in startGlobalScheduler()).
      */
     private void runVillagerWorkCycle() {
-        if(Bukkit.getOnlinePlayers().isEmpty()){
-            Bukkit.getLogger().info("No players online, skipping work cycle for villagers");
-            return; // No players online, do not perform work
-        }
-        // Iterate over all villagers in all worlds
-        for (Villager villager : plugin.getServer().getWorlds().stream()
-                .flatMap(world -> world.getEntitiesByClass(Villager.class).stream())
-                .toList()) {
-            // Perform work for each villager
-            if(!isEligibleForWorkCycle(villager)){
-                continue; // Skip non-eligible villagers
-            }
+        if (Bukkit.getOnlinePlayers().isEmpty()) return;
 
-            performVillagerWork(villager);
-        }
-        // Persist shelf inventories in case of abrupt shutdown
-        ShelfManager shelfManager = MinecraftNew.getInstance().getShelfManager();
-        if (shelfManager != null) {
-            shelfManager.saveAllShelves();
-        }
+        List<Villager> work = new ArrayList<>();
+        for (World w : Bukkit.getWorlds())
+            if (w.getEnvironment() == World.Environment.NORMAL)
+                for (Villager v : w.getEntitiesByClass(Villager.class))
+                    if (isEligibleForWorkCycle(v)) work.add(v);
+
+        new BukkitRunnable() {
+            int i = 0;
+            public void run() {
+                int budget = Math.min(32, work.size() - i); // 32 villagers per tick
+                for (int n = 0; n < budget; n++) performVillagerWork(work.get(i++));
+                if (i >= work.size()) cancel();
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
     }
+
+
 
     private void performVillagerWork(Villager villager) {
         Villager.Profession profession = villager.getProfession();
@@ -250,25 +242,24 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         }
 
         Map<Material, Integer> harvestYield = new HashMap<>();
-        Random random = new Random();
+
 
         for (Block block : cropsToHarvest) {
             Material blockType = block.getType();
             Material itemType = null;
             int yield = 0;
-            XPManager xpManager = new XPManager(MinecraftNew.getInstance());
-            int playerBoost = xpManager.getPlayerLevel(getNearestPlayer(villager.getLocation()), "Farming");
+            int playerBoost = xp.getPlayerLevel(getNearestPlayer(villager.getLocation()), "Farming");
             yield += playerBoost / 10;
             switch (blockType) {
                 case WHEAT -> {
                     if (block.getBlockData() instanceof Ageable crop) {
                         if (crop.getAge() == crop.getMaximumAge()) {
                             // Harvest wheat
-                            yield = 1 + random.nextInt(6); // Yield 1-2 wheat
+                            yield = 1 + rng.nextInt(6); // Yield 1-2 wheat
                             itemType = Material.WHEAT;
 
                             // Also yield seeds
-                            int seedYield = 1 + random.nextInt(2);
+                            int seedYield = 1 + rng.nextInt(2);
                             harvestYield.put(Material.WHEAT_SEEDS, harvestYield.getOrDefault(Material.WHEAT_SEEDS, 0) + seedYield);
 
                             // Reset crop growth
@@ -280,7 +271,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 case CARROTS -> {
                     if (block.getBlockData() instanceof Ageable crop) {
                         if (crop.getAge() == crop.getMaximumAge()) {
-                            yield = 2 + random.nextInt(3); // Yield 2-4 carrots
+                            yield = 2 + rng.nextInt(3); // Yield 2-4 carrots
                             itemType = Material.CARROT;
 
                             crop.setAge(0);
@@ -292,7 +283,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 case POTATOES -> {
                     if (block.getBlockData() instanceof Ageable crop) {
                         if (crop.getAge() == crop.getMaximumAge()) {
-                            yield = 2 + random.nextInt(3); // Yield 2-4 potatoes
+                            yield = 2 + rng.nextInt(3); // Yield 2-4 potatoes
                             itemType = Material.POTATO;
 
                             crop.setAge(0);
@@ -304,11 +295,11 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 case BEETROOTS -> {
                     if (block.getBlockData() instanceof Ageable crop) {
                         if (crop.getAge() == crop.getMaximumAge()) {
-                            yield = 1 + random.nextInt(2); // Yield 1-2 beetroots
+                            yield = 1 + rng.nextInt(2); // Yield 1-2 beetroots
                             itemType = Material.BEETROOT;
 
                             // Also yield seeds
-                            int seedYield = 1 + random.nextInt(2);
+                            int seedYield = 1 + rng.nextInt(2);
                             harvestYield.put(Material.BEETROOT_SEEDS, harvestYield.getOrDefault(Material.BEETROOT_SEEDS, 0) + seedYield);
 
                             crop.setAge(0);
@@ -319,13 +310,13 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 }
                 case PUMPKIN -> {
                     block.setType(Material.AIR);
-                    yield = 1 + random.nextInt(2); // Yield 1-2 pumpkins
+                    yield = 1 + rng.nextInt(2); // Yield 1-2 pumpkins
                     itemType = Material.PUMPKIN;
                     Bukkit.getLogger().info("Harvested PUMPKIN Yield: " + yield);
                 }
                 case MELON -> {
                     block.setType(Material.AIR);
-                    yield = 3 + random.nextInt(5); // Yield 3-7 melon slices
+                    yield = 3 + rng.nextInt(5); // Yield 3-7 melon slices
                     itemType = Material.MELON_SLICE;
                     Bukkit.getLogger().info("Harvested MELON Yield: " + yield);
                 }
@@ -393,14 +384,14 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
     private void performButcherWork(Villager villager, int radius) {
         Block smoker = findNearestBlock(villager, List.of(Material.SMOKER), radius);
-    
+
         if (smoker == null) {
             return;
         }
-    
+
         Map<Material, Integer> harvestYield = new HashMap<>();
-        Random random = new Random();
-    
+
+
         // List of all edible foods
         Material[] edibleFoods = {
                 Material.BAKED_POTATO, Material.COOKED_BEEF,
@@ -408,19 +399,19 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 Material.COOKED_PORKCHOP, Material.COOKED_RABBIT,
                 Material.DRIED_KELP
         };
-    
+
         Material food;
         int yield;
-    
+
         // Occasionally make a cake
-        if (random.nextInt(100) < 1) {
+        if (rng.nextInt(100) < 1) {
             food = Material.CAKE;
             yield = 1; // Assuming one whole cake
         } else {
-            food = edibleFoods[random.nextInt(edibleFoods.length)];
+            food = edibleFoods[rng.nextInt(edibleFoods.length)];
             yield = 4; // Always cook 4 items
         }
-    
+
         harvestYield.put(food, yield); // Final yield
 
         storeOrDropHarvest(villager, harvestYield);        villager.getWorld().playSound(villager.getLocation(), Sound.BLOCK_FIRE_AMBIENT, 10, 10);
@@ -446,7 +437,6 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         }
 
         Map<Material, Integer> harvestYield = new HashMap<>();
-        Random random = new Random();
 
         // Offer fish items with chance for treasure and junk items
         Material[] fishTypes = {
@@ -501,7 +491,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 Material.BONE,
         };
 
-        int roll = random.nextInt(100);
+        int roll = rng.nextInt(100);
         Material item;
         int quantity = 5;
         if (influenceMap.containsKey(Material.WATER)) {
@@ -515,16 +505,16 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         }
         if (roll < 5) {
             // 10% chance for treasure
-            item = treasureItems[random.nextInt(treasureItems.length)];
+            item = treasureItems[rng.nextInt(treasureItems.length)];
             quantity = 1;
         } else if (roll < 5) {
             // 20% chance for junk
-            item = junkItems[random.nextInt(junkItems.length)];
-            quantity = 1 + random.nextInt(2);
+            item = junkItems[rng.nextInt(junkItems.length)];
+            quantity = 1 + rng.nextInt(2);
         } else {
             // 70% chance for fish
-            item = fishTypes[random.nextInt(fishTypes.length)];
-            quantity = 1 + random.nextInt(3); // 1-3 items
+            item = fishTypes[rng.nextInt(fishTypes.length)];
+            quantity = 1 + rng.nextInt(3); // 1-3 items
         }
 
         // Modify yield based on nearby blocks
@@ -553,18 +543,17 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             }
         }
 
-        Random random = new Random();
         int bottlesProduced = 0;
 
         // Calculate the number of Bottles of Enchanting to produce based on influence
         if (influenceMap.getOrDefault(Material.BOOKSHELF, 0) > 0) {
-            bottlesProduced += random.nextInt(3) + 1; // 1-3 bottles from Bookshelves
+            bottlesProduced += rng.nextInt(3) + 1; // 1-3 bottles from Bookshelves
         }
         if (influenceMap.getOrDefault(Material.ENCHANTING_TABLE, 0) > 0) {
-            bottlesProduced += random.nextInt(2) + 1; // 1-2 bottles from Enchanting Table
+            bottlesProduced += rng.nextInt(2) + 1; // 1-2 bottles from Enchanting Table
         }
         if (influenceMap.getOrDefault(Material.LECTERN, 0) > 0) {
-            bottlesProduced += random.nextInt(3) + 1; // 1-3 bottles from Lectern
+            bottlesProduced += rng.nextInt(3) + 1; // 1-3 bottles from Lectern
         }
 
         // Ensure at least one bottle is produced
@@ -633,8 +622,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                         item.getType().name().toUpperCase().endsWith("_CHESTPLATE") ||
                         item.getType().name().toUpperCase().endsWith("_LEGGINGS") ||
                         item.getType().name().toUpperCase().endsWith("_BOOTS"))) {
-                    XPManager xpManager = new XPManager(plugin);
-                    int miningLevel = xpManager.getPlayerLevel(getNearestPlayer(villager), "Mining");
+                    int miningLevel = xp.getPlayerLevel(getNearestPlayer(villager), "Mining");
                     int repairAmount = miningLevel * 2;                    // Repair the armor item
                     repairArmor(item, repairAmount);
                     // Update the modified item back to the equipment array
@@ -732,16 +720,15 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
      */
 
 // Now update the repair methods to use the combined approach
-    
+
 
     private void performWeaponsmithWork(Villager villager, int radius) {
-        XPManager xpManager = new XPManager(plugin);
         // Get all displayed items (both frames and displays)
         Map<Entity, ItemStack> displayedItems = findAllDisplayedItems(villager, radius);
 
         // Fixed repair amount of 500 for all weapons
         Player nearestPlayer = getNearestPlayer(villager.getLocation());
-        int combatLevel = xpManager.getPlayerLevel(nearestPlayer, "Combat");
+        int combatLevel = xp.getPlayerLevel(nearestPlayer, "Combat");
         int repairAmount = combatLevel * 5;
 
         if(displayedItems.isEmpty()){            return;
@@ -785,8 +772,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
 
         if(displayedItems.isEmpty()){        }
         // Fixed repair amount for all tools
-        XPManager xpManager = new XPManager(plugin);
-        int smithingLevel = xpManager.getPlayerLevel(getNearestPlayer(villager.getLocation()), "Smithing");
+        int smithingLevel = xp.getPlayerLevel(getNearestPlayer(villager.getLocation()), "Smithing");
         int repairAmount = smithingLevel * 10;
 
         for (Map.Entry<Entity, ItemStack> entry : displayedItems.entrySet()) {
@@ -931,7 +917,6 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         }
 
         Map<Material, Integer> harvestYield = new HashMap<>();
-        Random random = new Random();
 
         // Map to keep track of wool counts by color
         Map<DyeColor, Integer> woolCounts = new HashMap<>();
@@ -950,7 +935,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             Material woolMaterial = Material.valueOf(color.name() + "_WOOL");
 
             // Yield is proportional to the number of sheep of that color
-            int yieldAmount = count * (1 + random.nextInt(10)); // Each sheep yields 1-10 wool
+            int yieldAmount = count * (1 + rng.nextInt(10)); // Each sheep yields 1-10 wool
 
             harvestYield.put(woolMaterial, (yieldAmount));
         }
@@ -982,7 +967,6 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             return;
         }
 
-        Random random = new Random();
         Map<Material, Integer> harvestYield = new HashMap<>();
 
         // Base leather production
@@ -992,7 +976,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         harvestYield.put(Material.LEATHER, leatherYield);
 
         // 10% chance to produce a saddle
-        if (random.nextFloat() < 0.10) {
+        if (rng.nextFloat() < 0.10) {
             harvestYield.put(Material.SADDLE, 1);
         }
 
@@ -1005,7 +989,6 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     }
 
     private void performClericWork(Villager villager) {
-        Random random = new Random();
 
         // List of possible ingredients
         Material[] ingredients = {
@@ -1022,13 +1005,13 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         };
 
         // Choose one random ingredient and amount (1-4)
-        Material ingredient = ingredients[random.nextInt(ingredients.length)];
-        int amount = 1 + random.nextInt(4); // Random amount between 1-4
+        Material ingredient = ingredients[rng.nextInt(ingredients.length)];
+        int amount = 1 + rng.nextInt(4); // Random amount between 1-4
         Map<Material, Integer> harvestYield = new HashMap<>();
         harvestYield.put(ingredient, amount);
 
         // 1% chance to brew special 3-hour potions
-        if (random.nextFloat() < 0.01) {
+        if (rng.nextFloat() < 0.01) {
             PotionEffectType[] positiveEffects = {
                     PotionEffectType.REGENERATION,
                     PotionEffectType.SPEED,
@@ -1044,7 +1027,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             // Create 3-hour potion
             ItemStack specialPotion = new ItemStack(Material.POTION);
             PotionMeta meta = (PotionMeta) specialPotion.getItemMeta();
-            PotionEffectType effect = positiveEffects[random.nextInt(positiveEffects.length)];
+            PotionEffectType effect = positiveEffects[rng.nextInt(positiveEffects.length)];
             // 3 hours = 216000 ticks (20 ticks/sec * 60 sec/min * 180 min)
             meta.addCustomEffect(new PotionEffect(effect, 216000, 0), true);
             meta.setDisplayName(ChatColor.LIGHT_PURPLE + "Extended " + effect.getName() + " Potion");
@@ -1181,15 +1164,15 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
         if (logVariants.isEmpty()) {            return; // No suitable logs found
         }
         // Find nearby target blocks
-    
+
         // Prepare the yield items
         Map<ItemStack, Integer> harvestYield = new HashMap<>();
-    
+
         // Add logs of each variant found
         for (Material logVariant : logVariants) {
             harvestYield.put(new ItemStack(logVariant), 16); // Each variant yields (multiplier * 2) logs
         }
-    
+
         // Store or drop the items
         storeOrDropHarvestItemStack(villager, harvestYield);        // Play sound to indicate the fletcher's work
         villager.getWorld().playSound(villager.getLocation(), Sound.ENTITY_VILLAGER_WORK_FLETCHER, 1.0f, 1.0f);

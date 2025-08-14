@@ -1,9 +1,8 @@
 package goat.minecraft.minecraftnew;
-import goat.minecraft.minecraftnew.other.arenas.champions.TestChampionPhaseCommand;
+
 import goat.minecraft.minecraftnew.other.beacon.*;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.*;
 import goat.minecraft.minecraftnew.other.resourcepack.ResourcePackListener;
-import goat.minecraft.minecraftnew.subsystems.cartography.CartographyManager;
 import goat.minecraft.minecraftnew.subsystems.gravedigging.Gravedigging;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.bartender.BartenderVillagerManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer.EngineerVillagerManager;
@@ -40,7 +39,6 @@ import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureRegistry;
 import goat.minecraft.minecraftnew.subsystems.fishing.SpawnSeaCreatureCommand;
 import goat.minecraft.minecraftnew.subsystems.fishing.SeaCreatureChanceCommand;
 import goat.minecraft.minecraftnew.subsystems.fishing.TreasureChanceCommand;
-import goat.minecraft.minecraftnew.other.arenas.champions.SpawnChampionCommand;
 import goat.minecraft.minecraftnew.subsystems.forestry.ForestSpiritManager;
 import goat.minecraft.minecraftnew.subsystems.forestry.SpiritChanceCommand;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
@@ -70,6 +68,8 @@ import goat.minecraft.minecraftnew.utils.commands.TogglePotionEffectsCommand;
 import goat.minecraft.minecraftnew.utils.commands.ToggleBarsCommand;
 import goat.minecraft.minecraftnew.utils.developercommands.*;
 import goat.minecraft.minecraftnew.utils.developercommands.SetCustomDurabilityCommand;
+import goat.minecraft.minecraftnew.utils.developercommands.SetMinecartSpeedCommand;
+import goat.minecraft.minecraftnew.utils.MinecartManager;
 import goat.minecraft.minecraftnew.utils.stats.StatsCalculator;
 import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
 import goat.minecraft.minecraftnew.utils.developercommands.AddTalentPointCommand;
@@ -102,6 +102,7 @@ import goat.minecraft.minecraftnew.other.armorsets.ThunderforgeSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.LostLegionSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.CountershotSetBonus;
 import goat.minecraft.minecraftnew.other.armorsets.StriderSetBonus;
+
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.other.durability.HeirloomManager;
 import goat.minecraft.minecraftnew.other.skilltree.SwiftStepMasteryBonus;
@@ -111,7 +112,6 @@ import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.other.structureblocks.GetStructureBlockCommand;
 import goat.minecraft.minecraftnew.other.structureblocks.SetStructureBlockPowerCommand;
 import goat.minecraft.minecraftnew.other.warpgate.WarpGateManager;
-import goat.minecraft.minecraftnew.other.arenas.ArenaManager;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentPreferences;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.EnvironmentSidebarPreferences;
 import goat.minecraft.minecraftnew.subsystems.dragons.DragonFightManager;
@@ -126,7 +126,6 @@ import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
-
 
 import java.util.Objects;
 
@@ -149,7 +148,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private ShelfManager shelfManager;
     private DoubleEnderchest doubleEnderchest;
     private WarpGateManager warpGateManager;
-    private ArenaManager arenaManager;
     private DragonFightManager dragonFightManager;
     private BeaconPassiveEffects beaconPassiveEffects;
     private MonolithSetBonus monolithSetBonus;
@@ -170,8 +168,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
     private SpectralArmorBonus spectralArmorBonus;
     private RejuvenationCatalystListener rejuvenationCatalystListener;
     private DeathCatalystListener deathCatalystListener;
-
-
+    private MinecartManager minecartManager;
 
     private PotionBrewingSubsystem potionBrewingSubsystem;
     private VerdantRelicsSubsystem verdantRelicsSubsystem;
@@ -191,9 +188,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         return warpGateManager;
     }
 
-    public ArenaManager getArenaManager() {
-        return arenaManager;
-    }
+
 
     public AnvilRepair getAnvilRepair() {
         return anvilRepair;
@@ -384,7 +379,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("getstructureblock").setExecutor(new GetStructureBlockCommand());
         getCommand("setstructureblockpower").setExecutor(new SetStructureBlockPowerCommand());
         getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
-        getCommand("getnearestarena").setExecutor(new GetNearestArenaCommand());
         getCommand("previewparticle").setExecutor(new PreviewParticleCommand(this));
         getCommand("previewflow").setExecutor(new PreviewFlowCommand(this));
         new RedVignetteCommand(this);
@@ -470,8 +464,6 @@ public class MinecraftNew extends JavaPlugin implements Listener {
             getDataFolder().mkdirs();
         }
         this.getCommand("spawnseacreature").setExecutor(new SpawnSeaCreatureCommand());
-        this.getCommand("spawnchampion").setExecutor(new SpawnChampionCommand());
-        this.getCommand("testchampion").setExecutor(new TestChampionPhaseCommand());
         getCommand("seacreaturechance").setExecutor(new SeaCreatureChanceCommand(this, xpManager));
         getCommand("treasurechance").setExecutor(new TreasureChanceCommand(this));
         getCommand("spiritchance").setExecutor(new SpiritChanceCommand(this, xpManager));
@@ -484,73 +476,11 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomNutritionManager.init(this);
         getCommand("nutrients").setExecutor(new NutritionCommand());
 
-        getLogger().info("MyPlugin has been enabled!");
-
-        //meatCookingManager = new MeatCookingManager(this);
-
-
-        Bukkit.getPluginManager().registerEvents(new HireVillager(), this);
-
-        getServer().getPluginManager().registerEvents(new UltimateEnchantingSystem(), this);
-
-        getServer().getPluginManager().registerEvents(new ArmorEquipListener(), this);
-
-        getServer().getPluginManager().registerEvents(new Leap(this), this);
-        getServer().getPluginManager().registerEvents(new Comfortable(this), this);
-        getServer().getPluginManager().registerEvents(new TerrorOfTheDeep(this), this);
-        getServer().getPluginManager().registerEvents(new BonePlating(this), this);
-        getServer().getPluginManager().registerEvents(new StrongSwimmer(this), this);
-        getServer().getPluginManager().registerEvents(new ShotCalling(this), this);
-        getServer().getPluginManager().registerEvents(new Recovery(this), this);
-        getServer().getPluginManager().registerEvents(new TippedSlowness(this), this);
-        getServer().getPluginManager().registerEvents(new LaserBeamPerkHandler(petManager), this);
-        getServer().getPluginManager().registerEvents(new WeakBonePlating(this), this);
-        getServer().getPluginManager().registerEvents(new Devour(this), this);
-        getServer().getPluginManager().registerEvents(new Fireproof(this), this);
-        getServer().getPluginManager().registerEvents(new AspectOfTheFrost(this), this);
-        getServer().getPluginManager().registerEvents(new Blizzard(this), this);
-        getServer().getPluginManager().registerEvents(new SecondWind(this), this);
-        getServer().getPluginManager().registerEvents(new Alpha(this), this);
-        getServer().getPluginManager().registerEvents(new Fetch(this), this);
-        getServer().getPluginManager().registerEvents(new Rebirth(this), this);
-        getServer().getPluginManager().registerEvents(new DiggingClaws(this), this);
-        getServer().getPluginManager().registerEvents(new XRay(this), this);
-        getServer().getPluginManager().registerEvents(new NoHibernation(this), this);
-        getServer().getPluginManager().registerEvents(new Echolocation(this), this);
-        getServer().getPluginManager().registerEvents(new MithrilMiner(this), this);
-        getServer().getPluginManager().registerEvents(new EmeraldSeeker(this), this);
-        getServer().getPluginManager().registerEvents(new Flight(this), this);
-        getServer().getPluginManager().registerEvents(new Broomstick(this), this);
-        getServer().getPluginManager().registerEvents(new Lullaby(this), this);
-        getServer().getPluginManager().registerEvents(new Collector(this), this);
-        getServer().getPluginManager().registerEvents(new Float(this), this);
-        getServer().getPluginManager().registerEvents(new Greed(this), this);
-        getServer().getPluginManager().registerEvents(new GreenThumb(this), this);
-        getServer().getPluginManager().registerEvents(new Cultivation(this), this);
-        getServer().getPluginManager().registerEvents(new Antidote(this), this);
-        getServer().getPluginManager().registerEvents(new QuickDraw(this), this);
-        getServer().getPluginManager().registerEvents(new SuperiorEndurance(this), this);
-        getServer().getPluginManager().registerEvents(new BoneCold(this), this);
-        getServer().getPluginManager().registerEvents(new Decay(this), this);
-        getServer().getPluginManager().registerEvents(new SecretLegion(this), this);
-        getServer().getPluginManager().registerEvents(new Blaze(this), this);
-        getServer().getPluginManager().registerEvents(new AspectOfTheEnd(petManager), this);
-        getServer().getPluginManager().registerEvents(new Groot(), this);
-        getServer().getPluginManager().registerEvents(new ParkourRoll(this), this);
-        getServer().getPluginManager().registerEvents(new Obsession(this), this);
-        getServer().getPluginManager().registerEvents(new Earthworm(this), this);
-        getServer().getPluginManager().registerEvents(new SpiderSteve(this), this);
-        getServer().getPluginManager().registerEvents(new PhoenixRebirth(this), this);
-        getServer().getPluginManager().registerEvents(new FlameTrail(this), this);
-        getServer().getPluginManager().registerEvents(new Spectral(this), this);
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.pets.perks.Revenant(this), this);
-        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.other.qol.FastAscend(), this);
-
-        this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
-        this.getCommand("i").setExecutor(new ItemCommand());
-        this.getCommand("savearmorcontents").setExecutor(new SaveArmorContentsCommand(this));
-        this.getCommand("equiparmorfromfile").setExecutor(new EquipArmorFromFileCommand(this));
         this.getCommand("saveitem").setExecutor(new SaveItemCommand(this));
+
+        // Initialize MinecartManager and register command
+        this.minecartManager = new MinecartManager(this);
+        this.getCommand("setminecartspeed").setExecutor(new SetMinecartSpeedCommand(this));
 
         getCommand("testskill").setExecutor(new TestSkillMessageCommand(xpManager));
         // Register events

@@ -42,6 +42,10 @@ commands:
   setplayeroxygen:
     description: Admin command to set the durability of a player's held item
     permission: continuity.admin
+  setminecartspeed:
+    description: Admin command to modify minecart speed using various methods
+    usage: /setminecartspeed <method> <modifier>
+    permission: continuity.admin
   setdurability:
     description: Admin command to set the durability of a player's held item
     usage: /setdurability <player> <durability>
