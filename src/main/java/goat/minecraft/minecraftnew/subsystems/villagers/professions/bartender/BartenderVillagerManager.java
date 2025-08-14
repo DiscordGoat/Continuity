@@ -5,9 +5,7 @@ import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager.TradeItem;
 import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
-import goat.minecraft.minecraftnew.utils.devtools.XPManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.PlayerTabListUpdater;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -77,9 +75,7 @@ public class BartenderVillagerManager implements Listener {
         Villager villager = interactionMap.get(player);
 
         // 1) Compute villager level from days played exactly as your other GUI:
-        int days = new PlayerTabListUpdater(MinecraftNew.getInstance(),
-                new XPManager(plugin))
-                .getDaysPlayed(player);
+        int days = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 24000;
         int lvl = days >=200?5:
                 days >=150?4:
                         days >=100?3:
