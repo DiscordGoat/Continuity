@@ -2,7 +2,6 @@ package goat.minecraft.minecraftnew.subsystems.villagers;
 
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
-import goat.minecraft.minecraftnew.other.additionalfunctionality.PlayerTabListUpdater;
 import goat.minecraft.minecraftnew.subsystems.culinary.CulinarySubsystem;
 import goat.minecraft.minecraftnew.subsystems.pets.PetManager;
 import goat.minecraft.minecraftnew.subsystems.pets.PetRegistry;
@@ -1212,8 +1211,7 @@ public class VillagerTradeManager implements Listener {
 
         // Get villager profession and player's days played
         Villager.Profession profession = villager.getProfession();
-        PlayerTabListUpdater playerTabListUpdater = new PlayerTabListUpdater(MinecraftNew.getInstance(), new XPManager(MinecraftNew.getInstance()));
-        int daysPlayed = playerTabListUpdater.getDaysPlayed(player);
+        int daysPlayed = player.getStatistic(Statistic.PLAY_ONE_MINUTE) / 24000;
         SkillTreeManager mgr = SkillTreeManager.getInstance();
         int offset = 0;
         if (mgr != null) {
