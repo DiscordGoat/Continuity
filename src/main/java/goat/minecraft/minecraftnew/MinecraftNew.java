@@ -274,6 +274,74 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         new AddGoldenDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
         PetManager petManager = PetManager.getInstance(this);
+        getLogger().info("MyPlugin has been enabled!");
+
+        //meatCookingManager = new MeatCookingManager(this);
+
+
+        Bukkit.getPluginManager().registerEvents(new HireVillager(), this);
+
+        getServer().getPluginManager().registerEvents(new UltimateEnchantingSystem(), this);
+
+        getServer().getPluginManager().registerEvents(new ArmorEquipListener(), this);
+
+        getServer().getPluginManager().registerEvents(new Leap(this), this);
+        getServer().getPluginManager().registerEvents(new Comfortable(this), this);
+        getServer().getPluginManager().registerEvents(new TerrorOfTheDeep(this), this);
+        getServer().getPluginManager().registerEvents(new BonePlating(this), this);
+        getServer().getPluginManager().registerEvents(new StrongSwimmer(this), this);
+        getServer().getPluginManager().registerEvents(new ShotCalling(this), this);
+        getServer().getPluginManager().registerEvents(new Recovery(this), this);
+        getServer().getPluginManager().registerEvents(new TippedSlowness(this), this);
+        getServer().getPluginManager().registerEvents(new LaserBeamPerkHandler(petManager), this);
+        getServer().getPluginManager().registerEvents(new WeakBonePlating(this), this);
+        getServer().getPluginManager().registerEvents(new Devour(this), this);
+        getServer().getPluginManager().registerEvents(new Fireproof(this), this);
+        getServer().getPluginManager().registerEvents(new AspectOfTheFrost(this), this);
+        getServer().getPluginManager().registerEvents(new Blizzard(this), this);
+        getServer().getPluginManager().registerEvents(new SecondWind(this), this);
+        getServer().getPluginManager().registerEvents(new Alpha(this), this);
+        getServer().getPluginManager().registerEvents(new Fetch(this), this);
+        getServer().getPluginManager().registerEvents(new Rebirth(this), this);
+        getServer().getPluginManager().registerEvents(new DiggingClaws(this), this);
+        getServer().getPluginManager().registerEvents(new XRay(this), this);
+        getServer().getPluginManager().registerEvents(new NoHibernation(this), this);
+        getServer().getPluginManager().registerEvents(new Echolocation(this), this);
+        getServer().getPluginManager().registerEvents(new MithrilMiner(this), this);
+        getServer().getPluginManager().registerEvents(new EmeraldSeeker(this), this);
+        getServer().getPluginManager().registerEvents(new Flight(this), this);
+        getServer().getPluginManager().registerEvents(new Broomstick(this), this);
+        getServer().getPluginManager().registerEvents(new Lullaby(this), this);
+        getServer().getPluginManager().registerEvents(new Collector(this), this);
+        getServer().getPluginManager().registerEvents(new Float(this), this);
+        getServer().getPluginManager().registerEvents(new Greed(this), this);
+        getServer().getPluginManager().registerEvents(new GreenThumb(this), this);
+        getServer().getPluginManager().registerEvents(new Cultivation(this), this);
+        getServer().getPluginManager().registerEvents(new Antidote(this), this);
+        getServer().getPluginManager().registerEvents(new QuickDraw(this), this);
+        getServer().getPluginManager().registerEvents(new SuperiorEndurance(this), this);
+        getServer().getPluginManager().registerEvents(new BoneCold(this), this);
+        getServer().getPluginManager().registerEvents(new Decay(this), this);
+        getServer().getPluginManager().registerEvents(new SecretLegion(this), this);
+        getServer().getPluginManager().registerEvents(new Blaze(this), this);
+        getServer().getPluginManager().registerEvents(new AspectOfTheEnd(petManager), this);
+        getServer().getPluginManager().registerEvents(new Groot(), this);
+        getServer().getPluginManager().registerEvents(new ParkourRoll(this), this);
+        getServer().getPluginManager().registerEvents(new Obsession(this), this);
+        getServer().getPluginManager().registerEvents(new Earthworm(this), this);
+        getServer().getPluginManager().registerEvents(new SpiderSteve(this), this);
+        getServer().getPluginManager().registerEvents(new PhoenixRebirth(this), this);
+        getServer().getPluginManager().registerEvents(new FlameTrail(this), this);
+        getServer().getPluginManager().registerEvents(new Spectral(this), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.subsystems.pets.perks.Revenant(this), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.other.qol.FastAscend(), this);
+
+        this.getCommand("givecustomitem").setExecutor(new GiveCustomItem());
+        this.getCommand("i").setExecutor(new ItemCommand());
+        this.getCommand("savearmorcontents").setExecutor(new SaveArmorContentsCommand(this));
+        this.getCommand("equiparmorfromfile").setExecutor(new EquipArmorFromFileCommand(this));
+        this.getCommand("saveitem").setExecutor(new SaveItemCommand(this));
+
         this.getCommand("testpet").setExecutor(new PetTestCommand(petManager));
         this.getCommand("island").setExecutor(new IslandCommand());
 
