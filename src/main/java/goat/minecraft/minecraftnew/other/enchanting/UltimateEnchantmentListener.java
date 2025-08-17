@@ -68,6 +68,8 @@ public class UltimateEnchantmentListener implements Listener {
     private final Map<UUID, List<Long>> warpCharges = new HashMap<>();
     // Removed Leviathan ultimate enchantment
 
+    private final Random random = new Random();
+
     private static class LoyalSwordData {
         double damageMultiplier = 1.0; // 1.0 = 100%
         long lastUsage = System.currentTimeMillis();
@@ -127,18 +129,58 @@ public class UltimateEnchantmentListener implements Listener {
                 .anyMatch(l -> l.toLowerCase().contains("treecapitator"));
     }
 
+    private boolean hasDiamondGemstone(ItemStack tool) {
+        return tool.getItemMeta() != null && tool.getItemMeta().hasLore()
+                && tool.getItemMeta().getLore().contains("Diamond Gemstone");
+    }
+
+    private Material getSmeltedMaterial(Material blockType) {
+        return switch (blockType) {
+            case ACACIA_LOG, SPRUCE_LOG, JUNGLE_LOG, DARK_OAK_LOG, OAK_LOG, BIRCH_LOG -> Material.CHARCOAL;
+            case KELP -> Material.DRIED_KELP;
+            case CACTUS -> Material.GREEN_DYE;
+            case NETHER_QUARTZ_ORE -> Material.QUARTZ;
+            case NETHERRACK -> Material.NETHER_BRICK;
+            case CHORUS_FRUIT -> Material.POPPED_CHORUS_FRUIT;
+            case CLAY -> Material.BRICK;
+            case COBBLESTONE, STONE -> Material.STONE;
+            case POTATO -> Material.BAKED_POTATO;
+            case SAND -> Material.GLASS;
+            case IRON_ORE, DEEPSLATE_IRON_ORE -> Material.IRON_INGOT;
+            case DEEPSLATE_GOLD_ORE, GOLD_ORE -> Material.GOLD_INGOT;
+            case WET_SPONGE -> Material.SPONGE;
+            case ANCIENT_DEBRIS -> Material.NETHERITE_SCRAP;
+            default -> null;
+        };
+    }
+
     /**
      * Break a single block and drop its loot.
      * If it's not an ore, we’ll also apply tool durability usage (so Hammer costs durability).
      */
     private void breakBlock(Player player, Block block, boolean consumeDurabilityIfNotOre) {
         ItemStack tool = player.getInventory().getItemInMainHand();
-        // Drop the block's natural drops
-        for (ItemStack drop : block.getDrops(tool)) {
-            if (drop != null && drop.getType() != Material.AIR) { // Check for null or air
-                block.getWorld().dropItemNaturally(block.getLocation(), drop);
+
+        boolean forgeActive = CustomEnchantmentManager.isEnchantmentActive(player, tool, "Forge");
+        int forgeLevel = forgeActive ? CustomEnchantmentManager.getEnchantmentLevel(tool, "Forge") : 0;
+        Material smeltedType = null;
+        if (forgeLevel > 0 && random.nextDouble() <= 0.2 * forgeLevel) {
+            smeltedType = getSmeltedMaterial(block.getType());
+        }
+
+        if (smeltedType != null) {
+            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(smeltedType));
+            if (hasDiamondGemstone(tool) && random.nextDouble() < 0.1) {
+                block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(smeltedType));
+            }
+        } else {
+            for (ItemStack drop : block.getDrops(tool)) {
+                if (drop != null && drop.getType() != Material.AIR) { // Check for null or air
+                    block.getWorld().dropItemNaturally(block.getLocation(), drop);
+                }
             }
         }
+
         // Set the block to air
         if(isLeafBlock(block.getType())){
             block.setType(Material.AIR);
@@ -214,11 +256,23 @@ public class UltimateEnchantmentListener implements Listener {
                 for (int i = 0; i < finalBlocksPerTick && index < blocks.size(); i++, index++) {
                     Block block = blocks.get(index);
 
-                    // Drop the block's natural drops
-                    // (No more durability check here, we've already handled it.)
-                    for (ItemStack drop : block.getDrops(tool)) {
-                        if (drop != null && drop.getType() != Material.AIR) {
-                            block.getWorld().dropItemNaturally(block.getLocation(), drop);
+                    boolean forgeActive = CustomEnchantmentManager.isEnchantmentActive(player, tool, "Forge");
+                    int forgeLevel = forgeActive ? CustomEnchantmentManager.getEnchantmentLevel(tool, "Forge") : 0;
+                    Material smeltedType = null;
+                    if (forgeLevel > 0 && random.nextDouble() <= 0.2 * forgeLevel) {
+                        smeltedType = getSmeltedMaterial(block.getType());
+                    }
+
+                    if (smeltedType != null) {
+                        block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(smeltedType));
+                        if (hasDiamondGemstone(tool) && random.nextDouble() < 0.1) {
+                            block.getWorld().dropItemNaturally(block.getLocation(), new ItemStack(smeltedType));
+                        }
+                    } else {
+                        for (ItemStack drop : block.getDrops(tool)) {
+                            if (drop != null && drop.getType() != Material.AIR) {
+                                block.getWorld().dropItemNaturally(block.getLocation(), drop);
+                            }
                         }
                     }
 
