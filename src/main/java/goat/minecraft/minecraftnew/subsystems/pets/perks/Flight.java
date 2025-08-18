@@ -60,6 +60,21 @@ public class Flight implements Listener {
         int flown = dailyFlightTracker.getOrDefault(playerId, 0);
         flown = Math.max(0, flown - seconds);
         dailyFlightTracker.put(playerId, flown);
+
+        // Recalculate and display remaining flight time
+        PetManager.Pet activePet = petManager.getActivePet(player);
+        int maxFlightSeconds = calculateMaxFlightSeconds(player, activePet);
+        int remainingSeconds = maxFlightSeconds - flown;
+        displayFlightProgress(player, flown, remainingSeconds);
+
+        // Re-enable flight if the player is allowed to fly and has time remaining
+        CatalystManager catalystManager = CatalystManager.getInstance();
+        boolean nearCatalyst = catalystManager != null &&
+                catalystManager.isNearCatalyst(player.getLocation(), CatalystType.FLIGHT);
+        boolean hasPerk = activePet != null && activePet.hasPerk(PetManager.PetPerk.FLIGHT);
+        if (remainingSeconds > 0 && (hasPerk || nearCatalyst)) {
+            enableFlight(player);
+        }
     }
 
     @EventHandler
