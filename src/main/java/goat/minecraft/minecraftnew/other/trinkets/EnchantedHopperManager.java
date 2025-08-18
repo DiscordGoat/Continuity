@@ -39,13 +39,11 @@ public class EnchantedHopperManager implements Listener {
     private final JavaPlugin plugin;
     private final NamespacedKey idKey;
     private final NamespacedKey delayKey;
-    private File hopperFile;
-    private FileConfiguration hopperConfig;
+    private File hopperFile;    private FileConfiguration hopperConfig;
     private final Map<UUID, UUID> openHoppers = new HashMap<>();
     private final Map<UUID, Inventory> previousInventories = new HashMap<>();
     private final Map<UUID, Long> lastRun = new HashMap<>();
     private final Map<UUID, Long> disabledUntil = new HashMap<>();
-
     private static final long[] DELAY_MS = {500L, 2000L, 30000L, 120000L};
 
     private EnchantedHopperManager(JavaPlugin plugin) {
@@ -56,7 +54,6 @@ public class EnchantedHopperManager implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         startTask();
     }
-
     public static void init(JavaPlugin plugin) {
         if (instance == null) {
             instance = new EnchantedHopperManager(plugin);
