@@ -4741,6 +4741,7 @@ public class ItemRegistry {
         GeneratorManager mgr = GeneratorManager.getInstance();
         if (mgr != null) {
             mgr.setGenerator(item, 0, 100, 1, false);
+            mgr.setGeneratorType(item, "rocket");
         }
         return item;
     }

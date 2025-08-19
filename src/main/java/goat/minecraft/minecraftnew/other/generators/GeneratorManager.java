@@ -1,5 +1,6 @@
 package goat.minecraft.minecraftnew.other.generators;
 
+import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.utils.devtools.ItemLoreFormatter;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
@@ -24,6 +25,7 @@ public class GeneratorManager {
     private final NamespacedKey tierKey;
     private final NamespacedKey activeKey;
     private final NamespacedKey idKey;
+    private final NamespacedKey typeKey;
 
     private GeneratorManager(JavaPlugin plugin) {
         this.powerKey = new NamespacedKey(plugin, "generator_power");
@@ -31,6 +33,7 @@ public class GeneratorManager {
         this.tierKey = new NamespacedKey(plugin, "generator_tier");
         this.activeKey = new NamespacedKey(plugin, "generator_active");
         this.idKey = new NamespacedKey(plugin, "generator_id");
+        this.typeKey = new NamespacedKey(plugin, "generator_type");
     }
 
     public static void init(JavaPlugin plugin) {
@@ -49,6 +52,7 @@ public class GeneratorManager {
         if (meta == null) return false;
         PersistentDataContainer data = meta.getPersistentDataContainer();
         return data.has(tierKey, PersistentDataType.INTEGER);
+
     }
 
     public int getPower(ItemStack item) {
@@ -84,7 +88,18 @@ public class GeneratorManager {
         if (meta == null) return null;
         return meta.getPersistentDataContainer().get(idKey, PersistentDataType.STRING);
     }
-
+    public String getGeneratorType(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return "";
+        return meta.getPersistentDataContainer().getOrDefault(typeKey, PersistentDataType.STRING, "");
+    }
+    public void setGeneratorType(ItemStack item, String type) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        PersistentDataContainer data = meta.getPersistentDataContainer();
+        data.set(typeKey, PersistentDataType.STRING, type);
+        item.setItemMeta(meta);
+    }
     public void setGenerator(ItemStack item, int power, int powerLimit, int tier, boolean active) {
         if (item == null) return;
         if (power < 0) power = 0;
@@ -99,6 +114,10 @@ public class GeneratorManager {
         data.set(powerLimitKey, PersistentDataType.INTEGER, powerLimit);
         data.set(tierKey, PersistentDataType.INTEGER, tier);
         data.set(activeKey, PersistentDataType.INTEGER, active ? 1 : 0);
+        data.set(typeKey, PersistentDataType.STRING,
+                data.get(typeKey, PersistentDataType.STRING) != null
+                        ? data.get(typeKey, PersistentDataType.STRING)
+                        : "");
         item.setItemMeta(meta);
         updateName(item);
         updateLore(item);
