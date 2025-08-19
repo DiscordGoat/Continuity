@@ -28,11 +28,16 @@ public class GeneratorListener implements Listener {
 
         if (click == ClickType.RIGHT || click == ClickType.SHIFT_RIGHT) {
             event.setCancelled(true);
+
+            // Toggle the generator's activation state which also updates its lore
+            mgr.toggleActivation(item);
+
             if (mgr.isActive(item)) {
-                GeneratorService.getInstance().deactivate(item);
-            } else {
                 GeneratorService.getInstance().activate(item, clicked, event.getSlot());
+            } else {
+                GeneratorService.getInstance().deactivate(item);
             }
+
             event.setCurrentItem(item);
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
         } else {
