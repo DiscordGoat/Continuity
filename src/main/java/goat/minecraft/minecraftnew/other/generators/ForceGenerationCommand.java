@@ -19,7 +19,7 @@ public class ForceGenerationCommand implements CommandExecutor {
         GeneratorService service = GeneratorService.getInstance();
         if (service != null) {
             service.forceGeneration();
-            sender.sendMessage(ChatColor.GREEN + "All generators set to 1s timers.");
+            sender.sendMessage(ChatColor.GREEN + "All generators will generate in 1s.");
         }
         return true;
     }

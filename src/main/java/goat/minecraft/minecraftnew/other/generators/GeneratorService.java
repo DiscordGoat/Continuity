@@ -133,7 +133,8 @@ public class GeneratorService {
 
     public void forceGeneration() {
         for (ActiveGenerator gen : activeGenerators.values()) {
-            gen.restart(20L);
+            long period = computePeriod(gen.tier);
+            gen.reschedule(20L, period);
         }
     }
 
@@ -184,12 +185,12 @@ public class GeneratorService {
 
         void start() {
             long period = computePeriod(tier);
-            task = schedule(period);
+            task = schedule(period, period);
         }
 
-        void restart(long period) {
+        void reschedule(long delay, long period) {
             stop();
-            task = schedule(period);
+            task = schedule(delay, period);
         }
 
         void stop() {
@@ -198,7 +199,7 @@ public class GeneratorService {
             }
         }
 
-        private BukkitTask schedule(long period) {
+        private BukkitTask schedule(long delay, long period) {
             return new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -212,7 +213,7 @@ public class GeneratorService {
                     ItemStack drop = generateItem(current);
                     inventory.addItem(drop);
                 }
-            }.runTaskTimer(plugin, period, period);
+            }.runTaskTimer(plugin, delay, period);
         }
 
         Location getLocation() {
