@@ -1628,8 +1628,10 @@ public class AnvilRepair implements Listener {
             return;
         }
         CustomDurabilityManager customDurabilityManager = CustomDurabilityManager.getInstance();
+        int currentDurability = customDurabilityManager.getCurrentDurability(repairee);
+        int maxDurability = customDurabilityManager.getMaxDurability(repairee);
 
-        if (mgr != null && isDurable(repairee)) {
+        if (mgr != null && isDurable(repairee) && currentDurability < maxDurability) {
             UUID uid = player.getUniqueId();
             Random rng = new Random();
 
