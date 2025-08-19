@@ -33,9 +33,11 @@ public class GeneratorListener implements Listener {
             } else {
                 GeneratorService.getInstance().activate(item, clicked, event.getSlot());
             }
+            event.setCurrentItem(item);
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
         } else {
             GeneratorService.getInstance().onMove(item);
+            event.setCurrentItem(item);
         }
     }
 
