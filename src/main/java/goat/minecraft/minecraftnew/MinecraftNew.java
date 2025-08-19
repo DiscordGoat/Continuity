@@ -87,6 +87,7 @@ import goat.minecraft.minecraftnew.other.trinkets.EnchantedClockManager;
 import goat.minecraft.minecraftnew.other.trinkets.EnchantedHopperManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import goat.minecraft.minecraftnew.other.auras.AuraManager;
+import goat.minecraft.minecraftnew.other.flight.FlightManager;
 import goat.minecraft.minecraftnew.other.armorsets.FlowManager;
 import goat.minecraft.minecraftnew.other.armorsets.MonolithSetBonus;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
@@ -309,7 +310,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Echolocation(this), this);
         getServer().getPluginManager().registerEvents(new MithrilMiner(this), this);
         getServer().getPluginManager().registerEvents(new EmeraldSeeker(this), this);
-        getServer().getPluginManager().registerEvents(new Flight(this), this);
+        getServer().getPluginManager().registerEvents(new FlightManager(this), this);
         getServer().getPluginManager().registerEvents(new Broomstick(this), this);
         getServer().getPluginManager().registerEvents(new Lullaby(this), this);
         getServer().getPluginManager().registerEvents(new Collector(this), this);
