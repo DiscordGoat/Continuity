@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other.additionalfunctionality;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.forestry.Forestry;
 import goat.minecraft.minecraftnew.subsystems.mining.PlayerOxygenManager;
+import goat.minecraft.minecraftnew.other.flight.FlightManager;
 import goat.minecraft.minecraftnew.other.additionalfunctionality.EnvironmentSidebarPreferences;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,7 +41,8 @@ public class ContinuityBoardManager implements Listener {
     }
 
     /**
-     * Updates the scoreboard for the given player. Displays Notoriety, Saturation, Oxygen, and Temperature.
+     * Updates the scoreboard for the given player. Displays Notoriety, Saturation, Oxygen,
+     * Flight, and Temperature.
      */
     public void updateScoreboard(Player player) {
         Scoreboard scoreboard = player.getScoreboard();
@@ -54,6 +56,8 @@ public class ContinuityBoardManager implements Listener {
         int currentOxygen = PlayerOxygenManager.getInstance().getPlayerOxygen(player);
         int saturation = PlayerOxygenManager.getInstance().getSaturation(player);
         int temperature = PlayerOxygenManager.getInstance().getTemperature(player);
+        // Retrieve flight from FlightManager.
+        int currentFlight = FlightManager.getInstance().getFlightValue(player);
         // Retrieve notoriety from Forestry.
         int notoriety = Forestry.getInstance().getNotoriety(player);
 
@@ -61,6 +65,7 @@ public class ContinuityBoardManager implements Listener {
         String notorietyStr = ChatColor.DARK_RED + "Notoriety: " + ChatColor.WHITE + notoriety;
         String saturationStr = ChatColor.YELLOW + "Saturation: " + ChatColor.WHITE + saturation;
         String oxygenStr = ChatColor.AQUA + "Oxygen: " + ChatColor.WHITE + currentOxygen + "s";
+        String flightStr = ChatColor.LIGHT_PURPLE + "Flight: " + ChatColor.WHITE + currentFlight + "s";
         String temperatureStr = ChatColor.RED + "Temperature: " + ChatColor.WHITE + temperature + "°F";
 
         // Clear existing scoreboard entries.
@@ -70,7 +75,7 @@ public class ContinuityBoardManager implements Listener {
 
         boolean bars = EnvironmentSidebarPreferences.isEnabled(player);
 
-        int line = bars ? 8 : 4;
+        int line = bars ? 10 : 5;
         objective.getScore(notorietyStr).setScore(line--);
         if (bars) {
             String bar = createBar(notoriety, 700, ChatColor.DARK_RED);
@@ -85,6 +90,12 @@ public class ContinuityBoardManager implements Listener {
         if (bars) {
             int maxOxygen = PlayerOxygenManager.getInstance().calculateInitialOxygen(player);
             String bar = createBar(currentOxygen, maxOxygen, ChatColor.AQUA);
+            objective.getScore(bar).setScore(line--);
+        }
+        objective.getScore(flightStr).setScore(line--);
+        if (bars) {
+            int maxFlight = FlightManager.getInstance().getFlight(player);
+            String bar = createBar(currentFlight, maxFlight, ChatColor.LIGHT_PURPLE);
             objective.getScore(bar).setScore(line--);
         }
         objective.getScore(temperatureStr).setScore(line--);
