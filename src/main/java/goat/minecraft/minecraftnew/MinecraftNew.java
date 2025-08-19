@@ -106,6 +106,8 @@ import goat.minecraft.minecraftnew.other.armorsets.StriderSetBonus;
 
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.other.durability.HeirloomManager;
+import goat.minecraft.minecraftnew.other.generators.GeneratorManager;
+import goat.minecraft.minecraftnew.other.generators.GeneratorListener;
 import goat.minecraft.minecraftnew.other.skilltree.SwiftStepMasteryBonus;
 import goat.minecraft.minecraftnew.other.skilltree.FastFarmerBonus;
 import goat.minecraft.minecraftnew.other.skilltree.SpectralArmorBonus;
@@ -271,6 +273,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         new SetDurabilityCommand(this);
         CustomDurabilityManager.init(this);
         HeirloomManager.init(this);
+        GeneratorManager.init(this);
         new SetCustomDurabilityCommand(this);
         new AddGoldenDurabilityCommand(this);
         this.getCommand("skin").setExecutor(new SkinCommand());
@@ -285,6 +288,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new UltimateEnchantingSystem(), this);
 
         getServer().getPluginManager().registerEvents(new ArmorEquipListener(), this);
+
+        getServer().getPluginManager().registerEvents(new GeneratorListener(), this);
 
         getServer().getPluginManager().registerEvents(new Leap(this), this);
         getServer().getPluginManager().registerEvents(new Comfortable(this), this);

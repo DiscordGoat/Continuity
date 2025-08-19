@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.enchanting.CustomEnchantmentManager;
 import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
 import goat.minecraft.minecraftnew.other.durability.HeirloomManager;
+import goat.minecraft.minecraftnew.other.generators.GeneratorManager;
 import goat.minecraft.minecraftnew.subsystems.mining.MiningGemManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import goat.minecraft.minecraftnew.subsystems.smithing.ReforgeSubsystem;
@@ -847,7 +848,16 @@ public class AnvilRepair implements Listener {
             repairAmount = repairAmount + 150;
         }
         // Determine the type of repair material and set the repair amount accordingly
-        if (billItem.getType() == Material.GOLD_INGOT) {
+        if (billItem.getType() == Material.REDSTONE_BLOCK) {
+            GeneratorManager gm = GeneratorManager.getInstance();
+            if (gm != null && gm.isGenerator(repairee)) {
+                int power = 1 + new Random().nextInt(18);
+                gm.addPower(repairee, power);
+                billItem.setAmount(billItem.getAmount() - 1);
+                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
+            }
+            return;
+        } else if (billItem.getType() == Material.GOLD_INGOT) {
             if (HeirloomManager.getInstance().isHeirloom(repairee)) {
                 StatsCalculator statsCalculator = StatsCalculator.getInstance(MinecraftNew.getInstance());
                 double quality = statsCalculator.getGoldenRepairQuality(player);
