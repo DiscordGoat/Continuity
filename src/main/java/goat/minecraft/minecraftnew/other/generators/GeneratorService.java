@@ -1,0 +1,229 @@
+package goat.minecraft.minecraftnew.other.generators;
+
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
+
+/**
+ * Handles activated generators, scheduling their item production and persisting
+ * their locations between server restarts.
+ */
+public class GeneratorService {
+    private static GeneratorService instance;
+
+    private final JavaPlugin plugin;
+    private final Map<String, ActiveGenerator> activeGenerators = new HashMap<>();
+    private final File dataFile;
+    private final YamlConfiguration dataConfig;
+
+    private GeneratorService(JavaPlugin plugin) {
+        this.plugin = plugin;
+        this.dataFile = new File(plugin.getDataFolder(), "generators.yml");
+        if (!dataFile.exists()) {
+            try { dataFile.createNewFile(); } catch (IOException e) { e.printStackTrace(); }
+        }
+        this.dataConfig = YamlConfiguration.loadConfiguration(dataFile);
+        loadAll();
+    }
+
+    public static void init(JavaPlugin plugin) {
+        if (instance == null) {
+            instance = new GeneratorService(plugin);
+        }
+    }
+
+    public static GeneratorService getInstance() {
+        return instance;
+    }
+
+    private void loadAll() {
+        GeneratorManager mgr = GeneratorManager.getInstance();
+        if (mgr == null) return;
+        for (String id : dataConfig.getKeys(false)) {
+            String worldName = dataConfig.getString(id + ".world");
+            int x = dataConfig.getInt(id + ".x");
+            int y = dataConfig.getInt(id + ".y");
+            int z = dataConfig.getInt(id + ".z");
+            int slot = dataConfig.getInt(id + ".slot");
+            World world = Bukkit.getWorld(worldName);
+            if (world == null) continue;
+            Block block = world.getBlockAt(x, y, z);
+            if (!(block.getState() instanceof InventoryHolder holder)) continue;
+            Inventory inv = holder.getInventory();
+            ItemStack current = inv.getItem(slot);
+            if (current == null || !mgr.isGenerator(current)) continue;
+            String currentId = mgr.getId(current);
+            if (currentId == null || !currentId.equals(id)) continue;
+            mgr.setGenerator(current, mgr.getPower(current), mgr.getPowerLimit(current), mgr.getTier(current), true);
+            ActiveGenerator gen = new ActiveGenerator(id, inv, slot, current, mgr.getTier(current));
+            activeGenerators.put(id, gen);
+            gen.start();
+        }
+    }
+
+    private void saveAll() {
+        for (String key : dataConfig.getKeys(false)) {
+            dataConfig.set(key, null);
+        }
+        for (ActiveGenerator gen : activeGenerators.values()) {
+            Location loc = gen.getLocation();
+            dataConfig.set(gen.id + ".world", loc.getWorld().getName());
+            dataConfig.set(gen.id + ".x", loc.getBlockX());
+            dataConfig.set(gen.id + ".y", loc.getBlockY());
+            dataConfig.set(gen.id + ".z", loc.getBlockZ());
+            dataConfig.set(gen.id + ".slot", gen.slot);
+            dataConfig.set(gen.id + ".item", gen.item);
+        }
+        try { dataConfig.save(dataFile); } catch (IOException e) { e.printStackTrace(); }
+    }
+
+    public void shutdown() {
+        saveAll();
+        for (ActiveGenerator gen : activeGenerators.values()) {
+            gen.stop();
+        }
+        activeGenerators.clear();
+    }
+
+    public void activate(ItemStack item, Inventory inventory, int slot) {
+        GeneratorManager mgr = GeneratorManager.getInstance();
+        if (mgr == null) return;
+        String id = mgr.getId(item);
+        if (id == null) return;
+        if (activeGenerators.containsKey(id)) return;
+        int tier = mgr.getTier(item);
+        mgr.setGenerator(item, mgr.getPower(item), mgr.getPowerLimit(item), tier, true);
+        ActiveGenerator gen = new ActiveGenerator(id, inventory, slot, item, tier);
+        activeGenerators.put(id, gen);
+        gen.start();
+        saveAll();
+    }
+
+    public void deactivate(ItemStack item) {
+        GeneratorManager mgr = GeneratorManager.getInstance();
+        if (mgr == null || item == null) return;
+        String id = mgr.getId(item);
+        if (id == null) return;
+        ActiveGenerator gen = activeGenerators.remove(id);
+        if (gen != null) {
+            gen.stop();
+            saveAll();
+        }
+        mgr.setGenerator(item, mgr.getPower(item), mgr.getPowerLimit(item), mgr.getTier(item), false);
+    }
+
+    public void onMove(ItemStack item) {
+        deactivate(item);
+    }
+
+    public void forceGeneration() {
+        for (ActiveGenerator gen : activeGenerators.values()) {
+            gen.restart(20L);
+        }
+    }
+
+    private long computePeriod(int tier) {
+        double base = 24000.0; // 20 minutes in ticks
+        double reduction = 0.08 * (tier - 1);
+        if (reduction > 0.95) reduction = 0.95;
+        return Math.max(20L, Math.round(base * (1 - reduction)));
+    }
+
+    private ItemStack generateItem(ItemStack generator) {
+        // For now we only have the Rocket Generator type
+        return createRandomRocket();
+    }
+
+    private ItemStack createRandomRocket() {
+        Random rand = new Random();
+        ItemStack rocket = new ItemStack(Material.FIREWORK_ROCKET);
+        FireworkMeta meta = (FireworkMeta) rocket.getItemMeta();
+        FireworkEffect.Type[] types = FireworkEffect.Type.values();
+        FireworkEffect effect = FireworkEffect.builder()
+                .withColor(Color.fromRGB(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)))
+                .with(types[rand.nextInt(types.length)])
+                .trail(rand.nextBoolean())
+                .flicker(rand.nextBoolean())
+                .build();
+        meta.addEffect(effect);
+        meta.setPower(1);
+        rocket.setItemMeta(meta);
+        return rocket;
+    }
+
+    private class ActiveGenerator {
+        private final String id;
+        private final Inventory inventory;
+        private final int slot;
+        private final ItemStack item;
+        private final int tier;
+        private BukkitTask task;
+
+        ActiveGenerator(String id, Inventory inv, int slot, ItemStack item, int tier) {
+            this.id = id;
+            this.inventory = inv;
+            this.slot = slot;
+            this.item = item;
+            this.tier = tier;
+        }
+
+        void start() {
+            long period = computePeriod(tier);
+            task = schedule(period);
+        }
+
+        void restart(long period) {
+            stop();
+            task = schedule(period);
+        }
+
+        void stop() {
+            if (task != null) {
+                task.cancel();
+            }
+        }
+
+        private BukkitTask schedule(long period) {
+            return new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (Bukkit.getOnlinePlayers().isEmpty()) return;
+                    GeneratorManager mgr = GeneratorManager.getInstance();
+                    ItemStack current = inventory.getItem(slot);
+                    if (current == null || mgr == null || !id.equals(mgr.getId(current))) {
+                        deactivate(item);
+                        return;
+                    }
+                    ItemStack drop = generateItem(current);
+                    inventory.addItem(drop);
+                }
+            }.runTaskTimer(plugin, period, period);
+        }
+
+        Location getLocation() {
+            InventoryHolder holder = inventory.getHolder();
+            if (holder instanceof BlockState state) {
+                return state.getLocation();
+            } else if (holder instanceof Entity entity) {
+                return entity.getLocation();
+            }
+            return plugin.getServer().getWorlds().get(0).getSpawnLocation();
+        }
+    }
+}
+

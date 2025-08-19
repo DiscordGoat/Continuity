@@ -61,6 +61,10 @@ commands:
   forceworkcycle:
     description: Forces the villager work cycle timer to 1 second.
     usage: /<command>
+  forcegeneration:
+    description: Dev command to set all generator timers to 1 second.
+    usage: /forcegeneration
+    permission: continuity.admin
   testdragon:
       description: Summon the initial and strong dragons in the End for testing.
       usage: /testdragon
