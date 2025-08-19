@@ -4,6 +4,7 @@ package goat.minecraft.minecraftnew.utils.devtools;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.other.structureblocks.StructureBlockManager;
 import goat.minecraft.minecraftnew.other.durability.HeirloomManager;
+import goat.minecraft.minecraftnew.other.generators.GeneratorManager;
 import goat.minecraft.minecraftnew.utils.stats.DefenseManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -4719,6 +4720,27 @@ public class ItemRegistry {
         HeirloomManager mgr = HeirloomManager.getInstance();
         if (mgr != null) {
             mgr.setGild(item, 0, 500);
+        }
+        return item;
+    }
+
+    // ===== Generators =====
+
+    public static ItemStack getRocketGenerator() {
+        ItemStack item = createCustomItem(
+                Material.LEATHER_CHESTPLATE,
+                ChatColor.GOLD + "Rocket Generator Tier I",
+                Arrays.asList(
+                        ChatColor.GRAY + "Generates a random Firework.",
+                        ChatColor.DARK_PURPLE + "Generator"
+                ),
+                1,
+                false,
+                true
+        );
+        GeneratorManager mgr = GeneratorManager.getInstance();
+        if (mgr != null) {
+            mgr.setGenerator(item, 0, 100, 1, false);
         }
         return item;
     }
