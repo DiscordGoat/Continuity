@@ -131,17 +131,19 @@ public class StatsCalculator {
     public int getFlightTime(Player player) {
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
         int seconds = 0;
-        if (pet != null && pet.hasPerk(PetManager.PetPerk.FLIGHT)) {
+        boolean hasFlightPerk = pet != null && pet.hasPerk(PetManager.PetPerk.FLIGHT);
+        if (hasFlightPerk) {
             int perkSeconds = pet.getLevel(); // 1 second per pet level
             PlayerMeritManager merits = PlayerMeritManager.getInstance(plugin);
             if (merits.hasPerk(player.getUniqueId(), "Icarus")) {
                 perkSeconds *= 2;
             }
             seconds += perkSeconds;
-        }
-        if (SkillTreeManager.getInstance() != null) {
-            int talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
-            seconds += talentLevel * 40; // 40s per talent level
+
+            if (SkillTreeManager.getInstance() != null) {
+                int talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
+                seconds += talentLevel * 40; // 40s per talent level
+            }
         }
         return seconds;
     }

@@ -134,16 +134,18 @@ public class FlightManager implements Listener {
 
     private int calculateFlight(Player player, Pet activePet) {
         int seconds = 0;
-        if (activePet != null && activePet.hasPerk(PetPerk.FLIGHT)) {
+        boolean hasFlightPerk = activePet != null && activePet.hasPerk(PetPerk.FLIGHT);
+        if (hasFlightPerk) {
             int perkSeconds = activePet.getLevel(); // 1s per level
             if (meritManager.hasPerk(player.getUniqueId(), "Icarus")) {
                 perkSeconds *= 2;
             }
             seconds += perkSeconds;
-        }
-        if (SkillTreeManager.getInstance() != null) {
-            int talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
-            seconds += talentLevel * 40;
+
+            if (SkillTreeManager.getInstance() != null) {
+                int talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
+                seconds += talentLevel * 40;
+            }
         }
         return seconds;
     }
