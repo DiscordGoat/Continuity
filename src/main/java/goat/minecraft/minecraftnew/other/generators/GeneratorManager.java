@@ -23,12 +23,14 @@ public class GeneratorManager {
     private final NamespacedKey powerLimitKey;
     private final NamespacedKey tierKey;
     private final NamespacedKey activeKey;
+    private final NamespacedKey idKey;
 
     private GeneratorManager(JavaPlugin plugin) {
         this.powerKey = new NamespacedKey(plugin, "generator_power");
         this.powerLimitKey = new NamespacedKey(plugin, "generator_power_limit");
         this.tierKey = new NamespacedKey(plugin, "generator_tier");
         this.activeKey = new NamespacedKey(plugin, "generator_active");
+        this.idKey = new NamespacedKey(plugin, "generator_id");
     }
 
     public static void init(JavaPlugin plugin) {
@@ -77,6 +79,12 @@ public class GeneratorManager {
         return val != null && val == 1;
     }
 
+    public String getId(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return null;
+        return meta.getPersistentDataContainer().get(idKey, PersistentDataType.STRING);
+    }
+
     public void setGenerator(ItemStack item, int power, int powerLimit, int tier, boolean active) {
         if (item == null) return;
         if (power < 0) power = 0;
@@ -84,6 +92,9 @@ public class GeneratorManager {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         PersistentDataContainer data = meta.getPersistentDataContainer();
+        if (!data.has(idKey, PersistentDataType.STRING)) {
+            data.set(idKey, PersistentDataType.STRING, java.util.UUID.randomUUID().toString());
+        }
         data.set(powerKey, PersistentDataType.INTEGER, power);
         data.set(powerLimitKey, PersistentDataType.INTEGER, powerLimit);
         data.set(tierKey, PersistentDataType.INTEGER, tier);

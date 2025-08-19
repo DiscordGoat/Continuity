@@ -4,29 +4,51 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
- * Handles player interaction with generators.
+ * Handles player interaction with generators via inventory GUIs.
  */
 public class GeneratorListener implements Listener {
 
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
-        if (event.getHand() != EquipmentSlot.HAND) return;
-        Action action = event.getAction();
-        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK) return;
-        ItemStack item = event.getItem();
-        if (item == null) return;
+    public void onInventoryClick(InventoryClickEvent event) {
+        ItemStack item = event.getCurrentItem();
+        Inventory clicked = event.getClickedInventory();
+        if (clicked == null || item == null) return;
         GeneratorManager mgr = GeneratorManager.getInstance();
-        if (mgr != null && mgr.isGenerator(item)) {
-            mgr.toggleActivation(item);
+        if (mgr == null || !mgr.isGenerator(item)) return;
+
+        ClickType click = event.getClick();
+        Player player = (Player) event.getWhoClicked();
+
+        if (click == ClickType.RIGHT || click == ClickType.SHIFT_RIGHT) {
             event.setCancelled(true);
-            Player player = event.getPlayer();
+            if (mgr.isActive(item)) {
+                GeneratorService.getInstance().deactivate(item);
+            } else {
+                GeneratorService.getInstance().activate(item, clicked, event.getSlot());
+            }
             player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1.0f, 1.0f);
+        } else {
+            GeneratorService.getInstance().onMove(item);
+        }
+    }
+
+    @EventHandler
+    public void onInventoryDrag(InventoryDragEvent event) {
+        GeneratorManager mgr = GeneratorManager.getInstance();
+        if (mgr == null) return;
+        for (ItemStack item : event.getNewItems().values()) {
+            if (item != null && mgr.isGenerator(item)) {
+                GeneratorService.getInstance().onMove(item);
+                break;
+            }
         }
     }
 }
+
