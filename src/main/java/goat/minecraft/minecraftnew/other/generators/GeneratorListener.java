@@ -26,7 +26,7 @@ public class GeneratorListener implements Listener {
         ClickType click = event.getClick();
         Player player = (Player) event.getWhoClicked();
 
-        if (click == ClickType.RIGHT || click == ClickType.SHIFT_RIGHT) {
+        if (click == ClickType.RIGHT) {
             event.setCancelled(true);
 
             // Toggle the generator's activation state which also updates its lore
