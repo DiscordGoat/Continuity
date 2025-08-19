@@ -127,16 +127,21 @@ public class StatsCalculator {
         return bonus;
     }
 
-    /** Maximum flight time in seconds from pet perks and merits. */
+    /** Maximum flight time in seconds from pet perks, merits and talents. */
     public int getFlightTime(Player player) {
         PetManager.Pet pet = PetManager.getInstance(plugin).getActivePet(player);
         int seconds = 0;
         if (pet != null && pet.hasPerk(PetManager.PetPerk.FLIGHT)) {
-            seconds = (int) (pet.getLevel() / 100.0 * 60);
+            int perkSeconds = pet.getLevel(); // 1 second per pet level
             PlayerMeritManager merits = PlayerMeritManager.getInstance(plugin);
             if (merits.hasPerk(player.getUniqueId(), "Icarus")) {
-                seconds *= 2;
+                perkSeconds *= 2;
             }
+            seconds += perkSeconds;
+        }
+        if (SkillTreeManager.getInstance() != null) {
+            int talentLevel = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.FLIGHT);
+            seconds += talentLevel * 40; // 40s per talent level
         }
         return seconds;
     }
