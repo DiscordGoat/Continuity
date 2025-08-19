@@ -675,6 +675,7 @@ public class AnvilRepair implements Listener {
                     billableItems.add(Material.MOJANG_BANNER_PATTERN);
                     billableItems.add(Material.LIGHTNING_ROD);
                     billableItems.add(Material.CONDUIT);
+                    billableItems.add(Material.REDSTONE_BLOCK);
                     billableItems.add(Material.GOLDEN_PICKAXE);
                     billableItems.add(Material.IRON_HOE);
                     billableItems.add(Material.OBSIDIAN);
