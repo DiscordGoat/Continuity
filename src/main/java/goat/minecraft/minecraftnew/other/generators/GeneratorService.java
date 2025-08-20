@@ -66,20 +66,32 @@ public class GeneratorService {
             if (!(block.getState() instanceof InventoryHolder holder)) continue;
             Inventory inv = holder.getInventory();
             ItemStack current = inv.getItem(slot);
+
             if (current == null || !mgr.isGenerator(current)) continue;
+
+            // Restore saved values
+            int power = dataConfig.getInt(id + ".power", 0);
+            int powerLimit = dataConfig.getInt(id + ".power_limit", 100);
+            int tier = dataConfig.getInt(id + ".tier", 1);
+
+            // Reinstate generator metadata
+            mgr.setGenerator(current, power, powerLimit, tier, true);
+
             String currentId = mgr.getId(current);
             if (currentId == null || !currentId.equals(id)) continue;
-            mgr.setGenerator(current, mgr.getPower(current), mgr.getPowerLimit(current), mgr.getTier(current), true);
-            ActiveGenerator gen = new ActiveGenerator(id, inv, slot, current, mgr.getTier(current));
+
+            ActiveGenerator gen = new ActiveGenerator(id, inv, slot, current, tier);
             activeGenerators.put(id, gen);
             gen.start();
         }
     }
 
+
     private void saveAll() {
         for (String key : dataConfig.getKeys(false)) {
             dataConfig.set(key, null);
         }
+        GeneratorManager mgr = GeneratorManager.getInstance();
         for (ActiveGenerator gen : activeGenerators.values()) {
             Location loc = gen.getLocation();
             dataConfig.set(gen.id + ".world", loc.getWorld().getName());
@@ -87,10 +99,20 @@ public class GeneratorService {
             dataConfig.set(gen.id + ".y", loc.getBlockY());
             dataConfig.set(gen.id + ".z", loc.getBlockZ());
             dataConfig.set(gen.id + ".slot", gen.slot);
+
+            // Save the item
             dataConfig.set(gen.id + ".item", gen.item);
+
+            // Save custom fields explicitly
+            if (mgr != null) {
+                dataConfig.set(gen.id + ".power", mgr.getPower(gen.item));
+                dataConfig.set(gen.id + ".power_limit", mgr.getPowerLimit(gen.item));
+                dataConfig.set(gen.id + ".tier", mgr.getTier(gen.item));
+            }
         }
         try { dataConfig.save(dataFile); } catch (IOException e) { e.printStackTrace(); }
     }
+
 
     public void shutdown() {
         saveAll();
@@ -185,8 +207,12 @@ public class GeneratorService {
 
         void start() {
             long period = computePeriod(tier);
+            Bukkit.getLogger().info("Starting generator " + id + " with period " + period);
+
+            // Just schedule normally right away
             task = schedule(period, period);
         }
+
 
         void reschedule(long delay, long period) {
             stop();
