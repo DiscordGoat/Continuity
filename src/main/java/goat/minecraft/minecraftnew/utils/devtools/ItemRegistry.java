@@ -4732,6 +4732,7 @@ public class ItemRegistry {
                 ChatColor.GOLD + "Rocket Generator Tier I",
                 Arrays.asList(
                         ChatColor.GRAY + "Generates a random Firework.",
+                        ChatColor.DARK_GRAY + "Type: rocket",
                         ChatColor.DARK_PURPLE + "Generator"
                 ),
                 1,
@@ -4741,7 +4742,6 @@ public class ItemRegistry {
         GeneratorManager mgr = GeneratorManager.getInstance();
         if (mgr != null) {
             mgr.setGenerator(item, 0, 100, 1, false);
-            mgr.setGeneratorType(item, "rocket");
         }
         return item;
     }
