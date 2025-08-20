@@ -157,6 +157,24 @@ public class GeneratorManager {
         }
         return String.valueOf(number);
     }
+    private static final int[] TIER_COOLDOWNS = {
+            20 * 60 * 20, // Tier I: 20m
+            20 * 60 * 10, // Tier II: 10m
+            20 * 60 * 5,  // Tier III: 5m
+            20 * 120,     // Tier IV: 2m
+            20 * 60,      // Tier V: 1m
+            20 * 30,      // Tier VI: 30s
+            20 * 15,      // Tier VII: 15s
+            20 * 10,      // Tier VIII: 10s
+            20 * 7,       // Tier IX: 7s
+            20 * 5        // Tier X: 5s
+    };
+    private int getGenerationsPerDay(int tier) {
+        if (tier <= 0 || tier > TIER_COOLDOWNS.length) return 0;
+        int cooldownTicks = TIER_COOLDOWNS[tier - 1];
+        if (cooldownTicks <= 0) return 0;
+        return 24000 / cooldownTicks; // 24000 ticks = 1 Minecraft day
+    }
 
     private void updateLore(ItemStack item) {
         ItemMeta meta = item.getItemMeta();
@@ -179,10 +197,16 @@ public class GeneratorManager {
             removeLine(lore, "MAX TIER");
         }
 
+        // ---- NEW: Generation Rate ----
+        int gensPerDay = getGenerationsPerDay(tier);
+        String genLine = ChatColor.AQUA + "Generation Rate: " + gensPerDay + "/Day";
+        replaceOrAdd(lore, "Generation Rate:", genLine);
+
         meta.setLore(lore);
         item.setItemMeta(meta);
         ItemLoreFormatter.formatLore(item);
     }
+
 
     private void replaceOrAdd(List<String> lore, String prefix, String line) {
         int index = findIndex(lore, prefix);

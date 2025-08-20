@@ -161,11 +161,21 @@ public class GeneratorService {
     }
 
     private long computePeriod(int tier) {
-        double base = 24000.0; // 20 minutes in ticks
-        double reduction = 0.08 * (tier - 1);
-        if (reduction > 0.95) reduction = 0.95;
-        return Math.max(20L, Math.round(base * (1 - reduction)));
+        switch (tier) {
+            case 1: return 20 * 60 * 20; // 20m
+            case 2: return 20 * 60 * 10; // 10m
+            case 3: return 20 * 60 * 5;  // 5m
+            case 4: return 20 * 120;     // 2m
+            case 5: return 20 * 60;      // 1m
+            case 6: return 20 * 30;      // 30s
+            case 7: return 20 * 15;      // 15s
+            case 8: return 20 * 10;      // 10s
+            case 9: return 20 * 7;       // 7s
+            case 10: return 20 * 5;      // 5s
+            default: return 20 * 60 * 20; // fallback 20m
+        }
     }
+
 
     private ItemStack generateItem(ItemStack generator) {
         // For now we only have the Rocket Generator type

@@ -197,7 +197,7 @@ public class PlayerOxygenManager implements Listener {
             playerOxygenLevels.put(uuid, initialOxygen);
         }
 
-        int currentOxygen = playerOxygenLevels.get(uuid);
+        int currentOxygen = getPlayerOxygen(player);
         int initialOxygen = calculateInitialOxygen(player);
 
         // Determine oxygen depletion rate
@@ -207,6 +207,7 @@ public class PlayerOxygenManager implements Listener {
         boolean isUnderwater = player.getEyeLocation().getBlock().getType() == Material.WATER;
 
         if (oxygenDepletionRate > 0 && !player.isInWater()) {
+            // Oxygen loss
             currentOxygen -= oxygenDepletionRate;
             if (currentOxygen < 0) {
                 int reserve = oxygenReserve.getOrDefault(uuid, 0);
@@ -227,15 +228,12 @@ public class PlayerOxygenManager implements Listener {
             }
 
             if (currentOxygen <= 60 && currentOxygen > 15) {
-                // Trigger the breath sound and darkness effect every 5 oxygen units decremented
                 if (currentOxygen % 5 == 0) {
                     player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_BREATH, 0.5F, 1.0F);
-                    applyDarknessEffect(player);  // Flash darkness when breathing
+                    applyDarknessEffect(player);
                 }
             }
 
-
-            // When oxygen is depleted, restrict block interactions
             if (currentOxygen == 0) {
                 Bukkit.getLogger().info("Player " + player.getName() + " has 0 oxygen and is now restricted from breaking natural blocks.");
             }
@@ -256,9 +254,12 @@ public class PlayerOxygenManager implements Listener {
                     }
                 }
             }
-        handleHypoxiaEffects(player, currentOxygen, initialOxygen);
         }
+
+        // ✅ Always recheck hypoxia after any oxygen update
+        handleHypoxiaEffects(player);
     }
+
 
     /**
      * Calculates the player's initial oxygen capacity based on their Mining level and Ventilation.
@@ -334,7 +335,7 @@ public class PlayerOxygenManager implements Listener {
         }
         int totalLevels = efficiencyLevels;
         if (reserveLevel > 0) {
-            int current = playerOxygenLevels.getOrDefault(uuid, calculateInitialOxygen(player));
+            int current = getPlayerOxygen(player);
             int initial = calculateInitialOxygen(player);
             if (current < initial / 2) {
                 totalLevels += reserveLevel * 5;
@@ -500,8 +501,13 @@ public class PlayerOxygenManager implements Listener {
         // Intensified mining fatigue handled in handleHypoxiaEffects
     }
 
-    private void handleHypoxiaEffects(Player player, int currentOxygen, int initialOxygen) {
+    private void handleHypoxiaEffects(Player player) {
         UUID id = player.getUniqueId();
+
+        // 🔑 Always fetch oxygen from the same place the scoreboard does
+        int currentOxygen = getPlayerOxygen(player);
+        int initialOxygen = calculateInitialOxygen(player);
+
         double percent = (currentOxygen * 100.0) / initialOxygen;
         int stage = 100;
         if (currentOxygen <= 0) {
@@ -513,22 +519,15 @@ public class PlayerOxygenManager implements Listener {
         } else if (percent <= 50.0) {
             stage = 50;
         }
+
         int prev = lastHypoxiaStage.getOrDefault(id, 100);
         if (stage < prev) {
             cancelHypoxiaTasks(id);
-            switch(stage) {
-                case 50:
-                    triggerStage50(player);
-                    break;
-                case 25:
-                    triggerStage25(player);
-                    break;
-                case 5:
-                    triggerStage5(player);
-                    break;
-                case 0:
-                    triggerStage0(player);
-                    break;
+            switch (stage) {
+                case 50: triggerStage50(player); break;
+                case 25: triggerStage25(player); break;
+                case 5:  triggerStage5(player);  break;
+                case 0:  triggerStage0(player);  break;
             }
         } else if (stage > prev) {
             cancelHypoxiaTasks(id);
@@ -540,14 +539,14 @@ public class PlayerOxygenManager implements Listener {
         } else {
             player.removePotionEffect(PotionEffectType.SLOWNESS);
         }
+
         if (stage <= 25) {
             int amp = (stage == 0) ? 3 : 0;
-            if(SkillTreeManager.getInstance().hasTalent(player, Talent.GOLD_FEVER)){
+            if (SkillTreeManager.getInstance().hasTalent(player, Talent.GOLD_FEVER)) {
                 amp -= 1;
             }
-            if(SkillTreeManager.getInstance().hasTalent(player, Talent.WAKE_UP_THE_STATUES)){
+            if (SkillTreeManager.getInstance().hasTalent(player, Talent.WAKE_UP_THE_STATUES)) {
                 int level = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.MINING, Talent.WAKE_UP_THE_STATUES);
-
                 amp -= 1 + level;
             }
             player.addPotionEffect(new PotionEffect(PotionEffectType.MINING_FATIGUE, 40, amp, false, false, false));
@@ -555,6 +554,7 @@ public class PlayerOxygenManager implements Listener {
             player.removePotionEffect(PotionEffectType.MINING_FATIGUE);
         }
     }
+
 
 
     @EventHandler
@@ -621,8 +621,7 @@ public class PlayerOxygenManager implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        int oxygen = playerOxygenLevels.getOrDefault(uuid, DEFAULT_OXYGEN_SECONDS);
+        int oxygen = getPlayerOxygen(player);
         Material blockType = event.getBlock().getType();
         if (oxygen == 0 && BANNED_BLOCKS.contains(blockType)) {
             event.setCancelled(true);
@@ -674,11 +673,22 @@ public class PlayerOxygenManager implements Listener {
         }
     }
 
+/* <<<<<<<<<<<<<<  ✨ Windsurf Command ⭐ >>>>>>>>>>>>>>>> */
+    /**
+     * Adds oxygen to the player's current oxygen level, and handles the logic for exceeding the initial oxygen capacity.
+     * If the added amount exceeds the initial capacity, the excess is stored in the oxygen reserve.
+     * Always calls {@link #handleHypoxiaEffects(Player)} after adding oxygen.
+     * @param player the player to add oxygen to
+     * @param amount the amount of oxygen to add
+     */
+/* <<<<<<<<<<  1fd068a2-08ae-4160-9571-4d629bdec52b  >>>>>>>>>>> */
     public void addOxygen(Player player, int amount) {
         UUID id = player.getUniqueId();
         int initial = calculateInitialOxygen(player);
         int current = playerOxygenLevels.getOrDefault(id, initial);
+
         current += amount;
+
         if (current > initial) {
             int extra = current - initial;
             int reserve = oxygenReserve.getOrDefault(id, 0);
@@ -687,9 +697,13 @@ public class PlayerOxygenManager implements Listener {
             oxygenReserve.put(id, reserve);
             current = initial;
         }
+
         playerOxygenLevels.put(id, current);
-        handleHypoxiaEffects(player, current, initial);
+
+        // ✅ Always recheck hypoxia after adding oxygen
+        handleHypoxiaEffects(player);
     }
+
 
     public int getPlayerOxygen(Player player) {
         UUID uuid = player.getUniqueId();

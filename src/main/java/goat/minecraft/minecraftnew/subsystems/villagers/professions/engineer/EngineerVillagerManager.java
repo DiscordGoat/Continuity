@@ -1,6 +1,7 @@
 package goat.minecraft.minecraftnew.subsystems.villagers.professions.engineer;
 
 import goat.minecraft.minecraftnew.other.additionalfunctionality.CustomBundleGUI;
+import goat.minecraft.minecraftnew.utils.devtools.ItemRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -139,6 +140,9 @@ public class EngineerVillagerManager implements Listener {
 
                 // Record the cost so we can look it up by item display name
                 costMapping.put(tradeItem.getItemMeta().getDisplayName(), cost);
+                ItemStack rocketGenerator = ItemRegistry.getRocketGenerator();
+                inv.setItem(53, rocketGenerator);
+                costMapping.put(rocketGenerator.getItemMeta().getDisplayName(), new TradeCost(16, 1));
 
                 slotIndex++;
                 if (slotIndex >= 54) break; // inventory is full
@@ -266,48 +270,44 @@ public class EngineerVillagerManager implements Listener {
      * 'multiplier' is 1 for left-click, 4 for right-click.
      */
     private void processEngineerPurchase(Player player, ItemStack itemForSale, TradeCost cost, int multiplier) {
-        // Total cost in Redstone Blocks
         int totalRedstoneBlockCost = cost.redstoneBlockCost * multiplier;
-        // Total number of items the player gets
         int totalOutputAmount = cost.baseOutput * multiplier;
 
-        // 1) Count how many Redstone Blocks the player has in their main inventory
         int blocksInInventory = countRedstoneBlocksInInventory(player);
 
         if (blocksInInventory >= totalRedstoneBlockCost) {
-            // The main inventory alone is enough
             removeMaterial(player, Material.REDSTONE_BLOCK, totalRedstoneBlockCost);
         } else {
-            // The player doesn't have enough in main inventory
-            // Remove whatever they do have from main inventory
             removeMaterial(player, Material.REDSTONE_BLOCK, blocksInInventory);
-
-            // We still need this many
             int shortfall = totalRedstoneBlockCost - blocksInInventory;
-
-            // Attempt removing shortfall from the backpack
             boolean success = CustomBundleGUI.getInstance().removeRedstoneBlocksFromBackpack(player, shortfall);
             if (!success) {
-                // They can’t afford the cost from inventory + backpack
                 player.sendMessage(ChatColor.RED + "You don't have enough Redstone Blocks (in inventory or backpack).");
-                return; // Stop here
+                return;
             }
         }
 
-        // If we get here, we've successfully removed enough blocks overall.
-        // --- Give the purchased items ---
-        ItemStack purchasedStack = new ItemStack(itemForSale.getType(), totalOutputAmount);
+        // --- Give the purchased item(s) ---
+        ItemStack purchasedStack;
+
+        // Check if this is the Rocket Generator trade
+        if (itemForSale.getItemMeta().getDisplayName().equals(ItemRegistry.getRocketGenerator().getItemMeta().getDisplayName())) {
+            purchasedStack = ItemRegistry.getRocketGenerator();
+            purchasedStack.setAmount(totalOutputAmount);
+        } else {
+            purchasedStack = new ItemStack(itemForSale.getType(), totalOutputAmount);
+        }
+
         Map<Integer, ItemStack> leftover = player.getInventory().addItem(purchasedStack);
         for (ItemStack leftoverItem : leftover.values()) {
-            // If inventory is full, drop any leftover items on the ground
             player.getWorld().dropItemNaturally(player.getLocation(), leftoverItem);
         }
 
-        // Feedback
         player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 1.2f);
         player.sendMessage(ChatColor.GREEN + "Purchase successful! You got " + totalOutputAmount + "x "
-                + formatMaterialName(itemForSale.getType().name()) + ".");
+                + ChatColor.YELLOW + purchasedStack.getItemMeta().getDisplayName() + ChatColor.GREEN + ".");
     }
+
 
     /**
      * Helper to count how many Redstone Blocks are in a player's main inventory.
