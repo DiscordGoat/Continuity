@@ -4732,7 +4732,7 @@ public class ItemRegistry {
                 ChatColor.GOLD + "Rocket Generator Tier I",
                 Arrays.asList(
                         ChatColor.GRAY + "Generates a random Firework.",
-                        ChatColor.DARK_GRAY + "Type: rocket",
+                        ChatColor.RED + "Hoppers ignore this item.",
                         ChatColor.DARK_PURPLE + "Generator"
                 ),
                 1,

@@ -88,17 +88,6 @@ public class PlayerOxygenManager implements Listener {
                 && PotionEffectPreferences.isEnabled(player, "Potion of Oxygen Recovery")) {
             interval = 2;
         }
-
-        int talent = 0;
-        if (SkillTreeManager.getInstance() != null) {
-            talent = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.WATERLOGGED);
-        }
-
-        if (talent > 0) {
-            interval = Math.max(1, interval - talent);
-        }
-
         return interval;
     }
 
@@ -618,24 +607,11 @@ public class PlayerOxygenManager implements Listener {
         addOxygen(player, amount);
     }
 
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event) {
-        Player player = event.getPlayer();
-        int oxygen = getPlayerOxygen(player);
-        Material blockType = event.getBlock().getType();
-        if (oxygen == 0 && BANNED_BLOCKS.contains(blockType)) {
-            event.setCancelled(true);
-            player.sendMessage(ChatColor.RED + "You cannot place that block when you have no oxygen.");
-            return;
-        }
-        recordPlacedBlock(player, event.getBlock().getLocation());
-    }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        UUID uuid = player.getUniqueId();
-        int oxygen = playerOxygenLevels.getOrDefault(uuid, DEFAULT_OXYGEN_SECONDS);
+        int oxygen = getPlayerOxygen(player);
         Block block = event.getBlock();
         Material blockType = block.getType();
 

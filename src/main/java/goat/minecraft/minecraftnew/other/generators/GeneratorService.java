@@ -186,6 +186,7 @@ public class GeneratorService {
         Random rand = new Random();
         ItemStack rocket = new ItemStack(Material.FIREWORK_ROCKET);
         FireworkMeta meta = (FireworkMeta) rocket.getItemMeta();
+        meta.setPower(5);
         FireworkEffect.Type[] types = FireworkEffect.Type.values();
         FireworkEffect effect = FireworkEffect.builder()
                 .withColor(Color.fromRGB(rand.nextInt(256), rand.nextInt(256), rand.nextInt(256)))
@@ -194,7 +195,6 @@ public class GeneratorService {
                 .flicker(rand.nextBoolean())
                 .build();
         meta.addEffect(effect);
-        meta.setPower(1);
         rocket.setItemMeta(meta);
         return rocket;
     }

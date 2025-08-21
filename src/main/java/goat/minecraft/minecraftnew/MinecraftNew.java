@@ -505,6 +505,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new PotionEffectPreferences(), this);
         EnvironmentSidebarPreferences.init(this);
         getServer().getPluginManager().registerEvents(new EnvironmentSidebarPreferences(), this);
+        Bukkit.getPluginManager().registerEvents(new HopperBlacklist(), this);
 
         forestryPetManager = new ForestryPetManager(this);
 
