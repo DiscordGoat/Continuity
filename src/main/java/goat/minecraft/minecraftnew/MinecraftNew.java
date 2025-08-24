@@ -413,6 +413,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         new Sleep(this);
         getServer().getPluginManager().registerEvents(new ShulkerBox(), this);
         getServer().getPluginManager().registerEvents(new SkinRemovalCauldron(), this);
+        PlacedBeaconManager.initialize(this);
         getServer().getPluginManager().registerEvents(new BeaconManager(this), this);
         getServer().getPluginManager().registerEvents(new BeaconCharmGUI(this, null), this);
         BeaconPassivesGUI.init(this);
