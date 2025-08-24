@@ -63,6 +63,12 @@ public class BeaconManager implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+        // Let placed beacons handle their own break logic
+        PlacedBeaconManager instance = PlacedBeaconManager.getInstance();
+        if (instance != null && instance.handleBlockBreak(event)) {
+            return;
+        }
+
         if (event.getBlock().getType() == Material.BEACON) {
             // Drop custom beacon instead of vanilla beacon
             event.setDropItems(false);
@@ -77,7 +83,15 @@ public class BeaconManager implements Listener {
         ItemStack item = event.getItem();
         
         if (item == null || !isCustomBeacon(item)) return;
-        
+
+        if (event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            PlacedBeaconManager instance = PlacedBeaconManager.getInstance();
+            if (instance != null && instance.tryActivateBeacon(player, event.getClickedBlock(), item)) {
+                event.setCancelled(true);
+                return;
+            }
+        }
+
         // Left click in air or right click on block
         if (event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
             event.setCancelled(true);
