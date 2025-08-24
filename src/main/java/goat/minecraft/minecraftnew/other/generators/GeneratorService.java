@@ -100,18 +100,22 @@ public class GeneratorService {
             dataConfig.set(gen.id + ".z", loc.getBlockZ());
             dataConfig.set(gen.id + ".slot", gen.slot);
 
-            // Save the item
-            dataConfig.set(gen.id + ".item", gen.item);
-
-            // Save custom fields explicitly
-            if (mgr != null) {
-                dataConfig.set(gen.id + ".power", mgr.getPower(gen.item));
-                dataConfig.set(gen.id + ".power_limit", mgr.getPowerLimit(gen.item));
-                dataConfig.set(gen.id + ".tier", mgr.getTier(gen.item));
+            // Get the CURRENT item from the inventory slot
+            ItemStack current = gen.inventory.getItem(gen.slot);
+            if (current != null && mgr.isGenerator(current)) {
+                // Save only live data
+                dataConfig.set(gen.id + ".power", mgr.getPower(current));
+                dataConfig.set(gen.id + ".power_limit", mgr.getPowerLimit(current));
+                dataConfig.set(gen.id + ".tier", mgr.getTier(current));
             }
         }
-        try { dataConfig.save(dataFile); } catch (IOException e) { e.printStackTrace(); }
+        try {
+            dataConfig.save(dataFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
 
     public void shutdown() {
@@ -220,6 +224,8 @@ public class GeneratorService {
             Bukkit.getLogger().info("Starting generator " + id + " with period " + period);
 
             // Just schedule normally right away
+            GeneratorChunkLoader.loadChunks(getLocation(), plugin);
+
             task = schedule(period, period);
         }
 
@@ -233,6 +239,7 @@ public class GeneratorService {
             if (task != null) {
                 task.cancel();
             }
+            GeneratorChunkLoader.unloadChunks(getLocation(), plugin);
         }
 
         private BukkitTask schedule(long delay, long period) {
@@ -262,5 +269,31 @@ public class GeneratorService {
             return plugin.getServer().getWorlds().get(0).getSpawnLocation();
         }
     }
+    public class GeneratorChunkLoader {
+        private static final int RADIUS = 4;
+
+        public static void loadChunks(Location loc, JavaPlugin plugin) {
+            World world = loc.getWorld();
+            Chunk origin = loc.getChunk();
+
+            for (int dx = -RADIUS; dx <= RADIUS; dx++) {
+                for (int dz = -RADIUS; dz <= RADIUS; dz++) {
+                    world.addPluginChunkTicket(origin.getX() + dx, origin.getZ() + dz, plugin);
+                }
+            }
+        }
+
+        public static void unloadChunks(Location loc, JavaPlugin plugin) {
+            World world = loc.getWorld();
+            Chunk origin = loc.getChunk();
+
+            for (int dx = -RADIUS; dx <= RADIUS; dx++) {
+                for (int dz = -RADIUS; dz <= RADIUS; dz++) {
+                    world.removePluginChunkTicket(origin.getX() + dx, origin.getZ() + dz, plugin);
+                }
+            }
+        }
+    }
+
 }
 

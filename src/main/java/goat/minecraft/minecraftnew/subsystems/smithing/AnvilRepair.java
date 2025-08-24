@@ -852,7 +852,7 @@ public class AnvilRepair implements Listener {
         if (billItem.getType() == Material.REDSTONE_BLOCK) {
             GeneratorManager gm = GeneratorManager.getInstance();
             if (gm != null && gm.isGenerator(repairee)) {
-                int power = 1 + new Random().nextInt(18);
+                int power = 1 + new Random().nextInt(18*2);
                 gm.addPower(repairee, power);
                 billItem.setAmount(billItem.getAmount() - 1);
                 player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1, 10);
