@@ -45,6 +45,7 @@ public class ApplyReforgeCommand implements CommandExecutor {
             case "armor" -> reforgeManager.isArmor(item);
             case "tool" -> reforgeManager.isTool(item);
             case "bow" -> reforgeManager.isBow(item);
+            case "elytra" -> reforgeManager.isElytra(item);
             default -> false;
         };
 
