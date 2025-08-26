@@ -4,6 +4,7 @@ import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.smithing.tierreforgelisteners.ReforgeManager;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +15,9 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,8 +68,8 @@ public class ElytraFlight implements Listener {
 
         UUID id = player.getUniqueId();
         long now = System.currentTimeMillis();
-        int currentGear = gear.getOrDefault(id, 1);
         int maxGear = getMaxGear(player);
+        int currentGear = gear.getOrDefault(id, maxGear);
 
         long cooldown = BASE_COOLDOWN_MS;
         if (reforgeManager.getReforgeTier(player.getInventory().getChestplate()) == 5 && currentGear <= 2) {
@@ -73,13 +77,16 @@ public class ElytraFlight implements Listener {
         }
 
         long last = lastBoost.getOrDefault(id, 0L);
-        if (now - last < cooldown) {
+        long timeLeft = cooldown - (now - last);
+        if (timeLeft > 0) {
+            sendActionBar(player, ChatColor.RED + "Boost cooldown: " + String.format("%.1f", timeLeft / 1000.0) + "s");
             return;
         }
 
         double boost = 0.5 * currentGear;
         Vector velocity = player.getLocation().getDirection().normalize().multiply(boost);
         player.setVelocity(player.getVelocity().add(velocity));
+        player.getWorld().playSound(player.getLocation(), Sound.ITEM_TRIDENT_RIPTIDE_1, 1.0f, 1.0f);
 
         lastBoost.put(id, now);
     }
@@ -126,7 +133,7 @@ public class ElytraFlight implements Listener {
 
             if (duration < 1000) {
                 int maxGear = getMaxGear(player);
-                int currentGear = gear.getOrDefault(id, 1);
+                int currentGear = gear.getOrDefault(id, maxGear);
                 currentGear++;
                 if (currentGear > maxGear) {
                     currentGear = 1;
@@ -167,5 +174,9 @@ public class ElytraFlight implements Listener {
         lastBoost.remove(id);
         sneakStart.remove(id);
         storedVelocity.remove(id);
+    }
+
+    private void sendActionBar(Player player, String message) {
+        player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(message));
     }
 }
