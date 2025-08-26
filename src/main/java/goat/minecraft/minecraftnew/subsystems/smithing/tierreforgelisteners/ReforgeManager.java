@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manages the reforging system for weapons, armor, tools, and bows.
+ * Manages the reforging system for weapons, armor, tools, bows, and elytras.
  */
 public class ReforgeManager {
 
@@ -27,12 +27,12 @@ public class ReforgeManager {
      * Represents the different tiers of reforging with associated properties.
      */
     public enum ReforgeTier {
-        TIER_0(0, ChatColor.RESET, "Sword", "Armor", "Tool", "Bow", 0, 0, 0, 0),
-        TIER_1(1, ChatColor.WHITE, "Sturdy Blade", "Sturdy Armor", "Sturdy Tool", "Oak Bow", 4, 6, 100, 10),
-        TIER_2(2, ChatColor.GREEN, "Sharpened Blade", "Reinforced Armor", "Enhanced Tool", "Birch Bow", 8, 12, 150, 20),
-        TIER_3(3, ChatColor.BLUE, "Reinforced Blade", "Fortified Armor", "Refined Tool", "Spruce Bow", 12, 18, 200, 30),
-        TIER_4(4, ChatColor.DARK_PURPLE, "Lethal Blade", "Battle Armor", "Superior Tool", "Acacia Bow", 16, 24, 250, 40),
-        TIER_5(5, ChatColor.GOLD, "Fatal Blade", "Legendary Armor", "Masterwork Tool", "Dark Oak Bow", 20, 30, 400, 50);
+        TIER_0(0, ChatColor.RESET, "Sword", "Armor", "Tool", "Bow", "Elytra", 0, 0, 0, 0),
+        TIER_1(1, ChatColor.WHITE, "Sturdy Blade", "Sturdy Armor", "Sturdy Tool", "Oak Bow", "Gustborne Elytra", 4, 6, 100, 10),
+        TIER_2(2, ChatColor.GREEN, "Sharpened Blade", "Reinforced Armor", "Enhanced Tool", "Birch Bow", "Skybound Elytra", 8, 12, 150, 20),
+        TIER_3(3, ChatColor.BLUE, "Reinforced Blade", "Fortified Armor", "Refined Tool", "Spruce Bow", "Stormforged Elytra", 12, 18, 200, 30),
+        TIER_4(4, ChatColor.DARK_PURPLE, "Lethal Blade", "Battle Armor", "Superior Tool", "Acacia Bow", "Tempest Elytra", 16, 24, 250, 40),
+        TIER_5(5, ChatColor.GOLD, "Fatal Blade", "Legendary Armor", "Masterwork Tool", "Dark Oak Bow", "Zephyr Elytra", 20, 30, 400, 50);
 
         private final int tier;
         private final ChatColor color;
@@ -40,6 +40,7 @@ public class ReforgeManager {
         private final String armorName;
         private final String toolName;
         private final String bowName;
+        private final String elytraName;
         private final int weaponDamageIncrease; // In percent
         private final int armorDefenseBonus; // Flat Defense bonus
         private final int toolDurabilityBonus; // Additional max durability
@@ -49,13 +50,14 @@ public class ReforgeManager {
          * Constructs a ReforgeTier enum constant.
          */
         ReforgeTier(int tier, ChatColor color, String swordName, String armorName, String toolName, String bowName,
-                    int weaponDamageIncrease, int armorDefenseBonus, int toolDurabilityBonus, int bowDamageIncrease) {
+                    String elytraName, int weaponDamageIncrease, int armorDefenseBonus, int toolDurabilityBonus, int bowDamageIncrease) {
             this.tier = tier;
             this.color = color;
             this.swordName = swordName;
             this.armorName = armorName;
             this.toolName = toolName;
             this.bowName = bowName;
+            this.elytraName = elytraName;
             this.weaponDamageIncrease = weaponDamageIncrease;
             this.armorDefenseBonus = armorDefenseBonus;
             this.toolDurabilityBonus = toolDurabilityBonus;
@@ -84,6 +86,10 @@ public class ReforgeManager {
 
         public String getBowName() {
             return bowName;
+        }
+
+        public String getElytraName() {
+            return elytraName;
         }
 
         public int getWeaponDamageIncrease() {
@@ -118,8 +124,9 @@ public class ReforgeManager {
         boolean isArmor = isArmor(item);
         boolean isTool = isTool(item);
         boolean isBow = isBow(item);
+        boolean isElytra = isElytra(item);
 
-        if (!isSword && !isArmor && !isTool && !isBow) {
+        if (!isSword && !isArmor && !isTool && !isBow && !isElytra) {
             return item; // Not a valid item for reforging
         }
 
@@ -145,7 +152,9 @@ public class ReforgeManager {
         String newName = isSword ? targetTier.getColor() + targetTier.getSwordName()
                 : isArmor ? targetTier.getColor() + targetTier.getArmorName()
                 : isTool ? targetTier.getColor() + targetTier.getToolName()
-                : isBow ? targetTier.getColor() + targetTier.getBowName() : meta.getDisplayName();
+                : isBow ? targetTier.getColor() + targetTier.getBowName()
+                : isElytra ? targetTier.getColor() + targetTier.getElytraName()
+                : meta.getDisplayName();
         meta.setDisplayName(newName);
 
         // Step 6: Update the item's lore with the appropriate percentage, preserving other lore
@@ -157,7 +166,8 @@ public class ReforgeManager {
                 || line.contains("Defense:")
                 || line.contains("Chance to repair durability:")
                 || line.contains("Max Durability: +")
-                || line.contains("Strength:"));
+                || line.contains("Strength:")
+                || line.contains("Max Gear:"));
 
         // Add the new reforge lore
         if (isSword) {
@@ -170,6 +180,8 @@ public class ReforgeManager {
             lore.add(ChatColor.DARK_GRAY + "Max Durability: " + ChatColor.AQUA + "+" + targetTier.getToolDurabilityBonus());
         } else if (isBow) {
             lore.add(ChatColor.DARK_GRAY + "Damage Increase: " + ChatColor.AQUA + targetTier.getBowDamageIncrease() + "%");
+        } else if (isElytra) {
+            lore.add(ChatColor.DARK_GRAY + "Max Gear: " + ChatColor.AQUA + (targetTier.getTier() + 1));
         }
 
         meta.setLore(lore);
@@ -269,7 +281,8 @@ public class ReforgeManager {
                 || line.contains("Chance to repair durability:")
                 || line.contains("Max Durability: ")
                 || line.contains("Max Durability: +")
-                || line.contains("Strength:"));
+                || line.contains("Strength:")
+                || line.contains("Max Gear:"));
         meta.setLore(lore);
         item.setItemMeta(meta);
 
@@ -323,5 +336,15 @@ public class ReforgeManager {
             return false;
         }
         return item.getType() == Material.BOW;
+    }
+
+    /**
+     * Checks if an ItemStack is an elytra.
+     */
+    public boolean isElytra(ItemStack item) {
+        if (item == null) {
+            return false;
+        }
+        return item.getType() == Material.ELYTRA;
     }
 }
