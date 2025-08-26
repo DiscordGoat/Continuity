@@ -980,11 +980,19 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
             harvestYield.put(Material.SADDLE, 1);
         }
 
+        // 0.1% chance to produce an elytra
+        if (rng.nextFloat() < 0.001) {
+            harvestYield.put(Material.ELYTRA, 1);
+        }
+
         // Store or drop the items
         storeOrDropHarvest(villager, harvestYield);        // Play sound effects
         villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_ARMOR_EQUIP_LEATHER, 1.0f, 1.0f);
         if (harvestYield.containsKey(Material.SADDLE)) {
             villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_ARMOR_EQUIP_GENERIC, 1.0f, 0.5f);
+        }
+        if (harvestYield.containsKey(Material.ELYTRA)) {
+            villager.getWorld().playSound(villager.getLocation(), Sound.ITEM_ARMOR_EQUIP_ELYTRA, 1.0f, 1.0f);
         }
     }
 
