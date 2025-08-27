@@ -54,28 +54,41 @@ public class GeneratorService {
     private void loadAll() {
         GeneratorManager mgr = GeneratorManager.getInstance();
         if (mgr == null) return;
+
         for (String id : dataConfig.getKeys(false)) {
             String worldName = dataConfig.getString(id + ".world");
             int x = dataConfig.getInt(id + ".x");
             int y = dataConfig.getInt(id + ".y");
             int z = dataConfig.getInt(id + ".z");
             int slot = dataConfig.getInt(id + ".slot");
+
             World world = Bukkit.getWorld(worldName);
             if (world == null) continue;
+
             Block block = world.getBlockAt(x, y, z);
             if (!(block.getState() instanceof InventoryHolder holder)) continue;
+
             Inventory inv = holder.getInventory();
             ItemStack current = inv.getItem(slot);
 
-            if (current == null || !mgr.isGenerator(current)) continue;
-
-            // Restore saved values
             int power = dataConfig.getInt(id + ".power", 0);
             int powerLimit = dataConfig.getInt(id + ".power_limit", 100);
             int tier = dataConfig.getInt(id + ".tier", 1);
 
-            // Reinstate generator metadata
-            mgr.setGenerator(current, power, powerLimit, tier, true);
+            // 🔧 Detect and fix broken entries (AIR + tier 0 → force Tier 10)
+            if ((current != null || current.getType() == Material.AIR) && tier == 0) {
+                mgr.setGenerator(current, 0, 0, 10, true);
+                inv.setItem(slot, current);
+
+                // overwrite tier so ActiveGenerator sees the fixed value
+                tier = 10;
+                Bukkit.getLogger().warning("[Generators] Fixed broken generator " + id + " at "
+                        + x + "," + y + "," + z + " → reset to Tier 10.");
+            } else {
+                // Normal restore path
+                if (current == null || !mgr.isGenerator(current)) continue;
+                mgr.setGenerator(current, power, powerLimit, tier, true);
+            }
 
             String currentId = mgr.getId(current);
             if (currentId == null || !currentId.equals(id)) continue;
@@ -85,6 +98,7 @@ public class GeneratorService {
             gen.start();
         }
     }
+
 
 
     private void saveAll() {

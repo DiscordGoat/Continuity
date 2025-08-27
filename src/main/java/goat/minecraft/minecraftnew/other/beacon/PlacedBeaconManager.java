@@ -51,9 +51,9 @@ public class PlacedBeaconManager implements Listener {
     private static final Map<Integer, Integer> TIER_RADIUS = Map.of(
             1, 50,
             2, 100,
-            3, 200,
-            4, 300,
-            5, 400
+            3, 150,
+            4, 250,
+            5, 350
     );
 
     private PlacedBeaconManager(JavaPlugin plugin) {
