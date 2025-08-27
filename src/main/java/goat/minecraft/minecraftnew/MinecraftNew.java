@@ -90,6 +90,7 @@ import goat.minecraft.minecraftnew.other.auras.AuraManager;
 import goat.minecraft.minecraftnew.other.flight.FlightManager;
 import goat.minecraft.minecraftnew.other.armorsets.FlowManager;
 import goat.minecraft.minecraftnew.other.elytra.ElytraFlight;
+import goat.minecraft.minecraftnew.other.elytra.ElytraSwap;
 import goat.minecraft.minecraftnew.other.armorsets.MonolithSetBonus;
 import goat.minecraft.minecraftnew.other.health.HealthManager;
 import goat.minecraft.minecraftnew.other.armorsets.DuskbloodSetBonus;
@@ -322,6 +323,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new EmeraldSeeker(this), this);
         getServer().getPluginManager().registerEvents(new FlightManager(this), this);
         getServer().getPluginManager().registerEvents(new ElytraFlight(this), this);
+        getServer().getPluginManager().registerEvents(new ElytraSwap(this), this);
         getServer().getPluginManager().registerEvents(new Broomstick(this), this);
         getServer().getPluginManager().registerEvents(new Lullaby(this), this);
         getServer().getPluginManager().registerEvents(new Collector(this), this);
