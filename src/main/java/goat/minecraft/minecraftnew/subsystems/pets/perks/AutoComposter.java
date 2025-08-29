@@ -34,6 +34,7 @@ public class AutoComposter {
             "BEETROOT_SEEDS",
             "POISONOUS_POTATO",
             "MELON_SLICE",
+            "MELON",
             "PUMPKIN",
             "BEETROOT",
             "PUMPKIN_SEEDS"
@@ -69,7 +70,7 @@ public class AutoComposter {
                             performConversion(player, perk);
                         } else if (perk == PetPerk.HARVEST_FESTIVAL) {
                             long lastTime = lastHarvestFestivalTime.getOrDefault(player, 0L);
-                            if (System.currentTimeMillis() - lastTime >= 5000) {
+                            if (System.currentTimeMillis() - lastTime >= 1000) {
                                 performHarvestFestival(player);
                                 lastHarvestFestivalTime.put(player, System.currentTimeMillis());
                             }

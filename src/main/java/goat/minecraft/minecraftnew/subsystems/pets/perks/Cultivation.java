@@ -30,8 +30,8 @@ public class Cultivation implements Listener {
         CROP_DROPS.put(Material.POTATOES, Material.POTATO);
         CROP_DROPS.put(Material.BEETROOTS, Material.BEETROOT);
         CROP_DROPS.put(Material.NETHER_WART, Material.NETHER_WART);
-        CROP_DROPS.put(Material.MELON, Material.MELON_SLICE);
-        CROP_DROPS.put(Material.PUMPKIN, Material.PUMPKIN_SEEDS);
+        CROP_DROPS.put(Material.MELON, Material.MELON);
+        CROP_DROPS.put(Material.PUMPKIN, Material.PUMPKIN);
     }
 
     public Cultivation(JavaPlugin plugin) {

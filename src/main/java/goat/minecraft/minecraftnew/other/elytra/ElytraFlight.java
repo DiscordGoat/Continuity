@@ -8,6 +8,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -51,7 +52,7 @@ public class ElytraFlight implements Listener {
             return;
         }
         ItemStack item = event.getItem();
-        if (item != null && item.getType() == Material.FIREWORK_ROCKET && event.getAction().isRightClick()) {
+        if (item != null && item.getType() == Material.FIREWORK_ROCKET && event.getAction().equals(Action.RIGHT_CLICK_AIR)) {
             event.setCancelled(true);
         }
     }
@@ -62,7 +63,7 @@ public class ElytraFlight implements Listener {
         if (!player.isGliding()) {
             return;
         }
-        if (!event.getAction().isLeftClick()) {
+        if (!event.getAction().equals(Action.LEFT_CLICK_AIR)) {
             return;
         }
 
