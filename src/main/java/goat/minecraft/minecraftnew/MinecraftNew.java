@@ -465,6 +465,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getCommand("getnearestcatalysttype").setExecutor(new GetNearestCatalystTypeCommand());
         getCommand("previewparticle").setExecutor(new PreviewParticleCommand(this));
         getCommand("previewflow").setExecutor(new PreviewFlowCommand(this));
+        getCommand("tracktps").setExecutor(new TrackTpsCommand(this));
         new RedVignetteCommand(this);
         new GlowingOresCommand(this);
         new FlyToMeCommand(this);
@@ -746,12 +747,12 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         CustomEnchantmentManager.registerEnchantment("Velocity", 3, true);
         CustomEnchantmentManager.registerEnchantment("Defenestration", 1, true);
         CustomEnchantmentManager.registerEnchantment("Lynch", 4, true);
-        CustomEnchantmentManager.registerEnchantment("Cornfield", 10, true);
-        CustomEnchantmentManager.registerEnchantment("What's Up Doc", 10, true);
-        CustomEnchantmentManager.registerEnchantment("Venerate", 10, true);
-        CustomEnchantmentManager.registerEnchantment("Legend", 10, true);
-        CustomEnchantmentManager.registerEnchantment("Clean Cut", 10, true);
-        CustomEnchantmentManager.registerEnchantment("Gourd", 10, true);
+        CustomEnchantmentManager.registerEnchantment("Cornfield", 50, true);
+        CustomEnchantmentManager.registerEnchantment("What's Up Doc", 50, true);
+        CustomEnchantmentManager.registerEnchantment("Venerate", 50, true);
+        CustomEnchantmentManager.registerEnchantment("Legend", 50, true);
+        CustomEnchantmentManager.registerEnchantment("Clean Cut", 50, true);
+        CustomEnchantmentManager.registerEnchantment("Gourd", 50, true);
 
 
         getServer().getPluginManager().registerEvents(new KnightMob(this), this);

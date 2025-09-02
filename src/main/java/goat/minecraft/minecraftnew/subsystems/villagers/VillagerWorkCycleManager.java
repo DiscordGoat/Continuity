@@ -42,6 +42,8 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
     private static VillagerWorkCycleManager instance;
     private final java.util.Random rng = new java.util.Random();
     private final XPManager xp = new XPManager(MinecraftNew.getInstance());
+    // Global toggle to disable villager work cycles (performance triage)
+    private static final boolean ENABLED = false;
 
 
     private static final int WORK_CYCLE_TICKS = 10*20*60;
@@ -59,7 +61,11 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
                 + " ticks (" + (initialReduction / 20) + "s). Starts in "
                 + (ticksUntilNextWorkCycle / 20) + "s");
 
-        startGlobalScheduler();  // start after setting the initial cooldown
+        if (ENABLED) {
+            startGlobalScheduler();  // start after setting the initial cooldown
+        } else {
+            Bukkit.getLogger().info("[WorkCycle] Villager work cycles are DISABLED.");
+        }
     }
     /**
  * Checks if a villager is eligible for work cycles.
@@ -126,6 +132,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
      */
     public int getSecondsUntilNextWorkCycle() {
         // Convert the remaining ticks to seconds
+        if (!ENABLED) return -1;
         return ticksUntilNextWorkCycle / 20;
     }
 
@@ -158,6 +165,7 @@ public class VillagerWorkCycleManager implements Listener, CommandExecutor {
      * Runs the actual villager work cycle logic (previously in startGlobalScheduler()).
      */
     private void runVillagerWorkCycle() {
+        if (!ENABLED) return;
         if (Bukkit.getOnlinePlayers().isEmpty()) return;
 
         List<Villager> work = new ArrayList<>();

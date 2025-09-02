@@ -50,6 +50,7 @@ public class FarmingEvent implements Listener {
 
     private static final long HARVEST_BALLAD_TICKS = 240L * 20L;
     private final Map<World, BukkitTask> harvestBalladLoops = new HashMap<>();
+    private final Map<UUID, Integer> cropHarvestCounter = new HashMap<>();
 
     static {
         cropXP.put(Material.WHEAT, 3); // Common crops
@@ -121,7 +122,7 @@ public class FarmingEvent implements Listener {
             case "Enchanted Golden Carrot":
                 seeder = ItemRegistry.getCarrotSeeder();
                 break;
-            case "Heart Root":
+            case "HeartRoot":
                 seeder = ItemRegistry.getBeetrootSeeder();
                 break;
             case "Immortal Potato":
@@ -181,11 +182,17 @@ public class FarmingEvent implements Listener {
                 }
             }
 
-            // Award Farming XP
+            // Award Farming XP (plugin) and batch vanilla XP orbs (1 orb of 10 XP per 10 crops)
             int xp = cropXP.get(blockType);
-            ExperienceOrb orb = (ExperienceOrb) block.getWorld().spawn(player.getLocation(), ExperienceOrb.class);
-            orb.setExperience(2);
             xpManager.addXP(player, "Farming", xp);
+            UUID pid = player.getUniqueId();
+            int tally = cropHarvestCounter.getOrDefault(pid, 0) + 1;
+            if (tally >= 10) {
+                tally -= 10;
+                ExperienceOrb batchOrb = (ExperienceOrb) block.getWorld().spawn(player.getLocation(), ExperienceOrb.class);
+                batchOrb.setExperience(10);
+            }
+            cropHarvestCounter.put(pid, tally);
             // Play harvest sound
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
 
@@ -303,14 +310,14 @@ public class FarmingEvent implements Listener {
                         + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEE_DURATION_I) * 10
                         + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEE_DURATION_II) * 10;
                 World world = player.getWorld();
-                long before = countFestivalBees(world);
+                long before = FestivalBeeManager.getInstance(plugin).getFestivalBeeCount();
                 FestivalBeeManager.getInstance(plugin).spawnFestivalBee(block.getLocation(), dur);
                 int swarm = mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.SWARM);
                 if (swarm > 0 && random.nextDouble() < swarm * 0.10) {
                     FestivalBeeManager.getInstance(plugin).spawnFestivalBee(block.getLocation(), dur);
                 }
                 player.sendMessage(ChatColor.GOLD + "A Festival Bee has spawned!");
-                long after = countFestivalBees(world);
+                long after = FestivalBeeManager.getInstance(plugin).getFestivalBeeCount();
 
 
                 if (before == 0 && after > 0) {
@@ -336,7 +343,8 @@ public class FarmingEvent implements Listener {
             World world = dead.getWorld();
             // Delay one tick to let the entity actually disappear
             Bukkit.getScheduler().runTask(plugin, () -> {
-                if (countFestivalBees(world) == 0) {
+                FestivalBeeManager.getInstance(plugin).onFestivalBeeDeath(dead.getUniqueId());
+                if (FestivalBeeManager.getInstance(plugin).getFestivalBeeCount() == 0) {
                     // no more bees → stop the music
                     stopAllHarvestBallads();
                 }
@@ -356,7 +364,7 @@ public class FarmingEvent implements Listener {
         );
 
         BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-            if (countFestivalBees(world) > 0) {
+            if (FestivalBeeManager.getInstance(plugin).getFestivalBeeCount() > 0) {
                 Bukkit.getOnlinePlayers().forEach(p ->
                         p.playSound(
                                 p.getLocation(),
@@ -419,10 +427,11 @@ public class FarmingEvent implements Listener {
                         new PetRegistry().addPetByName(player, "Scarecrow");
                         notifyHarvest(player, ChatColor.GOLD + "Scarecrow pet", 1, true);
                     } else {
-                        ItemStack item = ItemRegistry.getEnchantedHayBale();
-                        item.setAmount(4);
-                        block.getWorld().dropItemNaturally(dropLoc, item);
-                        notifyHarvest(player, item, true);
+                        // Already owns the pet; award a Legendary-tier harvest instead of epic fallback
+                        ItemStack legendary = ItemRegistry.getEnchantedHayBale();
+                        legendary.setAmount(16);
+                        block.getWorld().dropItemNaturally(dropLoc, legendary);
+                        notifyHarvest(player, legendary, true);
                     }
                 }
             }
@@ -451,10 +460,11 @@ public class FarmingEvent implements Listener {
                         new PetRegistry().addPetByName(player, "Killer Rabbit");
                         notifyHarvest(player, ChatColor.GOLD + "Killer Rabbit pet", 1, true);
                     } else {
-                        ItemStack item = ItemRegistry.getEnchantedGoldenCarrot();
-                        item.setAmount(4);
-                        block.getWorld().dropItemNaturally(dropLoc, item);
-                        notifyHarvest(player, item, true);
+                        // Already owns the pet; award a Legendary-tier harvest instead of epic fallback
+                        ItemStack legendary = ItemRegistry.getEnchantedGoldenCarrot();
+                        legendary.setAmount(16);
+                        block.getWorld().dropItemNaturally(dropLoc, legendary);
+                        notifyHarvest(player, legendary, true);
                     }
                 }
             }
@@ -483,10 +493,11 @@ public class FarmingEvent implements Listener {
                         new PetRegistry().addPetByName(player, "Baron");
                         notifyHarvest(player, ChatColor.GOLD + "Baron pet", 1, true);
                     } else {
-                        ItemStack item = ItemRegistry.getHeartRoot();
-                        item.setAmount(4);
-                        block.getWorld().dropItemNaturally(dropLoc, item);
-                        notifyHarvest(player, item, true);
+                        // Already owns the pet; award a Legendary-tier harvest instead of epic fallback
+                        ItemStack legendary = ItemRegistry.getHeartRoot();
+                        legendary.setAmount(16);
+                        block.getWorld().dropItemNaturally(dropLoc, legendary);
+                        notifyHarvest(player, legendary, true);
                     }
                 }
             }
@@ -515,10 +526,11 @@ public class FarmingEvent implements Listener {
                         new PetRegistry().addPetByName(player, "Mole");
                         notifyHarvest(player, ChatColor.GOLD + "Mole pet", 1, true);
                     } else {
-                        ItemStack item = ItemRegistry.getImmortalPotato();
-                        item.setAmount(4);
-                        block.getWorld().dropItemNaturally(dropLoc, item);
-                        notifyHarvest(player, item, true);
+                        // Already owns the pet; award a Legendary-tier harvest instead of epic fallback
+                        ItemStack legendary = ItemRegistry.getImmortalPotato();
+                        legendary.setAmount(16);
+                        block.getWorld().dropItemNaturally(dropLoc, legendary);
+                        notifyHarvest(player, legendary, true);
                     }
                 }
             }

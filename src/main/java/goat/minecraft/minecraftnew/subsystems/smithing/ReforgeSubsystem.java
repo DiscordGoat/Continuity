@@ -94,6 +94,54 @@ public class ReforgeSubsystem implements Listener {
         saveAll();
     }
 
+    /**
+     * Returns true if there is at least one in-progress (not complete) reforge session.
+     */
+    public boolean hasActiveInProgressSessions() {
+        for (ForgeSession session : activeSessions.values()) {
+            if (session != null && !session.complete) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Applies a 10% reduction to the remaining time of all in-progress reforges.
+     * Ensures at least 1 second reduction, completes sessions that reach 0.
+     * @return ReductionResult containing number of sessions affected and total seconds reduced across all sessions.
+     */
+    public ReductionResult applyLiquidMetal() {
+        int affected = 0;
+        int totalReduced = 0;
+        for (ForgeSession session : activeSessions.values()) {
+            if (session == null || session.complete) continue;
+            int before = session.timeLeft;
+            int reduce = (int) Math.ceil(before * 0.10);
+            if (reduce < 1) reduce = 1;
+            session.timeLeft = Math.max(0, session.timeLeft - reduce);
+            totalReduced += reduce;
+            affected++;
+            // Update display
+            session.updateStand( ChatColor.YELLOW + String.valueOf(session.timeLeft) + "s" );
+            // If reached 0, complete immediately
+            if (session.timeLeft <= 0) {
+                if (session.timerTask != null) session.timerTask.cancel();
+                session.completeSession();
+            }
+        }
+        if (affected > 0) saveAll();
+        return new ReductionResult(affected, totalReduced);
+    }
+
+    /** Simple result for Liquid Metal application. */
+    public static class ReductionResult {
+        public final int affectedSessions;
+        public final int totalSecondsReduced;
+        public ReductionResult(int affectedSessions, int totalSecondsReduced) {
+            this.affectedSessions = affectedSessions;
+            this.totalSecondsReduced = totalSecondsReduced;
+        }
+    }
+
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         if (event.getAction() == Action.LEFT_CLICK_BLOCK && event.getClickedBlock() != null) {

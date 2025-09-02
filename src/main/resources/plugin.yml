@@ -339,3 +339,7 @@ commands:
     description: Spawns a Champion with phase-based AI for testing
     usage: /testchampion <championName>
     permission: continuity.admin
+  tracktps:
+    description: Toggles a 1s chat TPS readout (dev)
+    usage: /tracktps
+    permission: continuity.admin

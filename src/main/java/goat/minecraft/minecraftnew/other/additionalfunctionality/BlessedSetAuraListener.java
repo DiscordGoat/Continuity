@@ -10,6 +10,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -44,6 +45,19 @@ public class BlessedSetAuraListener implements Listener {
         blessingAuraMap.put("Thunderforge", Aura.THUNDERFORGE);
         blessingAuraMap.put("Fathmic Iron", Aura.FATHMIC_IRON);
         blessingAuraMap.put("Nature's Wrath", Aura.NATURES_WRATH);
+
+        // Reapply auras for online players after reload
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                checkPlayer(p);
+            }
+        }, 1L);
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        // Ensure aura tasks and metadata are cleared on quit to prevent leaks
+        deactivate(event.getPlayer());
     }
 
     @EventHandler

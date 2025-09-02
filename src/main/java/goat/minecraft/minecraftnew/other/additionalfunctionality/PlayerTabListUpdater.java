@@ -66,7 +66,7 @@ public class PlayerTabListUpdater {
         int xpToNextLevel = xpManager.getXPToNextLevel(player, "Player");
 
         int secondsLeft = VillagerWorkCycleManager.getInstance(plugin).getSecondsUntilNextWorkCycle();
-        String formattedTime = formatSecondsToMMSS(secondsLeft);
+        String formattedTime = secondsLeft >= 0 ? formatSecondsToMMSS(secondsLeft) : "Disabled";
         int saplingSec = SaplingManager.getInstance(plugin).getCooldownSecondsRemaining();
         String saplingTime = formatSecondsToDDMMSS(saplingSec);
 
@@ -83,8 +83,10 @@ public class PlayerTabListUpdater {
 
         StringBuilder footer = new StringBuilder();
         footer.append(ChatColor.YELLOW).append("World Stats:");
-        footer.append("\n").append(ChatColor.YELLOW).append("Next Work Cycle: ")
-                .append(ChatColor.WHITE).append(formattedTime);
+        if (secondsLeft >= 0) {
+            footer.append("\n").append(ChatColor.YELLOW).append("Next Work Cycle: ")
+                    .append(ChatColor.WHITE).append(formattedTime);
+        }
         footer.append("\n").append(ChatColor.GREEN).append("Sapling Growth: ")
                 .append(ChatColor.WHITE).append(saplingTime);
 

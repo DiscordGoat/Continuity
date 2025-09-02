@@ -23,7 +23,7 @@ import goat.minecraft.minecraftnew.other.health.HealthManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-public class XPManager implements CommandExecutor {
+public class XPManager implements CommandExecutor, org.bukkit.event.Listener {
 
     private final JavaPlugin plugin;
     private final java.util.Map<String, HotbarAnimation> activeAnimations = new java.util.HashMap<>();
@@ -690,5 +690,18 @@ public class XPManager implements CommandExecutor {
             this.bonusXP += bonus;
             this.finalPercentage = newFinalPercentage;
         }
+    }
+
+    @org.bukkit.event.EventHandler
+    public void onQuit(org.bukkit.event.player.PlayerQuitEvent event) {
+        java.util.UUID id = event.getPlayer().getUniqueId();
+        java.util.List<String> toRemove = new java.util.ArrayList<>();
+        for (java.util.Map.Entry<String, HotbarAnimation> e : activeAnimations.entrySet()) {
+            if (e.getKey().startsWith(id.toString())) {
+                if (e.getValue().task != null) e.getValue().task.cancel();
+                toRemove.add(e.getKey());
+            }
+        }
+        for (String k : toRemove) activeAnimations.remove(k);
     }
 }

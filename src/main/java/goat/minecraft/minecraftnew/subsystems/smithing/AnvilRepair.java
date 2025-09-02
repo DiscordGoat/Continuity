@@ -1935,15 +1935,16 @@ public class AnvilRepair implements Listener {
             player.sendMessage(ChatColor.RED + "Not enough materials");
             return;
         }
-
-        mats.setAmount(mats.getAmount() - matsCount);
-        inventory.setItem(10, null);
-
         Block anvilBlock = getNearestAnvil(player, 5);
         if (anvilBlock == null) {
             player.sendMessage(ChatColor.RED + "No anvil nearby!");
             return;
         }
+        mats.setAmount(mats.getAmount() - matsCount);
+        inventory.setItem(10, null);
+
+
+
 
         ReforgeSubsystem subsystem = ReforgeSubsystem.getInstance(MinecraftNew.getInstance());
         subsystem.startReforge(anvilBlock.getLocation(), item, next, player);

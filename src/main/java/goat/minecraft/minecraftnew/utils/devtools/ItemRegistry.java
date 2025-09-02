@@ -1424,8 +1424,9 @@ public class ItemRegistry {
                 List.of(
                         ChatColor.GRAY + "Transfers whitelisted items to container above",
                         ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Configure",
-                        ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Change delay",
-                        ChatColor.GRAY + "Delay: " + ChatColor.WHITE + "0.5s"
+                        ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Toggle ON/OFF",
+                        ChatColor.GRAY + "Interval: " + ChatColor.WHITE + "0.5s",
+                        ChatColor.GRAY + "Status: " + ChatColor.RED + "OFF"
                 ),
                 1,
                 false,

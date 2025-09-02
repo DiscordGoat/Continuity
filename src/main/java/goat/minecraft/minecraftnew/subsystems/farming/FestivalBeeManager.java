@@ -14,18 +14,14 @@ import java.util.*;
 public class FestivalBeeManager {
     private static FestivalBeeManager instance;
     private final JavaPlugin plugin;
-    private final Map<UUID, Integer> bees = new HashMap<>();
+    private final Map<UUID, Bee> beeRefs = new HashMap<>();
+    private final Map<UUID, BukkitTask> expiryTasks = new HashMap<>();
     private final Map<World, BukkitTask> timelapseTasks = new HashMap<>();
+    private int festivalBeeCount = 0; // in-memory only
 
     private FestivalBeeManager(JavaPlugin plugin) {
         this.plugin = plugin;
         cleanup();
-        new BukkitRunnable() {
-            @Override
-            public void run() {
-                tick();
-            }
-        }.runTaskTimer(plugin, 20L, 20L);
     }
 
     public static FestivalBeeManager getInstance(JavaPlugin plugin) {
@@ -55,40 +51,33 @@ public class FestivalBeeManager {
         bee.setCustomName(ChatColor.GOLD + "Festival Bee: " + seconds);
         bee.setCustomNameVisible(true);
         bee.setRemoveWhenFarAway(true);
-        bees.put(bee.getUniqueId(), seconds);
+        beeRefs.put(bee.getUniqueId(), bee);
+        festivalBeeCount++;
         updateRules(world);
+
+        // Schedule expiry to remove the bee and decrement count
+        BukkitTask task = new BukkitRunnable() {
+            @Override
+            public void run() {
+                Bee b = beeRefs.remove(bee.getUniqueId());
+                expiryTasks.remove(bee.getUniqueId());
+                if (b != null && !b.isDead()) {
+                    b.remove();
+                }
+                if (festivalBeeCount > 0) festivalBeeCount--;
+                updateRules(world);
+            }
+        }.runTaskLater(plugin, seconds * 20L);
+        expiryTasks.put(bee.getUniqueId(), task);
     }
 
-    private void tick() {
-        Iterator<Map.Entry<UUID, Integer>> it = bees.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry<UUID, Integer> en = it.next();
-            Entity e = null;
-            for (World world : Bukkit.getWorlds()) {
-                for (Entity entity : world.getEntities()) {
-                    if (entity.getUniqueId().equals(en.getKey())) {
-                        e = entity;
-                        break;
-                    }
-                }
-                if (e != null) break;
-            }
-            if (e == null || e.isDead()) {
-                it.remove();
-                continue;
-            }
-            int remaining = en.getValue() - 1;
-            if (remaining <= 0) {
-                e.remove();
-                it.remove();
-                continue;
-            }
-            e.setCustomName(ChatColor.GOLD + "Festival Bee: " + remaining);
-            en.setValue(remaining);
-        }
-        for (World world : Bukkit.getWorlds()) {
-            updateRules(world);
-        }
+    public void onFestivalBeeDeath(UUID id) {
+        Bee b = beeRefs.remove(id);
+        BukkitTask t = expiryTasks.remove(id);
+        if (t != null) t.cancel();
+        if (festivalBeeCount > 0) festivalBeeCount--;
+        // update rules for all worlds
+        for (World w : Bukkit.getWorlds()) updateRules(w);
     }
     private void startSunsetTimelapse(World world, long targetTime, int durationTicks) {
         long startTime = world.getTime();
@@ -122,7 +111,7 @@ public class FestivalBeeManager {
     }
 
     private void updateRules(World world) {
-        int count = bees.size();
+        int count = festivalBeeCount;
 
         // adjust tick speed always
         world.setGameRule(GameRule.RANDOM_TICK_SPEED, 3 + count * 2);
@@ -145,5 +134,7 @@ public class FestivalBeeManager {
             if (task != null) task.cancel();
         }
     }
+
+    public int getFestivalBeeCount() { return festivalBeeCount; }
 
 }

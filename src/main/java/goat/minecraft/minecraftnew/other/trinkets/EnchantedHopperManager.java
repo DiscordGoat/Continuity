@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +40,7 @@ public class EnchantedHopperManager implements Listener {
     private final JavaPlugin plugin;
     private final NamespacedKey idKey;
     private final NamespacedKey delayKey;
+    private final NamespacedKey enabledKey;
     private File hopperFile;    private FileConfiguration hopperConfig;
     private final Map<UUID, UUID> openHoppers = new HashMap<>();
     private final Map<UUID, Inventory> previousInventories = new HashMap<>();
@@ -50,6 +52,7 @@ public class EnchantedHopperManager implements Listener {
         this.plugin = plugin;
         idKey = new NamespacedKey(plugin, "hopper_id");
         delayKey = new NamespacedKey(plugin, "hopper_delay");
+        enabledKey = new NamespacedKey(plugin, "hopper_enabled");
         initFile();
         Bukkit.getPluginManager().registerEvents(this, plugin);
         startTask();
@@ -210,15 +213,23 @@ public class EnchantedHopperManager implements Listener {
             if (meta == null || !meta.hasDisplayName()) continue;
             String name = ChatColor.stripColor(meta.getDisplayName());
             if (!name.equals("Enchanted Hopper")) continue;
+            if (!isEnabled(item)) continue; // require toggle ON
             UUID id = getOrCreateId(item);
-            int delayIndex = getDelayIndex(item);
-            if (!shouldRun(id, delayIndex)) continue;
+            if (!shouldRun(id)) continue; // fixed 0.5s cadence
             ItemStack containerItem = CustomBundleGUI.getInstance().getBackpackItem(player, slot - 9);
             if (containerItem == null) continue;
             transferItems(player, containerItem, getWhitelist(id));
             CustomBundleGUI.getInstance().setBackpackItem(player, slot - 9, containerItem);
             CustomBundleGUI.getInstance().setBackpackItem(player, slot, item);
         }
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent event) {
+        UUID pid = event.getPlayer().getUniqueId();
+        openHoppers.remove(pid);
+        previousInventories.remove(pid);
+        disabledUntil.remove(pid);
     }
 
     private void transferItems(Player player, ItemStack containerItem, List<ItemStack> whitelist) {
@@ -272,62 +283,48 @@ public class EnchantedHopperManager implements Listener {
         }
     }
 
-    private int getDelayIndex(ItemStack item) {
-        ItemMeta meta = item.getItemMeta();
-        if (meta == null) return 0;
-        PersistentDataContainer container = meta.getPersistentDataContainer();
-        Integer index = container.get(delayKey, PersistentDataType.INTEGER);
-        if (index == null) {
-            index = 0;
-            container.set(delayKey, PersistentDataType.INTEGER, index);
-            item.setItemMeta(meta);
-        }
-        return index;
-    }
-
-    private boolean shouldRun(UUID id, int index) {
+    private boolean shouldRun(UUID id) {
         long now = System.currentTimeMillis();
         long last = lastRun.getOrDefault(id, 0L);
-        if (now - last >= DELAY_MS[index]) {
+        if (now - last >= 500L) { // fixed half-second cadence
             lastRun.put(id, now);
             return true;
         }
         return false;
     }
 
-    public void cycleDelay(Player player, ItemStack item) {
-        UUID id = getOrCreateId(item);
-        int index = getDelayIndex(item);
-        index = (index + 1) % DELAY_MS.length;
-        ItemMeta meta = item.getItemMeta();
-        if (meta != null) {
-            meta.getPersistentDataContainer().set(delayKey, PersistentDataType.INTEGER, index);
-            item.setItemMeta(meta);
-        }
-        updateLore(item, index);
+    public void toggleEnabled(Player player, ItemStack item) {
+        boolean newState = !isEnabled(item);
+        setEnabled(item, newState);
+        updateLore(item, newState);
         player.updateInventory();
-        player.sendMessage(ChatColor.GREEN + "Hopper delay set to " + formatDelay(index));
-        lastRun.put(id, System.currentTimeMillis());
+        player.sendMessage(newState ? ChatColor.GREEN + "Enchanted Hopper enabled." : ChatColor.YELLOW + "Enchanted Hopper disabled.");
     }
 
-    private String formatDelay(int index) {
-        switch (index) {
-            case 0 -> { return "0.5s"; }
-            case 1 -> { return "2s"; }
-            case 2 -> { return "30s"; }
-            case 3 -> { return "120s"; }
-            default -> { return ""; }
-        }
+    private boolean isEnabled(ItemStack item) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return false;
+        PersistentDataContainer container = meta.getPersistentDataContainer();
+        Byte enabled = container.get(enabledKey, PersistentDataType.BYTE);
+        return enabled != null && enabled == (byte)1;
     }
 
-    private void updateLore(ItemStack item, int index) {
+    private void setEnabled(ItemStack item, boolean enabled) {
+        ItemMeta meta = item.getItemMeta();
+        if (meta == null) return;
+        meta.getPersistentDataContainer().set(enabledKey, PersistentDataType.BYTE, enabled ? (byte)1 : (byte)0);
+        item.setItemMeta(meta);
+    }
+
+    private void updateLore(ItemStack item, boolean enabled) {
         ItemMeta meta = item.getItemMeta();
         if (meta == null) return;
         List<String> lore = new ArrayList<>();
         lore.add(ChatColor.GRAY + "Transfers whitelisted items to container above");
         lore.add(ChatColor.BLUE + "Left-click" + ChatColor.GRAY + ": Configure");
-        lore.add(ChatColor.BLUE + "Shift-Right-click" + ChatColor.GRAY + ": Change delay");
-        lore.add(ChatColor.GRAY + "Delay: " + ChatColor.WHITE + formatDelay(index));
+        lore.add(ChatColor.BLUE + "Right-click" + ChatColor.GRAY + ": Toggle ON/OFF");
+        lore.add(ChatColor.GRAY + "Interval: " + ChatColor.WHITE + "0.5s");
+        lore.add(ChatColor.GRAY + "Status: " + (enabled ? ChatColor.GREEN + "ON" : ChatColor.RED + "OFF"));
         meta.setLore(lore);
         item.setItemMeta(meta);
     }

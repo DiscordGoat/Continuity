@@ -34,6 +34,7 @@ public class FlowManager implements Listener {
     private static FlowManager instance;
 
     private final JavaPlugin plugin;
+    private static final boolean ENABLED = false; // Disable Flow visuals/counters to reduce lag
 
     private static class FlowData {
         int flow = 0;
@@ -49,8 +50,10 @@ public class FlowManager implements Listener {
      */
     private FlowManager(JavaPlugin plugin) {
         this.plugin = plugin;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
-        startDecayTask();
+        if (ENABLED) {
+            Bukkit.getPluginManager().registerEvents(this, plugin);
+            startDecayTask();
+        }
     }
 
     /**
@@ -68,6 +71,7 @@ public class FlowManager implements Listener {
      * Returns the current flow level for the player.
      */
     public int getFlow(Player player) {
+        if (!ENABLED) return 0;
         FlowData data = flowMap.get(player.getUniqueId());
         return data == null ? 0 : data.flow;
     }
@@ -76,7 +80,7 @@ public class FlowManager implements Listener {
      * Increase the player's flow and update their last activity timestamp.
      */
     public void addFlow(Player player, int amount) {
-        if (amount <= 0) return;
+        if (!ENABLED || amount <= 0) return;
         FlowData data = flowMap.computeIfAbsent(player.getUniqueId(), k -> new FlowData());
         data.flow += amount;
         data.lastActivity = System.currentTimeMillis();
@@ -88,7 +92,7 @@ public class FlowManager implements Listener {
      * is wearing a blessed armor set.
      */
     public void addFlowStacks(Player player, int amount) {
-        if (amount <= 0) return;
+        if (!ENABLED || amount <= 0) return;
         FlowData data = flowMap.computeIfAbsent(player.getUniqueId(), k -> new FlowData());
         data.flow += amount;
         data.lastActivity = System.currentTimeMillis();
@@ -101,6 +105,7 @@ public class FlowManager implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
+        if (!ENABLED) return;
         Player player = event.getPlayer();
         
         // Check if player has a blessed armor set
@@ -126,6 +131,7 @@ public class FlowManager implements Listener {
 
     @EventHandler
     public void onEntityDeath(EntityDeathEvent event) {
+        if (!ENABLED) return;
         Player killer = event.getEntity().getKiller();
         if (killer == null) {
             return;
@@ -159,7 +165,7 @@ public class FlowManager implements Listener {
      * Adds flow for a specific FlowType and triggers appropriate animations.
      */
     public void addFlow(Player player, FlowType type, int amount) {
-        if (amount <= 0) return;
+        if (!ENABLED || amount <= 0) return;
         FlowData data = flowMap.computeIfAbsent(player.getUniqueId(), k -> new FlowData());
         data.flow += amount;
         data.lastActivity = System.currentTimeMillis();
@@ -167,6 +173,7 @@ public class FlowManager implements Listener {
     }
 
     private void startDecayTask() {
+        if (!ENABLED) return;
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -189,6 +196,7 @@ public class FlowManager implements Listener {
     }
 
     private void refreshAnimation(Player player, int intensity) {
+        if (!ENABLED) return;
         String blessing = BlessingUtils.getBlessing(player.getInventory().getHelmet());
         if (blessing == null || !BlessingUtils.hasFullSetBonus(player, blessing)) {
             stopAnimation(player);
@@ -205,6 +213,7 @@ public class FlowManager implements Listener {
     }
 
     private void startAnimation(Player player, FlowType type, int intensity) {
+        if (!ENABLED) return;
         intensity = Math.max(1, Math.min(intensity, 24));
         Integer existing = animationTasks.remove(player.getUniqueId());
         if (existing != null) {
