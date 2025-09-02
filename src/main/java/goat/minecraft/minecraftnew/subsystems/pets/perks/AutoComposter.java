@@ -70,7 +70,7 @@ public class AutoComposter {
                             performConversion(player, perk);
                         } else if (perk == PetPerk.HARVEST_FESTIVAL) {
                             long lastTime = lastHarvestFestivalTime.getOrDefault(player, 0L);
-                            if (System.currentTimeMillis() - lastTime >= 1000) {
+                            if (System.currentTimeMillis() - lastTime >= 100) {
                                 performHarvestFestival(player);
                                 lastHarvestFestivalTime.put(player, System.currentTimeMillis());
                             }
@@ -151,7 +151,8 @@ public class AutoComposter {
         // 4) For each eligible crop, see how many conversions we can do
         for (String cropName : AUTO_COMPOSTER_ELIGIBLE_CROPS) {
             int playerCropCount = playerCropCounts.getOrDefault(cropName, 0);
-            int weight = ("PUMPKIN".equals(cropName) || "MELON_SLICE".equals(cropName)) ? 8 : 1;
+            // Nerf pumpkins and melon slices: reduce weight from 8 to 2 (~4x nerf)
+            int weight = ("PUMPKIN".equals(cropName) || "MELON_SLICE".equals(cropName)) ? 2 : 1;
 
             int effective = playerCropCount * weight;
             if (effective >= requiredMaterialsOrganic) {

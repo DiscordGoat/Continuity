@@ -21,8 +21,10 @@ import goat.minecraft.minecraftnew.other.skilltree.Talent;
 import goat.minecraft.minecraftnew.other.trinkets.BankAccountManager;
 import goat.minecraft.minecraftnew.other.trinkets.TrinketManager;
 import org.bukkit.*;
+import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Villager;
@@ -34,6 +36,8 @@ import org.bukkit.inventory.*;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.java.JavaPlugin;
+import goat.minecraft.minecraftnew.other.durability.CustomDurabilityManager;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -1237,6 +1241,13 @@ public class VillagerTradeManager implements Listener {
             villagerLevel = 1; // Below day 20, no level or level 0.
             villager.setVillagerLevel(1);
         }
+        // If villager has a custom name, treat as "hired" and unlock all trades
+        boolean hiredVillager = villager.getCustomName() != null
+                && !ChatColor.stripColor(villager.getCustomName()).trim().isEmpty();
+        if (hiredVillager) {
+            villagerLevel = 5;
+            villager.setVillagerLevel(5);
+        }
         //make villagers invisible when trading
 
 
@@ -1260,7 +1271,7 @@ public class VillagerTradeManager implements Listener {
         // Populate the GUI with purchases (items villager is selling)
         int purchaseIndex = 0;
         for (TradeItem tradeItem : purchases) {
-            if (villagerLevel >= tradeItem.getRequiredLevel()) {
+            if (hiredVillager || villagerLevel >= tradeItem.getRequiredLevel()) {
                 ItemStack displayItem = tradeItem.getItem().clone();
                 ItemMeta meta = displayItem.getItemMeta();
                 if (meta != null) {
@@ -1294,7 +1305,7 @@ public class VillagerTradeManager implements Listener {
         // Populate the GUI with sells (items villager is buying)
         int sellIndex = 0;
         for (TradeItem tradeItem : sells) {
-            if (villagerLevel >= tradeItem.getRequiredLevel()) {
+            if (hiredVillager || villagerLevel >= tradeItem.getRequiredLevel()) {
                 ItemStack displayItem = tradeItem.getItem().clone();
                 ItemMeta meta = displayItem.getItemMeta();
                 if (meta != null) {
@@ -1319,6 +1330,9 @@ public class VillagerTradeManager implements Listener {
             }
         }
 
+        // Add Services button (slot 48, to the left of pet button)
+        addServicesButton(tradeGUI);
+
         // Add Villager Pet Button (slot 49)
         addVillagerPetButton(player, tradeGUI);
 
@@ -1334,6 +1348,23 @@ public class VillagerTradeManager implements Listener {
                 player.sendMessage(ChatColor.GRAY + "<" + rawName + "> " + req);
             }
         }
+    }
+
+    /**
+     * Adds the Services button at slot 48.
+     */
+    private void addServicesButton(Inventory tradeGUI) {
+        ItemStack services = new ItemStack(Material.IRON_PICKAXE);
+        ItemMeta meta = services.getItemMeta();
+        if (meta != null) {
+            meta.setDisplayName(ChatColor.AQUA + "Services");
+            List<String> lore = new ArrayList<>();
+            lore.add(ChatColor.GRAY + "Quality of life services");
+            lore.add(ChatColor.GRAY + "Varies by profession");
+            meta.setLore(lore);
+            services.setItemMeta(meta);
+        }
+        tradeGUI.setItem(48, services);
     }
 
 
@@ -1414,6 +1445,218 @@ public class VillagerTradeManager implements Listener {
             petManager.summonPet(player, "Villager");
             player.sendMessage(ChatColor.GREEN + "Villager Pet summoned while trading!");
             openVillagerTradeGUI(player);
+    }
+
+    /**
+     * Handle clicks on Services button in the Villager Trading GUI.
+     */
+    @EventHandler
+    public void onServicesButtonClick(InventoryClickEvent event) {
+        if (!event.getView().getTitle().equals(ChatColor.GREEN + "Villager Trading")) return;
+        if (event.getSlot() != 48) return;
+        event.setCancelled(true);
+
+        Player player = (Player) event.getWhoClicked();
+        Villager villager = playerVillagerMap.get(player);
+        if (villager == null) return;
+
+        VillagerServiceManager.getInstance(MinecraftNew.getInstance()).openServicesGUI(player, villager);
+    }
+
+    private void incrementAndAward(Player player,
+                                   java.util.Map<Material, Integer> counts,
+                                   java.util.Map<Material, Integer> awarded,
+                                   Material key) {
+        int newCount = counts.getOrDefault(key, 0) + 1;
+        counts.put(key, newCount);
+        int units = newCount / 100; // 1 unit per 100 crops
+        int already = awarded.getOrDefault(key, 0);
+        if (units > already) {
+            int toGive = units - already;
+            awarded.put(key, units);
+            ItemStack reward = mapCropToReward(key);
+            if (reward != null) {
+                for (int i = 0; i < toGive; i++) {
+                    dropStack(player, reward.clone());
+                }
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.6f, 1.2f);
+            }
+        }
+    }
+
+    private ItemStack mapCropToReward(Material crop) {
+        switch (crop) {
+            case WHEAT:
+                return ItemRegistry.getWheatSeeder();
+            case CARROTS:
+                return ItemRegistry.getCarrotSeeder();
+            case POTATOES:
+                return ItemRegistry.getPotatoSeeder();
+            case BEETROOTS:
+                return ItemRegistry.getBeetrootSeeder();
+            case PUMPKIN:
+                return ItemRegistry.getWorldsLargestPumpkin();
+            case MELON:
+                return ItemRegistry.getWorldsLargestWatermelon();
+            default:
+                return null;
+        }
+    }
+
+    // Removed duplicate Services inventory click handler.
+    // VillagerServiceManager exclusively handles clicks in the "Services" GUI to avoid double-processing.
+
+    private void giveRandomFoods(Player player, int count, Material[] pool) {
+        java.util.Random rng = new java.util.Random();
+        for (int i = 0; i < count; i++) {
+            Material m = pool[rng.nextInt(pool.length)];
+            ItemStack stack = new ItemStack(m, 1);
+            Map<Integer, ItemStack> overflow = player.getInventory().addItem(stack);
+            if (!overflow.isEmpty()) {
+                for (ItemStack left : overflow.values()) {
+                    player.getWorld().dropItemNaturally(player.getLocation(), left);
+                }
+            }
+        }
+    }
+
+    private Material[] getLightMealPool() {
+        return new Material[] {
+                // meats (cooked forms)
+                Material.COOKED_BEEF, Material.COOKED_PORKCHOP, Material.COOKED_CHICKEN,
+                Material.COOKED_MUTTON, Material.COOKED_RABBIT, Material.COOKED_COD,
+                Material.COOKED_SALMON,
+                // lighter items
+                Material.BREAD, Material.BAKED_POTATO, Material.BEETROOT_SOUP,
+                Material.MUSHROOM_STEW, Material.CARROT
+        };
+    }
+
+    private Material[] getBalancedMealPool() {
+        return new Material[] {
+                // all meats (cooked forms)
+                Material.COOKED_BEEF, Material.COOKED_PORKCHOP, Material.COOKED_CHICKEN,
+                Material.COOKED_MUTTON, Material.COOKED_RABBIT, Material.COOKED_COD,
+                Material.COOKED_SALMON,
+                // hearty additions
+                Material.RABBIT_STEW, Material.BEETROOT_SOUP, Material.SUSPICIOUS_STEW,
+                Material.BAKED_POTATO, Material.BREAD, Material.GOLDEN_CARROT
+        };
+    }
+
+    private void startFarmerHarvestService(Player player, Villager villager, int tier, int radius) {
+        final int durationSeconds = tier * 10;
+        final Location origin = villager.getLocation();
+        final World world = origin.getWorld();
+        final int cx = origin.getBlockX();
+        final int cy = origin.getBlockY();
+        final int cz = origin.getBlockZ();
+        final int r2 = radius * radius;
+
+        // Build target coordinates (include unloaded chunks; world.getBlockAt will load as needed)
+        java.util.List<int[]> targets = new java.util.ArrayList<>();
+        int minX = cx - radius, maxX = cx + radius;
+        int minY = Math.max(cy - 1, 0), maxY = Math.min(cy + 2, world.getMaxHeight() - 1);
+        int minZ = cz - radius, maxZ = cz + radius;
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                int dx = x - cx, dz = z - cz;
+                if ((dx * dx + dz * dz) > r2) continue; // circle mask
+                for (int y = minY; y <= maxY; y++) {
+                    targets.add(new int[]{x, y, z});
+                }
+            }
+        }
+
+        final int totalTicks = Math.max(1, durationSeconds * 20);
+        final int perTick = Math.max(1, (int) Math.ceil(targets.size() / (double) totalTicks));
+        final java.util.Map<Material, Integer> harvestedCounts = new java.util.HashMap<>();
+        final java.util.Map<Material, Integer> awardedUnits = new java.util.HashMap<>();
+
+        new org.bukkit.scheduler.BukkitRunnable() {
+            int index = 0;
+            int harvested = 0;
+            @Override
+            public void run() {
+                int budget = Math.min(perTick, targets.size() - index);
+                for (int i = 0; i < budget; i++) {
+                    int[] t = targets.get(index++);
+                    Block block = world.getBlockAt(t[0], t[1], t[2]);
+                    Material type = block.getType();
+                    switch (type) {
+                        case WHEAT: {
+                            if (block.getBlockData() instanceof org.bukkit.block.data.Ageable crop && crop.getAge() == crop.getMaximumAge()) {
+                                crop.setAge(0);
+                                block.setBlockData(crop);
+                                harvested++;
+                                incrementAndAward(player, harvestedCounts, awardedUnits, Material.WHEAT);
+                            }
+                            break;
+                        }
+                        case CARROTS: {
+                            if (block.getBlockData() instanceof org.bukkit.block.data.Ageable crop && crop.getAge() == crop.getMaximumAge()) {
+                                crop.setAge(0);
+                                block.setBlockData(crop);
+                                harvested++;
+                                incrementAndAward(player, harvestedCounts, awardedUnits, Material.CARROTS);
+                            }
+                            break;
+                        }
+                        case POTATOES: {
+                            if (block.getBlockData() instanceof org.bukkit.block.data.Ageable crop && crop.getAge() == crop.getMaximumAge()) {
+                                crop.setAge(0);
+                                block.setBlockData(crop);
+                                harvested++;
+                                incrementAndAward(player, harvestedCounts, awardedUnits, Material.POTATOES);
+                            }
+                            break;
+                        }
+                        case BEETROOTS: {
+                            if (block.getBlockData() instanceof org.bukkit.block.data.Ageable crop && crop.getAge() == crop.getMaximumAge()) {
+                                crop.setAge(0);
+                                block.setBlockData(crop);
+                                harvested++;
+                                incrementAndAward(player, harvestedCounts, awardedUnits, Material.BEETROOTS);
+                            }
+                            break;
+                        }
+                        case PUMPKIN: {
+                            block.setType(Material.AIR);
+                            harvested++;
+                            incrementAndAward(player, harvestedCounts, awardedUnits, Material.PUMPKIN);
+                            break;
+                        }
+                        case MELON: {
+                            block.setType(Material.AIR);
+                            harvested++;
+                            incrementAndAward(player, harvestedCounts, awardedUnits, Material.MELON);
+                            break;
+                        }
+                        default:
+                            break;
+                    }
+                }
+
+                if (index >= targets.size()) {
+                    cancel();
+                    if (harvested == 0) {
+                        player.sendMessage(ChatColor.YELLOW + "No mature crops found in range.");
+                    } else {
+                        player.playSound(player.getLocation(), Sound.BLOCK_CROP_BREAK, 1.0f, 1.2f);
+                        player.sendMessage(ChatColor.GREEN + "Harvest complete: " + harvested + " crops.");
+                    }
+                }
+            }
+        }.runTaskTimer(plugin, 0L, 1L);
+    }
+
+    private void dropStack(Player player, ItemStack stack) {
+        Map<Integer, ItemStack> overflow = player.getInventory().addItem(stack);
+        if (!overflow.isEmpty()) {
+            for (ItemStack left : overflow.values()) {
+                player.getWorld().dropItemNaturally(player.getLocation(), left);
+            }
+        }
     }
 
     @EventHandler
@@ -1516,6 +1759,7 @@ public class VillagerTradeManager implements Listener {
                 int villagerLevel = villager.getVillagerLevel();
 
                 // Determine if the player is buying or selling
+                boolean hiredVillager = villager.getCustomName() != null && !ChatColor.stripColor(villager.getCustomName()).trim().isEmpty();
                 int column = slot % 9;
                 if (column <= 3) {
                     // Purchases (columns 0-3)
@@ -1523,7 +1767,7 @@ public class VillagerTradeManager implements Listener {
                     int purchaseIndex = (slot / 9) * 4 + column;
                     if (purchaseIndex < purchases.size()) {
                         TradeItem tradeItem = purchases.get(purchaseIndex);
-                        if (villagerLevel >= tradeItem.getRequiredLevel()) {
+                        if (hiredVillager || villagerLevel >= tradeItem.getRequiredLevel()) {
                             int times = 1;
                             if (event.getClick().isRightClick()) {
                                 SkillTreeManager mgr = SkillTreeManager.getInstance();
@@ -1540,7 +1784,7 @@ public class VillagerTradeManager implements Listener {
                     int sellIndex = (slot / 9) * 4 + (column - 5);
                     if (sellIndex < sells.size()) {
                         TradeItem tradeItem = sells.get(sellIndex);
-                        if (villagerLevel >= tradeItem.getRequiredLevel()) {
+                        if (hiredVillager || villagerLevel >= tradeItem.getRequiredLevel()) {
                             if (event.getClick().isRightClick()) {
                                 boolean soldAny = false;
                                 while (processSell(player, villager, tradeItem, false)) {
@@ -2150,3 +2394,4 @@ public class VillagerTradeManager implements Listener {
         return item.getType().toString() + "|" + name;
     }
 }
+

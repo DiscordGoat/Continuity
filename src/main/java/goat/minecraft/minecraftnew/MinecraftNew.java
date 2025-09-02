@@ -55,6 +55,7 @@ import goat.minecraft.minecraftnew.subsystems.mining.Mining;
 import goat.minecraft.minecraftnew.subsystems.smithing.AnvilRepair;
 import goat.minecraft.minecraftnew.subsystems.smithing.ReforgeSubsystem;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerTradeManager;
+import goat.minecraft.minecraftnew.subsystems.villagers.VillagerServiceManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.VillagerWorkCycleManager;
 import goat.minecraft.minecraftnew.subsystems.villagers.MarketTrendManager;
 
@@ -769,6 +770,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new BowReforge(), this);
 
         villagerWorkCycleManager = VillagerWorkCycleManager.getInstance(this);
+        VillagerServiceManager.getInstance(this);
         getCommand("forceworkcycle").setExecutor(villagerWorkCycleManager);
         getCommand("repair").setExecutor(new RepairCommand());
         getCommand("repairall").setExecutor(new RepairAllCommand());
