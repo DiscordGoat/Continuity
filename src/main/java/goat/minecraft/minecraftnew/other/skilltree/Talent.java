@@ -21,6 +21,14 @@ public enum Talent {
             40,
             Material.CAULDRON
     ),
+    DINNER_BELL(
+            "Dinner Bell",
+            ChatColor.GRAY + "Hear when harvest nears",
+            ChatColor.YELLOW + "Enables " + ChatColor.GREEN + "Harvest" + ChatColor.GRAY + " sidebar progress.",
+            1,
+            20,
+            Material.BELL
+    ),
     OPTIMAL_CONFIGURATION(
             "Optimal Brewing Stand Settings",
             ChatColor.GRAY + "Installs an ad-blocker to prevent wasted time",

@@ -16,6 +16,10 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
+import goat.minecraft.minecraftnew.other.skilltree.SkillTreeManager;
+import goat.minecraft.minecraftnew.other.skilltree.Skill;
+import goat.minecraft.minecraftnew.other.skilltree.Talent;
+import goat.minecraft.minecraftnew.subsystems.farming.HarvestProgressTracker;
 
 public class ContinuityBoardManager implements Listener {
     private final ScoreboardManager scoreboardManager;
@@ -103,6 +107,22 @@ public class ContinuityBoardManager implements Listener {
             String bar = createBar(temperature, 400, ChatColor.RED);
             objective.getScore(bar).setScore(line--);
         }
+
+        // Optional: Harvest progress (Dinner Bell)
+        try {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            if (mgr != null && mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.DINNER_BELL) > 0) {
+                HarvestProgressTracker.Progress p = HarvestProgressTracker.get(player.getUniqueId());
+                if (p != null && p.requirement > 0) {
+                    String harvestStr = ChatColor.GREEN + "Harvest: " + ChatColor.WHITE + (p.current) + "/" + p.requirement;
+                    objective.getScore(harvestStr).setScore(line--);
+                    if (bars) {
+                        String bar = createBar(p.current, p.requirement, ChatColor.GREEN);
+                        objective.getScore(bar).setScore(line--);
+                    }
+                }
+            }
+        } catch (Throwable ignored) {}
 
         // Re-apply the scoreboard to the player.
         player.setScoreboard(scoreboard);

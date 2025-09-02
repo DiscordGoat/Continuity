@@ -183,7 +183,7 @@ public class FarmingEvent implements Listener {
             }
 
             // Batch XP and side-effects into a 2s window
-            int xp = cropXP.get(blockType);
+            int xp = cropXP.getOrDefault(blockType, 0);
             boolean hasUnrivaled = SkillTreeManager.getInstance() != null &&
                     (SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.UNRIVALED) > 0);
 

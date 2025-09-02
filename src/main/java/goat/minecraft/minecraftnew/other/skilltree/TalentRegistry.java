@@ -307,6 +307,7 @@ public final class TalentRegistry {
                 Arrays.asList(
                         Talent.EXTRA_CROP_CHANCE_I,
                         Talent.FOR_THE_STREETS,
+                        Talent.DINNER_BELL,
                         Talent.REAPER_I,
                         Talent.FAST_FARMER,
                         Talent.HARVEST_FESTIVAL,

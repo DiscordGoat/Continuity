@@ -152,6 +152,28 @@ public class CropCountManager {
         return newBuckets > prevBuckets;
     }
 
+    /** Returns the current raw count for the given crop for this player. */
+    public int getCount(Player player, Material crop) {
+        String k = key(crop);
+        if (k == null) return 0;
+        return config.getInt(player.getUniqueId().toString() + "." + k, 0);
+    }
+
+    /** Computes the current requirement for this player, after Reaper reductions. */
+    public int getRequirement(Player player) {
+        int reduction = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_I);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_II);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_III);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_IV);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_V);
+        }
+        int requirement = (int) Math.ceil(1000 * (1 - reduction / 100.0));
+        return Math.max(1, requirement);
+    }
+
     public void checkPetThresholds(Player player) {
         int total = config.getInt(player.getUniqueId().toString() + ".cropsHarvested", 0);
         checkPetThresholds(player, total);

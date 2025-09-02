@@ -894,7 +894,9 @@ public class PetManager implements Listener {
                 int requiredMaterialsOrganic = Math.max(256 - (level - 1) * (256 - 64) / 99, 64);
                 return ChatColor.GRAY + "Compacts " + requiredMaterialsOrganic + " crops into " + ChatColor.GREEN + "Organic Soil";
             case HARVEST_FESTIVAL:
-                return ChatColor.GRAY + "Compacts 2000 crops into " + ChatColor.YELLOW + "Fertilizer";
+                return ChatColor.GOLD + "Sacrifices crops for Harvest progress. "
+                            + ChatColor.YELLOW + "Every 2000 crops" + ChatColor.GRAY + ": "
+                            + ChatColor.GREEN + "+100 Harvest Count " + ChatColor.GRAY + "to your dominant crop.";
             case LUMBERJACK:
                 return "Drops " + ChatColor.GREEN + "+2 logs " + ChatColor.GRAY + "when chopping trees.";
             case EARTHWORM:
@@ -1355,7 +1357,12 @@ public class PetManager implements Listener {
         NO_HIBERNATION("No Hibernation", ChatColor.GOLD + ""),
         GROOT("Groot", ChatColor.GOLD + ""),
         COMPOSTER("Composter", ChatColor.GOLD + ""),
-        HARVEST_FESTIVAL("Harvest Festival", ChatColor.GOLD + "Compacts crops into Fertilizer while moving"),
+        HARVEST_FESTIVAL(
+                "Harvest Festival",
+                ChatColor.GOLD + "Sacrifices crops for Harvest progress. "
+                        + ChatColor.YELLOW + "Every 2000 crops" + ChatColor.GRAY + ": "
+                        + ChatColor.GREEN + "+100 Harvest Count " + ChatColor.GRAY + "to your dominant crop."
+        ),
         HEADLESS_HORSEMAN("Headless Horseman", ChatColor.GOLD + "+[Lvl]% Bonus Wheat Cropcount."),
         ORANGE("Orange", ChatColor.GOLD + "+[Lvl]% Bonus Carrot Cropcount."),
         BEETS_ME("Beets me", ChatColor.GOLD + "+[Lvl]% Bonus Beetroot Cropcount."),
