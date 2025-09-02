@@ -95,23 +95,23 @@ public class ToggleCustomEnchantmentsCommand implements CommandExecutor, Listene
                 "Deals bonus damage to certain",
                 "mobs like guardians or endermen."));
         descriptions.put("Cornfield", Arrays.asList(
-                "10% * level chance to",
-                "double-count wheat."));
+                "2% * level chance to",
+                "double-count wheat (max 100%)."));
         descriptions.put("What's Up Doc", Arrays.asList(
-                "10% * level chance to",
-                "double-count carrots."));
+                "2% * level chance to",
+                "double-count carrots (max 100%)."));
         descriptions.put("Venerate", Arrays.asList(
-                "10% * level chance to",
-                "double-count beetroot."));
+                "2% * level chance to",
+                "double-count beetroot (max 100%)."));
         descriptions.put("Legend", Arrays.asList(
-                "10% * level chance to",
-                "double-count potatoes."));
+                "2% * level chance to",
+                "double-count potatoes (max 100%)."));
         descriptions.put("Clean Cut", Arrays.asList(
-                "10% * level chance to",
-                "double-count melons."));
+                "2% * level chance to",
+                "double-count melons (max 100%)."));
         descriptions.put("Gourd", Arrays.asList(
-                "10% * level chance to",
-                "double-count pumpkins."));
+                "2% * level chance to",
+                "double-count pumpkins (max 100%)."));
     }
 
     @Override

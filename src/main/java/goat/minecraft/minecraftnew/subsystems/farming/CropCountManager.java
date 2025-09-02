@@ -20,6 +20,8 @@ public class CropCountManager {
     private final File file;
     private YamlConfiguration config;
     private final Random random = new Random();
+    private volatile boolean dirty = false;
+    private org.bukkit.scheduler.BukkitTask flushTask;
 
     private CropCountManager(JavaPlugin plugin) {
         this.plugin = plugin;
@@ -28,6 +30,12 @@ public class CropCountManager {
             try { file.createNewFile(); } catch (IOException ignored) {}
         }
         this.config = YamlConfiguration.loadConfiguration(file);
+        // Periodic async flush to disk to avoid synchronous IO on main thread
+        flushTask = org.bukkit.Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+            if (dirty) {
+                save();
+            }
+        }, 600L, 600L); // every 30 seconds
     }
 
     public static CropCountManager getInstance(JavaPlugin plugin) {
@@ -40,6 +48,7 @@ public class CropCountManager {
     private void save() {
         try {
             config.save(file);
+            dirty = false;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -84,7 +93,7 @@ public class CropCountManager {
         int totalPrev = config.getInt(uuid + ".cropsHarvested", 0);
         int total = totalPrev + incrementValue;
         config.set(uuid + ".cropsHarvested", total);
-        save();
+        dirty = true;
 
         checkPetThresholds(player, total);
         int reduction = 0;
@@ -98,14 +107,10 @@ public class CropCountManager {
         }
         int requirement = (int) Math.ceil(1000 * (1 - reduction / 100.0));
         if (requirement < 1) requirement = 1;
-        boolean trigger = false;
-        for (int i = previous + 1; i <= c; i++) {
-            if (i % requirement == 0) {
-                trigger = true;
-                break;
-            }
-        }
-        return trigger;
+        // O(1) threshold crossing: if quotient increases, we crossed a multiple of requirement
+        int prevBuckets = previous / requirement;
+        int newBuckets = c / requirement;
+        return newBuckets > prevBuckets;
     }
 
     public void checkPetThresholds(Player player) {
@@ -118,22 +123,26 @@ public class CropCountManager {
         if (total >= 4860 && !config.getBoolean(uuid + ".legendary", false)) {
             grantPet(player, PetManager.Rarity.LEGENDARY);
             config.set(uuid + ".legendary", true);
+            dirty = true;
         } else if (total >= 1620 && !config.getBoolean(uuid + ".epic", false)) {
             grantPet(player, PetManager.Rarity.EPIC);
             config.set(uuid + ".epic", true);
+            dirty = true;
         } else if (total >= 540 && !config.getBoolean(uuid + ".rare", false)) {
             grantPet(player, PetManager.Rarity.RARE);
             config.set(uuid + ".rare", true);
+            dirty = true;
         } else if (total >= 180 && !config.getBoolean(uuid + ".uncommon", false)) {
             grantPet(player, PetManager.Rarity.UNCOMMON);
             config.set(uuid + ".uncommon", true);
+            dirty = true;
         } else if (total >= 60 && !config.getBoolean(uuid + ".common", false)) {
             grantPet(player, PetManager.Rarity.COMMON);
             config.set(uuid + ".common", true);
+            dirty = true;
         } else {
             return;
         }
-        save();
     }
 
     private void grantPet(Player player, PetManager.Rarity rarity) {

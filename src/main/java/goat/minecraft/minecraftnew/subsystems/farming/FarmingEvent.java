@@ -205,7 +205,8 @@ public class FarmingEvent implements Listener {
                 switch (blockType) {
                     case WHEAT, WHEAT_SEEDS -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Cornfield");
-                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                        double chance = Math.min(level * 0.02, 1.0);
+                        if (level > 0 && random.nextDouble() < chance) {
                             if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
                                 harvest = true;
                             }
@@ -213,7 +214,8 @@ public class FarmingEvent implements Listener {
                     }
                     case CARROTS -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "What's Up Doc");
-                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                        double chance = Math.min(level * 0.02, 1.0);
+                        if (level > 0 && random.nextDouble() < chance) {
                             if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
                                 harvest = true;
                             }
@@ -221,7 +223,8 @@ public class FarmingEvent implements Listener {
                     }
                     case POTATOES -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Legend");
-                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                        double chance = Math.min(level * 0.02, 1.0);
+                        if (level > 0 && random.nextDouble() < chance) {
                             if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
                                 harvest = true;
                             }
@@ -229,7 +232,8 @@ public class FarmingEvent implements Listener {
                     }
                     case BEETROOTS -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Venerate");
-                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                        double chance = Math.min(level * 0.02, 1.0);
+                        if (level > 0 && random.nextDouble() < chance) {
                             if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
                                 harvest = true;
                             }
@@ -237,7 +241,8 @@ public class FarmingEvent implements Listener {
                     }
                     case MELON -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Clean Cut");
-                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                        double chance = Math.min(level * 0.02, 1.0);
+                        if (level > 0 && random.nextDouble() < chance) {
                             if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
                                 harvest = true;
                             }
@@ -245,7 +250,8 @@ public class FarmingEvent implements Listener {
                     }
                     case PUMPKIN -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Gourd");
-                        if (level > 0 && random.nextDouble() < level * 0.10) {
+                        double chance = Math.min(level * 0.02, 1.0);
+                        if (level > 0 && random.nextDouble() < chance) {
                             if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
                                 harvest = true;
                             }
@@ -280,21 +286,18 @@ public class FarmingEvent implements Listener {
                 player.addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.HASTE, 100, 1));
             }
 
-            // Unrivaled - grow nearby crops
+            // Unrivaled - 0.1% chance per level to drop 1 Fertilizer
             int un = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.UNRIVALED);
-            if (un > 0 && random.nextDouble() < un * 0.01) {
-                for (int dx = -3; dx <= 3; dx++) {
-                    for (int dz = -3; dz <= 3; dz++) {
-                        if (dx == 0 && dz == 0) continue;
-                        Block b = block.getRelative(dx, 0, dz);
-                        if (b.getBlockData() instanceof Ageable age) {
-                            if (age.getAge() < age.getMaximumAge()) {
-                                age.setAge(Math.min(age.getAge() + 1, age.getMaximumAge()));
-                                b.setBlockData(age);
-                            }
-                        }
+            if (un > 0 && random.nextDouble() < un * 0.001) {
+                org.bukkit.inventory.ItemStack fert = goat.minecraft.minecraftnew.utils.devtools.ItemRegistry.getFertilizer().clone();
+                java.util.Map<Integer, org.bukkit.inventory.ItemStack> overflow = player.getInventory().addItem(fert);
+                if (!overflow.isEmpty()) {
+                    for (org.bukkit.inventory.ItemStack left : overflow.values()) {
+                        player.getWorld().dropItemNaturally(player.getLocation(), left);
                     }
                 }
+                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.6f, 1.4f);
+                player.sendMessage(ChatColor.GREEN + "You found " + ChatColor.YELLOW + "Fertilizer" + ChatColor.GREEN + " while harvesting.");
             }
 
             // Festival Bees spawn
