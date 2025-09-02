@@ -47,10 +47,17 @@ public class FestivalBeeManager {
     public void spawnFestivalBee(Location loc, int seconds) {
         World world = loc.getWorld();
         if (world == null) return;
+        // Rewind time by 10 seconds (200 ticks)
+        long t = world.getTime();
+        long rewound = (t - 200) % 24000;
+        if (rewound < 0) rewound += 24000;
+        world.setTime(rewound);
+
         Bee bee = (Bee) world.spawnEntity(loc.clone().add(0,5,0), EntityType.BEE);
         bee.setCustomName(ChatColor.GOLD + "Festival Bee: " + seconds);
         bee.setCustomNameVisible(true);
         bee.setRemoveWhenFarAway(true);
+        bee.setAI(false);
         beeRefs.put(bee.getUniqueId(), bee);
         festivalBeeCount++;
         updateRules(world);

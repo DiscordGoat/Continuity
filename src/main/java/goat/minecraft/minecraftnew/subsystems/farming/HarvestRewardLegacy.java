@@ -202,9 +202,66 @@ public class HarvestRewardLegacy {
         String styledName = rarity.getColor() + rarity.getStyles() + baseName;
         String amountText = amount > 1 ? org.bukkit.ChatColor.YELLOW + "" + amount + "x " : "";
         player.sendMessage(org.bukkit.ChatColor.GREEN + "Harvest Reward: " + amountText + styledName);
-        player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME, rarity.getVolume(), rarity.getPitch());
+        playRarityJingle(player, rarity);
         String subtitle = amount > 1 ? org.bukkit.ChatColor.YELLOW + "" + amount + "x" : "";
         player.sendTitle(styledName, subtitle, rarity.getFadeIn(), rarity.getStay(), rarity.getFadeOut());
+    }
+
+    private static void playRarityJingle(Player player, HarvestRarity rarity) {
+        // Note pitches approximate C4, E4, G4, B4, C5 in Minecraft's pitch scale
+        // 1.00, 1.26, 1.50, 1.89, 2.00
+        float C = 1.00f, E = 1.26f, G = 1.50f, B = 1.89f, C5 = 2.00f;
+
+        Sound commonInstr = Sound.BLOCK_NOTE_BLOCK_PLING;
+        Sound harp = Sound.BLOCK_NOTE_BLOCK_HARP;
+        Sound bell = Sound.BLOCK_NOTE_BLOCK_BELL;
+        Sound chime = Sound.BLOCK_NOTE_BLOCK_CHIME;
+
+        int tickGap;
+        Sound instr;
+        float[] notes;
+
+        switch (rarity) {
+            case COMMON -> {
+                instr = commonInstr;
+                notes = new float[] { C };
+                tickGap = 0;
+            }
+            case UNCOMMON -> {
+                instr = harp;
+                notes = new float[] { C, E };
+                tickGap = 4;
+            }
+            case RARE -> {
+                instr = bell;
+                notes = new float[] { C, E, G };
+                tickGap = 3;
+            }
+            case EPIC -> {
+                instr = chime;
+                notes = new float[] { C, E, G, C5 };
+                tickGap = 3;
+            }
+            case LEGENDARY -> {
+                instr = chime; // use bright chime as a fanfare stand-in
+                notes = new float[] { C, E, G, B, C5 };
+                tickGap = 2;
+            }
+            default -> {
+                instr = chime;
+                notes = new float[] { C };
+                tickGap = 0;
+            }
+        }
+
+        final Sound playInstr = instr;
+        for (int i = 0; i < notes.length; i++) {
+            final float pitch = notes[i];
+            final int delay = i * Math.max(0, tickGap);
+            org.bukkit.Bukkit.getScheduler().runTaskLater(MinecraftNew.getInstance(), () -> {
+                player.playSound(player.getLocation(), playInstr, 1.0f, pitch);
+            }, delay);
+        }
     }
 
     private static HarvestRarity detectRarity(String name, boolean rareOrAbove) {

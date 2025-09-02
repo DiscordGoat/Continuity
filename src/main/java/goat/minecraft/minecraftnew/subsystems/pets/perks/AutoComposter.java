@@ -47,6 +47,7 @@ public class AutoComposter implements Listener {
     private final Map<UUID, Location> playerLastLocations = new HashMap<>();
     private final Map<UUID, Integer> composterTally = new HashMap<>();
     private final Map<UUID, Long> lastHarvestFestivalTime = new HashMap<>();
+    private final Map<UUID, Long> lastComposterTime = new HashMap<>();
     private final Map<UUID, Integer> harvestFestivalTally = new HashMap<>();
     private final Map<UUID, Material> lastDominant = new HashMap<>();
     private final Map<UUID, Map<Material, Integer>> cachedCounts = new HashMap<>();
@@ -94,6 +95,13 @@ public class AutoComposter implements Listener {
      *  requiredMaterialsOrganic = max(256 - (level - 1)*(256 - 64)/99, 64)
      */
     private void performConversion(Player player, PetPerk perk) {
+        long nowTs = System.currentTimeMillis();
+        Long lastTs = lastComposterTime.get(player.getUniqueId());
+        if (lastTs != null && (nowTs - lastTs) < 500) {
+            return; // 0.5s cooldown
+        }
+        // Set cooldown immediately to throttle scans even if nothing converts
+        lastComposterTime.put(player.getUniqueId(), nowTs);
         int level = getPetLevel(player);
 
         // 2) Calculate how many crops are required for 1 organic soil
@@ -205,6 +213,11 @@ public class AutoComposter implements Listener {
     }
 
     private void performHarvestFestival(Player player) {
+        long nowTs = System.currentTimeMillis();
+        Long lastTs = lastHarvestFestivalTime.get(player.getUniqueId());
+        if (lastTs != null && (nowTs - lastTs) < 500) {
+            return; // 0.5s cooldown
+        }
         // Remove all eligible crops instantly and count per material
         Inventory inv = player.getInventory();
         ItemStack[] contents = inv.getContents();
@@ -228,15 +241,19 @@ public class AutoComposter implements Listener {
             }
             lastReconcile.put(player.getUniqueId(), System.currentTimeMillis());
 
-            // Determine dominant crop for this activation
+            // Determine dominant crop for this activation (normalized to CropCountManager keys)
+            Map<Material, Integer> normalized = new HashMap<>();
+            for (Map.Entry<Material, Integer> e : removedByMat.entrySet()) {
+                Material key = normalizeToCrop(e.getKey());
+                if (key == null) continue; // skip unsupported materials
+                normalized.put(key, normalized.getOrDefault(key, 0) + e.getValue());
+            }
             Material dominant = null;
             int max = 0;
-            for (Map.Entry<Material, Integer> e : removedByMat.entrySet()) {
+            for (Map.Entry<Material, Integer> e : normalized.entrySet()) {
                 if (e.getValue() > max) { max = e.getValue(); dominant = e.getKey(); }
             }
-            if (dominant == null) {
-                dominant = lastDominant.getOrDefault(player.getUniqueId(), Material.WHEAT);
-            }
+            if (dominant == null) dominant = lastDominant.getOrDefault(player.getUniqueId(), Material.WHEAT);
             lastDominant.put(player.getUniqueId(), dominant);
 
             // Accumulate tally and award +100 per 2000 removed
@@ -247,11 +264,56 @@ public class AutoComposter implements Listener {
                 int total = CropCountManager.getInstance(plugin).getCount(player, dominant);
                 int req = CropCountManager.getInstance(plugin).getRequirement(player);
                 int current = total % Math.max(1, req);
+                if (current == 0 && total > 0) current = req; // avoid showing 0 right after threshold
                 HarvestProgressTracker.set(player.getUniqueId(), dominant, current, req);
+                // Subtle, short title to notify +100 progress
+                String main = ChatColor.GREEN + "+100 Harvest";
+                String sub = ChatColor.YELLOW + formatMaterialName(dominant);
+                player.sendTitle(main, sub, 5, 20, 5);
                 player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
             }
             harvestFestivalTally.put(player.getUniqueId(), tally);
         }
+        // set cooldown regardless of whether anything was removed to avoid rapid scanning
+        lastHarvestFestivalTime.put(player.getUniqueId(), nowTs);
+    }
+
+    /**
+     * Map inventory materials to the canonical crop materials used by CropCountManager.
+     */
+    private Material normalizeToCrop(Material m) {
+        switch (m) {
+            case WHEAT:
+            case WHEAT_SEEDS:
+                return Material.WHEAT; // count keys support WHEAT and WHEAT_SEEDS; prefer WHEAT here
+            case CARROT:
+            case CARROTS:
+                return Material.CARROTS;
+            case POTATO:
+            case POTATOES:
+                return Material.POTATOES;
+            case BEETROOT:
+            case BEETROOTS:
+            case BEETROOT_SEEDS:
+                return Material.BEETROOTS;
+            case MELON:
+            case MELON_SLICE:
+                return Material.MELON;
+            case PUMPKIN:
+            case PUMPKIN_SEEDS:
+                return Material.PUMPKIN;
+            default:
+                return null;
+        }
+    }
+
+    private String formatMaterialName(Material material) {
+        String[] words = material.name().toLowerCase(java.util.Locale.ROOT).split("_");
+        StringBuilder builder = new StringBuilder();
+        for (String word : words) {
+            builder.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)).append(" ");
+        }
+        return builder.toString().trim();
     }
 
     /**
@@ -307,7 +369,7 @@ public class AutoComposter implements Listener {
         }
         long now = System.currentTimeMillis();
         Long last = lastMoveActivation.get(player.getUniqueId());
-        if (last != null && (now - last) < 1000) {
+        if (last != null && (now - last) < 500) {
             return; // throttle to once per second
         }
         lastMoveActivation.put(player.getUniqueId(), now);

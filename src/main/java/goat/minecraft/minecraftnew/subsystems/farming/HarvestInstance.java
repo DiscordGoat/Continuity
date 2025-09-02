@@ -138,6 +138,7 @@ public class HarvestInstance {
             int total = CropCountManager.getInstance(plugin).getCount(player, dominant);
             int req = CropCountManager.getInstance(plugin).getRequirement(player);
             int current = total % Math.max(1, req);
+            if (current == 0 && total > 0) current = req; // avoid 0 display right after crossing
             HarvestProgressTracker.set(player.getUniqueId(), dominant, current, req);
         }
 

@@ -896,7 +896,7 @@ public class PetManager implements Listener {
             case HARVEST_FESTIVAL:
                 return ChatColor.GOLD + "Sacrifices crops for Harvest progress. "
                             + ChatColor.YELLOW + "Every 2000 crops" + ChatColor.GRAY + ": "
-                            + ChatColor.GREEN + "+100 Harvest Count " + ChatColor.GRAY + "to your dominant crop.";
+                            + ChatColor.GREEN + "+100 Harvest Count";
             case LUMBERJACK:
                 return "Drops " + ChatColor.GREEN + "+2 logs " + ChatColor.GRAY + "when chopping trees.";
             case EARTHWORM:
