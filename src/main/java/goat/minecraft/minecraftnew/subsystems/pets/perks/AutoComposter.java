@@ -70,7 +70,7 @@ public class AutoComposter {
                             performConversion(player, perk);
                         } else if (perk == PetPerk.HARVEST_FESTIVAL) {
                             long lastTime = lastHarvestFestivalTime.getOrDefault(player, 0L);
-                            if (System.currentTimeMillis() - lastTime >= 100) {
+                            if (System.currentTimeMillis() - lastTime >= 10) {
                                 performHarvestFestival(player);
                                 lastHarvestFestivalTime.put(player, System.currentTimeMillis());
                             }

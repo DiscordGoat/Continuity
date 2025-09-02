@@ -113,6 +113,45 @@ public class CropCountManager {
         return newBuckets > prevBuckets;
     }
 
+    /**
+     * Bulk increment a crop count and total, returning whether at least one threshold was crossed
+     * by applying this increment in one step.
+     */
+    public boolean bulkIncrement(Player player, Material crop, int count) {
+        if (count <= 0) return false;
+        String k = key(crop);
+        if (k == null) return false;
+        String uuid = player.getUniqueId().toString();
+
+        int previous = config.getInt(uuid + "." + k, 0);
+        int totalPrev = config.getInt(uuid + ".cropsHarvested", 0);
+
+        int reduction = 0;
+        if (SkillTreeManager.getInstance() != null) {
+            SkillTreeManager mgr = SkillTreeManager.getInstance();
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_I);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_II);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_III);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_IV);
+            reduction += mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.REAPER_V);
+        }
+        int requirement = (int) Math.ceil(1000 * (1 - reduction / 100.0));
+        if (requirement < 1) requirement = 1;
+
+        int prevBuckets = previous / requirement;
+        int newBuckets = (previous + count) / requirement;
+
+        // Apply updates
+        config.set(uuid + "." + k, previous + count);
+        config.set(uuid + ".cropsHarvested", totalPrev + count);
+        dirty = true;
+
+        // Check pet thresholds using updated total
+        checkPetThresholds(player, totalPrev + count);
+
+        return newBuckets > prevBuckets;
+    }
+
     public void checkPetThresholds(Player player) {
         int total = config.getInt(player.getUniqueId().toString() + ".cropsHarvested", 0);
         checkPetThresholds(player, total);

@@ -182,83 +182,65 @@ public class FarmingEvent implements Listener {
                 }
             }
 
-            // Award Farming XP (plugin) and batch vanilla XP orbs (1 orb of 10 XP per 10 crops)
+            // Batch XP and side-effects into a 2s window
             int xp = cropXP.get(blockType);
-            xpManager.addXP(player, "Farming", xp);
-            UUID pid = player.getUniqueId();
-            int tally = cropHarvestCounter.getOrDefault(pid, 0) + 1;
-            if (tally >= 10) {
-                tally -= 10;
-                ExperienceOrb batchOrb = (ExperienceOrb) block.getWorld().spawn(player.getLocation(), ExperienceOrb.class);
-                batchOrb.setExperience(10);
-            }
-            cropHarvestCounter.put(pid, tally);
-            // Play harvest sound
+            boolean hasUnrivaled = SkillTreeManager.getInstance() != null &&
+                    (SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.UNRIVALED) > 0);
+
+            // Enqueue this crop into the player's current batch
+            HarvestBatchManager.addToBatch(player, blockType, xp, hasUnrivaled, true, false, null);
+
+            // Maintain per-crop XP pickup sound feedback
             player.playSound(player.getLocation(), Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0f, 2.0f);
 
+            // Handle extra increments from custom enchantments as count-only contributions
             if (blockType == Material.WHEAT || blockType == Material.WHEAT_SEEDS || blockType == Material.CARROTS || blockType == Material.POTATOES ||
-                    blockType == Material.BEETROOTS || blockType == Material.PUMPKIN ||
-                    blockType == Material.MELON || blockType == Material.COCOA) {
-                harvest = CropCountManager.getInstance(plugin).increment(player, blockType);
-
+                    blockType == Material.BEETROOTS || blockType == Material.PUMPKIN || blockType == Material.MELON) {
                 ItemStack tool = player.getInventory().getItemInMainHand();
                 switch (blockType) {
                     case WHEAT, WHEAT_SEEDS -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Cornfield");
                         double chance = Math.min(level * 0.02, 1.0);
                         if (level > 0 && random.nextDouble() < chance) {
-                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
-                                harvest = true;
-                            }
+                            HarvestBatchManager.addToBatch(player, blockType, 0, false, false, false, null);
                         }
                     }
                     case CARROTS -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "What's Up Doc");
                         double chance = Math.min(level * 0.02, 1.0);
                         if (level > 0 && random.nextDouble() < chance) {
-                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
-                                harvest = true;
-                            }
+                            HarvestBatchManager.addToBatch(player, blockType, 0, false, false, false, null);
                         }
                     }
                     case POTATOES -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Legend");
                         double chance = Math.min(level * 0.02, 1.0);
                         if (level > 0 && random.nextDouble() < chance) {
-                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
-                                harvest = true;
-                            }
+                            HarvestBatchManager.addToBatch(player, blockType, 0, false, false, false, null);
                         }
                     }
                     case BEETROOTS -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Venerate");
                         double chance = Math.min(level * 0.02, 1.0);
                         if (level > 0 && random.nextDouble() < chance) {
-                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
-                                harvest = true;
-                            }
+                            HarvestBatchManager.addToBatch(player, blockType, 0, false, false, false, null);
                         }
                     }
                     case MELON -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Clean Cut");
                         double chance = Math.min(level * 0.02, 1.0);
                         if (level > 0 && random.nextDouble() < chance) {
-                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
-                                harvest = true;
-                            }
+                            HarvestBatchManager.addToBatch(player, blockType, 0, false, false, false, null);
                         }
                     }
                     case PUMPKIN -> {
                         int level = CustomEnchantmentManager.getEnchantmentLevel(tool, "Gourd");
                         double chance = Math.min(level * 0.02, 1.0);
                         if (level > 0 && random.nextDouble() < chance) {
-                            if (CropCountManager.getInstance(plugin).increment(player, blockType)) {
-                                harvest = true;
-                            }
+                            HarvestBatchManager.addToBatch(player, blockType, 0, false, false, false, null);
                         }
                     }
-                    default -> {
-                    }
+                    default -> {}
                 }
             }
 
@@ -286,56 +268,10 @@ public class FarmingEvent implements Listener {
                 player.addPotionEffect(new org.bukkit.potion.PotionEffect(PotionEffectType.HASTE, 100, 1));
             }
 
-            // Unrivaled - 0.1% chance per level to drop 1 Fertilizer
-            int un = SkillTreeManager.getInstance().getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.UNRIVALED);
-            if (un > 0 && random.nextDouble() < un * 0.001) {
-                org.bukkit.inventory.ItemStack fert = goat.minecraft.minecraftnew.utils.devtools.ItemRegistry.getFertilizer().clone();
-                java.util.Map<Integer, org.bukkit.inventory.ItemStack> overflow = player.getInventory().addItem(fert);
-                if (!overflow.isEmpty()) {
-                    for (org.bukkit.inventory.ItemStack left : overflow.values()) {
-                        player.getWorld().dropItemNaturally(player.getLocation(), left);
-                    }
-                }
-                player.playSound(player.getLocation(), Sound.ENTITY_ITEM_PICKUP, 0.6f, 1.4f);
-                player.sendMessage(ChatColor.GREEN + "You found " + ChatColor.YELLOW + "Fertilizer" + ChatColor.GREEN + " while harvesting.");
-            }
+            // Fertilizer handled in batch grant
 
-            // Festival Bees spawn
-            SkillTreeManager mgr = SkillTreeManager.getInstance();
-            double beeChance =
-                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_I) * 0.1 +
-                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_II) * 0.1 +
-                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_III) * 0.1 +
-                    mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEES_IV) * 0.1;
-            beeChance /= 100.0;
-            if (random.nextDouble() < beeChance) {
-                int dur = 30
-                        + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEE_DURATION_I) * 10
-                        + mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.FESTIVAL_BEE_DURATION_II) * 10;
-                World world = player.getWorld();
-                long before = FestivalBeeManager.getInstance(plugin).getFestivalBeeCount();
-                FestivalBeeManager.getInstance(plugin).spawnFestivalBee(block.getLocation(), dur);
-                int swarm = mgr.getTalentLevel(player.getUniqueId(), Skill.FARMING, Talent.SWARM);
-                if (swarm > 0 && random.nextDouble() < swarm * 0.10) {
-                    FestivalBeeManager.getInstance(plugin).spawnFestivalBee(block.getLocation(), dur);
-                }
-                player.sendMessage(ChatColor.GOLD + "A Festival Bee has spawned!");
-                long after = FestivalBeeManager.getInstance(plugin).getFestivalBeeCount();
-
-
-                if (before == 0 && after > 0) {
-                    startHarvestBalladLoop(world);
-                }
-
-                player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 0.5f);
-
-            }
-
-            if (harvest) {
-                xpManager.addXP(player, "Farming", 100);
-                player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 2.0f);
-                handleHarvestRewards(block, player, blockType);
-            }
+            // Festival Bees handled in batch grant
+            // Harvest reward handled in batch grant
         }
     }
     @EventHandler

@@ -19,11 +19,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class Collector implements Listener {
 
     private final PetManager petManager;
+    private final Map<UUID, Long> lastActivation = new HashMap<>();
 
     public Collector(JavaPlugin plugin) {
         this.petManager = PetManager.getInstance(plugin);
@@ -32,6 +35,17 @@ public class Collector implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
+        if (event.getTo() == null) return;
+        if (event.getFrom().getX() == event.getTo().getX()
+                && event.getFrom().getY() == event.getTo().getY()
+                && event.getFrom().getZ() == event.getTo().getZ()) {
+            return; // ignore pure rotation; require positional movement
+        }
+        long now = System.currentTimeMillis();
+        Long last = lastActivation.get(player.getUniqueId());
+        if (last != null && (now - last) < 1000) {
+            return; // throttle to once per second while moving
+        }
         PetManager.Pet activePet = petManager.getActivePet(player);
         if (activePet != null && (activePet.hasPerk(PetManager.PetPerk.COLLECTOR)
                 || activePet.hasUniqueTraitPerk(PetManager.PetPerk.COLLECTOR))) {
@@ -79,6 +93,7 @@ public class Collector implements Listener {
             // Notify the player about items collected, if any
             if (itemsCollected > 0) {
                 player.playSound(player.getLocation(), Sound.BLOCK_AZALEA_PLACE, 5, 100);
+                lastActivation.put(player.getUniqueId(), now);
             }
         }
     }
