@@ -13,6 +13,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -95,9 +97,15 @@ public class SkillsCommand implements CommandExecutor, Listener {
             ItemStack skillItem = new ItemStack(icon);
             ItemMeta meta = skillItem.getItemMeta();
             if (meta != null) {
-                meta.setDisplayName(ChatColor.AQUA + skill + " Skill");
+                ChatColor nameColor = (level >= 100) ? ChatColor.GOLD : ChatColor.AQUA;
+                meta.setDisplayName(nameColor + skill + " Skill");
                 // Pass the player so we can include a progress bar in the lore.
                 meta.setLore(getSkillStatLore(player, skill, level));
+                // Glow skills at level 100+
+                if (level >= 100) {
+                    meta.addEnchant(Enchantment.UNBREAKING, 1, true);
+                    meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+                }
                 skillItem.setItemMeta(meta);
             }
 
@@ -164,6 +172,11 @@ public class SkillsCommand implements CommandExecutor, Listener {
             default:
                 color = ChatColor.GRAY;
                 break;
+        }
+
+        // Add a MAXED tag for level 100+
+        if ((int) level >= 100) {
+            lore.add(ChatColor.GOLD.toString() + ChatColor.BOLD + "MAXED");
         }
 
         lore.add(color + "Level: " + ChatColor.GREEN + (int) level);

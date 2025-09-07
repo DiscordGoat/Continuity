@@ -28,21 +28,27 @@ public class AutoComposter implements Listener {
     private final MinecraftNew plugin;
 
     /**
-     * Crops eligible for auto-composting.
+     * Crops/seeds eligible for auto-composting. Built from Material names to broadly include farmables.
+     * Rule: any material whose enum name contains one of these crop-related keywords is eligible.
      */
-    private final Set<Material> AUTO_COMPOSTER_ELIGIBLE = EnumSet.of(
-            Material.POTATO,
-            Material.CARROT,
-            Material.WHEAT,
-            Material.WHEAT_SEEDS,
-            Material.BEETROOT_SEEDS,
-            Material.POISONOUS_POTATO,
-            Material.MELON_SLICE,
-            Material.MELON,
-            Material.PUMPKIN,
-            Material.BEETROOT,
-            Material.PUMPKIN_SEEDS
-    );
+    private final Set<Material> AUTO_COMPOSTER_ELIGIBLE = buildEligibleSet();
+
+    private static final Set<String> CROP_KEYWORDS = new HashSet<>(Arrays.asList(
+            "WHEAT", "SEED", "CARROT", "POTATO", "BEETROOT","MELON_SLICE", "MELON", "PUMPKIN",
+            "COCOA", "NETHER_WART", "SUGAR_CANE", "SWEET_BERRIES", "GLOW_BERRIES",
+            "BAMBOO", "CACTUS", "CHORUS", "KELP"
+    ));
+
+    private static Set<Material> buildEligibleSet() {
+        Set<Material> set = new HashSet<>();
+        for (Material m : Material.values()) {
+            String n = m.name();
+            for (String key : CROP_KEYWORDS) {
+                if (n.contains(key)) { set.add(m); break; }
+            }
+        }
+        return set;
+    }
 
     private final Map<UUID, Location> playerLastLocations = new HashMap<>();
     private final Map<UUID, Integer> composterTally = new HashMap<>();
@@ -102,51 +108,38 @@ public class AutoComposter implements Listener {
         }
         // Set cooldown immediately to throttle scans even if nothing converts
         lastComposterTime.put(player.getUniqueId(), nowTs);
-        int level = getPetLevel(player);
 
-        // 2) Calculate how many crops are required for 1 organic soil
-        int requiredMaterialsOrganic = Math.max(
-                256 - (level - 1) * (256 - 64) / 99,
-                64
-        );
-        if (SkillTreeManager.getInstance() != null) {
-            int lvl = SkillTreeManager.getInstance()
-                    .getTalentLevel(player.getUniqueId(), Skill.TAMING, Talent.COMPOSTER);
-            if (lvl > 0) {
-                requiredMaterialsOrganic = requiredMaterialsOrganic / 2;
-            }
+        // Count all eligible crops/seeds in inventory (live scan to avoid stale cache issues)
+        Map<Material, Integer> playerCropCounts = getPlayerCropCountsScan(player);
+        int totalEligible = 0;
+        for (Map.Entry<Material, Integer> e : playerCropCounts.entrySet()) {
+            if (AUTO_COMPOSTER_ELIGIBLE.contains(e.getKey())) totalEligible += e.getValue();
         }
 
-        // 3) Count how many of each eligible crop the player holds
-        Map<Material, Integer> playerCropCounts = getCachedCounts(player);
+        int conversions = totalEligible / 64; // 64 crops → 1 Organic Soil
+        if (conversions <= 0) return;
 
-        // 4) For each eligible crop, see how many conversions we can do
+        // Build a removal plan across all eligible materials to consume exactly conversions*64 items
+        int remaining = conversions * 64;
         Map<Material, Integer> toRemove = new HashMap<>();
-        int totalConversions = 0;
-        for (Material cropMat : AUTO_COMPOSTER_ELIGIBLE) {
-            int playerCropCount = playerCropCounts.getOrDefault(cropMat, 0);
-            // Nerf pumpkins and melon slices: reduce weight from 8 to 2 (~4x nerf)
-            int weight = (cropMat == Material.PUMPKIN || cropMat == Material.MELON || cropMat == Material.MELON_SLICE) ? 2 : 1;
-
-            int effective = playerCropCount * weight;
-            if (effective >= requiredMaterialsOrganic) {
-                int conversions = effective / requiredMaterialsOrganic;
-                int effectiveUsed = conversions * requiredMaterialsOrganic;
-                int itemsToRemove = (int) Math.ceil(effectiveUsed / (double) weight);
-                toRemove.put(cropMat, toRemove.getOrDefault(cropMat, 0) + itemsToRemove);
-                totalConversions += conversions;
+        for (Map.Entry<Material, Integer> e : playerCropCounts.entrySet()) {
+            if (remaining <= 0) break;
+            Material m = e.getKey();
+            if (!AUTO_COMPOSTER_ELIGIBLE.contains(m)) continue;
+            int avail = e.getValue();
+            if (avail <= 0) continue;
+            int take = Math.min(avail, remaining);
+            if (take > 0) {
+                toRemove.put(m, toRemove.getOrDefault(m, 0) + take);
+                remaining -= take;
             }
         }
 
-        if (totalConversions > 0) {
-            // Apply removals in a single inventory update and update cache
-            batchSubtract(player, toRemove);
-            if (perk == PetPerk.COMPOSTER) {
-                addOrganicSoil(player, totalConversions);
-            } else {
-                addFertilizer(player, totalConversions);
-            }
-        }
+        if (toRemove.isEmpty()) return;
+
+        // Apply removals and grant soil
+        batchSubtract(player, toRemove);
+        addOrganicSoil(player, conversions);
     }
 
     /**
@@ -256,21 +249,29 @@ public class AutoComposter implements Listener {
             if (dominant == null) dominant = lastDominant.getOrDefault(player.getUniqueId(), Material.WHEAT);
             lastDominant.put(player.getUniqueId(), dominant);
 
-            // Accumulate tally and award +100 per 2000 removed
+            // Accumulate tally; decide if awards should trigger based on dominant progress (<500)
             int tally = harvestFestivalTally.getOrDefault(player.getUniqueId(), 0) + removedTotal;
-            while (tally >= 2000) {
-                tally -= 2000;
-                CropCountManager.getInstance(plugin).bulkIncrement(player, dominant, 100);
-                int total = CropCountManager.getInstance(plugin).getCount(player, dominant);
-                int req = CropCountManager.getInstance(plugin).getRequirement(player);
-                int current = total % Math.max(1, req);
-                if (current == 0 && total > 0) current = req; // avoid showing 0 right after threshold
-                HarvestProgressTracker.set(player.getUniqueId(), dominant, current, req);
-                // Subtle, short title to notify +100 progress
-                String main = ChatColor.GREEN + "+100 Harvest";
-                String sub = ChatColor.YELLOW + formatMaterialName(dominant);
-                player.sendTitle(main, sub, 5, 20, 5);
-                player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
+            // Re-evaluate dominant progress from counters (removal does not change counters)
+            int totalBefore = CropCountManager.getInstance(plugin).getCount(player, dominant);
+            int reqBefore = CropCountManager.getInstance(plugin).getRequirement(player);
+            int currentBefore = totalBefore % Math.max(1, reqBefore);
+
+            boolean canAward = currentBefore < 500;
+            if (canAward) {
+                while (tally >= 2000) {
+                    tally -= 2000;
+                    CropCountManager.getInstance(plugin).bulkIncrement(player, dominant, 100);
+                    int total = CropCountManager.getInstance(plugin).getCount(player, dominant);
+                    int req = CropCountManager.getInstance(plugin).getRequirement(player);
+                    int current = total % Math.max(1, req);
+                    if (current == 0 && total > 0) current = req; // avoid showing 0 right after threshold
+                    HarvestProgressTracker.set(player.getUniqueId(), dominant, current, req);
+                    // Subtle, short title to notify +100 progress
+                    String main = ChatColor.GREEN + "+100 Harvest";
+                    String sub = ChatColor.YELLOW + formatMaterialName(dominant);
+                    player.sendTitle(main, sub, 5, 20, 5);
+                    player.playSound(player.getLocation(), Sound.BLOCK_ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
+                }
             }
             harvestFestivalTally.put(player.getUniqueId(), tally);
         }
@@ -321,7 +322,13 @@ public class AutoComposter implements Listener {
      * If full, drops them at the player's feet.
      */
     private void addOrganicSoil(Player player, int quantity) {
-        giveStacked(player, ItemRegistry.getOrganicSoil(), quantity, ChatColor.RED + "Your inventory is full! Organic Soil has been dropped on the ground.");
+        PetManager.Pet active = PetManager.getInstance(plugin).getActivePet(player);
+        if (active != null && "Pig".equalsIgnoreCase(active.getName())) {
+            // With Pig pet active, always drop instead of adding to inventory
+            dropStacked(player, ItemRegistry.getOrganicSoil(), quantity);
+        } else {
+            giveStacked(player, ItemRegistry.getOrganicSoil(), quantity, ChatColor.RED + "Your inventory is full! Organic Soil has been dropped on the ground.");
+        }
     }
 
     private void addFertilizer(Player player, int quantity) {
@@ -338,6 +345,16 @@ public class AutoComposter implements Listener {
                 for (ItemStack left : overflow.values()) player.getWorld().dropItemNaturally(player.getLocation(), left);
                 player.sendMessage(fullMessage);
             }
+            total -= give;
+        }
+    }
+
+    private void dropStacked(Player player, ItemStack base, int total) {
+        while (total > 0) {
+            ItemStack stack = base.clone();
+            int give = Math.min(total, stack.getMaxStackSize());
+            stack.setAmount(give);
+            player.getWorld().dropItemNaturally(player.getLocation(), stack);
             total -= give;
         }
     }

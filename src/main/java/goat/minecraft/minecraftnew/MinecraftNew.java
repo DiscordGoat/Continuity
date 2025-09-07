@@ -282,7 +282,8 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         GeneratorService.init(this);
         new SetCustomDurabilityCommand(this);
         new AddGoldenDurabilityCommand(this);
-        this.getCommand("skin").setExecutor(new SkinCommand());
+                new goat.minecraft.minecraftnew.utils.developercommands.SetCompassChargesCommand(this);
+this.getCommand("skin").setExecutor(new SkinCommand());
         PetManager petManager = PetManager.getInstance(this);
         getLogger().info("MyPlugin has been enabled!");
 
@@ -318,6 +319,7 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new Rebirth(this), this);
         getServer().getPluginManager().registerEvents(new DiggingClaws(this), this);
         getServer().getPluginManager().registerEvents(new XRay(this), this);
+        getServer().getPluginManager().registerEvents(new goat.minecraft.minecraftnew.other.additionalfunctionality.AttunedCompassListener(this), this);
         getServer().getPluginManager().registerEvents(new NoHibernation(this), this);
         getServer().getPluginManager().registerEvents(new Echolocation(this), this);
         getServer().getPluginManager().registerEvents(new MithrilMiner(this), this);
@@ -956,3 +958,4 @@ public class MinecraftNew extends JavaPlugin implements Listener {
         }
     }
 }
+

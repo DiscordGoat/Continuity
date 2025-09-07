@@ -117,6 +117,10 @@ commands:
   spawnseacreature:
     description: Spawns a sea creature by name.
     permission: continuity.admin
+  setcompasscharges:
+    description: Sets charges on the held compass
+    usage: /setcompasscharges <amount>
+    permission: continuity.admin
   spawncorpse:
     description: Spawns a corpse by name.
     permission: continuity.admin

@@ -102,7 +102,15 @@ public class BlessedSetAuraListener implements Listener {
             deactivate(player);
             return;
         }
-        String current = player.hasMetadata(META_KEY) ? player.getMetadata(META_KEY).get(0).asString() : null;
+        String current = null;
+        try {
+            java.util.List<org.bukkit.metadata.MetadataValue> meta = player.getMetadata(META_KEY);
+            if (meta != null && !meta.isEmpty()) {
+                current = meta.get(0).asString();
+            }
+        } catch (Exception ignored) {
+            current = null;
+        }
         if (!blessing.equals(current)) {
             auraManager.activateAura(player, aura);
             player.setMetadata(META_KEY, new FixedMetadataValue(plugin, blessing));
