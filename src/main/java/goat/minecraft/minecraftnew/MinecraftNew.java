@@ -125,8 +125,7 @@ import goat.minecraft.minecraftnew.other.additionalfunctionality.EnvironmentSide
 import goat.minecraft.minecraftnew.subsystems.dragons.DragonFightManager;
 import goat.minecraft.minecraftnew.subsystems.dragons.RefreshEndCommand;
 
-import goat.minecraft.minecraftnew.subsystems.music.PigStepArena;
-import goat.minecraft.minecraftnew.other.realms.Tropic;
+import goat.minecraft.minecraftnew.other.realms.utils.Tropic;
 import goat.minecraft.minecraftnew.other.realms.Frozen;
 import net.citizensnpcs.api.CitizensAPI;
 import org.bukkit.*;

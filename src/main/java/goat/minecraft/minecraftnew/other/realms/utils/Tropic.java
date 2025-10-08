@@ -1,6 +1,5 @@
-package goat.minecraft.minecraftnew.other.realms;
+package goat.minecraft.minecraftnew.other.realms.utils;
 
-import goat.minecraft.minecraftnew.other.realms.utils.TerrainUtils;
 import goat.minecraft.minecraftnew.utils.devtools.SchemManager;
 import org.bukkit.*;
 import org.bukkit.command.Command;
