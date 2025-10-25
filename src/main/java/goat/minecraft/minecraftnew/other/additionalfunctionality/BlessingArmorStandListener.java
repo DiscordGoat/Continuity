@@ -3,6 +3,7 @@ package goat.minecraft.minecraftnew.other.additionalfunctionality;
 import goat.minecraft.minecraftnew.MinecraftNew;
 import goat.minecraft.minecraftnew.subsystems.music.MusicDiscManager;
 import goat.minecraft.minecraftnew.utils.stats.StrengthManager;
+import goat.minecraft.minecraftnew.other.health.HealthManager;
 import org.bukkit.*;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
@@ -38,7 +39,9 @@ public class BlessingArmorStandListener implements Listener {
         colorMap.put("Nature's Wrath", ChatColor.DARK_GREEN);
 
         bonusMap.put("Lost Legion", List.of(ChatColor.GRAY + "Full Set Bonus: +25% Arrow Damage"));
-        bonusMap.put("Monolith", List.of(ChatColor.GRAY + "Full Set Bonus: +20 Health, +20% Defense"));
+        bonusMap.put("Monolith", List.of(ChatColor.GRAY + "Full Set Bonus: "
+                + HealthManager.COLOR + "+20 " + HealthManager.DISPLAY_NAME
+                + ChatColor.GRAY + ", +20% Defense"));
         bonusMap.put("Scorchsteel", List.of(ChatColor.GRAY + "Full Set Bonus: +20 Fire Stacks, +40% Nether Monster Damage Reduction"));
         bonusMap.put("Nature's Wrath", List.of(ChatColor.GRAY + "Full Set Bonus: +4% Spirit Chance, +25% Spirit Defense, +25% Spirit Damage"));
         bonusMap.put("Dweller", List.of(ChatColor.GRAY + "Full Set Bonus: +25% Ore Yield, +500 Oxygen"));
